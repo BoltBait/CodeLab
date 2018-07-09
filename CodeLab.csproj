@@ -1,0 +1,292 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{6E9302B8-7792-43A4-A4A4-1F5E8F371780}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>PaintDotNet.Effects</RootNamespace>
+    <AssemblyName>CodeLab</AssemblyName>
+    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <Reference Include="PaintDotNet.Base">
+      <HintPath>..\..\..\..\..\..\Program Files\Paint.NET\PaintDotNet.Base.dll</HintPath>
+    </Reference>
+    <Reference Include="PaintDotNet.Core">
+      <HintPath>..\..\..\..\..\..\Program Files\Paint.NET\PaintDotNet.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="PaintDotNet.Data">
+      <HintPath>..\..\..\..\..\..\Program Files\Paint.NET\PaintDotNet.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="PaintDotNet.Effects">
+      <HintPath>..\..\..\..\..\..\Program Files\Paint.NET\PaintDotNet.Effects.dll</HintPath>
+    </Reference>
+    <Reference Include="ScintillaNET, Version=3.6.3.0, Culture=neutral, PublicKeyToken=d42c48f11a620156, processorArchitecture=MSIL">
+      <HintPath>packages\jacobslusser.ScintillaNET.Signed.3.6.3\lib\net40\ScintillaNET.dll</HintPath>
+    </Reference>
+    <Reference Include="System">
+      <Name>System</Name>
+    </Reference>
+    <Reference Include="System.Drawing">
+      <Name>System.Drawing</Name>
+    </Reference>
+    <Reference Include="System.Windows.Forms">
+      <Name>System.Windows.Forms</Name>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BuildForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BuildForm.Designer.cs">
+      <DependentUpon>BuildForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="IntelliTip.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="ScriptBuilder.cs" />
+    <Compile Include="ScriptWriter.cs" />
+    <Compile Include="ThemeRenderer.cs" />
+    <Compile Include="CodeLab.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CodeLabConfigDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CodeLabConfigDialog.Designer.cs">
+      <DependentUpon>CodeLabConfigDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CodeLabConfigToken.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CodeTextBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ColorWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ColorWindow.Designer.cs">
+      <DependentUpon>ColorWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ScriptError.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CodeCompletionListBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Extensions.cs" />
+    <Compile Include="FileNew.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FileNew.Designer.cs">
+      <DependentUpon>FileNew.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Intelli.cs" />
+    <Compile Include="PdnColor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="PdnColor.designer.cs">
+      <DependentUpon>PdnColor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UIBuilder.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UIBuilder.Designer.cs">
+      <DependentUpon>UIBuilder.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FindAndReplace.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="FindAndReplace.Designer.cs">
+      <DependentUpon>FindAndReplace.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ViewSrc.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ViewSrc.Designer.cs">
+      <DependentUpon>ViewSrc.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="CodeLabConfigDialog.resx">
+      <DependentUpon>CodeLabConfigDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="BuildForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>BuildForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ColorWindow.resx">
+      <DependentUpon>ColorWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Icons\CodeLab.png" />
+    <EmbeddedResource Include="PdnColor.resx">
+      <DependentUpon>PdnColor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UIBuilder.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>UIBuilder.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FindAndReplace.resx">
+      <DependentUpon>FindAndReplace.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ViewSrc.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>ViewSrc.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="FileNew.resx">
+      <DependentUpon>FileNew.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+    <None Include="Resources\Photo.png" />
+    <None Include="Resources\BlendArrow.png" />
+    <None Include="Resources\DownArrow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\00int.png" />
+    <EmbeddedResource Include="Icons\01CheckBox.png" />
+    <EmbeddedResource Include="Icons\02ColorWheel.png" />
+    <EmbeddedResource Include="Icons\03AngleChooser.png" />
+    <EmbeddedResource Include="Icons\04PanSlider.png" />
+    <EmbeddedResource Include="Icons\05TextBox.png" />
+    <EmbeddedResource Include="Icons\06DoubleSlider.png" />
+    <EmbeddedResource Include="Icons\07DropDown.png" />
+    <EmbeddedResource Include="Icons\08BlendOps.png" />
+    <EmbeddedResource Include="Icons\09Fonts.png" />
+    <EmbeddedResource Include="Icons\10RadioButton.png" />
+    <EmbeddedResource Include="Icons\11ReseedButton.png" />
+    <EmbeddedResource Include="Icons\12MultiTextBox.png" />
+    <EmbeddedResource Include="Icons\13RollControl.png" />
+    <None Include="Icons\About.png" />
+    <None Include="Icons\Renumber.png" />
+    <None Include="Icons\Redo.png" />
+    <None Include="Icons\Undo.png" />
+    <None Include="Icons\Exit.png" />
+    <None Include="Icons\newspaper.png" />
+    <None Include="Icons\Handle.png" />
+    <None Include="Icons\Search.png" />
+    <None Include="Icons\Replace.png" />
+    <EmbeddedResource Include="Icons\Event.png" />
+    <EmbeddedResource Include="Icons\Field.png" />
+    <EmbeddedResource Include="Icons\Method.png" />
+    <EmbeddedResource Include="Icons\Property.png" />
+    <None Include="Icons\Copy.png" />
+    <None Include="Icons\Cut.png" />
+    <None Include="Icons\New.png" />
+    <None Include="Icons\Open.png" />
+    <None Include="Icons\Paste.png" />
+    <None Include="Icons\Save.png" />
+    <None Include="Icons\Comment.png" />
+    <None Include="Icons\Indent.png" />
+    <None Include="Icons\Uncomment.png" />
+    <None Include="Icons\Unindent.png" />
+    <None Include="Icons\SaveAsDll.png" />
+    <None Include="Icons\FormDesigner.png" />
+    <None Include="Icons\SelectAll.png" />
+    <None Include="Icons\HelpTopics.png" />
+    <None Include="Icons\Updates.png" />
+    <EmbeddedResource Include="Icons\Keyword.png" />
+    <EmbeddedResource Include="Icons\Type.png" />
+    <EmbeddedResource Include="Icons\Var.png" />
+    <EmbeddedResource Include="Icons\Class.png" />
+    <EmbeddedResource Include="Icons\Enum.png" />
+    <EmbeddedResource Include="Icons\Struct.png" />
+    <EmbeddedResource Include="Icons\Const.png" />
+    <EmbeddedResource Include="Icons\EnumItem.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include=".editorconfig" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Icons\WordPad.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Icons\ParagraphLeft.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Icons\InsertPicture.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Icons\ParagraphCenter.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Icons\SuperScript.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Icons\Subscript.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Icons\IncreaseFontSize.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Icons\DecreaseFontSize.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Icons\Bullets.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Icons\Format.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Icons\PlayButton.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\Snippet.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Icons\Bulb.png" />
+  </ItemGroup>
+  <PropertyGroup>
+    <PostBuildEvent>if $(ConfigurationName) == Release (
+    "C:\Program Files (x86)\Microsoft\ILMerge\ILMerge.exe" /ndebug /targetplatform:4.0,"C:\Windows\Microsoft.NET\Framework\v4.0.30319" /out:"$(TargetDir)Desktop\CodeLab.dll" "$(TargetDir)CodeLab.dll" "$(TargetDir)ScintillaNET.dll"
+    cmd /c explorer "$(TargetDir)Desktop"
+) else (
+    "C:\Program Files (x86)\Microsoft\ILMerge\ILMerge.exe" /targetplatform:4.0,"C:\Windows\Microsoft.NET\Framework\v4.0.30319" /out:"$(TargetDir)Desktop\CodeLab.dll" "$(TargetDir)CodeLab.dll" "$(TargetDir)ScintillaNET.dll"
+    copy "$(TargetDir)Desktop\$(TargetFileName)" "C:\Program Files\Paint.NET\Effects\"
+)
+exit 0
+
+</PostBuildEvent>
+  </PropertyGroup>
+</Project>

@@ -1,0 +1,3 @@
+﻿# CSharp code style settings:
+[*.cs]
+csharp_prefer_braces = true:warning
