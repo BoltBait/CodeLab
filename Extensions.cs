@@ -178,12 +178,12 @@ namespace PaintDotNet.Effects
 
         internal static string GetterSetter(this PropertyInfo property)
         {
-            if (property.SetMethod != null && property.GetMethod != null)
+            if (property.CanRead && property.CanWrite)
                 return " { get; set; }";
-            if (property.SetMethod != null)
-                return " { set; }";
-            if (property.GetMethod != null)
+            if (property.CanRead)
                 return " { get; }";
+            if (property.CanWrite)
+                return " { set; }";
 
             return string.Empty;
         }

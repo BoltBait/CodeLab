@@ -80,8 +80,6 @@ namespace PaintDotNet.Effects
             }
         }
 
-        internal string VarToRename => varToRename;
-
         internal bool LineNumbersEnabled
         {
             get
@@ -1156,7 +1154,7 @@ namespace PaintDotNet.Effects
             }
         }
 
-        internal string GetIntelliTip(int position)
+        private string GetIntelliTip(int position)
         {
             int style = this.GetStyleAt(position);
             if (style == Style.Cpp.Comment || style == Style.Cpp.CommentLine || style == Style.Cpp.Preprocessor || style == Style.Cpp.Operator)
@@ -3395,7 +3393,7 @@ namespace PaintDotNet.Effects
 
             if (this.IsIndicatorOn(Indicator.VariableRename, e.Position))
             {
-                renameVarMenuItem.Text = $"Rename '{VarToRename}' to '{this.GetWordFromPosition(e.Position)}'";
+                renameVarMenuItem.Text = $"Rename '{varToRename}' to '{this.GetWordFromPosition(e.Position)}'";
                 lightBulbMenu.Location = new Point(this.PointXFromPosition(e.Position) - lightBulbMenu.Width - 10,
                                                    this.PointYFromPosition(e.Position) + this.Lines[this.CurrentLine].Height);
                 lightBulbMenu.Show();

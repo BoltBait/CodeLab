@@ -78,7 +78,7 @@ namespace PaintDotNet.Effects
             // button1
             // 
             this.button1.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.button1.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.button1.Location = new System.Drawing.Point(287, 499);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
@@ -245,8 +245,8 @@ namespace PaintDotNet.Effects
             // DoIt
             // 
             this.DoIt.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.DoIt.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.DoIt.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.DoIt.ForeColor = System.Drawing.SystemColors.ControlText;
             this.DoIt.Location = new System.Drawing.Point(166, 499);
             this.DoIt.Name = "DoIt";
             this.DoIt.Size = new System.Drawing.Size(115, 23);

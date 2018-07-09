@@ -56,7 +56,7 @@ namespace PaintDotNet.Effects
             // 
             this.ButtonClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.ButtonClose.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.ButtonClose.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.ButtonClose.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.ButtonClose.Location = new System.Drawing.Point(461, 313);
             this.ButtonClose.Name = "ButtonClose";
             this.ButtonClose.Size = new System.Drawing.Size(75, 23);

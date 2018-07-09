@@ -192,8 +192,8 @@ namespace PaintDotNet.Effects
             // MoveUp
             // 
             this.MoveUp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.MoveUp.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.MoveUp.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.MoveUp.ForeColor = System.Drawing.SystemColors.ControlText;
             this.MoveUp.Location = new System.Drawing.Point(341, 28);
             this.MoveUp.Name = "MoveUp";
             this.MoveUp.Size = new System.Drawing.Size(23, 23);
@@ -206,8 +206,8 @@ namespace PaintDotNet.Effects
             // MoveDown
             // 
             this.MoveDown.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.MoveDown.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.MoveDown.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.MoveDown.ForeColor = System.Drawing.SystemColors.ControlText;
             this.MoveDown.Location = new System.Drawing.Point(341, 56);
             this.MoveDown.Name = "MoveDown";
             this.MoveDown.Size = new System.Drawing.Size(23, 23);
@@ -220,7 +220,7 @@ namespace PaintDotNet.Effects
             // Add
             // 
             this.Add.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.Add.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.Add.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.Add.Location = new System.Drawing.Point(262, 297);
             this.Add.Name = "Add";
             this.Add.Size = new System.Drawing.Size(38, 23);
@@ -248,7 +248,7 @@ namespace PaintDotNet.Effects
             // 
             this.Cancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.Cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.Cancel.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.Cancel.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.Cancel.Location = new System.Drawing.Point(289, 430);
             this.Cancel.Name = "Cancel";
             this.Cancel.Size = new System.Drawing.Size(75, 23);
@@ -261,8 +261,8 @@ namespace PaintDotNet.Effects
             // 
             this.OK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.OK.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.OK.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.OK.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.OK.ForeColor = System.Drawing.SystemColors.ControlText;
             this.OK.Location = new System.Drawing.Point(208, 430);
             this.OK.Name = "OK";
             this.OK.Size = new System.Drawing.Size(75, 23);
@@ -275,7 +275,7 @@ namespace PaintDotNet.Effects
             // UpdateBtn
             // 
             this.UpdateBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.UpdateBtn.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.UpdateBtn.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.UpdateBtn.Location = new System.Drawing.Point(308, 297);
             this.UpdateBtn.Name = "UpdateBtn";
             this.UpdateBtn.Size = new System.Drawing.Size(56, 23);
@@ -512,7 +512,7 @@ namespace PaintDotNet.Effects
             // PreviewButton
             // 
             this.PreviewButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.PreviewButton.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.PreviewButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.PreviewButton.Location = new System.Drawing.Point(12, 430);
             this.PreviewButton.Name = "PreviewButton";
             this.PreviewButton.Size = new System.Drawing.Size(75, 23);

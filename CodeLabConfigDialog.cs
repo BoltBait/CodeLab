@@ -259,6 +259,7 @@ namespace PaintDotNet.Effects
 
         private void RunWithDialog()
         {
+            tmrCompile.Enabled = false;
             Build();
             if (errorList.Items.Count != 0)
             {
@@ -297,6 +298,7 @@ namespace PaintDotNet.Effects
                     Build();
                 }
             }
+            tmrCompile.Enabled = true;
         }
 
         private void DisplayErrors()
@@ -467,7 +469,10 @@ namespace PaintDotNet.Effects
             if (errorList.SelectedIndex > -1)
             {
                 string errorMsg = (errorList.SelectedItem is ScriptError error) ? error.ErrorText : errorList.SelectedItem.ToString();
-                Clipboard.SetText(errorMsg);
+                if (!errorMsg.IsNullOrEmpty())
+                {
+                    Clipboard.SetText(errorMsg);
+                }
             }
         }
 

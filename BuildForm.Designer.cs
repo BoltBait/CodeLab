@@ -109,7 +109,7 @@ namespace PaintDotNet.Effects
             // 
             this.ButtonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.ButtonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.ButtonCancel.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.ButtonCancel.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.ButtonCancel.Location = new System.Drawing.Point(618, 439);
             this.ButtonCancel.Name = "ButtonCancel";
             this.ButtonCancel.Size = new System.Drawing.Size(75, 23);
@@ -121,8 +121,8 @@ namespace PaintDotNet.Effects
             // ButtonSave
             // 
             this.ButtonSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.ButtonSave.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.ButtonSave.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonSave.ForeColor = System.Drawing.SystemColors.ControlText;
             this.ButtonSave.Location = new System.Drawing.Point(537, 439);
             this.ButtonSave.Name = "ButtonSave";
             this.ButtonSave.Size = new System.Drawing.Size(75, 23);
@@ -282,7 +282,7 @@ namespace PaintDotNet.Effects
             // ViewSourceButton
             // 
             this.ViewSourceButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.ViewSourceButton.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.ViewSourceButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.ViewSourceButton.Location = new System.Drawing.Point(279, 438);
             this.ViewSourceButton.Name = "ViewSourceButton";
             this.ViewSourceButton.Size = new System.Drawing.Size(75, 23);

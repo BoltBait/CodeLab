@@ -115,7 +115,7 @@ namespace PaintDotNet.Effects
             for (int i = 0; i < memberInfo.Length; i++)
             {
                 if ((!memberInfo[i].ReflectedType.IsVisible && memberInfo[i].DeclaringType?.DeclaringType?.FullName != "PaintDotNet.Effects.UserScript") ||
-                    memberInfo[i].ReflectedType.IsSpecialName || memberInfo[i].GetCustomAttribute(typeof(ObsoleteAttribute)) != null)
+                    memberInfo[i].ReflectedType.IsSpecialName || memberInfo[i].GetCustomAttribute<ObsoleteAttribute>() != null)
                 {
                     continue;
                 }
@@ -126,17 +126,15 @@ namespace PaintDotNet.Effects
                 switch (memberInfo[i].MemberType)
                 {
                     case MemberTypes.Method:
-                        // filter out reflected property accessor methods
-                        if (memberInfo[i].Name.StartsWith("get_", StringComparison.Ordinal) || memberInfo[i].Name.StartsWith("set_", StringComparison.Ordinal) ||
-                            memberInfo[i].Name.StartsWith("add_", StringComparison.Ordinal) || memberInfo[i].Name.StartsWith("remove_", StringComparison.Ordinal) ||
-                            memberInfo[i].Name.StartsWith("op_", StringComparison.Ordinal))
+                        MethodInfo methodInfo = (MethodInfo)memberInfo[i];
+                        if (methodInfo.IsSpecialName)
                         {
                             continue;
                         }
 
                         string methodParameters = "(";
 
-                        ParameterInfo[] parameterInfo = ((MethodInfo)memberInfo[i]).GetParameters();
+                        ParameterInfo[] parameterInfo = methodInfo.GetParameters();
                         for (int p = 0; p < parameterInfo.Length; p++)
                         {
                             string parameterType = parameterInfo[p].ParameterType.GetDisplayName();
@@ -151,9 +149,9 @@ namespace PaintDotNet.Effects
 
                         methodParameters += ")";
 
-                        returnType = ((MethodInfo)memberInfo[i]).ReturnType.GetDisplayName();
-                        toolTip = $"{returnType} - {memberInfo[i].Name}{methodParameters}\n{memberInfo[i].MemberType}";
-                        unFilteredItems.Add(new IntelliBoxItem(memberInfo[i].Name + methodParameters, memberInfo[i].Name, toolTip, IntelliTypes.Method));
+                        returnType = methodInfo.ReturnType.GetDisplayName();
+                        toolTip = $"{returnType} - {methodInfo.Name}{methodParameters}\n{methodInfo.MemberType}";
+                        unFilteredItems.Add(new IntelliBoxItem(methodInfo.Name + methodParameters, methodInfo.Name, toolTip, IntelliTypes.Method));
                         break;
                     case MemberTypes.Property:
                         if (memberInfo[i].Name.Equals("Item", StringComparison.Ordinal))
@@ -204,8 +202,8 @@ namespace PaintDotNet.Effects
                         }
 
                         returnType = field.FieldType.GetDisplayName();
-                        toolTip = $"{returnType} - {memberInfo[i].Name}{fieldValue}\n{fieldTypeName}";
-                        unFilteredItems.Add(new IntelliBoxItem(memberInfo[i].Name, memberInfo[i].Name, toolTip, fieldType));
+                        toolTip = $"{returnType} - {field.Name}{fieldValue}\n{fieldTypeName}";
+                        unFilteredItems.Add(new IntelliBoxItem(field.Name, field.Name, toolTip, fieldType));
                         break;
                     case MemberTypes.NestedType:
                         Type nestedType = (Type)memberInfo[i];
@@ -228,8 +226,8 @@ namespace PaintDotNet.Effects
                             intelliType = IntelliTypes.Class;
                         }
 
-                        toolTip = $"{subType} - {memberInfo[i].Name}\nNested Type";
-                        unFilteredItems.Add(new IntelliBoxItem(memberInfo[i].Name, memberInfo[i].Name, toolTip, intelliType));
+                        toolTip = $"{subType} - {nestedType.Name}\nNested Type";
+                        unFilteredItems.Add(new IntelliBoxItem(nestedType.Name, nestedType.Name, toolTip, intelliType));
                         break;
                 }
             }
@@ -299,13 +297,13 @@ namespace PaintDotNet.Effects
                     if (type.StartsWith(shortName, StringComparison.OrdinalIgnoreCase))
                     {
                         Type[] generics = t.GetGenericArguments();
-                        string parameters = string.Empty;
+                        string args = string.Empty;
                         for (int i = 0; i < generics.Length; i++)
                         {
-                            parameters += generics[i].Name + (i == generics.Length - 1 ? string.Empty : ", ");
+                            args += generics[i].Name + (i == generics.Length - 1 ? string.Empty : ", ");
                         }
 
-                        name = $"{shortName}<{parameters}>";
+                        name = $"{shortName}<{args}>";
                         code = $"{shortName}<>";
                     }
                 }
@@ -352,13 +350,13 @@ namespace PaintDotNet.Effects
                     if (type.StartsWith(shortName, StringComparison.OrdinalIgnoreCase))
                     {
                         Type[] generics = t.GetGenericArguments();
-                        string parameters = string.Empty;
+                        string args = string.Empty;
                         for (int i = 0; i < generics.Length; i++)
                         {
-                            parameters += generics[i].Name + (i == generics.Length - 1 ? string.Empty : ", ");
+                            args += generics[i].Name + (i == generics.Length - 1 ? string.Empty : ", ");
                         }
 
-                        name = $"{shortName}<{parameters}>";
+                        name = $"{shortName}<{args}>";
                         code = $"{shortName}<>";
                     }
                 }
@@ -396,7 +394,7 @@ namespace PaintDotNet.Effects
             MemberInfo[] memberInfo = Intelli.UserScript.GetMembers(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
             for (int i = 0; i < memberInfo.Length; i++)
             {
-                if (memberInfo[i].GetCustomAttribute(typeof(ObsoleteAttribute)) != null)
+                if (memberInfo[i].GetCustomAttribute<ObsoleteAttribute>() != null)
                 {
                     continue;
                 }
@@ -407,18 +405,16 @@ namespace PaintDotNet.Effects
                 switch (memberInfo[i].MemberType)
                 {
                     case MemberTypes.Method:
-                        // filter out reflected property accessor methods
-                        if (memberInfo[i].DeclaringType != Intelli.UserScript || memberInfo[i].Name.Equals("Render", StringComparison.Ordinal) ||
-                            memberInfo[i].Name.StartsWith("get_", StringComparison.Ordinal) || memberInfo[i].Name.StartsWith("set_", StringComparison.Ordinal) ||
-                            memberInfo[i].Name.StartsWith("add_", StringComparison.Ordinal) || memberInfo[i].Name.StartsWith("remove_", StringComparison.Ordinal) ||
-                            memberInfo[i].Name.StartsWith("op_", StringComparison.Ordinal))
+                        MethodInfo methodInfo = (MethodInfo)memberInfo[i];
+                        if (methodInfo.IsSpecialName || methodInfo.DeclaringType != Intelli.UserScript ||
+                            methodInfo.Name.Equals("Render", StringComparison.Ordinal) || methodInfo.Name.Equals("PreRender", StringComparison.Ordinal))
                         {
                             continue;
                         }
 
                         string methodParameters = "(";
 
-                        ParameterInfo[] parameterInfo = ((MethodInfo)memberInfo[i]).GetParameters();
+                        ParameterInfo[] parameterInfo = methodInfo.GetParameters();
                         for (int p = 0; p < parameterInfo.Length; p++)
                         {
                             string parameterType = parameterInfo[p].ParameterType.GetDisplayName();
@@ -433,9 +429,9 @@ namespace PaintDotNet.Effects
 
                         methodParameters += ")";
 
-                        returnType = ((MethodInfo)memberInfo[i]).ReturnType.GetDisplayName();
-                        toolTip = $"{returnType} - {memberInfo[i].Name}{methodParameters}\n{memberInfo[i].MemberType}";
-                        unFilteredItems.Add(new IntelliBoxItem(memberInfo[i].Name + methodParameters, memberInfo[i].Name, toolTip, IntelliTypes.Method));
+                        returnType = methodInfo.ReturnType.GetDisplayName();
+                        toolTip = $"{returnType} - {methodInfo.Name}{methodParameters}\n{methodInfo.MemberType}";
+                        unFilteredItems.Add(new IntelliBoxItem(methodInfo.Name + methodParameters, methodInfo.Name, toolTip, IntelliTypes.Method));
                         break;
                     case MemberTypes.Property:
                         if (memberInfo[i].Name.Equals("SetRenderInfoCalled", StringComparison.Ordinal) || memberInfo[i].Name.Equals("__DebugMsgs", StringComparison.Ordinal))
@@ -456,7 +452,6 @@ namespace PaintDotNet.Effects
                         break;
                     case MemberTypes.Field:
                         if (memberInfo[i].Name.Equals("RandomNumber", StringComparison.Ordinal) || memberInfo[i].Name.Equals("instanceSeed", StringComparison.Ordinal) ||
-                            memberInfo[i].Name.EndsWith("_BackingField", StringComparison.Ordinal) ||
                             memberInfo[i].Name.Equals("__listener", StringComparison.Ordinal) || memberInfo[i].Name.Equals("__debugWriter", StringComparison.Ordinal))
                         {
                             continue;
@@ -753,12 +748,12 @@ namespace PaintDotNet.Effects
         internal string ToolTip { get; }
         internal int ImageIndex { get; }
 
-        internal IntelliBoxItem(string text, string code, string toolTip, IntelliTypes icon)
+        internal IntelliBoxItem(string text, string code, string toolTip, IntelliTypes intelliType)
         {
             this.Text = text;
             this.Code = code;
             this.ToolTip = toolTip;
-            this.ImageIndex = (int)icon;
+            this.ImageIndex = (int)intelliType;
         }
 
         public override string ToString()

@@ -37,7 +37,7 @@
             // CancelButton
             // 
             this.CancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.CancelButton.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.CancelButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.CancelButton.Location = new System.Drawing.Point(324, 238);
             this.CancelButton.Name = "CancelButton";
             this.CancelButton.Size = new System.Drawing.Size(75, 23);
@@ -48,7 +48,7 @@
             // OkButton
             // 
             this.OkButton.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.OkButton.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.OkButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.OkButton.Location = new System.Drawing.Point(243, 238);
             this.OkButton.Name = "OkButton";
             this.OkButton.Size = new System.Drawing.Size(75, 23);

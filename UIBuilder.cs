@@ -218,7 +218,7 @@ namespace PaintDotNet.Effects
                 ControlMin.Enabled = false;
                 ControlMax.Text = "1";
                 ControlMax.Enabled = false;
-                if (int.Parse(ControlDef.Text) > 0)
+                if (int.TryParse(ControlDef.Text, out int result) && result > 0)
                 {
                     ControlDef.Text = "1";
                 }

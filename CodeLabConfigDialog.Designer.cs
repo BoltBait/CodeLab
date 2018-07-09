@@ -163,8 +163,8 @@
             // 
             this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.btnOK.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.btnOK.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnOK.ForeColor = System.Drawing.SystemColors.ControlText;
             this.btnOK.Location = new System.Drawing.Point(631, 440);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(64, 24);
@@ -177,7 +177,7 @@
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.btnCancel.Location = new System.Drawing.Point(701, 440);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(64, 24);
@@ -189,7 +189,7 @@
             // btnBuild
             // 
             this.btnBuild.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnBuild.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.btnBuild.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.btnBuild.Location = new System.Drawing.Point(561, 440);
             this.btnBuild.Name = "btnBuild";
             this.btnBuild.Size = new System.Drawing.Size(64, 24);
@@ -1275,7 +1275,7 @@
             // 
             this.ClearOutput.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.ClearOutput.Enabled = false;
-            this.ClearOutput.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.ClearOutput.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.ClearOutput.Location = new System.Drawing.Point(269, 441);
             this.ClearOutput.Name = "ClearOutput";
             this.ClearOutput.Size = new System.Drawing.Size(45, 23);
