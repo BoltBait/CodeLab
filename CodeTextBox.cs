@@ -2599,15 +2599,14 @@ namespace PaintDotNet.Effects
             {
                 if (iBox.Visible)
                 {
-                    int periodWidth = this.TextWidth(Style.Default, ".");
                     Point newLocation = new Point
                     {
-                        X = PointXFromPosition(posAtIBox - 1) + periodWidth - iBox.IconWidth,
+                        X = PointXFromPosition(posAtIBox) - iBox.IconWidth,
                         Y = iBox.Location.Y
                     };
 
                     // Don't cover up the left margins
-                    int marginWidth = this.Margins[LeftMargin.LineNumbers].Width + this.Margins[LeftMargin.CodeFolding].Width + this.Margins[LeftMargin.Padding].Width;
+                    int marginWidth = this.Margins[LeftMargin.LineNumbers].Width + this.Margins[LeftMargin.Bookmarks].Width + this.Margins[LeftMargin.CodeFolding].Width + this.Margins[LeftMargin.Padding].Width;
                     if (newLocation.X < marginWidth)
                     {
                         newLocation.X = -iBox.Width;
@@ -2631,7 +2630,7 @@ namespace PaintDotNet.Effects
                     iBox.Location = new Point
                     {
                         X = iBox.Location.X,
-                        Y = PointYFromPosition(posAtIBox - 1) + lineHeight
+                        Y = PointYFromPosition(posAtIBox) + lineHeight
                     };
 
                     iBox.HideToolTip();
