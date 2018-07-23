@@ -109,7 +109,7 @@ namespace PaintDotNet.Effects
             set
             {
                 foreColor = value;
-                themeRenderer = new ThemeRenderer();
+                themeRenderer = null;
             }
         }
         internal static Color BackColor
@@ -121,13 +121,18 @@ namespace PaintDotNet.Effects
             set
             {
                 backColor = value;
-                themeRenderer = new ThemeRenderer();
+                themeRenderer = null;
             }
         }
         internal static ThemeRenderer Renderer
         {
             get
             {
+                if (themeRenderer == null)
+                {
+                    themeRenderer = new ThemeRenderer();
+                }
+
                 return themeRenderer;
             }
         }
