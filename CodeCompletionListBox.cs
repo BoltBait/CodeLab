@@ -554,17 +554,17 @@ namespace PaintDotNet.Effects
             List<IntelliBoxItem> matches = new List<IntelliBoxItem>();
             for (int i = 0; i < unFilteredItems.Count; i++)
             {
-                if (intelliTypeFilter != IntelliTypes.None)
+                if (intelliTypeFilter != IntelliTypes.None && unFilteredItems[i].ImageIndex != (int)intelliTypeFilter)
                 {
-                    if (unFilteredItems[i].ImageIndex == (int)intelliTypeFilter && unFilteredItems[i].ToString().Contains(stringFilter, StringComparison.OrdinalIgnoreCase))
-                    {
-                        matches.Add(unFilteredItems[i]);
-                    }
+                    continue;
                 }
-                else if (unFilteredItems[i].ToString().Contains(stringFilter, StringComparison.OrdinalIgnoreCase))
+
+                if (!unFilteredItems[i].ToString().Contains(stringFilter, StringComparison.OrdinalIgnoreCase))
                 {
-                    matches.Add(unFilteredItems[i]);
+                    continue;
                 }
+
+                matches.Add(unFilteredItems[i]);
             }
 
             if (intelliTypeFilter == IntelliTypes.None && matches.Count == 0)
