@@ -559,7 +559,8 @@ namespace PaintDotNet.Effects
                     continue;
                 }
 
-                if (!unFilteredItems[i].ToString().Contains(stringFilter, StringComparison.OrdinalIgnoreCase))
+                string itemName = unFilteredItems[i].ToString();
+                if (!itemName.Contains(stringFilter, StringComparison.OrdinalIgnoreCase) && !itemName.GetInitials().Contains(stringFilter, StringComparison.OrdinalIgnoreCase))
                 {
                     continue;
                 }

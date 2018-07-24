@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
@@ -112,6 +113,11 @@ namespace PaintDotNet.Effects
         internal static string StripBraces(this string str)
         {
             return Regex.Replace(str, @"\{(?:\{[^{}]*\}|[^{}])*\}", string.Empty);
+        }
+
+        internal static string GetInitials(this string str)
+        {
+            return new string(str.Where(c => char.IsUpper(c)).ToArray());
         }
 
         internal static bool Contains(this string source, string value, StringComparison comparisonType)
