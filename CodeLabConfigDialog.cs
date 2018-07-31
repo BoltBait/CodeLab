@@ -353,6 +353,28 @@ namespace PaintDotNet.Effects
             FinishTokenUpdate();
         }
 
+        private DialogResult PromptToSave()
+        {
+            DialogResult dr = MessageBox.Show(this, $"Do you want to save changes to '{FileName}'?", "Script Editor", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+            switch (dr)
+            {
+                case DialogResult.Yes:
+                    if (!SaveScript())
+                    {
+                        txtCode.Focus();
+                        return DialogResult.Cancel;
+                    }
+                    txtCode.SetSavePoint();
+                    return DialogResult.None;
+                case DialogResult.No:
+                    return DialogResult.None;
+                case DialogResult.Cancel:
+                    txtCode.Focus();
+                    return DialogResult.Cancel;
+            }
+            return DialogResult.None;
+        }
+
         private bool SaveScript()
         {
             if (FullScriptPath.IsNullOrEmpty() || !File.Exists(FullScriptPath))
@@ -814,25 +836,9 @@ namespace PaintDotNet.Effects
         #region Common functions for button/menu events
         private void CreateNewFile()
         {
-            if (txtCode.IsDirty)
+            if (txtCode.IsDirty && PromptToSave() == DialogResult.Cancel)
             {
-                DialogResult dr = MessageBox.Show(this, $"Do you want to save changes to '{FileName}'?", "Script Editor", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
-                switch (dr)
-                {
-                    case DialogResult.Yes:
-                        if (!SaveScript())
-                        {
-                            txtCode.Focus();
-                            return;
-                        }
-                        txtCode.SetSavePoint();
-                        break;
-                    case DialogResult.No:
-                        break;
-                    case DialogResult.Cancel:
-                        txtCode.Focus();
-                        return;
-                }
+                return;
             }
 
             FileNew fn = new FileNew();
@@ -854,25 +860,9 @@ namespace PaintDotNet.Effects
 
         private void OpenFile()
         {
-            if (txtCode.IsDirty)
+            if (txtCode.IsDirty && PromptToSave() == DialogResult.Cancel)
             {
-                DialogResult dr = MessageBox.Show(this, $"Do you want to save changes to '{FileName}'?", "Script Editor", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
-                switch (dr)
-                {
-                    case DialogResult.Yes:
-                        if (!SaveScript())
-                        {
-                            txtCode.Focus();
-                            return;
-                        }
-                        txtCode.SetSavePoint();
-                        break;
-                    case DialogResult.No:
-                        break;
-                    case DialogResult.Cancel:
-                        txtCode.Focus();
-                        return;
-                }
+                return;
             }
 
             LoadScript();
@@ -1932,25 +1922,9 @@ namespace PaintDotNet.Effects
 
         private void RecentItem_Click(object sender, EventArgs e)
         {
-            if (txtCode.IsDirty)
+            if (txtCode.IsDirty && PromptToSave() == DialogResult.Cancel)
             {
-                DialogResult dr = MessageBox.Show(this, $"Do you want to save changes to '{FileName}'?", "Script Editor", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
-                switch (dr)
-                {
-                    case DialogResult.Yes:
-                        if (!SaveScript())
-                        {
-                            txtCode.Focus();
-                            return;
-                        }
-                        txtCode.SetSavePoint();
-                        break;
-                    case DialogResult.No:
-                        break;
-                    case DialogResult.Cancel:
-                        txtCode.Focus();
-                        return;
-                }
+                return;
             }
 
             string filePath = (sender as ToolStripMenuItem)?.ToolTipText;
