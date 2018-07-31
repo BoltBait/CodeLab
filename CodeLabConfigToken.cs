@@ -25,6 +25,7 @@ namespace PaintDotNet.Effects
         internal List<Exception> LastExceptions;
         internal List<string> Output;
         internal string ScriptName;
+        internal string ScriptPath;
         internal bool Dirty;
         internal bool Preview;
         internal EffectConfigToken PreviewToken;
@@ -37,6 +38,7 @@ namespace PaintDotNet.Effects
             LastExceptions = new List<Exception>();
             Output = new List<string>();
             ScriptName = "Untitled";
+            ScriptPath = "";
             Dirty = false;
             Preview = false;
             PreviewToken = null;
@@ -51,6 +53,7 @@ namespace PaintDotNet.Effects
             sect.LastExceptions = this.LastExceptions; //Reference copy INTENDED.
             sect.Output = this.Output;
             sect.ScriptName = this.ScriptName;
+            sect.ScriptPath = this.ScriptPath;
             sect.Dirty = this.Dirty;
             sect.Preview = this.Preview;
             sect.PreviewToken = this.PreviewToken;

@@ -65,6 +65,7 @@
             this.loadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openRecentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.NoRecentsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.saveAsDLLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -442,6 +443,7 @@
             this.newToolStripMenuItem,
             this.loadToolStripMenuItem,
             this.openRecentToolStripMenuItem,
+            this.saveToolStripMenuItem,
             this.saveAsToolStripMenuItem,
             this.toolStripSeparator3,
             this.saveAsDLLToolStripMenuItem,
@@ -489,13 +491,23 @@
             this.NoRecentsToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
             this.NoRecentsToolStripMenuItem.Text = "No Recent Items";
             // 
+            // saveToolStripMenuItem
+            // 
+            this.saveToolStripMenuItem.Image = global::PaintDotNet.Effects.Properties.Resources.Save;
+            this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
+            this.saveToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
+            this.saveToolStripMenuItem.Text = "&Save";
+            this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
+            // 
             // saveAsToolStripMenuItem
             // 
             this.saveAsToolStripMenuItem.Image = global::PaintDotNet.Effects.Properties.Resources.Save;
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
+            this.saveAsToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.S)));
             this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
-            this.saveAsToolStripMenuItem.Text = "&Save...";
+            this.saveAsToolStripMenuItem.Text = "Save &As...";
             this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
             // 
             // toolStripSeparator3
@@ -1461,5 +1473,6 @@
         private System.Windows.Forms.ToolStripMenuItem CopyErrorMenuItem;
         private System.Windows.Forms.ToolStripMenuItem FullErrorMenuItem;
         private System.Windows.Forms.ToolStripMenuItem ErrorCodeMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
     }
 }

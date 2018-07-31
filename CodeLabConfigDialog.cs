@@ -218,6 +218,7 @@ namespace PaintDotNet.Effects
             if (sect != null)
             {
                 FileName = sect.ScriptName;
+                FullScriptPath = sect.ScriptPath;
                 txtCode.Text = sect.UserCode;
                 txtCode.ExecuteCmd(Command.ScrollToEnd); // Workaround for a scintilla bug
                 txtCode.ExecuteCmd(Command.ScrollToStart);
@@ -353,6 +354,26 @@ namespace PaintDotNet.Effects
         }
 
         private bool SaveScript()
+        {
+            if (FullScriptPath.IsNullOrEmpty() || !File.Exists(FullScriptPath))
+            {
+                return SaveAsScript();
+            }
+
+            bool saved = false;
+            try
+            {
+                File.WriteAllText(FullScriptPath, txtCode.Text);
+                saved = true;
+            }
+            catch
+            {
+            }
+
+            return saved;
+        }
+
+        private bool SaveAsScript()
         {
             RegistryKey settings = Registry.CurrentUser.OpenSubKey("Software\\CodeLab", true);
             if (settings == null)
@@ -804,6 +825,7 @@ namespace PaintDotNet.Effects
                             txtCode.Focus();
                             return;
                         }
+                        txtCode.SetSavePoint();
                         break;
                     case DialogResult.No:
                         break;
@@ -817,6 +839,7 @@ namespace PaintDotNet.Effects
             if (fn.ShowDialog() == DialogResult.OK)
             {
                 FileName = "Untitled";
+                FullScriptPath = "";
                 this.Text = FileName + "* - " + WindowTitle;
                 txtCode.Text = fn.CodeTemplate;
                 txtCode.ExecuteCmd(Command.ScrollToEnd); // Workaround for a scintilla bug
@@ -842,6 +865,7 @@ namespace PaintDotNet.Effects
                             txtCode.Focus();
                             return;
                         }
+                        txtCode.SetSavePoint();
                         break;
                     case DialogResult.No:
                         break;
@@ -857,9 +881,18 @@ namespace PaintDotNet.Effects
             Build();
         }
 
-        private void SaveFile()
+        private void Save()
         {
             if (SaveScript())
+            {
+                txtCode.SetSavePoint();
+            }
+            txtCode.Focus();
+        }
+
+        private void SaveAs()
+        {
+            if (SaveAsScript())
             {
                 txtCode.SetSavePoint();
             }
@@ -1030,9 +1063,14 @@ namespace PaintDotNet.Effects
             OpenFile();
         }
 
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Save();
+        }
+
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            SaveFile();
+            SaveAs();
         }
 
         private void saveAsDLLToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1660,7 +1698,7 @@ namespace PaintDotNet.Effects
 
         private void SaveButton_Click(object sender, EventArgs e)
         {
-            SaveFile();
+            Save();
         }
 
         private void SaveDLLButton_Click(object sender, EventArgs e)
@@ -1905,6 +1943,7 @@ namespace PaintDotNet.Effects
                             txtCode.Focus();
                             return;
                         }
+                        txtCode.SetSavePoint();
                         break;
                     case DialogResult.No:
                         break;
