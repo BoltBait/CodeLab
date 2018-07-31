@@ -205,6 +205,7 @@ namespace PaintDotNet.Effects
             sect.UserCode = txtCode.Text;
             sect.UserScriptObject = ScriptBuilder.UserScriptObject;
             sect.ScriptName = FileName;
+            sect.ScriptPath = FullScriptPath;
             sect.Dirty = txtCode.IsDirty;
             sect.Preview = preview;
             sect.PreviewToken = previewToken;
@@ -238,6 +239,7 @@ namespace PaintDotNet.Effects
                 UserCode = ScriptWriter.DefaultCode,
                 UserScriptObject = null,
                 ScriptName = "Untitled",
+                ScriptPath = "",
                 Dirty = false,
                 Preview = false,
                 PreviewToken = null,
