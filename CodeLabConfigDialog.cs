@@ -285,13 +285,7 @@ namespace PaintDotNet.Effects
                     {
                         preview = true;
                         previewToken = previewDialog.EffectToken;
-                        FinishTokenUpdate();
-
-                        previewDialog.EffectTokenChanged += (sender, e) =>
-                        {
-                            previewToken = previewDialog.EffectToken;
-                            FinishTokenUpdate();
-                        };
+                        previewDialog.EffectTokenChanged += (sender, e) => FinishTokenUpdate();
 
                         previewDialog.ShowDialog();
                     }
