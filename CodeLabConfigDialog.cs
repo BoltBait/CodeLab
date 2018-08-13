@@ -618,7 +618,7 @@ namespace PaintDotNet.Effects
         #endregion
 
         #region Dialog functions - Load Icons, keyboard events
-        private void CodeLabConfigDialog_Load(object sender, EventArgs e)
+        protected override void OnLoad(EventArgs e)
         {
             this.Opacity = 1.00;
             toolStripMenuItem2.Checked = false;
@@ -626,12 +626,16 @@ namespace PaintDotNet.Effects
             toolStripMenuItem4.Checked = false;
             toolStripMenuItem5.Checked = true;
             txtCode.Focus();
+
+            base.OnLoad(e);
         }
 
-        private void FormClosing_Handler(object sender, FormClosingEventArgs e)
+        protected override void OnFormClosing(FormClosingEventArgs e)
         {
             tmrCompile.Enabled = false;
             tmrExceptionCheck.Enabled = false;
+
+            base.OnFormClosing(e);
         }
 
         private void txtCode_KeyUp(object sender, KeyEventArgs e)

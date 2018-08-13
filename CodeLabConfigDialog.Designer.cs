@@ -1335,8 +1335,6 @@
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
             this.Text = "CodeLab";
             this.UseAppThemeBackColor = true;
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormClosing_Handler);
-            this.Load += new System.EventHandler(this.CodeLabConfigDialog_Load);
             this.errorListMenu.ResumeLayout(false);
             this.contextMenuStrip1.ResumeLayout(false);
             this.menuStrip1.ResumeLayout(false);
