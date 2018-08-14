@@ -652,7 +652,7 @@ namespace PaintDotNet.Effects
             }
             if (e.KeyCode == Keys.F1)
             {
-                helpTopicsToolStripMenuItem_Click(sender, new EventArgs());
+                helpTopicsToolStripMenuItem_Click(sender, EventArgs.Empty);
                 e.Handled = true;
                 e.SuppressKeyPress = true;
             }
@@ -1804,7 +1804,7 @@ namespace PaintDotNet.Effects
                     bool contains = false;
                     foreach (string listItem in recentsList)
                     {
-                        if (listItem.ToLowerInvariant() == itemPath.ToLowerInvariant())
+                        if (listItem.Equals(itemPath, StringComparison.OrdinalIgnoreCase))
                         {
                             contains = true;
                             break;
