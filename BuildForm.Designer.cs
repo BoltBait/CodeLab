@@ -98,6 +98,7 @@ namespace PaintDotNet.Effects
             this.PlainTextLabel = new System.Windows.Forms.Label();
             this.WarningLabel = new System.Windows.Forms.Label();
             this.MenuIcon = new System.Windows.Forms.PictureBox();
+            this.GenSlnButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.MajorVersion)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.MinorVersion)).BeginInit();
             this.toolStrip1.SuspendLayout();
@@ -821,12 +822,25 @@ namespace PaintDotNet.Effects
             this.MenuIcon.TabIndex = 3;
             this.MenuIcon.TabStop = false;
             // 
+            // GenSlnButton
+            // 
+            this.GenSlnButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.GenSlnButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.GenSlnButton.Location = new System.Drawing.Point(360, 438);
+            this.GenSlnButton.Name = "GenSlnButton";
+            this.GenSlnButton.Size = new System.Drawing.Size(125, 23);
+            this.GenSlnButton.TabIndex = 88;
+            this.GenSlnButton.Text = "Generate VS Solution";
+            this.GenSlnButton.UseVisualStyleBackColor = true;
+            this.GenSlnButton.Click += new System.EventHandler(this.GenSlnButton_Click);
+            // 
             // BuildForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.CancelButton = this.ButtonCancel;
             this.ClientSize = new System.Drawing.Size(717, 475);
+            this.Controls.Add(this.GenSlnButton);
             this.Controls.Add(this.ViewSourceButton);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.WarningLabel);
@@ -963,5 +977,6 @@ namespace PaintDotNet.Effects
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.Label WarningLabel;
         private System.Windows.Forms.Button ViewSourceButton;
+        private System.Windows.Forms.Button GenSlnButton;
     }
 }

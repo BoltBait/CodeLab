@@ -1127,5 +1127,32 @@ namespace PaintDotNet.Effects
                 VSW.ShowDialog();
             }
         }
+
+        private void GenSlnButton_Click(object sender, EventArgs e)
+        {
+            UpdateAllValues();
+            using (FolderBrowserDialog fbd = new FolderBrowserDialog())
+            {
+                string selectedDir = Registry.GetValue("HKEY_CURRENT_USER\\Software\\CodeLab", "LastSlnDir", Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)) as string;
+                fbd.SelectedPath = selectedDir ?? Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                fbd.ShowNewFolderButton = true;
+                fbd.Description = "Choose a Folder to place the generated Visual Studio Solution.";
+
+                if (fbd.ShowDialog() == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
+                {
+                    string SourceCode = ScriptWriter.FullSourceCode(FullScriptText, FileName, isAdjustment, SubMenuName.Text, MenuName.Text, IconPathStr, Support, ForceAliasSelection, ForceSingleThreaded, Author, MajorVer, MinorVer, Description, KeyWords, WindowTitleTextStr, HelpType, HelpStr);
+                    if (Solution.Generate(fbd.SelectedPath, FileName, SourceCode, IconPathStr))
+                    {
+                        Process.Start(fbd.SelectedPath);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Solution generated failed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+
+                    Registry.SetValue("HKEY_CURRENT_USER\\Software\\CodeLab", "LastSlnDir", fbd.SelectedPath, RegistryValueKind.String);
+                }
+            }
+        }
     }
 }

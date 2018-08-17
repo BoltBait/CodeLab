@@ -78,6 +78,7 @@
     </Compile>
     <Compile Include="ScriptBuilder.cs" />
     <Compile Include="ScriptWriter.cs" />
+    <Compile Include="SolutionGenerator.cs" />
     <Compile Include="ThemeRenderer.cs" />
     <Compile Include="CodeLab.cs">
       <SubType>Code</SubType>
