@@ -814,7 +814,7 @@ namespace PaintDotNet.Effects
                     }
 
                     string varRange = this.GetTextRange(varPos, semiColonPos - varPos);
-                    string[] possibleVars = varRange.StripBraces().Split(new char[] { ',' });
+                    string[] possibleVars = varRange.StripBraces().StripParens().Split(new char[] { ',' });
                     MatchCollection braceMatches = new Regex(@"\{(?:\{[^{}]*\}|[^{}])*\}").Matches(varRange);
 
                     int varCount = possibleVars.Length;
