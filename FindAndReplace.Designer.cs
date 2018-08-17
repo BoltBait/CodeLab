@@ -172,8 +172,6 @@
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.Controls.Add(this.toolStrip1);
             this.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.MaximumSize = new System.Drawing.Size(236, 80);
-            this.MinimumSize = new System.Drawing.Size(236, 52);
             this.Name = "FindAndReplace";
             this.Size = new System.Drawing.Size(234, 78);
             this.toolStrip1.ResumeLayout(false);

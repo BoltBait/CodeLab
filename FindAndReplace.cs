@@ -28,8 +28,9 @@ namespace PaintDotNet.Effects
             InitializeComponent();
 
             // HiDPI Fix
-            int replaceBoxMargin = Toggle.Width + Toggle.Margin.Horizontal + FindBox.Margin.Left;
-            ReplaceBox.Margin = new Padding(replaceBoxMargin, ReplaceBox.Margin.Top, ReplaceBox.Margin.Right, ReplaceBox.Margin.Bottom);
+            int leftMargin = Toggle.Width + Toggle.Margin.Horizontal + FindBox.Margin.Left;
+            MatchCase.Margin = new Padding(leftMargin, MatchCase.Margin.Top, MatchCase.Margin.Right, MatchCase.Margin.Bottom);
+            ReplaceBox.Margin = new Padding(leftMargin, ReplaceBox.Margin.Top, ReplaceBox.Margin.Right, ReplaceBox.Margin.Bottom);
         }
 
         #region Properties
@@ -201,7 +202,7 @@ namespace PaintDotNet.Effects
                 Toggle.Text = "▼";
                 ReplaceBox.Visible = false;
                 ReplaceAll.Visible = false;
-                this.Height = this.MinimumSize.Height;
+                this.Height = ReplaceBox.Bounds.Top;
                 replaceVisible = false;
             }
             else
@@ -209,7 +210,7 @@ namespace PaintDotNet.Effects
                 Toggle.Text = "▲";
                 ReplaceBox.Visible = true;
                 ReplaceAll.Visible = true;
-                this.Height = this.MaximumSize.Height;
+                this.Height = ReplaceBox.Bounds.Bottom + FindBox.Bounds.Top;
                 replaceVisible = true;
             }
         }
