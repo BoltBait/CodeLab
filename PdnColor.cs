@@ -23,25 +23,33 @@ namespace PaintDotNet.Effects
 {
     public partial class PdnColor : UserControl
     {
-        bool mouseDown;
-        bool ignore;
-        bool showAlpha;
-        double MasterHue;
-        double MasterSat;
-        double MasterVal;
-        int MasterAlpha;
-        Bitmap wheelBmp;
-        Color[] HsvRainbow;
+        private bool mouseDown;
+        private bool ignore;
+        private bool showAlpha;
+        private double MasterHue;
+        private double MasterSat;
+        private double MasterVal;
+        private int MasterAlpha;
+        private Bitmap wheelBmp;
+        private readonly Color[] HsvRainbow;
 
         public PdnColor()
         {
             InitializeComponent();
 
+            foreach (Control control in this.Controls)
+            {
+                if (control is NumericUpDown || control is TextBox)
+                {
+                    control.ForeColor = PdnTheme.ForeColor;
+                    control.BackColor = PdnTheme.BackColor;
+                }
+            }
+
             HsvRainbow = new Color[65];
             for (float i = 0; i < 65; i++)
             {
-                Color c = HSVtoRGB(255, i / 65, 1, 1);
-                HsvRainbow[(int)i] = c;
+                HsvRainbow[(int)i] = HSVColor.ToColor(255, i / 65, 1, 1);
             }
         }
 
@@ -49,20 +57,21 @@ namespace PaintDotNet.Effects
         [Category("Data")]
         public Color Color
         {
-            get => HSVtoRGB(MasterAlpha, MasterHue, MasterSat, MasterVal);
+            get => HSVColor.ToColor(MasterAlpha, MasterHue, MasterSat, MasterVal);
             set
             {
                 Color _colorval = value;
-                MasterHue = RGBtoHSV(_colorval, MasterHue).Hue;
-                MasterSat = RGBtoHSV(_colorval, MasterHue).Sat;
-                MasterVal = RGBtoHSV(_colorval, MasterHue).Value;
+                MasterHue = HSVColor.FromColor(_colorval, MasterHue).Hue;
+                MasterSat = HSVColor.FromColor(_colorval, MasterHue).Sat;
+                MasterVal = HSVColor.FromColor(_colorval, MasterHue).Value;
                 MasterAlpha = _colorval.A;
                 setColors(true, true);
                 UpdateColorSliders();
                 colorWheelBox.Refresh();
-                OnValueChanged(_colorval);
+                OnValueChanged();
             }
         }
+
         [Category("Behavior")]
         public bool ShowAlpha
         {
@@ -90,124 +99,11 @@ namespace PaintDotNet.Effects
         #endregion
 
         #region Event Handler
-        public delegate void ValueChangedEventHandler(object sender, Color e);
         [Category("Action")]
-        public event ValueChangedEventHandler ValueChanged;
-        protected void OnValueChanged(Color e)
+        public event EventHandler ValueChanged;
+        protected void OnValueChanged()
         {
-            this.ValueChanged?.Invoke(this, e);
-        }
-        #endregion
-
-        #region HSV/RGB Conversion functions
-        private Color HSVtoRGB(int alpha, double h, double s, double v)
-        {
-
-            double r, g, b;
-            if (s == 0)
-            {
-                r = v;
-                g = v;
-                b = v;
-            }
-            else
-            {
-                double varH = h * 6;
-                double varI = Math.Floor(varH);
-                double var1 = v * (1 - s);
-                double var2 = v * (1 - (s * (varH - varI)));
-                double var3 = v * (1 - (s * (1 - (varH - varI))));
-
-                if (varI == 0)
-                {
-                    r = v;
-                    g = var3;
-                    b = var1;
-                }
-                else if (varI == 1)
-                {
-                    r = var2;
-                    g = v;
-                    b = var1;
-                }
-                else if (varI == 2)
-                {
-                    r = var1;
-                    g = v;
-                    b = var3;
-                }
-                else if (varI == 3)
-                {
-                    r = var1;
-                    g = var2;
-                    b = v;
-                }
-                else if (varI == 4)
-                {
-                    r = var3;
-                    g = var1;
-                    b = v;
-                }
-                else
-                {
-                    r = v;
-                    g = var1;
-                    b = var2;
-                }
-            }
-            return Color.FromArgb(alpha, (int)(r * 255), (int)(g * 255), (int)(b * 255));
-        }
-
-        private HSVColor RGBtoHSV(Color c, double oldHue)
-        {
-            double r = (double)c.R / 255;
-            double g = (double)c.G / 255;
-            double b = (double)c.B / 255;
-            double varMin = Math.Min(r, Math.Min(g, b));
-            double varMax = Math.Max(r, Math.Max(g, b));
-            double delMax = varMax - varMin;
-            HSVColor hsv = new HSVColor();
-
-            hsv.Value = varMax;
-
-            if (delMax == 0)
-            {
-                hsv.Hue = oldHue;
-                hsv.Sat = 0;
-            }
-            else
-            {
-                double delR = (((varMax - r) / 6) + (delMax / 2)) / delMax;
-                double delG = (((varMax - g) / 6) + (delMax / 2)) / delMax;
-                double delB = (((varMax - b) / 6) + (delMax / 2)) / delMax;
-
-                hsv.Sat = delMax / varMax;
-
-                if (r == varMax)
-                {
-                    hsv.Hue = delB - delG;
-                }
-                else if (g == varMax)
-                {
-                    hsv.Hue = (1.0 / 3) + delR - delB;
-                }
-                else //// if (b == varMax) 
-                {
-                    hsv.Hue = (2.0 / 3) + delG - delR;
-                }
-
-                if (hsv.Hue < 0)
-                {
-                    hsv.Hue += 1;
-                }
-
-                if (hsv.Hue > 1)
-                {
-                    hsv.Hue -= 1;
-                }
-            }
-
-            return hsv;
+            this.ValueChanged?.Invoke(this, EventArgs.Empty);
         }
         #endregion
 
@@ -227,8 +123,7 @@ namespace PaintDotNet.Effects
             Color[] surround_colors = new Color[wheel_path.PointCount];
             for (float i = 0; i < num_pts; i++)
             {
-                Color c = HSVtoRGB(255, i / num_pts, 1, 1);
-                surround_colors[(int)i] = c;
+                surround_colors[(int)i] = HSVColor.ToColor(255, i / num_pts, 1, 1);
             }
             #endregion
 
@@ -258,12 +153,14 @@ namespace PaintDotNet.Effects
                 double hlfht = Radius + Padding;
                 double radius = MasterSat * (hlfht - 1 - Padding);
 
-                PointF _huePoint = new PointF();
-                _huePoint.X = (float)(hlfht + radius * Math.Cos(MasterHue * Math.PI / .5) - Padding);
-                _huePoint.Y = (float)(hlfht + radius * Math.Sin(MasterHue * Math.PI / .5) - Padding);
+                PointF _huePoint = new PointF
+                {
+                    X = (float)(hlfht + radius * Math.Cos(MasterHue * Math.PI / .5) - Padding),
+                    Y = (float)(hlfht + radius * Math.Sin(MasterHue * Math.PI / .5) - Padding)
+                };
                 SizeF _hueSize = new SizeF(Padding * 2, Padding * 2);
                 RectangleF _hueMark = new RectangleF(_huePoint, _hueSize);
-                using (SolidBrush markBrush = new SolidBrush(HSVtoRGB(MasterAlpha, MasterHue, MasterSat, 1)))
+                using (SolidBrush markBrush = new SolidBrush(HSVColor.ToColor(MasterAlpha, MasterHue, MasterSat, 1)))
                     g.FillEllipse(markBrush, _hueMark);
 
                 float dpiX = g.DpiX / 96f;
@@ -276,10 +173,9 @@ namespace PaintDotNet.Effects
                     g.DrawEllipse(markPen, _hueMark);
                 }
 
-
                 //draw colorsample
                 g.SmoothingMode = SmoothingMode.None;
-                Color _colorval = HSVtoRGB(MasterAlpha, MasterHue, MasterSat, MasterVal);
+                Color _colorval = HSVColor.ToColor(MasterAlpha, MasterHue, MasterSat, MasterVal);
 
                 Rectangle SwatchRect1 = new Rectangle(0, 0, (int)Math.Round(30 * dpiX), (int)Math.Round(30 * dpiY));
                 Rectangle SwatchRect2 = Rectangle.FromLTRB(SwatchRect1.Left + (int)Math.Round(1 * dpiX), SwatchRect1.Top + (int)Math.Round(1 * dpiY), SwatchRect1.Right - (int)Math.Round(1 * dpiX), SwatchRect1.Bottom - (int)Math.Round(1 * dpiY));
@@ -318,27 +214,23 @@ namespace PaintDotNet.Effects
             float Radius = colorWheelBox.ClientSize.Width / 2 - Padding;
 
             float hlfht = Radius + Padding;
-            double offset;
-            offset = Math.Sqrt((e.Y - hlfht) * (e.Y - hlfht) + (e.X - hlfht) * (e.X - hlfht)) / hlfht;
-
+            double offset = Math.Sqrt((e.Y - hlfht) * (e.Y - hlfht) + (e.X - hlfht) * (e.X - hlfht)) / hlfht;
 
             double rad = Math.Atan2(e.Y - hlfht, e.X - hlfht) * .5 / Math.PI;
             MasterHue = (rad < 0) ? rad + 1 : rad;
             MasterSat = (offset > 1) ? 1 : offset;
             MasterVal = 1;
 
-            Color _colorval = HSVtoRGB(MasterAlpha, MasterHue, MasterSat, MasterVal);
             UpdateColorSliders();
             setColors(true, true);
-            OnValueChanged(_colorval);
+            OnValueChanged();
             colorWheelBox.Refresh();
         }
 
         private void ColorWheel_MouseUp(object sender, MouseEventArgs e)
         {
-            Color _colorval = HSVtoRGB(MasterAlpha, MasterHue, MasterSat, MasterVal);
             UpdateColorSliders();
-            OnValueChanged(_colorval);
+            OnValueChanged();
             mouseDown = false;
             colorWheelBox.Refresh();
         }
@@ -357,9 +249,9 @@ namespace PaintDotNet.Effects
             {
                 Color _colorval = Color.FromArgb((int)alphaBox.Value,
                     (int)redBox.Value, (int)greenBox.Value, (int)blueBox.Value);
-                MasterHue = RGBtoHSV(_colorval, MasterHue).Hue;
-                MasterSat = RGBtoHSV(_colorval, MasterHue).Sat;
-                MasterVal = RGBtoHSV(_colorval, MasterHue).Value;
+                MasterHue = HSVColor.FromColor(_colorval, MasterHue).Hue;
+                MasterSat = HSVColor.FromColor(_colorval, MasterHue).Sat;
+                MasterVal = HSVColor.FromColor(_colorval, MasterHue).Value;
                 MasterAlpha = _colorval.A;
 
                 UpdateColorSliders();
@@ -378,7 +270,7 @@ namespace PaintDotNet.Effects
                 ignore = false;
 
                 colorWheelBox.Refresh();
-                OnValueChanged(_colorval);
+                OnValueChanged();
             }
         }
 
@@ -397,7 +289,7 @@ namespace PaintDotNet.Effects
             rgb_ValueChanged();
         }
 
-        private void RGB_Sliders_ValueChanged(object sender, float value)
+        private void RGB_Sliders_ValueChanged(object sender, EventArgs e)
         {
             RGB_Sliders_ValueChanged();
         }
@@ -407,9 +299,9 @@ namespace PaintDotNet.Effects
             if (!ignore)
             {
                 Color _colorval = Color.FromArgb((int)aColorSlider.Value, (int)rColorSlider.Value, (int)gColorSlider.Value, (int)bColorSlider.Value);
-                MasterHue = RGBtoHSV(_colorval, MasterHue).Hue;
-                MasterSat = RGBtoHSV(_colorval, MasterHue).Sat;
-                MasterVal = RGBtoHSV(_colorval, MasterHue).Value;
+                MasterHue = HSVColor.FromColor(_colorval, MasterHue).Hue;
+                MasterSat = HSVColor.FromColor(_colorval, MasterHue).Sat;
+                MasterVal = HSVColor.FromColor(_colorval, MasterHue).Value;
                 MasterAlpha = (int)aColorSlider.Value;
 
                 setColors(false, false);
@@ -430,7 +322,7 @@ namespace PaintDotNet.Effects
 
                 UpdateColorSliders();
                 colorWheelBox.Refresh();
-                OnValueChanged(_colorval);
+                OnValueChanged();
             }
         }
         #endregion
@@ -444,9 +336,9 @@ namespace PaintDotNet.Effects
                 {
                     ColorConverter c = new ColorConverter();
                     Color _colorval = (Color)c.ConvertFromString("#" + hexBox.Text);
-                    MasterHue = RGBtoHSV(_colorval, MasterHue).Hue;
-                    MasterSat = RGBtoHSV(_colorval, MasterHue).Sat;
-                    MasterVal = RGBtoHSV(_colorval, MasterHue).Value;
+                    MasterHue = HSVColor.FromColor(_colorval, MasterHue).Hue;
+                    MasterSat = HSVColor.FromColor(_colorval, MasterHue).Sat;
+                    MasterVal = HSVColor.FromColor(_colorval, MasterHue).Value;
                     if (showAlpha)
                     {
                         MasterAlpha = _colorval.A;
@@ -460,12 +352,11 @@ namespace PaintDotNet.Effects
                     colorWheelBox.Refresh();
                     UpdateColorSliders();
 
-                    OnValueChanged(_colorval);
-
+                    OnValueChanged();
                 }
                 catch
                 {
-                    Color _colorval = HSVtoRGB(MasterAlpha, MasterHue, MasterSat, MasterVal);
+                    Color _colorval = HSVColor.ToColor(MasterAlpha, MasterHue, MasterSat, MasterVal);
                     if (showAlpha)
                     {
                         hexBox.Text = _colorval.ToArgb().ToString("X8");
@@ -475,7 +366,6 @@ namespace PaintDotNet.Effects
                         hexBox.Text = _colorval.ToArgb().ToString("X8").Substring(2);
                     }
                 }
-
             }
         }
 
@@ -508,9 +398,8 @@ namespace PaintDotNet.Effects
                 MasterVal = (double)valBox.Value / 100;
                 setColors(true, true);
                 colorWheelBox.Refresh();
-                Color _colorval = HSVtoRGB(MasterAlpha, MasterHue, MasterSat, MasterVal);
                 UpdateColorSliders();
-                OnValueChanged(_colorval);
+                OnValueChanged();
             }
         }
 
@@ -541,12 +430,11 @@ namespace PaintDotNet.Effects
                 setColors(true, true);
                 UpdateColorSliders();
                 colorWheelBox.Refresh();
-                Color _colorval = HSVtoRGB(MasterAlpha, MasterHue, MasterSat, MasterVal);
-                OnValueChanged(_colorval);
+                OnValueChanged();
             }
         }
 
-        private void HSV_Sliders_ValueChanged(object sender, float value)
+        private void HSV_Sliders_ValueChanged(object sender, EventArgs e)
         {
             HSV_Sliders_ValueChanged();
         }
@@ -556,7 +444,7 @@ namespace PaintDotNet.Effects
         private void setColors(bool rgb, bool hex)
         {
             ignore = true;
-            Color _colorval = HSVtoRGB(MasterAlpha, MasterHue, MasterSat, MasterVal);
+            Color _colorval = HSVColor.ToColor(MasterAlpha, MasterHue, MasterSat, MasterVal);
             if (rgb)
             {
                 redBox.Value = _colorval.R;
@@ -579,7 +467,6 @@ namespace PaintDotNet.Effects
                 }
             }
             ignore = false;
-
         }
 
         private void UpdateColorSliders()
@@ -587,7 +474,7 @@ namespace PaintDotNet.Effects
             // TODO: Updating everything together at the same time is probably not the most optimal. It's already super fast though...
 
             ignore = true;
-            //Color RGB = HSVtoRGB(MasterAlpha, MasterHue, MasterSat, MasterVal);
+            //Color RGB = HSVColor.ToColor(MasterAlpha, MasterHue, MasterSat, MasterVal);
             Color RGB = Color.FromArgb((int)redBox.Value, (int)greenBox.Value, (int)blueBox.Value);
             aColorSlider.Colors = new Color[] { Color.Transparent, Color.FromArgb(RGB.R, RGB.G, RGB.B) };
             rColorSlider.Colors = new Color[] { Color.FromArgb(byte.MinValue, RGB.G, RGB.B), Color.FromArgb(byte.MaxValue, RGB.G, RGB.B) };
@@ -596,12 +483,12 @@ namespace PaintDotNet.Effects
 
             hColorSlider.Colors = HsvRainbow;
 
-            Color minSaturation = HSVtoRGB(byte.MaxValue, MasterHue, 0, MasterVal);
-            Color maxSaturation = HSVtoRGB(byte.MaxValue, MasterHue, 1, MasterVal);
+            Color minSaturation = HSVColor.ToColor(byte.MaxValue, MasterHue, 0, MasterVal);
+            Color maxSaturation = HSVColor.ToColor(byte.MaxValue, MasterHue, 1, MasterVal);
             sColorSlider.Colors = new Color[] { minSaturation, maxSaturation };
 
-            Color minValue = HSVtoRGB(byte.MaxValue, MasterHue, MasterSat, 0);
-            Color maxValue = HSVtoRGB(byte.MaxValue, MasterHue, MasterSat, 1);
+            Color minValue = HSVColor.ToColor(byte.MaxValue, MasterHue, MasterSat, 0);
+            Color maxValue = HSVColor.ToColor(byte.MaxValue, MasterHue, MasterSat, 1);
             vColorSlider.Colors = new Color[] { minValue, maxValue };
 
            aColorSlider.Value = MasterAlpha;
@@ -615,30 +502,127 @@ namespace PaintDotNet.Effects
         }
         #endregion
 
-        private void PdnColor_Load(object sender, EventArgs e)
+        private struct HSVColor
         {
-            // PDN Theme
-            foreach (Control control in this.Controls)
+            internal double Hue { get; set; }
+            internal double Sat { get; set; }
+            internal double Value { get; set; }
+
+            internal static Color ToColor(int alpha, double h, double s, double v)
             {
-                if (control is NumericUpDown || control is TextBox)
+                double r, g, b;
+                if (s == 0)
                 {
-                    control.ForeColor = PdnTheme.ForeColor;
-                    control.BackColor = PdnTheme.BackColor;
+                    r = v;
+                    g = v;
+                    b = v;
                 }
+                else
+                {
+                    double varH = h * 6;
+                    double varI = Math.Floor(varH);
+                    double var1 = v * (1 - s);
+                    double var2 = v * (1 - (s * (varH - varI)));
+                    double var3 = v * (1 - (s * (1 - (varH - varI))));
+
+                    if (varI == 0)
+                    {
+                        r = v;
+                        g = var3;
+                        b = var1;
+                    }
+                    else if (varI == 1)
+                    {
+                        r = var2;
+                        g = v;
+                        b = var1;
+                    }
+                    else if (varI == 2)
+                    {
+                        r = var1;
+                        g = v;
+                        b = var3;
+                    }
+                    else if (varI == 3)
+                    {
+                        r = var1;
+                        g = var2;
+                        b = v;
+                    }
+                    else if (varI == 4)
+                    {
+                        r = var3;
+                        g = var1;
+                        b = v;
+                    }
+                    else
+                    {
+                        r = v;
+                        g = var1;
+                        b = var2;
+                    }
+                }
+                return Color.FromArgb(alpha, (int)(r * 255), (int)(g * 255), (int)(b * 255));
+            }
+
+            internal static HSVColor FromColor(Color c, double oldHue)
+            {
+                double r = (double)c.R / 255;
+                double g = (double)c.G / 255;
+                double b = (double)c.B / 255;
+                double varMin = Math.Min(r, Math.Min(g, b));
+                double varMax = Math.Max(r, Math.Max(g, b));
+                double delMax = varMax - varMin;
+                HSVColor hsv = new HSVColor();
+
+                hsv.Value = varMax;
+
+                if (delMax == 0)
+                {
+                    hsv.Hue = oldHue;
+                    hsv.Sat = 0;
+                }
+                else
+                {
+                    double delR = (((varMax - r) / 6) + (delMax / 2)) / delMax;
+                    double delG = (((varMax - g) / 6) + (delMax / 2)) / delMax;
+                    double delB = (((varMax - b) / 6) + (delMax / 2)) / delMax;
+
+                    hsv.Sat = delMax / varMax;
+
+                    if (r == varMax)
+                    {
+                        hsv.Hue = delB - delG;
+                    }
+                    else if (g == varMax)
+                    {
+                        hsv.Hue = (1.0 / 3) + delR - delB;
+                    }
+                    else //// if (b == varMax) 
+                    {
+                        hsv.Hue = (2.0 / 3) + delG - delR;
+                    }
+
+                    if (hsv.Hue < 0)
+                    {
+                        hsv.Hue++;
+                    }
+
+                    if (hsv.Hue > 1)
+                    {
+                        hsv.Hue--;
+                    }
+                }
+
+                return hsv;
             }
         }
-    }
-
-    internal struct HSVColor
-    {
-        internal double Hue { get; set; }
-        internal double Sat { get; set; }
-        internal double Value { get; set; }
     }
 
     [DefaultEvent("ValueChanged")]
     public class ColorSlider : PictureBox
     {
+        #region Properties
         [Category("Data")]
         public float Value
         {
@@ -646,16 +630,18 @@ namespace PaintDotNet.Effects
             set
             {
                 this.value = value;
-                ValueChanged?.Invoke(this, this.value);
+                OnValueChanged();
                 this.Refresh();
             }
         }
+
         [Category("Behavior")]
         public int MaxValue
         {
             get => this.maxValue;
             set => this.maxValue = value;
         }
+
         [Category("Appearance")]
         public Color[] Colors
         {
@@ -666,20 +652,23 @@ namespace PaintDotNet.Effects
                 DrawColors();
             }
         }
-
-        #region Event handler
-        public delegate void ValueChangedEventHandler(object sender, float value);
-        [Category("Action")]
-        public event ValueChangedEventHandler ValueChanged;
         #endregion
 
-        float value = 0;
-        int maxValue = byte.MaxValue;
-        Color[] colors = { Color.White, Color.Black };
-        Bitmap markerBmp;
-        bool isMouseOver;
-        bool isMouseDown;
+        #region Event handler
+        [Category("Action")]
+        public event EventHandler ValueChanged;
+        protected void OnValueChanged()
+        {
+            this.ValueChanged?.Invoke(this, EventArgs.Empty);
+        }
+        #endregion
 
+        private float value = 0;
+        private int maxValue = byte.MaxValue;
+        private Color[] colors = { Color.White, Color.Black };
+        private Bitmap markerBmp;
+        private bool isMouseOver;
+        private bool isMouseDown;
 
         public ColorSlider()
         {
@@ -707,7 +696,7 @@ namespace PaintDotNet.Effects
             value = e.X / range * maxValue - offset;
             value = Clamp(value, 0, maxValue);
             this.Refresh();
-            ValueChanged?.Invoke(this, this.value);
+            OnValueChanged();
         }
 
         protected override void OnMouseDown(MouseEventArgs e)
@@ -831,6 +820,5 @@ namespace PaintDotNet.Effects
         {
             return (value < min) ? min : (value > max) ? max : value;
         }
-
     }
 }

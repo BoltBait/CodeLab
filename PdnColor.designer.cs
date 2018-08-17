@@ -362,7 +362,7 @@
             this.vColorSlider.TabIndex = 46;
             this.vColorSlider.TabStop = false;
             this.vColorSlider.Value = 0F;
-            this.vColorSlider.ValueChanged += new PaintDotNet.Effects.ColorSlider.ValueChangedEventHandler(this.HSV_Sliders_ValueChanged);
+            this.vColorSlider.ValueChanged += new System.EventHandler(this.HSV_Sliders_ValueChanged);
             // 
             // sColorSlider
             // 
@@ -377,7 +377,7 @@
             this.sColorSlider.TabIndex = 45;
             this.sColorSlider.TabStop = false;
             this.sColorSlider.Value = 0F;
-            this.sColorSlider.ValueChanged += new PaintDotNet.Effects.ColorSlider.ValueChangedEventHandler(this.HSV_Sliders_ValueChanged);
+            this.sColorSlider.ValueChanged += new System.EventHandler(this.HSV_Sliders_ValueChanged);
             // 
             // hColorSlider
             // 
@@ -392,7 +392,7 @@
             this.hColorSlider.TabIndex = 44;
             this.hColorSlider.TabStop = false;
             this.hColorSlider.Value = 0F;
-            this.hColorSlider.ValueChanged += new PaintDotNet.Effects.ColorSlider.ValueChangedEventHandler(this.HSV_Sliders_ValueChanged);
+            this.hColorSlider.ValueChanged += new System.EventHandler(this.HSV_Sliders_ValueChanged);
             // 
             // bColorSlider
             // 
@@ -407,7 +407,7 @@
             this.bColorSlider.TabIndex = 43;
             this.bColorSlider.TabStop = false;
             this.bColorSlider.Value = 0F;
-            this.bColorSlider.ValueChanged += new PaintDotNet.Effects.ColorSlider.ValueChangedEventHandler(this.RGB_Sliders_ValueChanged);
+            this.bColorSlider.ValueChanged += new System.EventHandler(this.RGB_Sliders_ValueChanged);
             // 
             // gColorSlider
             // 
@@ -422,7 +422,7 @@
             this.gColorSlider.TabIndex = 42;
             this.gColorSlider.TabStop = false;
             this.gColorSlider.Value = 0F;
-            this.gColorSlider.ValueChanged += new PaintDotNet.Effects.ColorSlider.ValueChangedEventHandler(this.RGB_Sliders_ValueChanged);
+            this.gColorSlider.ValueChanged += new System.EventHandler(this.RGB_Sliders_ValueChanged);
             // 
             // rColorSlider
             // 
@@ -437,7 +437,7 @@
             this.rColorSlider.TabIndex = 41;
             this.rColorSlider.TabStop = false;
             this.rColorSlider.Value = 0F;
-            this.rColorSlider.ValueChanged += new PaintDotNet.Effects.ColorSlider.ValueChangedEventHandler(this.RGB_Sliders_ValueChanged);
+            this.rColorSlider.ValueChanged += new System.EventHandler(this.RGB_Sliders_ValueChanged);
             // 
             // aColorSlider
             // 
@@ -452,7 +452,7 @@
             this.aColorSlider.TabIndex = 40;
             this.aColorSlider.TabStop = false;
             this.aColorSlider.Value = 0F;
-            this.aColorSlider.ValueChanged += new PaintDotNet.Effects.ColorSlider.ValueChangedEventHandler(this.HSV_Sliders_ValueChanged);
+            this.aColorSlider.ValueChanged += new System.EventHandler(this.HSV_Sliders_ValueChanged);
             // 
             // PdnColor
             // 
@@ -487,7 +487,6 @@
             this.Controls.Add(this.bLabel);
             this.Name = "PdnColor";
             this.Size = new System.Drawing.Size(385, 265);
-            this.Load += new System.EventHandler(this.PdnColor_Load);
             ((System.ComponentModel.ISupportInitialize)(this.colorWheelBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.alphaBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.blueBox)).EndInit();
