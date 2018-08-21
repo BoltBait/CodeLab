@@ -94,11 +94,70 @@ namespace PaintDotNet.Effects
         }
     }
 
+    internal sealed class TabRenderer : ToolStripProfessionalRenderer
+    {
+        internal TabRenderer() : base(new TabColorTable())
+        {
+            RoundedEdges = false;
+        }
+
+        protected override void OnRenderItemText(ToolStripItemTextRenderEventArgs e)
+        {
+            e.TextColor = PdnTheme.ForeColor;
+            base.OnRenderItemText(e);
+        }
+
+        private sealed class TabColorTable : ProfessionalColorTable
+        {
+            internal TabColorTable()
+            {
+                UseSystemColors = false;
+            }
+
+            private readonly Color BackColor = PdnTheme.BackColor;
+            private readonly Color BorderColor = Color.FromArgb(186, 0, 105, 210);
+            private readonly Color HiliteColor = Color.FromArgb(62, 0, 103, 206);
+            private readonly Color CheckedColor = Color.FromArgb(129, 52, 153, 254);
+            private readonly Color ActiveTabColor = Color.FromArgb(255, 52, 153, 254);
+
+            public override Color ButtonSelectedHighlight => HiliteColor;
+            public override Color ButtonSelectedBorder => ActiveTabColor;
+            public override Color ButtonSelectedGradientBegin => HiliteColor;
+            public override Color ButtonSelectedGradientMiddle => HiliteColor;
+            public override Color ButtonSelectedGradientEnd => HiliteColor;
+            public override Color ButtonSelectedHighlightBorder => BorderColor;
+
+            public override Color ButtonPressedHighlight => HiliteColor;
+            public override Color ButtonPressedGradientBegin => CheckedColor;
+            public override Color ButtonPressedGradientMiddle => CheckedColor;
+            public override Color ButtonPressedGradientEnd => CheckedColor;
+            public override Color ButtonPressedBorder => BorderColor;
+            public override Color ButtonPressedHighlightBorder => BorderColor;
+
+            public override Color ButtonCheckedGradientBegin => CheckedColor;
+            public override Color ButtonCheckedGradientMiddle => CheckedColor;
+            public override Color ButtonCheckedGradientEnd => CheckedColor;
+            public override Color ButtonCheckedHighlight => CheckedColor;
+            public override Color ButtonCheckedHighlightBorder => ActiveTabColor;
+
+            public override Color ToolStripBorder => ActiveTabColor;
+            public override Color ToolStripGradientBegin => BackColor;
+            public override Color ToolStripGradientMiddle => BackColor;
+            public override Color ToolStripGradientEnd => BackColor;
+            public override Color ToolStripDropDownBackground => BackColor;
+
+            public override Color OverflowButtonGradientBegin => BackColor;
+            public override Color OverflowButtonGradientMiddle => BackColor;
+            public override Color OverflowButtonGradientEnd => BackColor;
+        }
+    }
+
     internal static class PdnTheme
     {
         private static Color foreColor;
         private static Color backColor;
         private static ThemeRenderer themeRenderer;
+        private static TabRenderer tabRenderer;
 
         internal static Color ForeColor
         {
@@ -110,6 +169,7 @@ namespace PaintDotNet.Effects
             {
                 foreColor = value;
                 themeRenderer = null;
+                tabRenderer = null;
             }
         }
         internal static Color BackColor
@@ -122,6 +182,7 @@ namespace PaintDotNet.Effects
             {
                 backColor = value;
                 themeRenderer = null;
+                tabRenderer = null;
             }
         }
         internal static ThemeRenderer Renderer
@@ -134,6 +195,19 @@ namespace PaintDotNet.Effects
                 }
 
                 return themeRenderer;
+            }
+        }
+
+        internal static TabRenderer TabRenderer
+        {
+            get
+            {
+                if (tabRenderer == null)
+                {
+                    tabRenderer = new TabRenderer();
+                }
+
+                return tabRenderer;
             }
         }
     }

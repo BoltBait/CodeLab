@@ -43,7 +43,6 @@ namespace PaintDotNet.Effects
         private int posAtIBox = InvalidPosition;
         private int varToRenamePos = InvalidPosition;
         private string varToRename = string.Empty;
-        private bool isDirty = true;
         internal readonly List<int> errorLines = new List<int>();
         private readonly List<int> matchLines = new List<int>();
         private readonly SizeF dpi = new SizeF(1f, 1f);
@@ -53,9 +52,9 @@ namespace PaintDotNet.Effects
         private readonly ToolStripDropDownButton bulbIcon = new ToolStripDropDownButton();
         private readonly ToolStripMenuItem renameVarMenuItem = new ToolStripMenuItem();
 
-        #region Properties
-        internal bool IsDirty => isDirty;
+        private readonly Dictionary<Guid, ScintillaNET.Document> docCollection = new Dictionary<Guid, ScintillaNET.Document>();
 
+        #region Properties
         internal int[] Bookmarks
         {
             get
@@ -159,6 +158,11 @@ namespace PaintDotNet.Effects
                     findPanel.Location = new Point(this.ClientRectangle.Right - this.Margins.Right - findPanel.Width, 0);
                 }
             }
+        }
+
+        internal bool IsVirgin
+        {
+            get => !(this.CanUndo || this.CanRedo) && this.Text.Equals(ScriptWriter.DefaultCode);
         }
 
         [Category("Appearance")]
@@ -385,6 +389,8 @@ namespace PaintDotNet.Effects
 
             // Hide icon margin in Light Bulb menu
             ((ToolStripDropDownMenu)bulbIcon.DropDown).ShowImageMargin = false;
+
+            docCollection.Add(Guid.Empty, this.Document);
         }
 
         private void InitializeComponent()
@@ -2766,24 +2772,10 @@ namespace PaintDotNet.Effects
             base.OnZoomChanged(e);
         }
 
-        private int maxLineNumberCharLength;
         private bool Replacing;
         protected override void OnTextChanged(EventArgs e)
         {
-            // Adjust Line Numbers margin width
-            if (this.Margins[LeftMargin.LineNumbers].Width > 0) // Line Numbers Visible/Enabled?
-            {
-                // Did the number of characters in the line number display change?
-                // i.e. nnn VS nn, or nnnn VS nn, etc...
-                int newLineNumberCharLength = this.Lines.Count.ToString().Length;
-                if (newLineNumberCharLength != this.maxLineNumberCharLength)
-                {
-                    // Calculate the width required to display the last line number
-                    // and include some padding for good measure.
-                    this.Margins[LeftMargin.LineNumbers].Width = this.TextWidth(Style.LineNumber, new string('9', newLineNumberCharLength + 1)) + 2;
-                    this.maxLineNumberCharLength = newLineNumberCharLength;
-                }
-            }
+            AdjustLineNumbersWidth();
 
             // Make sure scrollbar does cover the Find panel
             if (findPanel.Visible)
@@ -2870,20 +2862,6 @@ namespace PaintDotNet.Effects
             }
 
             base.OnBeforeInsert(e);
-        }
-
-        protected override void OnSavePointLeft(EventArgs e)
-        {
-            this.isDirty = true;
-
-            base.OnSavePointLeft(e);
-        }
-
-        protected override void OnSavePointReached(EventArgs e)
-        {
-            this.isDirty = false;
-
-            base.OnSavePointReached(e);
         }
 
         protected override void OnResize(EventArgs e)
@@ -3078,6 +3056,10 @@ namespace PaintDotNet.Effects
         internal void UpdateSyntaxHighlighting()
         {
             this.SetKeywords(1, string.Join(" ", Intelli.AllTypes.Keys) + " " + string.Join(" ", Intelli.UserDefinedTypes.Keys));
+            this.SetKeywords(0, "stackalloc unchecked protected namespace interface volatile readonly override operator internal implicit explicit delegate "
+                + "continue abstract virtual private partial foreach finally default decimal checked ushort unsafe typeof switch struct string static sizeof "
+                + "sealed return public params object extern double while using ulong throw short sbyte float fixed false event const class catch break void "
+                + "uint true this null long lock goto enum else char case byte bool base try ref out new int for is in if do as var");
         }
 
         internal void FormatDocument()
@@ -3304,11 +3286,10 @@ namespace PaintDotNet.Effects
             HighlightWordUsage();
         }
 
-        internal bool IsIndicatorOn(int indicator, int position)
+        private void renameVar_Click(object sender, EventArgs e)
         {
-            uint bitmask = this.IndicatorAllOnFor(position);
-            int flag = (1 << indicator);
-            return ((bitmask & flag) == flag);
+            RenameVariable();
+            OnBuildNeeded();
         }
         #endregion
 
@@ -3356,6 +3337,31 @@ namespace PaintDotNet.Effects
         private float getDpiX(float value) => value * dpi.Width;
 
         private float getDpiY(float value) => value * dpi.Height;
+
+        internal bool IsIndicatorOn(int indicator, int position)
+        {
+            uint bitmask = this.IndicatorAllOnFor(position);
+            int flag = (1 << indicator);
+            return ((bitmask & flag) == flag);
+        }
+
+        private int maxLineNumberCharLength;
+        private void AdjustLineNumbersWidth()
+        {
+            if (this.Margins[LeftMargin.LineNumbers].Width > 0) // Line Numbers Visible/Enabled?
+            {
+                // Did the number of characters in the line number display change?
+                // i.e. nnn VS nn, or nnnn VS nn, etc...
+                int newLineNumberCharLength = this.Lines.Count.ToString().Length;
+                if (newLineNumberCharLength != this.maxLineNumberCharLength)
+                {
+                    // Calculate the width required to display the last line number
+                    // and include some padding for good measure.
+                    this.Margins[LeftMargin.LineNumbers].Width = this.TextWidth(Style.LineNumber, new string('9', newLineNumberCharLength + 1)) + 2;
+                    this.maxLineNumberCharLength = newLineNumberCharLength;
+                }
+            }
+        }
         #endregion
 
         #region Editor ToolTip Functions
@@ -3412,11 +3418,57 @@ namespace PaintDotNet.Effects
         }
         #endregion
 
-        private void renameVar_Click(object sender, EventArgs e)
+        #region Document Tabs functions
+        internal void CreateNewDocument(Guid guid)
         {
-            RenameVariable();
-            OnBuildNeeded();
+            this.findPanel.Hide();
+
+            var document = this.Document ;
+            this.AddRefDocument(document);
+
+            // Replace the current document with a new one
+            ScintillaNET.Document newDocument = this.CreateDocument();
+            this.docCollection.Add(guid, newDocument);
+
+            this.Document = newDocument;
+
+            this.Lexer = Lexer.Cpp;
+            this.UpdateSyntaxHighlighting();
+
+            this.SetProperty("fold", "1");
+            this.SetProperty("fold.compact", "0");
+            this.AutomaticFold = (AutomaticFold.Show | AutomaticFold.Click | AutomaticFold.Change);
         }
+
+        internal void SwitchToDocument(Guid guid)
+        {
+            if (!docCollection.ContainsKey(guid))
+            {
+                return;
+            }
+
+            this.findPanel.Hide();
+
+            var prevDocument = this.Document;
+            this.AddRefDocument(prevDocument);
+
+            this.Document = this.docCollection[guid];
+            this.ReleaseDocument(this.docCollection[guid]);
+
+            AdjustLineNumbersWidth();
+        }
+
+        internal void CloseDocument(Guid guid)
+        {
+            if (!docCollection.ContainsKey(guid))
+            {
+                return;
+            }
+
+            this.ReleaseDocument(this.docCollection[guid]);
+            this.docCollection.Remove(guid);
+        }
+        #endregion
     }
 
     public enum Theme

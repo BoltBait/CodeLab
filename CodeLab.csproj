@@ -79,6 +79,12 @@
     <Compile Include="ScriptBuilder.cs" />
     <Compile Include="ScriptWriter.cs" />
     <Compile Include="SolutionGenerator.cs" />
+    <Compile Include="TabStrip.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="TabStrip.Designer.cs">
+      <DependentUpon>TabStrip.cs</DependentUpon>
+    </Compile>
     <Compile Include="ThemeRenderer.cs" />
     <Compile Include="CodeLab.cs">
       <SubType>Code</SubType>
@@ -159,6 +165,9 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TabStrip.resx">
+      <DependentUpon>TabStrip.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UIBuilder.resx">
       <SubType>Designer</SubType>
@@ -277,6 +286,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Icons\Bulb.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Icons\Untitled.png" />
   </ItemGroup>
   <PropertyGroup>
     <PostBuildEvent>if $(ConfigurationName) == Release (

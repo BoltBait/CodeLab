@@ -154,6 +154,7 @@
             this.OutputTextBox = new System.Windows.Forms.TextBox();
             this.ClearOutput = new System.Windows.Forms.Button();
             this.ShowOutput = new System.Windows.Forms.CheckBox();
+            this.tabStrip1 = new PaintDotNet.Effects.TabStrip();
             this.errorListMenu.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -166,7 +167,7 @@
             this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.btnOK.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.btnOK.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnOK.Location = new System.Drawing.Point(631, 440);
+            this.btnOK.Location = new System.Drawing.Point(631, 469);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(64, 24);
             this.btnOK.TabIndex = 3;
@@ -179,7 +180,7 @@
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.btnCancel.Location = new System.Drawing.Point(701, 440);
+            this.btnCancel.Location = new System.Drawing.Point(701, 469);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(64, 24);
             this.btnCancel.TabIndex = 4;
@@ -191,7 +192,7 @@
             // 
             this.btnBuild.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnBuild.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.btnBuild.Location = new System.Drawing.Point(561, 440);
+            this.btnBuild.Location = new System.Drawing.Point(561, 469);
             this.btnBuild.Name = "btnBuild";
             this.btnBuild.Size = new System.Drawing.Size(64, 24);
             this.btnBuild.TabIndex = 2;
@@ -208,7 +209,7 @@
             this.errorList.Font = new System.Drawing.Font("Courier New", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.errorList.IntegralHeight = false;
             this.errorList.ItemHeight = 14;
-            this.errorList.Location = new System.Drawing.Point(-1, 344);
+            this.errorList.Location = new System.Drawing.Point(-1, 373);
             this.errorList.Name = "errorList";
             this.errorList.ScrollAlwaysVisible = true;
             this.errorList.Size = new System.Drawing.Size(774, 88);
@@ -841,7 +842,6 @@
             // wordWrapToolStripMenuItem
             // 
             this.wordWrapToolStripMenuItem.Name = "wordWrapToolStripMenuItem";
-            this.wordWrapToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.W)));
             this.wordWrapToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
             this.wordWrapToolStripMenuItem.Text = "&Word Wrap";
             this.wordWrapToolStripMenuItem.Click += new System.EventHandler(this.wordWrapToolStripMenuItem_Click);
@@ -1241,7 +1241,7 @@
             this.txtCode.ContextMenuStrip = this.contextMenuStrip1;
             this.txtCode.EdgeColor = System.Drawing.Color.PowderBlue;
             this.txtCode.Lexer = ScintillaNET.Lexer.Cpp;
-            this.txtCode.Location = new System.Drawing.Point(-1, 49);
+            this.txtCode.Location = new System.Drawing.Point(-1, 74);
             this.txtCode.Margin = new System.Windows.Forms.Padding(0);
             this.txtCode.MouseDwellTime = 250;
             this.txtCode.Name = "txtCode";
@@ -1259,7 +1259,7 @@
             // 
             this.ShowErrors.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.ShowErrors.AutoSize = true;
-            this.ShowErrors.Location = new System.Drawing.Point(12, 445);
+            this.ShowErrors.Location = new System.Drawing.Point(12, 474);
             this.ShowErrors.Name = "ShowErrors";
             this.ShowErrors.Size = new System.Drawing.Size(102, 17);
             this.ShowErrors.TabIndex = 15;
@@ -1273,7 +1273,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.OutputTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.OutputTextBox.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.OutputTextBox.Location = new System.Drawing.Point(-1, 344);
+            this.OutputTextBox.Location = new System.Drawing.Point(-1, 373);
             this.OutputTextBox.Multiline = true;
             this.OutputTextBox.Name = "OutputTextBox";
             this.OutputTextBox.ReadOnly = true;
@@ -1288,7 +1288,7 @@
             this.ClearOutput.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.ClearOutput.Enabled = false;
             this.ClearOutput.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.ClearOutput.Location = new System.Drawing.Point(269, 441);
+            this.ClearOutput.Location = new System.Drawing.Point(269, 470);
             this.ClearOutput.Name = "ClearOutput";
             this.ClearOutput.Size = new System.Drawing.Size(45, 23);
             this.ClearOutput.TabIndex = 18;
@@ -1300,7 +1300,7 @@
             // 
             this.ShowOutput.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.ShowOutput.AutoSize = true;
-            this.ShowOutput.Location = new System.Drawing.Point(140, 445);
+            this.ShowOutput.Location = new System.Drawing.Point(140, 474);
             this.ShowOutput.Name = "ShowOutput";
             this.ShowOutput.Size = new System.Drawing.Size(123, 17);
             this.ShowOutput.TabIndex = 19;
@@ -1308,12 +1308,26 @@
             this.ShowOutput.UseVisualStyleBackColor = true;
             this.ShowOutput.Click += new System.EventHandler(this.ShowOutput_Click);
             // 
+            // tabStrip1
+            // 
+            this.tabStrip1.AutoSize = true;
+            this.tabStrip1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.tabStrip1.Location = new System.Drawing.Point(0, 49);
+            this.tabStrip1.Name = "tabStrip1";
+            this.tabStrip1.Size = new System.Drawing.Size(775, 25);
+            this.tabStrip1.TabIndex = 20;
+            this.tabStrip1.SelectedTabChanged += new System.EventHandler(this.tabStrip1_SelectedIndexChanged);
+            this.tabStrip1.NewTabCreated += new System.EventHandler<PaintDotNet.Effects.TabEventArgs>(this.tabStrip1_NewTabCreated);
+            this.tabStrip1.TabClosingAndDirty += new System.EventHandler<System.ComponentModel.CancelEventArgs>(this.tabStrip1_TabClosingAndDirty);
+            this.tabStrip1.TabClosed += new System.EventHandler<PaintDotNet.Effects.TabEventArgs>(this.tabStrip1_TabClosed);
+            // 
             // CodeLabConfigDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(772, 471);
+            this.ClientSize = new System.Drawing.Size(772, 500);
+            this.Controls.Add(this.tabStrip1);
             this.Controls.Add(this.ClearOutput);
             this.Controls.Add(this.ShowOutput);
             this.Controls.Add(this.ShowErrors);
@@ -1471,6 +1485,7 @@
         private System.Windows.Forms.ToolStripMenuItem CopyErrorMenuItem;
         private System.Windows.Forms.ToolStripMenuItem FullErrorMenuItem;
         private System.Windows.Forms.ToolStripMenuItem ErrorCodeMenuItem;
+        private TabStrip tabStrip1;
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
     }
 }

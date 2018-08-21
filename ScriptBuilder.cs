@@ -43,14 +43,14 @@ namespace PaintDotNet.Effects
             get
             {
                 List<ScriptError> errorList = new List<ScriptError>();
-                if (result.Errors.HasErrors)
+                if (result != null && result.Errors.HasErrors)
                 {
                     foreach (CompilerError err in result.Errors)
                     {
                         errorList.Add(new ScriptError(err));
                     }
                 }
-                if (internalError != string.Empty)
+                if (!internalError.IsNullOrEmpty())
                 {
                     errorList.Add(new ScriptError(internalError));
                 }
@@ -106,7 +106,7 @@ namespace PaintDotNet.Effects
                 ScriptWriter.UserEnteredPart(scriptText) +
                 ScriptWriter.append_code;
 
-            internalError = string.Empty;
+            internalError = null;
             userScriptObject = null;
             // Compile code
             try
@@ -182,7 +182,7 @@ namespace PaintDotNet.Effects
             // Generate code
             string SourceCode = ScriptWriter.FullSourceCode(scriptText, FileName, isAdjustment, submenuname, menuname, iconpath, SupportURL, ForceAliasSelection, ForceSingleThreaded, Author, MajorVersion, MinorVersion, Description, KeyWords, WindowTitleStr, HelpType, HelpText);
 
-            internalError = string.Empty;
+            internalError = null;
             // Compile code
             try
             {
@@ -365,7 +365,7 @@ namespace PaintDotNet.Effects
                 ScriptWriter.UserEnteredPart(scriptText) +
                 ScriptWriter.EndPart();
 
-            internalError = string.Empty;
+            internalError = null;
             userScriptObject = null;
             // Compile code
             try

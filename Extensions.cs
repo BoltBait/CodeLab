@@ -54,6 +54,11 @@ namespace PaintDotNet.Effects
             return string.Join("\r\n", splitOriginal.ToArray());
         }
 
+        internal static bool IsNullOrEmpty(this string str)
+        {
+            return string.IsNullOrEmpty(str);
+        }
+
         internal static bool IsCSharpIndentifier(this string value)
         {
             if (value.Length == 0)
@@ -160,6 +165,11 @@ namespace PaintDotNet.Effects
 
         internal static bool Contains(this Type type, string memberName, bool onlyUserDefined)
         {
+            if (type == null)
+            {
+                return false;
+            }
+
             BindingFlags flags = (onlyUserDefined) ?
                 BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly :
                 BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;

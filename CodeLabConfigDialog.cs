@@ -24,6 +24,7 @@ using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace PaintDotNet.Effects
@@ -89,13 +90,13 @@ namespace PaintDotNet.Effects
             {
                 toolBarToolStripMenuItem.CheckState = CheckState.Checked;
                 toolStrip1.Visible = true;
-                txtCode.Location = new Point(txtCode.Left, toolStrip1.Bottom);
+                txtCode.Location = new Point(txtCode.Left, tabStrip1.Bottom);
             }
             else
             {
                 toolBarToolStripMenuItem.CheckState = CheckState.Unchecked;
                 toolStrip1.Visible = false;
-                txtCode.Location = new Point(txtCode.Left, toolStrip1.Top);
+                txtCode.Location = new Point(txtCode.Left, tabStrip1.Top);
             }
             if (1 == (int)settings.GetValue("ErrorBox", 1))
             {
@@ -206,7 +207,7 @@ namespace PaintDotNet.Effects
             sect.UserScriptObject = ScriptBuilder.UserScriptObject;
             sect.ScriptName = FileName;
             sect.ScriptPath = FullScriptPath;
-            sect.Dirty = txtCode.IsDirty;
+            sect.Dirty = tabStrip1.SelectedTabIsDirty;
             sect.Preview = preview;
             sect.PreviewToken = previewToken;
             sect.Bookmarks = txtCode.Bookmarks;
@@ -229,6 +230,8 @@ namespace PaintDotNet.Effects
                     txtCode.SetSavePoint();
                 }
                 txtCode.Bookmarks = sect.Bookmarks;
+
+                UpdateTabProperties();
             }
         }
 
@@ -258,6 +261,26 @@ namespace PaintDotNet.Effects
             txtCode.UpdateSyntaxHighlighting();
 
             FinishTokenUpdate();
+        }
+
+        private async Task BuildAsync()
+        {
+            tmrCompile.Enabled = false;
+            string code = txtCode.Text;
+            bool debug = OutputTextBox.Visible;
+            await Task.Run(() => ScriptBuilder.Build(code, debug));
+
+            if (this.IsDisposed)
+            {
+                return;
+            }
+
+            DisplayErrors();
+
+            txtCode.UpdateSyntaxHighlighting();
+
+            FinishTokenUpdate();
+            tmrCompile.Enabled = true;
         }
 
         private void RunWithDialog()
@@ -428,6 +451,7 @@ namespace PaintDotNet.Effects
                     FullScriptPath = sfd.FileName;
                     settings.SetValue("LastSourceDir", Path.GetDirectoryName(sfd.FileName));
                     FileName = Path.GetFileNameWithoutExtension(sfd.FileName);
+                    UpdateTabProperties();
                     AddToRecents(sfd.FileName);
                     saved = true;
                 }
@@ -463,16 +487,27 @@ namespace PaintDotNet.Effects
             bool loaded = false;
             if (ofd.ShowDialog() == DialogResult.OK)
             {
+                AddToRecents(ofd.FileName);
+
+                FullScriptPath = ofd.FileName;
+                FileName = Path.GetFileNameWithoutExtension(ofd.FileName);
+
+                if (tabStrip1.SelectedTabGuid == Guid.Empty && txtCode.IsVirgin)
+                {
+                    UpdateTabProperties();
+                }
+                else
+                {
+                    tabStrip1.NewTab(FileName, FullScriptPath);
+                }
+
                 try
                 {
-                    FullScriptPath = ofd.FileName;
-                    FileName = Path.GetFileNameWithoutExtension(ofd.FileName);
                     settings.SetValue("LastSourceDir", Path.GetDirectoryName(ofd.FileName));
                     txtCode.Text = File.ReadAllText(ofd.FileName);
                     txtCode.ExecuteCmd(Command.ScrollToEnd); // Workaround for a scintilla bug
                     txtCode.ExecuteCmd(Command.ScrollToStart);
                     txtCode.EmptyUndoBuffer();
-                    AddToRecents(ofd.FileName);
                     loaded = true;
                 }
                 catch
@@ -635,7 +670,30 @@ namespace PaintDotNet.Effects
             tmrCompile.Enabled = false;
             tmrExceptionCheck.Enabled = false;
 
+            if (tabStrip1.AnyDirtyTabs)
+            {
+                e.Cancel = MessageBox.Show("There are tabs with unsaved changes, and will be lost if CodeLab is closed.\r\n\r\nKeep CodeLab open?", "Unsaved changes", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes;
+            }
+
             base.OnFormClosing(e);
+        }
+
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            switch (keyData)
+            {
+                case (Keys.Control | Keys.Tab):
+                    tabStrip1.NextTab();
+                    return true;
+                case (Keys.Control | Keys.Shift | Keys.Tab):
+                    tabStrip1.PrevTab();
+                    return true;
+                case (Keys.Control | Keys.W):
+                    tabStrip1.CloseTab();
+                    return true;
+            }
+
+            return base.ProcessCmdKey(ref msg, keyData);
         }
 
         private void txtCode_KeyUp(object sender, KeyEventArgs e)
@@ -701,6 +759,7 @@ namespace PaintDotNet.Effects
             PdnTheme.ForeColor = this.ForeColor;
             PdnTheme.BackColor = this.BackColor;
             toolStrip1.Renderer = PdnTheme.Renderer;
+            tabStrip1.Renderer = PdnTheme.TabRenderer;
             menuStrip1.Renderer = PdnTheme.Renderer;
             contextMenuStrip1.Renderer = PdnTheme.Renderer;
             errorList.ForeColor = PdnTheme.ForeColor;
@@ -836,17 +895,21 @@ namespace PaintDotNet.Effects
         #region Common functions for button/menu events
         private void CreateNewFile()
         {
-            if (txtCode.IsDirty && PromptToSave() == DialogResult.Cancel)
-            {
-                return;
-            }
-
             FileNew fn = new FileNew();
             if (fn.ShowDialog() == DialogResult.OK)
             {
                 FileName = "Untitled";
                 FullScriptPath = "";
-                this.Text = FileName + "* - " + WindowTitle;
+
+                if (tabStrip1.SelectedTabGuid == Guid.Empty && txtCode.IsVirgin)
+                {
+                    UpdateTabProperties();
+                }
+                else
+                {
+                    tabStrip1.NewTab(FileName, FullScriptPath);
+                }
+
                 txtCode.Text = fn.CodeTemplate;
                 txtCode.ExecuteCmd(Command.ScrollToEnd); // Workaround for a scintilla bug
                 txtCode.ExecuteCmd(Command.ScrollToStart);
@@ -860,11 +923,6 @@ namespace PaintDotNet.Effects
 
         private void OpenFile()
         {
-            if (txtCode.IsDirty && PromptToSave() == DialogResult.Cancel)
-            {
-                return;
-            }
-
             LoadScript();
             txtCode.SetSavePoint();
             txtCode.Focus();
@@ -1174,7 +1232,7 @@ namespace PaintDotNet.Effects
                 Registry.SetValue("HKEY_CURRENT_USER\\Software\\CodeLab", "ToolBar", 1);
                 toolBarToolStripMenuItem.CheckState = CheckState.Checked;
                 toolStrip1.Visible = true;
-                txtCode.Location = new Point(txtCode.Left, toolStrip1.Bottom);
+                txtCode.Location = new Point(txtCode.Left, tabStrip1.Bottom);
                 txtCode.Height = txtCode.Height - toolStrip1.Height;
             }
             else
@@ -1182,7 +1240,7 @@ namespace PaintDotNet.Effects
                 Registry.SetValue("HKEY_CURRENT_USER\\Software\\CodeLab", "ToolBar", 0);
                 toolBarToolStripMenuItem.CheckState = CheckState.Unchecked;
                 toolStrip1.Visible = false;
-                txtCode.Location = new Point(txtCode.Left, toolStrip1.Top);
+                txtCode.Location = new Point(txtCode.Left, tabStrip1.Bottom);
                 txtCode.Height = txtCode.Height + toolStrip1.Height;
             }
             txtCode.Focus();
@@ -1922,11 +1980,6 @@ namespace PaintDotNet.Effects
 
         private void RecentItem_Click(object sender, EventArgs e)
         {
-            if (txtCode.IsDirty && PromptToSave() == DialogResult.Cancel)
-            {
-                return;
-            }
-
             string filePath = (sender as ToolStripMenuItem)?.ToolTipText;
             if (!File.Exists(filePath))
             {
@@ -1935,32 +1988,82 @@ namespace PaintDotNet.Effects
                 return;
             }
 
-            try
+            AddToRecents(filePath);
+
+            FullScriptPath = filePath;
+            FileName = Path.GetFileNameWithoutExtension(filePath);
+
+            if (tabStrip1.SelectedTabGuid == Guid.Empty && txtCode.IsVirgin)
             {
-                FullScriptPath = filePath;
-                FileName = Path.GetFileNameWithoutExtension(filePath);
-                AddToRecents(filePath);
-                txtCode.Text = File.ReadAllText(filePath);
-                txtCode.ExecuteCmd(Command.ScrollToEnd); // Workaround for a scintilla bug
-                txtCode.ExecuteCmd(Command.ScrollToStart);
-                txtCode.EmptyUndoBuffer();
-                txtCode.SetSavePoint();
-                txtCode.Focus();
-                Build();
+                UpdateTabProperties();
             }
-            catch
+            else
             {
+                tabStrip1.NewTab(FileName, FullScriptPath);
             }
+
+            txtCode.Text = File.ReadAllText(filePath);
+            txtCode.ExecuteCmd(Command.ScrollToEnd); // Workaround for a scintilla bug
+            txtCode.ExecuteCmd(Command.ScrollToStart);
+            txtCode.EmptyUndoBuffer();
+            txtCode.SetSavePoint();
+            txtCode.Focus();
+            Build();
         }
         #endregion
 
         #region Dirty Document functions
         private void txtCode_SavePointLeft(object sender, EventArgs e)
         {
-            this.Text = FileName + "* - " + WindowTitle;
+            tabStrip1.SelectedTabIsDirty = true;
         }
 
         private void txtCode_SavePointReached(object sender, EventArgs e)
+        {
+            tabStrip1.SelectedTabIsDirty = false;
+        }
+        #endregion
+
+        #region Document Tabs functions
+        private void tabStrip1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            FileName = tabStrip1.SelectedTabTitle;
+            FullScriptPath = tabStrip1.SelectedTabPath;
+            UpdateWindowTitle();
+            txtCode.SwitchToDocument(tabStrip1.SelectedTabGuid);
+            UpdateToolBarButtons();
+            BuildAsync();
+        }
+
+        private void tabStrip1_NewTabCreated(object sender, TabEventArgs e)
+        {
+            txtCode.CreateNewDocument(e.TabGuid);
+            UpdateWindowTitle();
+            UpdateToolBarButtons();
+        }
+
+        private void tabStrip1_TabClosingAndDirty(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (PromptToSave() == DialogResult.Cancel)
+            {
+                e.Cancel = true;
+            }
+        }
+
+        private void tabStrip1_TabClosed(object sender, TabEventArgs e)
+        {
+            this.txtCode.CloseDocument(e.TabGuid);
+        }
+
+        private void UpdateTabProperties()
+        {
+            tabStrip1.SelectedTabTitle = FileName;
+            tabStrip1.SelectedTabPath = FullScriptPath;
+
+            UpdateWindowTitle();
+        }
+
+        private void UpdateWindowTitle()
         {
             this.Text = FileName + " - " + WindowTitle;
         }
