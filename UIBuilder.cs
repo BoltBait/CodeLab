@@ -1,8 +1,8 @@
-/////////////////////////////////////////////////////////////////////////////////
+﻿/////////////////////////////////////////////////////////////////////////////////
 // CodeLab for Paint.NET
-// Portions Copyright �2007-2017 BoltBait. All Rights Reserved.
-// Portions Copyright �2018 Jason Wendt. All Rights Reserved.
-// Portions Copyright �Microsoft Corporation. All Rights Reserved.
+// Portions Copyright ©2007-2017 BoltBait. All Rights Reserved.
+// Portions Copyright ©2018 Jason Wendt. All Rights Reserved.
+// Portions Copyright ©Microsoft Corporation. All Rights Reserved.
 //
 // THE CODELAB DEVELOPERS MAKE NO WARRANTY OF ANY KIND REGARDING THE CODE. THEY
 // SPECIFICALLY DISCLAIM ANY WARRANTY OF FITNESS FOR ANY PARTICULAR PURPOSE OR
@@ -201,6 +201,21 @@ namespace PaintDotNet.Effects
                 ControlDef.Text = "0";
                 StyleLabel.Enabled = true;
                 ControlStyle.Enabled = true;
+                ControlStyle.Items.Clear();
+                ControlStyle.Items.AddRange(new string[] {
+                    "Default",
+                    "Hue",
+                    "Hue Centered",
+                    "Saturation",
+                    "White - Black",
+                    "Black - White",
+                    "Cyan - Red",
+                    "Magenta - Green",
+                    "Yellow - Blue",
+                    "Cyan - Orange",
+                    "White - Red",
+                    "White - Green",
+                    "White - Blue"});
                 ControlStyle.SelectedIndex = 0;
             }
             else if (ControlType.Text == "Check Box")
@@ -249,8 +264,12 @@ namespace PaintDotNet.Effects
                 ControlMax.Text = "16777215";
                 ControlMin.Text = "0";
                 ControlDef.Text = "0";
-                StyleLabel.Enabled = false;
-                ControlStyle.Enabled = false;
+                StyleLabel.Enabled = true;
+                ControlStyle.Enabled = true;
+                ControlStyle.Items.Clear();
+                ControlStyle.Items.AddRange(new string[] {
+                    "Default",
+                    "Alpha"});
                 ControlStyle.SelectedIndex = 0;
             }
             else if (ControlType.Text == "Angle Chooser")
@@ -377,6 +396,21 @@ namespace PaintDotNet.Effects
                 ControlDef.Text = "0";
                 StyleLabel.Enabled = true;
                 ControlStyle.Enabled = true;
+                ControlStyle.Items.Clear();
+                ControlStyle.Items.AddRange(new string[] {
+                    "Default",
+                    "Hue",
+                    "Hue Centered",
+                    "Saturation",
+                    "White - Black",
+                    "Black - White",
+                    "Cyan - Red",
+                    "Magenta - Green",
+                    "Yellow - Blue",
+                    "Cyan - Orange",
+                    "White - Red",
+                    "White - Green",
+                    "White - Blue"});
                 ControlStyle.SelectedIndex = 0;
             }
             else if (ControlType.Text == "Drop-Down List Box")
@@ -588,6 +622,21 @@ namespace PaintDotNet.Effects
                 {
                     case ElementType.IntSlider:
                         ControlType.Text = "Integer Slider";
+                        ControlStyle.Items.Clear();
+                        ControlStyle.Items.AddRange(new string[] {
+                            "Default",
+                            "Hue",
+                            "Hue Centered",
+                            "Saturation",
+                            "White - Black",
+                            "Black - White",
+                            "Cyan - Red",
+                            "Magenta - Green",
+                            "Yellow - Blue",
+                            "Cyan - Orange",
+                            "White - Red",
+                            "White - Green",
+                            "White - Blue"});
                         ControlStyle.SelectedIndex = CurrentElement.Style;
                         ControlMin.Text = CurrentElement.Min.ToString();
                         ControlMax.Text = CurrentElement.Max.ToString();
@@ -602,7 +651,11 @@ namespace PaintDotNet.Effects
                         break;
                     case ElementType.ColorWheel:
                         ControlType.Text = "Color Wheel";
-                        ControlStyle.SelectedIndex = 0;
+                        ControlStyle.Items.Clear();
+                        ControlStyle.Items.AddRange(new string[] {
+                            "Default",
+                            "Alpha"});
+                        ControlStyle.SelectedIndex = CurrentElement.Style;
                         ControlMin.Text = CurrentElement.Min.ToString();
                         ControlMax.Text = CurrentElement.Max.ToString();
                         ControlDef.Text = CurrentElement.Default.ToString();
@@ -631,6 +684,21 @@ namespace PaintDotNet.Effects
                         break;
                     case ElementType.DoubleSlider:
                         ControlType.Text = "Double Slider";
+                        ControlStyle.Items.Clear();
+                        ControlStyle.Items.AddRange(new string[] {
+                            "Default",
+                            "Hue",
+                            "Hue Centered",
+                            "Saturation",
+                            "White - Black",
+                            "Black - White",
+                            "Cyan - Red",
+                            "Magenta - Green",
+                            "Yellow - Blue",
+                            "Cyan - Orange",
+                            "White - Red",
+                            "White - Green",
+                            "White - Blue"});
                         ControlStyle.SelectedIndex = CurrentElement.Style;
                         ControlMin.Text = CurrentElement.dMin.ToString();
                         ControlMax.Text = CurrentElement.dMax.ToString();
@@ -795,29 +863,47 @@ namespace PaintDotNet.Effects
         private void ControlStyle_SelectedIndexChanged(object sender, EventArgs e)
         {
             dirty = true;
-            if (ControlStyle.SelectedIndex != 0)
+            if (ControlType.Text == "Color Wheel")
             {
-                ControlMax.Text = "100";
-                ControlMin.Text = "0";
-                ControlDef.Text = "0";
+                if (ControlStyle.SelectedIndex == 0)
+                {
+                    ControlMax.Text = "‭16777215‬";
+                    ControlMin.Text = "0";
+                    ControlDef.Text = "0";
+                }
+                else
+                {
+                    ControlMax.Text = int.MaxValue.ToString();
+                    ControlMin.Text = int.MinValue.ToString();
+                    ControlDef.Text = "0";
+                }
             }
-            if (ControlStyle.SelectedIndex == 1)
+            else
             {
-                ControlMax.Text = "360";
-                ControlMin.Text = "0";
-                ControlDef.Text = "0";
-            }
-            if (ControlStyle.SelectedIndex == 2)
-            {
-                ControlMax.Text = "180";
-                ControlMin.Text = "-180";
-                ControlDef.Text = "0";
-            }
-            if (ControlStyle.SelectedIndex >= 6 && ControlStyle.SelectedIndex <= 9)
-            {
-                ControlMax.Text = "255";
-                ControlMin.Text = "-255";
-                ControlDef.Text = "0";
+                if (ControlStyle.SelectedIndex != 0)
+                {
+                    ControlMax.Text = "100";
+                    ControlMin.Text = "0";
+                    ControlDef.Text = "0";
+                }
+                if (ControlStyle.SelectedIndex == 1)
+                {
+                    ControlMax.Text = "360";
+                    ControlMin.Text = "0";
+                    ControlDef.Text = "0";
+                }
+                if (ControlStyle.SelectedIndex == 2)
+                {
+                    ControlMax.Text = "180";
+                    ControlMin.Text = "-180";
+                    ControlDef.Text = "0";
+                }
+                if (ControlStyle.SelectedIndex >= 6 && ControlStyle.SelectedIndex <= 9)
+                {
+                    ControlMax.Text = "255";
+                    ControlMin.Text = "-255";
+                    ControlDef.Text = "0";
+                }
             }
         }
 
@@ -977,8 +1063,8 @@ namespace PaintDotNet.Effects
         internal double dMax = 100;
         internal double dDefault = 0;
         internal int Style = 0;
-        //   0  Default
-        //   1  Hue
+        //   0  Default           Default
+        //   1  Hue               Alpha
         //   2  Hue Centered
         //   3  Saturation
         //   4  White-Black
@@ -1063,9 +1149,16 @@ namespace PaintDotNet.Effects
                     Max = 0xffffff;
                     ColorDefault = (eDefault == "None" ? "" : eDefault);
                     Description = eName;
+                    string alphastyle = "";
+                    if (Style == 1)
+                    {
+                        alphastyle = "?";
+                        Min = int.MinValue;
+                        Max = int.MaxValue;
+                    }
                     if (ColorDefault != "")
                     {
-                        Description += " (" + ColorDefault + ")";
+                        Description += " (" + ColorDefault + alphastyle + ")";
                     }
                     Description += EnabledDescription;
                     break;
@@ -1259,9 +1352,20 @@ namespace PaintDotNet.Effects
                 {
                     ElementType = ElementType.ColorWheel;
                     Default = 0;
-                    ColorDefault = DefaultColor;
-                    Min = 0;
-                    Max = 0xffffff;
+                    if (DefaultColor.EndsWith("?"))
+                    {
+                        ColorDefault = DefaultColor.Substring(0, DefaultColor.Length - 1);
+                        Style = 1;
+                        Min = int.MinValue;
+                        Max = int.MaxValue;
+                    }
+                    else
+                    {
+                        ColorDefault = DefaultColor;
+                        Style = 0;
+                        Min = 0;
+                        Max = 0xffffff;
+                    }
                     Name = LabelStr;
                 }
                 else if ((TypeStr == "double") || (TypeStr == "AngleControl") || (TypeStr == "DoubleSliderControl"))
@@ -1400,9 +1504,14 @@ namespace PaintDotNet.Effects
                         break;
                     case ElementType.ColorWheel:
                         Description = Name;
+                        string alphastyle = "";
+                        if (Style == 1)
+                        {
+                            alphastyle = "?";
+                        }
                         if (ColorDefault != "")
                         {
-                            Description += " (" + ColorDefault + ")";
+                            Description += " (" + ColorDefault + alphastyle + ")";
                         }
                         Description += EnabledDescription;
                         break;
@@ -1503,11 +1612,32 @@ namespace PaintDotNet.Effects
                     {
                         c = Color.FromName(ColorDefault);
                     }
-                    SourceCode += " = ColorBgra.FromBgr(" + c.B.ToString() + "," + c.G.ToString() + "," + c.R.ToString() + ")";
+                    if (Style == 1)
+                    {
+                        SourceCode += " = ColorBgra.FromBgra(" + c.B.ToString() + "," + c.G.ToString() + "," + c.R.ToString() + ",255)";
+                    }
+                    else
+                    {
+                        SourceCode += " = ColorBgra.FromBgr(" + c.B.ToString() + "," + c.G.ToString() + "," + c.R.ToString() + ")";
+                    }
                     SourceCode += "; // ";
                     if (ColorDefault != "")
                     {
-                        SourceCode += "[" + ColorDefault + "] ";
+                        if (Style == 1)
+                        {
+                            SourceCode += "[" + ColorDefault + "?] ";
+                        }
+                        else
+                        {
+                            SourceCode += "[" + ColorDefault + "] ";
+                        }
+                    }
+                    else
+                    {
+                        if (Style == 1)
+                        {
+                            SourceCode += "[?] ";
+                        }
                     }
                     break;
                 case ElementType.PanSlider:

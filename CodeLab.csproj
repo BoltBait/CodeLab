@@ -48,7 +48,7 @@
     <Reference Include="PaintDotNet.Effects">
       <HintPath>..\..\..\..\..\..\Program Files\Paint.NET\PaintDotNet.Effects.dll</HintPath>
     </Reference>
-    <Reference Include="ScintillaNET, Version=3.6.3.0, Culture=neutral, PublicKeyToken=d42c48f11a620156, processorArchitecture=MSIL">
+    <Reference Include="ScintillaNET">
       <HintPath>packages\jacobslusser.ScintillaNET.Signed.3.6.3\lib\net40\ScintillaNET.dll</HintPath>
     </Reference>
     <Reference Include="System">

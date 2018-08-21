@@ -498,26 +498,56 @@ namespace PaintDotNet.Effects
                             ColorControlCount++;
                             if (u.ColorDefault != "")
                             {
-                                if (u.ColorDefault == "PrimaryColor" || u.ColorDefault == "SecondaryColor")
+                                if (u.Style == 0) // no alpha slider
                                 {
-                                    PropertyPart += "            props.Add(new Int32Property(PropertyNames.Amount" + x.ToString() + ", ColorBgra.ToOpaqueInt32(" + u.ColorDefault + "), 0, 0xffffff));\r\n";
+                                    if (u.ColorDefault == "PrimaryColor" || u.ColorDefault == "SecondaryColor")
+                                    {
+                                        PropertyPart += "            props.Add(new Int32Property(PropertyNames.Amount" + x.ToString() + ", ColorBgra.ToOpaqueInt32(" + u.ColorDefault + "), 0, 0xffffff));\r\n";
+                                    }
+                                    else
+                                    {
+                                        PropertyPart += "            props.Add(new Int32Property(PropertyNames.Amount" + x.ToString() + ", ColorBgra.ToOpaqueInt32(Color." + u.ColorDefault + "), 0, 0xffffff));\r\n";
+                                    }
                                 }
-                                else
+                                else // include alpha slider
                                 {
-                                    PropertyPart += "            props.Add(new Int32Property(PropertyNames.Amount" + x.ToString() + ", ColorBgra.ToOpaqueInt32(Color." + u.ColorDefault + "), 0, 0xffffff));\r\n";
+                                    if (u.ColorDefault == "PrimaryColor" || u.ColorDefault == "SecondaryColor")
+                                    {
+                                        PropertyPart += "            props.Add(new Int32Property(PropertyNames.Amount" + x.ToString() + ", unchecked((int)EnvironmentParameters." + u.ColorDefault + ".Bgra), Int32.MinValue, Int32.MaxValue));\r\n";
+                                    }
+                                    else
+                                    {
+                                        PropertyPart += "            props.Add(new Int32Property(PropertyNames.Amount" + x.ToString() + ", unchecked((int)ColorBgra." + u.ColorDefault + ".Bgra), Int32.MinValue, Int32.MaxValue));\r\n";
+                                    }
                                 }
                             }
                             else
                             {
-                                if (ColorControlCount < 2)
+                                if (u.Style == 0) // no alpha slider
                                 {
-                                    // First color wheel defaults to Primary Color
-                                    PropertyPart += "            props.Add(new Int32Property(PropertyNames.Amount" + x.ToString() + ", ColorBgra.ToOpaqueInt32(PrimaryColor), 0, 0xffffff));\r\n";
+                                    if (ColorControlCount < 2)
+                                    {
+                                        // First color wheel defaults to Primary Color
+                                        PropertyPart += "            props.Add(new Int32Property(PropertyNames.Amount" + x.ToString() + ", ColorBgra.ToOpaqueInt32(PrimaryColor), 0, 0xffffff));\r\n";
+                                    }
+                                    else
+                                    {
+                                        // Second color wheel (and beyond) defaults to Secondary Color
+                                        PropertyPart += "            props.Add(new Int32Property(PropertyNames.Amount" + x.ToString() + ", ColorBgra.ToOpaqueInt32(SecondaryColor), 0, 0xffffff));\r\n";
+                                    }
                                 }
-                                else
+                                else  // include alpha slider
                                 {
-                                    // Second color wheel (and beyond) defaults to Secondary Color
-                                    PropertyPart += "            props.Add(new Int32Property(PropertyNames.Amount" + x.ToString() + ", ColorBgra.ToOpaqueInt32(SecondaryColor), 0, 0xffffff));\r\n";
+                                    if (ColorControlCount < 2)
+                                    {
+                                        // First color wheel defaults to Primary Color
+                                        PropertyPart += "            props.Add(new Int32Property(PropertyNames.Amount" + x.ToString() + ", unchecked((int)EnvironmentParameters.PrimaryColor.Bgra), Int32.MinValue, Int32.MaxValue));\r\n";
+                                    }
+                                    else
+                                    {
+                                        // Second color wheel (and beyond) defaults to Secondary Color
+                                        PropertyPart += "            props.Add(new Int32Property(PropertyNames.Amount" + x.ToString() + ", unchecked((int)EnvironmentParameters.SecondaryColor.Bgra), Int32.MinValue, Int32.MaxValue));\r\n";
+                                    }
                                 }
                             }
                             break;
@@ -1010,7 +1040,14 @@ namespace PaintDotNet.Effects
                             SetRenderPart += "            Amount" + x.ToString() + " = newToken.GetProperty<BooleanProperty>(PropertyNames.Amount" + x.ToString() + ").Value;\r\n";
                             break;
                         case ElementType.ColorWheel:
-                            SetRenderPart += "            Amount" + x.ToString() + " = ColorBgra.FromOpaqueInt32(newToken.GetProperty<Int32Property>(PropertyNames.Amount" + x.ToString() + ").Value);\r\n";
+                            if (u.Style == 0)
+                            {
+                                SetRenderPart += "            Amount" + x.ToString() + " = ColorBgra.FromOpaqueInt32(newToken.GetProperty<Int32Property>(PropertyNames.Amount" + x.ToString() + ").Value);\r\n";
+                            }
+                            else
+                            {
+                                SetRenderPart += "            Amount" + x.ToString() + " = ColorBgra.FromUInt32(unchecked((uint)newToken.GetProperty<Int32Property>(PropertyNames.Amount" + x.ToString() + ").Value));\r\n";
+                            }
                             break;
                         case ElementType.AngleChooser:
                         case ElementType.DoubleSlider:

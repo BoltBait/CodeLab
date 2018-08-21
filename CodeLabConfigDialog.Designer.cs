@@ -1334,7 +1334,7 @@
             this.Name = "CodeLabConfigDialog";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
             this.Text = "CodeLab";
-            this.UseAppThemeBackColor = true;
+            this.UseAppThemeColors = true;
             this.errorListMenu.ResumeLayout(false);
             this.contextMenuStrip1.ResumeLayout(false);
             this.menuStrip1.ResumeLayout(false);
