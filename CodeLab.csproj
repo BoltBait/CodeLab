@@ -290,6 +290,9 @@
   <ItemGroup>
     <None Include="Icons\Untitled.png" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\14FilenameControl.png" />
+  </ItemGroup>
   <PropertyGroup>
     <PostBuildEvent>if $(ConfigurationName) == Release (
     "C:\Program Files (x86)\Microsoft\ILMerge\ILMerge.exe" /ndebug /targetplatform:4.0,"C:\Windows\Microsoft.NET\Framework\v4.0.30319" /out:"$(TargetDir)Desktop\CodeLab.dll" "$(TargetDir)CodeLab.dll" "$(TargetDir)ScintillaNET.dll"

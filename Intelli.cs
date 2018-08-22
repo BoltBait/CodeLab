@@ -118,6 +118,7 @@ namespace PaintDotNet.Effects
             AllTypes.Add("AngleControl", typeof(double));
             AllTypes.Add("PanSliderControl", typeof(Pair<double, double>));
             AllTypes.Add("TextboxControl", typeof(string));
+            AllTypes.Add("FilenameControl", typeof(string));
             AllTypes.Add("DoubleSliderControl", typeof(double));
             AllTypes.Add("RollControl", typeof(Tuple<double, double, double>));
             AllTypes.Add("ListBoxControl", typeof(byte));

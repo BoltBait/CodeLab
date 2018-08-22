@@ -91,6 +91,7 @@ namespace PaintDotNet.Effects
             imgList.Images.Add("11", Image.FromStream(Assembly.GetExecutingAssembly().GetManifestResourceStream("PaintDotNet.Effects.Icons.11ReseedButton.png")));
             imgList.Images.Add("12", Image.FromStream(Assembly.GetExecutingAssembly().GetManifestResourceStream("PaintDotNet.Effects.Icons.12MultiTextBox.png")));
             imgList.Images.Add("13", Image.FromStream(Assembly.GetExecutingAssembly().GetManifestResourceStream("PaintDotNet.Effects.Icons.13RollControl.png")));
+            imgList.Images.Add("14", Image.FromStream(Assembly.GetExecutingAssembly().GetManifestResourceStream("PaintDotNet.Effects.Icons.14FilenameControl.png")));
             ControlListView.SmallImageList = imgList;
 
             DefaultColorComboBox.Items.Add("None");
@@ -484,6 +485,27 @@ namespace PaintDotNet.Effects
                 ControlStyle.Enabled = false;
                 ControlStyle.SelectedIndex = 0;
             }
+            else if (ControlType.Text == "Filename Control")
+            {
+                OptionsLabel.Visible = true;
+                OptionsText.Visible = true;
+                DefaultColorComboBox.Visible = false;
+                ControlMin.Visible = false;
+                ControlMax.Visible = false;
+                ControlDef.Visible = false;
+                MinimumLabel.Visible = false;
+                MaximumLabel.Visible = false;
+                DefaultLabel.Visible = false;
+                ControlDef.Enabled = false;
+                ControlMax.Enabled = false;
+                ControlMin.Enabled = false;
+                ControlMax.Text = "255";
+                ControlMin.Text = "0";
+                ControlDef.Text = "0";
+                StyleLabel.Enabled = false;
+                ControlStyle.Enabled = false;
+                ControlStyle.SelectedIndex = 0;
+            }
         }
 
         private void FillStyleDropDown(int Style)
@@ -724,6 +746,16 @@ namespace PaintDotNet.Effects
                         ControlMin.Text = CurrentElement.Min.ToString();
                         ControlMax.Text = CurrentElement.Max.ToString();
                         ControlDef.Text = CurrentElement.Default.ToString();
+                        break;
+                    case ElementType.Filename:
+                        ControlType.Text = "Filename Control";
+                        ControlStyle.SelectedIndex = 0;
+                        ControlMin.Text = CurrentElement.Min.ToString();
+                        ControlMax.Text = CurrentElement.Max.ToString();
+                        ControlDef.Text = CurrentElement.Default.ToString();
+                        BarLoc = CurrentElement.Name.IndexOf("|", StringComparison.Ordinal);
+                        OptionsText.Text = CurrentElement.Name.Substring(BarLoc + 1);
+                        ControlName.Text = CurrentElement.ToShortName();
                         break;
                     default:
                         break;
@@ -1060,7 +1092,8 @@ namespace PaintDotNet.Effects
             "RadioButtonControl",       // 10
             "ReseedButtonControl",      // 11
             "MultiLineTextboxControl",  // 12
-            "RollControl"               // 13
+            "RollControl",              // 13
+            "FilenameControl"           // 14
         };
 
         internal UIElement(ElementType eType, string eName, string eMin, string eMax, string eDefault, string eOptions, int eStyle, bool eEnabled, int eTargetAmount, bool eSwap)
@@ -1195,6 +1228,15 @@ namespace PaintDotNet.Effects
                     Max = 1;
                     Default = 0;
                     Description = eName + EnabledDescription;
+                    break;
+                case ElementType.Filename:
+                    Min = 0;
+                    Max = 0;
+                    Default = 0;
+                    Name += "|" + eOptions;
+                    NameLength = Name.IndexOf("|", StringComparison.Ordinal);
+                    if (NameLength == -1) NameLength = Name.Length;
+                    Description = Name.Substring(0, NameLength) + EnabledDescription;
                     break;
             }
         }
@@ -1447,6 +1489,14 @@ namespace PaintDotNet.Effects
                     Max = 1;
                     Name = LabelStr;
                 }
+                else if (TypeStr == "FilenameControl")
+                {
+                    ElementType = ElementType.Filename;
+                    Default = 0;
+                    Min = 0;
+                    Max = 255;
+                    Name = LabelStr;
+                }
                 else return;
 
                 string EnabledDescription = "";
@@ -1517,6 +1567,11 @@ namespace PaintDotNet.Effects
                         break;
                     case ElementType.RollBall:
                         Description = Name + EnabledDescription;
+                        break;
+                    case ElementType.Filename:
+                        NameLength = Name.IndexOf("|", StringComparison.Ordinal);
+                        if (NameLength == -1) NameLength = Name.Length;
+                        Description = Name.Substring(0, NameLength) + EnabledDescription;
                         break;
                     default:
                         break;
@@ -1637,6 +1692,9 @@ namespace PaintDotNet.Effects
                     SourceCode += " = Tuple.Create<double, double, double>( 0.0 , 0.0 , 0.0 )";
                     SourceCode += "; // ";
                     break;
+                case ElementType.Filename:
+                    SourceCode += " = @\"\"; // ";
+                    break;
                 default:
                     break;
             }
@@ -1670,13 +1728,26 @@ namespace PaintDotNet.Effects
 
         internal string ToShortName()
         {
-            if ((ElementType == ElementType.DropDown) || (ElementType == ElementType.RadioButtons))
+            if ((ElementType == ElementType.DropDown) || (ElementType == ElementType.RadioButtons) || (ElementType == ElementType.Filename))
             {
                 int BarLoc = Name.IndexOf("|", StringComparison.Ordinal);
                 if (BarLoc == -1) return Name;
                 return Name.Substring(0, BarLoc);
             }
             return Name;
+        }
+
+        internal string ToAllowableFileTypes()
+        {
+            int BarLoc = Name.IndexOf("|", StringComparison.Ordinal);
+            if (BarLoc == -1) return null;
+            string Options = Name.Substring(BarLoc + 1);
+            string[] filetypes = Options.Split('|');
+            for (int i=0; i < filetypes.Length ; i++)
+            {
+                filetypes[i] = "\"" + filetypes[i] + "\"";
+            }
+            return filetypes.Join(",");
         }
     }
 
@@ -1695,6 +1766,7 @@ namespace PaintDotNet.Effects
         RadioButtons,
         ReseedButton,
         MultiLineTextbox,
-        RollBall
+        RollBall,
+        Filename
     }
 }
