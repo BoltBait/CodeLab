@@ -201,22 +201,7 @@ namespace PaintDotNet.Effects
                 ControlDef.Text = "0";
                 StyleLabel.Enabled = true;
                 ControlStyle.Enabled = true;
-                ControlStyle.Items.Clear();
-                ControlStyle.Items.AddRange(new string[] {
-                    "Default",
-                    "Hue",
-                    "Hue Centered",
-                    "Saturation",
-                    "White - Black",
-                    "Black - White",
-                    "Cyan - Red",
-                    "Magenta - Green",
-                    "Yellow - Blue",
-                    "Cyan - Orange",
-                    "White - Red",
-                    "White - Green",
-                    "White - Blue"});
-                ControlStyle.SelectedIndex = 0;
+                FillStyleDropDown(0);
             }
             else if (ControlType.Text == "Check Box")
             {
@@ -266,11 +251,7 @@ namespace PaintDotNet.Effects
                 ControlDef.Text = "0";
                 StyleLabel.Enabled = true;
                 ControlStyle.Enabled = true;
-                ControlStyle.Items.Clear();
-                ControlStyle.Items.AddRange(new string[] {
-                    "Default",
-                    "Alpha"});
-                ControlStyle.SelectedIndex = 0;
+                FillStyleDropDown(1);
             }
             else if (ControlType.Text == "Angle Chooser")
             {
@@ -396,22 +377,7 @@ namespace PaintDotNet.Effects
                 ControlDef.Text = "0";
                 StyleLabel.Enabled = true;
                 ControlStyle.Enabled = true;
-                ControlStyle.Items.Clear();
-                ControlStyle.Items.AddRange(new string[] {
-                    "Default",
-                    "Hue",
-                    "Hue Centered",
-                    "Saturation",
-                    "White - Black",
-                    "Black - White",
-                    "Cyan - Red",
-                    "Magenta - Green",
-                    "Yellow - Blue",
-                    "Cyan - Orange",
-                    "White - Red",
-                    "White - Green",
-                    "White - Blue"});
-                ControlStyle.SelectedIndex = 0;
+                FillStyleDropDown(0);
             }
             else if (ControlType.Text == "Drop-Down List Box")
             {
@@ -520,6 +486,37 @@ namespace PaintDotNet.Effects
             }
         }
 
+        private void FillStyleDropDown(int Style)
+        {
+            ControlStyle.Items.Clear();
+            switch (Style)
+            {
+                case 1:
+                    ControlStyle.Items.AddRange(new string[] {
+                            "Default",
+                            "Alpha"});
+                    break;
+                default:
+                case 0:
+                    ControlStyle.Items.AddRange(new string[] {
+                            "Default",
+                            "Hue",
+                            "Hue Centered",
+                            "Saturation",
+                            "White - Black",
+                            "Black - White",
+                            "Cyan - Red",
+                            "Magenta - Green",
+                            "Yellow - Blue",
+                            "Cyan - Orange",
+                            "White - Red",
+                            "White - Green",
+                            "White - Blue"});
+                    break;
+            }
+            ControlStyle.SelectedIndex = 0;
+        }
+
         private void Update_Click(object sender, EventArgs e)
         {
             int CurrentItem = -1;
@@ -622,21 +619,7 @@ namespace PaintDotNet.Effects
                 {
                     case ElementType.IntSlider:
                         ControlType.Text = "Integer Slider";
-                        ControlStyle.Items.Clear();
-                        ControlStyle.Items.AddRange(new string[] {
-                            "Default",
-                            "Hue",
-                            "Hue Centered",
-                            "Saturation",
-                            "White - Black",
-                            "Black - White",
-                            "Cyan - Red",
-                            "Magenta - Green",
-                            "Yellow - Blue",
-                            "Cyan - Orange",
-                            "White - Red",
-                            "White - Green",
-                            "White - Blue"});
+                        FillStyleDropDown(0);
                         ControlStyle.SelectedIndex = CurrentElement.Style;
                         ControlMin.Text = CurrentElement.Min.ToString();
                         ControlMax.Text = CurrentElement.Max.ToString();
@@ -651,10 +634,7 @@ namespace PaintDotNet.Effects
                         break;
                     case ElementType.ColorWheel:
                         ControlType.Text = "Color Wheel";
-                        ControlStyle.Items.Clear();
-                        ControlStyle.Items.AddRange(new string[] {
-                            "Default",
-                            "Alpha"});
+                        FillStyleDropDown(1);
                         ControlStyle.SelectedIndex = CurrentElement.Style;
                         ControlMin.Text = CurrentElement.Min.ToString();
                         ControlMax.Text = CurrentElement.Max.ToString();
@@ -684,21 +664,7 @@ namespace PaintDotNet.Effects
                         break;
                     case ElementType.DoubleSlider:
                         ControlType.Text = "Double Slider";
-                        ControlStyle.Items.Clear();
-                        ControlStyle.Items.AddRange(new string[] {
-                            "Default",
-                            "Hue",
-                            "Hue Centered",
-                            "Saturation",
-                            "White - Black",
-                            "Black - White",
-                            "Cyan - Red",
-                            "Magenta - Green",
-                            "Yellow - Blue",
-                            "Cyan - Orange",
-                            "White - Red",
-                            "White - Green",
-                            "White - Blue"});
+                        FillStyleDropDown(0);
                         ControlStyle.SelectedIndex = CurrentElement.Style;
                         ControlMin.Text = CurrentElement.dMin.ToString();
                         ControlMax.Text = CurrentElement.dMax.ToString();
