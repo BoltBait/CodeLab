@@ -97,6 +97,7 @@ namespace PaintDotNet.Effects
             + "using AngleControl = System.Double;\r\n"
             + "using PanSliderControl = PaintDotNet.Pair<double,double>;\r\n"
             + "using TextboxControl = System.String;\r\n"
+            + "using FilenameControl = System.String;\r\n"
             + "using DoubleSliderControl = System.Double;\r\n"
             + "using ListBoxControl = System.Byte;\r\n"
             + "using RadioButtonControl = System.Byte;\r\n"
@@ -587,6 +588,9 @@ namespace PaintDotNet.Effects
                         case ElementType.RollBall:
                             PropertyPart += "            props.Add(new DoubleVector3Property(PropertyNames.Amount" + x.ToString() + ",Tuple.Create<double, double, double>(0.0, 0.0, 0.0), Tuple.Create<double, double, double>(-180.0, -180.0, 0.0), Tuple.Create<double, double, double>(180.0, 180.0, 90.0)));\r\n";
                             break;
+                        case ElementType.Filename:
+                            PropertyPart += "            props.Add(new StringProperty(PropertyNames.Amount" + x.ToString() + ", \"\"));\r\n";
+                            break;
                         default:
                             break;
                     }
@@ -623,6 +627,7 @@ namespace PaintDotNet.Effects
                                     case ElementType.PanSlider:
                                         PropertyPart += "            propRules.Add(new ReadOnlyBoundToValueRule<Pair<double, double>, DoubleVectorProperty>(\"Amount" + x.ToString() + "\", \"Amount" + (u.EnableLinkVar + 1).ToString() + "\", Pair.Create(0d,0d), " + (!u.EnableSwap).ToString().ToLower() + "));\r\n";
                                         break;
+                                    case ElementType.Filename:
                                     case ElementType.Textbox:
                                     case ElementType.MultiLineTextbox:
                                         PropertyPart += "            propRules.Add(new ReadOnlyBoundToValueRule<string, StringProperty>(\"Amount" + x.ToString() + "\", \"Amount" + (u.EnableLinkVar + 1).ToString() + "\", new[] { \"\" }, " + (!u.EnableSwap).ToString().ToLower() + "));\r\n";
@@ -826,6 +831,14 @@ namespace PaintDotNet.Effects
                         PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames.Amount" + x.ToString() + ", ControlInfoPropertyNames.UpDownIncrementY, 0.01);\r\n";
                         PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames.Amount" + x.ToString() + ", ControlInfoPropertyNames.UpDownIncrementZ, 0.01);\r\n";
                         PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames.Amount" + x.ToString() + ", ControlInfoPropertyNames.DecimalPlaces, 3);\r\n";
+                    }
+                    if (u.ElementType == ElementType.Filename)
+                    {
+                        PropertyPart += "            configUI.SetPropertyControlType(PropertyNames.Amount" + x.ToString() + ", PropertyControlType.FileChooser);\r\n";
+                        PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames.Amount" + x.ToString() + ", ControlInfoPropertyNames.FileTypes, new string[] { ";
+                        PropertyPart += u.ToAllowableFileTypes();
+                        PropertyPart += " });\r\n";
+                        PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames.Amount" + x.ToString() + ", ControlInfoPropertyNames.AllowAllFiles, true);\r\n";
                     }
                 }
                 PropertyPart += "\r\n";
@@ -1056,6 +1069,7 @@ namespace PaintDotNet.Effects
                         case ElementType.PanSlider:
                             SetRenderPart += "            Amount" + x.ToString() + " = newToken.GetProperty<DoubleVectorProperty>(PropertyNames.Amount" + x.ToString() + ").Value;\r\n";
                             break;
+                        case ElementType.Filename:
                         case ElementType.Textbox:
                         case ElementType.MultiLineTextbox:
                             SetRenderPart += "            Amount" + x.ToString() + " = newToken.GetProperty<StringProperty>(PropertyNames.Amount" + x.ToString() + ").Value;\r\n";
