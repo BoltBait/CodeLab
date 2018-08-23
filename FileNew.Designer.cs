@@ -65,6 +65,7 @@ namespace PaintDotNet.Effects
             this.FAS = new System.Windows.Forms.CheckBox();
             this.ST = new System.Windows.Forms.CheckBox();
             this.SurfaceCode = new System.Windows.Forms.CheckBox();
+            this.NoStyle = new System.Windows.Forms.RadioButton();
             ((System.ComponentModel.ISupportInitialize)(this.BlendArrow)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -82,7 +83,7 @@ namespace PaintDotNet.Effects
             this.button1.Location = new System.Drawing.Point(287, 499);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 0;
+            this.button1.TabIndex = 29;
             this.button1.Text = "Cancel";
             this.button1.UseVisualStyleBackColor = true;
             // 
@@ -93,7 +94,7 @@ namespace PaintDotNet.Effects
             this.label1.Location = new System.Drawing.Point(16, 13);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(64, 13);
-            this.label1.TabIndex = 2;
+            this.label1.TabIndex = 1;
             this.label1.Text = "Loop style:";
             // 
             // BasicStyle
@@ -103,7 +104,7 @@ namespace PaintDotNet.Effects
             this.BasicStyle.Location = new System.Drawing.Point(35, 30);
             this.BasicStyle.Name = "BasicStyle";
             this.BasicStyle.Size = new System.Drawing.Size(51, 17);
-            this.BasicStyle.TabIndex = 3;
+            this.BasicStyle.TabIndex = 2;
             this.BasicStyle.TabStop = true;
             this.BasicStyle.Text = "Basic";
             this.BasicStyle.UseVisualStyleBackColor = true;
@@ -114,7 +115,7 @@ namespace PaintDotNet.Effects
             this.AdvancedStyle.Location = new System.Drawing.Point(112, 30);
             this.AdvancedStyle.Name = "AdvancedStyle";
             this.AdvancedStyle.Size = new System.Drawing.Size(155, 17);
-            this.AdvancedStyle.TabIndex = 4;
+            this.AdvancedStyle.TabIndex = 3;
             this.AdvancedStyle.Text = "Advanced (unsafe pointers)";
             this.AdvancedStyle.UseVisualStyleBackColor = true;
             // 
@@ -250,7 +251,7 @@ namespace PaintDotNet.Effects
             this.DoIt.Location = new System.Drawing.Point(166, 499);
             this.DoIt.Name = "DoIt";
             this.DoIt.Size = new System.Drawing.Size(115, 23);
-            this.DoIt.TabIndex = 1;
+            this.DoIt.TabIndex = 0;
             this.DoIt.Text = "Generate Code";
             this.DoIt.UseVisualStyleBackColor = true;
             this.DoIt.Click += new System.EventHandler(this.DoIt_Click);
@@ -515,6 +516,18 @@ namespace PaintDotNet.Effects
             this.SurfaceCode.UseVisualStyleBackColor = true;
             this.SurfaceCode.CheckedChanged += new System.EventHandler(this.SurfaceCode_CheckedChanged);
             // 
+            // NoStyle
+            // 
+            this.NoStyle.AutoSize = true;
+            this.NoStyle.Location = new System.Drawing.Point(292, 30);
+            this.NoStyle.Name = "NoStyle";
+            this.NoStyle.Size = new System.Drawing.Size(51, 17);
+            this.NoStyle.TabIndex = 4;
+            this.NoStyle.TabStop = true;
+            this.NoStyle.Text = "None";
+            this.NoStyle.UseVisualStyleBackColor = true;
+            this.NoStyle.CheckedChanged += new System.EventHandler(this.NoStyle_CheckedChanged);
+            // 
             // FileNew
             // 
             this.AcceptButton = this.DoIt;
@@ -523,6 +536,7 @@ namespace PaintDotNet.Effects
             this.AutoSize = true;
             this.CancelButton = this.button1;
             this.ClientSize = new System.Drawing.Size(374, 543);
+            this.Controls.Add(this.NoStyle);
             this.Controls.Add(this.SurfaceCode);
             this.Controls.Add(this.ST);
             this.Controls.Add(this.FAS);
@@ -620,5 +634,6 @@ namespace PaintDotNet.Effects
         private System.Windows.Forms.CheckBox FAS;
         private System.Windows.Forms.CheckBox ST;
         private System.Windows.Forms.CheckBox SurfaceCode;
+        private System.Windows.Forms.RadioButton NoStyle;
     }
 }

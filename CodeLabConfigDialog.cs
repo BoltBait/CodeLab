@@ -31,7 +31,7 @@ namespace PaintDotNet.Effects
 {
     internal partial class CodeLabConfigDialog : EffectConfigDialog
     {
-        private const string ThisVersion = "3.5"; // Remember to change it in CodeLab.cs too!
+        private const string ThisVersion = "4.0"; // Remember to change it in CodeLab.cs too!
         private const string WebUpdateFile = "http://www.boltbait.com/versions.txt"; // The web site to check for updates
         private const string ThisApplication = "1"; // in the WebUpadteFile, CodeLab is application #1
         // format of the versions.txt file:  application number;current version;URL to download current version
@@ -672,7 +672,7 @@ namespace PaintDotNet.Effects
 
             if (tabStrip1.AnyDirtyTabs)
             {
-                e.Cancel = MessageBox.Show("There are tabs with unsaved changes, and will be lost if CodeLab is closed.\r\n\r\nKeep CodeLab open?", "Unsaved changes", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes;
+                e.Cancel = MessageBox.Show("Tabs marked with \"*\" have unsaved changes. These changes will be lost if CodeLab is closed.\r\n\r\nWould you like to save these files?", "Unsaved changes", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes;
             }
 
             base.OnFormClosing(e);
