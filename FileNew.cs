@@ -646,6 +646,25 @@ namespace PaintDotNet.Effects
                 if (BlendingCode.Text == "Xor") code += "private BinaryPixelOp xorOp = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Xor);" + cr;
                 code += cr;
             }
+            else if (NoStyle.Checked)
+            {
+                code += "// Setup for using " + BlendingCode.Text + " blend op" + cr;
+                if ((BlendingCode.Text == "Normal") || (BlendingCode.Text == "Pass Through")) code += "private BinaryPixelOp normalOp = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Normal);" + cr;
+                if (BlendingCode.Text == "Multiply") code += "private BinaryPixelOp multiplyOp = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Multiply);" + cr;
+                if (BlendingCode.Text == "Darken") code += "private BinaryPixelOp darkenOp = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Darken);" + cr;
+                if (BlendingCode.Text == "Additive") code += "private BinaryPixelOp additiveOp = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Additive);" + cr;
+                if (BlendingCode.Text == "ColorBurn") code += "private BinaryPixelOp colorburnOp = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.ColorBurn);" + cr;
+                if (BlendingCode.Text == "ColorDodge") code += "private BinaryPixelOp colordodgeOp = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.ColorDodge);" + cr;
+                if (BlendingCode.Text == "Difference") code += "private BinaryPixelOp differenceOp = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Difference);" + cr;
+                if (BlendingCode.Text == "Glow") code += "private BinaryPixelOp glowOp = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Glow);" + cr;
+                if (BlendingCode.Text == "Lighten") code += "private BinaryPixelOp lightenOp = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Lighten);" + cr;
+                if (BlendingCode.Text == "Negation") code += "private BinaryPixelOp negationOp = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Negation);" + cr;
+                if (BlendingCode.Text == "Overlay") code += "private BinaryPixelOp overlayOp = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Overlay);" + cr;
+                if (BlendingCode.Text == "Reflect") code += "private BinaryPixelOp reflectOp = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Reflect);" + cr;
+                if (BlendingCode.Text == "Screen") code += "private BinaryPixelOp screenOp = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Screen);" + cr;
+                if (BlendingCode.Text == "Xor") code += "private BinaryPixelOp xorOp = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Xor);" + cr;
+                code += cr;
+            }
 
             // setup for using the clipboard
             if (EffectCode.Text.Contains("Clipboard"))
@@ -1089,7 +1108,7 @@ namespace PaintDotNet.Effects
             }
                         
             // Now, call the actual function if this is a complex effect
-            if ((EffectCode.Text.Contains("Copy")) && (!BlendingCode.Text.Contains("Pass Through")))
+            if ((EffectCode.Text.Contains("Copy")) && (!BlendingCode.Text.Contains("Pass Through")) || NoStyle.Checked)
             {
                 code += "    // Call the copy function" + cr;
                 code += "    " + wrksurface + ".CopySurface(src,rect.Location,rect);" + cr;
@@ -1335,150 +1354,184 @@ namespace PaintDotNet.Effects
                 code += cr;
                 code += "    // Now in the main render loop, the " + wrksurface + " canvas is Zoom Blurred" + cr;
             }
-            // On to the main render loop!
-            code += "    for (int y = rect.Top; y < rect.Bottom; y++)" + cr;
-            code += "    {" + cr;
-            code += "        if (IsCancelRequested) return;" + cr;
-            if (AdvancedStyle.Checked)
+            if (NoStyle.Checked)
             {
-                code += "        ColorBgra* srcPtr = src.GetPointAddressUnchecked(rect.Left, y);" + cr;
-                code += "        ColorBgra* dstPtr = dst.GetPointAddressUnchecked(rect.Left, y);" + cr;
-                if (SurfaceCode.Checked)
-                {
-                    code += "        ColorBgra* wrkPtr = wrk.GetPointAddressUnchecked(rect.Left, y);" + cr;
-                }
-            }
-            code += "        for (int x = rect.Left; x < rect.Right; x++)" + cr;
-            code += "        {" + cr;
-            if (AdvancedStyle.Checked)
-            {
-                if ((EffectCode.Text.Contains("Copy") || (EffectCode.Text.Contains("Clipboard"))) && (BlendingCode.Text.Contains("Pass Through")))
-                {
-                    code += "            ColorBgra CurrentPixel = *srcPtr;" + cr;
-                    blendtop = destcode;
-                    if (SurfaceCode.Checked)
-                    {
-                        blendtop = wrkcode;
-                    }
-                }
-                else
-                {
-                    code += "            ColorBgra CurrentPixel = *" + wrksurface + "Ptr;" + cr;
-                    blendtop = srccode;
-                }
+                code += "    using (Graphics g = new RenderArgs(" + wrksurface + ").Graphics)" + cr;
+                code += "    using (Pen pen = new Pen(ColorBgra.Black, 1))" + cr;
+                code += "    using (GraphicsPath path = new GraphicsPath())" + cr;
+                code += "    using (SolidBrush brush = new SolidBrush(ColorBgra.Black))" + cr;
+                code += "    using (Font font = new Font(\"Arial\", 12))" + cr;
+                code += "    {" + cr;
+                code += "        g.Clip = new Region(rect);" + cr;
+                code += "        g.SmoothingMode = SmoothingMode.AntiAlias;" + cr;
+                code += "        g.TextRenderingHint = TextRenderingHint.AntiAlias;" + cr;
+                code += "        pen.LineJoin = LineJoin.Round;" + cr;
+                code += "        // add additional GDI+ commands here" + cr;
+                code += "    }" + cr;
+                string blendOp = "normalOp";
+                if (BlendingCode.Text == "Multiply") blendOp = "multiplyOp";
+                if (BlendingCode.Text == "Darken") blendOp = "darkenOp";
+                if (BlendingCode.Text == "Additive") blendOp = "additiveOp";
+                if (BlendingCode.Text == "ColorBurn") blendOp = "colorburnOp";
+                if (BlendingCode.Text == "ColorDodge") blendOp = "colordodgeOp";
+                if (BlendingCode.Text == "Difference") blendOp = "differenceOp";
+                if (BlendingCode.Text == "Glow") blendOp = "glowOp";
+                if (BlendingCode.Text == "Lighten") blendOp = "lightenOp";
+                if (BlendingCode.Text == "Negation") blendOp = "negationOp";
+                if (BlendingCode.Text == "Overlay") blendOp = "overlayOp";
+                if (BlendingCode.Text == "Reflect") blendOp = "reflectOp";
+                if (BlendingCode.Text == "Screen") blendOp = "screenOp";
+                if (BlendingCode.Text == "Xor") blendOp = "xorOp";
+                if (BlendingCode.Text == "User selected blending mode") blendOp = "Amount" + controls;
+                code += "    " + blendOp + ".Apply(dst, src, " + wrksurface + ", rect);" + cr;
             }
             else
             {
-                if ((EffectCode.Text.Contains("Copy") || (EffectCode.Text.Contains("Clipboard"))) && (BlendingCode.Text.Contains("Pass Through")))
+                // On to the main render loop!
+                code += "    for (int y = rect.Top; y < rect.Bottom; y++)" + cr;
+                code += "    {" + cr;
+                code += "        if (IsCancelRequested) return;" + cr;
+                if (AdvancedStyle.Checked)
                 {
-                    code += "            ColorBgra CurrentPixel = src[x,y];" + cr;
-                    blendtop = destcode;
+                    code += "        ColorBgra* srcPtr = src.GetPointAddressUnchecked(rect.Left, y);" + cr;
+                    code += "        ColorBgra* dstPtr = dst.GetPointAddressUnchecked(rect.Left, y);" + cr;
                     if (SurfaceCode.Checked)
                     {
-                        blendtop = wrkcode;
+                        code += "        ColorBgra* wrkPtr = wrk.GetPointAddressUnchecked(rect.Left, y);" + cr;
+                    }
+                }
+                code += "        for (int x = rect.Left; x < rect.Right; x++)" + cr;
+                code += "        {" + cr;
+                if (AdvancedStyle.Checked)
+                {
+                    if ((EffectCode.Text.Contains("Copy") || (EffectCode.Text.Contains("Clipboard"))) && (BlendingCode.Text.Contains("Pass Through")))
+                    {
+                        code += "            ColorBgra CurrentPixel = *srcPtr;" + cr;
+                        blendtop = destcode;
+                        if (SurfaceCode.Checked)
+                        {
+                            blendtop = wrkcode;
+                        }
+                    }
+                    else
+                    {
+                        code += "            ColorBgra CurrentPixel = *" + wrksurface + "Ptr;" + cr;
+                        blendtop = srccode;
                     }
                 }
                 else
                 {
-                    code += "            ColorBgra CurrentPixel = " + wrksurface + "[x,y];" + cr;
-                    blendtop = srccode;
+                    if ((EffectCode.Text.Contains("Copy") || (EffectCode.Text.Contains("Clipboard"))) && (BlendingCode.Text.Contains("Pass Through")))
+                    {
+                        code += "            ColorBgra CurrentPixel = src[x,y];" + cr;
+                        blendtop = destcode;
+                        if (SurfaceCode.Checked)
+                        {
+                            blendtop = wrkcode;
+                        }
+                    }
+                    else
+                    {
+                        code += "            ColorBgra CurrentPixel = " + wrksurface + "[x,y];" + cr;
+                        blendtop = srccode;
+                    }
                 }
-            }
-            if (EffectCode.Text.Contains("Clipboard"))
-            {
-                code += "            if (IsCancelRequested) return;" + cr;
-                code += "            // If clipboard has an image, get it" + cr;
-                code += "            if (img != null)" + cr;
-                code += "            {" + cr;
-                code += "                CurrentPixel = img.GetBilinearSampleWrapped(x, y);" + cr;
-                code += "            }" + cr;
-            }
-            code += cr;
-
-            // Are we near a selection outline?
-            if (SelectionCode.Checked)
-            {
-                code += "            if ( (!selectionRegion.IsVisible(x-1,y)) || (!selectionRegion.IsVisible(x,y-1)) || (!selectionRegion.IsVisible(x+1,y)) || (!selectionRegion.IsVisible(x,y+1)) )" + cr;
-                code += "            {" + cr;
-                code += "                // This pixel is next to the marching ants" + cr;
-                additionalindent = "    ";
-            }
-
-            code += additionalindent + "            // TODO: Add additional pixel processing code here" + cr;
-
-            // Add selected Pixel Op here
-            if (PixelOpCode.Text == "Desaturate") code += additionalindent + "            CurrentPixel = desaturateOp.Apply(CurrentPixel);" + cr;
-            if (PixelOpCode.Text == "Invert")     code += additionalindent + "            CurrentPixel = invertOp.Apply(CurrentPixel);" + cr;
-
-            code += cr;
-
-            // Add selected Blend Op here
-            if (BlendingCode.Text == "Normal")      code += additionalindent + "            CurrentPixel = normalOp.Apply(" + blendtop + ", CurrentPixel);" + cr;
-            if (BlendingCode.Text == "Multiply")    code += additionalindent + "            CurrentPixel = multiplyOp.Apply(" + blendtop + ", CurrentPixel);" + cr;
-            if (BlendingCode.Text == "Darken")      code += additionalindent + "            CurrentPixel = darkenOp.Apply(" + blendtop + ", CurrentPixel);" + cr;
-            if (BlendingCode.Text == "Additive")    code += additionalindent + "            CurrentPixel = additiveOp.Apply(" + blendtop + ", CurrentPixel);" + cr;
-            if (BlendingCode.Text == "ColorBurn")   code += additionalindent + "            CurrentPixel = colorburnOp.Apply(" + blendtop + ", CurrentPixel);" + cr;
-            if (BlendingCode.Text == "ColorDodge")  code += additionalindent + "            CurrentPixel = colordodgeOp.Apply(" + blendtop + ", CurrentPixel);" + cr;
-            if (BlendingCode.Text == "Difference")  code += additionalindent + "            CurrentPixel = differenceOp.Apply(" + blendtop + ", CurrentPixel);" + cr;
-            if (BlendingCode.Text == "Glow")        code += additionalindent + "            CurrentPixel = glowOp.Apply(" + blendtop + ", CurrentPixel);" + cr;
-            if (BlendingCode.Text == "Lighten")     code += additionalindent + "            CurrentPixel = lightenOp.Apply(" + blendtop + ", CurrentPixel);" + cr;
-            if (BlendingCode.Text == "Negation")    code += additionalindent + "            CurrentPixel = negationOp.Apply(" + blendtop + ", CurrentPixel);" + cr;
-            if (BlendingCode.Text == "Overlay")     code += additionalindent + "            CurrentPixel = overlayOp.Apply(" + blendtop + ", CurrentPixel);" + cr;
-            if (BlendingCode.Text == "Reflect")     code += additionalindent + "            CurrentPixel = reflectOp.Apply(" + blendtop + ", CurrentPixel);" + cr;
-            if (BlendingCode.Text == "Screen")      code += additionalindent + "            CurrentPixel = screenOp.Apply(" + blendtop + ", CurrentPixel);" + cr;
-            if (BlendingCode.Text == "Xor")         code += additionalindent + "            CurrentPixel = xorOp.Apply(" + blendtop + ", CurrentPixel);" + cr;
-            if (BlendingCode.Text == "User selected blending mode") code += additionalindent + "            CurrentPixel = Amount" + controls + ".Apply(" + blendtop + ", CurrentPixel);" + cr;
-
-            code += cr;
-
-            // Add selected Pixel Op here
-            if (FinalPixelOpCode.Text == "Desaturate") code += additionalindent + "            CurrentPixel = desaturateOp.Apply(CurrentPixel);" + cr;
-            if (FinalPixelOpCode.Text == "Invert") code += additionalindent + "            CurrentPixel = invertOp.Apply(CurrentPixel);" + cr;
-
-            // HSV Color mode
-            if (HsvColorMode.Checked)
-            {
+                if (EffectCode.Text.Contains("Clipboard"))
+                {
+                    code += "            if (IsCancelRequested) return;" + cr;
+                    code += "            // If clipboard has an image, get it" + cr;
+                    code += "            if (img != null)" + cr;
+                    code += "            {" + cr;
+                    code += "                CurrentPixel = img.GetBilinearSampleWrapped(x, y);" + cr;
+                    code += "            }" + cr;
+                }
                 code += cr;
-                code += additionalindent + "            HsvColor hsv = HsvColor.FromColor(CurrentPixel.ToColor());" + cr;
-                code += additionalindent + "            int H = hsv.Hue;" + cr;
-                code += additionalindent + "            int S = hsv.Saturation;" + cr;
-                code += additionalindent + "            int V = hsv.Value;" + cr;
-                code += additionalindent + "            byte A = CurrentPixel.A;" + cr;
-                code += additionalindent + cr;
-                code += additionalindent + "            // TODO:  Modify H, S, V, and A according to some formula here" + cr;
-                code += additionalindent + cr;
-                code += additionalindent + "            CurrentPixel = ColorBgra.FromColor(new HsvColor(H,S,V).ToColor());" + cr;
-                code += additionalindent + "            CurrentPixel.A = A;" + cr;
-            }
 
-            code += cr;
-            if (SelectionCode.Checked)
-            {
-                code += "            }" + cr;
-                code += "            else" + cr;
-                code += "            {" + cr;
-                code += "                // This pixel is NOT next to the marching ants" + cr;
-                code += "                // TODO: Add additional pixel processing code here" + cr;
-                code += "            }" + cr;
-            }
-
-            if (AdvancedStyle.Checked)
-            {
-                code += "            *dstPtr = CurrentPixel;" + cr;
-                code += "            srcPtr++;" + cr;
-                code += "            dstPtr++;" + cr;
-                if (SurfaceCode.Checked)
+                // Are we near a selection outline?
+                if (SelectionCode.Checked)
                 {
-                    code += "            wrkPtr++;" + cr;
+                    code += "            if ( (!selectionRegion.IsVisible(x-1,y)) || (!selectionRegion.IsVisible(x,y-1)) || (!selectionRegion.IsVisible(x+1,y)) || (!selectionRegion.IsVisible(x,y+1)) )" + cr;
+                    code += "            {" + cr;
+                    code += "                // This pixel is next to the marching ants" + cr;
+                    additionalindent = "    ";
                 }
-            }
-            else
-            {
-                code += "            dst[x,y] = CurrentPixel;" + cr;
-            }
 
-            code += "        }" + cr;
-            code += "    }" + cr;
+                code += additionalindent + "            // TODO: Add additional pixel processing code here" + cr;
+
+                // Add selected Pixel Op here
+                if (PixelOpCode.Text == "Desaturate") code += additionalindent + "            CurrentPixel = desaturateOp.Apply(CurrentPixel);" + cr;
+                if (PixelOpCode.Text == "Invert") code += additionalindent + "            CurrentPixel = invertOp.Apply(CurrentPixel);" + cr;
+
+                code += cr;
+
+                // Add selected Blend Op here
+                if (BlendingCode.Text == "Normal") code += additionalindent + "            CurrentPixel = normalOp.Apply(" + blendtop + ", CurrentPixel);" + cr;
+                if (BlendingCode.Text == "Multiply") code += additionalindent + "            CurrentPixel = multiplyOp.Apply(" + blendtop + ", CurrentPixel);" + cr;
+                if (BlendingCode.Text == "Darken") code += additionalindent + "            CurrentPixel = darkenOp.Apply(" + blendtop + ", CurrentPixel);" + cr;
+                if (BlendingCode.Text == "Additive") code += additionalindent + "            CurrentPixel = additiveOp.Apply(" + blendtop + ", CurrentPixel);" + cr;
+                if (BlendingCode.Text == "ColorBurn") code += additionalindent + "            CurrentPixel = colorburnOp.Apply(" + blendtop + ", CurrentPixel);" + cr;
+                if (BlendingCode.Text == "ColorDodge") code += additionalindent + "            CurrentPixel = colordodgeOp.Apply(" + blendtop + ", CurrentPixel);" + cr;
+                if (BlendingCode.Text == "Difference") code += additionalindent + "            CurrentPixel = differenceOp.Apply(" + blendtop + ", CurrentPixel);" + cr;
+                if (BlendingCode.Text == "Glow") code += additionalindent + "            CurrentPixel = glowOp.Apply(" + blendtop + ", CurrentPixel);" + cr;
+                if (BlendingCode.Text == "Lighten") code += additionalindent + "            CurrentPixel = lightenOp.Apply(" + blendtop + ", CurrentPixel);" + cr;
+                if (BlendingCode.Text == "Negation") code += additionalindent + "            CurrentPixel = negationOp.Apply(" + blendtop + ", CurrentPixel);" + cr;
+                if (BlendingCode.Text == "Overlay") code += additionalindent + "            CurrentPixel = overlayOp.Apply(" + blendtop + ", CurrentPixel);" + cr;
+                if (BlendingCode.Text == "Reflect") code += additionalindent + "            CurrentPixel = reflectOp.Apply(" + blendtop + ", CurrentPixel);" + cr;
+                if (BlendingCode.Text == "Screen") code += additionalindent + "            CurrentPixel = screenOp.Apply(" + blendtop + ", CurrentPixel);" + cr;
+                if (BlendingCode.Text == "Xor") code += additionalindent + "            CurrentPixel = xorOp.Apply(" + blendtop + ", CurrentPixel);" + cr;
+                if (BlendingCode.Text == "User selected blending mode") code += additionalindent + "            CurrentPixel = Amount" + controls + ".Apply(" + blendtop + ", CurrentPixel);" + cr;
+
+                code += cr;
+
+                // Add selected Pixel Op here
+                if (FinalPixelOpCode.Text == "Desaturate") code += additionalindent + "            CurrentPixel = desaturateOp.Apply(CurrentPixel);" + cr;
+                if (FinalPixelOpCode.Text == "Invert") code += additionalindent + "            CurrentPixel = invertOp.Apply(CurrentPixel);" + cr;
+
+                // HSV Color mode
+                if (HsvColorMode.Checked)
+                {
+                    code += cr;
+                    code += additionalindent + "            HsvColor hsv = HsvColor.FromColor(CurrentPixel.ToColor());" + cr;
+                    code += additionalindent + "            int H = hsv.Hue;" + cr;
+                    code += additionalindent + "            int S = hsv.Saturation;" + cr;
+                    code += additionalindent + "            int V = hsv.Value;" + cr;
+                    code += additionalindent + "            byte A = CurrentPixel.A;" + cr;
+                    code += additionalindent + cr;
+                    code += additionalindent + "            // TODO:  Modify H, S, V, and A according to some formula here" + cr;
+                    code += additionalindent + cr;
+                    code += additionalindent + "            CurrentPixel = ColorBgra.FromColor(new HsvColor(H,S,V).ToColor());" + cr;
+                    code += additionalindent + "            CurrentPixel.A = A;" + cr;
+                }
+
+                code += cr;
+                if (SelectionCode.Checked)
+                {
+                    code += "            }" + cr;
+                    code += "            else" + cr;
+                    code += "            {" + cr;
+                    code += "                // This pixel is NOT next to the marching ants" + cr;
+                    code += "                // TODO: Add additional pixel processing code here" + cr;
+                    code += "            }" + cr;
+                }
+
+                if (AdvancedStyle.Checked)
+                {
+                    code += "            *dstPtr = CurrentPixel;" + cr;
+                    code += "            srcPtr++;" + cr;
+                    code += "            dstPtr++;" + cr;
+                    if (SurfaceCode.Checked)
+                    {
+                        code += "            wrkPtr++;" + cr;
+                    }
+                }
+                else
+                {
+                    code += "            dst[x,y] = CurrentPixel;" + cr;
+                }
+
+                code += "        }" + cr;
+                code += "    }" + cr;
+            }
             code += "}" + cr;
             code += cr;
 
@@ -1513,6 +1566,26 @@ namespace PaintDotNet.Effects
             else
             {
                 dstLabel.Text = "DST\r\nIMAGE";
+            }
+        }
+
+        private void NoStyle_CheckedChanged(object sender, EventArgs e)
+        {
+            if (NoStyle.Checked)
+            {
+                SelectionCode.Enabled = false;
+                HsvColorMode.Enabled = false;
+                PixelOpCode.Text = "Pass Through";
+                PixelOpCode.Enabled = false;
+                FinalPixelOpCode.Text = "Pass Through";
+                FinalPixelOpCode.Enabled = false;
+            }
+            else
+            {
+                SelectionCode.Enabled = true;
+                HsvColorMode.Enabled = true;
+                PixelOpCode.Enabled = true;
+                FinalPixelOpCode.Enabled = true;
             }
         }
     }

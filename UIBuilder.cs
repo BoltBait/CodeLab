@@ -505,6 +505,7 @@ namespace PaintDotNet.Effects
                 StyleLabel.Enabled = false;
                 ControlStyle.Enabled = false;
                 ControlStyle.SelectedIndex = 0;
+                OptionsText.Text = "png|jpg|gif|bmp";
             }
         }
 
