@@ -47,6 +47,7 @@ namespace PaintDotNet.Effects
         private readonly List<int> matchLines = new List<int>();
         private readonly SizeF dpi = new SizeF(1f, 1f);
         private Theme theme;
+        private const int Preprocessor = 64;
 
         private readonly ToolStrip lightBulbMenu = new ToolStrip();
         private readonly ToolStripDropDownButton bulbIcon = new ToolStripDropDownButton();
@@ -177,7 +178,6 @@ namespace PaintDotNet.Effects
             set
             {
                 theme = value;
-                const int Preprocessor = 64;
                 switch (value)
                 {
                     case Theme.Dark:
@@ -627,7 +627,8 @@ namespace PaintDotNet.Effects
             int numStart = position;
             while (numStart > InvalidPosition)
             {
-                if (this.GetStyleAt(numStart - 1) != Style.Cpp.Number)
+                int style = this.GetStyleAt(numStart - 1);
+                if (style != Style.Cpp.Number && style != Style.Cpp.Number + Preprocessor)
                 {
                     break;
                 }
@@ -654,7 +655,10 @@ namespace PaintDotNet.Effects
                 numEnd++;
             }
 
-            if (this.GetStyleAt(numStart) != Style.Cpp.Number || this.GetStyleAt(numEnd) != Style.Cpp.Number)
+            int startStyle = this.GetStyleAt(numStart);
+            int endStyle = this.GetStyleAt(numEnd);
+            if ((startStyle != Style.Cpp.Number && startStyle != Style.Cpp.Number + Preprocessor) ||
+                (endStyle != Style.Cpp.Number && endStyle != Style.Cpp.Number + Preprocessor))
             {
                 return null;
             }
@@ -843,9 +847,8 @@ namespace PaintDotNet.Effects
                             varPos += possibleVars[i].Length + braceLength + 1;
                         }
 
-                        // Don't parse variables in comments
                         int style = this.GetStyleAt(thisVarPos);
-                        if (style == Style.Cpp.Comment || style == Style.Cpp.CommentLine || style == Style.Cpp.Preprocessor)
+                        if (style != Style.Cpp.Identifier && style != Style.Cpp.Identifier + Preprocessor)
                         {
                             continue;
                         }
@@ -894,7 +897,9 @@ namespace PaintDotNet.Effects
         private IntelliTypes GetIntelliType(int position)
         {
             int style = this.GetStyleAt(position);
-            if (style == Style.Cpp.Comment || style == Style.Cpp.CommentLine || style == Style.Cpp.String || style == Style.Cpp.Preprocessor || style == Style.Cpp.Character || style == Style.Cpp.Verbatim)
+            if (style != Style.Cpp.Word && style != Style.Cpp.Word + Preprocessor &&
+                style != Style.Cpp.Word2 && style != Style.Cpp.Word2 + Preprocessor &&
+                style != Style.Cpp.Identifier && style != Style.Cpp.Identifier + Preprocessor)
             {
                 return IntelliTypes.None;
             }
@@ -1096,7 +1101,8 @@ namespace PaintDotNet.Effects
                         }
 
                         int style = this.GetStyleAt(typePos);
-                        if (style != Style.Cpp.Comment && style != Style.Cpp.CommentLine && style != Style.Cpp.Preprocessor)
+                        if (style == Style.Cpp.Word || style == Style.Cpp.Word + Preprocessor ||
+                            style == Style.Cpp.Word2 || style == Style.Cpp.Word2 + Preprocessor)
                         {
                             string foundType = this.GetWordFromPosition(typePos);
 
@@ -1121,7 +1127,9 @@ namespace PaintDotNet.Effects
                         }
 
                         int style = this.GetStyleAt(typePos);
-                        if (style != Style.Cpp.Comment && style != Style.Cpp.CommentLine && style != Style.Cpp.Preprocessor)
+                        if (style == Style.Cpp.Word || style == Style.Cpp.Word + Preprocessor ||
+                            style == Style.Cpp.Word2 || style == Style.Cpp.Word2 + Preprocessor ||
+                            style == Style.Cpp.Identifier || style == Style.Cpp.Identifier + Preprocessor)
                         {
                             string foundType = this.GetWordFromPosition(typePos);
                             Type t = null;
@@ -1163,21 +1171,26 @@ namespace PaintDotNet.Effects
         private string GetIntelliTip(int position)
         {
             int style = this.GetStyleAt(position);
-            if (style == Style.Cpp.Comment || style == Style.Cpp.CommentLine || style == Style.Cpp.Preprocessor || style == Style.Cpp.Operator)
+            if (style == Style.Cpp.Comment || style == Style.Cpp.Comment + Preprocessor ||
+                style == Style.Cpp.CommentLine || style == Style.Cpp.CommentLine + Preprocessor ||
+                style == Style.Cpp.Preprocessor || style == Style.Cpp.Preprocessor + Preprocessor ||
+                style == Style.Cpp.Operator || style == Style.Cpp.Operator + Preprocessor)
             {
                 return string.Empty;
             }
-            if (style == Style.Cpp.String || style == Style.Cpp.Verbatim)
+            if (style == Style.Cpp.String || style == Style.Cpp.String + Preprocessor ||
+                style == Style.Cpp.StringEol || style == Style.Cpp.StringEol + Preprocessor ||
+                style == Style.Cpp.Verbatim || style == Style.Cpp.Verbatim + Preprocessor)
             {
                 Type stringType = typeof(string);
                 return $"{stringType.GetObjectType()} - {stringType.Namespace}.{stringType.Name}";
             }
-            if (style == Style.Cpp.Character)
+            if (style == Style.Cpp.Character || style == Style.Cpp.Character + Preprocessor)
             {
                 Type charType = typeof(char);
                 return $"{charType.GetObjectType()} - {charType.Namespace}.{charType.Name}";
             }
-            if (style == Style.Cpp.Number)
+            if (style == Style.Cpp.Number || style == Style.Cpp.Number + Preprocessor)
             {
                 Type numType = GetNumberType(position);
                 return (numType != null) ? $"{numType.GetObjectType()} - {numType.Namespace}.{numType.Name}" : string.Empty;
@@ -1460,7 +1473,9 @@ namespace PaintDotNet.Effects
         private Type GetReturnType(int position)
         {
             int style = this.GetStyleAt(position - 1);
-            if (style == Style.Cpp.Comment || style == Style.Cpp.CommentLine || style == Style.Cpp.String || style == Style.Cpp.Preprocessor || style == Style.Cpp.Character || style == Style.Cpp.Verbatim)
+            if (style != Style.Cpp.Word && style != Style.Cpp.Word + Preprocessor &&
+                style != Style.Cpp.Word2 && style != Style.Cpp.Word2 + Preprocessor &&
+                style != Style.Cpp.Identifier && style != Style.Cpp.Identifier + Preprocessor)
             {
                 return null;
             }
@@ -1564,7 +1579,9 @@ namespace PaintDotNet.Effects
         private Type GetDeclaringType(int position)
         {
             int style = this.GetStyleAt(position);
-            if (style == Style.Cpp.Comment || style == Style.Cpp.CommentLine || style == Style.Cpp.String || style == Style.Cpp.Preprocessor || style == Style.Cpp.Character || style == Style.Cpp.Verbatim)
+            if (style != Style.Cpp.Word && style != Style.Cpp.Word + Preprocessor &&
+                style != Style.Cpp.Word2 && style != Style.Cpp.Word2 + Preprocessor &&
+                style != Style.Cpp.Identifier && style != Style.Cpp.Identifier + Preprocessor)
             {
                 return null;
             }
@@ -1674,11 +1691,16 @@ namespace PaintDotNet.Effects
             int position = this.CurrentPosition;
 
             int style = this.GetStyleAt(position);
-            if (style == Style.Cpp.Comment || style == Style.Cpp.CommentLine || style == Style.Cpp.Preprocessor)
+            if (style == Style.Cpp.Comment || style == Style.Cpp.Comment + Preprocessor ||
+                style == Style.Cpp.CommentLine || style == Style.Cpp.CommentLine + Preprocessor ||
+                style == Style.Cpp.Preprocessor || style == Style.Cpp.Preprocessor + Preprocessor ||
+                style == Style.Cpp.Operator || style == Style.Cpp.Operator + Preprocessor)
             {
                 return false;
             }
-            if (style == Style.Cpp.String || style == Style.Cpp.Verbatim)
+            if (style == Style.Cpp.String || style == Style.Cpp.String + Preprocessor ||
+                style == Style.Cpp.StringEol || style == Style.Cpp.StringEol + Preprocessor ||
+                style == Style.Cpp.Verbatim || style == Style.Cpp.Verbatim + Preprocessor)
             {
                 Type stringType = typeof(string);
                 string fullName = $"{stringType.Namespace}.{stringType.Name}";
@@ -1686,7 +1708,7 @@ namespace PaintDotNet.Effects
                 System.Diagnostics.Process.Start($"https://docs.microsoft.com/en-us/dotnet/api/{fullName}");
                 return true;
             }
-            if (style == Style.Cpp.Character)
+            if (style == Style.Cpp.Character || style == Style.Cpp.Character + Preprocessor)
             {
                 Type charType = typeof(char);
                 string fullName = $"{charType.Namespace}.{charType.Name}";
@@ -1694,7 +1716,7 @@ namespace PaintDotNet.Effects
                 System.Diagnostics.Process.Start($"https://docs.microsoft.com/en-us/dotnet/api/{fullName}");
                 return true;
             }
-            if (style == Style.Cpp.Number)
+            if (style == Style.Cpp.Number || style == Style.Cpp.Number + Preprocessor)
             {
                 Type numType = GetNumberType(position);
                 if (numType != null)
@@ -1748,7 +1770,8 @@ namespace PaintDotNet.Effects
                     }
 
                     int style2 = this.GetStyleAt(typePos);
-                    if (style2 == Style.Cpp.Comment || style2 == Style.Cpp.CommentLine || style2 == Style.Cpp.Preprocessor)
+                    if (style2 != Style.Cpp.Word && style2 != Style.Cpp.Word + Preprocessor &&
+                        style2 != Style.Cpp.Word2 && style2 != Style.Cpp.Word2 + Preprocessor)
                     {
                         continue;
                     }
@@ -1891,7 +1914,9 @@ namespace PaintDotNet.Effects
 
                             // Don't parse variables in comments
                             int style2 = this.GetStyleAt(typePos);
-                            if (style2 == Style.Cpp.Comment || style2 == Style.Cpp.CommentLine || style2 == Style.Cpp.Preprocessor)
+                            if (style2 != Style.Cpp.Word && style2 != Style.Cpp.Word2 + Preprocessor &&
+                                style2 != Style.Cpp.Word2 && style2 != Style.Cpp.Word2 + Preprocessor &&
+                                style2 != Style.Cpp.Identifier && style2 != Style.Cpp.Identifier + Preprocessor)
                             {
                                 continue;
                             }
@@ -2333,18 +2358,20 @@ namespace PaintDotNet.Effects
                 prevCharPos--;
             }
 
-            // Ensure it's not in comments or string
-            int style = this.GetStyleAt(prevCharPos);
-            if (style == Style.Cpp.Comment || style == Style.Cpp.Verbatim)
+            int style = this.GetStyleAt(position - 1);
+            if (prevCharPos < this.Lines[this.LineFromPosition(position)].Position)
             {
-                return;
-            }
-            else if (style == Style.Cpp.CommentLine || style == Style.Cpp.String || style == Style.Cpp.Preprocessor || style == Style.Cpp.Character)
-            {
-                if (prevCharPos >= this.Lines[this.LineFromPosition(position)].Position)
+                int prevStyle = this.GetStyleAt(prevCharPos);
+                if (prevStyle == Style.Cpp.Comment || prevStyle == Style.Cpp.Comment + Preprocessor || 
+                    prevStyle == Style.Cpp.Verbatim || prevStyle == Style.Cpp.Verbatim + Preprocessor)
                 {
                     return;
                 }
+            }
+            else if (style != Style.Cpp.Default && style != Style.Cpp.Default + Preprocessor &&
+                     style != Style.Cpp.Operator && style != Style.Cpp.Operator + Preprocessor)
+            {
+                return;
             }
 
             // Ensure previous word is not Type or Variable
@@ -2383,9 +2410,9 @@ namespace PaintDotNet.Effects
                 return;
             }
 
-            // Ensure it's not in comments
             int style = this.GetStyleAt(this.WordStartPosition(position, true));
-            if (style == Style.Cpp.Comment || style == Style.Cpp.CommentLine || style == Style.Cpp.String || style == Style.Cpp.Preprocessor || style == Style.Cpp.Character || style == Style.Cpp.Verbatim)
+            if (style != Style.Cpp.Word && style != Style.Cpp.Word + Preprocessor &&
+                style != Style.Cpp.Word2 && style != Style.Cpp.Word2 + Preprocessor)
             {
                 return;
             }
@@ -2673,7 +2700,7 @@ namespace PaintDotNet.Effects
 
                     int style = this.GetStyleAt(bracePos1);
 
-                    if (bracePos1 > InvalidPosition && style != Style.Cpp.CommentLine && style != Style.Cpp.String && style != Style.Cpp.Preprocessor)
+                    if (bracePos1 > InvalidPosition && (style == Style.Cpp.Operator || style == Style.Cpp.Operator + Preprocessor))
                     {
                         // Find the matching brace
                         bracePos2 = this.BraceMatch(bracePos1);
