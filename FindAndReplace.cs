@@ -72,41 +72,23 @@ namespace PaintDotNet.Effects
         {
             get
             {
-                List<SearchFlags> flagList = new List<SearchFlags>();
+                SearchFlags flags = SearchFlags.None;
+
                 if (MatchCase.Checked)
                 {
-                    flagList.Add(SearchFlags.MatchCase);
+                    flags |= SearchFlags.MatchCase;
                 }
 
                 if (MatchWord.Checked)
                 {
-                    flagList.Add(SearchFlags.WholeWord);
+                    flags |= SearchFlags.WholeWord;
                 }
 
                 if (Regex.Checked)
                 {
-                    flagList.Add(SearchFlags.Regex);
+                    flags |= SearchFlags.Regex;
                 }
 
-                SearchFlags flags;
-                switch (flagList.Count)
-                {
-                    case 0:
-                        flags = SearchFlags.None;
-                        break;
-                    case 1:
-                        flags = flagList[0];
-                        break;
-                    case 2:
-                        flags = flagList[0] | flagList[1];
-                        break;
-                    case 3:
-                        flags = flagList[0] | flagList[1] | flagList[2];
-                        break;
-                    default:
-                        flags = SearchFlags.None;
-                        break;
-                }
                 return flags;
             }
         }
