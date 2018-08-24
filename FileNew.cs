@@ -1050,9 +1050,9 @@ namespace PaintDotNet.Effects
                 code += "    MandelbrotParameters.SetPropertyValue(MandelbrotFractalEffect.PropertyNames.InvertColors, Amount5);" + cr;
                 code += "    mandelbrotEffect.SetRenderInfo(MandelbrotParameters, new RenderArgs(" + wrksurface + "), new RenderArgs(src));" + cr;
             }
-            if (EffectCode.Text.Contains("Empty"))
+            if (EffectCode.Text.Contains("Empty") || NoStyle.Checked)
             {
-                code += "    " + wrksurface + ".Clear(Color.Transparent);" + cr;
+                code += "    " + wrksurface + ".Clear(ColorBgra.Transparent);" + cr;
             }
             if (EffectCode.Text.Contains("Copy") && wrksurface != "dst")
             {
@@ -1108,7 +1108,7 @@ namespace PaintDotNet.Effects
             }
                         
             // Now, call the actual function if this is a complex effect
-            if ((EffectCode.Text.Contains("Copy")) && (!BlendingCode.Text.Contains("Pass Through")) || NoStyle.Checked)
+            if ((EffectCode.Text.Contains("Copy")) && (!BlendingCode.Text.Contains("Pass Through")))
             {
                 code += "    // Call the copy function" + cr;
                 code += "    " + wrksurface + ".CopySurface(src,rect.Location,rect);" + cr;
@@ -1357,16 +1357,19 @@ namespace PaintDotNet.Effects
             if (NoStyle.Checked)
             {
                 code += "    using (Graphics g = new RenderArgs(" + wrksurface + ").Graphics)" + cr;
+                code += "    using (Region gClipRegion = new Region(rect))" + cr;
                 code += "    using (Pen pen = new Pen(ColorBgra.Black, 1))" + cr;
                 code += "    using (GraphicsPath path = new GraphicsPath())" + cr;
                 code += "    using (SolidBrush brush = new SolidBrush(ColorBgra.Black))" + cr;
                 code += "    using (Font font = new Font(\"Arial\", 12))" + cr;
                 code += "    {" + cr;
-                code += "        g.Clip = new Region(rect);" + cr;
+                code += "        g.Clip = gClipRegion;" + cr;
                 code += "        g.SmoothingMode = SmoothingMode.AntiAlias;" + cr;
                 code += "        g.TextRenderingHint = TextRenderingHint.AntiAlias;" + cr;
                 code += "        pen.LineJoin = LineJoin.Round;" + cr;
+                code += cr;
                 code += "        // add additional GDI+ commands here" + cr;
+                code += cr;
                 code += "    }" + cr;
                 string blendOp = "normalOp";
                 if (BlendingCode.Text == "Multiply") blendOp = "multiplyOp";
@@ -1579,6 +1582,10 @@ namespace PaintDotNet.Effects
                 PixelOpCode.Enabled = false;
                 FinalPixelOpCode.Text = "Pass Through";
                 FinalPixelOpCode.Enabled = false;
+                BlendingCode.Text = "Normal";
+                SurfaceCode.Checked = true;
+                SurfaceCode.Enabled = false;
+                EffectCode.Text = "         Empty------->";
             }
             else
             {
@@ -1586,6 +1593,8 @@ namespace PaintDotNet.Effects
                 HsvColorMode.Enabled = true;
                 PixelOpCode.Enabled = true;
                 FinalPixelOpCode.Enabled = true;
+                BlendingCode.Text = "Pass Through";
+                SurfaceCode.Enabled = true;
             }
         }
     }
