@@ -112,7 +112,7 @@ namespace PaintDotNet.Effects
             // AdvancedStyle
             // 
             this.AdvancedStyle.AutoSize = true;
-            this.AdvancedStyle.Location = new System.Drawing.Point(112, 30);
+            this.AdvancedStyle.Location = new System.Drawing.Point(104, 30);
             this.AdvancedStyle.Name = "AdvancedStyle";
             this.AdvancedStyle.Size = new System.Drawing.Size(155, 17);
             this.AdvancedStyle.TabIndex = 3;
@@ -519,12 +519,12 @@ namespace PaintDotNet.Effects
             // NoStyle
             // 
             this.NoStyle.AutoSize = true;
-            this.NoStyle.Location = new System.Drawing.Point(292, 30);
+            this.NoStyle.Location = new System.Drawing.Point(277, 30);
             this.NoStyle.Name = "NoStyle";
-            this.NoStyle.Size = new System.Drawing.Size(51, 17);
+            this.NoStyle.Size = new System.Drawing.Size(85, 17);
             this.NoStyle.TabIndex = 4;
             this.NoStyle.TabStop = true;
-            this.NoStyle.Text = "None";
+            this.NoStyle.Text = "None (GDI+)";
             this.NoStyle.UseVisualStyleBackColor = true;
             this.NoStyle.CheckedChanged += new System.EventHandler(this.NoStyle_CheckedChanged);
             // 
