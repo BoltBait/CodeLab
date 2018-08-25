@@ -154,16 +154,17 @@ namespace PaintDotNet.Effects
                         unFilteredItems.Add(new IntelliBoxItem(methodInfo.Name + methodParameters, methodInfo.Name, toolTip, IntelliTypes.Method));
                         break;
                     case MemberTypes.Property:
-                        if (memberInfo[i].ToString().Contains("[", StringComparison.Ordinal))
+                        PropertyInfo property = (PropertyInfo)memberInfo[i];
+                        if (property.ToString().Contains("[", StringComparison.Ordinal) && !property.PropertyType.Name.Contains("[", StringComparison.Ordinal))
                         {
                             continue;
                         }
 
-                        string getSet = ((PropertyInfo)memberInfo[i]).GetterSetter();
+                        string getSet = property.GetterSetter();
 
-                        returnType = ((PropertyInfo)memberInfo[i]).PropertyType.GetDisplayName();
-                        toolTip = $"{returnType} - {memberInfo[i].Name}{getSet}\n{memberInfo[i].MemberType}";
-                        unFilteredItems.Add(new IntelliBoxItem(memberInfo[i].Name, memberInfo[i].Name, toolTip, IntelliTypes.Property));
+                        returnType = property.PropertyType.GetDisplayName();
+                        toolTip = $"{returnType} - {property.Name}{getSet}\n{property.MemberType}";
+                        unFilteredItems.Add(new IntelliBoxItem(property.Name, property.Name, toolTip, IntelliTypes.Property));
                         break;
                     case MemberTypes.Event:
                         returnType = ((EventInfo)memberInfo[i]).EventHandlerType.GetDisplayName();
