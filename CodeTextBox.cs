@@ -1100,10 +1100,10 @@ namespace PaintDotNet.Effects
                             typePos--;
                         }
 
-                        int style = this.GetStyleAt(typePos);
-                        if (style == Style.Cpp.Word || style == Style.Cpp.Word + Preprocessor ||
-                            style == Style.Cpp.Word2 || style == Style.Cpp.Word2 + Preprocessor)
-                        {
+                        //int style = this.GetStyleAt(typePos);
+                        //if (style == Style.Cpp.Word || style == Style.Cpp.Word + Preprocessor ||
+                        //    style == Style.Cpp.Word2 || style == Style.Cpp.Word2 + Preprocessor)
+                        //{
                             string foundType = this.GetWordFromPosition(typePos);
 
                             Type t = Intelli.UserDefinedTypes[word];
@@ -1113,7 +1113,7 @@ namespace PaintDotNet.Effects
                             {
                                 this.IndicatorCurrent = Indicator.ObjectHighlightDef;
                             }
-                        }
+                        //}
 
                     }
                     else if (Intelli.UserScript.Contains(word, true))
@@ -1126,11 +1126,11 @@ namespace PaintDotNet.Effects
                             typePos--;
                         }
 
-                        int style = this.GetStyleAt(typePos);
-                        if (style == Style.Cpp.Word || style == Style.Cpp.Word + Preprocessor ||
-                            style == Style.Cpp.Word2 || style == Style.Cpp.Word2 + Preprocessor ||
-                            style == Style.Cpp.Identifier || style == Style.Cpp.Identifier + Preprocessor)
-                        {
+                        //int style = this.GetStyleAt(typePos);
+                        //if (style == Style.Cpp.Word || style == Style.Cpp.Word + Preprocessor ||
+                        //    style == Style.Cpp.Word2 || style == Style.Cpp.Word2 + Preprocessor ||
+                        //    style == Style.Cpp.Identifier || style == Style.Cpp.Identifier + Preprocessor)
+                        //{
                             string foundType = this.GetWordFromPosition(typePos);
                             Type t = null;
                             if (Intelli.AllTypes.ContainsKey(foundType))
@@ -1156,7 +1156,7 @@ namespace PaintDotNet.Effects
                                     this.IndicatorCurrent = Indicator.ObjectHighlightDef;
                                 }
                             }
-                        }
+                        //}
                     }
                     #endregion
 
