@@ -453,6 +453,7 @@ namespace PaintDotNet.Effects
                         break;
                     case MemberTypes.Field:
                         if (memberInfo[i].Name.Equals("RandomNumber", StringComparison.Ordinal) || memberInfo[i].Name.Equals("instanceSeed", StringComparison.Ordinal) ||
+                            memberInfo[i].Name.EndsWith("_BackingField", StringComparison.Ordinal) ||
                             memberInfo[i].Name.Equals("__listener", StringComparison.Ordinal) || memberInfo[i].Name.Equals("__debugWriter", StringComparison.Ordinal))
                         {
                             continue;
