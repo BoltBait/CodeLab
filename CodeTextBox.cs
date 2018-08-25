@@ -2354,9 +2354,14 @@ namespace PaintDotNet.Effects
                 return;
             }
 
-            string lastWords = GetLastWords(position);
-            bool isStatic = (Intelli.AllTypes.ContainsKey(lastWords) || Intelli.UserDefinedTypes.ContainsKey(lastWords)
-                             || type.IsNested); // IsNested may cause false positives
+            string[] lastWords = GetLastWords(position).Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
+            if (lastWords.Length == 0)
+            {
+                return;
+            }
+
+            string lastWord = lastWords.Last();
+            bool isStatic = (Intelli.AllTypes.ContainsKey(lastWord) || Intelli.UserDefinedTypes.ContainsKey(lastWord));
 
             iBox.Populate(type, isStatic);
 
