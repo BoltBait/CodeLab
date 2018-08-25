@@ -154,7 +154,7 @@ namespace PaintDotNet.Effects
                         unFilteredItems.Add(new IntelliBoxItem(methodInfo.Name + methodParameters, methodInfo.Name, toolTip, IntelliTypes.Method));
                         break;
                     case MemberTypes.Property:
-                        if (memberInfo[i].Name.Equals("Item", StringComparison.Ordinal))
+                        if (memberInfo[i].ToString().Contains("[", StringComparison.Ordinal))
                         {
                             continue;
                         }
