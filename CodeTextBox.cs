@@ -1418,6 +1418,7 @@ namespace PaintDotNet.Effects
             string[] paramArray = this.GetTextRange(paramStart, paramEnd - paramStart).Split(',');
 
             Tuple<int, int> oldRange = new Tuple<int, int>(this.TargetStart, this.TargetEnd);
+            this.SearchFlags = SearchFlags.MatchCase;
             for (int i = 0; i < mi.Length; i++)
             {
                 ParameterInfo[] paramInfo = ((MethodInfo)mi[i]).GetParameters();
@@ -1473,11 +1474,29 @@ namespace PaintDotNet.Effects
         private Type GetReturnType(int position)
         {
             int style = this.GetStyleAt(position - 1);
-            if (style != Style.Cpp.Word && style != Style.Cpp.Word + Preprocessor &&
-                style != Style.Cpp.Word2 && style != Style.Cpp.Word2 + Preprocessor &&
-                style != Style.Cpp.Identifier && style != Style.Cpp.Identifier + Preprocessor)
+            if (style == Style.Cpp.Comment || style == Style.Cpp.Comment + Preprocessor ||
+                style == Style.Cpp.CommentLine || style == Style.Cpp.CommentLine + Preprocessor ||
+                style == Style.Cpp.Preprocessor || style == Style.Cpp.Preprocessor + Preprocessor ||
+                style == Style.Cpp.Operator || style == Style.Cpp.Operator + Preprocessor)
             {
                 return null;
+            }
+
+            if (style == Style.Cpp.String || style == Style.Cpp.String + Preprocessor ||
+                style == Style.Cpp.StringEol || style == Style.Cpp.StringEol + Preprocessor ||
+                style == Style.Cpp.Verbatim || style == Style.Cpp.Verbatim + Preprocessor)
+            {
+                return typeof(string);
+            }
+
+            if (style == Style.Cpp.Character || style == Style.Cpp.Character + Preprocessor)
+            {
+                return typeof(char);
+            }
+
+            if (style == Style.Cpp.Number || style == Style.Cpp.Number + Preprocessor)
+            {
+                return GetNumberType(position - 1);
             }
 
             string lastWords = GetLastWords(position);
