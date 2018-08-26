@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using System.IO.Compression;
 
 namespace PaintDotNet.Effects
 {
@@ -155,6 +156,7 @@ namespace PaintDotNet.Effects
             string fullPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
             fullPath = Path.Combine(fullPath, FileName);
             fullPath = Path.ChangeExtension(fullPath, ".dll");
+            string zPath = Path.ChangeExtension(fullPath, ".zip");
             string iconResName = Path.GetFileName(iconpath);
             string installPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
             installPath = Path.Combine(installPath, "Install_" + Regex.Replace(FileName, @"[^\w]", ""));
@@ -241,6 +243,10 @@ namespace PaintDotNet.Effects
                 {
                     File.Delete(installPath);
                 }
+                if (File.Exists(zPath))
+                {
+                    File.Delete(zPath);
+                }
 
                 // Try this in Russian for outputting Russian characters to the install batch file:
 
@@ -270,12 +276,12 @@ namespace PaintDotNet.Effects
                 sw.WriteLine("");
                 sw.WriteLine(":: End Get ADMIN Privs");
                 sw.WriteLine(":: Read registry to find paint.net install directory");
-                sw.WriteLine("reg query HKLM\\SOFTWARE\\Paint.NET /v TARGETDIR 2>nul || (echo Sorry, I can't find paint.net! & goto fail)");
+                sw.WriteLine("reg query HKLM\\SOFTWARE\\Paint.NET /v TARGETDIR 2>nul || (echo Sorry, I can't find paint.net! & goto store)");
                 sw.WriteLine("set PDN_DIR=");
                 sw.WriteLine("for /f \"tokens=2,*\" %%a in ('reg query HKLM\\SOFTWARE\\Paint.NET /v TARGETDIR ^| findstr TARGETDIR') do (");
                 sw.WriteLine("  set PDN_DIR=%%b");
                 sw.WriteLine(")");
-                sw.WriteLine("if not defined PDN_DIR (echo Sorry, I can't find paint.net! & goto fail)");
+                sw.WriteLine("if not defined PDN_DIR (echo Sorry, I can't find paint.net! & goto store)");
                 sw.WriteLine(":: End read registry");
                 sw.WriteLine(":: Now do install");
                 sw.WriteLine("@echo off");
@@ -284,6 +290,32 @@ namespace PaintDotNet.Effects
                 sw.WriteLine("echo Installing " + Path.GetFileName(fullPath) + " to %PDN_DIR%\\Effects\\");
                 sw.WriteLine("echo.");
                 sw.WriteLine("copy /y \"" + Path.GetFileName(fullPath) + "\" \"%PDN_DIR%\\Effects\\\"");
+                sw.WriteLine("if '%errorlevel%' == '0' (");
+                sw.WriteLine("goto success");
+                sw.WriteLine(") else (");
+                sw.WriteLine("goto fail");
+                sw.WriteLine(")");
+                sw.WriteLine(":store");
+                sw.WriteLine("reg query \"HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\User Shell Folders\" /v Personal 2>nul || (echo Sorry, I can't find Paint.NET! & goto fail)");
+                sw.WriteLine("set PDN_DIR=");
+                sw.WriteLine("for /f \"tokens=2,*\" %%a in ('reg query \"HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\User Shell Folders\" /v Personal ^| findstr Personal') do (");
+                sw.WriteLine("  set PDN_DIR=%%b");
+                sw.WriteLine(")");
+                sw.WriteLine("if not defined PDN_DIR (echo Sorry, I can't find Paint.NET! & goto fail)");
+                sw.WriteLine("@echo off");
+                sw.WriteLine("cls");
+                sw.WriteLine("setlocal enabledelayedexpansion");
+                sw.WriteLine("set PDN_DIR=!PDN_DIR:%%USERPROFILE%%=%USERPROFILE%!");
+                sw.WriteLine("setlocal disabledelayedexpansion");
+                sw.WriteLine("echo.");
+                sw.WriteLine("echo I could not find the standard installation of Paint.NET.");
+                sw.WriteLine("echo I will install this effect in your Documents folder instead");
+                sw.WriteLine("echo in case you are using the store version.");
+                sw.WriteLine("echo.");
+                sw.WriteLine("echo Installing " + Path.GetFileName(fullPath) + " to %PDN_DIR%\\paint.net User Files\\Effects\\");
+                sw.WriteLine("echo.");
+                sw.WriteLine("mkdir \"%PDN_DIR%\\paint.net User Files\\Effects\\\" 2>nul");
+                sw.WriteLine("copy /y \"" + Path.GetFileName(fullPath) + "\" \"%PDN_DIR%\\paint.net User Files\\Effects\\\"");
                 sw.WriteLine("if '%errorlevel%' == '0' (");
                 sw.WriteLine("goto success");
                 sw.WriteLine(") else (");
@@ -326,6 +358,20 @@ namespace PaintDotNet.Effects
 
                 sw.Flush();
                 sw.Close();
+
+                // Create .zip file on user's desktop
+                using (ZipArchive archive = ZipFile.Open(zPath, ZipArchiveMode.Create))
+                {
+                    archive.CreateEntryFromFile(fullPath, Path.GetFileName(fullPath)); // add .dll file
+                    archive.CreateEntryFromFile(installPath, Path.GetFileName(installPath)); // add install.bat
+                }
+
+                if (File.Exists(zPath))
+                {
+                    // if the zip file was successfully built, delete temp files
+                    File.Delete(fullPath);
+                    File.Delete(installPath);
+                }
 
                 return true;
             }
