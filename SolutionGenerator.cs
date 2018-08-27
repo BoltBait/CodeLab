@@ -149,7 +149,7 @@ namespace PaintDotNet.Effects
             csprojFile.AppendLine("  </ItemGroup>");
             csprojFile.AppendLine("  <Import Project=\"$(MSBuildToolsPath)\\Microsoft.CSharp.targets\" />");
             csprojFile.AppendLine("  <PropertyGroup>");
-            csprojFile.AppendLine($"    <PostBuildEvent>copy \"$(TargetPath)\" \"{Path.Combine(pdnPath, "Effects")}\"</PostBuildEvent>");
+            csprojFile.AppendLine($"    <PostBuildEvent>cmd /c explorer \"$(TargetDir)\" \r\nexit 0</PostBuildEvent>");
             csprojFile.AppendLine("  </PropertyGroup>");
             csprojFile.Append("</Project>"); // no end-of-line at the end of this file
 
