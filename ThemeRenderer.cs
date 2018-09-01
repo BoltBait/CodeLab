@@ -114,7 +114,7 @@ namespace PaintDotNet.Effects
                 UseSystemColors = false;
             }
 
-            private readonly Color BackColor = PdnTheme.BackColor;
+            private readonly Color BackColor = Color.FromArgb(255, ColorBgra.Blend(new ColorBgra[] { ColorBgra.FromBgra(128, 128, 128, 64), PdnTheme.BackColor }));
             private readonly Color BorderColor = Color.FromArgb(186, 0, 105, 210);
             private readonly Color HiliteColor = Color.FromArgb(62, 0, 103, 206);
             private readonly Color CheckedColor = Color.FromArgb(129, 52, 153, 254);
