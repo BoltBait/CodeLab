@@ -155,9 +155,9 @@ namespace PaintDotNet.Effects
             {
                 this.VScrollBar = !value;
                 indicatorBar.Visible = value;
-                UpdateIndicatorBar();
-
                 this.Margins.Right = (value) ? indicatorBar.Width + 1 : 1;
+
+                UpdateIndicatorBar();
 
                 if (findPanel.Visible)
                 {
@@ -3496,7 +3496,7 @@ namespace PaintDotNet.Effects
         #region Indicator Map functions
         internal void UpdateIndicatorBar()
         {
-            if (!indicatorBar.Visible)
+            if (!MapEnabled)
             {
                 return;
             }
