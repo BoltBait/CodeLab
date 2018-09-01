@@ -334,6 +334,7 @@ namespace PaintDotNet.Effects
 
             if (ScriptBuilder.Errors.Count == 0)
             {
+                txtCode.UpdateIndicatorBar();
                 return;
             }
 
@@ -361,6 +362,9 @@ namespace PaintDotNet.Effects
                 // Underline the error
                 txtCode.IndicatorFillRange(errPosition, errorLength);
             }
+
+            txtCode.UpdateIndicatorBar();
+
             ShowErrors.Text = $"Show Errors List ({errorList.Items.Count})";
             ShowErrors.ForeColor = Color.Red;
         }

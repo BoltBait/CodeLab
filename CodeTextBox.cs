@@ -40,6 +40,7 @@ namespace PaintDotNet.Effects
         private readonly IntelliBox iBox = new IntelliBox();
         private readonly FindAndReplace findPanel = new FindAndReplace();
         private readonly IntelliTip intelliTip = new IntelliTip();
+        private readonly IndicatorBar indicatorBar = new IndicatorBar();
         private int posAtIBox = InvalidPosition;
         private int varToRenamePos = InvalidPosition;
         private string varToRename = string.Empty;
@@ -152,7 +153,11 @@ namespace PaintDotNet.Effects
             }
             set
             {
-                this.Margins.Right = (value) ? getDpiX(18) : 1;
+                this.VScrollBar = !value;
+                indicatorBar.Visible = value;
+                UpdateIndicatorBar();
+
+                this.Margins.Right = (value) ? indicatorBar.Width + 1 : 1;
 
                 if (findPanel.Visible)
                 {
@@ -225,6 +230,10 @@ namespace PaintDotNet.Effects
                         // Code Folding
                         this.SetFoldMarginColor(true, Color.FromArgb(30, 30, 30));
                         this.SetFoldMarginHighlightColor(true, Color.FromArgb(30, 30, 30));
+
+                        // Code Fold Ellipsis
+                        this.Styles[Style.FoldDisplayText].ForeColor = Color.Gray;
+                        this.Styles[Style.FoldDisplayText].BackColor = Color.FromArgb(30, 30, 30);
 
                         // Code Folding markers
                         for (int i = 25; i <= 31; i++)
@@ -313,6 +322,10 @@ namespace PaintDotNet.Effects
                         this.SetFoldMarginColor(true, Color.White);
                         this.SetFoldMarginHighlightColor(true, Color.White);
 
+                        // Code Fold Ellipsis
+                        this.Styles[Style.FoldDisplayText].ForeColor = Color.Gray;
+                        this.Styles[Style.FoldDisplayText].BackColor = Color.White;
+
                         // Code Folding markers
                         for (int i = 25; i <= 31; i++)
                         {
@@ -356,6 +369,7 @@ namespace PaintDotNet.Effects
 
                 findPanel.UpdateTheme();
                 lightBulbMenu.Renderer = PdnTheme.Renderer;
+                indicatorBar.Theme = value;
             }
         }
         #endregion
@@ -405,6 +419,9 @@ namespace PaintDotNet.Effects
             findPanel.VisibleChanged += FindPanel_VisibleChanged;
             findPanel.ParametersChanged += FindPanel_ParametersChanged;
             findPanel.ReplaceAllClicked += FindPanel_ReplaceAllClicked;
+
+            indicatorBar.Visible = false;
+            indicatorBar.Scroll += IndicatorBar_Scroll;
 
             // 
             // lightBulbMenu
@@ -530,7 +547,10 @@ namespace PaintDotNet.Effects
             this.Markers[Marker.FolderTail].Symbol = MarkerSymbol.LCorner;
 
             // Enable automatic folding
-            this.AutomaticFold = (AutomaticFold.Show | AutomaticFold.Click | AutomaticFold.Change);
+            this.AutomaticFold = (AutomaticFold.Show | AutomaticFold.Change);
+
+            // Fold Ellipsis
+            this.FoldDisplayTextSetStyle(FoldDisplayText.Boxed);
 
             // Display whitespace
             this.WhitespaceSize = 1;
@@ -568,6 +588,7 @@ namespace PaintDotNet.Effects
             this.Controls.Add(iBox);
             this.Controls.Add(findPanel);
             this.Controls.Add(lightBulbMenu);
+            this.Controls.Add(indicatorBar);
             this.lightBulbMenu.ResumeLayout(true);
             this.ResumeLayout(true);
         }
@@ -2562,6 +2583,7 @@ namespace PaintDotNet.Effects
             if (term == string.Empty)
             {
                 findPanel.Matches = 0;
+                UpdateIndicatorBar();
                 return;
             }
 
@@ -2585,6 +2607,8 @@ namespace PaintDotNet.Effects
             }
 
             findPanel.Matches = matches;
+
+            UpdateIndicatorBar();
         }
 
         private void Replace(string oldTerm, string newTerm, SearchFlags searchFlags)
@@ -2623,6 +2647,7 @@ namespace PaintDotNet.Effects
         }
 
         private int lastCaretPos = 0;
+        private bool mapScroll = false;
         private static bool IsBrace(int c, bool openBrace)
         {
             if (openBrace)
@@ -2651,6 +2676,8 @@ namespace PaintDotNet.Effects
         }
         protected override void OnUpdateUI(UpdateUIEventArgs e)
         {
+            base.OnUpdateUI(e);
+
             if (e.Change.HasFlag(UpdateChange.HScroll))
             {
                 if (iBox.Visible)
@@ -2696,10 +2723,28 @@ namespace PaintDotNet.Effects
                 {
                     lightBulbMenu.Hide();
                 }
+
+                if (!mapScroll)
+                {
+                    indicatorBar.Value = this.FirstVisibleLine;
+                }
+                else
+                {
+                    mapScroll = false;
+                }
+            }
+
+            if (e.Change.HasFlag(UpdateChange.Content))
+            {
+                indicatorBar.Maximum = CountUILines();
+                indicatorBar.Value = indicatorBar.Value = this.FirstVisibleLine;
             }
 
             if (e.Change.HasFlag(UpdateChange.Selection) || e.Change.HasFlag(UpdateChange.Content))
             {
+                int curLine = GetVisibleLine(this.CurrentLine);
+                indicatorBar.Caret = CountVisibleLines(curLine);
+
                 // Has the caret changed position?
                 int caretPos = this.CurrentPosition;
                 if (lastCaretPos != caretPos)
@@ -2746,8 +2791,6 @@ namespace PaintDotNet.Effects
                     }
                 }
             }
-
-            base.OnUpdateUI(e);
         }
 
         protected override void OnInsertCheck(InsertCheckEventArgs e)
@@ -2818,6 +2861,8 @@ namespace PaintDotNet.Effects
             }
 
             this.WhitespaceSize = getDpiX((this.Zoom >= 2) ? 2 : 1);
+
+            UpdateIndicatorBar();
 
             base.OnZoomChanged(e);
         }
@@ -2914,8 +2959,10 @@ namespace PaintDotNet.Effects
             base.OnBeforeInsert(e);
         }
 
-        protected override void OnResize(EventArgs e)
+        protected override void OnClientSizeChanged(EventArgs e)
         {
+            base.OnClientSizeChanged(e);
+
             if (findPanel.Visible)
             {
                 findPanel.Location = new Point(this.ClientRectangle.Right - this.Margins.Right - findPanel.Width, 0);
@@ -2926,7 +2973,7 @@ namespace PaintDotNet.Effects
                 iBox.Visible = false;
             }
 
-            base.OnResize(e);
+            UpdateIndicatorBar();
         }
 
         protected override void OnLostFocus(EventArgs e)
@@ -2944,90 +2991,13 @@ namespace PaintDotNet.Effects
             base.OnLostFocus(e);
         }
 
-        protected override void OnPainted(EventArgs e)
-        {
-            base.OnPainted(e);
-
-            if (!this.MapEnabled)
-            {
-                return;
-            }
-
-            using (Graphics map = this.CreateGraphics())
-            {
-                RectangleF bounds = RectangleF.FromLTRB(map.VisibleClipBounds.Right - getDpiX(16),
-                                                        map.VisibleClipBounds.Top,
-                                                        map.VisibleClipBounds.Right,
-                                                        map.VisibleClipBounds.Bottom);
-
-                Color backColor, caretColor;
-                if (this.theme == Theme.Dark)
-                {
-                    backColor = Color.FromArgb(62, 62, 62);
-                    caretColor = Color.Gainsboro;
-                }
-                else
-                {
-                    backColor = Color.WhiteSmoke;
-                    caretColor = Color.MediumBlue;
-                }
-
-                using (SolidBrush backBrush = new SolidBrush(backColor))
-                {
-                    map.FillRectangle(backBrush, bounds);
-                }
-
-                int visibleLines = CountVisibleLines();
-
-                using (Pen caretPen = new Pen(caretColor, getDpiY(2f)))
-                {
-                    int curLine = GetVisibleLine(this.CurrentLine);
-                    curLine = CountVisibleLines(curLine);
-                    float curLineVPos = (float)curLine / visibleLines * bounds.Height;
-                    curLineVPos = curLineVPos.Clamp(bounds.Top + getDpiY(1f), bounds.Bottom - getDpiY(1f));
-                    map.DrawLine(caretPen, bounds.Left, curLineVPos, bounds.Right, curLineVPos);
-                }
-
-                using (Pen indicatorPen = new Pen(Color.DeepSkyBlue, getDpiY(4f)))
-                {
-                    for (int i = 0; i < this.Bookmarks.Length; i++)
-                    {
-                        int bkmkLine = GetVisibleLine(Bookmarks[i]);
-                        bkmkLine = CountVisibleLines(bkmkLine);
-                        float bkmkVPos = (float)bkmkLine / visibleLines * bounds.Height;
-                        bkmkVPos = bkmkVPos.Clamp(bounds.Top, bounds.Bottom);
-                        map.DrawLine(indicatorPen, bounds.Left + getDpiX(6f), bkmkVPos, bounds.Right - getDpiX(6f), bkmkVPos);
-                    }
-
-                    indicatorPen.Color = Color.Orange; //this.Indicators[Indicator.Find].ForeColor;
-                    for (int i = 0; i < matchLines.Count; i++)
-                    {
-                        int matchLine = GetVisibleLine(matchLines[i]);
-                        matchLine = CountVisibleLines(matchLine);
-                        float matchLineVPos = (float)matchLine / visibleLines * bounds.Height;
-                        matchLineVPos = matchLineVPos.Clamp(bounds.Top, bounds.Bottom);
-                        map.DrawLine(indicatorPen, bounds.Left, matchLineVPos, bounds.Left + getDpiX(4f), matchLineVPos);
-                    }
-
-                    indicatorPen.Color = this.Indicators[Indicator.Error].ForeColor;
-                    for (int i = 0; i < errorLines.Count; i++)
-                    {
-                        int errorLine = GetVisibleLine(errorLines[i]);
-                        errorLine = CountVisibleLines(errorLine);
-                        float errLineVPos = (float)errorLine / visibleLines * bounds.Height;
-                        errLineVPos = errLineVPos.Clamp(bounds.Top, bounds.Bottom);
-                        map.DrawLine(indicatorPen, bounds.Right - getDpiX(4f), errLineVPos, bounds.Right, errLineVPos);
-                    }
-                }
-            }
-        }
-
         protected override void OnMarginClick(MarginClickEventArgs e)
         {
+            Line line = this.Lines[this.LineFromPosition(e.Position)];
+
             if (e.Margin == LeftMargin.Bookmarks)
             {
                 // Do we have a marker for this line?
-                Line line = this.Lines[this.LineFromPosition(e.Position)];
                 if ((line.MarkerGet() & BookmarkMargin.Mask) > 0)
                 {
                     // Remove existing bookmark
@@ -3039,6 +3009,15 @@ namespace PaintDotNet.Effects
                     line.MarkerAdd(BookmarkMargin.Marker);
                 }
             }
+            else if (e.Margin == LeftMargin.CodeFolding)
+            {
+                if (line.FoldLevelFlags.HasFlag(FoldLevelFlags.Header))
+                {
+                    line.ToggleFoldShowText("...");
+                }
+            }
+
+            UpdateIndicatorBar();
 
             base.OnMarginClick(e);
         }
@@ -3361,7 +3340,7 @@ namespace PaintDotNet.Effects
             return line;
         }
 
-        private int CountVisibleLines()
+        private int CountUILines()
         {
             return CountVisibleLines(this.Lines.Count);
         }
@@ -3373,7 +3352,7 @@ namespace PaintDotNet.Effects
             {
                 if (this.Lines[i].Visible)
                 {
-                    count++;
+                    count += this.Lines[i].WrapCount;
                 }
             }
 
@@ -3381,12 +3360,6 @@ namespace PaintDotNet.Effects
         }
 
         private int getDpiX(int value) => (int)Math.Round(value * dpi.Width);
-
-        private int getDpiY(int value) => (int)Math.Round(value * dpi.Height);
-
-        private float getDpiX(float value) => value * dpi.Width;
-
-        private float getDpiY(float value) => value * dpi.Height;
 
         internal bool IsIndicatorOn(int indicator, int position)
         {
@@ -3517,6 +3490,53 @@ namespace PaintDotNet.Effects
 
             this.ReleaseDocument(this.docCollection[guid]);
             this.docCollection.Remove(guid);
+        }
+        #endregion
+
+        #region Indicator Map functions
+        internal void UpdateIndicatorBar()
+        {
+            if (!indicatorBar.Visible)
+            {
+                return;
+            }
+
+            indicatorBar.Maximum = CountUILines();
+            indicatorBar.LargeChange = this.LinesOnScreen;
+            indicatorBar.Value = indicatorBar.Value = this.FirstVisibleLine;
+
+            int curLine = GetVisibleLine(this.CurrentLine);
+            indicatorBar.Caret = CountVisibleLines(curLine);
+
+            List<int> bkmks = new List<int>();
+            for (int i = 0; i < this.Bookmarks.Length; i++)
+            {
+                int bkmkLine = GetVisibleLine(Bookmarks[i]);
+                bkmks.Add(CountVisibleLines(bkmkLine));
+            }
+            indicatorBar.Bookmarks = bkmks.ToArray();
+
+            List<int> matches = new List<int>();
+            for (int i = 0; i < matchLines.Count; i++)
+            {
+                int matchLine = GetVisibleLine(matchLines[i]);
+                matches.Add(CountVisibleLines(matchLine));
+            }
+            indicatorBar.Matches = matches.ToArray();
+
+            List<int> errors = new List<int>();
+            for (int i = 0; i < errorLines.Count; i++)
+            {
+                int errorLine = GetVisibleLine(errorLines[i]);
+                errors.Add(CountVisibleLines(errorLine));
+            }
+            indicatorBar.Errors = errors.ToArray();
+        }
+
+        private void IndicatorBar_Scroll(object sender, ScrollEventArgs e)
+        {
+            mapScroll = true;
+            this.LineScroll(e.NewValue - this.FirstVisibleLine, 0);
         }
         #endregion
     }
