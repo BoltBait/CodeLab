@@ -497,9 +497,14 @@ namespace PaintDotNet.Effects
                             break;
                         case ElementType.ColorWheel:
                             ColorControlCount++;
+                            bool includeAlpha = false;
+                            if (u.Style == 1 || u.Style == 3)
+                            {
+                                includeAlpha = true;
+                            }
                             if (u.ColorDefault != "")
                             {
-                                if (u.Style == 0) // no alpha slider
+                                if (!includeAlpha) // no alpha slider
                                 {
                                     if (u.ColorDefault == "PrimaryColor" || u.ColorDefault == "SecondaryColor")
                                     {
@@ -524,7 +529,7 @@ namespace PaintDotNet.Effects
                             }
                             else
                             {
-                                if (u.Style == 0) // no alpha slider
+                                if (!includeAlpha) // no alpha slider
                                 {
                                     if (ColorControlCount < 2)
                                     {
@@ -747,6 +752,10 @@ namespace PaintDotNet.Effects
                     if (u.ElementType == ElementType.ColorWheel)
                     {
                         PropertyPart += "            configUI.SetPropertyControlType(PropertyNames.Amount" + x.ToString() + ", PropertyControlType.ColorWheel);\r\n";
+                        if (u.Style == 2 || u.Style == 3)
+                        {
+                            PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames.Amount" + x.ToString() + ", ControlInfoPropertyNames.ShowResetButton, false);\r\n";
+                        }
                     }
                     if (u.ElementType == ElementType.AngleChooser)
                     {

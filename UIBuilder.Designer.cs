@@ -82,7 +82,7 @@ namespace PaintDotNet.Effects
             this.ControlMax.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.ControlMax.Location = new System.Drawing.Point(309, 303);
             this.ControlMax.Name = "ControlMax";
-            this.ControlMax.Size = new System.Drawing.Size(48, 20);
+            this.ControlMax.Size = new System.Drawing.Size(55, 20);
             this.ControlMax.TabIndex = 11;
             this.ControlMax.Text = "100";
             this.toolTip1.SetToolTip(this.ControlMax, "Maximum value");
@@ -411,7 +411,7 @@ namespace PaintDotNet.Effects
             "not checked, 0"});
             this.enabledWhenCondition.Location = new System.Drawing.Point(256, 330);
             this.enabledWhenCondition.Name = "enabledWhenCondition";
-            this.enabledWhenCondition.Size = new System.Drawing.Size(101, 21);
+            this.enabledWhenCondition.Size = new System.Drawing.Size(108, 21);
             this.enabledWhenCondition.TabIndex = 15;
             this.enabledWhenCondition.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.enabledWhenCondition_DrawItem);
             this.enabledWhenCondition.SelectedIndexChanged += new System.EventHandler(this.enabledWhenCondition_SelectedIndexChanged);
@@ -449,7 +449,7 @@ namespace PaintDotNet.Effects
             "White-Blue"});
             this.ControlStyle.Location = new System.Drawing.Point(247, 274);
             this.ControlStyle.Name = "ControlStyle";
-            this.ControlStyle.Size = new System.Drawing.Size(110, 23);
+            this.ControlStyle.Size = new System.Drawing.Size(117, 23);
             this.ControlStyle.TabIndex = 5;
             this.ControlStyle.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.ControlStyle_DrawItem);
             this.ControlStyle.SelectedIndexChanged += new System.EventHandler(this.ControlStyle_SelectedIndexChanged);

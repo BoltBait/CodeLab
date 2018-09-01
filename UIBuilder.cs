@@ -517,7 +517,10 @@ namespace PaintDotNet.Effects
                 case 1:
                     ControlStyle.Items.AddRange(new string[] {
                             "Default",
-                            "Alpha"});
+                            "Alpha",
+                            "Default no Reset",
+                            "Alpha no Reset"
+                    });
                     break;
                 default:
                 case 0:
@@ -864,7 +867,7 @@ namespace PaintDotNet.Effects
             dirty = true;
             if (ControlType.Text == "Color Wheel")
             {
-                if (ControlStyle.SelectedIndex == 0)
+                if (ControlStyle.SelectedIndex == 0 || ControlStyle.SelectedIndex == 2)
                 {
                     ControlMax.Text = "‭16777215‬";
                     ControlMin.Text = "0";
@@ -1064,8 +1067,8 @@ namespace PaintDotNet.Effects
         internal int Style = 0;
         //   0  Default           Default
         //   1  Hue               Alpha
-        //   2  Hue Centered
-        //   3  Saturation
+        //   2  Hue Centered      Default no Reset
+        //   3  Saturation        Alpha no Reset
         //   4  White-Black
         //   5  Black-White
         //   6  Cyan-Red
@@ -1150,15 +1153,20 @@ namespace PaintDotNet.Effects
                     ColorDefault = (eDefault == "None" ? "" : eDefault);
                     Description = eName;
                     string alphastyle = "";
-                    if (Style == 1)
+                    string resetstyle = "";
+                    if (Style == 1 || Style == 3)
                     {
                         alphastyle = "?";
                         Min = int.MinValue;
                         Max = int.MaxValue;
                     }
+                    if (Style == 2 || Style == 3)
+                    {
+                        resetstyle = "!";
+                    }
                     if (ColorDefault != "")
                     {
-                        Description += " (" + ColorDefault + alphastyle + ")";
+                        Description += " (" + ColorDefault + alphastyle + resetstyle + ")";
                     }
                     Description += EnabledDescription;
                     break;
@@ -1368,6 +1376,23 @@ namespace PaintDotNet.Effects
                         Min = int.MinValue;
                         Max = int.MaxValue;
                     }
+                    else if (DefaultColor.EndsWith("!"))
+                    {
+                        if (DefaultColor.EndsWith("?!"))
+                        {
+                            ColorDefault = DefaultColor.Substring(0, DefaultColor.Length - 2);
+                            Style = 3;
+                            Min = int.MinValue;
+                            Max = int.MaxValue;
+                        }
+                        else
+                        {
+                            ColorDefault = DefaultColor.Substring(0, DefaultColor.Length - 1);
+                            Style = 2;
+                            Min = 0;
+                            Max = 0xffffff;
+                        }
+                    }
                     else
                     {
                         ColorDefault = DefaultColor;
@@ -1522,13 +1547,18 @@ namespace PaintDotNet.Effects
                     case ElementType.ColorWheel:
                         Description = Name;
                         string alphastyle = "";
-                        if (Style == 1)
+                        if (Style == 1 || Style == 3)
                         {
                             alphastyle = "?";
                         }
+                        string resetstyle = "";
+                        if (Style == 2 || Style == 3)
+                        {
+                            resetstyle = "!";
+                        }
                         if (ColorDefault != "")
                         {
-                            Description += " (" + ColorDefault + alphastyle + ")";
+                            Description += " (" + ColorDefault + alphastyle + resetstyle + ")";
                         }
                         Description += EnabledDescription;
                         break;
@@ -1634,7 +1664,17 @@ namespace PaintDotNet.Effects
                     {
                         c = Color.FromName(ColorDefault);
                     }
-                    if (Style == 1)
+                    string alphastyle = "";
+                    string resetstyle = "";
+                    if (Style == 1 || Style == 3)
+                    {
+                        alphastyle = "?";
+                    }
+                    if (Style == 2 || Style == 3)
+                    {
+                        resetstyle = "!";
+                    }
+                    if (alphastyle == "?")
                     {
                         SourceCode += " = ColorBgra.FromBgra(" + c.B.ToString() + "," + c.G.ToString() + "," + c.R.ToString() + ",255)";
                     }
@@ -1643,23 +1683,9 @@ namespace PaintDotNet.Effects
                         SourceCode += " = ColorBgra.FromBgr(" + c.B.ToString() + "," + c.G.ToString() + "," + c.R.ToString() + ")";
                     }
                     SourceCode += "; // ";
-                    if (ColorDefault != "")
+                    if (ColorDefault.Trim() + alphastyle + resetstyle != "")
                     {
-                        if (Style == 1)
-                        {
-                            SourceCode += "[" + ColorDefault + "?] ";
-                        }
-                        else
-                        {
-                            SourceCode += "[" + ColorDefault + "] ";
-                        }
-                    }
-                    else
-                    {
-                        if (Style == 1)
-                        {
-                            SourceCode += "[?] ";
-                        }
+                        SourceCode += "[" + ColorDefault.Trim() + alphastyle + resetstyle + "] ";
                     }
                     break;
                 case ElementType.PanSlider:
