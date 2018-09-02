@@ -1062,7 +1062,7 @@ namespace PaintDotNet.Effects
                             SetRenderPart += "            Amount" + x.ToString() + " = newToken.GetProperty<BooleanProperty>(PropertyNames.Amount" + x.ToString() + ").Value;\r\n";
                             break;
                         case ElementType.ColorWheel:
-                            if (u.Style == 0)
+                            if (u.Style == 0 || u.Style == 2)
                             {
                                 SetRenderPart += "            Amount" + x.ToString() + " = ColorBgra.FromOpaqueInt32(newToken.GetProperty<Int32Property>(PropertyNames.Amount" + x.ToString() + ").Value);\r\n";
                             }
