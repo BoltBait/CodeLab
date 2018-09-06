@@ -419,6 +419,7 @@ namespace PaintDotNet.Effects
             findPanel.VisibleChanged += FindPanel_VisibleChanged;
             findPanel.ParametersChanged += FindPanel_ParametersChanged;
             findPanel.ReplaceAllClicked += FindPanel_ReplaceAllClicked;
+            findPanel.FindNextClicked += FindPanel_FindNextClicked;
 
             indicatorBar.Visible = false;
             indicatorBar.Scroll += IndicatorBar_Scroll;
@@ -2571,6 +2572,34 @@ namespace PaintDotNet.Effects
         private void FindPanel_ReplaceAllClicked(object sender, EventArgs e)
         {
             Replace(findPanel.Term, findPanel.Replacement, findPanel.Flags);
+        }
+
+        private void FindPanel_FindNextClicked(object sender, EventArgs e)
+        {
+            if (findPanel.Term.Length == 0)
+            {
+                return;
+            }
+
+            this.SearchFlags = findPanel.Flags;
+
+            this.SetTargetRange(this.CurrentPosition, this.TextLength);
+            if (this.SearchInTarget(findPanel.Term) != InvalidPosition)
+            {
+                this.SetSel(this.TargetStart, this.TargetEnd);
+                this.Lines[this.LineFromPosition(this.TargetStart)].EnsureVisible();
+                this.ScrollCaret();
+
+                return;
+            }
+
+            this.SetTargetRange(0, this.CurrentPosition);
+            if (this.SearchInTarget(findPanel.Term) != InvalidPosition)
+            {
+                this.SetSel(this.TargetStart, this.TargetEnd);
+                this.Lines[this.LineFromPosition(this.TargetStart)].EnsureVisible();
+                this.ScrollCaret();
+            }
         }
 
         private void Find(string term, SearchFlags searchFlags)

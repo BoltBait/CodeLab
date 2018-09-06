@@ -27,10 +27,14 @@ namespace PaintDotNet.Effects
         {
             InitializeComponent();
 
-            // HiDPI Fix
+            // HiDPI Fixes
             int leftMargin = Toggle.Width + Toggle.Margin.Horizontal + FindBox.Margin.Left;
             MatchCase.Margin = new Padding(leftMargin, MatchCase.Margin.Top, MatchCase.Margin.Right, MatchCase.Margin.Bottom);
             ReplaceBox.Margin = new Padding(leftMargin, ReplaceBox.Margin.Top, ReplaceBox.Margin.Right, ReplaceBox.Margin.Bottom);
+
+            int emptySpace = toolStrip1.ClientSize.Width - (toolStrip1.Padding.Horizontal + Toggle.Width + Toggle.Margin.Horizontal +
+                             FindBox.Width + FindBox.Margin.Horizontal + Next.Width + Next.Margin.Horizontal + Close.Width + Close.Margin.Horizontal);
+            Close.Margin = new Padding(emptySpace, Close.Margin.Top, Close.Margin.Right, Close.Margin.Bottom);
         }
 
         #region Properties
@@ -97,12 +101,8 @@ namespace PaintDotNet.Effects
         {
             set
             {
-                HitCount.Text = value.ToString();
-
-                // Adjust margins to keep close button on far right
-                int emptySpace = toolStrip1.ClientSize.Width - (toolStrip1.Padding.Horizontal + Toggle.Width + Toggle.Margin.Horizontal +
-                                 FindBox.Width + FindBox.Margin.Horizontal + HitCount.Width + Close.Width + Close.Margin.Horizontal);
-                HitCount.Margin = new Padding(emptySpace / 2, HitCount.Margin.Top, emptySpace / 2, HitCount.Margin.Bottom);
+                string matches = (value == 1) ? "Match" : "Matches";
+                this.Next.ToolTipText = $"Find Next\r\n({value} {matches})";
             }
         }
         #endregion
@@ -118,6 +118,12 @@ namespace PaintDotNet.Effects
         protected void OnReplaceAllClicked()
         {
             this.ReplaceAllClicked?.Invoke(this, EventArgs.Empty);
+        }
+
+        internal event EventHandler FindNextClicked;
+        protected void OnFindNextClicked()
+        {
+            this.FindNextClicked?.Invoke(this, EventArgs.Empty);
         }
         #endregion
 
@@ -210,6 +216,11 @@ namespace PaintDotNet.Effects
         private void toolStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
             toolStrip1.Focus();
+        }
+
+        private void Next_Click(object sender, EventArgs e)
+        {
+            OnFindNextClicked();
         }
     }
 }

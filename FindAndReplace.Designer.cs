@@ -31,7 +31,7 @@
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.Toggle = new System.Windows.Forms.ToolStripButton();
             this.FindBox = new System.Windows.Forms.ToolStripTextBox();
-            this.HitCount = new System.Windows.Forms.ToolStripLabel();
+            this.Next = new System.Windows.Forms.ToolStripButton();
             this.Close = new System.Windows.Forms.ToolStripButton();
             this.MatchCase = new System.Windows.Forms.ToolStripButton();
             this.MatchWord = new System.Windows.Forms.ToolStripButton();
@@ -48,7 +48,7 @@
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.Toggle,
             this.FindBox,
-            this.HitCount,
+            this.Next,
             this.Close,
             this.MatchCase,
             this.MatchWord,
@@ -84,14 +84,15 @@
             this.FindBox.Size = new System.Drawing.Size(150, 23);
             this.FindBox.TextChanged += new System.EventHandler(this.FindBox_TextChanged);
             // 
-            // HitCount
+            // Next
             // 
-            this.HitCount.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.HitCount.Margin = new System.Windows.Forms.Padding(0, 3, 0, 2);
-            this.HitCount.Name = "HitCount";
-            this.HitCount.Size = new System.Drawing.Size(13, 15);
-            this.HitCount.Text = "0";
-            this.HitCount.ToolTipText = "Matches";
+            this.Next.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.Next.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Next.Name = "Next";
+            this.Next.Size = new System.Drawing.Size(24, 19);
+            this.Next.Text = "➡";
+            this.Next.ToolTipText = "Find Next";
+            this.Next.Click += new System.EventHandler(this.Next_Click);
             // 
             // Close
             // 
@@ -193,6 +194,6 @@
         private System.Windows.Forms.ToolStripTextBox ReplaceBox;
         private System.Windows.Forms.ToolStripButton Regex;
         private System.Windows.Forms.ToolStripButton ReplaceAll;
-        private System.Windows.Forms.ToolStripLabel HitCount;
+        private System.Windows.Forms.ToolStripButton Next;
     }
 }
