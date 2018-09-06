@@ -1953,7 +1953,7 @@ namespace PaintDotNet.Effects
 
                             // Don't parse variables in comments
                             int style2 = this.GetStyleAt(typePos);
-                            if (style2 != Style.Cpp.Word && style2 != Style.Cpp.Word2 + Preprocessor &&
+                            if (style2 != Style.Cpp.Word && style2 != Style.Cpp.Word + Preprocessor &&
                                 style2 != Style.Cpp.Word2 && style2 != Style.Cpp.Word2 + Preprocessor &&
                                 style2 != Style.Cpp.Identifier && style2 != Style.Cpp.Identifier + Preprocessor)
                             {
@@ -2737,7 +2737,7 @@ namespace PaintDotNet.Effects
             if (e.Change.HasFlag(UpdateChange.Content))
             {
                 indicatorBar.Maximum = CountUILines();
-                indicatorBar.Value = indicatorBar.Value = this.FirstVisibleLine;
+                indicatorBar.Value = this.FirstVisibleLine;
             }
 
             if (e.Change.HasFlag(UpdateChange.Selection) || e.Change.HasFlag(UpdateChange.Content))
@@ -3503,7 +3503,7 @@ namespace PaintDotNet.Effects
 
             indicatorBar.Maximum = CountUILines();
             indicatorBar.LargeChange = this.LinesOnScreen;
-            indicatorBar.Value = indicatorBar.Value = this.FirstVisibleLine;
+            indicatorBar.Value = this.FirstVisibleLine;
 
             int curLine = GetVisibleLine(this.CurrentLine);
             indicatorBar.Caret = CountVisibleLines(curLine);
