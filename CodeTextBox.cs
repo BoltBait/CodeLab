@@ -1456,11 +1456,10 @@ namespace PaintDotNet.Effects
                 for (int j = 0; j < paramInfo.Length; j++)
                 {
                     int paramPos = InvalidPosition;
-                    while (this.SearchInTarget(paramArray[j].Trim()) != InvalidPosition)
+                    if (this.SearchInTarget(paramArray[j].Trim()) != InvalidPosition)
                     {
                         paramPos = this.TargetEnd;
                         this.SetTargetRange(this.TargetEnd, paramEnd);
-                        break;
                     }
 
                     if (paramPos == InvalidPosition)
@@ -2051,12 +2050,11 @@ namespace PaintDotNet.Effects
                         // move caret/selection to the correct location
                         this.SearchFlags = SearchFlags.None;
                         this.SetTargetRange(startPos, endPos);
-                        while (this.SearchInTarget("&") != InvalidPosition)
+                        if (this.SearchInTarget("&") != InvalidPosition)
                         {
                             this.DeleteRange(this.TargetStart, 1);
                             this.SelectionStart = this.WordStartPosition(this.TargetStart, true);
                             this.SelectionEnd = this.WordEndPosition(this.TargetStart, true);
-                            break;
                         }
 
                         this.EndUndoAction();
