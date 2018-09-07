@@ -13,6 +13,7 @@
 /////////////////////////////////////////////////////////////////////////////////
 
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -165,7 +166,6 @@ namespace PaintDotNet.Effects
             csprojUserFile.Append("</Project>"); // no end-of-line at the end of this file
 
 
-            bool generated = false;
             try
             {
                 File.WriteAllText(Path.Combine(slnPath, projectName + ".sln"), slnFile.ToString());
@@ -191,15 +191,23 @@ namespace PaintDotNet.Effects
                 {
                     File.Copy(rtfPath, Path.Combine(projPath, Path.GetFileName(rtfPath)), true);
                 }
-
-                generated = true;
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Solution generated failed.\r\n\r\n" + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
             }
 
-            return generated;
+            try
+            {
+                Process.Start("explorer.exe", "/select," + Path.Combine(slnPath, projectName + ".sln"));
+            }
+            catch
+            {
+                MessageBox.Show("Could not navigate to the generated Solution file.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            return true;
         }
     }
 }
