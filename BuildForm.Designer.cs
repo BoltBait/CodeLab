@@ -819,6 +819,7 @@ namespace PaintDotNet.Effects
             this.MenuIcon.Location = new System.Drawing.Point(86, 102);
             this.MenuIcon.Name = "MenuIcon";
             this.MenuIcon.Size = new System.Drawing.Size(16, 16);
+            this.MenuIcon.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.MenuIcon.TabIndex = 3;
             this.MenuIcon.TabStop = false;
             // 

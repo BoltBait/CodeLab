@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -143,6 +144,16 @@ namespace PaintDotNet.Effects
             }
 
             return count;
+        }
+
+        internal static Bitmap ResizeForDPI(this Image image, SizeF dpi)
+        {
+            Size newSize = new Size
+            {
+                Width = (int)Math.Round(image.Width * dpi.Width / 96f),
+                Height = (int)Math.Round(image.Height * dpi.Height / 96f),
+            };
+            return new Bitmap(image, newSize);
         }
 
         internal static string GetDisplayName(this Type type)

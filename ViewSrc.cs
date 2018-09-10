@@ -31,6 +31,10 @@ namespace PaintDotNet.Effects
             TextSrcBox.ForeColor = PdnTheme.ForeColor;
             TextSrcBox.BackColor = PdnTheme.BackColor;
 
+            // DPI fixes
+            CopyButton.Image = CopyButton.Image.ResizeForDPI(this.AutoScaleDimensions);
+            SaveButton.Image = SaveButton.Image.ResizeForDPI(this.AutoScaleDimensions);
+
             TextSrcBox.Text = SourceString;
             this.Text = title;
             SaveButton.Visible = ShowSaveButton;
