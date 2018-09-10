@@ -155,7 +155,7 @@ namespace PaintDotNet.Effects
                         break;
                     case MemberTypes.Property:
                         PropertyInfo property = (PropertyInfo)memberInfo[i];
-                        if (property.ToString().Contains("[", StringComparison.Ordinal) && !property.PropertyType.Name.Contains("[", StringComparison.Ordinal))
+                        if (property.GetIndexParameters().Length > 0)
                         {
                             continue;
                         }
