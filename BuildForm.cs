@@ -244,38 +244,11 @@ namespace PaintDotNet.Effects
 
             #region Load default icon
             // See if a default icon exists
-            try
-            {
-                Uri location = new Uri(ScriptPath);
-                string fullPath = Uri.UnescapeDataString(Path.GetDirectoryName(location.AbsolutePath));
-                fullPath = Path.Combine(fullPath, ScriptName);
-                fullPath = Path.ChangeExtension(fullPath, ".png");
-                if (File.Exists(fullPath))
-                {
-                    Bitmap newicon = new Bitmap(fullPath);
-                    if ((newicon.Width == 16) && (newicon.Height == 16))
-                    {
-                        MenuIcon.Image = newicon;
-                        IconPathStr = fullPath;
-                    }
-                    else
-                    {
-                        MenuIcon.Image = null;
-                        IconPathStr = fullPath;
-                    }
-                }
-                else
-                {
-                    MenuIcon.Image = null;
-                    IconPathStr = "";
-                }
-            }
-            catch
-            {
-                // If something went wrong, don't crash, just assume the file is invalid
-                MenuIcon.Image = null;
-                IconPathStr = "";
-            }
+            string iconPath = Path.GetDirectoryName(ScriptPath);
+            iconPath = Path.Combine(iconPath, ScriptName);
+            iconPath = Path.ChangeExtension(iconPath, ".png");
+
+            SetIcon(iconPath);
             #endregion
 
             if (HelpPlainText.Text == "")
@@ -367,6 +340,43 @@ namespace PaintDotNet.Effects
         #endregion
 
         #region Select Icon
+        private void SetIcon(string filePath)
+        {
+            if (!File.Exists(filePath))
+            {
+                MenuIcon.Image = null;
+                IconPathStr = "";
+                return;
+            }
+
+            Bitmap newicon;
+            try
+            {
+                // Load the file as a bitmap
+                newicon = new Bitmap(filePath);
+            }
+            catch
+            {
+                // If any errors happen, assume the file is invalid.
+                MenuIcon.Image = null;
+                IconPathStr = "";
+                return;
+            }
+
+            // Make sure the icon is 16 x 16
+            if ((newicon.Width != 16) || (newicon.Height != 16))
+            {
+                MenuIcon.Image = null;
+                IconPathStr = "";
+                MessageBox.Show("PNG file must be 16 x 16 pixels", "Improper File Selected");
+                return;
+            }
+
+            // Load the icon to the message box
+            MenuIcon.Image = newicon;
+            IconPathStr = filePath;
+        }
+
         private void ButtonIcon_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
@@ -377,37 +387,7 @@ namespace PaintDotNet.Effects
 
             if (ofd.ShowDialog() == DialogResult.OK)
             {
-                try
-                {
-                    if (File.Exists(ofd.FileName))
-                    {
-                        // Load the file as a bitmap
-                        Bitmap newicon = new Bitmap(ofd.FileName);
-                        // Make sure the icon is 16 x 16
-                        if ((newicon.Width == 16) && (newicon.Height == 16))
-                        {
-                            // Load the icon to the message box
-                            MenuIcon.Image = newicon;
-                            IconPathStr = ofd.FileName;
-                        }
-                        else
-                        {
-                            MessageBox.Show("PNG file must be 16 x 16 pixels", "Improper File Selected");
-                            IconPathStr = "";
-                            MenuIcon.Image = null;
-                        }
-                    }
-                    else
-                    {
-                        IconPathStr = "";
-                    }
-                }
-                catch
-                {
-                    // If any errors happen, assume the file is invalid.
-                    MenuIcon.Image = null;
-                    IconPathStr = "";
-                }
+                SetIcon(ofd.FileName);
             }
         }
         #endregion
