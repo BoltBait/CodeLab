@@ -18,7 +18,6 @@ using System.IO;
 using System.Windows.Forms;
 using System.Text.RegularExpressions;
 using System.Runtime.InteropServices;
-using Microsoft.Win32;
 using System.IO.Compression;
 using System.Text;
 using System.Diagnostics;
@@ -802,19 +801,12 @@ namespace PaintDotNet.Effects
 
         private void DoOpen()
         {
-            RegistryKey settings = Registry.CurrentUser.OpenSubKey("Software\\CodeLab", true);
-            if (settings == null)
-            {
-                Registry.CurrentUser.CreateSubKey("Software\\CodeLab").Flush();
-                settings = Registry.CurrentUser.OpenSubKey("Software\\CodeLab", true);
-            }
-            string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
-            string initialDir = (string)settings.GetValue("LastSourceDir", desktopPath);
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Title = "Open Help File";
             ofd.Filter = "Rich Text Format (*.RTF)|*.RTF|Compressed Rich Text Format (*.RTZ)|*.RTZ|Text Format with UBB Codes (*.TXT)|*.TXT";
             ofd.DefaultExt = ".rtf";
             ofd.Multiselect = false;
+            ofd.InitialDirectory = Settings.LastSourceDirectory;
             if (ofd.ShowDialog() == DialogResult.OK && File.Exists(ofd.FileName))
             {
                 try
@@ -848,19 +840,12 @@ namespace PaintDotNet.Effects
 
         private void DoSave(bool OpenInWordPad)
         {
-            RegistryKey settings = Registry.CurrentUser.OpenSubKey("Software\\CodeLab", true);
-            if (settings == null)
-            {
-                Registry.CurrentUser.CreateSubKey("Software\\CodeLab").Flush();
-                settings = Registry.CurrentUser.OpenSubKey("Software\\CodeLab", true);
-            }
-            string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
-            string initialDir = (string)settings.GetValue("LastSourceDir", desktopPath);
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.Title = "Save Help File";
             sfd.FileName = Path.ChangeExtension(FileName,".rtf");
             sfd.Filter = "Rich Text Format (*.RTF)|*.RTF";
             sfd.DefaultExt = ".rtf";
+            sfd.InitialDirectory = Settings.LastSourceDirectory;
 
             if (sfd.ShowDialog() == DialogResult.OK)
             {
@@ -1023,19 +1008,12 @@ namespace PaintDotNet.Effects
 
         private void InsertImageButton_Click(object sender, EventArgs e)
         {
-            RegistryKey settings = Registry.CurrentUser.OpenSubKey("Software\\CodeLab", true);
-            if (settings == null)
-            {
-                Registry.CurrentUser.CreateSubKey("Software\\CodeLab").Flush();
-                settings = Registry.CurrentUser.OpenSubKey("Software\\CodeLab", true);
-            }
-            string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
-            string initialDir = (string)settings.GetValue("LastSourceDir", desktopPath);
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Title = "Open Image File";
             ofd.Filter = "Image Files(*.PNG;*.BMP;*.JPG;*.GIF)|*.PNG;*.BMP;*.JPG;*.GIF|All files (*.*)|*.*";
             ofd.DefaultExt = ".png";
             ofd.Multiselect = false;
+            ofd.InitialDirectory = Settings.LastSourceDirectory;
             if (ofd.ShowDialog() == DialogResult.OK)
             {
                 Bitmap aimg = null;
@@ -1126,8 +1104,7 @@ namespace PaintDotNet.Effects
 
             using (FolderBrowserDialog fbd = new FolderBrowserDialog())
             {
-                string selectedDir = Registry.GetValue("HKEY_CURRENT_USER\\Software\\CodeLab", "LastSlnDir", Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)) as string;
-                fbd.SelectedPath = selectedDir ?? Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                fbd.SelectedPath = Settings.LastSlnDirectory;
                 fbd.ShowNewFolderButton = true;
                 fbd.Description = "Choose a Folder to place the generated Visual Studio Solution.";
 
@@ -1136,7 +1113,7 @@ namespace PaintDotNet.Effects
                     string SourceCode = ScriptWriter.FullSourceCode(FullScriptText, FileName, isAdjustment, SubMenuName.Text, MenuName.Text, IconPathStr, Support, ForceAliasSelection, ForceSingleThreaded, Author, MajorVer, MinorVer, Description, KeyWords, WindowTitleTextStr, HelpType, HelpStr);
                     Solution.Generate(fbd.SelectedPath, FileName, SourceCode, IconPathStr);
 
-                    Registry.SetValue("HKEY_CURRENT_USER\\Software\\CodeLab", "LastSlnDir", fbd.SelectedPath, RegistryValueKind.String);
+                    Settings.LastSlnDirectory = fbd.SelectedPath;
                 }
             }
         }

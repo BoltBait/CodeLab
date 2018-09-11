@@ -80,6 +80,7 @@
     </Compile>
     <Compile Include="ScriptBuilder.cs" />
     <Compile Include="ScriptWriter.cs" />
+    <Compile Include="Settings.cs" />
     <Compile Include="SolutionGenerator.cs" />
     <Compile Include="TabStrip.cs">
       <SubType>UserControl</SubType>

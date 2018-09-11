@@ -14,7 +14,6 @@
 // Latest distribution: http://www.BoltBait.com/pdn/codelab
 /////////////////////////////////////////////////////////////////////////////////
 
-using Microsoft.Win32;
 using PaintDotNet.AppModel;
 using ScintillaNET;
 using System;
@@ -54,39 +53,33 @@ namespace PaintDotNet.Effects
             InitializeComponent();
 
             #region Load Settings from registry
-            RegistryKey settings = Registry.CurrentUser.OpenSubKey("Software\\CodeLab", true);
-            if (settings == null)
-            {
-                Registry.CurrentUser.CreateSubKey("Software\\CodeLab").Flush();
-                settings = Registry.CurrentUser.OpenSubKey("Software\\CodeLab", true);
-            }
-            if (1 == (int)settings.GetValue("WordWrap", 0))
+            if (Settings.WordWrap)
             {
                 txtCode.WrapMode = WrapMode.Whitespace;
                 wordWrapToolStripMenuItem.CheckState = CheckState.Checked;
             }
-            if (1 == (int)settings.GetValue("WhiteSpace", 0))
+            if (Settings.WhiteSpace)
             {
                 txtCode.ViewWhitespace = WhitespaceMode.VisibleAlways;
                 whiteSpaceToolStripMenuItem.CheckState = CheckState.Checked;
                 txtCode.WrapVisualFlags = WrapVisualFlags.Start;
             }
-            if (1 == (int)settings.GetValue("CodeFolding", 0))
+            if (Settings.CodeFolding)
             {
                 txtCode.CodeFoldingEnabled = true;
                 codeFoldingToolStripMenuItem.CheckState = CheckState.Checked;
             }
-            if (1 == (int)settings.GetValue("LineNumbers", 0))
+            if (Settings.LineNumbers)
             {
                 txtCode.LineNumbersEnabled = true;
                 lineNumbersToolStripMenuItem.CheckState = CheckState.Checked;
             }
-            if (1 == (int)settings.GetValue("Bookmarks", 0))
+            if (Settings.Bookmarks)
             {
                 txtCode.BookmarksEnabled = true;
                 bookmarksToolStripMenuItem.CheckState = CheckState.Checked;
             }
-            if (1 == (int)settings.GetValue("ToolBar", 1))
+            if (Settings.ToolBar)
             {
                 toolBarToolStripMenuItem.CheckState = CheckState.Checked;
                 toolStrip1.Visible = true;
@@ -98,11 +91,11 @@ namespace PaintDotNet.Effects
                 toolStrip1.Visible = false;
                 txtCode.Location = new Point(txtCode.Left, tabStrip1.Top);
             }
-            if (1 == (int)settings.GetValue("ErrorBox", 1))
+            if (Settings.ErrorBox)
             {
                 viewCheckBoxes(true, false);
             }
-            else if (1 == (int)settings.GetValue("Output", 1))
+            else if (Settings.Output)
             {
                 viewCheckBoxes(false, true);
             }
@@ -112,13 +105,13 @@ namespace PaintDotNet.Effects
             }
             OriginalForeColor = this.ForeColor;
             OriginalBackColor = this.BackColor;
-            if ((int)Theme.Auto == (int)settings.GetValue("EditorTheme", 0))
+            if (Settings.EditorTheme == Theme.Auto)
             {
                 autoToolStripMenuItem.CheckState = CheckState.Checked;
                 darkToolStripMenuItem.CheckState = CheckState.Unchecked;
                 lightToolStripMenuItem.CheckState = CheckState.Unchecked;
             }
-            else if ((int)Theme.Dark == (int)settings.GetValue("EditorTheme", 0))
+            else if (Settings.EditorTheme == Theme.Dark)
             {
                 this.ForeColor = Color.White;
                 this.BackColor = Color.FromArgb(40, 40, 40);
@@ -127,7 +120,7 @@ namespace PaintDotNet.Effects
                 darkToolStripMenuItem.CheckState = CheckState.Checked;
                 lightToolStripMenuItem.CheckState = CheckState.Unchecked;
             }
-            else if ((int)Theme.Light == (int)settings.GetValue("EditorTheme", 0))
+            else if (Settings.EditorTheme == Theme.Light)
             {
                 this.ForeColor = Color.Black;
                 this.BackColor = Color.White;
@@ -136,17 +129,17 @@ namespace PaintDotNet.Effects
                 darkToolStripMenuItem.CheckState = CheckState.Unchecked;
                 lightToolStripMenuItem.CheckState = CheckState.Checked;
             }
-            if (1 == (int)settings.GetValue("LargeFonts", 0))
+            if (Settings.LargeFonts)
             {
                 txtCode.Zoom = 2;
                 largeFontToolStripMenuItem.CheckState = CheckState.Checked;
             }
-            if (1 == (int)settings.GetValue("Map", 0))
+            if (Settings.Map)
             {
                 txtCode.MapEnabled = true;
                 indicatorMapMenuItem.CheckState = CheckState.Checked;
             }
-            if (1 == (int)settings.GetValue("CheckForUpdates", 1))
+            if (Settings.CheckForUpdates)
             {
                 CheckForUpdates = true;
                 checkForUpdatesToolStripMenuItem.CheckState = CheckState.Checked;
@@ -156,7 +149,7 @@ namespace PaintDotNet.Effects
             {
                 checkForUpdatesToolStripMenuItem.CheckState = CheckState.Unchecked;
             }
-            string editorFont = (string)settings.GetValue("FontFamily", "Courier New");
+            string editorFont = Settings.FontFamily;
             if (!IsFontInstalled(editorFont))
             {
                 editorFont = "Courier New";
@@ -173,7 +166,6 @@ namespace PaintDotNet.Effects
             txtCode.Styles[Style.Default].Font = editorFont;
             OutputTextBox.Font = new Font(editorFont, OutputTextBox.Font.Size);
             errorList.Font = new Font(editorFont, errorList.Font.Size);
-            settings.Close();
             #endregion
 
             // Disable menu items if they'll have no effect
@@ -420,15 +412,6 @@ namespace PaintDotNet.Effects
 
         private bool SaveAsScript()
         {
-            RegistryKey settings = Registry.CurrentUser.OpenSubKey("Software\\CodeLab", true);
-            if (settings == null)
-            {
-                Registry.CurrentUser.CreateSubKey("Software\\CodeLab").Flush();
-                settings = Registry.CurrentUser.OpenSubKey("Software\\CodeLab", true);
-            }
-            string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
-            string initialDir = (string)settings.GetValue("LastSourceDir", desktopPath);
-
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.Title = "Save User Script";
             sfd.DefaultExt = ".cs";
@@ -436,7 +419,7 @@ namespace PaintDotNet.Effects
             sfd.OverwritePrompt = true;
             sfd.AddExtension = true;
             sfd.FileName = (FileName == "Untitled") ? "MyScript.cs" : FileName + ".cs";
-            sfd.InitialDirectory = initialDir;
+            sfd.InitialDirectory = Settings.LastSourceDirectory;
             sfd.FileOk += (object sender, System.ComponentModel.CancelEventArgs e) =>
             {
                 if (!char.IsLetter(Path.GetFileName(sfd.FileName), 0))
@@ -453,7 +436,7 @@ namespace PaintDotNet.Effects
                 {
                     File.WriteAllText(sfd.FileName, txtCode.Text);
                     FullScriptPath = sfd.FileName;
-                    settings.SetValue("LastSourceDir", Path.GetDirectoryName(sfd.FileName));
+                    Settings.LastSourceDirectory = Path.GetDirectoryName(sfd.FileName);
                     FileName = Path.GetFileNameWithoutExtension(sfd.FileName);
                     UpdateTabProperties();
                     AddToRecents(sfd.FileName);
@@ -464,29 +447,19 @@ namespace PaintDotNet.Effects
                 }
             }
 
-            settings.Close();
             sfd.Dispose();
             return saved;
         }
 
         private bool LoadScript()
         {
-            RegistryKey settings = Registry.CurrentUser.OpenSubKey("Software\\CodeLab", true);
-            if (settings == null)
-            {
-                Registry.CurrentUser.CreateSubKey("Software\\CodeLab").Flush();
-                settings = Registry.CurrentUser.OpenSubKey("Software\\CodeLab", true);
-            }
-            string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
-            string initialDir = (string)settings.GetValue("LastSourceDir", desktopPath);
-
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Title = "Load User Script";
             ofd.DefaultExt = ".cs";
             ofd.Filter = "C# Code Files (*.CS)|*.cs";
             ofd.DefaultExt = ".cs";
             ofd.Multiselect = false;
-            ofd.InitialDirectory = initialDir;
+            ofd.InitialDirectory = Settings.LastSourceDirectory;
 
             bool loaded = false;
             if (ofd.ShowDialog() == DialogResult.OK)
@@ -507,7 +480,7 @@ namespace PaintDotNet.Effects
 
                 try
                 {
-                    settings.SetValue("LastSourceDir", Path.GetDirectoryName(ofd.FileName));
+                    Settings.LastSourceDirectory = Path.GetDirectoryName(ofd.FileName);
                     txtCode.Text = File.ReadAllText(ofd.FileName);
                     txtCode.ExecuteCmd(Command.ScrollToEnd); // Workaround for a scintilla bug
                     txtCode.ExecuteCmd(Command.ScrollToStart);
@@ -519,7 +492,6 @@ namespace PaintDotNet.Effects
                 }
             }
 
-            settings.Close();
             ofd.Dispose();
             return loaded;
         }
@@ -813,37 +785,10 @@ namespace PaintDotNet.Effects
 
             if (!force)
             {
-                RegistryKey settings = Registry.CurrentUser.OpenSubKey("Software\\CodeLab", true);
-                if (settings == null)
+                // only check for updates every 7 days
+                if (Math.Abs((Settings.LatestUpdateCheck - DateTime.Today).TotalDays) < 7)
                 {
-                    Registry.CurrentUser.CreateSubKey("Software\\CodeLab").Flush();
-                    settings = Registry.CurrentUser.OpenSubKey("Software\\CodeLab", true);
-                }
-                string PreviousCheck = (string)settings.GetValue("LatestUpdateCheck", string.Empty);
-                settings.Close();
-
-                if (PreviousCheck != string.Empty)
-                {
-                    DateTime LastCheck;
-                    if (DateTime.TryParseExact(PreviousCheck, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out LastCheck))
-                    {
-                        // only check for updates every 7 days
-                        if (Math.Abs((LastCheck - DateTime.Today).TotalDays) < 7)
-                        {
-                            return; // not time yet
-                        }
-                    }
-                    else
-                    {
-                        // Date in registry didn't parse correctly so update it to today
-                        using (settings = Registry.CurrentUser.OpenSubKey("Software\\CodeLab", true))
-                        {
-                            if (settings != null)
-                            {
-                                settings.SetValue("LatestUpdateCheck", DateTime.Now.ToString("yyyy-MM-dd"));
-                            }
-                        }
-                    }
+                    return; // not time yet
                 }
             }
 
@@ -884,13 +829,9 @@ namespace PaintDotNet.Effects
                     UpdateVER = "";
                     UpdateURL = "";
                 }
-                using (RegistryKey settings = Registry.CurrentUser.OpenSubKey("Software\\CodeLab", true))
-                {
-                    if (settings != null)
-                    {
-                        settings.SetValue("LatestUpdateCheck", DateTime.Now.ToString("yyyy-MM-dd"));
-                    }
-                }
+
+                Settings.LatestUpdateCheck = DateTime.Now;
+
                 DisplayUpdates(silentMode);
             };
         }
@@ -1234,7 +1175,7 @@ namespace PaintDotNet.Effects
         {
             if (!toolStrip1.Visible)
             {
-                Registry.SetValue("HKEY_CURRENT_USER\\Software\\CodeLab", "ToolBar", 1);
+                Settings.ToolBar = true;
                 toolBarToolStripMenuItem.CheckState = CheckState.Checked;
                 toolStrip1.Visible = true;
                 txtCode.Location = new Point(txtCode.Left, tabStrip1.Bottom);
@@ -1242,7 +1183,7 @@ namespace PaintDotNet.Effects
             }
             else
             {
-                Registry.SetValue("HKEY_CURRENT_USER\\Software\\CodeLab", "ToolBar", 0);
+                Settings.ToolBar = false;
                 toolBarToolStripMenuItem.CheckState = CheckState.Unchecked;
                 toolStrip1.Visible = false;
                 txtCode.Location = new Point(txtCode.Left, tabStrip1.Bottom);
@@ -1255,8 +1196,8 @@ namespace PaintDotNet.Effects
         {
             if (ErrorsVisible)
             {
-                Registry.SetValue("HKEY_CURRENT_USER\\Software\\CodeLab", "ErrorBox", 1);
-                Registry.SetValue("HKEY_CURRENT_USER\\Software\\CodeLab", "Output", 0);
+                Settings.ErrorBox = true;
+                Settings.Output = false;
                 viewErrorsToolStripMenuItem.CheckState = CheckState.Checked;
                 viewDebugToolStripMenuItem.CheckState = CheckState.Unchecked;
                 ShowErrors.Checked = true;
@@ -1268,8 +1209,8 @@ namespace PaintDotNet.Effects
             }
             else if (DebugVisible)
             {
-                Registry.SetValue("HKEY_CURRENT_USER\\Software\\CodeLab", "ErrorBox", 0);
-                Registry.SetValue("HKEY_CURRENT_USER\\Software\\CodeLab", "Output", 1);
+                Settings.ErrorBox = false;
+                Settings.Output = true;
                 viewErrorsToolStripMenuItem.CheckState = CheckState.Unchecked;
                 viewDebugToolStripMenuItem.CheckState = CheckState.Checked;
                 ShowErrors.Checked = false;
@@ -1281,8 +1222,8 @@ namespace PaintDotNet.Effects
             }
             else
             {
-                Registry.SetValue("HKEY_CURRENT_USER\\Software\\CodeLab", "ErrorBox", 0);
-                Registry.SetValue("HKEY_CURRENT_USER\\Software\\CodeLab", "Output", 0);
+                Settings.ErrorBox = false;
+                Settings.Output = false;
                 viewErrorsToolStripMenuItem.CheckState = CheckState.Unchecked;
                 viewDebugToolStripMenuItem.CheckState = CheckState.Unchecked;
                 ShowErrors.Checked = false;
@@ -1351,13 +1292,13 @@ namespace PaintDotNet.Effects
             if (txtCode.Zoom != 2)
             {
                 txtCode.Zoom = 2;
-                Registry.SetValue("HKEY_CURRENT_USER\\Software\\CodeLab", "LargeFonts", 1);
+                Settings.LargeFonts = true;
                 largeFontToolStripMenuItem.CheckState = CheckState.Checked;
             }
             else
             {
                 txtCode.Zoom = 0;
-                Registry.SetValue("HKEY_CURRENT_USER\\Software\\CodeLab", "LargeFonts", 0);
+                Settings.LargeFonts = false;
                 largeFontToolStripMenuItem.CheckState = CheckState.Unchecked;
             }
             txtCode.Focus();
@@ -1368,14 +1309,14 @@ namespace PaintDotNet.Effects
             if (txtCode.WrapMode == WrapMode.None)
             {
                 txtCode.WrapMode = WrapMode.Whitespace;
-                Registry.SetValue("HKEY_CURRENT_USER\\Software\\CodeLab", "WordWrap", 1);
+                Settings.WordWrap = true;
                 wordWrapToolStripMenuItem.CheckState = CheckState.Checked;
                 txtCode.WrapVisualFlags = WrapVisualFlags.Start;
             }
             else
             {
                 txtCode.WrapMode = WrapMode.None;
-                Registry.SetValue("HKEY_CURRENT_USER\\Software\\CodeLab", "WordWrap", 0);
+                Settings.WordWrap = false;
                 wordWrapToolStripMenuItem.CheckState = CheckState.Unchecked;
                 txtCode.WrapVisualFlags = WrapVisualFlags.None;
             }
@@ -1387,13 +1328,13 @@ namespace PaintDotNet.Effects
             if (txtCode.ViewWhitespace == WhitespaceMode.Invisible)
             {
                 txtCode.ViewWhitespace = WhitespaceMode.VisibleAlways;
-                Registry.SetValue("HKEY_CURRENT_USER\\Software\\CodeLab", "WhiteSpace", 1);
+                Settings.WhiteSpace = true;
                 whiteSpaceToolStripMenuItem.CheckState = CheckState.Checked;
             }
             else
             {
                 txtCode.ViewWhitespace = WhitespaceMode.Invisible;
-                Registry.SetValue("HKEY_CURRENT_USER\\Software\\CodeLab", "WhiteSpace", 0);
+                Settings.WhiteSpace = false;
                 whiteSpaceToolStripMenuItem.CheckState = CheckState.Unchecked;
             }
             txtCode.Focus();
@@ -1404,13 +1345,13 @@ namespace PaintDotNet.Effects
             if (!txtCode.CodeFoldingEnabled)
             {
                 txtCode.CodeFoldingEnabled = true;
-                Registry.SetValue("HKEY_CURRENT_USER\\Software\\CodeLab", "CodeFolding", 1);
+                Settings.CodeFolding = true;
                 codeFoldingToolStripMenuItem.CheckState = CheckState.Checked;
             }
             else
             {
                 txtCode.CodeFoldingEnabled = false;
-                Registry.SetValue("HKEY_CURRENT_USER\\Software\\CodeLab", "CodeFolding", 0);
+                Settings.CodeFolding = false;
                 codeFoldingToolStripMenuItem.CheckState = CheckState.Unchecked;
             }
             txtCode.Focus();
@@ -1421,13 +1362,13 @@ namespace PaintDotNet.Effects
             if (!txtCode.LineNumbersEnabled)
             {
                 txtCode.LineNumbersEnabled = true;
-                Registry.SetValue("HKEY_CURRENT_USER\\Software\\CodeLab", "LineNumbers", 1);
+                Settings.LineNumbers = true;
                 lineNumbersToolStripMenuItem.CheckState = CheckState.Checked;
             }
             else
             {
                 txtCode.LineNumbersEnabled = false;
-                Registry.SetValue("HKEY_CURRENT_USER\\Software\\CodeLab", "LineNumbers", 0);
+                Settings.LineNumbers = false;
                 lineNumbersToolStripMenuItem.CheckState = CheckState.Unchecked;
             }
             txtCode.Focus();
@@ -1438,13 +1379,13 @@ namespace PaintDotNet.Effects
             if (!txtCode.BookmarksEnabled)
             {
                 txtCode.BookmarksEnabled = true;
-                Registry.SetValue("HKEY_CURRENT_USER\\Software\\CodeLab", "Bookmarks", 1);
+                Settings.Bookmarks = true;
                 bookmarksToolStripMenuItem.CheckState = CheckState.Checked;
             }
             else
             {
                 txtCode.BookmarksEnabled = false;
-                Registry.SetValue("HKEY_CURRENT_USER\\Software\\CodeLab", "Bookmarks", 0);
+                Settings.Bookmarks = false;
                 bookmarksToolStripMenuItem.CheckState = CheckState.Unchecked;
             }
             txtCode.Focus();
@@ -1455,13 +1396,13 @@ namespace PaintDotNet.Effects
             if (!txtCode.MapEnabled)
             {
                 txtCode.MapEnabled = true;
-                Registry.SetValue("HKEY_CURRENT_USER\\Software\\CodeLab", "Map", 1);
+                Settings.Map = true;
                 indicatorMapMenuItem.CheckState = CheckState.Checked;
             }
             else
             {
                 txtCode.MapEnabled = false;
-                Registry.SetValue("HKEY_CURRENT_USER\\Software\\CodeLab", "Map", 0);
+                Settings.Map = false;
                 indicatorMapMenuItem.CheckState = CheckState.Unchecked;
             }
             txtCode.Focus();
@@ -1474,7 +1415,7 @@ namespace PaintDotNet.Effects
             fontsEnvyRMenuItem.Checked = false;
             fontsHackMenuItem.Checked = false;
             fontsVerdanaMenuItem.Checked = false;
-            Registry.SetValue("HKEY_CURRENT_USER\\Software\\CodeLab", "FontFamily", "Courier New");
+            Settings.FontFamily = "Courier New";
             txtCode.Styles[Style.Default].Font = "Courier New";
             OutputTextBox.Font = new Font("Courier New", OutputTextBox.Font.Size);
             errorList.Font = new Font("Courier New", errorList.Font.Size);
@@ -1488,7 +1429,7 @@ namespace PaintDotNet.Effects
             fontsEnvyRMenuItem.Checked = false;
             fontsHackMenuItem.Checked = false;
             fontsVerdanaMenuItem.Checked = false;
-            Registry.SetValue("HKEY_CURRENT_USER\\Software\\CodeLab", "FontFamily", "Consolas");
+            Settings.FontFamily = "Consolas";
             txtCode.Styles[Style.Default].Font = "Consolas";
             OutputTextBox.Font = new Font("Consolas", OutputTextBox.Font.Size);
             errorList.Font = new Font("Consolas", errorList.Font.Size);
@@ -1502,7 +1443,7 @@ namespace PaintDotNet.Effects
             fontsEnvyRMenuItem.Checked = true;
             fontsHackMenuItem.Checked = false;
             fontsVerdanaMenuItem.Checked = false;
-            Registry.SetValue("HKEY_CURRENT_USER\\Software\\CodeLab", "FontFamily", "Envy Code R");
+            Settings.FontFamily = "Envy Code R";
             txtCode.Styles[Style.Default].Font = "Envy Code R";
             OutputTextBox.Font = new Font("Envy Code R", OutputTextBox.Font.Size);
             errorList.Font = new Font("Envy Code R", errorList.Font.Size);
@@ -1516,7 +1457,7 @@ namespace PaintDotNet.Effects
             fontsEnvyRMenuItem.Checked = false;
             fontsHackMenuItem.Checked = true;
             fontsVerdanaMenuItem.Checked = false;
-            Registry.SetValue("HKEY_CURRENT_USER\\Software\\CodeLab", "FontFamily", "Hack");
+            Settings.FontFamily = "Hack";
             txtCode.Styles[Style.Default].Font = "Hack";
             OutputTextBox.Font = new Font("Hack", OutputTextBox.Font.Size);
             errorList.Font = new Font("Hack", errorList.Font.Size);
@@ -1530,7 +1471,7 @@ namespace PaintDotNet.Effects
             fontsEnvyRMenuItem.Checked = false;
             fontsHackMenuItem.Checked = false;
             fontsVerdanaMenuItem.Checked = true;
-            Registry.SetValue("HKEY_CURRENT_USER\\Software\\CodeLab", "FontFamily", "Verdana");
+            Settings.FontFamily = "Verdana";
             txtCode.Styles[Style.Default].Font = "Verdana";
             OutputTextBox.Font = new Font("Verdana", OutputTextBox.Font.Size);
             errorList.Font = new Font("Verdana", errorList.Font.Size);
@@ -1583,7 +1524,7 @@ namespace PaintDotNet.Effects
             this.BackColor = Color.White;
             ApplyTheme();
             txtCode.Theme = Theme.Light;
-            Registry.SetValue("HKEY_CURRENT_USER\\Software\\CodeLab", "EditorTheme", (int)Theme.Light);
+            Settings.EditorTheme = Theme.Light;
             lightToolStripMenuItem.CheckState = CheckState.Checked;
             darkToolStripMenuItem.CheckState = CheckState.Unchecked;
             autoToolStripMenuItem.CheckState = CheckState.Unchecked;
@@ -1596,7 +1537,7 @@ namespace PaintDotNet.Effects
             this.BackColor = Color.FromArgb(40, 40, 40);
             ApplyTheme();
             txtCode.Theme = Theme.Dark;
-            Registry.SetValue("HKEY_CURRENT_USER\\Software\\CodeLab", "EditorTheme", (int)Theme.Dark);
+            Settings.EditorTheme = Theme.Dark;
             lightToolStripMenuItem.CheckState = CheckState.Unchecked;
             darkToolStripMenuItem.CheckState = CheckState.Checked;
             autoToolStripMenuItem.CheckState = CheckState.Unchecked;
@@ -1609,7 +1550,7 @@ namespace PaintDotNet.Effects
             this.BackColor = OriginalBackColor;
             ApplyTheme();
             txtCode.Theme = (PdnTheme.BackColor.R < 128 && PdnTheme.BackColor.G < 128 && PdnTheme.BackColor.B < 128) ? Theme.Dark : Theme.Light;
-            Registry.SetValue("HKEY_CURRENT_USER\\Software\\CodeLab", "EditorTheme", (int)Theme.Auto);
+            Settings.EditorTheme = Theme.Auto;
             lightToolStripMenuItem.CheckState = CheckState.Unchecked;
             darkToolStripMenuItem.CheckState = CheckState.Unchecked;
             autoToolStripMenuItem.CheckState = CheckState.Checked;
@@ -1633,14 +1574,14 @@ namespace PaintDotNet.Effects
         {
             if (!CheckForUpdates)
             {
-                Registry.SetValue("HKEY_CURRENT_USER\\Software\\CodeLab", "CheckForUpdates", 1);
+                Settings.CheckForUpdates = true;
                 checkForUpdatesToolStripMenuItem.CheckState = CheckState.Checked;
                 CheckForUpdates = true;
                 GoCheckForUpdates(false, true);
             }
             else
             {
-                Registry.SetValue("HKEY_CURRENT_USER\\Software\\CodeLab", "CheckForUpdates", 0);
+                Settings.CheckForUpdates = false;
                 checkForUpdatesToolStripMenuItem.CheckState = CheckState.Unchecked;
                 CheckForUpdates = false;
             }
@@ -1844,13 +1785,7 @@ namespace PaintDotNet.Effects
         #region Recent Items functions
         private void AddToRecents(string filePath)
         {
-            RegistryKey settings = Registry.CurrentUser.OpenSubKey("Software\\CodeLab", true);
-            if (settings == null)
-            {
-                Registry.CurrentUser.CreateSubKey("Software\\CodeLab").Flush();
-                settings = Registry.CurrentUser.OpenSubKey("Software\\CodeLab", true);
-            }
-            string recents = (string)settings.GetValue("RecentDocs", string.Empty);
+            string recents = Settings.RecentDocs;
 
             if (recents == string.Empty)
             {
@@ -1884,22 +1819,14 @@ namespace PaintDotNet.Effects
                 recents = string.Join("|", recentsList.ToArray(), 0, length);
             }
 
-            settings.SetValue("RecentDocs", recents);
-            settings.Close();
+            Settings.RecentDocs = recents;
         }
 
         private void openRecentToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
         {
             this.openRecentToolStripMenuItem.DropDownItems.Clear();
 
-            RegistryKey settings = Registry.CurrentUser.OpenSubKey("Software\\CodeLab", true);
-            if (settings == null)
-            {
-                Registry.CurrentUser.CreateSubKey("Software\\CodeLab").Flush();
-                settings = Registry.CurrentUser.OpenSubKey("Software\\CodeLab", true);
-            }
-            string recents = (string)settings.GetValue("RecentDocs", string.Empty);
-            settings.Close();
+            string recents = Settings.RecentDocs;
 
             List<ToolStripItem> recentsList = new List<ToolStripItem>();
             string[] paths = recents.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
@@ -1969,17 +1896,9 @@ namespace PaintDotNet.Effects
 
         private void ClearRecents_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("Are you sure you want to clear the Open Recent list?", "CodeLab", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+            if (MessageBox.Show("Are you sure you want to clear the Open Recent list?", "CodeLab", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
-                return;
-            }
-
-            using (RegistryKey settings = Registry.CurrentUser.OpenSubKey("Software\\CodeLab", true))
-            {
-                if (settings != null)
-                {
-                    settings.SetValue("RecentDocs", string.Empty);
-                }
+                Settings.RecentDocs = string.Empty;
             }
         }
 

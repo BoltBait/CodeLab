@@ -14,7 +14,6 @@
 
 using System;
 using System.Windows.Forms;
-using Microsoft.Win32;
 using System.IO;
 
 namespace PaintDotNet.Effects
@@ -58,16 +57,6 @@ namespace PaintDotNet.Effects
 
         private void SaveButton_Click(object sender, EventArgs e)
         {
-            RegistryKey settings = Registry.CurrentUser.OpenSubKey("Software\\CodeLab", true);
-            if (settings == null)
-            {
-                Registry.CurrentUser.CreateSubKey("Software\\CodeLab").Flush();
-                settings = Registry.CurrentUser.OpenSubKey("Software\\CodeLab", true);
-            }
-            string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
-            string initialDir = (string)settings.GetValue("LastSourceDir", desktopPath);
-            settings.Close();
-
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.Title = "Save Complete Source Code";
             sfd.DefaultExt = ".cs";
@@ -75,7 +64,7 @@ namespace PaintDotNet.Effects
             sfd.OverwritePrompt = true;
             sfd.AddExtension = true;
             sfd.FileName = "project.cs";
-            sfd.InitialDirectory = initialDir;
+            sfd.InitialDirectory = Settings.LastSourceDirectory;
 
             if (sfd.ShowDialog() == DialogResult.OK)
             {
