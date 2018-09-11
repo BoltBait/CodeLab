@@ -205,15 +205,12 @@ namespace PaintDotNet.Effects
             // See if a help file exists
             try
             {
-                Uri location = new Uri(ScriptPath);
-                string fullPath = Uri.UnescapeDataString(Path.GetDirectoryName(location.AbsolutePath));
-                fullPath = Path.Combine(fullPath, ScriptName);
-                fullPath = Path.ChangeExtension(fullPath, ".txt");
-                if (File.Exists(fullPath))
+                string txtPath = Path.GetDirectoryName(ScriptPath);
+                txtPath = Path.Combine(txtPath, ScriptName);
+                txtPath = Path.ChangeExtension(txtPath, ".txt");
+                if (File.Exists(txtPath))
                 {
-                    StreamReader sr = new StreamReader(fullPath);
-                    RichHelpContent.Text = sr.ReadToEnd();
-                    sr.Close();
+                    RichHelpContent.Text = File.ReadAllText(txtPath);
                     ChangeUBBtoRTF();
                     radioButtonRich.Checked = true;
                 }
@@ -224,15 +221,12 @@ namespace PaintDotNet.Effects
             }
             try
             {
-                Uri location = new Uri(ScriptPath);
-                string fullPath = Uri.UnescapeDataString(Path.GetDirectoryName(location.AbsolutePath));
-                fullPath = Path.Combine(fullPath, ScriptName);
-                fullPath = Path.ChangeExtension(fullPath, ".rtf");
-                if (File.Exists(fullPath))
+                string rtfPath = Path.GetDirectoryName(ScriptPath);
+                rtfPath = Path.Combine(rtfPath, ScriptName);
+                rtfPath = Path.ChangeExtension(rtfPath, ".rtf");
+                if (File.Exists(rtfPath))
                 {
-                    StreamReader sr = new StreamReader(fullPath);
-                    RichHelpContent.Rtf = sr.ReadToEnd();
-                    sr.Close();
+                    RichHelpContent.Rtf = File.ReadAllText(rtfPath);
                     radioButtonRich.Checked = true;
                 }
             }
@@ -253,7 +247,7 @@ namespace PaintDotNet.Effects
 
             if (HelpPlainText.Text == "")
             {
-                HelpPlainText.Text = MenuName.Text + " v" + MajorVersion.Value.ToString() + DecimalSymbol.Text + MinorVersion.Value.ToString() + "\r\nCopyright ©" + DateTime.Now.Year.ToString() + " by " + AuthorName.Text + "\r\nAll rights reserved.";
+                HelpPlainText.Text = $"{MenuName.Text} v{MajorVersion.Value}{DecimalSymbol.Text}{MinorVersion.Value}\r\nCopyright ©{DateTime.Now.Year} by {AuthorName.Text}\r\nAll rights reserved.";
                 if (radioButtonNone.Checked)
                 {
                     radioButtonPlain.Checked = true;
@@ -327,9 +321,7 @@ namespace PaintDotNet.Effects
                     HelpType = 3;
                     // save rtz file where the cs file is stored: RTZPath
                     string CompressedOutput = CompressString(RichHelpContent.Rtf);
-                    StreamWriter sw = new StreamWriter(RTZPath, false);
-                    sw.Write(CompressedOutput);
-                    sw.Close();
+                    File.WriteAllText(RTZPath, CompressedOutput);
                     // return filename
                     HelpStr = Path.GetFileName(RTZPath);
                 }
@@ -548,7 +540,7 @@ namespace PaintDotNet.Effects
         {
             if (radioButtonURL.Checked)
             {
-                if (HelpURL.Text.ToLower().StartsWith("http://", StringComparison.OrdinalIgnoreCase) || HelpURL.Text.ToLower().StartsWith("https://", StringComparison.OrdinalIgnoreCase))
+                if (HelpURL.Text.StartsWith("http://", StringComparison.OrdinalIgnoreCase) || HelpURL.Text.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
                 {
                     Process.Start(HelpURL.Text);
                 }
@@ -804,31 +796,32 @@ namespace PaintDotNet.Effects
             ofd.Filter = "Rich Text Format (*.RTF)|*.RTF|Compressed Rich Text Format (*.RTZ)|*.RTZ|Text Format with UBB Codes (*.TXT)|*.TXT";
             ofd.DefaultExt = ".rtf";
             ofd.Multiselect = false;
-            if (ofd.ShowDialog() == DialogResult.OK)
+            if (ofd.ShowDialog() == DialogResult.OK && File.Exists(ofd.FileName))
             {
-                if (Path.GetExtension(ofd.FileName).ToLower() == ".rtf")
+                try
                 {
-                    StreamReader sr = new StreamReader(ofd.FileName);
-                    RichHelpContent.ResetText();
-                    RichHelpContent.Rtf = sr.ReadToEnd();
-                    sr.Close();
+                    string fileExtenion = Path.GetExtension(ofd.FileName);
+                    if (fileExtenion.Equals(".rtf", StringComparison.OrdinalIgnoreCase))
+                    {
+                        RichHelpContent.ResetText();
+                        RichHelpContent.Rtf = File.ReadAllText(ofd.FileName);
+                    }
+                    else if (fileExtenion.Equals(".rtz", StringComparison.OrdinalIgnoreCase))
+                    {
+                        string FileContents = File.ReadAllText(ofd.FileName);
+                        string ExpandedContents = DecompressString(FileContents);
+                        RichHelpContent.ResetText();
+                        RichHelpContent.Rtf = ExpandedContents;
+                    }
+                    else if (fileExtenion.Equals(".txt", StringComparison.OrdinalIgnoreCase))
+                    {
+                        RichHelpContent.ResetText();
+                        RichHelpContent.Text = File.ReadAllText(ofd.FileName);
+                        ChangeUBBtoRTF();
+                    }
                 }
-                if (Path.GetExtension(ofd.FileName).ToLower() == ".rtz")
+                catch
                 {
-                    StreamReader sr = new StreamReader(ofd.FileName);
-                    string FileContents = sr.ReadToEnd();
-                    string ExpandedContents = DecompressString(FileContents);
-                    RichHelpContent.ResetText();
-                    RichHelpContent.Rtf = ExpandedContents;
-                    sr.Close();
-                }
-                if (Path.GetExtension(ofd.FileName).ToLower() == ".txt")
-                {
-                    StreamReader sr = new StreamReader(ofd.FileName);
-                    RichHelpContent.ResetText();
-                    RichHelpContent.Text = sr.ReadToEnd();
-                    sr.Close();
-                    ChangeUBBtoRTF();
                 }
             }
             RichHelpContent.Focus();
@@ -849,31 +842,26 @@ namespace PaintDotNet.Effects
             sfd.FileName = Path.ChangeExtension(FileName,".rtf");
             sfd.Filter = "Rich Text Format (*.RTF)|*.RTF";
             sfd.DefaultExt = ".rtf";
+
             if (sfd.ShowDialog() == DialogResult.OK)
             {
-                StreamWriter sw = new StreamWriter(sfd.FileName);
-                sw.Write(RichHelpContent.Rtf);
-                sw.Close();
-                if (OpenInWordPad)
+                try
                 {
-                    WarningLabel.Visible = true;
-                    Application.DoEvents();
-                    string sysFolder = Environment.GetFolderPath(Environment.SpecialFolder.System);
-                    ProcessStartInfo pInfo = new ProcessStartInfo();
-                    pInfo.Arguments = "\"" + sfd.FileName + "\"";
-                    pInfo.FileName = "wordpad.exe";
-                    Process p = Process.Start(pInfo);
-                    p.WaitForInputIdle();
-                    p.WaitForExit();
-                    WarningLabel.Visible = false;
-                    try
+                    File.WriteAllText(sfd.FileName, RichHelpContent.Rtf);
+                    if (OpenInWordPad)
                     {
-                        StreamReader sr = new StreamReader(sfd.FileName);
-                        RichHelpContent.Rtf = sr.ReadToEnd();
-                        sr.Close();
+                        WarningLabel.Visible = true;
+                        Application.DoEvents();
+                        string sysFolder = Environment.GetFolderPath(Environment.SpecialFolder.System);
+                        Process p = Process.Start("wordpad.exe", "\"" + sfd.FileName + "\"");
+                        p.WaitForInputIdle();
+                        p.WaitForExit();
+                        WarningLabel.Visible = false;
+                        RichHelpContent.Rtf = File.ReadAllText(sfd.FileName);
                     }
-                    catch
-                    { }
+                }
+                catch
+                {
                 }
             }
         }
