@@ -139,7 +139,7 @@ namespace PaintDotNet.Effects
                 {
                     csprojFile.AppendLine($"    <EmbeddedResource Include=\"{effectName}.sample.png\" />");
                 }
-                if (sampleExists)
+                if (rtfExists)
                 {
                     csprojFile.AppendLine($"    <EmbeddedResource Include=\"{effectName}.rtz\" />");
                 }

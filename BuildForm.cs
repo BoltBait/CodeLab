@@ -1099,6 +1099,12 @@ namespace PaintDotNet.Effects
         private void GenSlnButton_Click(object sender, EventArgs e)
         {
             UpdateAllValues();
+            if (radioButtonRich.Checked)
+            {
+                string CompressedOutput = CompressString(RichHelpContent.Rtf);
+                File.WriteAllText(RTZPath, CompressedOutput);
+            }
+
             using (FolderBrowserDialog fbd = new FolderBrowserDialog())
             {
                 string selectedDir = Registry.GetValue("HKEY_CURRENT_USER\\Software\\CodeLab", "LastSlnDir", Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)) as string;
