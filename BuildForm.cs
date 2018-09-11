@@ -43,7 +43,7 @@ namespace PaintDotNet.Effects
         internal string KeyWords = "";
         internal bool ForceAliasSelection = false;
         internal bool ForceSingleThreaded = false;
-        internal int HelpType = 0;
+        internal HelpType HelpType = 0;
         internal string HelpStr = "";
         private string HelpFileName = "";
         internal string RTZPath = "";
@@ -279,22 +279,22 @@ namespace PaintDotNet.Effects
             if (radioButtonNone.Checked)
             {
                 HelpStr = "";
-                HelpType = 0;
+                HelpType = HelpType.None;
             }
             if (radioButtonURL.Checked)
             {
                 HelpStr = HelpURL.Text;
-                HelpType = 1;
+                HelpType = HelpType.URL;
             }
             if (radioButtonPlain.Checked)
             {
                 HelpStr = HelpPlainText.Text.Replace("\n", "\\n").Replace("\r", "").Replace("\t", "\\t");
-                HelpType = 2;
+                HelpType = HelpType.PlainText;
             }
             if (radioButtonRich.Checked)
             {
-                HelpType = 3;
                 HelpStr = Path.GetFileName(RTZPath);
+                HelpType = HelpType.RichText;
             }
 
             if (MenuName.Text.Trim() != "")
@@ -318,7 +318,7 @@ namespace PaintDotNet.Effects
             {
                 if (radioButtonRich.Checked)
                 {
-                    HelpType = 3;
+                    HelpType = HelpType.RichText;
                     // save rtz file where the cs file is stored: RTZPath
                     string CompressedOutput = CompressString(RichHelpContent.Rtf);
                     File.WriteAllText(RTZPath, CompressedOutput);
@@ -1115,5 +1115,13 @@ namespace PaintDotNet.Effects
                 }
             }
         }
+    }
+
+    internal enum HelpType
+    {
+        None,
+        URL,
+        PlainText,
+        RichText
     }
 }

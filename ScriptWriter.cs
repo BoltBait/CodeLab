@@ -363,7 +363,7 @@ namespace PaintDotNet.Effects
             return EffectPart;
         }
 
-        internal static string PropertyPart(List<UIElement> UserControls, bool OnWindowHelpButtonClickedExists, string FileName, string WindowTitleStr, int HelpType, string HelpText)
+        internal static string PropertyPart(List<UIElement> UserControls, bool OnWindowHelpButtonClickedExists, string FileName, string WindowTitleStr, HelpType HelpType, string HelpText)
         {
             HelpText = HelpText.Replace('"', '\'');
             string NameSpace = Regex.Replace(FileName, @"[^\w]", "") + "Effect";
@@ -872,17 +872,17 @@ namespace PaintDotNet.Effects
                     if ((HelpText != "") && (HelpType > 0))
                     {
                         PropertyPart += "            // Add help button to effect UI\r\n";
-                        if (HelpType == 1) // URL
+                        if (HelpType == HelpType.URL)
                         {
                             PropertyPart += "            props[ControlInfoPropertyNames.WindowHelpContentType].Value = WindowHelpContentType.CustomViaCallback;\r\n";
                             PropertyPart += "            props[ControlInfoPropertyNames.WindowHelpContent].Value = \"" + HelpText.Replace("\n", "\\n").Replace("\r", "").Replace("\t", "\\t").Replace("\"", "\\\"") + "\";\r\n";
                         }
-                        else if (HelpType == 2) // Plain Text
+                        else if (HelpType == HelpType.PlainText)
                         {
                             PropertyPart += "            props[ControlInfoPropertyNames.WindowHelpContentType].Value = WindowHelpContentType.PlainText;\r\n";
                             PropertyPart += "            props[ControlInfoPropertyNames.WindowHelpContent].Value = \"" + HelpText.Replace("\n", "\\n").Replace("\r", "").Replace("\t", "\\t").Replace("\"", "\\\"") + "\";\r\n";
                         }
-                        else if (HelpType == 3)
+                        else if (HelpType == HelpType.RichText)
                         {
                             // We have to add custom help
                             PropertyPart += "            props[ControlInfoPropertyNames.WindowHelpContentType].Value = WindowHelpContentType.CustomViaCallback;\r\n";
@@ -898,7 +898,7 @@ namespace PaintDotNet.Effects
             return PropertyPart;
         }
 
-        internal static string HelpPart(bool OnWindowHelpButtonClickedExists, int HelpType, string HelpText)
+        internal static string HelpPart(bool OnWindowHelpButtonClickedExists, HelpType HelpType, string HelpText)
         {
             HelpText = HelpText.Replace('"', '\'');
             string HelpPart = "";
@@ -907,7 +907,7 @@ namespace PaintDotNet.Effects
             {
                 if ((HelpText != "") && (HelpType > 0))
                 {
-                    if (HelpType == 1) // URL
+                    if (HelpType == HelpType.URL)
                     {
                         HelpPart += "        private void OnWindowHelpButtonClicked(IWin32Window owner, string helpContent)\r\n";
                         HelpPart += "        {\r\n";
@@ -918,7 +918,7 @@ namespace PaintDotNet.Effects
                         HelpPart += "        }\r\n";
                         HelpPart += "\r\n";
                     }
-                    else if (HelpType == 3)
+                    else if (HelpType == HelpType.RichText)
                     {
                         HelpPart += "        RichTextBox rtb_HelpBox;\r\n";
                         HelpPart += "        Button btn_HelpBoxOKButton;\r\n";
@@ -1231,7 +1231,7 @@ namespace PaintDotNet.Effects
             return UserControls;
         }
 
-        internal static string FullSourceCode(string SourceCode, string FileName, bool isAdjustment, string submenuname, string menuname, string iconpath, string SupportURL, bool ForceAliasSelection, bool ForceSingleThreaded, string Author, int MajorVersion, int MinorVersion, string Description, string KeyWords, string WindowTitleStr, int HelpType, string HelpText)
+        internal static string FullSourceCode(string SourceCode, string FileName, bool isAdjustment, string submenuname, string menuname, string iconpath, string SupportURL, bool ForceAliasSelection, bool ForceSingleThreaded, string Author, int MajorVersion, int MinorVersion, string Description, string KeyWords, string WindowTitleStr, HelpType HelpType, string HelpText)
         {
             List<UIElement> UserControls = ProcessUIControls(SourceCode);
             Regex preRenderRegex = new Regex(@"void PreRender\(Surface dst, Surface src\)(\s)*{(.|\s)*}", RegexOptions.Singleline);

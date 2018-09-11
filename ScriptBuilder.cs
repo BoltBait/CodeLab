@@ -147,7 +147,7 @@ namespace PaintDotNet.Effects
             return false;
         }
 
-        internal static bool BuildDll(string scriptText, string scriptPath, string submenuname, string menuname, string iconpath, string Author, int MajorVersion, int MinorVersion, string SupportURL, string WindowTitleStr, bool isAdjustment, string Description, string KeyWords, bool ForceAliasSelection, bool ForceSingleThreaded, int HelpType, string HelpText)
+        internal static bool BuildDll(string scriptText, string scriptPath, string submenuname, string menuname, string iconpath, string Author, int MajorVersion, int MinorVersion, string SupportURL, string WindowTitleStr, bool isAdjustment, string Description, string KeyWords, bool ForceAliasSelection, bool ForceSingleThreaded, HelpType HelpType, string HelpText)
         {
             string FileName = Path.GetFileNameWithoutExtension(scriptPath);
             string NameSpace = FileName;
@@ -204,7 +204,7 @@ namespace PaintDotNet.Effects
                     }
                 }
                 string HelpPath = Path.ChangeExtension(scriptPath, ".rtz");
-                if (HelpType == 3 && File.Exists(HelpPath))
+                if (HelpType == HelpType.RichText && File.Exists(HelpPath))
                 {
                     // If an help file exists in the source directory with a ".rtz" extension, add it to the build as an imbedded resource.
                     param.CompilerOptions = param.CompilerOptions + " /res:\"" + HelpPath + "\",\"" + NameSpace + "." + Path.GetFileName(HelpPath) + "\" ";
