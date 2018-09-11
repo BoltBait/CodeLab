@@ -259,13 +259,12 @@
             // 
             // hexBox
             // 
-            this.hexBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.hexBox.Location = new System.Drawing.Point(322, 95);
             this.hexBox.Name = "hexBox";
             this.hexBox.Size = new System.Drawing.Size(60, 20);
             this.hexBox.TabIndex = 4;
             this.hexBox.Text = "FFFFFFFF";
-            this.hexBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.hexBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.hexBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.hexBox_KeyPress);
             this.hexBox.Leave += new System.EventHandler(this.hexBox_Leave);
             // 
