@@ -203,6 +203,15 @@ namespace PaintDotNet.Effects
                 }
             }
 
+            if (HelpPlainText.Text == "")
+            {
+                HelpPlainText.Text = $"{MenuName.Text} v{MajorVersion.Value}{DecimalSymbol.Text}{MinorVersion.Value}\r\nCopyright ©{DateTime.Now.Year} by {AuthorName.Text}\r\nAll rights reserved.";
+                if (radioButtonNone.Checked)
+                {
+                    radioButtonPlain.Checked = true;
+                }
+            }
+
             string resourcePath = Path.Combine(Path.GetDirectoryName(ScriptPath), ScriptName);
 
             // See if a help file exists
@@ -263,14 +272,6 @@ namespace PaintDotNet.Effects
             SetIcon(iconPath);
             #endregion
 
-            if (HelpPlainText.Text == "")
-            {
-                HelpPlainText.Text = $"{MenuName.Text} v{MajorVersion.Value}{DecimalSymbol.Text}{MinorVersion.Value}\r\nCopyright ©{DateTime.Now.Year} by {AuthorName.Text}\r\nAll rights reserved.";
-                if (radioButtonNone.Checked)
-                {
-                    radioButtonPlain.Checked = true;
-                }
-            }
             UpdateReadOnlyFields();
         }
         #endregion
