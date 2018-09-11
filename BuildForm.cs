@@ -202,28 +202,13 @@ namespace PaintDotNet.Effects
                     radioButtonPlain.Checked = true;
                 }
             }
+
+            string resourcePath = Path.Combine(Path.GetDirectoryName(ScriptPath), ScriptName);
+
             // See if a help file exists
             try
             {
-                string txtPath = Path.GetDirectoryName(ScriptPath);
-                txtPath = Path.Combine(txtPath, ScriptName);
-                txtPath = Path.ChangeExtension(txtPath, ".txt");
-                if (File.Exists(txtPath))
-                {
-                    RichHelpContent.Text = File.ReadAllText(txtPath);
-                    ChangeUBBtoRTF();
-                    radioButtonRich.Checked = true;
-                }
-            }
-            catch
-            {
-                // If something went wrong, don't crash, just assume the file is invalid
-            }
-            try
-            {
-                string rtfPath = Path.GetDirectoryName(ScriptPath);
-                rtfPath = Path.Combine(rtfPath, ScriptName);
-                rtfPath = Path.ChangeExtension(rtfPath, ".rtf");
+                string rtfPath = Path.ChangeExtension(resourcePath, ".rtf");
                 if (File.Exists(rtfPath))
                 {
                     RichHelpContent.Rtf = File.ReadAllText(rtfPath);
@@ -234,14 +219,47 @@ namespace PaintDotNet.Effects
             {
                 // If something went wrong, don't crash, just assume the file is invalid
             }
+
+            if (RichHelpContent.Text.Length == 0)
+            {
+                try
+                {
+                    string rtzPath = Path.ChangeExtension(resourcePath, ".rtz");
+                    if (File.Exists(rtzPath))
+                    {
+                        string compressedContents = File.ReadAllText(rtzPath);
+                        RichHelpContent.Rtf = DecompressString(compressedContents);
+                        radioButtonRich.Checked = true;
+                    }
+                }
+                catch
+                {
+                    // If something went wrong, don't crash, just assume the file is invalid
+                }
+            }
+
+            if (RichHelpContent.Text.Length == 0)
+            {
+                try
+                {
+                    string txtPath = Path.ChangeExtension(resourcePath, ".txt");
+                    if (File.Exists(txtPath))
+                    {
+                        RichHelpContent.Text = File.ReadAllText(txtPath);
+                        ChangeUBBtoRTF();
+                        radioButtonRich.Checked = true;
+                    }
+                }
+                catch
+                {
+                    // If something went wrong, don't crash, just assume the file is invalid
+                }
+            }
             #endregion
 
             #region Load default icon
             // See if a default icon exists
-            string iconPath = Path.GetDirectoryName(ScriptPath);
-            iconPath = Path.Combine(iconPath, ScriptName);
-            iconPath = Path.ChangeExtension(iconPath, ".png");
-
+            string iconPath = Path.ChangeExtension(resourcePath, ".png");
             SetIcon(iconPath);
             #endregion
 
