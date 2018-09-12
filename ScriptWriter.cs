@@ -201,7 +201,7 @@ namespace PaintDotNet.Effects
             SupportURL = SupportURL.Trim();
             if (SupportURL == "")
             {
-                SupportURL = "http://www.getpaint.net/redirect/plugins.html";
+                SupportURL = "https://www.getpaint.net/redirect/plugins.html";
             }
 
             string SupportInfoPart = "";
