@@ -162,22 +162,6 @@ namespace PaintDotNet.Effects
             installPath = Path.Combine(installPath, "Install_" + Regex.Replace(FileName, @"[^\w]", ""));
             installPath = Path.ChangeExtension(installPath, ".bat");
 
-            // Calculate some default Attributes
-            SupportURL = SupportURL.Trim();
-            if (SupportURL == "")
-            {
-                SupportURL = "http://www.getpaint.net/redirect/plugins.html";
-            }
-            Description = Description.Trim();
-            if (Description == "")
-            {
-                Description = menuname + " selected pixels";
-            }
-            if (KeyWords == "")
-            {
-                KeyWords = menuname;
-            }
-
             // Remove non-alpha characters from namespace
             NameSpace = Regex.Replace(NameSpace, @"[^\w]", "") + "Effect";
 
