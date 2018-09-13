@@ -66,7 +66,7 @@ namespace PaintDotNet.Effects
             param.IncludeDebugInformation = false;
             param.GenerateExecutable = false;
             param.WarningLevel = 0;     // Turn off all warnings
-            param.CompilerOptions = param.CompilerOptions + " /unsafe /optimize";
+            param.CompilerOptions = " /unsafe /optimize";
 
             // Get all loaded assemblies
             Assembly[] allLoadedAssemblies = AppDomain.CurrentDomain.GetAssemblies();
@@ -150,20 +150,17 @@ namespace PaintDotNet.Effects
         internal static bool BuildDll(string scriptText, string scriptPath, string submenuname, string menuname, string iconpath, string Author, int MajorVersion, int MinorVersion, string SupportURL, string WindowTitleStr, bool isAdjustment, string Description, string KeyWords, bool ForceAliasSelection, bool ForceSingleThreaded, HelpType HelpType, string HelpText)
         {
             string FileName = Path.GetFileNameWithoutExtension(scriptPath);
-            string NameSpace = FileName;
 
             // Calculate output path
-            string fullPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
-            fullPath = Path.Combine(fullPath, FileName);
-            fullPath = Path.ChangeExtension(fullPath, ".dll");
-            string zPath = Path.ChangeExtension(fullPath, ".zip");
-            string iconResName = Path.GetFileName(iconpath);
-            string installPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
-            installPath = Path.Combine(installPath, "Install_" + Regex.Replace(FileName, @"[^\w]", ""));
-            installPath = Path.ChangeExtension(installPath, ".bat");
+            string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
+            string dllPath = Path.Combine(desktopPath, FileName);
+            dllPath = Path.ChangeExtension(dllPath, ".dll");
+            string zipPath = Path.ChangeExtension(dllPath, ".zip");
+            string batPath = Path.Combine(desktopPath, "Install_" + Regex.Replace(FileName, @"[^\w]", ""));
+            batPath = Path.ChangeExtension(batPath, ".bat");
 
             // Remove non-alpha characters from namespace
-            NameSpace = Regex.Replace(NameSpace, @"[^\w]", "") + "Effect";
+            string NameSpace = Regex.Replace(FileName, @"[^\w]", "") + "Effect";
 
             // Generate code
             string SourceCode = ScriptWriter.FullSourceCode(scriptText, FileName, isAdjustment, submenuname, menuname, iconpath, SupportURL, ForceAliasSelection, ForceSingleThreaded, Author, MajorVersion, MinorVersion, Description, KeyWords, WindowTitleStr, HelpType, HelpText);
@@ -176,11 +173,10 @@ namespace PaintDotNet.Effects
                 if (File.Exists(iconpath))
                 {
                     // If an icon is specified and exists, add it to the build as an imbedded resource to the same namespace as the effect.
-                    param.CompilerOptions = param.CompilerOptions + " /res:\"" + iconpath + "\",\"" + NameSpace + "." + iconResName + "\" ";
+                    param.CompilerOptions = param.CompilerOptions + " /res:\"" + iconpath + "\",\"" + NameSpace + "." + Path.GetFileName(iconpath) + "\" ";
 
                     // If an icon exists, see if a sample image exists
-                    string samplepath;
-                    samplepath = Path.ChangeExtension(iconpath, ".sample.png");
+                    string samplepath = Path.ChangeExtension(iconpath, ".sample.png");
                     if (File.Exists(samplepath))
                     {
                         // If an image exists in the icon directory with a ".sample.png" extension, add it to the build as an imbedded resource.
@@ -194,7 +190,7 @@ namespace PaintDotNet.Effects
                     param.CompilerOptions = param.CompilerOptions + " /res:\"" + HelpPath + "\",\"" + NameSpace + "." + Path.GetFileName(HelpPath) + "\" ";
                 }
 
-                param.CompilerOptions = param.CompilerOptions + " /debug- /target:library /out:\"" + fullPath + "\"";
+                param.CompilerOptions = param.CompilerOptions + " /debug- /target:library /out:\"" + dllPath + "\"";
 
                 try
                 {
@@ -223,13 +219,13 @@ namespace PaintDotNet.Effects
                 }
 
                 // Create install bat file
-                if (File.Exists(installPath))
+                if (File.Exists(batPath))
                 {
-                    File.Delete(installPath);
+                    File.Delete(batPath);
                 }
-                if (File.Exists(zPath))
+                if (File.Exists(zipPath))
                 {
-                    File.Delete(zPath);
+                    File.Delete(zipPath);
                 }
 
                 // Try this in Russian for outputting Russian characters to the install batch file:
@@ -238,7 +234,7 @@ namespace PaintDotNet.Effects
                 //var stream = new FileStream(installPath, FileMode.Create);
                 //StreamWriter sw = new StreamWriter(stream, encoding);
 
-                StreamWriter sw = new StreamWriter(installPath);
+                StreamWriter sw = new StreamWriter(batPath);
 
                 sw.WriteLine("@echo off");
                 sw.WriteLine(":: Get ADMIN Privs");
@@ -271,9 +267,9 @@ namespace PaintDotNet.Effects
                 sw.WriteLine("@echo off");
                 sw.WriteLine("cls");
                 sw.WriteLine("echo.");
-                sw.WriteLine("echo Installing " + Path.GetFileName(fullPath) + " to %PDN_DIR%\\Effects\\");
+                sw.WriteLine("echo Installing " + Path.GetFileName(dllPath) + " to %PDN_DIR%\\Effects\\");
                 sw.WriteLine("echo.");
-                sw.WriteLine("copy /y \"" + Path.GetFileName(fullPath) + "\" \"%PDN_DIR%\\Effects\\\"");
+                sw.WriteLine("copy /y \"" + Path.GetFileName(dllPath) + "\" \"%PDN_DIR%\\Effects\\\"");
                 sw.WriteLine("if '%errorlevel%' == '0' (");
                 sw.WriteLine("goto success");
                 sw.WriteLine(") else (");
@@ -296,10 +292,10 @@ namespace PaintDotNet.Effects
                 sw.WriteLine("echo I will install this effect in your Documents folder instead");
                 sw.WriteLine("echo in case you are using the store version.");
                 sw.WriteLine("echo.");
-                sw.WriteLine("echo Installing " + Path.GetFileName(fullPath) + " to %PDN_DIR%\\paint.net User Files\\Effects\\");
+                sw.WriteLine("echo Installing " + Path.GetFileName(dllPath) + " to %PDN_DIR%\\paint.net User Files\\Effects\\");
                 sw.WriteLine("echo.");
                 sw.WriteLine("mkdir \"%PDN_DIR%\\paint.net User Files\\Effects\\\" 2>nul");
-                sw.WriteLine("copy /y \"" + Path.GetFileName(fullPath) + "\" \"%PDN_DIR%\\paint.net User Files\\Effects\\\"");
+                sw.WriteLine("copy /y \"" + Path.GetFileName(dllPath) + "\" \"%PDN_DIR%\\paint.net User Files\\Effects\\\"");
                 sw.WriteLine("if '%errorlevel%' == '0' (");
                 sw.WriteLine("goto success");
                 sw.WriteLine(") else (");
@@ -344,27 +340,24 @@ namespace PaintDotNet.Effects
                 sw.Close();
 
                 // Create .zip file on user's desktop
-                using (ZipArchive archive = ZipFile.Open(zPath, ZipArchiveMode.Create))
+                using (ZipArchive archive = ZipFile.Open(zipPath, ZipArchiveMode.Create))
                 {
-                    archive.CreateEntryFromFile(fullPath, Path.GetFileName(fullPath)); // add .dll file
-                    archive.CreateEntryFromFile(installPath, Path.GetFileName(installPath)); // add install.bat
+                    archive.CreateEntryFromFile(dllPath, Path.GetFileName(dllPath)); // add .dll file
+                    archive.CreateEntryFromFile(batPath, Path.GetFileName(batPath)); // add install.bat
                 }
 
-                if (File.Exists(zPath))
+                if (File.Exists(zipPath))
                 {
                     // if the zip file was successfully built, delete temp files
-                    File.Delete(fullPath);
-                    File.Delete(installPath);
+                    File.Delete(dllPath);
+                    File.Delete(batPath);
                 }
 
                 return true;
             }
             catch (Exception ex)
             {
-                fullPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
-                fullPath = Path.Combine(fullPath, FileName);
-                fullPath = Path.ChangeExtension(fullPath, ".dll");
-                if (!File.Exists(fullPath))
+                if (!File.Exists(dllPath))
                 {
                     //userScriptObject = null;
                     internalError = ex.Message;
