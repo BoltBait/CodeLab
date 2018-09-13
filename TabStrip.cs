@@ -305,20 +305,9 @@ namespace PaintDotNet.Effects
         /// Do NOT USE. For Initial Tab only.
         /// </summary>
         public Tab()
+            : this("Untitled", string.Empty)
         {
-            this.ImageAlign = ContentAlignment.MiddleLeft;
-            this.Margin = new Padding(0, 5, 3, 0);
-            this.AutoToolTip = false;
-
-            this.Image = Properties.Resources.Untitled;
-            this.Text = "Untitled";
-            this.ToolTipText = "Untitled";
             this.Guid = Guid.Empty;
-            this.IsDirty = false;
-            this.Title = "Untitled";
-            this.Path = string.Empty;
-
-            closeRect = Rectangle.Empty;
         }
 
         internal Tab(string title, string path)
