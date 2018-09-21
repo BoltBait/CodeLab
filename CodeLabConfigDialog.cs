@@ -168,6 +168,12 @@ namespace PaintDotNet.Effects
             errorList.Font = new Font(editorFont, errorList.Font.Size);
             #endregion
 
+            this.Opacity = 1.00;
+            opacity50MenuItem.Checked = false;
+            opacity75MenuItem.Checked = false;
+            opacity90MenuItem.Checked = false;
+            opacity100MenuItem.Checked = true;
+
             // Disable menu items if they'll have no effect
             transparencyToolStripMenuItem.Enabled = EnableOpacity;
             fontsCourierMenuItem.Enabled = IsFontInstalled("Courier New");
@@ -629,18 +635,6 @@ namespace PaintDotNet.Effects
         #endregion
 
         #region Dialog functions - Load Icons, keyboard events
-        protected override void OnLoad(EventArgs e)
-        {
-            this.Opacity = 1.00;
-            opacity50MenuItem.Checked = false;
-            opacity75MenuItem.Checked = false;
-            opacity90MenuItem.Checked = false;
-            opacity100MenuItem.Checked = true;
-            txtCode.Focus();
-
-            base.OnLoad(e);
-        }
-
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
             tmrCompile.Enabled = false;
