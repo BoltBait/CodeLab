@@ -115,10 +115,10 @@
             this.fontsHackMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fontsVerdanaMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.transparencyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripMenuItem();
+            this.opacity50MenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.opacity75MenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.opacity90MenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.opacity100MenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.themeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.autoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.lightToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -905,43 +905,43 @@
             // transparencyToolStripMenuItem
             // 
             this.transparencyToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItem2,
-            this.toolStripMenuItem3,
-            this.toolStripMenuItem4,
-            this.toolStripMenuItem5});
+            this.opacity50MenuItem,
+            this.opacity75MenuItem,
+            this.opacity90MenuItem,
+            this.opacity100MenuItem});
             this.transparencyToolStripMenuItem.Name = "transparencyToolStripMenuItem";
             this.transparencyToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
             this.transparencyToolStripMenuItem.Text = "&Transparency";
             // 
-            // toolStripMenuItem2
+            // opacity50MenuItem
             // 
-            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(96, 22);
-            this.toolStripMenuItem2.Text = "50%";
-            this.toolStripMenuItem2.Click += new System.EventHandler(this.toolStripMenuItem2_Click);
+            this.opacity50MenuItem.Name = "opacity50MenuItem";
+            this.opacity50MenuItem.Size = new System.Drawing.Size(96, 22);
+            this.opacity50MenuItem.Text = "50%";
+            this.opacity50MenuItem.Click += new System.EventHandler(this.opacity50MenuItem_Click);
             // 
-            // toolStripMenuItem3
+            // opacity75MenuItem
             // 
-            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(96, 22);
-            this.toolStripMenuItem3.Text = "25%";
-            this.toolStripMenuItem3.Click += new System.EventHandler(this.toolStripMenuItem3_Click);
+            this.opacity75MenuItem.Name = "opacity75MenuItem";
+            this.opacity75MenuItem.Size = new System.Drawing.Size(96, 22);
+            this.opacity75MenuItem.Text = "25%";
+            this.opacity75MenuItem.Click += new System.EventHandler(this.opacity75MenuItem_Click);
             // 
-            // toolStripMenuItem4
+            // opacity90MenuItem
             // 
-            this.toolStripMenuItem4.Name = "toolStripMenuItem4";
-            this.toolStripMenuItem4.Size = new System.Drawing.Size(96, 22);
-            this.toolStripMenuItem4.Text = "10%";
-            this.toolStripMenuItem4.Click += new System.EventHandler(this.toolStripMenuItem4_Click);
+            this.opacity90MenuItem.Name = "opacity90MenuItem";
+            this.opacity90MenuItem.Size = new System.Drawing.Size(96, 22);
+            this.opacity90MenuItem.Text = "10%";
+            this.opacity90MenuItem.Click += new System.EventHandler(this.opacity90MenuItem_Click);
             // 
-            // toolStripMenuItem5
+            // opacity100MenuItem
             // 
-            this.toolStripMenuItem5.Checked = true;
-            this.toolStripMenuItem5.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.toolStripMenuItem5.Name = "toolStripMenuItem5";
-            this.toolStripMenuItem5.Size = new System.Drawing.Size(96, 22);
-            this.toolStripMenuItem5.Text = "0%";
-            this.toolStripMenuItem5.Click += new System.EventHandler(this.toolStripMenuItem5_Click);
+            this.opacity100MenuItem.Checked = true;
+            this.opacity100MenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.opacity100MenuItem.Name = "opacity100MenuItem";
+            this.opacity100MenuItem.Size = new System.Drawing.Size(96, 22);
+            this.opacity100MenuItem.Text = "0%";
+            this.opacity100MenuItem.Click += new System.EventHandler(this.opacity100MenuItem_Click);
             // 
             // themeToolStripMenuItem
             // 
@@ -1418,9 +1418,9 @@
         private System.Windows.Forms.ToolStripMenuItem fontsHackMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem transparencyToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem3;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem4;
+        private System.Windows.Forms.ToolStripMenuItem opacity50MenuItem;
+        private System.Windows.Forms.ToolStripMenuItem opacity75MenuItem;
+        private System.Windows.Forms.ToolStripMenuItem opacity90MenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem indentToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem unindentToolStripMenuItem;
@@ -1439,7 +1439,7 @@
         private System.Windows.Forms.ToolStripMenuItem commentSelectionToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem uncommentSelectionToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem changesInThisVersionToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem5;
+        private System.Windows.Forms.ToolStripMenuItem opacity100MenuItem;
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripButton OpenButton;
         private System.Windows.Forms.ToolStripButton SaveButton;

@@ -632,10 +632,10 @@ namespace PaintDotNet.Effects
         protected override void OnLoad(EventArgs e)
         {
             this.Opacity = 1.00;
-            toolStripMenuItem2.Checked = false;
-            toolStripMenuItem3.Checked = false;
-            toolStripMenuItem4.Checked = false;
-            toolStripMenuItem5.Checked = true;
+            opacity50MenuItem.Checked = false;
+            opacity75MenuItem.Checked = false;
+            opacity90MenuItem.Checked = false;
+            opacity100MenuItem.Checked = true;
             txtCode.Focus();
 
             base.OnLoad(e);
@@ -1478,43 +1478,43 @@ namespace PaintDotNet.Effects
             txtCode.Focus();
         }
 
-        private void toolStripMenuItem2_Click(object sender, EventArgs e)
+        private void opacity50MenuItem_Click(object sender, EventArgs e)
         {
             this.Opacity = 0.50;
-            toolStripMenuItem2.Checked = true;
-            toolStripMenuItem3.Checked = false;
-            toolStripMenuItem4.Checked = false;
-            toolStripMenuItem5.Checked = false;
+            opacity50MenuItem.Checked = true;
+            opacity75MenuItem.Checked = false;
+            opacity90MenuItem.Checked = false;
+            opacity100MenuItem.Checked = false;
             txtCode.Focus();
         }
 
-        private void toolStripMenuItem5_Click(object sender, EventArgs e)
+        private void opacity100MenuItem_Click(object sender, EventArgs e)
         {
             this.Opacity = 1.00;
-            toolStripMenuItem2.Checked = false;
-            toolStripMenuItem3.Checked = false;
-            toolStripMenuItem4.Checked = false;
-            toolStripMenuItem5.Checked = true;
+            opacity50MenuItem.Checked = false;
+            opacity75MenuItem.Checked = false;
+            opacity90MenuItem.Checked = false;
+            opacity100MenuItem.Checked = true;
             txtCode.Focus();
         }
 
-        private void toolStripMenuItem3_Click(object sender, EventArgs e)
+        private void opacity75MenuItem_Click(object sender, EventArgs e)
         {
             this.Opacity = 0.75;
-            toolStripMenuItem2.Checked = false;
-            toolStripMenuItem3.Checked = true;
-            toolStripMenuItem4.Checked = false;
-            toolStripMenuItem5.Checked = false;
+            opacity50MenuItem.Checked = false;
+            opacity75MenuItem.Checked = true;
+            opacity90MenuItem.Checked = false;
+            opacity100MenuItem.Checked = false;
             txtCode.Focus();
         }
 
-        private void toolStripMenuItem4_Click(object sender, EventArgs e)
+        private void opacity90MenuItem_Click(object sender, EventArgs e)
         {
             this.Opacity = 0.90;
-            toolStripMenuItem2.Checked = false;
-            toolStripMenuItem3.Checked = false;
-            toolStripMenuItem4.Checked = true;
-            toolStripMenuItem5.Checked = false;
+            opacity50MenuItem.Checked = false;
+            opacity75MenuItem.Checked = false;
+            opacity90MenuItem.Checked = true;
+            opacity100MenuItem.Checked = false;
             txtCode.Focus();
         }
 
