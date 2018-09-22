@@ -1263,353 +1263,357 @@ namespace PaintDotNet.Effects
             int NameLength;
 
             Match m = REAmt.Match(RawSourceLine);
-            if (m.Success)
+            if (!m.Success)
             {
-                Match m0 = REMinMaxStyle.Match(m.Groups["rawcomment"].Value);
-                if (m0.Success)
+                // don't understand raw source line
+                return;
+            }
+
+            Match m0 = REMinMaxStyle.Match(m.Groups["rawcomment"].Value);
+            if (m0.Success)
+            {
+                MinimumStr = m0.Groups["minimum"].Value;
+                MaximumStr = m0.Groups["maximum"].Value;
+                StyleStr = m0.Groups["style"].Value;
+                LabelStr = m0.Groups["label"].Value.Trim();
+            }
+            else
+            {
+                Match m1 = REMinMax.Match(m.Groups["rawcomment"].Value);
+                if (m1.Success)
                 {
-                    MinimumStr = m0.Groups["minimum"].Value;
-                    MaximumStr = m0.Groups["maximum"].Value;
-                    StyleStr = m0.Groups["style"].Value;
-                    LabelStr = m0.Groups["label"].Value.Trim();
+                    MinimumStr = m1.Groups["minimum"].Value;
+                    MaximumStr = m1.Groups["maximum"].Value;
+                    LabelStr = m1.Groups["label"].Value.Trim();
                 }
                 else
-                { 
-                    Match m1 = REMinMax.Match(m.Groups["rawcomment"].Value);
-                    if (m1.Success)
+                {
+                    Match m2 = REMaxOnly.Match(m.Groups["rawcomment"].Value);
+                    if (m2.Success)
                     {
-                        MinimumStr = m1.Groups["minimum"].Value;
-                        MaximumStr = m1.Groups["maximum"].Value;
-                        LabelStr = m1.Groups["label"].Value.Trim();
+                        MinimumStr = "0";
+                        MaximumStr = m2.Groups["maximum"].Value;
+                        LabelStr = m2.Groups["label"].Value.Trim();
                     }
                     else
                     {
-                        Match m2 = REMaxOnly.Match(m.Groups["rawcomment"].Value);
-                        if (m2.Success)
+                        Match m3 = REColorOnly.Match(m.Groups["rawcomment"].Value);
+                        if (m3.Success)
                         {
-                            MinimumStr = "0";
-                            MaximumStr = m2.Groups["maximum"].Value;
-                            LabelStr = m2.Groups["label"].Value.Trim();
+                            DefaultColor = m3.Groups["defcolor"].Value;
+                            LabelStr = m3.Groups["label"].Value.Trim();
                         }
                         else
                         {
-                            Match m3 = REColorOnly.Match(m.Groups["rawcomment"].Value);
-                            if (m3.Success)
+                            Match m1L = RELabel.Match(m.Groups["rawcomment"].Value);
+                            if (m1L.Success)
                             {
-                                DefaultColor = m3.Groups["defcolor"].Value;
-                                LabelStr = m3.Groups["label"].Value.Trim();
-                            }
-                            else
-                            {
-                                Match m1L = RELabel.Match(m.Groups["rawcomment"].Value);
-                                if (m1L.Success)
-                                {
-                                    LabelStr = m1L.Groups["label"].Value.Trim();
-                                }
+                                LabelStr = m1L.Groups["label"].Value.Trim();
                             }
                         }
                     }
                 }
-                Match me = REEnabled.Match(LabelStr);
-                if (me.Success)
-                {
-                    string dgts = me.Groups["digits"].Value.Trim();
-                    string swap = me.Groups["swap"].Value.Trim();
-                    LabelStr = me.Groups["label"].Value.Trim();
-                    if (!int.TryParse(dgts, out EnableLinkVar))
-                    {
-                        EnableLinkVar = 0;
-                        EnabledWhen = false;
-                        EnableSwap = false;
-                    }
-                    else
-                    {
-                        EnableLinkVar--;
-                        EnabledWhen = true;
-                        EnableSwap = (swap == "!");
-                    }
-                }
-                DefaultStr = m.Groups["default"].Value.Trim();
-                TypeStr = m.Groups["type"].Value.Trim();
+            }
 
-                if ((TypeStr == "int") || (TypeStr == "IntSliderControl"))
+            Match me = REEnabled.Match(LabelStr);
+            if (me.Success)
+            {
+                string dgts = me.Groups["digits"].Value.Trim();
+                string swap = me.Groups["swap"].Value.Trim();
+                LabelStr = me.Groups["label"].Value.Trim();
+                if (!int.TryParse(dgts, out EnableLinkVar))
                 {
-                    ElementType = ElementType.IntSlider;
-                    if (!int.TryParse(DefaultStr, out Default)) Default = 0;
-                    if (!int.TryParse(MinimumStr, out Min)) Min = 0;
-                    if (!int.TryParse(MaximumStr, out Max)) Max = 100;
-                    if (!int.TryParse(StyleStr, out Style)) Style = 0;
-                    Style = Math.Max(0, Math.Min(MaxStyles, Style));
-                    Name = LabelStr;
+                    EnableLinkVar = 0;
+                    EnabledWhen = false;
+                    EnableSwap = false;
                 }
-                else if ((TypeStr == "bool") || (TypeStr == "CheckboxControl"))
+                else
                 {
-                    ElementType = ElementType.Checkbox;
-                    if (DefaultStr.Contains("true"))
-                    {
-                        Default = 1;
-                    }
-                    else
-                    {
-                        Default = 0;
-                    }
-                    Min = 0;
-                    Max = 1;
-                    Name = LabelStr;
+                    EnableLinkVar--;
+                    EnabledWhen = true;
+                    EnableSwap = (swap == "!");
                 }
-                else if ((TypeStr == "ColorBgra") || (TypeStr == "ColorWheelControl"))
+            }
+
+            DefaultStr = m.Groups["default"].Value.Trim();
+            TypeStr = m.Groups["type"].Value.Trim();
+
+            if ((TypeStr == "int") || (TypeStr == "IntSliderControl"))
+            {
+                ElementType = ElementType.IntSlider;
+                if (!int.TryParse(DefaultStr, out Default)) Default = 0;
+                if (!int.TryParse(MinimumStr, out Min)) Min = 0;
+                if (!int.TryParse(MaximumStr, out Max)) Max = 100;
+                if (!int.TryParse(StyleStr, out Style)) Style = 0;
+                Style = Math.Max(0, Math.Min(MaxStyles, Style));
+                Name = LabelStr;
+            }
+            else if ((TypeStr == "bool") || (TypeStr == "CheckboxControl"))
+            {
+                ElementType = ElementType.Checkbox;
+                if (DefaultStr.Contains("true"))
                 {
-                    ElementType = ElementType.ColorWheel;
+                    Default = 1;
+                }
+                else
+                {
                     Default = 0;
-                    if (DefaultColor.EndsWith("?"))
+                }
+                Min = 0;
+                Max = 1;
+                Name = LabelStr;
+            }
+            else if ((TypeStr == "ColorBgra") || (TypeStr == "ColorWheelControl"))
+            {
+                ElementType = ElementType.ColorWheel;
+                Default = 0;
+                if (DefaultColor.EndsWith("?"))
+                {
+                    ColorDefault = DefaultColor.Substring(0, DefaultColor.Length - 1);
+                    Style = 1;
+                    Min = int.MinValue;
+                    Max = int.MaxValue;
+                }
+                else if (DefaultColor.EndsWith("!"))
+                {
+                    if (DefaultColor.EndsWith("?!"))
                     {
-                        ColorDefault = DefaultColor.Substring(0, DefaultColor.Length - 1);
-                        Style = 1;
+                        ColorDefault = DefaultColor.Substring(0, DefaultColor.Length - 2);
+                        Style = 3;
                         Min = int.MinValue;
                         Max = int.MaxValue;
                     }
-                    else if (DefaultColor.EndsWith("!"))
-                    {
-                        if (DefaultColor.EndsWith("?!"))
-                        {
-                            ColorDefault = DefaultColor.Substring(0, DefaultColor.Length - 2);
-                            Style = 3;
-                            Min = int.MinValue;
-                            Max = int.MaxValue;
-                        }
-                        else
-                        {
-                            ColorDefault = DefaultColor.Substring(0, DefaultColor.Length - 1);
-                            Style = 2;
-                            Min = 0;
-                            Max = 0xffffff;
-                        }
-                    }
                     else
                     {
-                        ColorDefault = DefaultColor;
-                        Style = 0;
+                        ColorDefault = DefaultColor.Substring(0, DefaultColor.Length - 1);
+                        Style = 2;
                         Min = 0;
                         Max = 0xffffff;
                     }
-                    Name = LabelStr;
                 }
-                else if ((TypeStr == "double") || (TypeStr == "AngleControl") || (TypeStr == "DoubleSliderControl"))
+                else
                 {
-                    if (!double.TryParse(MaximumStr, NumberStyles.Float, CultureInfo.InvariantCulture, out dMax)) dMax = 10;
-                    if (!double.TryParse(MinimumStr, NumberStyles.Float, CultureInfo.InvariantCulture, out dMin)) dMin = 0;
-                    if (!double.TryParse(DefaultStr, NumberStyles.Float, CultureInfo.InvariantCulture, out dDefault)) dDefault = 0;
-
-                    if (!int.TryParse(MaximumStr, out Max)) Max = 180;
-                    if (!int.TryParse(MinimumStr, out Min)) Min = -180;
-                    if (!int.TryParse(DefaultStr, out Default)) Default = 45;
-
-                    if (!int.TryParse(StyleStr, out Style)) Style = 0;
-                    Style = Math.Max(0, Math.Min(MaxStyles, Style));
-
-                    if (((TypeStr == "double") && (Min == -180) && (dMin == -180) && (Max == 180) && (dMax == 180) && (Default == 45) && (dDefault == 45)) || (TypeStr == "AngleControl"))
-                    {
-                        ElementType = ElementType.AngleChooser;
-                        dMin = dMin.Clamp(-180.0, 360.0);
-                        double upperBound = (dMin < 0.0) ? 180.0 : 360;
-                        dMax = dMax.Clamp(dMin, upperBound);
-                        dDefault = dDefault.Clamp(dMin, dMax);
-                        Min = (int)dMin;
-                        Max = (int)dMax;
-                        Default = (int)dDefault;
-                        Style = 0;
-                    }
-                    else
-                    {
-                        ElementType = ElementType.DoubleSlider;
-                        Max = (int)dMax;
-                        Min = (int)dMin;
-                        Default = (int)dDefault;
-                    }
-                    Name = LabelStr;
+                    ColorDefault = DefaultColor;
+                    Style = 0;
+                    Min = 0;
+                    Max = 0xffffff;
                 }
-                else if ((TypeStr == "Pair<double, double>") || (TypeStr == "PanSliderControl"))
+                Name = LabelStr;
+            }
+            else if ((TypeStr == "double") || (TypeStr == "AngleControl") || (TypeStr == "DoubleSliderControl"))
+            {
+                if (!double.TryParse(MaximumStr, NumberStyles.Float, CultureInfo.InvariantCulture, out dMax)) dMax = 10;
+                if (!double.TryParse(MinimumStr, NumberStyles.Float, CultureInfo.InvariantCulture, out dMin)) dMin = 0;
+                if (!double.TryParse(DefaultStr, NumberStyles.Float, CultureInfo.InvariantCulture, out dDefault)) dDefault = 0;
+
+                if (!int.TryParse(MaximumStr, out Max)) Max = 180;
+                if (!int.TryParse(MinimumStr, out Min)) Min = -180;
+                if (!int.TryParse(DefaultStr, out Default)) Default = 45;
+
+                if (!int.TryParse(StyleStr, out Style)) Style = 0;
+                Style = Math.Max(0, Math.Min(MaxStyles, Style));
+
+                if (((TypeStr == "double") && (Min == -180) && (dMin == -180) && (Max == 180) && (dMax == 180) && (Default == 45) && (dDefault == 45)) || (TypeStr == "AngleControl"))
                 {
-                    ElementType = ElementType.PanSlider;
-                    Default = 0;
-                    Min = -1;
-                    Max = 1;
+                    ElementType = ElementType.AngleChooser;
+                    dMin = dMin.Clamp(-180.0, 360.0);
+                    double upperBound = (dMin < 0.0) ? 180.0 : 360;
+                    dMax = dMax.Clamp(dMin, upperBound);
+                    dDefault = dDefault.Clamp(dMin, dMax);
+                    Min = (int)dMin;
+                    Max = (int)dMax;
+                    Default = (int)dDefault;
+                    Style = 0;
+                }
+                else
+                {
+                    ElementType = ElementType.DoubleSlider;
+                    Max = (int)dMax;
+                    Min = (int)dMin;
+                    Default = (int)dDefault;
+                }
+                Name = LabelStr;
+            }
+            else if ((TypeStr == "Pair<double, double>") || (TypeStr == "PanSliderControl"))
+            {
+                ElementType = ElementType.PanSlider;
+                Default = 0;
+                Min = -1;
+                Max = 1;
+                dMin = 0;
+                if (!double.TryParse(DefaultStr.Substring(DefaultStr.IndexOf('(') + 1, DefaultStr.IndexOf(',') - DefaultStr.IndexOf('(') - 1).Trim(), NumberStyles.Float, CultureInfo.InvariantCulture, out dMin))
+                {
                     dMin = 0;
-                    if (!double.TryParse(DefaultStr.Substring(DefaultStr.IndexOf('(') + 1, DefaultStr.IndexOf(',') - DefaultStr.IndexOf('(') - 1).Trim(), NumberStyles.Float, CultureInfo.InvariantCulture, out dMin))
-                    {
-                        dMin = 0;
-                    }
+                }
+                dMax = 0;
+                if (!double.TryParse(DefaultStr.Substring(DefaultStr.IndexOf(',') + 1, DefaultStr.IndexOf(')') - DefaultStr.IndexOf(',') - 1).Trim(), NumberStyles.Float, CultureInfo.InvariantCulture, out dMax))
+                {
                     dMax = 0;
-                    if (!double.TryParse(DefaultStr.Substring(DefaultStr.IndexOf(',') + 1, DefaultStr.IndexOf(')') - DefaultStr.IndexOf(',') - 1).Trim(), NumberStyles.Float, CultureInfo.InvariantCulture, out dMax))
-                    {
-                        dMax = 0;
-                    }
-                    Name = LabelStr;
                 }
-                else if ((TypeStr == "string") || (TypeStr == "TextboxControl") || (TypeStr == "MultiLineTextboxControl"))
+                Name = LabelStr;
+            }
+            else if ((TypeStr == "string") || (TypeStr == "TextboxControl") || (TypeStr == "MultiLineTextboxControl"))
+            {
+                ElementType = ElementType.Textbox;
+                if (!int.TryParse(DefaultStr, out Default)) Default = 0;
+                if (!int.TryParse(MinimumStr, out Min)) Min = 0;
+                if (!int.TryParse(MaximumStr, out Max)) Max = 255;
+                if ((Min > 0) || (TypeStr == "MultiLineTextboxControl")) ElementType = ElementType.MultiLineTextbox;
+                Name = LabelStr;
+            }
+            else if ((TypeStr == "byte") || (TypeStr == "ListBoxControl") || (TypeStr == "RadioButtonControl") || (TypeStr == "ReseedButtonControl"))
+            {
+                if ((TypeStr == "ListBoxControl") || (MaximumStr == ""))
                 {
-                    ElementType = ElementType.Textbox;
+                    ElementType = ElementType.DropDown;
                     if (!int.TryParse(DefaultStr, out Default)) Default = 0;
-                    if (!int.TryParse(MinimumStr, out Min)) Min = 0;
-                    if (!int.TryParse(MaximumStr, out Max)) Max = 255;
-                    if ((Min > 0) || (TypeStr == "MultiLineTextboxControl")) ElementType = ElementType.MultiLineTextbox;
-                    Name = LabelStr;
-                }
-                else if ((TypeStr == "byte") || (TypeStr == "ListBoxControl") || (TypeStr == "RadioButtonControl") || (TypeStr == "ReseedButtonControl"))
-                {
-                    if ((TypeStr == "ListBoxControl") || (MaximumStr == ""))
-                    {
-                        ElementType = ElementType.DropDown;
-                        if (!int.TryParse(DefaultStr, out Default)) Default = 0;
-                        Min = 0;
-                        Max = 0;
-                        Name = LabelStr;
-                    }
-                    else if ((TypeStr == "RadioButtonControl") || (MaximumStr == "1"))
-                    {
-                        ElementType = ElementType.RadioButtons;
-                        if (!int.TryParse(DefaultStr, out Default)) Default = 0;
-                        Min = 0;
-                        Max = 0;
-                        Name = LabelStr;
-                    }
-                    else if ((TypeStr == "ReseedButtonControl") || (MaximumStr == "255"))
-                    {
-                        ElementType = ElementType.ReseedButton;
-                        Default = 0;
-                        Min = 0;
-                        Max = 255;
-                        Name = LabelStr;
-                    }
-                    if (!LabelStr.Contains("|"))
-                    {
-                        ElementType = ElementType.ReseedButton;
-                        Default = 0;
-                        Min = 0;
-                        Max = 255;
-                        Name = LabelStr;
-                    }
-                }
-                else if (TypeStr == "UserBlendOp" || TypeStr == "BinaryPixelOp")
-                {
-                    ElementType = ElementType.BinaryPixelOp;
-                    Default = 0;
                     Min = 0;
                     Max = 0;
                     Name = LabelStr;
                 }
-                else if (TypeStr == "FontFamily")
+                else if ((TypeStr == "RadioButtonControl") || (MaximumStr == "1"))
                 {
-                    ElementType = ElementType.FontFamily;
-                    Default = 0;
+                    ElementType = ElementType.RadioButtons;
+                    if (!int.TryParse(DefaultStr, out Default)) Default = 0;
                     Min = 0;
                     Max = 0;
                     Name = LabelStr;
                 }
-                else if ((TypeStr == "Tuple<double, double, double>") || (TypeStr == "RollControl"))
+                else if ((TypeStr == "ReseedButtonControl") || (MaximumStr == "255"))
                 {
-                    ElementType = ElementType.RollBall;
-                    Default = 0;
-                    Min = 0;
-                    Max = 1;
-                    Name = LabelStr;
-                }
-                else if (TypeStr == "FilenameControl")
-                {
-                    ElementType = ElementType.Filename;
+                    ElementType = ElementType.ReseedButton;
                     Default = 0;
                     Min = 0;
                     Max = 255;
                     Name = LabelStr;
                 }
-                else return;
-
-                string EnabledDescription = "";
-                if (EnabledWhen)
+                if (!LabelStr.Contains("|"))
                 {
-                    EnabledDescription += " {";
-                    if (EnableSwap)
-                    {
-                        EnabledDescription += "!";
-                    }
-                    EnabledDescription += "Amount" + (EnableLinkVar + 1).ToString() + "} ";
+                    ElementType = ElementType.ReseedButton;
+                    Default = 0;
+                    Min = 0;
+                    Max = 255;
+                    Name = LabelStr;
                 }
-
-                switch (ElementType)
-                {
-                    case ElementType.IntSlider:
-                        Description = Name + " (" + Min.ToString() + ".." + Default.ToString() + ".." + Max.ToString() + ")" + EnabledDescription;
-                        break;
-                    case ElementType.Checkbox:
-                        Description = Name + ((Default == 0) ? " (unchecked)" : " (checked)") + EnabledDescription;
-                        break;
-                    case ElementType.ColorWheel:
-                        Description = Name;
-                        string alphastyle = "";
-                        if (Style == 1 || Style == 3)
-                        {
-                            alphastyle = "?";
-                        }
-                        string resetstyle = "";
-                        if (Style == 2 || Style == 3)
-                        {
-                            resetstyle = "!";
-                        }
-                        if (ColorDefault != "")
-                        {
-                            Description += " (" + ColorDefault + alphastyle + resetstyle + ")";
-                        }
-                        Description += EnabledDescription;
-                        break;
-                    case ElementType.AngleChooser:
-                        Description = Name + " (" + dMin.ToString() + ".." + dDefault.ToString() + ".." + dMax.ToString() + ")" + EnabledDescription;
-                        break;
-                    case ElementType.PanSlider:
-                        Description = Name + EnabledDescription;
-                        break;
-                    case ElementType.Textbox:
-                        Description = Name + " (" + Max.ToString() + ")" + EnabledDescription;
-                        break;
-                    case ElementType.DoubleSlider:
-                        Description = Name + " (" + dMin.ToString() + ".." + dDefault.ToString() + ".." + dMax.ToString() + ")" + EnabledDescription;
-                        break;
-                    case ElementType.DropDown:
-                        NameLength = Name.IndexOf("|", StringComparison.Ordinal);
-                        if (NameLength == -1) NameLength = Name.Length;
-                        Description = Name.Substring(0, NameLength) + EnabledDescription;
-                        break;
-                    case ElementType.BinaryPixelOp:
-                        Description = Name + " (Normal)" + EnabledDescription;
-                        break;
-                    case ElementType.FontFamily:
-                        Description = Name + EnabledDescription;
-                        break;
-                    case ElementType.RadioButtons:
-                        NameLength = Name.IndexOf("|", StringComparison.Ordinal);
-                        if (NameLength == -1) NameLength = Name.Length;
-                        Description = Name.Substring(0, NameLength) + EnabledDescription;
-                        break;
-                    case ElementType.ReseedButton:
-                        Description = Name + " (Button)" + EnabledDescription;
-                        break;
-                    case ElementType.MultiLineTextbox:
-                        Description = Name + " (" + Max.ToString() + ")" + EnabledDescription;
-                        break;
-                    case ElementType.RollBall:
-                        Description = Name + EnabledDescription;
-                        break;
-                    case ElementType.Filename:
-                        NameLength = Name.IndexOf("|", StringComparison.Ordinal);
-                        if (NameLength == -1) NameLength = Name.Length;
-                        Description = Name.Substring(0, NameLength) + EnabledDescription;
-                        break;
-                    default:
-                        break;
-                }
+            }
+            else if (TypeStr == "UserBlendOp" || TypeStr == "BinaryPixelOp")
+            {
+                ElementType = ElementType.BinaryPixelOp;
+                Default = 0;
+                Min = 0;
+                Max = 0;
+                Name = LabelStr;
+            }
+            else if (TypeStr == "FontFamily")
+            {
+                ElementType = ElementType.FontFamily;
+                Default = 0;
+                Min = 0;
+                Max = 0;
+                Name = LabelStr;
+            }
+            else if ((TypeStr == "Tuple<double, double, double>") || (TypeStr == "RollControl"))
+            {
+                ElementType = ElementType.RollBall;
+                Default = 0;
+                Min = 0;
+                Max = 1;
+                Name = LabelStr;
+            }
+            else if (TypeStr == "FilenameControl")
+            {
+                ElementType = ElementType.Filename;
+                Default = 0;
+                Min = 0;
+                Max = 255;
+                Name = LabelStr;
             }
             else
             {
-                // don't understand raw source line
+                return;
+            }
+
+            string EnabledDescription = "";
+            if (EnabledWhen)
+            {
+                EnabledDescription += " {";
+                if (EnableSwap)
+                {
+                    EnabledDescription += "!";
+                }
+                EnabledDescription += "Amount" + (EnableLinkVar + 1).ToString() + "} ";
+            }
+
+            switch (ElementType)
+            {
+                case ElementType.IntSlider:
+                    Description = Name + " (" + Min.ToString() + ".." + Default.ToString() + ".." + Max.ToString() + ")" + EnabledDescription;
+                    break;
+                case ElementType.Checkbox:
+                    Description = Name + ((Default == 0) ? " (unchecked)" : " (checked)") + EnabledDescription;
+                    break;
+                case ElementType.ColorWheel:
+                    Description = Name;
+                    string alphastyle = "";
+                    if (Style == 1 || Style == 3)
+                    {
+                        alphastyle = "?";
+                    }
+                    string resetstyle = "";
+                    if (Style == 2 || Style == 3)
+                    {
+                        resetstyle = "!";
+                    }
+                    if (ColorDefault != "")
+                    {
+                        Description += " (" + ColorDefault + alphastyle + resetstyle + ")";
+                    }
+                    Description += EnabledDescription;
+                    break;
+                case ElementType.AngleChooser:
+                    Description = Name + " (" + dMin.ToString() + ".." + dDefault.ToString() + ".." + dMax.ToString() + ")" + EnabledDescription;
+                    break;
+                case ElementType.PanSlider:
+                    Description = Name + EnabledDescription;
+                    break;
+                case ElementType.Textbox:
+                    Description = Name + " (" + Max.ToString() + ")" + EnabledDescription;
+                    break;
+                case ElementType.DoubleSlider:
+                    Description = Name + " (" + dMin.ToString() + ".." + dDefault.ToString() + ".." + dMax.ToString() + ")" + EnabledDescription;
+                    break;
+                case ElementType.DropDown:
+                    NameLength = Name.IndexOf("|", StringComparison.Ordinal);
+                    if (NameLength == -1) NameLength = Name.Length;
+                    Description = Name.Substring(0, NameLength) + EnabledDescription;
+                    break;
+                case ElementType.BinaryPixelOp:
+                    Description = Name + " (Normal)" + EnabledDescription;
+                    break;
+                case ElementType.FontFamily:
+                    Description = Name + EnabledDescription;
+                    break;
+                case ElementType.RadioButtons:
+                    NameLength = Name.IndexOf("|", StringComparison.Ordinal);
+                    if (NameLength == -1) NameLength = Name.Length;
+                    Description = Name.Substring(0, NameLength) + EnabledDescription;
+                    break;
+                case ElementType.ReseedButton:
+                    Description = Name + " (Button)" + EnabledDescription;
+                    break;
+                case ElementType.MultiLineTextbox:
+                    Description = Name + " (" + Max.ToString() + ")" + EnabledDescription;
+                    break;
+                case ElementType.RollBall:
+                    Description = Name + EnabledDescription;
+                    break;
+                case ElementType.Filename:
+                    NameLength = Name.IndexOf("|", StringComparison.Ordinal);
+                    if (NameLength == -1) NameLength = Name.Length;
+                    Description = Name.Substring(0, NameLength) + EnabledDescription;
+                    break;
+                default:
+                    break;
             }
         }
 
