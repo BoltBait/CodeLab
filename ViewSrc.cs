@@ -15,6 +15,7 @@
 using System;
 using System.Windows.Forms;
 using System.IO;
+using System.Drawing;
 
 namespace PaintDotNet.Effects
 {
@@ -34,6 +35,7 @@ namespace PaintDotNet.Effects
             CopyButton.Image = CopyButton.Image.ResizeForDPI(this.AutoScaleDimensions);
             SaveButton.Image = SaveButton.Image.ResizeForDPI(this.AutoScaleDimensions);
 
+            TextSrcBox.Font = new Font(Settings.FontFamily, TextSrcBox.Font.Size);
             TextSrcBox.Text = SourceString;
             this.Text = title;
             SaveButton.Visible = ShowSaveButton;
