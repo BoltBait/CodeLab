@@ -558,7 +558,7 @@ namespace PaintDotNet.Effects
                             }
                             break;
                         case ElementType.AngleChooser:
-                            PropertyPart += "            props.Add(new DoubleProperty(PropertyNames.Amount" + x.ToString() + "," + u.Default.ToString() + ", -180, +180));\r\n";
+                            PropertyPart += "            props.Add(new DoubleProperty(PropertyNames.Amount" + x.ToString() + "," + u.dDefault.ToString() + ", " + u.dMin.ToString() + ", " + u.dMax.ToString() + "));\r\n";
                             break;
                         case ElementType.PanSlider:
                             PropertyPart += "            props.Add(new DoubleVectorProperty(PropertyNames.Amount" + x.ToString() + ",Pair.Create(" + u.dMin.ToString("F3", CultureInfo.InvariantCulture) + "," + u.dMax.ToString("F3", CultureInfo.InvariantCulture) + "), Pair.Create(-1.0, -1.0), Pair.Create(+1.0, +1.0)));\r\n";

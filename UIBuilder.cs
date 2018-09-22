@@ -266,8 +266,8 @@ namespace PaintDotNet.Effects
                 MaximumLabel.Visible = true;
                 DefaultLabel.Visible = true;
                 ControlDef.Enabled = true;
-                ControlMax.Enabled = false;
-                ControlMin.Enabled = false;
+                ControlMax.Enabled = true;
+                ControlMin.Enabled = true;
                 ControlMax.Text = "180";
                 ControlMin.Text = "-180";
                 ControlDef.Text = "45";
@@ -670,9 +670,9 @@ namespace PaintDotNet.Effects
                     case ElementType.AngleChooser:
                         ControlType.Text = "Angle Chooser";
                         ControlStyle.SelectedIndex = 0;
-                        ControlMin.Text = CurrentElement.Min.ToString();
-                        ControlMax.Text = CurrentElement.Max.ToString();
-                        ControlDef.Text = CurrentElement.Default.ToString();
+                        ControlMin.Text = CurrentElement.dMin.ToString();
+                        ControlMax.Text = CurrentElement.dMax.ToString();
+                        ControlDef.Text = CurrentElement.dDefault.ToString();
                         break;
                     case ElementType.PanSlider:
                         ControlType.Text = "Pan Slider";
@@ -1171,9 +1171,14 @@ namespace PaintDotNet.Effects
                     Description += EnabledDescription;
                     break;
                 case ElementType.AngleChooser:
-                    Min = -180;
-                    Max = 180;
-                    Description = eName + " (" + Min.ToString() + ".." + Default.ToString() + ".." + Max.ToString() + ")" + EnabledDescription;
+                    dMin = dMin.Clamp(-180.0, 360.0);
+                    double upperBound = (dMin < 0.0) ? 180.0 : 360;
+                    dMax = dMax.Clamp(dMin, upperBound);
+                    dDefault = dDefault.Clamp(dMin, dMax);
+                    Min = (int)dMin;
+                    Max = (int)dMax;
+                    Default = (int)dDefault;
+                    Description = eName + " (" + dMin.ToString() + ".." + dDefault.ToString() + ".." + dMax.ToString() + ")" + EnabledDescription;
                     break;
                 case ElementType.PanSlider:
                     Min = -1;
@@ -1418,6 +1423,13 @@ namespace PaintDotNet.Effects
                     if (((TypeStr == "double") && (Min == -180) && (dMin == -180) && (Max == 180) && (dMax == 180) && (Default == 45) && (dDefault == 45)) || (TypeStr == "AngleControl"))
                     {
                         ElementType = ElementType.AngleChooser;
+                        dMin = dMin.Clamp(-180.0, 360.0);
+                        double upperBound = (dMin < 0.0) ? 180.0 : 360;
+                        dMax = dMax.Clamp(dMin, upperBound);
+                        dDefault = dDefault.Clamp(dMin, dMax);
+                        Min = (int)dMin;
+                        Max = (int)dMax;
+                        Default = (int)dDefault;
                         Style = 0;
                     }
                     else
@@ -1563,7 +1575,7 @@ namespace PaintDotNet.Effects
                         Description += EnabledDescription;
                         break;
                     case ElementType.AngleChooser:
-                        Description = Name + " (" + Min.ToString() + ".." + Default.ToString() + ".." + Max.ToString() + ")" + EnabledDescription;
+                        Description = Name + " (" + dMin.ToString() + ".." + dDefault.ToString() + ".." + dMax.ToString() + ")" + EnabledDescription;
                         break;
                     case ElementType.PanSlider:
                         Description = Name + EnabledDescription;
