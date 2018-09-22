@@ -376,7 +376,7 @@ namespace PaintDotNet.Effects
             Regex preRenderRegex = new Regex(@"void PreRender\(Surface dst, Surface src\)(\s)*{(.|\s)*}", RegexOptions.Singleline);
 
             // Generate code
-            List<UIElement> UserControls = ScriptWriter.ProcessUIControls(scriptText);
+            List<UIElement> UserControls = UIElement.ProcessUIControls(scriptText);
 
             string SourceCode =
                 ScriptWriter.UsingPartCode +
@@ -423,7 +423,7 @@ namespace PaintDotNet.Effects
             uiCode = "#region UICode\r\n" + uiCode + "\r\n#endregion\r\n";
 
             // Generate code
-            List<UIElement> UserControls = ScriptWriter.ProcessUIControls(uiCode);
+            List<UIElement> UserControls = UIElement.ProcessUIControls(uiCode);
 
             string SourceCode =
                 ScriptWriter.UsingPartCode +

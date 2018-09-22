@@ -92,7 +92,7 @@ namespace PaintDotNet.Effects
             DefaultColorComboBox.Items.Add("SecondaryColor");
             DefaultColorComboBox.Items.AddRange(GetColorNames());
 
-            MasterList = ScriptWriter.ProcessUIControls(UserScriptText);
+            MasterList = UIElement.ProcessUIControls(UserScriptText);
             refreshListView(0);
             dirty = false;
             PC = PrimaryColor;
@@ -1086,6 +1086,57 @@ namespace PaintDotNet.Effects
             "RollControl",              // 13
             "FilenameControl"           // 14
         };
+
+        internal static List<UIElement> ProcessUIControls(string SourceCode)
+        {
+            string UIControlsText = "";
+            Regex REUIControlsContainer = new Regex(@"\#region UICode(?<sublabel>.*?)\#endregion", RegexOptions.Singleline | RegexOptions.IgnoreCase);
+            Match mcc = REUIControlsContainer.Match(SourceCode);
+            if (mcc.Success)
+            {
+                // We found the standard #region UICode/#endregion block
+                UIControlsText = mcc.Groups["sublabel"].Value.Trim();
+            }
+            else
+            {
+                // Find standard UI controls from REALLY OLD scripts
+                Regex REAmt1 = new Regex(@"int\s+Amount1\s*=\s*(?<default>\-?\d+)(?<rawcomment>.*)\n", RegexOptions.IgnoreCase);
+                Match ma1 = REAmt1.Match(SourceCode);
+                if (ma1.Success)
+                {
+                    UIControlsText = "int Amount1 = " + ma1.Groups["default"].Value.Trim() + ma1.Groups["rawcomment"].Value.Trim();
+                    Regex REAmt2 = new Regex(@"int\s+Amount2\s*=\s*(?<default>\-?\d+)(?<rawcomment>.*)\n", RegexOptions.IgnoreCase);
+                    Match ma2 = REAmt2.Match(SourceCode);
+                    if (ma2.Success)
+                    {
+                        UIControlsText += "\nint Amount2 = " + ma2.Groups["default"].Value.Trim() + ma2.Groups["rawcomment"].Value.Trim();
+                        Regex REAmt3 = new Regex(@"int\s+Amount3\s*=\s*(?<default>\-?\d+)(?<rawcomment>.*)\n", RegexOptions.IgnoreCase);
+                        Match ma3 = REAmt3.Match(SourceCode);
+                        if (ma3.Success)
+                        {
+                            UIControlsText += "\nint Amount3 = " + ma3.Groups["default"].Value.Trim() + ma3.Groups["rawcomment"].Value.Trim();
+                        }
+                    }
+                }
+                else
+                {
+                    // No UI controls found
+                    UIControlsText = "";
+                }
+            }
+            // process those UI controls
+            string[] SrcLines = UIControlsText.Split('\n');
+            List<UIElement> UserControls = new List<UIElement>();
+            foreach (string s in SrcLines)
+            {
+                string Line = s.Trim();
+                if (Line != "" && !Line.StartsWith("//"))
+                {
+                    UserControls.Add(new UIElement(Line));
+                }
+            }
+            return UserControls;
+        }
 
         internal UIElement(ElementType eType, string eName, string eMin, string eMax, string eDefault, string eOptions, int eStyle, bool eEnabled, int eTargetAmount, bool eSwap)
         {
