@@ -26,25 +26,14 @@ namespace PaintDotNet.Effects
 {
     internal partial class UIBuilder : Form
     {
-        private string ScriptText;
         internal string UIControlsText;
         private ColorBgra PC;
         private bool dirty = false;
-        private List<UIElement> MasterList = new List<UIElement>();
+        private readonly List<UIElement> MasterList = new List<UIElement>();
 
         internal UIBuilder(string UserScriptText, ColorBgra PrimaryColor)
         {
             InitializeComponent();
-
-            SizeF dpi;
-            using (Graphics g = this.CreateGraphics())
-                dpi = new SizeF(g.DpiX / 96f, g.DpiY / 96f);
-
-            imgList.ImageSize = new Size((int)Math.Round(16 * dpi.Width), (int)Math.Round(16 * dpi.Height));
-            ControlStyle.ItemHeight = ControlType.ItemHeight;
-            ControlStyle.Height = ControlType.Height;
-            DefaultColorComboBox.DropDownWidth = DefaultColorComboBox.Width * 2;
-            enabledWhenField.DropDownWidth = enabledWhenField.Width * 2;
 
             // PDN Theme
             this.ForeColor = PdnTheme.ForeColor;
@@ -60,23 +49,26 @@ namespace PaintDotNet.Effects
                 }
             }
 
-            ScriptText = UserScriptText;
-            PC = PrimaryColor;
-            enabledWhenCondition.SelectedIndex = 0;
-            enabledWhenField.SelectedIndex = 0;
-            ControlStyle.SelectedIndex = 0;
-            UpdateEnabledFields();
-        }
 
-        private void UIBuilder_Load(object sender, EventArgs e)
-        {
             if (ControlType.ItemHeight < 18)
             {
                 ControlType.ItemHeight = 18;
             }
+            ControlType.SelectedIndex = 0;
 
-            ControlListView.View = View.List;
-            ControlListView.Items.Clear();
+            ControlStyle.ItemHeight = ControlType.ItemHeight;
+            ControlStyle.Height = ControlType.Height;
+            ControlStyle.SelectedIndex = 0;
+
+            enabledWhenField.DropDownWidth = enabledWhenField.Width * 2;
+            enabledWhenField.SelectedIndex = 0;
+
+            enabledWhenCondition.SelectedIndex = 0;
+
+            UpdateEnabledFields();
+
+            SizeF dpi = new SizeF(this.AutoScaleDimensions.Width / 96f, this.AutoScaleDimensions.Height / 96f);
+            imgList.ImageSize = new Size((int)Math.Round(16 * dpi.Width), (int)Math.Round(16 * dpi.Height));
             imgList.Images.Add("00", Image.FromStream(Assembly.GetExecutingAssembly().GetManifestResourceStream("PaintDotNet.Effects.Icons.00int.png")));
             imgList.Images.Add("01", Image.FromStream(Assembly.GetExecutingAssembly().GetManifestResourceStream("PaintDotNet.Effects.Icons.01CheckBox.png")));
             imgList.Images.Add("02", Image.FromStream(Assembly.GetExecutingAssembly().GetManifestResourceStream("PaintDotNet.Effects.Icons.02ColorWheel.png")));
@@ -94,19 +86,16 @@ namespace PaintDotNet.Effects
             imgList.Images.Add("14", Image.FromStream(Assembly.GetExecutingAssembly().GetManifestResourceStream("PaintDotNet.Effects.Icons.14FilenameControl.png")));
             ControlListView.SmallImageList = imgList;
 
+            DefaultColorComboBox.DropDownWidth = DefaultColorComboBox.Width * 2;
             DefaultColorComboBox.Items.Add("None");
             DefaultColorComboBox.Items.Add("PrimaryColor");
             DefaultColorComboBox.Items.Add("SecondaryColor");
-            foreach (string c in GetColorNames())
-            {
-                DefaultColorComboBox.Items.Add(c);
-            }
+            DefaultColorComboBox.Items.AddRange(GetColorNames());
 
-            ControlType.SelectedIndex = 0;
-            MasterList.Clear();
-            MasterList = ScriptWriter.ProcessUIControls(ScriptText);
+            MasterList = ScriptWriter.ProcessUIControls(UserScriptText);
             refreshListView(0);
             dirty = false;
+            PC = PrimaryColor;
         }
 
         private void refreshListView(int SelectItemIndex)
@@ -522,8 +511,8 @@ namespace PaintDotNet.Effects
                             "Alpha no Reset"
                     });
                     break;
-                default:
                 case 0:
+                default:
                     ControlStyle.Items.AddRange(new string[] {
                             "Default",
                             "Hue",
@@ -784,17 +773,15 @@ namespace PaintDotNet.Effects
             e.DrawFocusRectangle();
         }
 
-        private static List<string> GetColorNames()
+        private static string[] GetColorNames()
         {
-            List<string> names;
-
-            names = typeof(Color).GetProperties(BindingFlags.Public | BindingFlags.Static)
+            List<string> names = typeof(Color).GetProperties(BindingFlags.Public | BindingFlags.Static)
                      .Where(prop => prop.PropertyType == typeof(Color) && prop.Name != "Transparent")
                      .Select(prop => prop.Name).ToList();
 
             names.Sort();
 
-            return names;
+            return names.ToArray();
         }
 
         private void ControlType_DrawItem(object sender, DrawItemEventArgs e)
@@ -1078,7 +1065,7 @@ namespace PaintDotNet.Effects
         //  10  White-Red
         //  11  White-Green
         //  12  White-Blue
-        internal int MaxStyles = 12;
+        private const int MaxStyles = 12;
         internal bool EnabledWhen = false;
         internal int EnableLinkVar = 0;
         internal bool EnableSwap = false;

@@ -570,7 +570,6 @@ namespace PaintDotNet.Effects
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "User Interface Designer";
-            this.Load += new System.EventHandler(this.UIBuilder_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
