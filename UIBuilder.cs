@@ -109,10 +109,12 @@ namespace PaintDotNet.Effects
                 Count++;
                 enabledWhenField.Items.Add("Amount" + Count.ToString() + " - " + uie.Name);
             }
+
             if (enabledWhenField.Items.Count > 0)
             {
                 enabledWhenField.SelectedIndex = 0;
             }
+
             if (SelectItemIndex >= 0 && SelectItemIndex < ControlListView.Items.Count)
             {
                 ControlListView.Items[SelectItemIndex].Selected = true;
@@ -156,7 +158,7 @@ namespace PaintDotNet.Effects
 
         private void Add_Click(object sender, EventArgs e)
         {
-            ElementType elementType = (Enum.IsDefined(typeof(ElementType), ControlType.SelectedIndex)) ? (ElementType)ControlType.SelectedIndex : ElementType.IntSlider;
+            ElementType elementType = Enum.IsDefined(typeof(ElementType), ControlType.SelectedIndex) ? (ElementType)ControlType.SelectedIndex : ElementType.IntSlider;
             string defaultStr = (elementType == ElementType.ColorWheel) ? DefaultColorComboBox.SelectedItem.ToString() : ControlDef.Text;
             MasterList.Add(new UIElement(elementType, ControlName.Text, ControlMin.Text, ControlMax.Text, defaultStr, OptionsText.Text, ControlStyle.SelectedIndex, rbEnabledWhen.Checked, enabledWhenField.SelectedIndex, (enabledWhenCondition.SelectedIndex != 0)));
             refreshListView(MasterList.Count - 1);
@@ -499,28 +501,29 @@ namespace PaintDotNet.Effects
             {
                 case 1:
                     ControlStyle.Items.AddRange(new string[] {
-                            "Default",
-                            "Alpha",
-                            "Default no Reset",
-                            "Alpha no Reset"
+                        "Default",
+                        "Alpha",
+                        "Default no Reset",
+                        "Alpha no Reset"
                     });
                     break;
                 case 0:
                 default:
                     ControlStyle.Items.AddRange(new string[] {
-                            "Default",
-                            "Hue",
-                            "Hue Centered",
-                            "Saturation",
-                            "White - Black",
-                            "Black - White",
-                            "Cyan - Red",
-                            "Magenta - Green",
-                            "Yellow - Blue",
-                            "Cyan - Orange",
-                            "White - Red",
-                            "White - Green",
-                            "White - Blue"});
+                        "Default",
+                        "Hue",
+                        "Hue Centered",
+                        "Saturation",
+                        "White - Black",
+                        "Black - White",
+                        "Cyan - Red",
+                        "Magenta - Green",
+                        "Yellow - Blue",
+                        "Cyan - Orange",
+                        "White - Red",
+                        "White - Green",
+                        "White - Blue"
+                    });
                     break;
             }
             ControlStyle.SelectedIndex = 0;
@@ -533,7 +536,7 @@ namespace PaintDotNet.Effects
             {
                 CurrentItem = ControlListView.SelectedItems[0].Index;
             }
-            ElementType elementType = (Enum.IsDefined(typeof(ElementType), ControlType.SelectedIndex)) ? (ElementType)ControlType.SelectedIndex : ElementType.IntSlider;
+            ElementType elementType = Enum.IsDefined(typeof(ElementType), ControlType.SelectedIndex) ? (ElementType)ControlType.SelectedIndex : ElementType.IntSlider;
             string defaultStr = (elementType == ElementType.ColorWheel) ? DefaultColorComboBox.SelectedItem.ToString() : ControlDef.Text;
             UIElement uiElement = new UIElement(elementType, ControlName.Text, ControlMin.Text, ControlMax.Text, defaultStr, OptionsText.Text, ControlStyle.SelectedIndex, rbEnabledWhen.Checked, enabledWhenField.SelectedIndex, (enabledWhenCondition.SelectedIndex != 0));
             if (CurrentItem > -1)
@@ -557,11 +560,11 @@ namespace PaintDotNet.Effects
 
         private void MoveUp_Click(object sender, EventArgs e)
         {
-            int CurrentItem = -1;
-            if (ControlListView.SelectedItems.Count > 0)
+            if (ControlListView.SelectedItems.Count == 0)
             {
-                CurrentItem = ControlListView.SelectedItems[0].Index;
+                return;
             }
+            int CurrentItem = ControlListView.SelectedItems[0].Index;
             if (CurrentItem > 0)
             {
                 UIElement TargetElement = MasterList[CurrentItem];
@@ -589,168 +592,182 @@ namespace PaintDotNet.Effects
 
         private void ControlListView_SelectedIndexChanged(object sender, EventArgs e)
         {
-            UIElement CurrentElement;
-            int BarLoc;
-            int CurrentItem = -1;
-            if (ControlListView.SelectedItems.Count > 0)
-            {
-                CurrentItem = ControlListView.SelectedItems[0].Index;
-            }
-            if (CurrentItem > -1)
-            {
-                CurrentElement = MasterList[CurrentItem];
-                ControlName.Text = CurrentElement.Name;
-                if (CurrentElement.EnabledWhen)
-                {
-                    rbEnabled.Checked = false;
-                    rbEnabledWhen.Checked = true;
-                    enabledWhenField.SelectedIndex = (CurrentElement.EnableLinkVar > enabledWhenField.Items.Count) ? 0 : CurrentElement.EnableLinkVar;
-                    enabledWhenCondition.SelectedIndex = (CurrentElement.EnableSwap) ? 1 : 0;
-                }
-                else
-                {
-                    rbEnabled.Checked = true;
-                    rbEnabledWhen.Checked = false;
-                }
-                switch (CurrentElement.ElementType)
-                {
-                    case ElementType.IntSlider:
-                        ControlType.Text = "Integer Slider";
-                        FillStyleDropDown(0);
-                        ControlStyle.SelectedIndex = CurrentElement.Style;
-                        ControlMin.Text = CurrentElement.Min.ToString();
-                        ControlMax.Text = CurrentElement.Max.ToString();
-                        ControlDef.Text = CurrentElement.Default.ToString();
-                        break;
-                    case ElementType.Checkbox:
-                        ControlType.Text = "Check Box";
-                        ControlStyle.SelectedIndex = 0;
-                        ControlMin.Text = CurrentElement.Min.ToString();
-                        ControlMax.Text = CurrentElement.Max.ToString();
-                        ControlDef.Text = CurrentElement.Default.ToString();
-                        break;
-                    case ElementType.ColorWheel:
-                        ControlType.Text = "Color Wheel";
-                        FillStyleDropDown(1);
-                        ControlStyle.SelectedIndex = CurrentElement.Style;
-                        ControlMin.Text = CurrentElement.Min.ToString();
-                        ControlMax.Text = CurrentElement.Max.ToString();
-                        ControlDef.Text = CurrentElement.Default.ToString();
-                        DefaultColorComboBox.Text = (CurrentElement.ColorDefault == "" ? "None" : CurrentElement.ColorDefault);
-                        break;
-                    case ElementType.AngleChooser:
-                        ControlType.Text = "Angle Chooser";
-                        ControlStyle.SelectedIndex = 0;
-                        ControlMin.Text = CurrentElement.dMin.ToString();
-                        ControlMax.Text = CurrentElement.dMax.ToString();
-                        ControlDef.Text = CurrentElement.dDefault.ToString();
-                        break;
-                    case ElementType.PanSlider:
-                        ControlType.Text = "Pan Slider";
-                        ControlStyle.SelectedIndex = 0;
-                        ControlMin.Text = CurrentElement.Min.ToString();
-                        ControlMax.Text = CurrentElement.Max.ToString();
-                        ControlDef.Text = CurrentElement.Default.ToString();
-                        break;
-                    case ElementType.Textbox:
-                        ControlType.Text = "String";
-                        ControlStyle.SelectedIndex = 0;
-                        ControlMin.Text = CurrentElement.Min.ToString();
-                        ControlMax.Text = CurrentElement.Max.ToString();
-                        ControlDef.Text = CurrentElement.Default.ToString();
-                        break;
-                    case ElementType.DoubleSlider:
-                        ControlType.Text = "Double Slider";
-                        FillStyleDropDown(0);
-                        ControlStyle.SelectedIndex = CurrentElement.Style;
-                        ControlMin.Text = CurrentElement.dMin.ToString();
-                        ControlMax.Text = CurrentElement.dMax.ToString();
-                        ControlDef.Text = CurrentElement.dDefault.ToString();
-                        break;
-                    case ElementType.DropDown:
-                        ControlType.Text = "Drop-Down List Box";
-                        ControlStyle.SelectedIndex = 0;
-                        ControlMin.Text = CurrentElement.Min.ToString();
-                        ControlMax.Text = CurrentElement.Max.ToString();
-                        ControlDef.Text = CurrentElement.Default.ToString();
-                        BarLoc = CurrentElement.Name.IndexOf("|", StringComparison.Ordinal);
-                        OptionsText.Text = CurrentElement.Name.Substring(BarLoc + 1);
-                        ControlName.Text = CurrentElement.ToShortName();
-                        break;
-                    case ElementType.BinaryPixelOp:
-                        ControlType.Text = "BlendOp Types";
-                        ControlStyle.SelectedIndex = 0;
-                        ControlMin.Text = CurrentElement.Min.ToString();
-                        ControlMax.Text = CurrentElement.Max.ToString();
-                        ControlDef.Text = CurrentElement.Default.ToString();
-                        break;
-                    case ElementType.FontFamily:
-                        ControlType.Text = "Font Names";
-                        ControlStyle.SelectedIndex = 0;
-                        ControlMin.Text = CurrentElement.Min.ToString();
-                        ControlMax.Text = CurrentElement.Max.ToString();
-                        ControlDef.Text = CurrentElement.Default.ToString();
-                        break;
-                    case ElementType.RadioButtons:
-                        ControlType.Text = "Radio Button List";
-                        ControlStyle.SelectedIndex = 0;
-                        ControlMin.Text = CurrentElement.Min.ToString();
-                        ControlMax.Text = CurrentElement.Max.ToString();
-                        ControlDef.Text = CurrentElement.Default.ToString();
-                        BarLoc = CurrentElement.Name.IndexOf("|", StringComparison.Ordinal);
-                        OptionsText.Text = CurrentElement.Name.Substring(BarLoc + 1);
-                        ControlName.Text = CurrentElement.ToShortName();
-                        break;
-                    case ElementType.ReseedButton:
-                        ControlType.Text = "Reseed Button";
-                        ControlStyle.SelectedIndex = 0;
-                        ControlMin.Text = CurrentElement.Min.ToString();
-                        ControlMax.Text = CurrentElement.Max.ToString();
-                        ControlDef.Text = CurrentElement.Default.ToString();
-                        break;
-                    case ElementType.MultiLineTextbox:
-                        ControlType.Text = "Multi-Line String";
-                        ControlStyle.SelectedIndex = 0;
-                        ControlMin.Text = CurrentElement.Min.ToString();
-                        ControlMax.Text = CurrentElement.Max.ToString();
-                        ControlDef.Text = CurrentElement.Default.ToString();
-                        break;
-                    case ElementType.RollBall:
-                        ControlType.Text = "3D Roll Control";
-                        ControlStyle.SelectedIndex = 0;
-                        ControlMin.Text = CurrentElement.Min.ToString();
-                        ControlMax.Text = CurrentElement.Max.ToString();
-                        ControlDef.Text = CurrentElement.Default.ToString();
-                        break;
-                    case ElementType.Filename:
-                        ControlType.Text = "Filename Control";
-                        ControlStyle.SelectedIndex = 0;
-                        ControlMin.Text = CurrentElement.Min.ToString();
-                        ControlMax.Text = CurrentElement.Max.ToString();
-                        ControlDef.Text = CurrentElement.Default.ToString();
-                        BarLoc = CurrentElement.Name.IndexOf("|", StringComparison.Ordinal);
-                        OptionsText.Text = CurrentElement.Name.Substring(BarLoc + 1);
-                        ControlName.Text = CurrentElement.ToShortName();
-                        break;
-                    default:
-                        break;
-                }
-            }
             dirty = false;
+            if (ControlListView.SelectedItems.Count == 0)
+            {
+                return;
+            }
+
+            int CurrentItem = ControlListView.SelectedItems[0].Index;
+            if (CurrentItem == -1)
+            {
+                return;
+            }
+
+            UIElement CurrentElement = MasterList[CurrentItem];
+            ControlName.Text = CurrentElement.Name;
+            if (CurrentElement.EnabledWhen)
+            {
+                rbEnabled.Checked = false;
+                rbEnabledWhen.Checked = true;
+                enabledWhenField.SelectedIndex = (CurrentElement.EnableLinkVar > enabledWhenField.Items.Count) ? 0 : CurrentElement.EnableLinkVar;
+                enabledWhenCondition.SelectedIndex = (CurrentElement.EnableSwap) ? 1 : 0;
+            }
+            else
+            {
+                rbEnabled.Checked = true;
+                rbEnabledWhen.Checked = false;
+            }
+
+            int BarLoc;
+            switch (CurrentElement.ElementType)
+            {
+                case ElementType.IntSlider:
+                    ControlType.Text = "Integer Slider";
+                    FillStyleDropDown(0);
+                    ControlStyle.SelectedIndex = CurrentElement.Style;
+                    ControlMin.Text = CurrentElement.Min.ToString();
+                    ControlMax.Text = CurrentElement.Max.ToString();
+                    ControlDef.Text = CurrentElement.Default.ToString();
+                    break;
+                case ElementType.Checkbox:
+                    ControlType.Text = "Check Box";
+                    ControlStyle.SelectedIndex = 0;
+                    ControlMin.Text = CurrentElement.Min.ToString();
+                    ControlMax.Text = CurrentElement.Max.ToString();
+                    ControlDef.Text = CurrentElement.Default.ToString();
+                    break;
+                case ElementType.ColorWheel:
+                    ControlType.Text = "Color Wheel";
+                    FillStyleDropDown(1);
+                    ControlStyle.SelectedIndex = CurrentElement.Style;
+                    ControlMin.Text = CurrentElement.Min.ToString();
+                    ControlMax.Text = CurrentElement.Max.ToString();
+                    ControlDef.Text = CurrentElement.Default.ToString();
+                    DefaultColorComboBox.Text = (CurrentElement.ColorDefault == "" ? "None" : CurrentElement.ColorDefault);
+                    break;
+                case ElementType.AngleChooser:
+                    ControlType.Text = "Angle Chooser";
+                    ControlStyle.SelectedIndex = 0;
+                    ControlMin.Text = CurrentElement.dMin.ToString();
+                    ControlMax.Text = CurrentElement.dMax.ToString();
+                    ControlDef.Text = CurrentElement.dDefault.ToString();
+                    break;
+                case ElementType.PanSlider:
+                    ControlType.Text = "Pan Slider";
+                    ControlStyle.SelectedIndex = 0;
+                    ControlMin.Text = CurrentElement.Min.ToString();
+                    ControlMax.Text = CurrentElement.Max.ToString();
+                    ControlDef.Text = CurrentElement.Default.ToString();
+                    break;
+                case ElementType.Textbox:
+                    ControlType.Text = "String";
+                    ControlStyle.SelectedIndex = 0;
+                    ControlMin.Text = CurrentElement.Min.ToString();
+                    ControlMax.Text = CurrentElement.Max.ToString();
+                    ControlDef.Text = CurrentElement.Default.ToString();
+                    break;
+                case ElementType.DoubleSlider:
+                    ControlType.Text = "Double Slider";
+                    FillStyleDropDown(0);
+                    ControlStyle.SelectedIndex = CurrentElement.Style;
+                    ControlMin.Text = CurrentElement.dMin.ToString();
+                    ControlMax.Text = CurrentElement.dMax.ToString();
+                    ControlDef.Text = CurrentElement.dDefault.ToString();
+                    break;
+                case ElementType.DropDown:
+                    ControlType.Text = "Drop-Down List Box";
+                    ControlStyle.SelectedIndex = 0;
+                    ControlMin.Text = CurrentElement.Min.ToString();
+                    ControlMax.Text = CurrentElement.Max.ToString();
+                    ControlDef.Text = CurrentElement.Default.ToString();
+                    BarLoc = CurrentElement.Name.IndexOf("|", StringComparison.Ordinal);
+                    OptionsText.Text = CurrentElement.Name.Substring(BarLoc + 1);
+                    ControlName.Text = CurrentElement.ToShortName();
+                    break;
+                case ElementType.BinaryPixelOp:
+                    ControlType.Text = "BlendOp Types";
+                    ControlStyle.SelectedIndex = 0;
+                    ControlMin.Text = CurrentElement.Min.ToString();
+                    ControlMax.Text = CurrentElement.Max.ToString();
+                    ControlDef.Text = CurrentElement.Default.ToString();
+                    break;
+                case ElementType.FontFamily:
+                    ControlType.Text = "Font Names";
+                    ControlStyle.SelectedIndex = 0;
+                    ControlMin.Text = CurrentElement.Min.ToString();
+                    ControlMax.Text = CurrentElement.Max.ToString();
+                    ControlDef.Text = CurrentElement.Default.ToString();
+                    break;
+                case ElementType.RadioButtons:
+                    ControlType.Text = "Radio Button List";
+                    ControlStyle.SelectedIndex = 0;
+                    ControlMin.Text = CurrentElement.Min.ToString();
+                    ControlMax.Text = CurrentElement.Max.ToString();
+                    ControlDef.Text = CurrentElement.Default.ToString();
+                    BarLoc = CurrentElement.Name.IndexOf("|", StringComparison.Ordinal);
+                    OptionsText.Text = CurrentElement.Name.Substring(BarLoc + 1);
+                    ControlName.Text = CurrentElement.ToShortName();
+                    break;
+                case ElementType.ReseedButton:
+                    ControlType.Text = "Reseed Button";
+                    ControlStyle.SelectedIndex = 0;
+                    ControlMin.Text = CurrentElement.Min.ToString();
+                    ControlMax.Text = CurrentElement.Max.ToString();
+                    ControlDef.Text = CurrentElement.Default.ToString();
+                    break;
+                case ElementType.MultiLineTextbox:
+                    ControlType.Text = "Multi-Line String";
+                    ControlStyle.SelectedIndex = 0;
+                    ControlMin.Text = CurrentElement.Min.ToString();
+                    ControlMax.Text = CurrentElement.Max.ToString();
+                    ControlDef.Text = CurrentElement.Default.ToString();
+                    break;
+                case ElementType.RollBall:
+                    ControlType.Text = "3D Roll Control";
+                    ControlStyle.SelectedIndex = 0;
+                    ControlMin.Text = CurrentElement.Min.ToString();
+                    ControlMax.Text = CurrentElement.Max.ToString();
+                    ControlDef.Text = CurrentElement.Default.ToString();
+                    break;
+                case ElementType.Filename:
+                    ControlType.Text = "Filename Control";
+                    ControlStyle.SelectedIndex = 0;
+                    ControlMin.Text = CurrentElement.Min.ToString();
+                    ControlMax.Text = CurrentElement.Max.ToString();
+                    ControlDef.Text = CurrentElement.Default.ToString();
+                    BarLoc = CurrentElement.Name.IndexOf("|", StringComparison.Ordinal);
+                    OptionsText.Text = CurrentElement.Name.Substring(BarLoc + 1);
+                    ControlName.Text = CurrentElement.ToShortName();
+                    break;
+                default:
+                    break;
+            }
         }
 
         private void DefaultColorComboBox_DrawItem(object sender, DrawItemEventArgs e)
         {
-            e.DrawBackground();
-            if (DefaultColorComboBox.Items[e.Index].ToString() == "None" || DefaultColorComboBox.Items[e.Index].ToString() == "PrimaryColor" || DefaultColorComboBox.Items[e.Index].ToString() == "SecondaryColor")
+            if (e.Index == -1)
             {
-                if (e.Index != -1) e.Graphics.DrawString(DefaultColorComboBox.Items[e.Index].ToString(), new Font(e.Font, FontStyle.Regular), new SolidBrush(e.ForeColor), e.Bounds);
+                return;
             }
-            else
+
+            e.DrawBackground();
+            string colorName = DefaultColorComboBox.Items[e.Index].ToString();
+
+            using (SolidBrush solidBrush = new SolidBrush(e.ForeColor))
+            using (Font font = new Font(e.Font, FontStyle.Regular))
             {
-                Color itemColor = Color.FromName(DefaultColorComboBox.Items[e.Index].ToString());
-                e.Graphics.FillRectangle(new SolidBrush(itemColor), new Rectangle(e.Bounds.X + 1, e.Bounds.Y + 1, e.Bounds.Height - 2, e.Bounds.Height - 2));
-                if (e.Index != -1) e.Graphics.DrawString(DefaultColorComboBox.Items[e.Index].ToString(), new Font(e.Font, FontStyle.Bold), new SolidBrush(itemColor), new Rectangle(e.Bounds.X + e.Bounds.Height, e.Bounds.Y + 1, e.Bounds.Width - e.Bounds.Height, e.Bounds.Height));
+                if (colorName == "None" || colorName == "PrimaryColor" || colorName == "SecondaryColor")
+                {
+                    e.Graphics.DrawString(colorName, font, solidBrush, e.Bounds);
+                }
+                else
+                {
+                    solidBrush.Color = Color.FromName(colorName);
+                    e.Graphics.FillRectangle(solidBrush, new Rectangle(e.Bounds.X + 1, e.Bounds.Y + 1, e.Bounds.Height - 2, e.Bounds.Height - 2));
+                    e.Graphics.DrawString(colorName, font, solidBrush, new Rectangle(e.Bounds.X + e.Bounds.Height, e.Bounds.Y + 1, e.Bounds.Width - e.Bounds.Height, e.Bounds.Height));
+                }
             }
             e.DrawFocusRectangle();
         }
@@ -768,13 +785,18 @@ namespace PaintDotNet.Effects
 
         private void ControlType_DrawItem(object sender, DrawItemEventArgs e)
         {
+            if (e.Index == -1)
+            {
+                return;
+            }
+
             e.DrawBackground();
-            ComboBox myBox = (ComboBox)sender;
-            //int imgOffset = (int)Math.Round((e.Bounds.Height - ControlListView.SmallImageList.ImageSize.Height) / 2f);
-            e.Graphics.DrawImage(ControlListView.SmallImageList.Images[e.Index], e.Bounds.X + myBox.Margin.Left, e.Bounds.Y + 1, e.Bounds.Height, e.Bounds.Height - 2);
+            e.Graphics.DrawImage(ControlListView.SmallImageList.Images[e.Index], e.Bounds.X + ControlType.Margin.Left, e.Bounds.Y + 1, e.Bounds.Height, e.Bounds.Height - 2);
             using (SolidBrush textBrush = new SolidBrush(e.ForeColor))
             using (StringFormat textFormat = new StringFormat { LineAlignment = StringAlignment.Center })
-                if (e.Index != -1) e.Graphics.DrawString(ControlType.Items[e.Index].ToString(), e.Font, textBrush, new Rectangle(e.Bounds.X + e.Bounds.Height + myBox.Margin.Left * 2, e.Bounds.Y, e.Bounds.Width - e.Bounds.Height - myBox.Margin.Left * 2, e.Bounds.Height), textFormat);
+            {
+                e.Graphics.DrawString(ControlType.Items[e.Index].ToString(), e.Font, textBrush, new Rectangle(e.Bounds.X + e.Bounds.Height + ControlType.Margin.Left * 2, e.Bounds.Y, e.Bounds.Width - e.Bounds.Height - ControlType.Margin.Left * 2, e.Bounds.Height), textFormat);
+            }
             e.DrawFocusRectangle();
         }
 
@@ -806,28 +828,49 @@ namespace PaintDotNet.Effects
 
         private void enabledWhenField_DrawItem(object sender, DrawItemEventArgs e)
         {
+            if (e.Index == -1)
+            {
+                return;
+            }
+
             e.DrawBackground();
-            using (SolidBrush textBrush = new SolidBrush((((int)e.State & (int)DrawItemState.Disabled) > 0) ? Color.Gray : e.ForeColor))
+            using (SolidBrush textBrush = new SolidBrush(e.State.HasFlag(DrawItemState.Disabled) ? Color.Gray : e.ForeColor))
             using (StringFormat textFormat = new StringFormat { LineAlignment = StringAlignment.Center })
-                if (e.Index != -1) e.Graphics.DrawString(enabledWhenField.Items[e.Index].ToString(), e.Font, textBrush, new Rectangle(e.Bounds.X, e.Bounds.Y, e.Bounds.Width, e.Bounds.Height), textFormat);
+            {
+                e.Graphics.DrawString(enabledWhenField.Items[e.Index].ToString(), e.Font, textBrush, new Rectangle(e.Bounds.X, e.Bounds.Y, e.Bounds.Width, e.Bounds.Height), textFormat);
+            }
             e.DrawFocusRectangle();
         }
 
         private void enabledWhenCondition_DrawItem(object sender, DrawItemEventArgs e)
         {
+            if (e.Index == -1)
+            {
+                return;
+            }
+
             e.DrawBackground();
-            using (SolidBrush textBrush = new SolidBrush((((int)e.State & (int)DrawItemState.Disabled) > 0) ? Color.Gray : e.ForeColor))
+            using (SolidBrush textBrush = new SolidBrush(e.State.HasFlag(DrawItemState.Disabled) ? Color.Gray : e.ForeColor))
             using (StringFormat textFormat = new StringFormat { LineAlignment = StringAlignment.Center })
-                if (e.Index != -1) e.Graphics.DrawString(enabledWhenCondition.Items[e.Index].ToString(), e.Font, textBrush, new Rectangle(e.Bounds.X, e.Bounds.Y, e.Bounds.Width, e.Bounds.Height), textFormat);
+            {
+                e.Graphics.DrawString(enabledWhenCondition.Items[e.Index].ToString(), e.Font, textBrush, new Rectangle(e.Bounds.X, e.Bounds.Y, e.Bounds.Width, e.Bounds.Height), textFormat);
+            }
             e.DrawFocusRectangle();
         }
 
         private void ControlStyle_DrawItem(object sender, DrawItemEventArgs e)
         {
+            if (e.Index == -1)
+            {
+                return;
+            }
+
             e.DrawBackground();
-            using (SolidBrush textBrush = new SolidBrush((((int)e.State & (int)DrawItemState.Disabled) > 0) ? Color.Gray : e.ForeColor))
+            using (SolidBrush textBrush = new SolidBrush(e.State.HasFlag(DrawItemState.Disabled) ? Color.Gray : e.ForeColor))
             using (StringFormat textFormat = new StringFormat { LineAlignment = StringAlignment.Center })
-                if (e.Index != -1) e.Graphics.DrawString(ControlStyle.Items[e.Index].ToString(), e.Font, textBrush, new Rectangle(e.Bounds.X, e.Bounds.Y, e.Bounds.Width, e.Bounds.Height), textFormat);
+            {
+                e.Graphics.DrawString(ControlStyle.Items[e.Index].ToString(), e.Font, textBrush, new Rectangle(e.Bounds.X, e.Bounds.Y, e.Bounds.Width, e.Bounds.Height), textFormat);
+            }
             e.DrawFocusRectangle();
         }
 
@@ -851,28 +894,28 @@ namespace PaintDotNet.Effects
             }
             else
             {
-                if (ControlStyle.SelectedIndex != 0)
-                {
-                    ControlMax.Text = "100";
-                    ControlMin.Text = "0";
-                    ControlDef.Text = "0";
-                }
                 if (ControlStyle.SelectedIndex == 1)
                 {
                     ControlMax.Text = "360";
                     ControlMin.Text = "0";
                     ControlDef.Text = "0";
                 }
-                if (ControlStyle.SelectedIndex == 2)
+                else if (ControlStyle.SelectedIndex == 2)
                 {
                     ControlMax.Text = "180";
                     ControlMin.Text = "-180";
                     ControlDef.Text = "0";
                 }
-                if (ControlStyle.SelectedIndex >= 6 && ControlStyle.SelectedIndex <= 9)
+                else if (ControlStyle.SelectedIndex >= 6 && ControlStyle.SelectedIndex <= 9)
                 {
                     ControlMax.Text = "255";
                     ControlMin.Text = "-255";
+                    ControlDef.Text = "0";
+                }
+                else if (ControlStyle.SelectedIndex != 0)
+                {
+                    ControlMax.Text = "100";
+                    ControlMin.Text = "0";
                     ControlDef.Text = "0";
                 }
             }
@@ -928,7 +971,7 @@ namespace PaintDotNet.Effects
             if (!double.TryParse(ControlMin.Text, out dMin)) dMin = 0;
             if (!double.TryParse(ControlDef.Text, out dDef)) dDef = 0;
 
-            if (("Angle Chooser" != ControlType.Text) && ("Double Slider" != ControlType.Text))
+            if ((ControlType.Text != "Angle Chooser") && (ControlType.Text != "Double Slider"))
             {
                 dMax = Math.Truncate(dMax);
                 ControlMax.Text = dMax.ToString();
@@ -962,7 +1005,7 @@ namespace PaintDotNet.Effects
             if (!double.TryParse(ControlMin.Text, out dMin)) dMin = 0;
             if (!double.TryParse(ControlDef.Text, out dDef)) dDef = 0;
 
-            if (("Angle Chooser" != ControlType.Text) && ("Double Slider" != ControlType.Text))
+            if ((ControlType.Text != "Angle Chooser") && (ControlType.Text != "Double Slider"))
             {
                 dMax = Math.Truncate(dMax);
                 ControlMax.Text = dMax.ToString();
@@ -996,7 +1039,7 @@ namespace PaintDotNet.Effects
             if (!double.TryParse(ControlMin.Text, out dMin)) dMin = 0;
             if (!double.TryParse(ControlDef.Text, out dDef)) dDef = 0;
 
-            if (("Angle Chooser" != ControlType.Text) && ("Double Slider" != ControlType.Text))
+            if ((ControlType.Text != "Angle Chooser") && (ControlType.Text != "Double Slider"))
             {
                 dMax = Math.Truncate(dMax);
                 ControlMax.Text = dMax.ToString();
@@ -1112,7 +1155,7 @@ namespace PaintDotNet.Effects
             foreach (string s in SrcLines)
             {
                 string Line = s.Trim();
-                if (Line != "" && !Line.StartsWith("//"))
+                if (Line != "" && !Line.StartsWith("//", StringComparison.Ordinal))
                 {
                     UserControls.Add(new UIElement(Line));
                 }
@@ -1400,31 +1443,28 @@ namespace PaintDotNet.Effects
             {
                 ElementType = ElementType.ColorWheel;
                 Default = 0;
-                if (DefaultColor.EndsWith("?"))
+                if (DefaultColor.EndsWith("?!", StringComparison.Ordinal)) // Alpha - No Reset
+                {
+                    ColorDefault = DefaultColor.Substring(0, DefaultColor.Length - 2);
+                    Style = 3;
+                    Min = int.MinValue;
+                    Max = int.MaxValue;
+                }
+                else if (DefaultColor.EndsWith("?", StringComparison.Ordinal)) // Alpha - Reset
                 {
                     ColorDefault = DefaultColor.Substring(0, DefaultColor.Length - 1);
                     Style = 1;
                     Min = int.MinValue;
                     Max = int.MaxValue;
                 }
-                else if (DefaultColor.EndsWith("!"))
+                else if (DefaultColor.EndsWith("!", StringComparison.Ordinal)) // No Alpha - No Reset
                 {
-                    if (DefaultColor.EndsWith("?!"))
-                    {
-                        ColorDefault = DefaultColor.Substring(0, DefaultColor.Length - 2);
-                        Style = 3;
-                        Min = int.MinValue;
-                        Max = int.MaxValue;
-                    }
-                    else
-                    {
-                        ColorDefault = DefaultColor.Substring(0, DefaultColor.Length - 1);
-                        Style = 2;
-                        Min = 0;
-                        Max = 0xffffff;
-                    }
+                    ColorDefault = DefaultColor.Substring(0, DefaultColor.Length - 1);
+                    Style = 2;
+                    Min = 0;
+                    Max = 0xffffff;
                 }
-                else
+                else // No Alpha - Reset
                 {
                     ColorDefault = DefaultColor;
                     Style = 0;
