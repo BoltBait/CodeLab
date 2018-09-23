@@ -1237,10 +1237,10 @@ namespace PaintDotNet.Effects
                 case ElementType.DropDown:
                     Min = 0;
                     Max = 0;
-                    Default = 0;
                     Name += "|" + eOptions;
+                    int maxDropDown = Name.Split('|').Length - 2;
+                    Default = Default.Clamp(0, maxDropDown);
                     NameLength = Name.IndexOf("|", StringComparison.Ordinal);
-                    if (NameLength == -1) NameLength = Name.Length;
                     Description = Name.Substring(0, NameLength) + EnabledDescription;
                     break;
                 case ElementType.BinaryPixelOp:
@@ -1258,10 +1258,10 @@ namespace PaintDotNet.Effects
                 case ElementType.RadioButtons:
                     Min = 0;
                     Max = 0;
-                    Default = 0;
                     Name += "|" + eOptions;
+                    int maxRadio = Name.Split('|').Length - 2;
+                    Default = Default.Clamp(0, maxRadio);
                     NameLength = Name.IndexOf("|", StringComparison.Ordinal);
-                    if (NameLength == -1) NameLength = Name.Length;
                     Description = Name.Substring(0, NameLength) + EnabledDescription;
                     break;
                 case ElementType.ReseedButton:
@@ -1755,7 +1755,7 @@ namespace PaintDotNet.Effects
                     SourceCode += "; // [" + Min.ToString() + "," + Max.ToString() + "] ";
                     break;
                 case ElementType.DropDown:
-                    SourceCode += " = 0; // ";
+                    SourceCode += " = " + Default.ToString() + "; // ";
                     break;
                 case ElementType.BinaryPixelOp:
                     SourceCode += " = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Normal); // ";
@@ -1764,7 +1764,7 @@ namespace PaintDotNet.Effects
                     SourceCode += " = new FontFamily(\"Arial\"); // ";
                     break;
                 case ElementType.RadioButtons:
-                    SourceCode += " = 0; // [1] ";
+                    SourceCode += " = " + Default.ToString() + "; // [1] ";
                     break;
                 case ElementType.ReseedButton:
                     SourceCode += " = 0; // [255] ";
