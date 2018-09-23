@@ -157,14 +157,8 @@ namespace PaintDotNet.Effects
         private void Add_Click(object sender, EventArgs e)
         {
             ElementType elementType = (Enum.IsDefined(typeof(ElementType), ControlType.SelectedIndex)) ? (ElementType)ControlType.SelectedIndex : ElementType.IntSlider;
-            if (ControlType.SelectedIndex == 2)
-            {
-                MasterList.Add(new UIElement(elementType, ControlName.Text, ControlMin.Text, ControlMax.Text, DefaultColorComboBox.SelectedItem.ToString(), OptionsText.Text, ControlStyle.SelectedIndex, rbEnabledWhen.Checked, enabledWhenField.SelectedIndex, (enabledWhenCondition.SelectedIndex != 0)));
-            }
-            else
-            {
-                MasterList.Add(new UIElement(elementType, ControlName.Text, ControlMin.Text, ControlMax.Text, ControlDef.Text, OptionsText.Text, ControlStyle.SelectedIndex, rbEnabledWhen.Checked, enabledWhenField.SelectedIndex, (enabledWhenCondition.SelectedIndex != 0)));
-            }
+            string defaultStr = (elementType == ElementType.ColorWheel) ? DefaultColorComboBox.SelectedItem.ToString() : ControlDef.Text;
+            MasterList.Add(new UIElement(elementType, ControlName.Text, ControlMin.Text, ControlMax.Text, defaultStr, OptionsText.Text, ControlStyle.SelectedIndex, rbEnabledWhen.Checked, enabledWhenField.SelectedIndex, (enabledWhenCondition.SelectedIndex != 0)));
             refreshListView(MasterList.Count - 1);
             dirty = false;
         }
@@ -540,29 +534,17 @@ namespace PaintDotNet.Effects
                 CurrentItem = ControlListView.SelectedItems[0].Index;
             }
             ElementType elementType = (Enum.IsDefined(typeof(ElementType), ControlType.SelectedIndex)) ? (ElementType)ControlType.SelectedIndex : ElementType.IntSlider;
+            string defaultStr = (elementType == ElementType.ColorWheel) ? DefaultColorComboBox.SelectedItem.ToString() : ControlDef.Text;
+            UIElement uiElement = new UIElement(elementType, ControlName.Text, ControlMin.Text, ControlMax.Text, defaultStr, OptionsText.Text, ControlStyle.SelectedIndex, rbEnabledWhen.Checked, enabledWhenField.SelectedIndex, (enabledWhenCondition.SelectedIndex != 0));
             if (CurrentItem > -1)
             {
                 MasterList.RemoveAt(CurrentItem);
-                if (ControlType.SelectedIndex == 2)
-                {
-                    MasterList.Insert(CurrentItem, new UIElement(elementType, ControlName.Text, ControlMin.Text, ControlMax.Text, DefaultColorComboBox.SelectedItem.ToString(), OptionsText.Text, ControlStyle.SelectedIndex, rbEnabledWhen.Checked, enabledWhenField.SelectedIndex, (enabledWhenCondition.SelectedIndex != 0)));
-                }
-                else
-                {
-                    MasterList.Insert(CurrentItem, new UIElement(elementType, ControlName.Text, ControlMin.Text, ControlMax.Text, ControlDef.Text, OptionsText.Text, ControlStyle.SelectedIndex, rbEnabledWhen.Checked, enabledWhenField.SelectedIndex, (enabledWhenCondition.SelectedIndex != 0)));
-                }
+                MasterList.Insert(CurrentItem, uiElement);
                 refreshListView(CurrentItem);
             }
             else
             {
-                if (ControlType.SelectedIndex == 2)
-                {
-                    MasterList.Add(new UIElement(elementType, ControlName.Text, ControlMin.Text, ControlMax.Text, DefaultColorComboBox.SelectedItem.ToString(), OptionsText.Text, ControlStyle.SelectedIndex, rbEnabledWhen.Checked, enabledWhenField.SelectedIndex, (enabledWhenCondition.SelectedIndex != 0)));
-                }
-                else
-                {
-                    MasterList.Add(new UIElement(elementType, ControlName.Text, ControlMin.Text, ControlMax.Text, ControlDef.Text, OptionsText.Text, ControlStyle.SelectedIndex, rbEnabledWhen.Checked, enabledWhenField.SelectedIndex, (enabledWhenCondition.SelectedIndex != 0)));
-                }
+                MasterList.Add(uiElement);
                 refreshListView(MasterList.Count - 1);
             }
             dirty = false;
