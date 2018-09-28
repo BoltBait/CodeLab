@@ -47,6 +47,7 @@ namespace PaintDotNet.Effects
         private EffectConfigToken previewToken = null;
         private Color OriginalForeColor;
         private Color OriginalBackColor;
+        private readonly string locale = CultureInfo.CurrentUICulture.Name.ToLowerInvariant();
 
         public CodeLabConfigDialog()
         {
@@ -547,7 +548,7 @@ namespace PaintDotNet.Effects
         {
             if (errorList.SelectedIndex > -1 && errorList.SelectedItem is ScriptError error)
             {
-                Services.GetService<IShellService>().LaunchUrl(null, $"https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/compiler-messages/{error.ErrorNumber}");
+                Services.GetService<IShellService>().LaunchUrl(null, $"https://docs.microsoft.com/{locale}/dotnet/csharp/language-reference/compiler-messages/{error.ErrorNumber}");
             }
         }
 
