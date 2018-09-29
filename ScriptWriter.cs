@@ -211,14 +211,14 @@ namespace PaintDotNet.Effects
             SupportInfoPart += "        {\r\n";
             SupportInfoPart += "            get\r\n";
             SupportInfoPart += "            {\r\n";
-            SupportInfoPart += "                return ((AssemblyCopyrightAttribute)base.GetType().Assembly.GetCustomAttributes(typeof(AssemblyCopyrightAttribute), false)[0]).Copyright;\r\n";
+            SupportInfoPart += "                return base.GetType().Assembly.GetCustomAttribute<AssemblyCopyrightAttribute>().Copyright;\r\n";
             SupportInfoPart += "            }\r\n";
             SupportInfoPart += "        }\r\n";
             SupportInfoPart += "        public string Copyright\r\n";
             SupportInfoPart += "        {\r\n";
             SupportInfoPart += "            get\r\n";
             SupportInfoPart += "            {\r\n";
-            SupportInfoPart += "                return ((AssemblyDescriptionAttribute)base.GetType().Assembly.GetCustomAttributes(typeof(AssemblyDescriptionAttribute), false)[0]).Description;\r\n";
+            SupportInfoPart += "                return base.GetType().Assembly.GetCustomAttribute<AssemblyDescriptionAttribute>().Description;\r\n";
             SupportInfoPart += "            }\r\n";
             SupportInfoPart += "        }\r\n";
             SupportInfoPart += "\r\n";
@@ -226,7 +226,7 @@ namespace PaintDotNet.Effects
             SupportInfoPart += "        {\r\n";
             SupportInfoPart += "            get\r\n";
             SupportInfoPart += "            {\r\n";
-            SupportInfoPart += "                return ((AssemblyProductAttribute)base.GetType().Assembly.GetCustomAttributes(typeof(AssemblyProductAttribute), false)[0]).Product;\r\n";
+            SupportInfoPart += "                return base.GetType().Assembly.GetCustomAttribute<AssemblyProductAttribute>().Product;\r\n";
             SupportInfoPart += "            }\r\n";
             SupportInfoPart += "        }\r\n";
             SupportInfoPart += "\r\n";
