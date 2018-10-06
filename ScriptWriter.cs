@@ -137,7 +137,7 @@ namespace PaintDotNet.Effects
             + "    }\r\n"
             + "\r\n"
             + "    public UserScript()\r\n"
-            + "        : base(\"\", null, EffectFlags.None)\r\n"
+            + "        : base(\"UserScript\", null)\r\n"
             + "    {\r\n"
             + "        __listener = new TextWriterTraceListener(__debugWriter);\r\n"
             + "        Debug.Listeners.Add(__listener);\r\n"
@@ -264,7 +264,11 @@ namespace PaintDotNet.Effects
 
         internal static string EffectPart(List<UIElement> UserControls, string FileName, string submenuname, string menuname, string iconpath, bool ForceAliasSelection, bool ForceSingleThreaded)
         {
-            menuname = menuname.Replace('"', '\'');
+            menuname = menuname.Trim().Replace('"', '\'');
+            if (menuname.Length == 0)
+            {
+                menuname = FileName;
+            }
             string NameSpace = Regex.Replace(FileName, @"[^\w]", "") + "Effect";
             string iconResName = Path.GetFileName(iconpath);
 

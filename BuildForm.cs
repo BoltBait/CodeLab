@@ -73,7 +73,6 @@ namespace PaintDotNet.Effects
             WarningLabel.Visible = false;
 
             // Set dialog box title
-            MenuName.Text = ScriptName;
             this.Text = "Building " + ScriptName + ".dll";
             this.HelpFileName = ScriptName + ".txt";
             this.RTZPath = Path.ChangeExtension(ScriptPath, ".rtz");
@@ -94,7 +93,8 @@ namespace PaintDotNet.Effects
             Match mmn = REName.Match(ScriptText);
             if (mmn.Success)
             {
-                MenuName.Text = mmn.Groups["menulabel"].Value.Trim();
+                string menuName = mmn.Groups["menulabel"].Value.Trim();
+                MenuName.Text = (menuName.Length > 0) ? menuName : ScriptName;
             }
             else
             {
@@ -1085,7 +1085,11 @@ namespace PaintDotNet.Effects
 
         private void ViewSourceButton_Click(object sender, EventArgs e)
         {
-            UpdateAllValues();
+            if (!UpdateAllValues())
+            {
+                return;
+            }
+
             string SourceCode = ScriptWriter.FullSourceCode(FullScriptText, FileName, isAdjustment, SubMenuName.Text, MenuName.Text, IconPathStr, Support, ForceAliasSelection, ForceSingleThreaded, Author, MajorVer, MinorVer, Description, KeyWords, WindowTitleTextStr, HelpType, HelpStr);
             using (ViewSrc VSW = new ViewSrc("Full Source Code", SourceCode, true))
             {
@@ -1095,7 +1099,11 @@ namespace PaintDotNet.Effects
 
         private void GenSlnButton_Click(object sender, EventArgs e)
         {
-            UpdateAllValues();
+            if (!UpdateAllValues())
+            {
+                return;
+            }
+
             if (radioButtonRich.Checked)
             {
                 string CompressedOutput = CompressString(RichHelpContent.Rtf);
