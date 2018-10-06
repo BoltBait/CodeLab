@@ -137,7 +137,7 @@ namespace PaintDotNet.Effects
             + "    }\r\n"
             + "\r\n"
             + "    public UserScript()\r\n"
-            + "        : base(\"\",null,false)\r\n"
+            + "        : base(\"\", null, EffectFlags.None)\r\n"
             + "    {\r\n"
             + "        __listener = new TextWriterTraceListener(__debugWriter);\r\n"
             + "        Debug.Listeners.Add(__listener);\r\n"
