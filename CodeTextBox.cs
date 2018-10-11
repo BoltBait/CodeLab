@@ -429,13 +429,12 @@ namespace PaintDotNet.Effects
             // 
             // lightBulbMenu
             // 
-            this.lightBulbMenu.Dock = System.Windows.Forms.DockStyle.None;
-            this.lightBulbMenu.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
-            this.lightBulbMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.bulbIcon});
-            this.lightBulbMenu.Location = new System.Drawing.Point(50, 100);
+            this.lightBulbMenu.Dock = DockStyle.None;
+            this.lightBulbMenu.GripStyle = ToolStripGripStyle.Hidden;
+            this.lightBulbMenu.Items.Add(this.bulbIcon);
+            this.lightBulbMenu.Location = new Point(50, 100);
             this.lightBulbMenu.Name = "lightBulbMenu";
-            this.lightBulbMenu.Size = new System.Drawing.Size(63, 25);
+            this.lightBulbMenu.Size = new Size(63, 25);
             this.lightBulbMenu.TabIndex = 20;
             this.lightBulbMenu.Text = "Light Bulb";
             this.lightBulbMenu.Visible = false;
@@ -444,20 +443,19 @@ namespace PaintDotNet.Effects
             // bulbIcon
             // 
             this.bulbIcon.AutoToolTip = false;
-            this.bulbIcon.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.bulbIcon.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.renameVarMenuItem});
-            this.bulbIcon.Image = global::PaintDotNet.Effects.Properties.Resources.Bulb;
+            this.bulbIcon.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            this.bulbIcon.DropDownItems.Add(this.renameVarMenuItem);
+            this.bulbIcon.Image = Properties.Resources.Bulb;
             this.bulbIcon.Name = "bulbIcon";
-            this.bulbIcon.Size = new System.Drawing.Size(29, 22);
+            this.bulbIcon.Size = new Size(29, 22);
             this.bulbIcon.Text = "Bulb Icon";
             // 
             // renameVarMenuItem
             // 
             this.renameVarMenuItem.Name = "renameVarMenuItem";
-            this.renameVarMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.renameVarMenuItem.Size = new Size(152, 22);
             this.renameVarMenuItem.Text = "Rename";
-            this.renameVarMenuItem.Click += new System.EventHandler(this.renameVar_Click);
+            this.renameVarMenuItem.Click += renameVar_Click;
 
             #region ScintillaNET Initializers
             this.StyleResetDefault();
