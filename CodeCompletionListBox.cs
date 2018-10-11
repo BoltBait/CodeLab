@@ -627,33 +627,24 @@ namespace PaintDotNet.Effects
 
         protected override void OnDrawItem(DrawItemEventArgs e)
         {
+            if (e.Index == -1)
+            {
+                return;
+            }
+
             e.DrawBackground();
             e.DrawFocusRectangle();
 
             if (Items[e.Index] is IntelliBoxItem item)
             {
-                if (item.ImageIndex != -1)
-                {
-                    using (SolidBrush iconBg = new SolidBrush(this.BackColor))
-                        e.Graphics.FillRectangle(iconBg, e.Bounds.Left, e.Bounds.Top, imageList.ImageSize.Width + 1, imageList.ImageSize.Height);
-                    imageList.Draw(e.Graphics, e.Bounds.Left, e.Bounds.Top, item.ImageIndex);
-                    TextRenderer.DrawText(e.Graphics, item.Text, e.Font, new Point(e.Bounds.Left + imageList.ImageSize.Width, e.Bounds.Top), e.ForeColor);
-                }
-                else
-                {
-                    TextRenderer.DrawText(e.Graphics, item.Text, e.Font, new Point(e.Bounds.Left, e.Bounds.Top), e.ForeColor);
-                }
+                using (SolidBrush iconBg = new SolidBrush(this.BackColor))
+                    e.Graphics.FillRectangle(iconBg, e.Bounds.Left, e.Bounds.Top, imageList.ImageSize.Width + 1, imageList.ImageSize.Height);
+                imageList.Draw(e.Graphics, e.Bounds.Left, e.Bounds.Top, item.ImageIndex);
+                TextRenderer.DrawText(e.Graphics, item.Text, e.Font, new Point(e.Bounds.Left + imageList.ImageSize.Width, e.Bounds.Top), e.ForeColor);
             }
             else
             {
-                if (e.Index != -1)
-                {
-                    TextRenderer.DrawText(e.Graphics, Items[e.Index].ToString(), e.Font, new Point(e.Bounds.Left, e.Bounds.Top), e.ForeColor);
-                }
-                else
-                {
-                    TextRenderer.DrawText(e.Graphics, Text, e.Font, new Point(e.Bounds.Left, e.Bounds.Top), e.ForeColor);
-                }
+                TextRenderer.DrawText(e.Graphics, Items[e.Index].ToString(), e.Font, new Point(e.Bounds.Left, e.Bounds.Top), e.ForeColor);
             }
 
             base.OnDrawItem(e);
