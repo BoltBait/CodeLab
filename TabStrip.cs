@@ -292,7 +292,7 @@ namespace PaintDotNet.Effects
     public sealed class Tab : ToolStripButton
     {
         internal int Index { get; set; }
-        internal Guid Guid { get; set; }
+        internal Guid Guid { get; }
         internal bool IsDirty { get; set; }
         internal string Title { get; set; }
         internal string Path { get; set; }
