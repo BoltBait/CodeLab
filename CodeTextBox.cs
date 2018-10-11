@@ -2861,6 +2861,10 @@ namespace PaintDotNet.Effects
                     if (this.GetCharAt(this.CurrentPosition - 2) == '.')
                     {
                         MemberIntelliBox(this.CurrentPosition - 2);
+                        if (iBox.Visible)
+                        {
+                            iBox.Filter(this.GetTextRange(this.CurrentPosition - 1, 1));
+                        }
                     }
                     else
                     {
