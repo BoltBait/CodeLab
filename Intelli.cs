@@ -194,7 +194,7 @@ namespace PaintDotNet.Effects
         }
     }
 
-    internal enum IntelliTypes
+    internal enum IntelliType
     {
         Method,
         Property,

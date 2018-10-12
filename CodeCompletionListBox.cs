@@ -36,7 +36,7 @@ namespace PaintDotNet.Effects
         private IntelliBoxItem LastUsedNonMember = IntelliBoxItem.Empty;
         private bool membersInBox;
         private string stringFilter = string.Empty;
-        private IntelliTypes intelliTypeFilter = IntelliTypes.None;
+        private IntelliType intelliTypeFilter = IntelliType.None;
 
         internal bool MouseOver => mouseOver;
         internal bool Matches => filterMatches;
@@ -105,7 +105,7 @@ namespace PaintDotNet.Effects
             this.Items.Clear();
             unFilteredItems.Clear();
             stringFilter = string.Empty;
-            intelliTypeFilter = IntelliTypes.None;
+            intelliTypeFilter = IntelliType.None;
             membersInBox = true;
 
             MemberInfo[] memberInfo = (isStatic) ?
@@ -151,7 +151,7 @@ namespace PaintDotNet.Effects
 
                         returnType = methodInfo.ReturnType.GetDisplayName();
                         toolTip = $"{returnType} - {methodInfo.Name}{methodParameters}\n{methodInfo.MemberType}";
-                        unFilteredItems.Add(new IntelliBoxItem(methodInfo.Name + methodParameters, methodInfo.Name, toolTip, IntelliTypes.Method));
+                        unFilteredItems.Add(new IntelliBoxItem(methodInfo.Name + methodParameters, methodInfo.Name, toolTip, IntelliType.Method));
                         break;
                     case MemberTypes.Property:
                         PropertyInfo property = (PropertyInfo)memberInfo[i];
@@ -164,41 +164,41 @@ namespace PaintDotNet.Effects
 
                         returnType = property.PropertyType.GetDisplayName();
                         toolTip = $"{returnType} - {property.Name}{getSet}\n{property.MemberType}";
-                        unFilteredItems.Add(new IntelliBoxItem(property.Name, property.Name, toolTip, IntelliTypes.Property));
+                        unFilteredItems.Add(new IntelliBoxItem(property.Name, property.Name, toolTip, IntelliType.Property));
                         break;
                     case MemberTypes.Event:
                         returnType = ((EventInfo)memberInfo[i]).EventHandlerType.GetDisplayName();
                         toolTip = $"{returnType} - {memberInfo[i].Name}\n{memberInfo[i].MemberType}";
-                        unFilteredItems.Add(new IntelliBoxItem(memberInfo[i].Name, memberInfo[i].Name, toolTip, IntelliTypes.Event));
+                        unFilteredItems.Add(new IntelliBoxItem(memberInfo[i].Name, memberInfo[i].Name, toolTip, IntelliType.Event));
                         break;
                     case MemberTypes.Field:
                         FieldInfo field = (FieldInfo)memberInfo[i];
                         string fieldTypeName;
-                        IntelliTypes fieldType;
+                        IntelliType fieldType;
                         string fieldValue;
 
                         if (!field.IsStatic)
                         {
                             fieldTypeName = "Field";
-                            fieldType = IntelliTypes.Field;
+                            fieldType = IntelliType.Field;
                             fieldValue = string.Empty;
                         }
                         else if (field.FieldType.IsEnum)
                         {
                             fieldTypeName = "Enum Value";
-                            fieldType = IntelliTypes.EnumItem;
+                            fieldType = IntelliType.EnumItem;
                             fieldValue = $" ({(int)field.GetValue(null)})";
                         }
                         else if (field.IsLiteral && !field.IsInitOnly)
                         {
                             fieldTypeName = "Constant";
-                            fieldType = IntelliTypes.Constant;
+                            fieldType = IntelliType.Constant;
                             fieldValue = $" ({field.GetValue(null)})";
                         }
                         else
                         {
                             fieldTypeName = "Field";
-                            fieldType = IntelliTypes.Field;
+                            fieldType = IntelliType.Field;
                             fieldValue = $" ( {field.GetValue(null)} )";
                         }
 
@@ -208,23 +208,23 @@ namespace PaintDotNet.Effects
                         break;
                     case MemberTypes.NestedType:
                         Type nestedType = (Type)memberInfo[i];
-                        IntelliTypes intelliType = IntelliTypes.Type;
+                        IntelliType intelliType = IntelliType.Type;
                         string subType = "Type";
 
                         if (nestedType.IsEnum)
                         {
                             subType = "enum";
-                            intelliType = IntelliTypes.Enum;
+                            intelliType = IntelliType.Enum;
                         }
                         else if (nestedType.IsValueType)
                         {
                             subType = "struct";
-                            intelliType = IntelliTypes.Struct;
+                            intelliType = IntelliType.Struct;
                         }
                         else if (nestedType.IsClass)
                         {
                             subType = "class";
-                            intelliType = IntelliTypes.Class;
+                            intelliType = IntelliType.Class;
                         }
 
                         toolTip = $"{subType} - {nestedType.Name}\nNested Type";
@@ -257,7 +257,7 @@ namespace PaintDotNet.Effects
             this.Items.Clear();
             unFilteredItems.Clear();
             stringFilter = string.Empty;
-            intelliTypeFilter = IntelliTypes.None;
+            intelliTypeFilter = IntelliType.None;
             membersInBox = false;
 
             foreach (string type in Intelli.AutoCompleteTypes.Keys)
@@ -267,22 +267,22 @@ namespace PaintDotNet.Effects
                 string baseType = "Type";
                 string name = type;
                 string code = type;
-                IntelliTypes icon = IntelliTypes.Type;
+                IntelliType icon = IntelliType.Type;
 
                 if (t.IsEnum)
                 {
                     baseType = "enum";
-                    icon = IntelliTypes.Enum;
+                    icon = IntelliType.Enum;
                 }
                 else if (t.IsValueType)
                 {
                     baseType = "struct";
-                    icon = IntelliTypes.Struct;
+                    icon = IntelliType.Struct;
                 }
                 else if (t.IsClass)
                 {
                     baseType = "class";
-                    icon = IntelliTypes.Class;
+                    icon = IntelliType.Class;
                 }
                 else if (t.IsInterface)
                 {
@@ -320,22 +320,22 @@ namespace PaintDotNet.Effects
                 string baseType = "Type";
                 string name = type;
                 string code = type;
-                IntelliTypes icon = IntelliTypes.Type;
+                IntelliType icon = IntelliType.Type;
 
                 if (t.IsEnum)
                 {
                     baseType = "enum";
-                    icon = IntelliTypes.Enum;
+                    icon = IntelliType.Enum;
                 }
                 else if (t.IsValueType)
                 {
                     baseType = "struct";
-                    icon = IntelliTypes.Struct;
+                    icon = IntelliType.Struct;
                 }
                 else if (t.IsClass)
                 {
                     baseType = "class";
-                    icon = IntelliTypes.Class;
+                    icon = IntelliType.Class;
                 }
                 else if (t.IsInterface)
                 {
@@ -370,26 +370,26 @@ namespace PaintDotNet.Effects
             {
                 string type = Intelli.Variables[var].GetDisplayName();
                 string toolTip = $"{type} - {var}\nLocal Variable";
-                unFilteredItems.Add(new IntelliBoxItem(var, var, toolTip, IntelliTypes.Variable));
+                unFilteredItems.Add(new IntelliBoxItem(var, var, toolTip, IntelliType.Variable));
             }
 
             foreach (string para in Intelli.Parameters.Keys)
             {
                 string type = Intelli.Parameters[para].GetDisplayName();
                 string toolTip = $"{type} - {para}\nParameter";
-                unFilteredItems.Add(new IntelliBoxItem(para, para, toolTip, IntelliTypes.Variable)); // use the var icon
+                unFilteredItems.Add(new IntelliBoxItem(para, para, toolTip, IntelliType.Variable)); // use the var icon
             }
 
             foreach (string key in Intelli.Keywords)
             {
                 string toolTip = $"{key}\nKeyword";
-                unFilteredItems.Add(new IntelliBoxItem(key, key, toolTip, IntelliTypes.Keyword));
+                unFilteredItems.Add(new IntelliBoxItem(key, key, toolTip, IntelliType.Keyword));
             }
 
             foreach (string snip in Intelli.Snippets.Keys)
             {
                 string toolTip = $"{snip}\nSnippet - Tab Twice";
-                unFilteredItems.Add(new IntelliBoxItem(snip, snip, toolTip, IntelliTypes.Snippet));
+                unFilteredItems.Add(new IntelliBoxItem(snip, snip, toolTip, IntelliType.Snippet));
             }
 
             MemberInfo[] memberInfo = Intelli.UserScript.GetMembers(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
@@ -432,7 +432,7 @@ namespace PaintDotNet.Effects
 
                         returnType = methodInfo.ReturnType.GetDisplayName();
                         toolTip = $"{returnType} - {methodInfo.Name}{methodParameters}\n{methodInfo.MemberType}";
-                        unFilteredItems.Add(new IntelliBoxItem(methodInfo.Name + methodParameters, methodInfo.Name, toolTip, IntelliTypes.Method));
+                        unFilteredItems.Add(new IntelliBoxItem(methodInfo.Name + methodParameters, methodInfo.Name, toolTip, IntelliType.Method));
                         break;
                     case MemberTypes.Property:
                         if (memberInfo[i].Name.Equals("SetRenderInfoCalled", StringComparison.Ordinal) || memberInfo[i].Name.Equals("__DebugMsgs", StringComparison.Ordinal))
@@ -444,12 +444,12 @@ namespace PaintDotNet.Effects
 
                         returnType = ((PropertyInfo)memberInfo[i]).PropertyType.GetDisplayName();
                         toolTip = $"{returnType} - {memberInfo[i].Name}{getSet}\n{memberInfo[i].MemberType}";
-                        unFilteredItems.Add(new IntelliBoxItem(memberInfo[i].Name, memberInfo[i].Name, toolTip, IntelliTypes.Property));
+                        unFilteredItems.Add(new IntelliBoxItem(memberInfo[i].Name, memberInfo[i].Name, toolTip, IntelliType.Property));
                         break;
                     case MemberTypes.Event:
                         returnType = ((EventInfo)memberInfo[i]).EventHandlerType.GetDisplayName();
                         toolTip = $"{returnType} - {memberInfo[i].Name}\n{memberInfo[i].MemberType}";
-                        unFilteredItems.Add(new IntelliBoxItem(memberInfo[i].Name, memberInfo[i].Name, toolTip, IntelliTypes.Event));
+                        unFilteredItems.Add(new IntelliBoxItem(memberInfo[i].Name, memberInfo[i].Name, toolTip, IntelliType.Event));
                         break;
                     case MemberTypes.Field:
                         if (memberInfo[i].Name.Equals("RandomNumber", StringComparison.Ordinal) || memberInfo[i].Name.Equals("instanceSeed", StringComparison.Ordinal) ||
@@ -461,31 +461,31 @@ namespace PaintDotNet.Effects
 
                         FieldInfo field = (FieldInfo)memberInfo[i];
                         string fieldTypeName;
-                        IntelliTypes fieldType;
+                        IntelliType fieldType;
                         string fieldValue;
 
                         if (!field.IsStatic)
                         {
                             fieldTypeName = "Field";
-                            fieldType = IntelliTypes.Field;
+                            fieldType = IntelliType.Field;
                             fieldValue = string.Empty;
                         }
                         else if (field.FieldType.IsEnum)
                         {
                             fieldTypeName = "Enum Value";
-                            fieldType = IntelliTypes.EnumItem;
+                            fieldType = IntelliType.EnumItem;
                             fieldValue = $" ({(int)field.GetValue(null)})";
                         }
                         else if (field.IsLiteral && !field.IsInitOnly)
                         {
                             fieldTypeName = "Constant";
-                            fieldType = IntelliTypes.Constant;
+                            fieldType = IntelliType.Constant;
                             fieldValue = $" ({field.GetValue(null)})";
                         }
                         else
                         {
                             fieldTypeName = "Field";
-                            fieldType = IntelliTypes.Field;
+                            fieldType = IntelliType.Field;
                             fieldValue = $" ( {field.GetValue(null)} )";
                         }
 
@@ -508,12 +508,12 @@ namespace PaintDotNet.Effects
             this.Items.Clear();
             unFilteredItems.Clear();
             stringFilter = string.Empty;
-            intelliTypeFilter = IntelliTypes.None;
+            intelliTypeFilter = IntelliType.None;
             membersInBox = false;
 
             if (!type.IsEnum && type.IsValueType)
             {
-                unFilteredItems.Add(new IntelliBoxItem($"{type.Name}()", string.Empty, $"{type.Name}()", IntelliTypes.Constructor));
+                unFilteredItems.Add(new IntelliBoxItem($"{type.Name}()", string.Empty, $"{type.Name}()", IntelliType.Constructor));
             }
 
             ConstructorInfo[] constructors = type.GetConstructors();
@@ -527,7 +527,7 @@ namespace PaintDotNet.Effects
                 }
 
                 string toolTip = $"{type.Name}({ctorString})";
-                unFilteredItems.Add(new IntelliBoxItem(toolTip, string.Empty, toolTip, IntelliTypes.Constructor));
+                unFilteredItems.Add(new IntelliBoxItem(toolTip, string.Empty, toolTip, IntelliType.Constructor));
             }
 
             this.Items.AddRange(unFilteredItems.ToArray());
@@ -544,9 +544,9 @@ namespace PaintDotNet.Effects
             Filter();
         }
 
-        internal void Filter(IntelliTypes intelliTypes)
+        internal void Filter(IntelliType intelliTypes)
         {
-            intelliTypeFilter = (intelliTypes == intelliTypeFilter) ? IntelliTypes.None : intelliTypes;
+            intelliTypeFilter = (intelliTypes == intelliTypeFilter) ? IntelliType.None : intelliTypes;
 
             Filter();
         }
@@ -556,7 +556,7 @@ namespace PaintDotNet.Effects
             List<IntelliBoxItem> matches = new List<IntelliBoxItem>();
             for (int i = 0; i < unFilteredItems.Count; i++)
             {
-                if (intelliTypeFilter != IntelliTypes.None && unFilteredItems[i].ImageIndex != (int)intelliTypeFilter)
+                if (intelliTypeFilter != IntelliType.None && unFilteredItems[i].ImageIndex != (int)intelliTypeFilter)
                 {
                     continue;
                 }
@@ -570,7 +570,7 @@ namespace PaintDotNet.Effects
                 matches.Add(unFilteredItems[i]);
             }
 
-            if (intelliTypeFilter == IntelliTypes.None && matches.Count == 0)
+            if (intelliTypeFilter == IntelliType.None && matches.Count == 0)
             {
                 filterMatches = false;
                 return;
@@ -693,7 +693,7 @@ namespace PaintDotNet.Effects
                 {
                     this.LastUsedMember = item;
                 }
-                else if (item.ImageIndex != (int)IntelliTypes.Keyword && item.ImageIndex != (int)IntelliTypes.Snippet)
+                else if (item.ImageIndex != (int)IntelliType.Keyword && item.ImageIndex != (int)IntelliType.Snippet)
                 {
                     this.LastUsedNonMember = item;
                 }
@@ -735,14 +735,14 @@ namespace PaintDotNet.Effects
             return this.Text.GetHashCode() ^ this.Code.GetHashCode() ^ this.ToolTip.GetHashCode() ^ this.ImageIndex.GetHashCode();
         }
 
-        internal static readonly IntelliBoxItem Empty = new IntelliBoxItem(string.Empty, string.Empty, string.Empty, IntelliTypes.None);
+        internal static readonly IntelliBoxItem Empty = new IntelliBoxItem(string.Empty, string.Empty, string.Empty, IntelliType.None);
 
         internal string Text { get; }
         internal string Code { get; }
         internal string ToolTip { get; }
         internal int ImageIndex { get; }
 
-        internal IntelliBoxItem(string text, string code, string toolTip, IntelliTypes intelliType)
+        internal IntelliBoxItem(string text, string code, string toolTip, IntelliType intelliType)
         {
             this.Text = text;
             this.Code = code;

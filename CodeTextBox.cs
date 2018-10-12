@@ -916,35 +916,35 @@ namespace PaintDotNet.Effects
             }
         }
 
-        private IntelliTypes GetIntelliType(int position)
+        private IntelliType GetIntelliType(int position)
         {
             int style = this.GetStyleAt(position);
             if (style != Style.Cpp.Word && style != Style.Cpp.Word + Preprocessor &&
                 style != Style.Cpp.Word2 && style != Style.Cpp.Word2 + Preprocessor &&
                 style != Style.Cpp.Identifier && style != Style.Cpp.Identifier + Preprocessor)
             {
-                return IntelliTypes.None;
+                return IntelliType.None;
             }
 
             string lastWords = GetLastWords(this.WordEndPosition(position, true));
             if (lastWords == string.Empty)
             {
-                return IntelliTypes.None;
+                return IntelliType.None;
             }
 
             if (Intelli.Variables.ContainsKey(lastWords))
             {
-                return IntelliTypes.Variable;
+                return IntelliType.Variable;
             }
 
             if (Intelli.Parameters.ContainsKey(lastWords))
             {
-                return IntelliTypes.Parameter;
+                return IntelliType.Parameter;
             }
 
             if (Intelli.AllTypes.ContainsKey(lastWords) || Intelli.UserDefinedTypes.ContainsKey(lastWords))
             {
-                return IntelliTypes.Type;
+                return IntelliType.Type;
             }
 
             // since we have periods in our last works, let's see what we can do...
@@ -952,14 +952,14 @@ namespace PaintDotNet.Effects
             string[] tokens = lastWords.Split(separator, StringSplitOptions.RemoveEmptyEntries);
             if (tokens.Length == 0)
             {
-                return IntelliTypes.None;
+                return IntelliType.None;
             }
 
             int[] tokenPos = GetLastWordsPos(position);
 
             if (tokens.Length != tokenPos.Length)
             {
-                return IntelliTypes.None;
+                return IntelliType.None;
             }
 
             // if the first token is a variable of a known type
@@ -993,7 +993,7 @@ namespace PaintDotNet.Effects
             }
             else
             {
-                return IntelliTypes.None;
+                return IntelliType.None;
             }
 
             for (int i = 1; i < tokens.Length; i++)
@@ -1005,7 +1005,7 @@ namespace PaintDotNet.Effects
 
                 if (mi.Length == 0)
                 {
-                    return IntelliTypes.None;
+                    return IntelliType.None;
                 }
 
                 if (i == tokens.Length - 1)
@@ -1014,15 +1014,15 @@ namespace PaintDotNet.Effects
                     switch (mi[0].MemberType)
                     {
                         case MemberTypes.Property:
-                            return IntelliTypes.Property;
+                            return IntelliType.Property;
                         case MemberTypes.Method:
-                            return IntelliTypes.Method;
+                            return IntelliType.Method;
                         case MemberTypes.Field:
-                            return IntelliTypes.Field;
+                            return IntelliType.Field;
                         case MemberTypes.Event:
-                            return IntelliTypes.Event;
+                            return IntelliType.Event;
                         case MemberTypes.NestedType:
-                            return IntelliTypes.Type;
+                            return IntelliType.Type;
                     }
                 }
                 else
@@ -1037,12 +1037,12 @@ namespace PaintDotNet.Effects
                     // stop to prevent null ref on next iteration
                     if (type == null)
                     {
-                        return IntelliTypes.None;
+                        return IntelliType.None;
                     }
                 }
             }
 
-            return IntelliTypes.None;
+            return IntelliType.None;
         }
 
         private void HighlightWordUsage()
@@ -1054,8 +1054,8 @@ namespace PaintDotNet.Effects
             this.IndicatorClearRange(0, this.TextLength);
 
             int position = this.CurrentPosition;
-            IntelliTypes currentType = GetIntelliType(position);
-            if (currentType == IntelliTypes.None)
+            IntelliType currentType = GetIntelliType(position);
+            if (currentType == IntelliType.None)
             {
                 return;
             }
@@ -1071,7 +1071,7 @@ namespace PaintDotNet.Effects
 
             // Search the document
             int rangeEnd = this.TextLength;
-            if (currentType == IntelliTypes.Variable)
+            if (currentType == IntelliType.Variable)
             {
                 Tuple<int, int> methodBounds = GetMethodBounds(position);
                 if (methodBounds.Item1 == InvalidPosition || methodBounds.Item2 == InvalidPosition)
@@ -1095,8 +1095,8 @@ namespace PaintDotNet.Effects
             {
                 if (GetIntelliType(this.TargetStart) == currentType)
                 {
-                    if (currentType == IntelliTypes.Property || currentType == IntelliTypes.Method || currentType == IntelliTypes.EnumItem ||
-                        currentType == IntelliTypes.Constant || currentType == IntelliTypes.Field)
+                    if (currentType == IntelliType.Property || currentType == IntelliType.Method || currentType == IntelliType.EnumItem ||
+                        currentType == IntelliType.Constant || currentType == IntelliType.Field)
                     {
                         if (GetDeclaringType(this.TargetStart) != declaringType)
                         {
@@ -1108,11 +1108,11 @@ namespace PaintDotNet.Effects
                     this.IndicatorCurrent = Indicator.ObjectHighlight;
 
                     #region Word Definition Highlight
-                    if ((currentType == IntelliTypes.Variable || currentType == IntelliTypes.Parameter) && Intelli.VarPos.ContainsKey(word) && Intelli.VarPos[word] == this.TargetStart)
+                    if ((currentType == IntelliType.Variable || currentType == IntelliType.Parameter) && Intelli.VarPos.ContainsKey(word) && Intelli.VarPos[word] == this.TargetStart)
                     {
                         this.IndicatorCurrent = Indicator.ObjectHighlightDef;
                     }
-                    else if (currentType == IntelliTypes.Type && Intelli.UserDefinedTypes.ContainsKey(word))
+                    else if (currentType == IntelliType.Type && Intelli.UserDefinedTypes.ContainsKey(word))
                     {
                         int typePos = this.TargetStart;
 
@@ -2089,61 +2089,61 @@ namespace PaintDotNet.Effects
             {
                 e.SuppressKeyPress = true;
                 e.Handled = true;
-                iBox.Filter(IntelliTypes.Variable);
+                iBox.Filter(IntelliType.Variable);
             }
             else if (e.Alt && e.KeyCode == Keys.O)
             {
                 e.SuppressKeyPress = true;
                 e.Handled = true;
-                iBox.Filter(IntelliTypes.Constant);
+                iBox.Filter(IntelliType.Constant);
             }
             else if (e.Alt && e.KeyCode == Keys.P)
             {
                 e.SuppressKeyPress = true;
                 e.Handled = true;
-                iBox.Filter(IntelliTypes.Property);
+                iBox.Filter(IntelliType.Property);
             }
             else if (e.Alt && e.KeyCode == Keys.F)
             {
                 e.SuppressKeyPress = true;
                 e.Handled = true;
-                iBox.Filter(IntelliTypes.Field);
+                iBox.Filter(IntelliType.Field);
             }
             else if (e.Alt && e.KeyCode == Keys.M)
             {
                 e.SuppressKeyPress = true;
                 e.Handled = true;
-                iBox.Filter(IntelliTypes.Method);
+                iBox.Filter(IntelliType.Method);
             }
             else if (e.Alt && e.KeyCode == Keys.C)
             {
                 e.SuppressKeyPress = true;
                 e.Handled = true;
-                iBox.Filter(IntelliTypes.Class);
+                iBox.Filter(IntelliType.Class);
             }
             else if (e.Alt && e.KeyCode == Keys.S)
             {
                 e.SuppressKeyPress = true;
                 e.Handled = true;
-                iBox.Filter(IntelliTypes.Struct);
+                iBox.Filter(IntelliType.Struct);
             }
             else if (e.Alt && e.KeyCode == Keys.E)
             {
                 e.SuppressKeyPress = true;
                 e.Handled = true;
-                iBox.Filter(IntelliTypes.Enum);
+                iBox.Filter(IntelliType.Enum);
             }
             else if (e.Alt && e.KeyCode == Keys.K)
             {
                 e.SuppressKeyPress = true;
                 e.Handled = true;
-                iBox.Filter(IntelliTypes.Keyword);
+                iBox.Filter(IntelliType.Keyword);
             }
             else if (e.Alt && e.KeyCode == Keys.T)
             {
                 e.SuppressKeyPress = true;
                 e.Handled = true;
-                iBox.Filter(IntelliTypes.Snippet);
+                iBox.Filter(IntelliType.Snippet);
             }
             else if (e.KeyCode == Keys.OemPeriod)
             {
@@ -2405,7 +2405,7 @@ namespace PaintDotNet.Effects
             if (prevCharPos < this.Lines[this.LineFromPosition(position)].Position)
             {
                 int prevStyle = this.GetStyleAt(prevCharPos);
-                if (prevStyle == Style.Cpp.Comment || prevStyle == Style.Cpp.Comment + Preprocessor || 
+                if (prevStyle == Style.Cpp.Comment || prevStyle == Style.Cpp.Comment + Preprocessor ||
                     prevStyle == Style.Cpp.Verbatim || prevStyle == Style.Cpp.Verbatim + Preprocessor)
                 {
                     return;
@@ -2958,7 +2958,7 @@ namespace PaintDotNet.Effects
         {
             // Set indicator for Variable Renaming?
             int wordStartPos = this.WordStartPosition(e.Position, true);
-            if (e.Source == ModificationSource.User && GetIntelliType(wordStartPos) == IntelliTypes.Variable &&
+            if (e.Source == ModificationSource.User && GetIntelliType(wordStartPos) == IntelliType.Variable &&
                 !IsIndicatorOn(Indicator.VariableRename, wordStartPos) && e.Text.Trim() != string.Empty && !Replacing)
             {
                 varToRenamePos = wordStartPos;
@@ -2976,7 +2976,7 @@ namespace PaintDotNet.Effects
         {
             // Set indicator for Variable Renaming?
             int wordStartPos = this.WordStartPosition(e.Position, true);
-            if (e.Source == ModificationSource.User && GetIntelliType(wordStartPos) == IntelliTypes.Variable &&
+            if (e.Source == ModificationSource.User && GetIntelliType(wordStartPos) == IntelliType.Variable &&
                 !IsIndicatorOn(Indicator.VariableRename, wordStartPos) && e.Text.Trim() != string.Empty && !Replacing)
             {
                 varToRenamePos = wordStartPos;
@@ -3329,7 +3329,7 @@ namespace PaintDotNet.Effects
             this.BeginUndoAction();
             while (this.SearchInTarget(varToRename) != InvalidPosition)
             {
-                if (GetIntelliType(this.TargetStart) == IntelliTypes.Variable)
+                if (GetIntelliType(this.TargetStart) == IntelliType.Variable)
                 {
                     // Replace the instance with new string
                     this.ReplaceTarget(newVar);
