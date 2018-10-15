@@ -76,7 +76,7 @@ namespace PaintDotNet.Effects
             {
                 { "if", " (true&)\n{\n    \n}" },
                 { "else", "\n{\n    &\n}" },
-                { "while", " (false&)\n{\n    break;\n}" },
+                { "while", " (true&)\n{\n    break;\n}" },
                 { "for", " (int i = 0; i < length&; i++)\n{\n    \n}" },
                 { "foreach", " (var item in collection&)\n{\n    \n}" },
                 { "using", " (resource&)\n{\n    \n}" },
