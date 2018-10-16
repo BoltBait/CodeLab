@@ -48,9 +48,6 @@
     <Reference Include="PaintDotNet.Effects">
       <HintPath>..\..\..\..\..\..\Program Files\Paint.NET\PaintDotNet.Effects.dll</HintPath>
     </Reference>
-    <Reference Include="ScintillaNET">
-      <HintPath>packages\jacobslusser.ScintillaNET.Signed.3.6.3\lib\net40\ScintillaNET.dll</HintPath>
-    </Reference>
     <Reference Include="System">
       <Name>System</Name>
     </Reference>
@@ -194,7 +191,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
     <None Include="Resources\Photo.png" />
     <None Include="Resources\BlendArrow.png" />
     <None Include="Resources\DownArrow.png" />
@@ -298,6 +294,11 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Icons\14FilenameControl.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="jacobslusser.ScintillaNET.Signed">
+      <Version>3.6.3</Version>
+    </PackageReference>
   </ItemGroup>
   <PropertyGroup>
     <PostBuildEvent>if $(ConfigurationName) == Release (
