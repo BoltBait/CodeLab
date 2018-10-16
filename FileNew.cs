@@ -733,17 +733,21 @@ namespace PaintDotNet.Effects
             {
                 code += "protected override void OnDispose(bool disposing)" + cr;
                 code += "{" + cr;
-                code += "    // Release any surfaces or effects you've created." + cr;
+                code += "    if (disposing)" + cr;
+                code += "    {" + cr;
+                code += "        // Release any surfaces or effects you've created." + cr;
                 if (SurfaceCode.Checked)
                 {
-                    code += "    if (wrk != null) wrk.Dispose();" + cr;
-                    code += "    wrk = null;" + cr;
+                    code += "        if (wrk != null) wrk.Dispose();" + cr;
+                    code += "        wrk = null;" + cr;
                 }
                 if (EffectName != "")
                 {
-                    code += "    if (" + EffectName + " != null) " + EffectName + ".Dispose();" + cr;
-                    code += "    " + EffectName + " = null;" + cr;
+                    code += "        if (" + EffectName + " != null) " + EffectName + ".Dispose();" + cr;
+                    code += "        " + EffectName + " = null;" + cr;
                 }
+                code += "    }" + cr;
+                code += cr;
                 code += "    base.OnDispose(disposing);" + cr;
                 code += "}" + cr;
                 code += cr;
