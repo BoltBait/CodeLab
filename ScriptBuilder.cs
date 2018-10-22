@@ -292,10 +292,10 @@ namespace PaintDotNet.Effects
                 sw.WriteLine("echo I will install this effect in your Documents folder instead");
                 sw.WriteLine("echo in case you are using the store version.");
                 sw.WriteLine("echo.");
-                sw.WriteLine("echo Installing " + Path.GetFileName(dllPath) + " to %PDN_DIR%\\paint.net User Files\\Effects\\");
+                sw.WriteLine("echo Installing " + Path.GetFileName(dllPath) + " to %PDN_DIR%\\paint.net App Files\\Effects\\");
                 sw.WriteLine("echo.");
-                sw.WriteLine("mkdir \"%PDN_DIR%\\paint.net User Files\\Effects\\\" 2>nul");
-                sw.WriteLine("copy /y \"" + Path.GetFileName(dllPath) + "\" \"%PDN_DIR%\\paint.net User Files\\Effects\\\"");
+                sw.WriteLine("mkdir \"%PDN_DIR%\\paint.net App Files\\Effects\\\" 2>nul");
+                sw.WriteLine("copy /y \"" + Path.GetFileName(dllPath) + "\" \"%PDN_DIR%\\paint.net App Files\\Effects\\\"");
                 sw.WriteLine("if '%errorlevel%' == '0' (");
                 sw.WriteLine("goto success");
                 sw.WriteLine(") else (");
