@@ -30,7 +30,7 @@ namespace PaintDotNet.Effects
 {
     internal partial class CodeLabConfigDialog : EffectConfigDialog
     {
-        private const string ThisVersion = "4.0"; // Remember to change it in CodeLab.cs too!
+        private const string ThisVersion = "4.1"; // Remember to change it in CodeLab.cs too!
         private const string WebUpdateFile = "http://www.boltbait.com/versions.txt"; // The web site to check for updates
         private const string ThisApplication = "1"; // in the WebUpadteFile, CodeLab is application #1
         // format of the versions.txt file:  application number;current version;URL to download current version
@@ -296,7 +296,7 @@ namespace PaintDotNet.Effects
                 {
                     MessageBox.Show("Something went wrong, and the Preview can't be run.", "Preview Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-                else if (!ScriptBuilder.UserScriptObject.CheckForEffectFlags(EffectFlags.Configurable))
+                else if (!ScriptBuilder.UserScriptObject.Options.Flags.HasFlag(EffectFlags.Configurable))
                 {
                     MessageBox.Show("There are no UI controls, so the Preview can't be displayed.", "Preview Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }

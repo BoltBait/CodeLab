@@ -944,7 +944,7 @@ namespace PaintDotNet.Effects
             {
                 MessageBox.Show("Something went wrong, and the Preview can't be displayed.", "Preview Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            else if (!ScriptBuilder.UserScriptObject.CheckForEffectFlags(EffectFlags.Configurable))
+            else if (!ScriptBuilder.UserScriptObject.Options.Flags.HasFlag(EffectFlags.Configurable))
             {
                 MessageBox.Show("There are no UI controls, so the Preview can't be displayed.", "Preview Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
