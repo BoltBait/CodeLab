@@ -3539,29 +3539,50 @@ namespace PaintDotNet.Effects
             int curLine = GetVisibleLine(this.CurrentLine);
             indicatorBar.Caret = CountVisibleLines(curLine);
 
-            List<int> bkmks = new List<int>();
-            for (int i = 0; i < this.Bookmarks.Length; i++)
+            if (this.Bookmarks.Length == 0)
             {
-                int bkmkLine = GetVisibleLine(Bookmarks[i]);
-                bkmks.Add(CountVisibleLines(bkmkLine));
+                indicatorBar.Bookmarks = Array.Empty<int>();
             }
-            indicatorBar.Bookmarks = bkmks.ToArray();
+            else
+            {
+                List<int> bkmks = new List<int>();
+                for (int i = 0; i < this.Bookmarks.Length; i++)
+                {
+                    int bkmkLine = GetVisibleLine(Bookmarks[i]);
+                    bkmks.Add(CountVisibleLines(bkmkLine));
+                }
+                indicatorBar.Bookmarks = bkmks.ToArray();
+            }
 
-            List<int> matches = new List<int>();
-            for (int i = 0; i < matchLines.Count; i++)
+            if (matchLines.Count == 0)
             {
-                int matchLine = GetVisibleLine(matchLines[i]);
-                matches.Add(CountVisibleLines(matchLine));
+                indicatorBar.Matches = Array.Empty<int>();
             }
-            indicatorBar.Matches = matches.ToArray();
+            else
+            {
+                List<int> matches = new List<int>();
+                for (int i = 0; i < matchLines.Count; i++)
+                {
+                    int matchLine = GetVisibleLine(matchLines[i]);
+                    matches.Add(CountVisibleLines(matchLine));
+                }
+                indicatorBar.Matches = matches.ToArray();
+            }
 
-            List<int> errors = new List<int>();
-            for (int i = 0; i < errorLines.Count; i++)
+            if (errorLines.Count == 0)
             {
-                int errorLine = GetVisibleLine(errorLines[i]);
-                errors.Add(CountVisibleLines(errorLine));
+                indicatorBar.Errors = Array.Empty<int>();
             }
-            indicatorBar.Errors = errors.ToArray();
+            else
+            {
+                List<int> errors = new List<int>();
+                for (int i = 0; i < errorLines.Count; i++)
+                {
+                    int errorLine = GetVisibleLine(errorLines[i]);
+                    errors.Add(CountVisibleLines(errorLine));
+                }
+                indicatorBar.Errors = errors.ToArray();
+            }
         }
 
         private void IndicatorBar_Scroll(object sender, ScrollEventArgs e)

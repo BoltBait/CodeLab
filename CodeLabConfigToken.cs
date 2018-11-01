@@ -42,7 +42,7 @@ namespace PaintDotNet.Effects
             Dirty = false;
             Preview = false;
             PreviewToken = null;
-            Bookmarks = new int[0];
+            Bookmarks = Array.Empty<int>();
         }
 
         public override object Clone()

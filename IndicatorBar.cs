@@ -42,9 +42,9 @@ namespace PaintDotNet.Effects
 
         private Theme theme = Theme.Light;
         private int caret = 0;
-        private int[] errors = new int[0];
-        private int[] matches = new int[0];
-        private int[] bookmarks = new int[0];
+        private int[] errors = Array.Empty<int>();
+        private int[] matches = Array.Empty<int>();
+        private int[] bookmarks = Array.Empty<int>();
         private int maximum = 100;
         private int largeChange = 50;
 
