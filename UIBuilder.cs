@@ -138,12 +138,7 @@ namespace PaintDotNet.Effects
 
         private void Delete_Click(object sender, EventArgs e)
         {
-            int CurrentItem = -1;
-            if (ControlListView.SelectedItems.Count > 0)
-            {
-                CurrentItem = ControlListView.SelectedItems[0].Index;
-            }
-
+            int CurrentItem = (ControlListView.SelectedItems.Count > 0) ? ControlListView.SelectedItems[0].Index : - 1;
             if (CurrentItem > -1)
             {
                 MasterList.RemoveAt(CurrentItem);
@@ -531,14 +526,11 @@ namespace PaintDotNet.Effects
 
         private void Update_Click(object sender, EventArgs e)
         {
-            int CurrentItem = -1;
-            if (ControlListView.SelectedItems.Count > 0)
-            {
-                CurrentItem = ControlListView.SelectedItems[0].Index;
-            }
             ElementType elementType = Enum.IsDefined(typeof(ElementType), ControlType.SelectedIndex) ? (ElementType)ControlType.SelectedIndex : ElementType.IntSlider;
             string defaultStr = (elementType == ElementType.ColorWheel) ? DefaultColorComboBox.SelectedItem.ToString() : ControlDef.Text;
             UIElement uiElement = new UIElement(elementType, ControlName.Text, ControlMin.Text, ControlMax.Text, defaultStr, OptionsText.Text, ControlStyle.SelectedIndex, rbEnabledWhen.Checked, enabledWhenField.SelectedIndex, (enabledWhenCondition.SelectedIndex != 0));
+
+            int CurrentItem = (ControlListView.SelectedItems.Count > 0) ? ControlListView.SelectedItems[0].Index : -1;
             if (CurrentItem > -1)
             {
                 MasterList.RemoveAt(CurrentItem);
@@ -576,11 +568,7 @@ namespace PaintDotNet.Effects
 
         private void MoveDown_Click(object sender, EventArgs e)
         {
-            int CurrentItem = -1;
-            if (ControlListView.SelectedItems.Count > 0)
-            {
-                CurrentItem = ControlListView.SelectedItems[0].Index;
-            }
+            int CurrentItem = (ControlListView.SelectedItems.Count > 0) ? ControlListView.SelectedItems[0].Index : -1;
             if (CurrentItem >= 0 && CurrentItem < MasterList.Count - 1)
             {
                 UIElement TargetElement = MasterList[CurrentItem];
