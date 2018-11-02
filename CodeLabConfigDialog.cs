@@ -19,7 +19,6 @@ using ScintillaNET;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Text.RegularExpressions;
@@ -47,7 +46,6 @@ namespace PaintDotNet.Effects
         private EffectConfigToken previewToken = null;
         private Color OriginalForeColor;
         private Color OriginalBackColor;
-        private readonly string locale = CultureInfo.CurrentUICulture.Name.ToLowerInvariant();
 
         public CodeLabConfigDialog()
         {
@@ -532,7 +530,7 @@ namespace PaintDotNet.Effects
         {
             if (errorList.SelectedIndex > -1 && errorList.SelectedItem is ScriptError error)
             {
-                Services.GetService<IShellService>().LaunchUrl(null, $"https://docs.microsoft.com/{locale}/dotnet/csharp/language-reference/compiler-messages/{error.ErrorNumber}");
+                Services.GetService<IShellService>().LaunchUrl(null, $"https://docs.microsoft.com/dotnet/csharp/language-reference/compiler-messages/{error.ErrorNumber}");
             }
         }
 

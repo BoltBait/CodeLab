@@ -27,7 +27,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
-using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -50,7 +49,6 @@ namespace PaintDotNet.Effects
         private readonly SizeF dpi = new SizeF(1f, 1f);
         private Theme theme;
         private const int Preprocessor = 64;
-        private readonly string locale = CultureInfo.CurrentUICulture.Name.ToLowerInvariant();
 
         private readonly ToolStrip lightBulbMenu = new ToolStrip();
         private readonly ToolStripDropDownButton bulbIcon = new ToolStripDropDownButton();
@@ -1744,7 +1742,7 @@ namespace PaintDotNet.Effects
                 Type stringType = typeof(string);
                 string fullName = $"{stringType.Namespace}.{stringType.Name}";
 
-                System.Diagnostics.Process.Start($"https://docs.microsoft.com/{locale}/dotnet/api/{fullName}");
+                System.Diagnostics.Process.Start($"https://docs.microsoft.com/dotnet/api/{fullName}");
                 return true;
             }
             if (style == Style.Cpp.Character || style == Style.Cpp.Character + Preprocessor)
@@ -1752,7 +1750,7 @@ namespace PaintDotNet.Effects
                 Type charType = typeof(char);
                 string fullName = $"{charType.Namespace}.{charType.Name}";
 
-                System.Diagnostics.Process.Start($"https://docs.microsoft.com/{locale}/dotnet/api/{fullName}");
+                System.Diagnostics.Process.Start($"https://docs.microsoft.com/dotnet/api/{fullName}");
                 return true;
             }
             if (style == Style.Cpp.Number || style == Style.Cpp.Number + Preprocessor)
@@ -1762,7 +1760,7 @@ namespace PaintDotNet.Effects
                 {
                     string fullName = $"{numType.Namespace}.{numType.Name}";
 
-                    System.Diagnostics.Process.Start($"https://docs.microsoft.com/{locale}/dotnet/api/{fullName}");
+                    System.Diagnostics.Process.Start($"https://docs.microsoft.com/dotnet/api/{fullName}");
                     return true;
                 }
 
@@ -1837,7 +1835,7 @@ namespace PaintDotNet.Effects
                     return false;
                 }
 
-                System.Diagnostics.Process.Start($"https://docs.microsoft.com/{locale}/dotnet/api/{fullName}");
+                System.Diagnostics.Process.Start($"https://docs.microsoft.com/dotnet/api/{fullName}");
                 return true;
             }
 
@@ -1976,7 +1974,7 @@ namespace PaintDotNet.Effects
                         return false;
                     }
 
-                    System.Diagnostics.Process.Start($"https://docs.microsoft.com/{locale}/dotnet/api/{fullName}");
+                    System.Diagnostics.Process.Start($"https://docs.microsoft.com/dotnet/api/{fullName}");
                     return true;
                 }
                 else
