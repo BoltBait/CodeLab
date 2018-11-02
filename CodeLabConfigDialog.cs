@@ -324,10 +324,9 @@ namespace PaintDotNet.Effects
         {
             errorList.Items.Clear();
             toolTips.SetToolTip(errorList, "");
-            txtCode.errorLines.Clear();
 
-            txtCode.IndicatorCurrent = Indicator.Error;
-            txtCode.IndicatorClearRange(0, txtCode.TextLength); // Clear underlines from the previous time
+            txtCode.ClearErrors();
+
             ShowErrors.Text = "Show Errors List";
             ShowErrors.ForeColor = this.ForeColor;
 
@@ -341,25 +340,10 @@ namespace PaintDotNet.Effects
             {
                 errorList.Items.Add(err);
 
-                if (err.Line < 1)
+                if (err.Line > 0)
                 {
-                    continue;
+                    txtCode.AddError(err.Line - 1, err.Column);
                 }
-
-                txtCode.errorLines.Add(err.Line - 1);
-
-                int errPosition = txtCode.Lines[err.Line - 1].Position + err.Column;
-                int errorLength = txtCode.GetWordFromPosition(errPosition).Length;
-
-                // if error is at the end of the line (missing semi-colon), or is a stray '.'
-                if (errorLength == 0 || errPosition == txtCode.Lines[err.Line - 1].EndPosition - 2)
-                {
-                    errPosition--;
-                    errorLength = 1;
-                }
-
-                // Underline the error
-                txtCode.IndicatorFillRange(errPosition, errorLength);
             }
 
             txtCode.UpdateIndicatorBar();

@@ -45,7 +45,7 @@ namespace PaintDotNet.Effects
         private int posAtIBox = InvalidPosition;
         private int varToRenamePos = InvalidPosition;
         private string varToRename = string.Empty;
-        internal readonly List<int> errorLines = new List<int>();
+        private readonly List<int> errorLines = new List<int>();
         private readonly List<int> matchLines = new List<int>();
         private readonly SizeF dpi = new SizeF(1f, 1f);
         private Theme theme;
@@ -3589,6 +3589,34 @@ namespace PaintDotNet.Effects
         {
             mapScroll = true;
             this.LineScroll(e.NewValue - this.FirstVisibleLine, 0);
+        }
+        #endregion
+
+        #region Errors
+        internal void ClearErrors()
+        {
+            errorLines.Clear();
+            this.IndicatorCurrent = Indicator.Error;
+            this.IndicatorClearRange(0, this.TextLength); // Clear underlines from the previous time
+        }
+
+        internal void AddError(int line, int column)
+        {
+            errorLines.Add(line);
+
+            int errPosition = this.Lines[line].Position + column;
+            int errorLength = this.GetWordFromPosition(errPosition).Length;
+
+            // if error is at the end of the line (missing semi-colon), or is a stray '.'
+            if (errorLength == 0 || errPosition == this.Lines[line].EndPosition - 2)
+            {
+                errPosition--;
+                errorLength = 1;
+            }
+
+            // Underline the error
+            this.IndicatorCurrent = Indicator.Error;
+            this.IndicatorFillRange(errPosition, errorLength);
         }
         #endregion
     }
