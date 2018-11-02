@@ -3619,6 +3619,32 @@ namespace PaintDotNet.Effects
             this.IndicatorFillRange(errPosition, errorLength);
         }
         #endregion
+
+        #region Constants
+        private static class Indicator
+        {
+            // 0 - 7 are reserved by Scintilla internally... used by the lexers
+            internal const int Error = 8;
+            internal const int ObjectHighlight = 9;
+            internal const int ObjectHighlightDef = 10;
+            internal const int VariableRename = 11;
+            internal const int Find = 12;
+        }
+
+        private static class LeftMargin
+        {
+            internal const int LineNumbers = 0;
+            internal const int Bookmarks = 1;
+            internal const int CodeFolding = 2;
+            internal const int Padding = 3;
+        }
+
+        private static class BookmarkMargin
+        {
+            internal const int Marker = 3;
+            internal const uint Mask = (1 << 3);
+        }
+        #endregion
     }
 
     public enum Theme
@@ -3626,29 +3652,5 @@ namespace PaintDotNet.Effects
         Auto,
         Light,
         Dark
-    }
-
-    internal static class Indicator
-    {
-        // 0 - 7 are reserved by Scintilla internally... used by the lexers
-        internal const int Error = 8;
-        internal const int ObjectHighlight = 9;
-        internal const int ObjectHighlightDef = 10;
-        internal const int VariableRename = 11;
-        internal const int Find = 12;
-    }
-
-    internal static class LeftMargin
-    {
-        internal const int LineNumbers = 0;
-        internal const int Bookmarks = 1;
-        internal const int CodeFolding = 2;
-        internal const int Padding = 3;
-    }
-
-    internal static class BookmarkMargin
-    {
-        internal const int Marker = 3;
-        internal const uint Mask = (1 << 3);
     }
 }
