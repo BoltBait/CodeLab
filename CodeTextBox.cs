@@ -1742,7 +1742,7 @@ namespace PaintDotNet.Effects
                 Type stringType = typeof(string);
                 string fullName = $"{stringType.Namespace}.{stringType.Name}";
 
-                System.Diagnostics.Process.Start($"https://docs.microsoft.com/dotnet/api/{fullName}");
+                OpenMsDocs(fullName);
                 return true;
             }
             if (style == Style.Cpp.Character || style == Style.Cpp.Character + Preprocessor)
@@ -1750,7 +1750,7 @@ namespace PaintDotNet.Effects
                 Type charType = typeof(char);
                 string fullName = $"{charType.Namespace}.{charType.Name}";
 
-                System.Diagnostics.Process.Start($"https://docs.microsoft.com/dotnet/api/{fullName}");
+                OpenMsDocs(fullName);
                 return true;
             }
             if (style == Style.Cpp.Number || style == Style.Cpp.Number + Preprocessor)
@@ -1760,7 +1760,7 @@ namespace PaintDotNet.Effects
                 {
                     string fullName = $"{numType.Namespace}.{numType.Name}";
 
-                    System.Diagnostics.Process.Start($"https://docs.microsoft.com/dotnet/api/{fullName}");
+                    OpenMsDocs(fullName);
                     return true;
                 }
 
@@ -1835,7 +1835,7 @@ namespace PaintDotNet.Effects
                     return false;
                 }
 
-                System.Diagnostics.Process.Start($"https://docs.microsoft.com/dotnet/api/{fullName}");
+                OpenMsDocs(fullName);
                 return true;
             }
 
@@ -1974,7 +1974,7 @@ namespace PaintDotNet.Effects
                         return false;
                     }
 
-                    System.Diagnostics.Process.Start($"https://docs.microsoft.com/dotnet/api/{fullName}");
+                    OpenMsDocs(fullName);
                     return true;
                 }
                 else
@@ -1994,6 +1994,11 @@ namespace PaintDotNet.Effects
             }
 
             return false;
+
+            void OpenMsDocs(string fullName)
+            {
+                System.Diagnostics.Process.Start($"https://docs.microsoft.com/dotnet/api/{fullName}");
+            }
         }
 
         protected override void OnMouseWheel(MouseEventArgs e)
