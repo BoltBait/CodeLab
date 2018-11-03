@@ -448,15 +448,13 @@ namespace PaintDotNet.Effects
                 PropertyPart += "            List<Property> props = new List<Property>();\r\n";
                 PropertyPart += "\r\n";
 
-                // Check to see if we're including a color wheel
+                // Check to see if we're including a color wheel without an alpha slider
                 foreach (UIElement u in UserControls)
                 {
-                    if (u.ElementType == ElementType.ColorWheel)
+                    if (u.ElementType == ElementType.ColorWheel && !(u.Style == 1 || u.Style == 3))
                     {
-                        PropertyPart += "            ColorBgra PrimaryColor = EnvironmentParameters.PrimaryColor;\r\n";
-                        PropertyPart += "            PrimaryColor.A = 255;\r\n";
-                        PropertyPart += "            ColorBgra SecondaryColor = EnvironmentParameters.SecondaryColor;\r\n";
-                        PropertyPart += "            SecondaryColor.A = 255;\r\n";
+                        PropertyPart += "            ColorBgra PrimaryColor = EnvironmentParameters.PrimaryColor.NewAlpha(byte.MaxValue);\r\n";
+                        PropertyPart += "            ColorBgra SecondaryColor = EnvironmentParameters.SecondaryColor.NewAlpha(byte.MaxValue);\r\n";
                         PropertyPart += "\r\n";
                         // only include it once
                         break;
@@ -501,11 +499,7 @@ namespace PaintDotNet.Effects
                             break;
                         case ElementType.ColorWheel:
                             ColorControlCount++;
-                            bool includeAlpha = false;
-                            if (u.Style == 1 || u.Style == 3)
-                            {
-                                includeAlpha = true;
-                            }
+                            bool includeAlpha = (u.Style == 1 || u.Style == 3);
                             if (u.ColorDefault != "")
                             {
                                 if (!includeAlpha) // no alpha slider
