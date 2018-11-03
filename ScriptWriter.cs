@@ -1088,8 +1088,7 @@ namespace PaintDotNet.Effects
                             SetRenderPart += "            Amount" + x.ToString() + " = LayerBlendModeUtil.CreateCompositionOp((LayerBlendMode)newToken.GetProperty<StaticListChoiceProperty>(PropertyNames.Amount" + x.ToString() + ").Value);\r\n";
                             break;
                         case ElementType.FontFamily:
-                            SetRenderPart += "            FontFamily Amount" + x.ToString() + "FontFamily = (FontFamily)newToken.GetProperty<StaticListChoiceProperty>(PropertyNames.Amount" + x.ToString() + ").Value;\r\n";
-                            SetRenderPart += "            Amount" + x.ToString() + " = new FontFamily(Amount" + x.ToString() + "FontFamily.Name);\r\n";
+                            SetRenderPart += "            Amount" + x.ToString() + " = (FontFamily)newToken.GetProperty<StaticListChoiceProperty>(PropertyNames.Amount" + x.ToString() + ").Value;\r\n";
                             break;
                         case ElementType.RadioButtons:
                             SetRenderPart += "            Amount" + x.ToString() + " = (byte)((int)newToken.GetProperty<StaticListChoiceProperty>(PropertyNames.Amount" + x.ToString() + ").Value);\r\n";
