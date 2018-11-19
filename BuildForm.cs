@@ -87,6 +87,11 @@ namespace PaintDotNet.Effects
             if (msm.Success)
             {
                 SubMenuName.Text = msm.Groups["sublabel"].Value.Trim();
+                if ((SubMenuName.Text.ToLower() == "adjustments") || (SubMenuName.Text.ToLower() == "adj"))
+                {
+                    AdjustmentRadio.Checked = true;
+                    SubMenuName.Text = "";
+                }
             }
             // Preload menu name
             Regex REName = new Regex(@"//[\s-[\r\n]]*Name[\s-[\r\n]]*:[\s-[\r\n]]*(?<menulabel>.*)(?=\r?\n|$)", RegexOptions.IgnoreCase);
