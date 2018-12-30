@@ -372,7 +372,7 @@ namespace PaintDotNet.Effects
 
         internal static bool BuildFullPreview(string scriptText)
         {
-            string FileName = "PreviewEffect";
+            const string FileName = "PreviewEffect";
             Regex preRenderRegex = new Regex(@"void PreRender\(Surface dst, Surface src\)(\s)*{(.|\s)*}", RegexOptions.Singleline);
 
             // Generate code
@@ -419,7 +419,7 @@ namespace PaintDotNet.Effects
 
         internal static bool BuildUiPreview(string uiCode)
         {
-            string FileName = "UiPreviewEffect";
+            const string FileName = "UiPreviewEffect";
             uiCode = "#region UICode\r\n" + uiCode + "\r\n#endregion\r\n";
 
             // Generate code

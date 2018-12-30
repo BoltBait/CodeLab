@@ -1158,7 +1158,7 @@ namespace PaintDotNet.Effects
                 toolBarToolStripMenuItem.CheckState = CheckState.Checked;
                 toolStrip1.Visible = true;
                 txtCode.Location = new Point(txtCode.Left, tabStrip1.Bottom);
-                txtCode.Height = txtCode.Height - toolStrip1.Height;
+                txtCode.Height -= toolStrip1.Height;
             }
             else
             {
@@ -1166,7 +1166,7 @@ namespace PaintDotNet.Effects
                 toolBarToolStripMenuItem.CheckState = CheckState.Unchecked;
                 toolStrip1.Visible = false;
                 txtCode.Location = new Point(txtCode.Left, tabStrip1.Bottom);
-                txtCode.Height = txtCode.Height + toolStrip1.Height;
+                txtCode.Height += toolStrip1.Height;
             }
             txtCode.Focus();
         }

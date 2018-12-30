@@ -20,7 +20,7 @@ using System.Windows.Forms;
 
 namespace PaintDotNet.Effects
 {
-    [DefaultEvent("SelectedTabChanged")]
+    [DefaultEvent(nameof(SelectedTabChanged))]
     public partial class TabStrip : UserControl
     {
         private Tab activeTab;

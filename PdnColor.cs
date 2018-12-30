@@ -609,7 +609,7 @@ namespace PaintDotNet.Effects
         }
     }
 
-    [DefaultEvent("ValueChanged")]
+    [DefaultEvent(nameof(ValueChanged))]
     public class ColorSlider : PictureBox
     {
         #region Properties

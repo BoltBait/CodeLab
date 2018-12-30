@@ -387,10 +387,7 @@ namespace PaintDotNet.Effects
             if (!this.DesignMode)
             {
                 timer.Interval = 1000;
-                timer.Tick += (sender, e) =>
-                {
-                    ParseLocalVariables(this.CurrentPosition);
-                };
+                timer.Tick += (sender, e) => ParseLocalVariables(this.CurrentPosition);
                 timer.Start();
             }
 
@@ -668,7 +665,7 @@ namespace PaintDotNet.Effects
                 }
                 else if (!char.IsDigit(curChar))
                 {
-                    numEnd = numEnd - 1;
+                    numEnd--;
                     break;
                 }
 
