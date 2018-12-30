@@ -925,7 +925,7 @@ namespace PaintDotNet.Effects
             }
 
             string lastWords = GetLastWords(this.WordEndPosition(position, true));
-            if (lastWords == string.Empty)
+            if (lastWords.Length == 0)
             {
                 return IntelliType.None;
             }
@@ -1059,7 +1059,7 @@ namespace PaintDotNet.Effects
             }
 
             string word = this.GetWordFromPosition(position);
-            if (word == string.Empty)
+            if (word.Length == 0)
             {
                 return;
             }
@@ -1171,7 +1171,7 @@ namespace PaintDotNet.Effects
                                 MemberInfo member = Intelli.UserScript.GetMember(word, BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly)[0];
                                 string returnType = member.GetReturnType()?.GetDisplayName();
 
-                                if (returnType != string.Empty && t.GetDisplayName() == returnType)
+                                if (returnType.Length > 0 && t.GetDisplayName() == returnType)
                                 {
                                     this.IndicatorCurrent = Indicator.ObjectHighlightDef;
                                 }
@@ -1218,7 +1218,7 @@ namespace PaintDotNet.Effects
 
 
             string lastWords = GetLastWords(this.WordEndPosition(position, true));
-            if (lastWords == string.Empty)
+            if (lastWords.Length == 0)
             {
                 return string.Empty;
             }
@@ -1518,7 +1518,7 @@ namespace PaintDotNet.Effects
             }
 
             string lastWords = GetLastWords(position);
-            if (lastWords == string.Empty)
+            if (lastWords.Length == 0)
             {
                 return null;
             }
@@ -1624,7 +1624,7 @@ namespace PaintDotNet.Effects
             }
 
             string lastWords = GetLastWords(this.WordEndPosition(position, true));
-            if (lastWords == string.Empty)
+            if (lastWords.Length == 0)
             {
                 return null;
             }
@@ -1768,7 +1768,7 @@ namespace PaintDotNet.Effects
             }
 
             string lastWords = GetLastWords(this.WordEndPosition(position, true));
-            if (lastWords == string.Empty)
+            if (lastWords.Length == 0)
             {
                 return false;
             }
@@ -1830,7 +1830,7 @@ namespace PaintDotNet.Effects
                 string typeName = (t.IsGenericType) ? t.Name.Replace("`", "-") : t.Name;
                 string fullName = $"{t.Namespace}.{typeName}";
 
-                if (fullName == string.Empty || fullName.StartsWith("PaintDotNet", StringComparison.Ordinal))
+                if (fullName.Length == 0 || fullName.StartsWith("PaintDotNet", StringComparison.Ordinal))
                 {
                     return false;
                 }
@@ -1896,7 +1896,7 @@ namespace PaintDotNet.Effects
                     string typeName = (type.IsGenericType) ? mi[0].DeclaringType.Name.Replace("`", "-") : mi[0].DeclaringType.Name;
                     string fullName = $"{mi[0].DeclaringType.Namespace}.{typeName}.{mi[0].Name}";
 
-                    if (fullName == string.Empty)
+                    if (fullName.Length == 0)
                     {
                         return false;
                     }
@@ -1905,7 +1905,7 @@ namespace PaintDotNet.Effects
                     {
                         string returnType = mi[0].GetReturnType()?.GetDisplayName();
 
-                        if (returnType == string.Empty)
+                        if (returnType.Length == 0)
                         {
                             return false;
                         }
@@ -2610,7 +2610,7 @@ namespace PaintDotNet.Effects
             this.IndicatorClearRange(0, this.TextLength);
             this.matchLines.Clear();
 
-            if (term == string.Empty)
+            if (term.Length == 0)
             {
                 findPanel.Matches = 0;
                 UpdateIndicatorBar();
@@ -2643,7 +2643,7 @@ namespace PaintDotNet.Effects
 
         private void Replace(string oldTerm, string newTerm, SearchFlags searchFlags)
         {
-            if (oldTerm == string.Empty)
+            if (oldTerm.Length == 0)
             {
                 return;
             }
@@ -2913,7 +2913,7 @@ namespace PaintDotNet.Effects
             }
 
             //Update Find Highlighting
-            if (findPanel.Visible && findPanel.Term != string.Empty && !Replacing)
+            if (findPanel.Visible && findPanel.Term.Length > 0 && !Replacing)
             {
                 Tuple<int, int> oldRange = new Tuple<int, int>(this.TargetStart, this.TargetEnd);
                 Find(findPanel.Term, findPanel.Flags);
@@ -2962,7 +2962,7 @@ namespace PaintDotNet.Effects
             // Set indicator for Variable Renaming?
             int wordStartPos = this.WordStartPosition(e.Position, true);
             if (e.Source == ModificationSource.User && GetIntelliType(wordStartPos) == IntelliType.Variable &&
-                !IsIndicatorOn(Indicator.VariableRename, wordStartPos) && e.Text.Trim() != string.Empty && !Replacing)
+                !IsIndicatorOn(Indicator.VariableRename, wordStartPos) && e.Text.Trim().Length > 0 && !Replacing)
             {
                 varToRenamePos = wordStartPos;
                 varToRename = this.GetWordFromPosition(e.Position);
@@ -2980,7 +2980,7 @@ namespace PaintDotNet.Effects
             // Set indicator for Variable Renaming?
             int wordStartPos = this.WordStartPosition(e.Position, true);
             if (e.Source == ModificationSource.User && GetIntelliType(wordStartPos) == IntelliType.Variable &&
-                !IsIndicatorOn(Indicator.VariableRename, wordStartPos) && e.Text.Trim() != string.Empty && !Replacing)
+                !IsIndicatorOn(Indicator.VariableRename, wordStartPos) && e.Text.Trim().Length > 0 && !Replacing)
             {
                 varToRenamePos = wordStartPos;
                 varToRename = this.GetWordFromPosition(e.Position);
@@ -3066,7 +3066,7 @@ namespace PaintDotNet.Effects
             int minIndent = int.MaxValue;
             for (int line = startLine; line < endLine + 1; line++)
             {
-                if (this.Lines[line].Text.Trim() != string.Empty && this.Lines[line].Indentation < minIndent)
+                if (this.Lines[line].Text.Trim().Length > 0 && this.Lines[line].Indentation < minIndent)
                 {
                     minIndent = this.Lines[line].Indentation;
                 }
@@ -3075,7 +3075,7 @@ namespace PaintDotNet.Effects
             this.BeginUndoAction();
             for (int line = startLine; line < endLine + 1; line++)
             {
-                if (this.Lines[line].Text.Trim() != string.Empty)
+                if (this.Lines[line].Text.Trim().Length > 0)
                 {
                     this.InsertText(this.Lines[line].Position + minIndent, "//");
                 }
@@ -3162,7 +3162,7 @@ namespace PaintDotNet.Effects
                     lineIndent -= this.TabWidth;
                 }
 
-                if (trimmedLine != string.Empty)
+                if (trimmedLine.Length > 0)
                 {
                     caseStart = false;
                 }
@@ -3241,7 +3241,7 @@ namespace PaintDotNet.Effects
             foreach (string item in UiCodeText)
             {
                 string trimmed = item.Trim();
-                if (trimmed != string.Empty)
+                if (trimmed.Length > 0)
                 {
                     UIlist.Add(trimmed);
                 }
@@ -3291,7 +3291,7 @@ namespace PaintDotNet.Effects
 
             void Replace(string oldValue, string newValue, SearchFlags searchFlags)
             {
-                if (oldValue == string.Empty)
+                if (oldValue.Length == 0)
                 {
                     return;
                 }
@@ -3447,7 +3447,7 @@ namespace PaintDotNet.Effects
                 }
             }
 
-            if (tooltipText != string.Empty)
+            if (tooltipText.Length > 0)
             {
                 int y = this.PointYFromPosition(e.Position) + this.Lines[this.CurrentLine].Height;
                 intelliTip.Show(tooltipText, this, e.X, y);

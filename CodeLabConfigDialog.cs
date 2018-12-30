@@ -500,7 +500,7 @@ namespace PaintDotNet.Effects
                 return;
             }
 
-            ErrorCodeMenuItem.Visible = (errorList.SelectedItem is ScriptError error && error.ErrorNumber != string.Empty);
+            ErrorCodeMenuItem.Visible = (errorList.SelectedItem is ScriptError error && error.ErrorNumber.Length > 0);
         }
 
         private void CopyErrorMenuItem_Click(object sender, EventArgs e)
@@ -601,7 +601,7 @@ namespace PaintDotNet.Effects
                 string output = sect.Output[0];
                 sect.Output.Clear();
 
-                if (output.Trim() != string.Empty)
+                if (output.Trim().Length > 0)
                 {
                     OutputTextBox.AppendText(output);
                 }
@@ -1764,7 +1764,7 @@ namespace PaintDotNet.Effects
         {
             string recents = Settings.RecentDocs;
 
-            if (recents == string.Empty)
+            if (recents.Length == 0)
             {
                 recents = filePath;
             }
@@ -1825,7 +1825,7 @@ namespace PaintDotNet.Effects
                     if (wtn.Success)
                     {
                         string scriptName = wtn.Groups["menulabel"].Value.Trim();
-                        if (scriptName != string.Empty)
+                        if (scriptName.Length > 0)
                         {
                             menuText = $"&{count} {scriptName} ({Path.GetFileName(itemPath)})";
                         }
