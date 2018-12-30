@@ -625,7 +625,9 @@ namespace PaintDotNet.Effects
 
             if (tabStrip1.AnyDirtyTabs)
             {
-                e.Cancel = MessageBox.Show("Tabs marked with \"*\" have unsaved changes. These changes will be lost if CodeLab is closed.\r\n\r\nWould you like to save these files?", "Unsaved changes", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes;
+                e.Cancel = (tabStrip1.TabCount == 1) ?
+                    PromptToSave() == DialogResult.Cancel :
+                    MessageBox.Show("There are one or more Tabs with unsaved changes. These changes will be lost if CodeLab is closed.\r\n\r\nWould you like to return to CodeLab, so these files can be saved?", "Unsaved changes", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes;
             }
 
             base.OnFormClosing(e);

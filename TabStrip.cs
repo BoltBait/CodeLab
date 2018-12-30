@@ -34,6 +34,11 @@ namespace PaintDotNet.Effects
         }
 
         #region Properties
+        internal int TabCount
+        {
+            get => this.toolStrip1.Items.Count;
+        }
+
         internal bool AnyDirtyTabs
         {
             get
