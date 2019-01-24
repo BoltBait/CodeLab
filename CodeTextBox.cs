@@ -1407,9 +1407,8 @@ namespace PaintDotNet.Effects
         {
             List<string> defaultParams = new List<string>();
             ParameterInfo[] defaultInfo = ((MethodInfo)mi[0]).GetParameters();
-            for (int i = 0; i < defaultInfo.Length; i++)
+            foreach (ParameterInfo param in defaultInfo)
             {
-                ParameterInfo param = defaultInfo[i];
                 defaultParams.Add($"{(param.ParameterType.IsByRef ? "ref " : string.Empty)}{param.ParameterType.GetDisplayName()} {param.Name}");
             }
             Tuple<int, string> defaultOverload = new Tuple<int, string>(0, defaultParams.Join(", "));
