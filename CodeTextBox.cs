@@ -2762,14 +2762,20 @@ namespace PaintDotNet.Effects
 
             if (e.Change.HasFlag(UpdateChange.Content))
             {
-                indicatorBar.Maximum = CountUILines();
-                indicatorBar.Value = this.FirstVisibleLine;
+                if (MapEnabled)
+                {
+                    indicatorBar.Maximum = CountUILines();
+                    indicatorBar.Value = this.FirstVisibleLine;
+                }
             }
 
             if (e.Change.HasFlag(UpdateChange.Selection) || e.Change.HasFlag(UpdateChange.Content))
             {
-                int curLine = GetVisibleLine(this.CurrentLine);
-                indicatorBar.Caret = CountVisibleLines(curLine);
+                if (MapEnabled)
+                {
+                    int curLine = GetVisibleLine(this.CurrentLine);
+                    indicatorBar.Caret = CountVisibleLines(curLine);
+                }
 
                 // Has the caret changed position?
                 int caretPos = this.CurrentPosition;
