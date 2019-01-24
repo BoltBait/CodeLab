@@ -155,11 +155,11 @@ namespace PaintDotNet.Effects
             Author = Author.Replace('"', '\'');
             menuname = menuname.Replace('"', '\'');
             Description = Description.Trim();
-            if (Description == "")
+            if (Description.Length == 0)
             {
                 Description = menuname + " selected pixels";
             }
-            if (KeyWords == "")
+            if (KeyWords.Length == 0)
             {
                 KeyWords = menuname;
             }
@@ -199,7 +199,7 @@ namespace PaintDotNet.Effects
         {
             menuname = menuname.Replace('"', '\'');
             SupportURL = SupportURL.Trim();
-            if (SupportURL == "")
+            if (SupportURL.Length == 0)
             {
                 SupportURL = "https://www.getpaint.net/redirect/plugins.html";
             }
@@ -303,7 +303,7 @@ namespace PaintDotNet.Effects
             EffectPart += "        {\r\n";
             EffectPart += "            get\r\n";
             EffectPart += "            {\r\n";
-            if (submenuname.Trim() == "")
+            if (submenuname.Trim().Length == 0)
             {
                 EffectPart += "                return null;\r\n";
             }

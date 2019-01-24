@@ -632,7 +632,7 @@ namespace PaintDotNet.Effects
                     ControlMin.Text = CurrentElement.Min.ToString();
                     ControlMax.Text = CurrentElement.Max.ToString();
                     ControlDef.Text = CurrentElement.Default.ToString();
-                    DefaultColorComboBox.Text = (CurrentElement.ColorDefault == "" ? "None" : CurrentElement.ColorDefault);
+                    DefaultColorComboBox.Text = (CurrentElement.ColorDefault.Length == 0 ? "None" : CurrentElement.ColorDefault);
                     break;
                 case ElementType.AngleChooser:
                     ControlType.Text = "Angle Chooser";
@@ -1524,7 +1524,7 @@ namespace PaintDotNet.Effects
             }
             else if ((TypeStr == "byte") || (TypeStr == "ListBoxControl") || (TypeStr == "RadioButtonControl") || (TypeStr == "ReseedButtonControl"))
             {
-                if ((TypeStr == "ListBoxControl") || (MaximumStr == ""))
+                if ((TypeStr == "ListBoxControl") || (MaximumStr.Length == 0))
                 {
                     ElementType = ElementType.DropDown;
                     if (!int.TryParse(DefaultStr, out Default)) Default = 0;
@@ -1716,7 +1716,7 @@ namespace PaintDotNet.Effects
                     break;
                 case ElementType.ColorWheel:
                     Color c = Color.White;
-                    if (ColorDefault == "" || ColorDefault == "PrimaryColor")
+                    if (ColorDefault.Length == 0 || ColorDefault == "PrimaryColor")
                     {
                         c = Color.Black;
                     }

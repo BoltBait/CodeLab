@@ -760,8 +760,6 @@ namespace PaintDotNet.Effects
             UpdateVER = "";
             UpdateURL = "";
 
-            if (WebUpdateFile == "") return;
-
             if (!force)
             {
                 // only check for updates every 7 days
@@ -878,7 +876,7 @@ namespace PaintDotNet.Effects
             {
                 MessageBox.Show("Before you can build a DLL, you must resolve all code errors.", "Build Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            else if (FileName == "Untitled" || FileName == "")
+            else if (FileName.Length == 0 || FileName == "Untitled")
             {
                 MessageBox.Show("Before you can build a DLL, you must first save your source file using the File > Save as... menu.", "Build Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }

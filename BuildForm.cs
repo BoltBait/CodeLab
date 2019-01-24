@@ -207,7 +207,7 @@ namespace PaintDotNet.Effects
                 }
             }
 
-            if (HelpPlainText.Text == "")
+            if (HelpPlainText.Text.Length == 0)
             {
                 HelpPlainText.Text = $"{MenuName.Text} v{MajorVersion.Value}{DecimalSymbol.Text}{MinorVersion.Value}\r\nCopyright ©{DateTime.Now.Year} by {AuthorName.Text}\r\nAll rights reserved.";
                 if (radioButtonNone.Checked)
