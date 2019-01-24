@@ -3284,6 +3284,8 @@ namespace PaintDotNet.Effects
             Replace(modifier, string.Empty, SearchFlags.None);
             this.EndUndoAction();
 
+            OnBuildNeeded();
+
 
             void Replace(string oldValue, string newValue, SearchFlags searchFlags)
             {
