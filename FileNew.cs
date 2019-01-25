@@ -63,7 +63,6 @@ namespace PaintDotNet.Effects
             string srccode = "src[x,y]";
             string wrkcode = "wrk[x,y]";
             string blendtop = "";
-            string additionalindent = "";
             string EffectName = "";
             /*
             ---------Copy--------->
@@ -329,6 +328,7 @@ namespace PaintDotNet.Effects
             {
                 controls = "1";
             }
+
             if (BlendingCode.Text == "User selected blending mode")
             {
                 code += "BinaryPixelOp Amount" + controls + " = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Normal); // Blending Mode" + cr;
@@ -343,6 +343,7 @@ namespace PaintDotNet.Effects
                 // we will be using the wrk surface for the destination of the complex effects
                 wrksurface = "wrk";
             }
+
             // setup for calling complex effects
             if (EffectCode.Text.Contains("Gaussian Blur"))
             {
@@ -352,7 +353,7 @@ namespace PaintDotNet.Effects
                 code += cr;
                 EffectName = "blurEffect";
             }
-            if (EffectCode.Text.Contains("Contrast"))
+            else if (EffectCode.Text.Contains("Contrast"))
             {
                 code += "// Setup for calling the Brightness and Contrast Adjustment function" + cr;
                 code += "BrightnessAndContrastAdjustment bacAdjustment = new BrightnessAndContrastAdjustment();" + cr;
@@ -360,7 +361,7 @@ namespace PaintDotNet.Effects
                 code += cr;
                 EffectName = "bacAdjustment";
             }
-            if (EffectCode.Text.Contains("Frosted"))
+            else if (EffectCode.Text.Contains("Frosted"))
             {
                 code += "// Setup for calling the Frosted Glass effect" + cr;
                 code += "FrostedGlassEffect frostedEffect = new FrostedGlassEffect();" + cr;
@@ -368,7 +369,7 @@ namespace PaintDotNet.Effects
                 code += cr;
                 EffectName = "frostedEffect";
             }
-            if (EffectCode.Text.Contains("Add Noise"))
+            else if (EffectCode.Text.Contains("Add Noise"))
             {
                 code += "// Setup for calling the Add Noise effect" + cr;
                 code += "AddNoiseEffect noiseEffect = new AddNoiseEffect();" + cr;
@@ -376,7 +377,7 @@ namespace PaintDotNet.Effects
                 code += cr;
                 EffectName = "noiseEffect";
             }
-            if (EffectCode.Text.Contains("Motion Blur"))
+            else if (EffectCode.Text.Contains("Motion Blur"))
             {
                 code += "// Setup for calling the Motion Blur effect" + cr;
                 code += "MotionBlurEffect blurEffect = new MotionBlurEffect();" + cr;
@@ -384,7 +385,7 @@ namespace PaintDotNet.Effects
                 code += cr;
                 EffectName = "blurEffect";
             }
-            if (EffectCode.Text.Contains("Clouds"))
+            else if (EffectCode.Text.Contains("Clouds"))
             {
                 code += "// Setup for calling the Render Clouds function" + cr;
                 code += "CloudsEffect cloudsEffect = new CloudsEffect();" + cr;
@@ -392,7 +393,7 @@ namespace PaintDotNet.Effects
                 code += cr;
                 EffectName = "cloudsEffect";
             }
-            if (EffectCode.Text.Contains("Oil Painting"))
+            else if (EffectCode.Text.Contains("Oil Painting"))
             {
                 code += "// Setup for calling the Oil Painting effect" + cr;
                 code += "OilPaintingEffect oilpaintEffect = new OilPaintingEffect();" + cr;
@@ -400,7 +401,7 @@ namespace PaintDotNet.Effects
                 code += cr;
                 EffectName = "oilpaintEffect";
             }
-            if (EffectCode.Text.Contains("Reduce Noise"))
+            else if (EffectCode.Text.Contains("Reduce Noise"))
             {
                 code += "// Setup for calling the Reduce Noise effect" + cr;
                 code += "ReduceNoiseEffect reducenoiseEffect = new ReduceNoiseEffect();" + cr;
@@ -408,7 +409,7 @@ namespace PaintDotNet.Effects
                 code += cr;
                 EffectName = "reducenoiseEffect";
             }
-            if (EffectCode.Text.Contains("Median"))
+            else if (EffectCode.Text.Contains("Median"))
             {
                 code += "// Setup for calling the Median effect" + cr;
                 code += "MedianEffect medianEffect = new MedianEffect();" + cr;
@@ -416,7 +417,7 @@ namespace PaintDotNet.Effects
                 code += cr;
                 EffectName = "medianEffect";
             }
-            if (EffectCode.Text.Contains("Edge Detect"))
+            else if (EffectCode.Text.Contains("Edge Detect"))
             {
                 code += "// Setup for calling the Edge Detect effect" + cr;
                 code += "EdgeDetectEffect edgedetectEffect = new EdgeDetectEffect();" + cr;
@@ -424,7 +425,7 @@ namespace PaintDotNet.Effects
                 code += cr;
                 EffectName = "edgedetectEffect";
             }
-            if (EffectCode.Text.Contains("Emboss"))
+            else if (EffectCode.Text.Contains("Emboss"))
             {
                 code += "// Setup for calling the Emboss effect" + cr;
                 code += "EmbossEffect embossEffect = new EmbossEffect();" + cr;
@@ -432,7 +433,7 @@ namespace PaintDotNet.Effects
                 code += cr;
                 EffectName = "embossEffect";
             }
-            if (EffectCode.Text.Contains("Relief"))
+            else if (EffectCode.Text.Contains("Relief"))
             {
                 code += "// Setup for calling the Relief effect" + cr;
                 code += "ReliefEffect reliefEffect = new ReliefEffect();" + cr;
@@ -440,7 +441,7 @@ namespace PaintDotNet.Effects
                 code += cr;
                 EffectName = "reliefEffect";
             }
-            if (EffectCode.Text.Contains("Outline"))
+            else if (EffectCode.Text.Contains("Outline"))
             {
                 code += "// Setup for calling the Outline effect" + cr;
                 code += "OutlineEffect outlineEffect = new OutlineEffect();" + cr;
@@ -448,7 +449,7 @@ namespace PaintDotNet.Effects
                 code += cr;
                 EffectName = "outlineEffect";
             }
-            if (EffectCode.Text.Contains("Sharpen"))
+            else if (EffectCode.Text.Contains("Sharpen"))
             {
                 code += "// Setup for calling the Sharpen effect" + cr;
                 code += "SharpenEffect sharpenEffect = new SharpenEffect();" + cr;
@@ -456,7 +457,7 @@ namespace PaintDotNet.Effects
                 code += cr;
                 EffectName = "sharpenEffect";
             }
-            if (EffectCode.Text.Contains("Pencil Sketch"))
+            else if (EffectCode.Text.Contains("Pencil Sketch"))
             {
                 code += "// Setup for calling the Pencil Sketch effect" + cr;
                 code += "PencilSketchEffect pencilSketchEffect = new PencilSketchEffect();" + cr;
@@ -464,7 +465,7 @@ namespace PaintDotNet.Effects
                 code += cr;
                 EffectName = "pencilSketchEffect";
             }
-            if (EffectCode.Text.Contains("Posterize"))
+            else if (EffectCode.Text.Contains("Posterize"))
             {
                 code += "// Setup for calling the Posterize adjustment" + cr;
                 code += "PosterizeAdjustment posterizeEffect = new PosterizeAdjustment();" + cr;
@@ -472,7 +473,7 @@ namespace PaintDotNet.Effects
                 code += cr;
                 EffectName = "posterizeEffect";
             }
-            if (EffectCode.Text.Contains("Sepia"))
+            else if (EffectCode.Text.Contains("Sepia"))
             {
                 code += "// Setup for calling the Sepia effect" + cr;
                 code += "SepiaEffect sepiaEffect = new SepiaEffect();" + cr;
@@ -480,7 +481,7 @@ namespace PaintDotNet.Effects
                 code += cr;
                 EffectName = "sepiaEffect";
             }
-            if (EffectCode.Text.Contains("Ink Sketch"))
+            else if (EffectCode.Text.Contains("Ink Sketch"))
             {
                 code += "// Setup for calling the Ink Sketch effect" + cr;
                 code += "InkSketchEffect inkEffect = new InkSketchEffect();" + cr;
@@ -488,7 +489,7 @@ namespace PaintDotNet.Effects
                 code += cr;
                 EffectName = "inkEffect";
             }
-            if (EffectCode.Text.Contains("Radial Blur"))
+            else if (EffectCode.Text.Contains("Radial Blur"))
             {
                 code += "// Setup for calling the Radial Blur effect" + cr;
                 code += "RadialBlurEffect radialEffect = new RadialBlurEffect();" + cr;
@@ -496,7 +497,7 @@ namespace PaintDotNet.Effects
                 code += cr;
                 EffectName = "radialEffect";
             }
-            if (EffectCode.Text.Contains("Surface Blur"))
+            else if (EffectCode.Text.Contains("Surface Blur"))
             {
                 code += "// Setup for calling the Surface Blur effect" + cr;
                 code += "SurfaceBlurEffect surfaceEffect = new SurfaceBlurEffect();" + cr;
@@ -504,7 +505,7 @@ namespace PaintDotNet.Effects
                 code += cr;
                 EffectName = "surfaceEffect";
             }
-            if (EffectCode.Text.Contains("Unfocus"))
+            else if (EffectCode.Text.Contains("Unfocus"))
             {
                 code += "// Setup for calling the Unfocus effect" + cr;
                 code += "UnfocusEffect unfocusEffect = new UnfocusEffect();" + cr;
@@ -512,7 +513,7 @@ namespace PaintDotNet.Effects
                 code += cr;
                 EffectName = "unfocusEffect";
             }
-            if (EffectCode.Text.Contains("Zoom Blur"))
+            else if (EffectCode.Text.Contains("Zoom Blur"))
             {
                 code += "// Setup for calling the Zoom Blur effect" + cr;
                 code += "ZoomBlurEffect zoomEffect = new ZoomBlurEffect();" + cr;
@@ -520,7 +521,7 @@ namespace PaintDotNet.Effects
                 code += cr;
                 EffectName = "zoomEffect";
             }
-            if (EffectCode.Text.Contains("Bulge"))
+            else if (EffectCode.Text.Contains("Bulge"))
             {
                 code += "// Setup for calling the Bulge effect" + cr;
                 code += "BulgeEffect bulgeEffect = new BulgeEffect();" + cr;
@@ -528,7 +529,7 @@ namespace PaintDotNet.Effects
                 code += cr;
                 EffectName = "bulgeEffect";
             }
-            if (EffectCode.Text.Contains("Crystalize"))
+            else if (EffectCode.Text.Contains("Crystalize"))
             {
                 code += "// Setup for calling the Crystalize effect" + cr;
                 code += "CrystalizeEffect crystalizeEffect = new CrystalizeEffect();" + cr;
@@ -536,7 +537,7 @@ namespace PaintDotNet.Effects
                 code += cr;
                 EffectName = "crystalizeEffect";
             }
-            if (EffectCode.Text.Contains("Dents"))
+            else if (EffectCode.Text.Contains("Dents"))
             {
                 code += "// Setup for calling the Dents effect" + cr;
                 code += "DentsEffect dentsEffect = new DentsEffect();" + cr;
@@ -544,7 +545,7 @@ namespace PaintDotNet.Effects
                 code += cr;
                 EffectName = "dentsEffect";
             }
-            if (EffectCode.Text.Contains("Pixelate"))
+            else if (EffectCode.Text.Contains("Pixelate"))
             {
                 code += "// Setup for calling the Pixelate effect" + cr;
                 code += "PixelateEffect pixelateEffect = new PixelateEffect();" + cr;
@@ -552,7 +553,7 @@ namespace PaintDotNet.Effects
                 code += cr;
                 EffectName = "pixelateEffect";
             }
-            if (EffectCode.Text.Contains("Polar Inversion"))
+            else if (EffectCode.Text.Contains("Polar Inversion"))
             {
                 code += "// Setup for calling the Polar Inversion effect" + cr;
                 code += "PolarInversionEffect polarEffect = new PolarInversionEffect();" + cr;
@@ -560,7 +561,7 @@ namespace PaintDotNet.Effects
                 code += cr;
                 EffectName = "polarEffect";
             }
-            if (EffectCode.Text.Contains("Tile Reflection"))
+            else if (EffectCode.Text.Contains("Tile Reflection"))
             {
                 code += "// Setup for calling the Tile Reflection effect" + cr;
                 code += "TileEffect tileEffect = new TileEffect();" + cr;
@@ -568,7 +569,7 @@ namespace PaintDotNet.Effects
                 code += cr;
                 EffectName = "tileEffect";
             }
-            if (EffectCode.Text.Contains("Twist"))
+            else if (EffectCode.Text.Contains("Twist"))
             {
                 code += "// Setup for calling the Twist effect" + cr;
                 code += "TwistEffect twistEffect = new TwistEffect();" + cr;
@@ -576,7 +577,7 @@ namespace PaintDotNet.Effects
                 code += cr;
                 EffectName = "twistEffect";
             }
-            if (EffectCode.Text.Contains("Glow"))
+            else if (EffectCode.Text.Contains("Glow"))
             {
                 code += "// Setup for calling the Glow effect" + cr;
                 code += "GlowEffect glowEffect = new GlowEffect();" + cr;
@@ -584,7 +585,7 @@ namespace PaintDotNet.Effects
                 code += cr;
                 EffectName = "glowEffect";
             }
-            if (EffectCode.Text.Contains("Soften Portrait"))
+            else if (EffectCode.Text.Contains("Soften Portrait"))
             {
                 code += "// Setup for calling the Soften Portrait effect" + cr;
                 code += "SoftenPortraitEffect portraitEffect = new SoftenPortraitEffect();" + cr;
@@ -592,7 +593,7 @@ namespace PaintDotNet.Effects
                 code += cr;
                 EffectName = "portraitEffect";
             }
-            if (EffectCode.Text.Contains("Vignette"))
+            else if (EffectCode.Text.Contains("Vignette"))
             {
                 code += "// Setup for calling the Vignette effect" + cr;
                 code += "VignetteEffect vignetteEffect = new VignetteEffect();" + cr;
@@ -600,7 +601,7 @@ namespace PaintDotNet.Effects
                 code += cr;
                 EffectName = "vignetteEffect";
             }
-            if (EffectCode.Text.Contains("Julia"))
+            else if (EffectCode.Text.Contains("Julia"))
             {
                 code += "// Setup for calling the Julia effect" + cr;
                 code += "JuliaFractalEffect juliaEffect = new JuliaFractalEffect();" + cr;
@@ -608,7 +609,7 @@ namespace PaintDotNet.Effects
                 code += cr;
                 EffectName = "juliaEffect";
             }
-            if (EffectCode.Text.Contains("Mandelbrot"))
+            else if (EffectCode.Text.Contains("Mandelbrot"))
             {
                 code += "// Setup for calling the Mandelbrot effect" + cr;
                 code += "MandelbrotFractalEffect mandelbrotEffect = new MandelbrotFractalEffect();" + cr;
@@ -618,11 +619,11 @@ namespace PaintDotNet.Effects
             }
 
             // setup for selected pixel op
-            if ((!PixelOpCode.Text.Contains("Pass Through")) || (!FinalPixelOpCode.Text.Contains("Pass Through")))
+            if (!PixelOpCode.Text.Contains("Pass Through") || !FinalPixelOpCode.Text.Contains("Pass Through"))
             {
                 code += "// Setup for using pixel op" + cr;
-                if ((PixelOpCode.Text == "Desaturate") || (FinalPixelOpCode.Text == "Desaturate")) code += "private UnaryPixelOps.Desaturate desaturateOp = new UnaryPixelOps.Desaturate();" + cr;
-                if ((PixelOpCode.Text == "Invert")     || (FinalPixelOpCode.Text == "Invert"))     code += "private UnaryPixelOps.Invert invertOp = new UnaryPixelOps.Invert();" + cr;
+                if (PixelOpCode.Text == "Desaturate" || FinalPixelOpCode.Text == "Desaturate") code += "private UnaryPixelOps.Desaturate desaturateOp = new UnaryPixelOps.Desaturate();" + cr;
+                if (PixelOpCode.Text == "Invert" || FinalPixelOpCode.Text == "Invert")         code += "private UnaryPixelOps.Invert invertOp = new UnaryPixelOps.Invert();" + cr;
                 code += cr;
             }
 
@@ -729,7 +730,7 @@ namespace PaintDotNet.Effects
                 code += cr;
             }
 
-            if (SurfaceCode.Checked || EffectName != "")
+            if (SurfaceCode.Checked || EffectName.Length > 0)
             {
                 code += "protected override void OnDispose(bool disposing)" + cr;
                 code += "{" + cr;
@@ -741,7 +742,7 @@ namespace PaintDotNet.Effects
                     code += "        if (wrk != null) wrk.Dispose();" + cr;
                     code += "        wrk = null;" + cr;
                 }
-                if (EffectName != "")
+                if (EffectName.Length > 0)
                 {
                     code += "        if (" + EffectName + " != null) " + EffectName + ".Dispose();" + cr;
                     code += "        " + EffectName + " = null;" + cr;
@@ -764,6 +765,7 @@ namespace PaintDotNet.Effects
                 code += "    }" + cr;
                 code += cr;
             }
+
             if (EffectCode.Text.Contains("Gaussian Blur"))
             {
                 code += "    blurProps = blurEffect.CreatePropertyCollection();" + cr;
@@ -771,7 +773,7 @@ namespace PaintDotNet.Effects
                 code += "    BlurParameters.SetPropertyValue(GaussianBlurEffect.PropertyNames.Radius, Amount1);" + cr;
                 code += "    blurEffect.SetRenderInfo(BlurParameters, new RenderArgs(" + wrksurface + "), new RenderArgs(src));" + cr;
             }
-            if (EffectCode.Text.Contains("Contrast"))
+            else if (EffectCode.Text.Contains("Contrast"))
             {
                 code += "    bacProps = bacAdjustment.CreatePropertyCollection();" + cr;
                 code += "    PropertyBasedEffectConfigToken bacParameters = new PropertyBasedEffectConfigToken(bacProps);" + cr;
@@ -779,7 +781,7 @@ namespace PaintDotNet.Effects
                 code += "    bacParameters.SetPropertyValue(BrightnessAndContrastAdjustment.PropertyNames.Contrast, Amount2);" + cr;
                 code += "    bacAdjustment.SetRenderInfo(bacParameters, new RenderArgs(" + wrksurface + "), new RenderArgs(src));" + cr;
             }
-            if (EffectCode.Text.Contains("Frosted"))
+            else if (EffectCode.Text.Contains("Frosted"))
             {
                 code += "    frostedProps = frostedEffect.CreatePropertyCollection();" + cr;
                 code += "    PropertyBasedEffectConfigToken FrostedParameters = new PropertyBasedEffectConfigToken(frostedProps);" + cr;
@@ -788,7 +790,7 @@ namespace PaintDotNet.Effects
                 code += "    FrostedParameters.SetPropertyValue(FrostedGlassEffect.PropertyNames.NumSamples, Amount3);" + cr;
                 code += "    frostedEffect.SetRenderInfo(FrostedParameters, new RenderArgs(" + wrksurface + "), new RenderArgs(src));" + cr;
             }
-            if (EffectCode.Text.Contains("Add Noise"))
+            else if (EffectCode.Text.Contains("Add Noise"))
             {
                 code += "    noiseProps = noiseEffect.CreatePropertyCollection();" + cr;
                 code += "    PropertyBasedEffectConfigToken NoiseParameters = new PropertyBasedEffectConfigToken(noiseProps);" + cr;
@@ -797,7 +799,7 @@ namespace PaintDotNet.Effects
                 code += "    NoiseParameters.SetPropertyValue(AddNoiseEffect.PropertyNames.Coverage, Amount3);" + cr;
                 code += "    noiseEffect.SetRenderInfo(NoiseParameters, new RenderArgs(" + wrksurface + "), new RenderArgs(src));" + cr;
             }
-            if (EffectCode.Text.Contains("Motion Blur"))
+            else if (EffectCode.Text.Contains("Motion Blur"))
             {
                 code += "    blurProps = blurEffect.CreatePropertyCollection();" + cr;
                 code += "    PropertyBasedEffectConfigToken BlurParameters = new PropertyBasedEffectConfigToken(blurProps);" + cr;
@@ -806,7 +808,7 @@ namespace PaintDotNet.Effects
                 code += "    BlurParameters.SetPropertyValue(MotionBlurEffect.PropertyNames.Distance, Amount3);" + cr;
                 code += "    blurEffect.SetRenderInfo(BlurParameters, new RenderArgs(" + wrksurface + "), new RenderArgs(src));" + cr;
             }
-            if (EffectCode.Text.Contains("Clouds"))
+            else if (EffectCode.Text.Contains("Clouds"))
             {
                 code += "    cloudsProps = cloudsEffect.CreatePropertyCollection();" + cr;
                 code += "    PropertyBasedEffectConfigToken CloudsParameters = new PropertyBasedEffectConfigToken(cloudsProps);" + cr;
@@ -816,7 +818,7 @@ namespace PaintDotNet.Effects
                 code += "    CloudsParameters.SetPropertyValue(CloudsEffect.PropertyNames.Seed, (int)Amount4);" + cr;
                 code += "    cloudsEffect.SetRenderInfo(CloudsParameters, new RenderArgs(" + wrksurface + "), new RenderArgs(src));" + cr;
             }
-            if (EffectCode.Text.Contains("Oil Painting"))
+            else if (EffectCode.Text.Contains("Oil Painting"))
             {
                 code += "    oilpaintProps = oilpaintEffect.CreatePropertyCollection();" + cr;
                 code += "    PropertyBasedEffectConfigToken oilpaintParameters = new PropertyBasedEffectConfigToken(oilpaintProps);" + cr;
@@ -824,7 +826,7 @@ namespace PaintDotNet.Effects
                 code += "    oilpaintParameters.SetPropertyValue(OilPaintingEffect.PropertyNames.Coarseness, Amount2);" + cr;
                 code += "    oilpaintEffect.SetRenderInfo(oilpaintParameters, new RenderArgs(" + wrksurface + "), new RenderArgs(src));" + cr;
             }
-            if (EffectCode.Text.Contains("Reduce Noise"))
+            else if (EffectCode.Text.Contains("Reduce Noise"))
             {
                 code += "    reducenoiseProps = reducenoiseEffect.CreatePropertyCollection();" + cr;
                 code += "    PropertyBasedEffectConfigToken reducenoiseParameters = new PropertyBasedEffectConfigToken(reducenoiseProps);" + cr;
@@ -832,7 +834,7 @@ namespace PaintDotNet.Effects
                 code += "    reducenoiseParameters.SetPropertyValue(ReduceNoiseEffect.PropertyNames.Strength, Amount2);" + cr;
                 code += "    reducenoiseEffect.SetRenderInfo(reducenoiseParameters, new RenderArgs(" + wrksurface + "), new RenderArgs(src));" + cr;
             }
-            if (EffectCode.Text.Contains("Median"))
+            else if (EffectCode.Text.Contains("Median"))
             {
                 code += "    medianProps = medianEffect.CreatePropertyCollection();" + cr;
                 code += "    PropertyBasedEffectConfigToken medianParameters = new PropertyBasedEffectConfigToken(medianProps);" + cr;
@@ -840,28 +842,28 @@ namespace PaintDotNet.Effects
                 code += "    medianParameters.SetPropertyValue(MedianEffect.PropertyNames.Percentile, Amount2);" + cr;
                 code += "    medianEffect.SetRenderInfo(medianParameters, new RenderArgs(" + wrksurface + "), new RenderArgs(src));" + cr;
             }
-            if (EffectCode.Text.Contains("Edge Detect"))
+            else if (EffectCode.Text.Contains("Edge Detect"))
             {
                 code += "    edgeProps = edgedetectEffect.CreatePropertyCollection();" + cr;
                 code += "    PropertyBasedEffectConfigToken EdgeParameters = new PropertyBasedEffectConfigToken(edgeProps);" + cr;
                 code += "    EdgeParameters.SetPropertyValue(EdgeDetectEffect.PropertyNames.Angle, Amount1);" + cr;
                 code += "    edgedetectEffect.SetRenderInfo(EdgeParameters, new RenderArgs(" + wrksurface + "), new RenderArgs(src));" + cr;
             }
-            if (EffectCode.Text.Contains("Emboss"))
+            else if (EffectCode.Text.Contains("Emboss"))
             {
                 code += "    embossProps = embossEffect.CreatePropertyCollection();" + cr;
                 code += "    PropertyBasedEffectConfigToken EmbossParameters = new PropertyBasedEffectConfigToken(embossProps);" + cr;
                 code += "    EmbossParameters.SetPropertyValue(EmbossEffect.PropertyNames.Angle, Amount1);" + cr;
                 code += "    embossEffect.SetRenderInfo(EmbossParameters, new RenderArgs(" + wrksurface + "), new RenderArgs(src));" + cr;
             }
-            if (EffectCode.Text.Contains("Relief"))
+            else if (EffectCode.Text.Contains("Relief"))
             {
                 code += "    reliefProps = reliefEffect.CreatePropertyCollection();" + cr;
                 code += "    PropertyBasedEffectConfigToken ReliefParameters = new PropertyBasedEffectConfigToken(reliefProps);" + cr;
                 code += "    ReliefParameters.SetPropertyValue(ReliefEffect.PropertyNames.Angle, Amount1);" + cr;
                 code += "    reliefEffect.SetRenderInfo(ReliefParameters, new RenderArgs(" + wrksurface + "), new RenderArgs(src));" + cr;
             }
-            if (EffectCode.Text.Contains("Posterize"))
+            else if (EffectCode.Text.Contains("Posterize"))
             {
                 code += "    posterizeProps = posterizeEffect.CreatePropertyCollection();" + cr;
                 code += "    PropertyBasedEffectConfigToken PosterizeParameters = new PropertyBasedEffectConfigToken(posterizeProps);" + cr;
@@ -871,7 +873,7 @@ namespace PaintDotNet.Effects
                 code += "    PosterizeParameters.SetPropertyValue(PosterizeAdjustment.PropertyNames.LinkLevels, Amount4);" + cr;
                 code += "    posterizeEffect.SetRenderInfo(PosterizeParameters, new RenderArgs(" + wrksurface + "), new RenderArgs(src));" + cr;
             }
-            if (EffectCode.Text.Contains("Outline"))
+            else if (EffectCode.Text.Contains("Outline"))
             {
                 code += "    outlineProps = outlineEffect.CreatePropertyCollection();" + cr;
                 code += "    PropertyBasedEffectConfigToken outlineParameters = new PropertyBasedEffectConfigToken(outlineProps);" + cr;
@@ -879,14 +881,14 @@ namespace PaintDotNet.Effects
                 code += "    outlineParameters.SetPropertyValue(OutlineEffect.PropertyNames.Intensity, Amount2);" + cr;
                 code += "    outlineEffect.SetRenderInfo(outlineParameters, new RenderArgs(" + wrksurface + "), new RenderArgs(src));" + cr;
             }
-            if (EffectCode.Text.Contains("Sharpen"))
+            else if (EffectCode.Text.Contains("Sharpen"))
             {
                 code += "    sharpenProps = sharpenEffect.CreatePropertyCollection();" + cr;
                 code += "    PropertyBasedEffectConfigToken SharpenParameters = new PropertyBasedEffectConfigToken(sharpenProps);" + cr;
                 code += "    SharpenParameters.SetPropertyValue(SharpenEffect.PropertyNames.Amount, Amount1);" + cr;
                 code += "    sharpenEffect.SetRenderInfo(SharpenParameters, new RenderArgs(" + wrksurface + "), new RenderArgs(src));" + cr;
             }
-            if (EffectCode.Text.Contains("Pencil Sketch"))
+            else if (EffectCode.Text.Contains("Pencil Sketch"))
             {
                 code += "    pencilSketchProps = pencilSketchEffect.CreatePropertyCollection();" + cr;
                 code += "    PropertyBasedEffectConfigToken pencilSketchParameters = new PropertyBasedEffectConfigToken(pencilSketchProps);" + cr;
@@ -894,13 +896,13 @@ namespace PaintDotNet.Effects
                 code += "    pencilSketchParameters.SetPropertyValue(PencilSketchEffect.PropertyNames.ColorRange, Amount2);" + cr;
                 code += "    pencilSketchEffect.SetRenderInfo(pencilSketchParameters, new RenderArgs(" + wrksurface + "), new RenderArgs(src));" + cr;
             }
-            if (EffectCode.Text.Contains("Sepia"))
+            else if (EffectCode.Text.Contains("Sepia"))
             {
                 code += "    sepiaProps = sepiaEffect.CreatePropertyCollection();" + cr;
                 code += "    PropertyBasedEffectConfigToken SepiaParameters = new PropertyBasedEffectConfigToken(sepiaProps);" + cr;
                 code += "    sepiaEffect.SetRenderInfo(SepiaParameters, new RenderArgs(" + wrksurface + "), new RenderArgs(src));" + cr;
             }
-            if (EffectCode.Text.Contains("Ink Sketch"))
+            else if (EffectCode.Text.Contains("Ink Sketch"))
             {
                 code += "    inkProps = inkEffect.CreatePropertyCollection();" + cr;
                 code += "    PropertyBasedEffectConfigToken InkParameters = new PropertyBasedEffectConfigToken(inkProps);" + cr;
@@ -908,7 +910,7 @@ namespace PaintDotNet.Effects
                 code += "    InkParameters.SetPropertyValue(InkSketchEffect.PropertyNames.Coloring, Amount2);" + cr;
                 code += "    inkEffect.SetRenderInfo(InkParameters, new RenderArgs(" + wrksurface + "), new RenderArgs(src));" + cr;
             }
-            if (EffectCode.Text.Contains("Radial Blur"))
+            else if (EffectCode.Text.Contains("Radial Blur"))
             {
                 code += "    radialProps = radialEffect.CreatePropertyCollection();" + cr;
                 code += "    PropertyBasedEffectConfigToken RadialParameters = new PropertyBasedEffectConfigToken(radialProps);" + cr;
@@ -917,7 +919,7 @@ namespace PaintDotNet.Effects
                 code += "    RadialParameters.SetPropertyValue(RadialBlurEffect.PropertyNames.Quality, Amount3);" + cr;
                 code += "    radialEffect.SetRenderInfo(RadialParameters, new RenderArgs(" + wrksurface + "), new RenderArgs(src));" + cr;
             }
-            if (EffectCode.Text.Contains("Surface Blur"))
+            else if (EffectCode.Text.Contains("Surface Blur"))
             {
                 code += "    surfaceProps = surfaceEffect.CreatePropertyCollection();" + cr;
                 code += "    PropertyBasedEffectConfigToken SurfaceParameters = new PropertyBasedEffectConfigToken(surfaceProps);" + cr;
@@ -925,14 +927,14 @@ namespace PaintDotNet.Effects
                 code += "    SurfaceParameters.SetPropertyValue(SurfaceBlurEffect.PropertyName.Threshold, Amount2);" + cr;
                 code += "    surfaceEffect.SetRenderInfo(SurfaceParameters, new RenderArgs(" + wrksurface + "), new RenderArgs(src));" + cr;
             }
-            if (EffectCode.Text.Contains("Unfocus"))
+            else if (EffectCode.Text.Contains("Unfocus"))
             {
                 code += "    unfocusProps = unfocusEffect.CreatePropertyCollection();" + cr;
                 code += "    PropertyBasedEffectConfigToken UnfocusParameters = new PropertyBasedEffectConfigToken(unfocusProps);" + cr;
                 code += "    UnfocusParameters.SetPropertyValue(UnfocusEffect.PropertyNames.Radius, Amount1);" + cr;
                 code += "    unfocusEffect.SetRenderInfo(UnfocusParameters, new RenderArgs(" + wrksurface + "), new RenderArgs(src));" + cr;
             }
-            if (EffectCode.Text.Contains("Zoom Blur"))
+            else if (EffectCode.Text.Contains("Zoom Blur"))
             {
                 code += "    zoomProps = zoomEffect.CreatePropertyCollection();" + cr;
                 code += "    PropertyBasedEffectConfigToken ZoomParameters = new PropertyBasedEffectConfigToken(zoomProps);" + cr;
@@ -940,7 +942,7 @@ namespace PaintDotNet.Effects
                 code += "    ZoomParameters.SetPropertyValue(ZoomBlurEffect.PropertyNames.Offset, Amount2);" + cr;
                 code += "    zoomEffect.SetRenderInfo(ZoomParameters, new RenderArgs(" + wrksurface + "), new RenderArgs(src));" + cr;
             }
-            if (EffectCode.Text.Contains("Bulge"))
+            else if (EffectCode.Text.Contains("Bulge"))
             {
                 code += "    bulgeProps = bulgeEffect.CreatePropertyCollection();" + cr;
                 code += "    PropertyBasedEffectConfigToken BulgeParameters = new PropertyBasedEffectConfigToken(bulgeProps);" + cr;
@@ -948,7 +950,7 @@ namespace PaintDotNet.Effects
                 code += "    BulgeParameters.SetPropertyValue(BulgeEffect.PropertyNames.Offset, Amount2);" + cr;
                 code += "    bulgeEffect.SetRenderInfo(BulgeParameters, new RenderArgs(" + wrksurface + "), new RenderArgs(src));" + cr;
             }
-            if (EffectCode.Text.Contains("Crystalize"))
+            else if (EffectCode.Text.Contains("Crystalize"))
             {
                 code += "    crystalizeProps = crystalizeEffect.CreatePropertyCollection();" + cr;
                 code += "    PropertyBasedEffectConfigToken CrystalizeParameters = new PropertyBasedEffectConfigToken(crystalizeProps);" + cr;
@@ -957,7 +959,7 @@ namespace PaintDotNet.Effects
                 code += "    CrystalizeParameters.SetPropertyValue(CrystalizeEffect.PropertyNames.Seed, (int)Amount3);" + cr;
                 code += "    crystalizeEffect.SetRenderInfo(CrystalizeParameters, new RenderArgs(" + wrksurface + "), new RenderArgs(src));" + cr;
             }
-            if (EffectCode.Text.Contains("Dents"))
+            else if (EffectCode.Text.Contains("Dents"))
             {
                 code += "    dentsProps = dentsEffect.CreatePropertyCollection();" + cr;
                 code += "    PropertyBasedEffectConfigToken DentsParameters = new PropertyBasedEffectConfigToken(dentsProps);" + cr;
@@ -969,14 +971,14 @@ namespace PaintDotNet.Effects
                 code += "    DentsParameters.SetPropertyValue(DentsEffect.PropertyNames.Seed, (int)Amount6);" + cr;
                 code += "    dentsEffect.SetRenderInfo(DentsParameters, new RenderArgs(" + wrksurface + "), new RenderArgs(src));" + cr;
             }
-            if (EffectCode.Text.Contains("Pixelate"))
+            else if (EffectCode.Text.Contains("Pixelate"))
             {
                 code += "    pixelateProps = pixelateEffect.CreatePropertyCollection();" + cr;
                 code += "    PropertyBasedEffectConfigToken PixelateParameters = new PropertyBasedEffectConfigToken(pixelateProps);" + cr;
                 code += "    PixelateParameters.SetPropertyValue(PixelateEffect.PropertyNames.CellSize, Amount1);" + cr;
                 code += "    pixelateEffect.SetRenderInfo(PixelateParameters, new RenderArgs(" + wrksurface + "), new RenderArgs(src));" + cr;
             }
-            if (EffectCode.Text.Contains("Polar Inversion"))
+            else if (EffectCode.Text.Contains("Polar Inversion"))
             {
                 code += "    polarProps = polarEffect.CreatePropertyCollection();" + cr;
                 code += "    PropertyBasedEffectConfigToken PolarParameters = new PropertyBasedEffectConfigToken(polarProps);" + cr;
@@ -986,7 +988,7 @@ namespace PaintDotNet.Effects
                 code += "    PolarParameters.SetPropertyValue(PolarInversionEffect.PropertyNames.Quality, Amount4);" + cr;
                 code += "    polarEffect.SetRenderInfo(PolarParameters, new RenderArgs(" + wrksurface + "), new RenderArgs(src));" + cr;
             }
-            if (EffectCode.Text.Contains("Tile Reflection"))
+            else if (EffectCode.Text.Contains("Tile Reflection"))
             {
                 code += "    tileProps = tileEffect.CreatePropertyCollection();" + cr;
                 code += "    PropertyBasedEffectConfigToken TileParameters = new PropertyBasedEffectConfigToken(tileProps);" + cr;
@@ -996,7 +998,7 @@ namespace PaintDotNet.Effects
                 code += "    TileParameters.SetPropertyValue(TileEffect.PropertyNames.Quality, Amount4);" + cr;
                 code += "    tileEffect.SetRenderInfo(TileParameters, new RenderArgs(" + wrksurface + "), new RenderArgs(src));" + cr;
             }
-            if (EffectCode.Text.Contains("Twist"))
+            else if (EffectCode.Text.Contains("Twist"))
             {
                 code += "    twistProps = twistEffect.CreatePropertyCollection();" + cr;
                 code += "    PropertyBasedEffectConfigToken TwistParameters = new PropertyBasedEffectConfigToken(twistProps);" + cr;
@@ -1006,7 +1008,7 @@ namespace PaintDotNet.Effects
                 code += "    TwistParameters.SetPropertyValue(TwistEffect.PropertyNames.Quality, Amount4);" + cr;
                 code += "    twistEffect.SetRenderInfo(TwistParameters, new RenderArgs(" + wrksurface + "), new RenderArgs(src));" + cr;
             }
-            if (EffectCode.Text.Contains("Glow"))
+            else if (EffectCode.Text.Contains("Glow"))
             {
                 code += "    glowProps = glowEffect.CreatePropertyCollection();" + cr;
                 code += "    PropertyBasedEffectConfigToken GlowParameters = new PropertyBasedEffectConfigToken(glowProps);" + cr;
@@ -1015,7 +1017,7 @@ namespace PaintDotNet.Effects
                 code += "    GlowParameters.SetPropertyValue(GlowEffect.PropertyNames.Contrast, Amount3);" + cr;
                 code += "    glowEffect.SetRenderInfo(GlowParameters, new RenderArgs(" + wrksurface + "), new RenderArgs(src));" + cr;
             }
-            if (EffectCode.Text.Contains("Soften Portrait"))
+            else if (EffectCode.Text.Contains("Soften Portrait"))
             {
                 code += "    portraitProps = portraitEffect.CreatePropertyCollection();" + cr;
                 code += "    PropertyBasedEffectConfigToken PortraitParameters = new PropertyBasedEffectConfigToken(portraitProps);" + cr;
@@ -1024,7 +1026,7 @@ namespace PaintDotNet.Effects
                 code += "    PortraitParameters.SetPropertyValue(SoftenPortraitEffect.PropertyNames.Warmth, Amount3);" + cr;
                 code += "    softenEffect.SetRenderInfo(PortraitParameters, new RenderArgs(" + wrksurface + "), new RenderArgs(src));" + cr;
             }
-            if (EffectCode.Text.Contains("Vignette"))
+            else if (EffectCode.Text.Contains("Vignette"))
             {
                 code += "    vignetteProps = vignetteEffect.CreatePropertyCollection();" + cr;
                 code += "    PropertyBasedEffectConfigToken VignetteParameters = new PropertyBasedEffectConfigToken(vignetteProps);" + cr;
@@ -1033,7 +1035,7 @@ namespace PaintDotNet.Effects
                 code += "    VignetteParameters.SetPropertyValue(VignetteEffect.PropertyNames.Amount, Amount3);" + cr;
                 code += "    vignetteEffect.SetRenderInfo(VignetteParameters, new RenderArgs(" + wrksurface + "), new RenderArgs(src));" + cr;
             }
-            if (EffectCode.Text.Contains("Julia"))
+            else if (EffectCode.Text.Contains("Julia"))
             {
                 code += "    juliaProps = juliaEffect.CreatePropertyCollection();" + cr;
                 code += "    PropertyBasedEffectConfigToken JuliaParameters = new PropertyBasedEffectConfigToken(juliaProps);" + cr;
@@ -1043,7 +1045,7 @@ namespace PaintDotNet.Effects
                 code += "    JuliaParameters.SetPropertyValue(JuliaFractalEffect.PropertyNames.Quality, Amount4);" + cr;
                 code += "    juliaEffect.SetRenderInfo(JuliaParameters, new RenderArgs(" + wrksurface + "), new RenderArgs(src));" + cr;
             }
-            if (EffectCode.Text.Contains("Mandelbrot"))
+            else if (EffectCode.Text.Contains("Mandelbrot"))
             {
                 code += "    mandelbrotProps = mandelbrotEffect.CreatePropertyCollection();" + cr;
                 code += "    PropertyBasedEffectConfigToken MandelbrotParameters = new PropertyBasedEffectConfigToken(mandelbrotProps);" + cr;
@@ -1054,6 +1056,7 @@ namespace PaintDotNet.Effects
                 code += "    MandelbrotParameters.SetPropertyValue(MandelbrotFractalEffect.PropertyNames.InvertColors, Amount5);" + cr;
                 code += "    mandelbrotEffect.SetRenderInfo(MandelbrotParameters, new RenderArgs(" + wrksurface + "), new RenderArgs(src));" + cr;
             }
+
             if (EffectCode.Text.Contains("Empty") || NoStyle.Checked)
             {
                 code += "    " + wrksurface + ".Clear(ColorBgra.Transparent);" + cr;
@@ -1062,6 +1065,7 @@ namespace PaintDotNet.Effects
             {
                 code += "    " + wrksurface + ".CopySurface(src);" + cr;
             }
+
             // finish PreRender
             code += "}" + cr + cr;
             code += "// Here is the main render loop function" + cr;
@@ -1110,9 +1114,9 @@ namespace PaintDotNet.Effects
                 code += "    int BrushWidth = (int)EnvironmentParameters.BrushWidth;" + cr;
                 code += cr;
             }
-                        
+
             // Now, call the actual function if this is a complex effect
-            if ((EffectCode.Text.Contains("Copy")) && (!BlendingCode.Text.Contains("Pass Through")))
+            if (EffectCode.Text.Contains("Copy") && !BlendingCode.Text.Contains("Pass Through"))
             {
                 code += "    // Call the copy function" + cr;
                 code += "    " + wrksurface + ".CopySurface(src,rect.Location,rect);" + cr;
@@ -1127,237 +1131,238 @@ namespace PaintDotNet.Effects
                 code += cr;
                 code += "    // Now in the main render loop, the " + wrksurface + " canvas has a blurred version of the src canvas" + cr;
             }
-            if (EffectCode.Text.Contains("Contrast"))
+            else if (EffectCode.Text.Contains("Contrast"))
             {
                 code += "    // Call the Brightness and Contrast Adjustment function" + cr;
                 code += "    bacAdjustment.Render(new Rectangle[1] {rect},0,1);" + cr;
                 code += cr;
                 code += "    // Now in the main render loop, the " + wrksurface + " canvas has an adjusted version of the src canvas" + cr;
             }
-            if (EffectCode.Text.Contains("Frosted"))
+            else if (EffectCode.Text.Contains("Frosted"))
             {
                 code += "    // Call the Frosted Glass function" + cr;
                 code += "    frostedEffect.Render(new Rectangle[1] { rect }, 0, 1);" + cr;
                 code += cr;
                 code += "    // Now in the main render loop, the " + wrksurface + " canvas has a frosted version of the src canvas" + cr;
             }
-            if (EffectCode.Text.Contains("Add Noise"))
+            else if (EffectCode.Text.Contains("Add Noise"))
             {
                 code += "    // Call the Add Noise function" + cr;
                 code += "    noiseEffect.Render(new Rectangle[1] { rect }, 0, 1);" + cr;
                 code += cr;
                 code += "    // Now in the main render loop, the " + wrksurface + " canvas has a noisy version of the src canvas" + cr;
             }
-            if (EffectCode.Text.Contains("Motion Blur"))
+            else if (EffectCode.Text.Contains("Motion Blur"))
             {
                 code += "    // Call the Motion Blur function" + cr;
                 code += "    blurEffect.Render(new Rectangle[1] {rect},0,1);" + cr;
                 code += cr;
                 code += "    // Now in the main render loop, the " + wrksurface + " canvas has a blurred version of the src canvas" + cr;
             }
-            if (EffectCode.Text.Contains("Clouds"))
+            else if (EffectCode.Text.Contains("Clouds"))
             {
                 code += "    // Call the Clouds function using Black and White" + cr;
                 code += "    cloudsEffect.Render(new Rectangle[1] {rect},0,1);" + cr;
                 code += cr;
                 code += "    // Now in the main render loop, the " + wrksurface + " canvas has a render of clouds" + cr;
             }
-            if (EffectCode.Text.Contains("Oil Painting"))
+            else if (EffectCode.Text.Contains("Oil Painting"))
             {
                 code += "    // Call the Oil Painting function" + cr;
                 code += "    oilpaintEffect.Render(new Rectangle[1] {rect},0,1);" + cr;
                 code += cr;
                 code += "    // Now in the main render loop, the " + wrksurface + " canvas has an oil painted version of the src canvas" + cr;
             }
-            if (EffectCode.Text.Contains("Reduce Noise"))
+            else if (EffectCode.Text.Contains("Reduce Noise"))
             {
                 code += "    // Call the Reduce Noise function" + cr;
                 code += "    reducenoiseEffect.Render(new Rectangle[1] {rect},0,1);" + cr;
                 code += cr;
                 code += "    // Now in the main render loop, the " + wrksurface + " canvas has a less noisy version of the src canvas" + cr;
             }
-            if (EffectCode.Text.Contains("Median"))
+            else if (EffectCode.Text.Contains("Median"))
             {
                 code += "    // Call the Median function" + cr;
                 code += "    medianEffect.Render(new Rectangle[1] {rect},0,1);" + cr;
                 code += cr;
                 code += "    // Now in the main render loop, the " + wrksurface + " canvas has a median version of the src canvas" + cr;
             }
-            if (EffectCode.Text.Contains("Edge Detect"))
+            else if (EffectCode.Text.Contains("Edge Detect"))
             {
                 code += "    // Call the Edge Detect function" + cr;
                 code += "    edgedetectEffect.Render(new Rectangle[1] {rect},0,1);" + cr;
                 code += cr;
                 code += "    // Now in the main render loop, the " + wrksurface + " canvas has an edge detect version of the src canvas" + cr;
             }
-            if (EffectCode.Text.Contains("Emboss"))
+            else if (EffectCode.Text.Contains("Emboss"))
             {
                 code += "    // Call the Emboss function" + cr;
                 code += "    embossEffect.Render(new Rectangle[1] {rect},0,1);" + cr;
                 code += cr;
                 code += "    // Now in the main render loop, the " + wrksurface + " canvas has an embossed version of the src canvas" + cr;
             }
-            if (EffectCode.Text.Contains("Relief"))
+            else if (EffectCode.Text.Contains("Relief"))
             {
                 code += "    // Call the Relief function" + cr;
                 code += "    reliefEffect.Render(new Rectangle[1] {rect},0,1);" + cr;
                 code += cr;
                 code += "    // Now in the main render loop, the " + wrksurface + " canvas has a relief version of the src canvas" + cr;
             }
-            if (EffectCode.Text.Contains("Posterize"))
+            else if (EffectCode.Text.Contains("Posterize"))
             {
                 code += "    // Call the Posterize function" + cr;
                 code += "    posterizeEffect.Render(new Rectangle[1] {rect},0,1);" + cr;
                 code += cr;
                 code += "    // Now in the main render loop, the " + wrksurface + " canvas has a posterized version of the src canvas" + cr;
             }
-            if (EffectCode.Text.Contains("Outline"))
+            else if (EffectCode.Text.Contains("Outline"))
             {
                 code += "    // Call the Outline function" + cr;
                 code += "    outlineEffect.Render(new Rectangle[1] { rect }, 0, 1);" + cr;
                 code += cr;
                 code += "    // Now in the main render loop, the " + wrksurface + " canvas has an outlined version of the src canvas" + cr;
             }
-            if (EffectCode.Text.Contains("Sharpen"))
+            else if (EffectCode.Text.Contains("Sharpen"))
             {
                 code += "    // Call the Sharpen function" + cr;
                 code += "    sharpenEffect.Render(new Rectangle[1] { rect }, 0, 1);" + cr;
                 code += cr;
                 code += "    // Now in the main render loop, the " + wrksurface + " canvas has a sharpened version of the src canvas" + cr;
             }
-            if (EffectCode.Text.Contains("Pencil Sketch"))
+            else if (EffectCode.Text.Contains("Pencil Sketch"))
             {
                 code += "    // Call the Pencil Sketch function" + cr;
                 code += "    pencilSketchEffect.Render(new Rectangle[1] { rect }, 0, 1);" + cr;
                 code += cr;
                 code += "    // Now in the main render loop, the " + wrksurface + " canvas has an sketched version of the src canvas" + cr;
             }
-            if (EffectCode.Text.Contains("Sepia"))
+            else if (EffectCode.Text.Contains("Sepia"))
             {
                 code += "    // Call the Sepia function" + cr;
                 code += "    sepiaEffect.Render(new Rectangle[1] {rect},0,1);" + cr;
                 code += cr;
                 code += "    // Now in the main render loop, the " + wrksurface + " canvas has a sepia version of the src canvas" + cr;
             }
-            if (EffectCode.Text.Contains("Bulge"))
+            else if (EffectCode.Text.Contains("Bulge"))
             {
                 code += "    // Call the Bulge function" + cr;
                 code += "    bulgeEffect.Render(new Rectangle[1] {rect},0,1);" + cr;
                 code += cr;
                 code += "    // Now in the main render loop, the " + wrksurface + " canvas is Bulged" + cr;
             }
-            if (EffectCode.Text.Contains("Crystalize"))
+            else if (EffectCode.Text.Contains("Crystalize"))
             {
                 code += "    // Call the Crystalize function" + cr;
                 code += "    crystalizeEffect.Render(new Rectangle[1] {rect},0,1);" + cr;
                 code += cr;
                 code += "    // Now in the main render loop, the " + wrksurface + " canvas is Crystalized" + cr;
             }
-            if (EffectCode.Text.Contains("Dents"))
+            else if (EffectCode.Text.Contains("Dents"))
             {
                 code += "    // Call the Dents function" + cr;
                 code += "    dentsEffect.Render(new Rectangle[1] {rect},0,1);" + cr;
                 code += cr;
                 code += "    // Now in the main render loop, the " + wrksurface + " canvas has Dents" + cr;
             }
-            if (EffectCode.Text.Contains("Glow"))
+            else if (EffectCode.Text.Contains("Glow"))
             {
                 code += "    // Call the Glow function" + cr;
                 code += "    glowEffect.Render(new Rectangle[1] {rect},0,1);" + cr;
                 code += cr;
                 code += "    // Now in the main render loop, the " + wrksurface + " canvas has a Glow" + cr;
             }
-            if (EffectCode.Text.Contains("Ink Sketch"))
+            else if (EffectCode.Text.Contains("Ink Sketch"))
             {
                 code += "    // Call the Ink Sketch function" + cr;
                 code += "    inkEffect.Render(new Rectangle[1] {rect},0,1);" + cr;
                 code += cr;
                 code += "    // Now in the main render loop, the " + wrksurface + " canvas has an Ink Sketch" + cr;
             }
-            if (EffectCode.Text.Contains("Julia"))
+            else if (EffectCode.Text.Contains("Julia"))
             {
                 code += "    // Call the Julia function" + cr;
                 code += "    juliaEffect.Render(new Rectangle[1] {rect},0,1);" + cr;
                 code += cr;
                 code += "    // Now in the main render loop, the " + wrksurface + " canvas has a render of the Julia fractal" + cr;
             }
-            if (EffectCode.Text.Contains("Mandelbrot"))
+            else if (EffectCode.Text.Contains("Mandelbrot"))
             {
                 code += "    // Call the Mandelbrot function" + cr;
                 code += "    mandelbrotEffect.Render(new Rectangle[1] {rect},0,1);" + cr;
                 code += cr;
                 code += "    // Now in the main render loop, the " + wrksurface + " canvas has a render of the Mandelbrot fractal" + cr;
             }
-            if (EffectCode.Text.Contains("Pixelate"))
+            else if (EffectCode.Text.Contains("Pixelate"))
             {
                 code += "    // Call the Pixelate function" + cr;
                 code += "    pixelateEffect.Render(new Rectangle[1] {rect},0,1);" + cr;
                 code += cr;
                 code += "    // Now in the main render loop, the " + wrksurface + " canvas is Pixelated" + cr;
             }
-            if (EffectCode.Text.Contains("Polar Inversion"))
+            else if (EffectCode.Text.Contains("Polar Inversion"))
             {
                 code += "    // Call the Polar Inversion function" + cr;
                 code += "    polarEffect.Render(new Rectangle[1] {rect},0,1);" + cr;
                 code += cr;
                 code += "    // Now in the main render loop, the " + wrksurface + " canvas has a Polar Inversion" + cr;
             }
-            if (EffectCode.Text.Contains("Radial Blur"))
+            else if (EffectCode.Text.Contains("Radial Blur"))
             {
                 code += "    // Call the Radial Blur function" + cr;
                 code += "    radialEffect.Render(new Rectangle[1] {rect},0,1);" + cr;
                 code += cr;
                 code += "    // Now in the main render loop, the " + wrksurface + " canvas has a Radial Blur" + cr;
             }
-            if (EffectCode.Text.Contains("Soften Portrait"))
+            else if (EffectCode.Text.Contains("Soften Portrait"))
             {
                 code += "    // Call the Soften Portrait function" + cr;
                 code += "    portraitEffect.Render(new Rectangle[1] {rect},0,1);" + cr;
                 code += cr;
                 code += "    // Now in the main render loop, the " + wrksurface + " canvas has a Softend Portrait" + cr;
             }
-            if (EffectCode.Text.Contains("Surface Blur"))
+            else if (EffectCode.Text.Contains("Surface Blur"))
             {
                 code += "    // Call the Surface Blur function" + cr;
                 code += "    surfaceEffect.Render(new Rectangle[1] {rect},0,1);" + cr;
                 code += cr;
                 code += "    // Now in the main render loop, the " + wrksurface + " canvas is blurred" + cr;
             }
-            if (EffectCode.Text.Contains("Tile Reflection"))
+            else if (EffectCode.Text.Contains("Tile Reflection"))
             {
                 code += "    // Call the Tile Reflection function" + cr;
                 code += "    tileEffect.Render(new Rectangle[1] {rect},0,1);" + cr;
                 code += cr;
                 code += "    // Now in the main render loop, the " + wrksurface + " canvas has a Tile Reflection" + cr;
             }
-            if (EffectCode.Text.Contains("Twist"))
+            else if (EffectCode.Text.Contains("Twist"))
             {
                 code += "    // Call the Twist function" + cr;
                 code += "    twistEffect.Render(new Rectangle[1] {rect},0,1);" + cr;
                 code += cr;
                 code += "    // Now in the main render loop, the " + wrksurface + " canvas is Twisted" + cr;
             }
-            if (EffectCode.Text.Contains("Unfocus"))
+            else if (EffectCode.Text.Contains("Unfocus"))
             {
                 code += "    // Call the Unfocus function" + cr;
                 code += "    unfocusEffect.Render(new Rectangle[1] {rect},0,1);" + cr;
                 code += cr;
                 code += "    // Now in the main render loop, the " + wrksurface + " canvas is Unfocused" + cr;
             }
-            if (EffectCode.Text.Contains("Vignette"))
+            else if (EffectCode.Text.Contains("Vignette"))
             {
                 code += "    // Call the Vignette function" + cr;
                 code += "    vignetteEffect.Render(new Rectangle[1] {rect},0,1);" + cr;
                 code += cr;
                 code += "    // Now in the main render loop, the " + wrksurface + " canvas has a Vignette" + cr;
             }
-            if (EffectCode.Text.Contains("Zoom Blur"))
+            else if (EffectCode.Text.Contains("Zoom Blur"))
             {
                 code += "    // Call the Zoom Blur function" + cr;
                 code += "    zoomEffect.Render(new Rectangle[1] {rect},0,1);" + cr;
                 code += cr;
                 code += "    // Now in the main render loop, the " + wrksurface + " canvas is Zoom Blurred" + cr;
             }
+
             if (NoStyle.Checked)
             {
                 code += "    using (Graphics g = new RenderArgs(" + wrksurface + ").Graphics)" + cr;
@@ -1377,19 +1382,19 @@ namespace PaintDotNet.Effects
                 code += "    }" + cr;
                 string blendOp = "normalOp";
                 if (BlendingCode.Text == "Multiply") blendOp = "multiplyOp";
-                if (BlendingCode.Text == "Darken") blendOp = "darkenOp";
-                if (BlendingCode.Text == "Additive") blendOp = "additiveOp";
-                if (BlendingCode.Text == "ColorBurn") blendOp = "colorburnOp";
-                if (BlendingCode.Text == "ColorDodge") blendOp = "colordodgeOp";
-                if (BlendingCode.Text == "Difference") blendOp = "differenceOp";
-                if (BlendingCode.Text == "Glow") blendOp = "glowOp";
-                if (BlendingCode.Text == "Lighten") blendOp = "lightenOp";
-                if (BlendingCode.Text == "Negation") blendOp = "negationOp";
-                if (BlendingCode.Text == "Overlay") blendOp = "overlayOp";
-                if (BlendingCode.Text == "Reflect") blendOp = "reflectOp";
-                if (BlendingCode.Text == "Screen") blendOp = "screenOp";
-                if (BlendingCode.Text == "Xor") blendOp = "xorOp";
-                if (BlendingCode.Text == "User selected blending mode") blendOp = "Amount" + controls;
+                else if (BlendingCode.Text == "Darken") blendOp = "darkenOp";
+                else if (BlendingCode.Text == "Additive") blendOp = "additiveOp";
+                else if (BlendingCode.Text == "ColorBurn") blendOp = "colorburnOp";
+                else if (BlendingCode.Text == "ColorDodge") blendOp = "colordodgeOp";
+                else if (BlendingCode.Text == "Difference") blendOp = "differenceOp";
+                else if (BlendingCode.Text == "Glow") blendOp = "glowOp";
+                else if (BlendingCode.Text == "Lighten") blendOp = "lightenOp";
+                else if (BlendingCode.Text == "Negation") blendOp = "negationOp";
+                else if (BlendingCode.Text == "Overlay") blendOp = "overlayOp";
+                else if (BlendingCode.Text == "Reflect") blendOp = "reflectOp";
+                else if (BlendingCode.Text == "Screen") blendOp = "screenOp";
+                else if (BlendingCode.Text == "Xor") blendOp = "xorOp";
+                else if (BlendingCode.Text == "User selected blending mode") blendOp = "Amount" + controls;
                 code += "    " + blendOp + ".Apply(dst, src, " + wrksurface + ", rect);" + cr;
             }
             else
@@ -1454,6 +1459,8 @@ namespace PaintDotNet.Effects
                 }
                 code += cr;
 
+                string additionalindent = "";
+
                 // Are we near a selection outline?
                 if (SelectionCode.Checked)
                 {
@@ -1467,32 +1474,32 @@ namespace PaintDotNet.Effects
 
                 // Add selected Pixel Op here
                 if (PixelOpCode.Text == "Desaturate") code += additionalindent + "            CurrentPixel = desaturateOp.Apply(CurrentPixel);" + cr;
-                if (PixelOpCode.Text == "Invert") code += additionalindent + "            CurrentPixel = invertOp.Apply(CurrentPixel);" + cr;
+                else if (PixelOpCode.Text == "Invert") code += additionalindent + "            CurrentPixel = invertOp.Apply(CurrentPixel);" + cr;
 
                 code += cr;
 
                 // Add selected Blend Op here
                 if (BlendingCode.Text == "Normal") code += additionalindent + "            CurrentPixel = normalOp.Apply(" + blendtop + ", CurrentPixel);" + cr;
-                if (BlendingCode.Text == "Multiply") code += additionalindent + "            CurrentPixel = multiplyOp.Apply(" + blendtop + ", CurrentPixel);" + cr;
-                if (BlendingCode.Text == "Darken") code += additionalindent + "            CurrentPixel = darkenOp.Apply(" + blendtop + ", CurrentPixel);" + cr;
-                if (BlendingCode.Text == "Additive") code += additionalindent + "            CurrentPixel = additiveOp.Apply(" + blendtop + ", CurrentPixel);" + cr;
-                if (BlendingCode.Text == "ColorBurn") code += additionalindent + "            CurrentPixel = colorburnOp.Apply(" + blendtop + ", CurrentPixel);" + cr;
-                if (BlendingCode.Text == "ColorDodge") code += additionalindent + "            CurrentPixel = colordodgeOp.Apply(" + blendtop + ", CurrentPixel);" + cr;
-                if (BlendingCode.Text == "Difference") code += additionalindent + "            CurrentPixel = differenceOp.Apply(" + blendtop + ", CurrentPixel);" + cr;
-                if (BlendingCode.Text == "Glow") code += additionalindent + "            CurrentPixel = glowOp.Apply(" + blendtop + ", CurrentPixel);" + cr;
-                if (BlendingCode.Text == "Lighten") code += additionalindent + "            CurrentPixel = lightenOp.Apply(" + blendtop + ", CurrentPixel);" + cr;
-                if (BlendingCode.Text == "Negation") code += additionalindent + "            CurrentPixel = negationOp.Apply(" + blendtop + ", CurrentPixel);" + cr;
-                if (BlendingCode.Text == "Overlay") code += additionalindent + "            CurrentPixel = overlayOp.Apply(" + blendtop + ", CurrentPixel);" + cr;
-                if (BlendingCode.Text == "Reflect") code += additionalindent + "            CurrentPixel = reflectOp.Apply(" + blendtop + ", CurrentPixel);" + cr;
-                if (BlendingCode.Text == "Screen") code += additionalindent + "            CurrentPixel = screenOp.Apply(" + blendtop + ", CurrentPixel);" + cr;
-                if (BlendingCode.Text == "Xor") code += additionalindent + "            CurrentPixel = xorOp.Apply(" + blendtop + ", CurrentPixel);" + cr;
-                if (BlendingCode.Text == "User selected blending mode") code += additionalindent + "            CurrentPixel = Amount" + controls + ".Apply(" + blendtop + ", CurrentPixel);" + cr;
+                else if (BlendingCode.Text == "Multiply") code += additionalindent + "            CurrentPixel = multiplyOp.Apply(" + blendtop + ", CurrentPixel);" + cr;
+                else if (BlendingCode.Text == "Darken") code += additionalindent + "            CurrentPixel = darkenOp.Apply(" + blendtop + ", CurrentPixel);" + cr;
+                else if (BlendingCode.Text == "Additive") code += additionalindent + "            CurrentPixel = additiveOp.Apply(" + blendtop + ", CurrentPixel);" + cr;
+                else if (BlendingCode.Text == "ColorBurn") code += additionalindent + "            CurrentPixel = colorburnOp.Apply(" + blendtop + ", CurrentPixel);" + cr;
+                else if (BlendingCode.Text == "ColorDodge") code += additionalindent + "            CurrentPixel = colordodgeOp.Apply(" + blendtop + ", CurrentPixel);" + cr;
+                else if (BlendingCode.Text == "Difference") code += additionalindent + "            CurrentPixel = differenceOp.Apply(" + blendtop + ", CurrentPixel);" + cr;
+                else if (BlendingCode.Text == "Glow") code += additionalindent + "            CurrentPixel = glowOp.Apply(" + blendtop + ", CurrentPixel);" + cr;
+                else if (BlendingCode.Text == "Lighten") code += additionalindent + "            CurrentPixel = lightenOp.Apply(" + blendtop + ", CurrentPixel);" + cr;
+                else if (BlendingCode.Text == "Negation") code += additionalindent + "            CurrentPixel = negationOp.Apply(" + blendtop + ", CurrentPixel);" + cr;
+                else if (BlendingCode.Text == "Overlay") code += additionalindent + "            CurrentPixel = overlayOp.Apply(" + blendtop + ", CurrentPixel);" + cr;
+                else if (BlendingCode.Text == "Reflect") code += additionalindent + "            CurrentPixel = reflectOp.Apply(" + blendtop + ", CurrentPixel);" + cr;
+                else if (BlendingCode.Text == "Screen") code += additionalindent + "            CurrentPixel = screenOp.Apply(" + blendtop + ", CurrentPixel);" + cr;
+                else if (BlendingCode.Text == "Xor") code += additionalindent + "            CurrentPixel = xorOp.Apply(" + blendtop + ", CurrentPixel);" + cr;
+                else if (BlendingCode.Text == "User selected blending mode") code += additionalindent + "            CurrentPixel = Amount" + controls + ".Apply(" + blendtop + ", CurrentPixel);" + cr;
 
                 code += cr;
 
                 // Add selected Pixel Op here
                 if (FinalPixelOpCode.Text == "Desaturate") code += additionalindent + "            CurrentPixel = desaturateOp.Apply(CurrentPixel);" + cr;
-                if (FinalPixelOpCode.Text == "Invert") code += additionalindent + "            CurrentPixel = invertOp.Apply(CurrentPixel);" + cr;
+                else if (FinalPixelOpCode.Text == "Invert") code += additionalindent + "            CurrentPixel = invertOp.Apply(CurrentPixel);" + cr;
 
                 // HSV Color mode
                 if (HsvColorMode.Checked)
@@ -1566,14 +1573,7 @@ namespace PaintDotNet.Effects
 
         private void SurfaceCode_CheckedChanged(object sender, EventArgs e)
         {
-            if (SurfaceCode.Checked)
-            {
-                dstLabel.Text = "WRK\r\nIMAGE";
-            }
-            else
-            {
-                dstLabel.Text = "DST\r\nIMAGE";
-            }
+            dstLabel.Text = SurfaceCode.Checked ? "WRK\r\nIMAGE" : "DST\r\nIMAGE";
         }
 
         private void NoStyle_CheckedChanged(object sender, EventArgs e)

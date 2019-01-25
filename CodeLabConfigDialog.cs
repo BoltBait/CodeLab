@@ -401,15 +401,18 @@ namespace PaintDotNet.Effects
 
         private bool SaveAsScript()
         {
-            SaveFileDialog sfd = new SaveFileDialog();
-            sfd.Title = "Save User Script";
-            sfd.DefaultExt = ".cs";
-            sfd.Filter = "C# Code Files (*.CS)|*.cs";
-            sfd.OverwritePrompt = true;
-            sfd.AddExtension = true;
-            sfd.FileName = (FileName == "Untitled") ? "MyScript.cs" : FileName + ".cs";
-            sfd.InitialDirectory = Settings.LastSourceDirectory;
-            sfd.FileOk += (object sender, System.ComponentModel.CancelEventArgs e) =>
+            SaveFileDialog sfd = new SaveFileDialog
+            {
+                Title = "Save User Script",
+                DefaultExt = ".cs",
+                Filter = "C# Code Files (*.CS)|*.cs",
+                OverwritePrompt = true,
+                AddExtension = true,
+                FileName = (FileName == "Untitled") ? "MyScript.cs" : FileName + ".cs",
+                InitialDirectory = Settings.LastSourceDirectory
+            };
+
+            sfd.FileOk += (sender, e) =>
             {
                 if (!char.IsLetter(Path.GetFileName(sfd.FileName), 0))
                 {
@@ -442,13 +445,14 @@ namespace PaintDotNet.Effects
 
         private bool LoadScript()
         {
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Title = "Load User Script";
-            ofd.DefaultExt = ".cs";
-            ofd.Filter = "C# Code Files (*.CS)|*.cs";
-            ofd.DefaultExt = ".cs";
-            ofd.Multiselect = false;
-            ofd.InitialDirectory = Settings.LastSourceDirectory;
+            OpenFileDialog ofd = new OpenFileDialog
+            {
+                Title = "Load User Script",
+                DefaultExt = ".cs",
+                Filter = "C# Code Files (*.CS)|*.cs",
+                Multiselect = false,
+                InitialDirectory = Settings.LastSourceDirectory
+            };
 
             bool loaded = false;
             if (ofd.ShowDialog() == DialogResult.OK)
@@ -1854,8 +1858,10 @@ namespace PaintDotNet.Effects
                 ToolStripSeparator toolStripSeparator = new ToolStripSeparator();
                 recentsList.Add(toolStripSeparator);
 
-                ToolStripMenuItem clearRecents = new ToolStripMenuItem();
-                clearRecents.Text = "&Clear List";
+                ToolStripMenuItem clearRecents = new ToolStripMenuItem
+                {
+                    Text = "&Clear List"
+                };
                 clearRecents.Click += ClearRecents_Click;
                 recentsList.Add(clearRecents);
 
@@ -1863,9 +1869,11 @@ namespace PaintDotNet.Effects
             }
             else
             {
-                ToolStripMenuItem noRecents = new ToolStripMenuItem();
-                noRecents.Text = "No Recent Items";
-                noRecents.Enabled = false;
+                ToolStripMenuItem noRecents = new ToolStripMenuItem
+                {
+                    Text = "No Recent Items",
+                    Enabled = false
+                };
 
                 this.openRecentToolStripMenuItem.DropDownItems.Add(noRecents);
             }

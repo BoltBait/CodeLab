@@ -46,8 +46,8 @@ namespace PaintDotNet.Effects
         internal string HelpStr = "";
         private string HelpFileName = "";
         internal string RTZPath = "";
-        string FullScriptText = "";
-        string FileName = "";
+        private string FullScriptText = "";
+        private string FileName = "";
 
         internal BuildForm(string ScriptName, string ScriptText, string ScriptPath)
         {
@@ -81,18 +81,21 @@ namespace PaintDotNet.Effects
             #region Populate fields from script comments
             FullScriptText = ScriptText;
             FileName = ScriptName;
+
             // Preload submenu name
             Regex RESubMenu = new Regex(@"//[\s-[\r\n]]*SubMenu[\s-[\r\n]]*:[\s-[\r\n]]*(?<sublabel>.*)(?=\r?\n|$)", RegexOptions.IgnoreCase);
             Match msm = RESubMenu.Match(ScriptText);
             if (msm.Success)
             {
                 SubMenuName.Text = msm.Groups["sublabel"].Value.Trim();
-                if ((SubMenuName.Text.ToLower() == "adjustments") || (SubMenuName.Text.ToLower() == "adj"))
+                if (SubMenuName.Text.Equals("adjustments", StringComparison.OrdinalIgnoreCase) ||
+                    SubMenuName.Text.Equals("adj", StringComparison.OrdinalIgnoreCase))
                 {
                     AdjustmentRadio.Checked = true;
-                    SubMenuName.Text = "";
+                    SubMenuName.Text = string.Empty;
                 }
             }
+
             // Preload menu name
             Regex REName = new Regex(@"//[\s-[\r\n]]*Name[\s-[\r\n]]*:[\s-[\r\n]]*(?<menulabel>.*)(?=\r?\n|$)", RegexOptions.IgnoreCase);
             Match mmn = REName.Match(ScriptText);
@@ -105,6 +108,7 @@ namespace PaintDotNet.Effects
             {
                 MenuName.Text = ScriptName;
             }
+
             // Preload window title
             Regex RETitle = new Regex(@"//[\s-[\r\n]]*Title[\s-[\r\n]]*:[\s-[\r\n]]*(?<titlelabel>.*)(?=\r?\n|$)", RegexOptions.IgnoreCase);
             Match wtn = RETitle.Match(ScriptText);
@@ -112,6 +116,7 @@ namespace PaintDotNet.Effects
             {
                 WindowTitleText.Text = wtn.Groups["titlelabel"].Value.Trim();
             }
+
             // Preload version checking for period
             Regex REVersion = new Regex(@"//[\s-[\r\n]]*Version[\s-[\r\n]]*:[\s-[\r\n]]*(?<majorversionlabel>\d+)\.(?<minorversionlabel>\d+)(?=\r?\n|$)", RegexOptions.IgnoreCase);
             Match vsn = REVersion.Match(ScriptText);
@@ -123,17 +128,16 @@ namespace PaintDotNet.Effects
             }
             if (vsn.Success)
             {
-                decimal majorv = 0;
-                decimal minorv = 0;
-                if (decimal.TryParse(vsn.Groups["majorversionlabel"].Value.Trim(), out majorv))
+                if (decimal.TryParse(vsn.Groups["majorversionlabel"].Value.Trim(), out decimal majorv))
                 {
                     MajorVersion.Value = majorv.Clamp(MajorVersion.Minimum, MajorVersion.Maximum);
                 }
-                if (decimal.TryParse(vsn.Groups["minorversionlabel"].Value.Trim(), out minorv))
+                if (decimal.TryParse(vsn.Groups["minorversionlabel"].Value.Trim(), out decimal minorv))
                 {
                     MinorVersion.Value = minorv.Clamp(MinorVersion.Minimum, MinorVersion.Maximum);
                 }
             }
+
             // Preload author's name
             Regex REAuthor = new Regex(@"//[\s-[\r\n]]*Author[\s-[\r\n]]*:[\s-[\r\n]]*(?<authorlabel>.*)(?=\r?\n|$)", RegexOptions.IgnoreCase);
             Match mau = REAuthor.Match(ScriptText);
@@ -141,6 +145,7 @@ namespace PaintDotNet.Effects
             {
                 AuthorName.Text = mau.Groups["authorlabel"].Value.Trim();
             }
+
             // Preload Description
             Regex REDesc = new Regex(@"//[\s-[\r\n]]*Desc[\s-[\r\n]]*:[\s-[\r\n]]*(?<desclabel>.*)(?=\r?\n|$)", RegexOptions.IgnoreCase);
             Match mds = REDesc.Match(ScriptText);
@@ -152,6 +157,7 @@ namespace PaintDotNet.Effects
             {
                 DescriptionBox.Text = ScriptName + " selected pixels";
             }
+
             // Preload Keywords
             Regex REWords = new Regex(@"//[\s-[\r\n]]*KeyWords[\s-[\r\n]]*:[\s-[\r\n]]*(?<wordslabel>.*)(?=\r?\n|$)", RegexOptions.IgnoreCase);
             Match mkw = REWords.Match(ScriptText);
@@ -163,6 +169,7 @@ namespace PaintDotNet.Effects
             {
                 KeyWordsBox.Text = ScriptName;
             }
+
             // Preload Support URL
             Regex RESupport = new Regex(@"//[\s-[\r\n]]*URL[\s-[\r\n]]*:[\s-[\r\n]]*(?<urllabel>.*)(?=\r?\n|$)", RegexOptions.IgnoreCase);
             Match msu = RESupport.Match(ScriptText);
@@ -170,6 +177,7 @@ namespace PaintDotNet.Effects
             {
                 SupportURL.Text = msu.Groups["urllabel"].Value.Trim();
             }
+
             // Preload Force Aliased Selection
             ForceAliasSelectionBox.Checked = false;
             Regex REAlias = new Regex(@"//[\s-[\r\n]]*(Force\s*Aliased\s*Selection|FAS)[\s-[\r\n]]*(?=\r?\n|$)", RegexOptions.IgnoreCase);
@@ -178,6 +186,7 @@ namespace PaintDotNet.Effects
             {
                 ForceAliasSelectionBox.Checked = true;
             }
+
             // Preload Force Single Threaded
             ForceSingleThreadedBox.Checked = false;
             Regex RESingle = new Regex(@"//[\s-[\r\n]]*(Force\s*Single\s*Threaded|FST)[\s-[\r\n]]*(?=\r?\n|$)", RegexOptions.IgnoreCase);
@@ -394,11 +403,13 @@ namespace PaintDotNet.Effects
 
         private void ButtonIcon_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Title = "Load 16x16 PNG Graphic";       // File Open dialog box title
-            ofd.Filter = "Icon Files (*.PNG)|*.png";    // Only PNG files are allowed
-            ofd.DefaultExt = ".png";
-            ofd.Multiselect = false;                    // only 1 file at a time is allowed
+            OpenFileDialog ofd = new OpenFileDialog
+            {
+                Title = "Load 16x16 PNG Graphic",       // File Open dialog box title
+                Filter = "Icon Files (*.PNG)|*.png",    // Only PNG files are allowed
+                DefaultExt = ".png",
+                Multiselect = false                     // only 1 file at a time is allowed
+            };
 
             if (ofd.ShowDialog() == DialogResult.OK)
             {
@@ -408,8 +419,8 @@ namespace PaintDotNet.Effects
         #endregion
 
         #region UBB and Help Preview
-        RichTextBox rtb_HelpBox;
-        Button btn_HelpBoxOKButton;
+        private RichTextBox rtb_HelpBox;
+        private Button btn_HelpBoxOKButton;
 
         private void rtb_LinkClicked(object sender, LinkClickedEventArgs e)
         {
@@ -572,11 +583,11 @@ namespace PaintDotNet.Effects
                     MessageBox.Show("Specified URL should start with 'http://' or 'https://'\r\n\r\nFix your URL and try again.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
-            if (radioButtonPlain.Checked)
+            else if (radioButtonPlain.Checked)
             {
                 MessageBox.Show(HelpPlainText.Text, MenuName.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-            if (radioButtonRich.Checked)
+            else if (radioButtonRich.Checked)
             {
                 using (Form form = new Form())
                 {
@@ -685,7 +696,7 @@ namespace PaintDotNet.Effects
                 PreviewLabel.Enabled = false;
                 PreviewHelpButton.Enabled = false;
             }
-            if (radioButtonURL.Checked)
+            else if (radioButtonURL.Checked)
             {
                 HelpURL.Enabled = true;
                 HelpURL.Focus();
@@ -697,7 +708,7 @@ namespace PaintDotNet.Effects
                 PreviewLabel.Enabled = true;
                 PreviewHelpButton.Enabled = true;
             }
-            if (radioButtonPlain.Checked)
+            else if (radioButtonPlain.Checked)
             {
                 HelpURL.Enabled = false;
                 HelpPlainText.Enabled = true;
@@ -709,7 +720,7 @@ namespace PaintDotNet.Effects
                 PreviewLabel.Enabled = true;
                 PreviewHelpButton.Enabled = true;
             }
-            if (radioButtonRich.Checked)
+            else if (radioButtonRich.Checked)
             {
                 HelpURL.Enabled = false;
                 HelpPlainText.Enabled = false;
@@ -757,11 +768,12 @@ namespace PaintDotNet.Effects
 
         private void DoColor()
         {
-            ColorWindow colorDialog1 = new ColorWindow();
-            Color CurrentColor = RichHelpContent.SelectionColor;
-            CurrentColor = Color.FromArgb(255, CurrentColor);
-            colorDialog1.Color = CurrentColor;
-            colorDialog1.ShowAlpha = false;
+            ColorWindow colorDialog1 = new ColorWindow
+            {
+                Color = Color.FromArgb(255, RichHelpContent.SelectionColor),
+                ShowAlpha = false
+            };
+
             if (colorDialog1.ShowDialog() == DialogResult.OK && colorDialog1.Color != RichHelpContent.SelectionColor)
             {
                 RichHelpContent.SelectionColor = colorDialog1.Color;
@@ -770,48 +782,36 @@ namespace PaintDotNet.Effects
 
         private void DoBold()
         {
-            if (RichHelpContent.SelectionFont.Bold)
-            {
-                RichHelpContent.SelectionFont = new Font(RichHelpContent.SelectionFont, RichHelpContent.SelectionFont.Style ^ FontStyle.Bold);
-            }
-            else
-            {
-                RichHelpContent.SelectionFont = new Font(RichHelpContent.SelectionFont, RichHelpContent.SelectionFont.Style | FontStyle.Bold);
-            }
+            RichHelpContent.SelectionFont = (RichHelpContent.SelectionFont.Bold) ?
+                new Font(RichHelpContent.SelectionFont, RichHelpContent.SelectionFont.Style ^ FontStyle.Bold) :
+                new Font(RichHelpContent.SelectionFont, RichHelpContent.SelectionFont.Style | FontStyle.Bold);
         }
 
         private void DoItalics()
         {
-            if (RichHelpContent.SelectionFont.Italic)
-            {
-                RichHelpContent.SelectionFont = new Font(RichHelpContent.SelectionFont, RichHelpContent.SelectionFont.Style ^ FontStyle.Italic);
-            }
-            else
-            {
-                RichHelpContent.SelectionFont = new Font(RichHelpContent.SelectionFont, RichHelpContent.SelectionFont.Style | FontStyle.Italic);
-            }
+            RichHelpContent.SelectionFont = (RichHelpContent.SelectionFont.Italic) ?
+                new Font(RichHelpContent.SelectionFont, RichHelpContent.SelectionFont.Style ^ FontStyle.Italic) :
+                new Font(RichHelpContent.SelectionFont, RichHelpContent.SelectionFont.Style | FontStyle.Italic);
         }
 
         private void DoUnderline()
         {
-            if (RichHelpContent.SelectionFont.Underline)
-            {
-                RichHelpContent.SelectionFont = new Font(RichHelpContent.SelectionFont, RichHelpContent.SelectionFont.Style ^ FontStyle.Underline);
-            }
-            else
-            {
-                RichHelpContent.SelectionFont = new Font(RichHelpContent.SelectionFont, RichHelpContent.SelectionFont.Style | FontStyle.Underline);
-            }
+            RichHelpContent.SelectionFont = (RichHelpContent.SelectionFont.Underline) ?
+                new Font(RichHelpContent.SelectionFont, RichHelpContent.SelectionFont.Style ^ FontStyle.Underline) :
+                new Font(RichHelpContent.SelectionFont, RichHelpContent.SelectionFont.Style | FontStyle.Underline);
         }
 
         private void DoOpen()
         {
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Title = "Open Help File";
-            ofd.Filter = "Rich Text Format (*.RTF)|*.RTF|Compressed Rich Text Format (*.RTZ)|*.RTZ|Text Format with UBB Codes (*.TXT)|*.TXT";
-            ofd.DefaultExt = ".rtf";
-            ofd.Multiselect = false;
-            ofd.InitialDirectory = Settings.LastSourceDirectory;
+            OpenFileDialog ofd = new OpenFileDialog
+            {
+                Title = "Open Help File",
+                Filter = "Rich Text Format (*.RTF)|*.RTF|Compressed Rich Text Format (*.RTZ)|*.RTZ|Text Format with UBB Codes (*.TXT)|*.TXT",
+                DefaultExt = ".rtf",
+                Multiselect = false,
+                InitialDirectory = Settings.LastSourceDirectory
+            };
+
             if (ofd.ShowDialog() == DialogResult.OK && File.Exists(ofd.FileName))
             {
                 try
@@ -845,12 +845,14 @@ namespace PaintDotNet.Effects
 
         private void DoSave(bool OpenInWordPad)
         {
-            SaveFileDialog sfd = new SaveFileDialog();
-            sfd.Title = "Save Help File";
-            sfd.FileName = Path.ChangeExtension(FileName,".rtf");
-            sfd.Filter = "Rich Text Format (*.RTF)|*.RTF";
-            sfd.DefaultExt = ".rtf";
-            sfd.InitialDirectory = Settings.LastSourceDirectory;
+            SaveFileDialog sfd = new SaveFileDialog
+            {
+                Title = "Save Help File",
+                FileName = Path.ChangeExtension(FileName, ".rtf"),
+                Filter = "Rich Text Format (*.RTF)|*.RTF",
+                DefaultExt = ".rtf",
+                InitialDirectory = Settings.LastSourceDirectory
+            };
 
             if (sfd.ShowDialog() == DialogResult.OK)
             {
@@ -877,26 +879,12 @@ namespace PaintDotNet.Effects
 
         private void DoSuperscript()
         {
-            if (RichHelpContent.SelectionCharOffset == 0)
-            {
-                RichHelpContent.SelectionCharOffset = 5;
-            }
-            else
-            {
-                RichHelpContent.SelectionCharOffset = 0;
-            }
+            RichHelpContent.SelectionCharOffset = (RichHelpContent.SelectionCharOffset == 0) ? 5 : 0;
         }
 
         private void DoSubscript()
         {
-            if (RichHelpContent.SelectionCharOffset == 0)
-            {
-                RichHelpContent.SelectionCharOffset = -5;
-            }
-            else
-            {
-                RichHelpContent.SelectionCharOffset = 0;
-            }
+            RichHelpContent.SelectionCharOffset = (RichHelpContent.SelectionCharOffset == 0) ? -5 : 0;
         }
 
         private void DoLargeFont()
@@ -1013,12 +1001,15 @@ namespace PaintDotNet.Effects
 
         private void InsertImageButton_Click(object sender, EventArgs e)
         {
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Title = "Open Image File";
-            ofd.Filter = "Image Files(*.PNG;*.BMP;*.JPG;*.GIF)|*.PNG;*.BMP;*.JPG;*.GIF|All files (*.*)|*.*";
-            ofd.DefaultExt = ".png";
-            ofd.Multiselect = false;
-            ofd.InitialDirectory = Settings.LastSourceDirectory;
+            OpenFileDialog ofd = new OpenFileDialog
+            {
+                Title = "Open Image File",
+                Filter = "Image Files(*.PNG;*.BMP;*.JPG;*.GIF)|*.PNG;*.BMP;*.JPG;*.GIF|All files (*.*)|*.*",
+                DefaultExt = ".png",
+                Multiselect = false,
+                InitialDirectory = Settings.LastSourceDirectory
+            };
+
             if (ofd.ShowDialog() == DialogResult.OK)
             {
                 Bitmap aimg = null;
@@ -1026,7 +1017,7 @@ namespace PaintDotNet.Effects
                 {
                     aimg = (Bitmap)Image.FromFile(ofd.FileName, false);
                 }
-                catch (Exception)
+                catch
                 {
                 }
                 if (aimg != null)
@@ -1038,7 +1029,6 @@ namespace PaintDotNet.Effects
                     MessageBox.Show("There was a problem opening the image.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
-
         }
 
         private void ColorButton_Click(object sender, EventArgs e)
