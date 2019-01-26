@@ -14,7 +14,7 @@
 
 using ScintillaNET;
 using System;
-using System.Collections.Generic;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace PaintDotNet.Effects
@@ -22,6 +22,7 @@ namespace PaintDotNet.Effects
     internal partial class FindAndReplace : UserControl
     {
         private bool replaceVisible = true;
+        private bool notFound = false;
 
         internal FindAndReplace()
         {
@@ -101,6 +102,10 @@ namespace PaintDotNet.Effects
         {
             set
             {
+                this.notFound = (this.FindBox.Text.Length > 0 && value == 0);
+                this.FindBox.ForeColor = this.notFound ? Color.Black : this.toolStrip1.ForeColor;
+                this.FindBox.BackColor = this.notFound ? Color.FromArgb(246, 97, 81) : this.toolStrip1.BackColor;
+
                 string matches = (value == 1) ? "Match" : "Matches";
                 this.Next.ToolTipText = $"Find Next\r\n({value} {matches})";
             }
@@ -130,6 +135,11 @@ namespace PaintDotNet.Effects
         internal void UpdateTheme()
         {
             toolStrip1.Renderer = PdnTheme.Renderer;
+
+            this.FindBox.ForeColor = this.notFound ? Color.Black : this.toolStrip1.ForeColor;
+            this.FindBox.BackColor = this.notFound ? Color.FromArgb(246, 97, 81) : this.toolStrip1.BackColor;
+            this.ReplaceBox.ForeColor = this.toolStrip1.ForeColor;
+            this.ReplaceBox.BackColor = this.toolStrip1.BackColor;
         }
 
         private void Close_Click(object sender, EventArgs e)
