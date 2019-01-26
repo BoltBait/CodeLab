@@ -401,6 +401,26 @@ namespace PaintDotNet.Effects
 
         private bool SaveAsScript()
         {
+            string fileName = this.FileName;
+            if (fileName.Equals("Untitled", StringComparison.Ordinal))
+            {
+                Regex REName = new Regex(@"//[\s-[\r\n]]*Name[\s-[\r\n]]*:[\s-[\r\n]]*(?<scriptName>.*)(?=\r?\n|$)", RegexOptions.IgnoreCase);
+                Match wtn = REName.Match(txtCode.Text);
+                if (wtn.Success)
+                {
+                    string scriptName = wtn.Groups["scriptName"].Value.Trim();
+                    if (scriptName.Length > 0)
+                    {
+                        fileName = scriptName;
+                    }
+                }
+
+                if (fileName.Equals("Untitled", StringComparison.Ordinal))
+                {
+                    fileName = "MyScript";
+                }
+            }
+
             SaveFileDialog sfd = new SaveFileDialog
             {
                 Title = "Save User Script",
@@ -408,7 +428,7 @@ namespace PaintDotNet.Effects
                 Filter = "C# Code Files (*.CS)|*.cs",
                 OverwritePrompt = true,
                 AddExtension = true,
-                FileName = (FileName == "Untitled") ? "MyScript.cs" : FileName + ".cs",
+                FileName = fileName + ".cs",
                 InitialDirectory = Settings.LastSourceDirectory
             };
 
