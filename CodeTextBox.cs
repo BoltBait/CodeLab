@@ -3129,19 +3129,18 @@ namespace PaintDotNet.Effects
 
         internal void FormatDocument()
         {
+            string[] linesNoComments = this.Text.StripComments().Split('\n');
+            if (linesNoComments.Length != this.Lines.Count)
+            {
+                return;
+            }
+
             int lineIndent = 0;
             bool codeBlock = false;
             bool braceless = false;
 
             int withinCase = 0;
             bool caseStart = false;
-
-            string[] linesNoComments = this.Text.StripComments().Split('\n');
-
-            if (linesNoComments.Length != this.Lines.Count)
-            {
-                return;
-            }
 
             this.BeginUndoAction();
             for (int line = 0; line < this.Lines.Count; line++)
@@ -3213,8 +3212,7 @@ namespace PaintDotNet.Effects
                         lineIndent -= this.TabWidth;
                     }
                 }
-                else if (trimmedLine.EndsWith(")", StringComparison.Ordinal)
-                    && (trimmedLine.StartsWith("using", StringComparison.Ordinal) || trimmedLine.StartsWith("if", StringComparison.Ordinal) || trimmedLine.StartsWith("else", StringComparison.Ordinal)))
+                else if (trimmedLine.StartsWith("using", StringComparison.Ordinal) || trimmedLine.StartsWith("if", StringComparison.Ordinal) || trimmedLine.StartsWith("else", StringComparison.Ordinal))
                 {
                     codeBlock = true;
                 }
