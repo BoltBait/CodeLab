@@ -215,7 +215,7 @@ namespace PaintDotNet.Effects
             return string.Empty;
         }
 
-        internal static string Params(this MethodInfo method)
+        internal static string Params(this MethodBase method)
         {
             List<string> methodParams = new List<string>();
             foreach (ParameterInfo param in method.GetParameters())

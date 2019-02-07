@@ -486,17 +486,9 @@ namespace PaintDotNet.Effects
                 unFilteredItems.Add(new IntelliBoxItem($"{type.Name}()", string.Empty, $"{type.Name}()", IntelliType.Constructor));
             }
 
-            ConstructorInfo[] constructors = type.GetConstructors();
-            foreach (ConstructorInfo constructor in constructors)
+            foreach (ConstructorInfo constructor in type.GetConstructors())
             {
-                ParameterInfo[] parameters = constructor.GetParameters();
-                string ctorString = string.Empty;
-                for (int j = 0; j < parameters.Length; j++)
-                {
-                    ctorString += $"{parameters[j].ParameterType.GetDisplayName()} {parameters[j].Name}{(j == parameters.Length - 1 ? string.Empty : ", ")}";
-                }
-
-                string toolTip = $"{type.Name}({ctorString})";
+                string toolTip = $"{type.Name}({constructor.Params()})";
                 unFilteredItems.Add(new IntelliBoxItem(toolTip, string.Empty, toolTip, IntelliType.Constructor));
             }
 
