@@ -164,14 +164,14 @@ namespace PaintDotNet.Effects
         internal static string GetGenericName(this Type type)
         {
             string typeName = Regex.Replace(type.Name, @"`\d", string.Empty);
-            Type[] generics = type.GetGenericArguments();
-            string parameters = string.Empty;
-            for (int i = 0; i < generics.Length; i++)
+
+            List<string> genericArgs = new List<string>();
+            foreach (Type arg in type.GetGenericArguments())
             {
-                parameters += generics[i].GetAliasName() + (i == generics.Length - 1 ? string.Empty : ", ");
+                genericArgs.Add(arg.GetAliasName());
             }
 
-            return $"{typeName}<{parameters}>";
+            return $"{typeName}<{genericArgs.Join(", ")}>";
         }
 
         internal static bool Contains(this Type type, string memberName, bool onlyUserDefined)

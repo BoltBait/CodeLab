@@ -279,19 +279,8 @@ namespace PaintDotNet.Effects
 
                 if (t.IsGenericType)
                 {
-                    string shortName = System.Text.RegularExpressions.Regex.Replace(t.Name, @"`\d", string.Empty);
-                    if (type.StartsWith(shortName, StringComparison.OrdinalIgnoreCase))
-                    {
-                        Type[] generics = t.GetGenericArguments();
-                        string args = string.Empty;
-                        for (int i = 0; i < generics.Length; i++)
-                        {
-                            args += generics[i].Name + (i == generics.Length - 1 ? string.Empty : ", ");
-                        }
-
-                        name = $"{shortName}<{args}>";
-                        code = $"{shortName}<>";
-                    }
+                    name = t.GetGenericName();
+                    code = System.Text.RegularExpressions.Regex.Replace(t.Name, @"`\d", string.Empty) + "<>";
                 }
 
                 string toolTip = $"{baseType} - {t.Namespace}.{name}\nType";
@@ -332,19 +321,8 @@ namespace PaintDotNet.Effects
 
                 if (t.IsGenericType)
                 {
-                    string shortName = System.Text.RegularExpressions.Regex.Replace(t.Name, @"`\d", string.Empty);
-                    if (type.StartsWith(shortName, StringComparison.OrdinalIgnoreCase))
-                    {
-                        Type[] generics = t.GetGenericArguments();
-                        string args = string.Empty;
-                        for (int i = 0; i < generics.Length; i++)
-                        {
-                            args += generics[i].Name + (i == generics.Length - 1 ? string.Empty : ", ");
-                        }
-
-                        name = $"{shortName}<{args}>";
-                        code = $"{shortName}<>";
-                    }
+                    name = t.GetGenericName();
+                    code = System.Text.RegularExpressions.Regex.Replace(t.Name, @"`\d", string.Empty) + "<>";
                 }
 
                 string toolTip = $"{baseType} - {t.DeclaringType.Name}.{name}\nType";
