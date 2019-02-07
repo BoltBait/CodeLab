@@ -215,6 +215,17 @@ namespace PaintDotNet.Effects
             return string.Empty;
         }
 
+        internal static string Params(this MethodInfo method)
+        {
+            List<string> methodParams = new List<string>();
+            foreach (ParameterInfo param in method.GetParameters())
+            {
+                methodParams.Add($"{(param.ParameterType.IsByRef ? "ref " : string.Empty)}{param.ParameterType.GetDisplayName()} {param.Name}");
+            }
+
+            return methodParams.Join(", ");
+        }
+
         internal static Type GetReturnType(this MemberInfo member)
         {
             switch (member.MemberType)

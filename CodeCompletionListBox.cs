@@ -132,22 +132,7 @@ namespace PaintDotNet.Effects
                             continue;
                         }
 
-                        string methodParameters = "(";
-
-                        ParameterInfo[] parameterInfo = methodInfo.GetParameters();
-                        for (int p = 0; p < parameterInfo.Length; p++)
-                        {
-                            string parameterType = parameterInfo[p].ParameterType.GetDisplayName();
-
-                            methodParameters += parameterType + " " + parameterInfo[p].Name;
-
-                            if (p < parameterInfo.Length - 1)
-                            {
-                                methodParameters += ", ";
-                            }
-                        }
-
-                        methodParameters += ")";
+                        string methodParameters = $"({methodInfo.Params()})";
 
                         returnType = methodInfo.ReturnType.GetDisplayName();
                         toolTip = $"{returnType} - {methodInfo.Name}{methodParameters}\n{methodInfo.MemberType}";
@@ -413,22 +398,7 @@ namespace PaintDotNet.Effects
                             continue;
                         }
 
-                        string methodParameters = "(";
-
-                        ParameterInfo[] parameterInfo = methodInfo.GetParameters();
-                        for (int p = 0; p < parameterInfo.Length; p++)
-                        {
-                            string parameterType = parameterInfo[p].ParameterType.GetDisplayName();
-
-                            methodParameters += parameterType + " " + parameterInfo[p].Name;
-
-                            if (p < parameterInfo.Length - 1)
-                            {
-                                methodParameters += ", ";
-                            }
-                        }
-
-                        methodParameters += ")";
+                        string methodParameters = $"({methodInfo.Params()})";
 
                         returnType = methodInfo.ReturnType.GetDisplayName();
                         toolTip = $"{returnType} - {methodInfo.Name}{methodParameters}\n{methodInfo.MemberType}";

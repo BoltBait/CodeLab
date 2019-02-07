@@ -1405,13 +1405,7 @@ namespace PaintDotNet.Effects
 
         private Tuple<int, string> GetOverload(MemberInfo[] mi, int position)
         {
-            List<string> defaultParams = new List<string>();
-            ParameterInfo[] defaultInfo = ((MethodInfo)mi[0]).GetParameters();
-            foreach (ParameterInfo param in defaultInfo)
-            {
-                defaultParams.Add($"{(param.ParameterType.IsByRef ? "ref " : string.Empty)}{param.ParameterType.GetDisplayName()} {param.Name}");
-            }
-            Tuple<int, string> defaultOverload = new Tuple<int, string>(0, defaultParams.Join(", "));
+            Tuple<int, string> defaultOverload = new Tuple<int, string>(0, ((MethodInfo)mi[0]).Params());
 
             if (mi.Length == 1)
             {
