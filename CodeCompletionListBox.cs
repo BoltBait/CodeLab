@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace PaintDotNet.Effects
@@ -249,9 +250,11 @@ namespace PaintDotNet.Effects
             {
                 Type t = Intelli.AutoCompleteTypes[type];
 
+                string name = t.IsGenericType && type.Equals(t.Name, StringComparison.Ordinal) ? t.GetGenericName() : type;
+                string realName = t.IsGenericType ? t.GetGenericName() : t.Name;
+                string code = t.IsGenericType && type.Equals(t.Name, StringComparison.Ordinal) ? Regex.Replace(t.Name, @"`\d", string.Empty) + "<>" : type;
+
                 string baseType = "Type";
-                string name = type;
-                string code = type;
                 IntelliType icon = IntelliType.Type;
 
                 if (t.IsEnum)
@@ -277,13 +280,7 @@ namespace PaintDotNet.Effects
                     continue;
                 }
 
-                if (t.IsGenericType)
-                {
-                    name = t.GetGenericName();
-                    code = System.Text.RegularExpressions.Regex.Replace(t.Name, @"`\d", string.Empty) + "<>";
-                }
-
-                string toolTip = $"{baseType} - {t.Namespace}.{name}\nType";
+                string toolTip = $"{baseType} - {t.Namespace}.{realName}\nType";
                 unFilteredItems.Add(new IntelliBoxItem(name, code, toolTip, icon));
             }
 
@@ -291,9 +288,11 @@ namespace PaintDotNet.Effects
             {
                 Type t = Intelli.UserDefinedTypes[type];
 
+                string name = t.IsGenericType && type.Equals(t.Name, StringComparison.Ordinal) ? t.GetGenericName() : type;
+                string realName = t.IsGenericType ? t.GetGenericName() : t.Name;
+                string code = t.IsGenericType && type.Equals(t.Name, StringComparison.Ordinal) ? Regex.Replace(t.Name, @"`\d", string.Empty) + "<>" : type;
+
                 string baseType = "Type";
-                string name = type;
-                string code = type;
                 IntelliType icon = IntelliType.Type;
 
                 if (t.IsEnum)
@@ -319,13 +318,7 @@ namespace PaintDotNet.Effects
                     continue;
                 }
 
-                if (t.IsGenericType)
-                {
-                    name = t.GetGenericName();
-                    code = System.Text.RegularExpressions.Regex.Replace(t.Name, @"`\d", string.Empty) + "<>";
-                }
-
-                string toolTip = $"{baseType} - {t.DeclaringType.Name}.{name}\nType";
+                string toolTip = $"{baseType} - {t.DeclaringType.Name}.{realName}\nType";
                 unFilteredItems.Add(new IntelliBoxItem(name, code, toolTip, icon));
             }
 
