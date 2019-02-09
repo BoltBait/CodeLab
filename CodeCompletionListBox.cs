@@ -639,60 +639,60 @@ namespace PaintDotNet.Effects
                 }
             }
         }
-    }
 
-    internal class IntelliBoxItem : IComparable, IEquatable<IntelliBoxItem>
-    {
-        public int CompareTo(object obj)
+        private class IntelliBoxItem : IComparable, IEquatable<IntelliBoxItem>
         {
-            if (obj == null)
+            public int CompareTo(object obj)
             {
+                if (obj == null)
+                {
+                    return 0;
+                }
+
+                if (obj is IntelliBoxItem other)
+                {
+                    return (string.Compare(this.Text, other.Text, StringComparison.OrdinalIgnoreCase));
+                }
+
                 return 0;
             }
-
-            if (obj is IntelliBoxItem other)
-            {
-                return (string.Compare(this.Text, other.Text, StringComparison.OrdinalIgnoreCase));
-            }
-
-            return 0;
-        }
-        public bool Equals(IntelliBoxItem other)
-        {
-            return (this.Text == other.Text && this.Code == other.Code && this.ToolTip == other.ToolTip && this.ImageIndex == other.ImageIndex);
-        }
-        public override bool Equals(object obj)
-        {
-            if (obj is IntelliBoxItem other)
+            public bool Equals(IntelliBoxItem other)
             {
                 return (this.Text == other.Text && this.Code == other.Code && this.ToolTip == other.ToolTip && this.ImageIndex == other.ImageIndex);
             }
+            public override bool Equals(object obj)
+            {
+                if (obj is IntelliBoxItem other)
+                {
+                    return (this.Text == other.Text && this.Code == other.Code && this.ToolTip == other.ToolTip && this.ImageIndex == other.ImageIndex);
+                }
 
-            return false;
-        }
-        public override int GetHashCode()
-        {
-            return this.Text.GetHashCode() ^ this.Code.GetHashCode() ^ this.ToolTip.GetHashCode() ^ this.ImageIndex.GetHashCode();
-        }
+                return false;
+            }
+            public override int GetHashCode()
+            {
+                return this.Text.GetHashCode() ^ this.Code.GetHashCode() ^ this.ToolTip.GetHashCode() ^ this.ImageIndex.GetHashCode();
+            }
 
-        internal static readonly IntelliBoxItem Empty = new IntelliBoxItem(string.Empty, string.Empty, string.Empty, IntelliType.None);
+            internal static readonly IntelliBoxItem Empty = new IntelliBoxItem(string.Empty, string.Empty, string.Empty, IntelliType.None);
 
-        internal string Text { get; }
-        internal string Code { get; }
-        internal string ToolTip { get; }
-        internal int ImageIndex { get; }
+            internal string Text { get; }
+            internal string Code { get; }
+            internal string ToolTip { get; }
+            internal int ImageIndex { get; }
 
-        internal IntelliBoxItem(string text, string code, string toolTip, IntelliType intelliType)
-        {
-            this.Text = text;
-            this.Code = code;
-            this.ToolTip = toolTip;
-            this.ImageIndex = (int)intelliType;
-        }
+            internal IntelliBoxItem(string text, string code, string toolTip, IntelliType intelliType)
+            {
+                this.Text = text;
+                this.Code = code;
+                this.ToolTip = toolTip;
+                this.ImageIndex = (int)intelliType;
+            }
 
-        public override string ToString()
-        {
-            return Code;
+            public override string ToString()
+            {
+                return Code;
+            }
         }
     }
 }
