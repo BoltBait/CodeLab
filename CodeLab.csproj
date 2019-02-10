@@ -293,6 +293,18 @@
     <None Include="Icons\Untitled.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Icons\Bold.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Icons\Italic.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Icons\Underline.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Icons\SaveAs.png" />
+  </ItemGroup>
+  <ItemGroup>
     <EmbeddedResource Include="Icons\14FilenameControl.png" />
   </ItemGroup>
   <ItemGroup>

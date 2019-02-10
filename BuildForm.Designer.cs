@@ -635,31 +635,31 @@ namespace PaintDotNet.Effects
             // 
             // BoldButton
             // 
-            this.BoldButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.BoldButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.BoldButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.BoldButton.Image = global::PaintDotNet.Effects.Properties.Resources.Bold;
             this.BoldButton.Name = "BoldButton";
             this.BoldButton.Size = new System.Drawing.Size(23, 22);
-            this.BoldButton.Text = "B";
+            this.BoldButton.Text = "Bold";
             this.BoldButton.ToolTipText = "Bold (Ctrl+B)";
             this.BoldButton.Click += new System.EventHandler(this.BoldButton_Click);
             // 
             // ItalicsButton
             // 
-            this.ItalicsButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.ItalicsButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic);
+            this.ItalicsButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.ItalicsButton.Image = global::PaintDotNet.Effects.Properties.Resources.Italic;
             this.ItalicsButton.Name = "ItalicsButton";
             this.ItalicsButton.Size = new System.Drawing.Size(23, 22);
-            this.ItalicsButton.Text = "i";
+            this.ItalicsButton.Text = "Italics";
             this.ItalicsButton.ToolTipText = "Italics (Ctrl+I)";
             this.ItalicsButton.Click += new System.EventHandler(this.ItalicsButton_Click);
             // 
             // UnderlineButton
             // 
-            this.UnderlineButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.UnderlineButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Underline);
+            this.UnderlineButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.UnderlineButton.Image = global::PaintDotNet.Effects.Properties.Resources.Underline;
             this.UnderlineButton.Name = "UnderlineButton";
             this.UnderlineButton.Size = new System.Drawing.Size(23, 22);
-            this.UnderlineButton.Text = "U";
+            this.UnderlineButton.Text = "Underline";
             this.UnderlineButton.ToolTipText = "Underline (Ctrl+U)";
             this.UnderlineButton.Click += new System.EventHandler(this.UnderlineButton_Click);
             // 

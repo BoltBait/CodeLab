@@ -503,7 +503,7 @@
             // 
             // saveAsToolStripMenuItem
             // 
-            this.saveAsToolStripMenuItem.Image = global::PaintDotNet.Effects.Properties.Resources.Save;
+            this.saveAsToolStripMenuItem.Image = global::PaintDotNet.Effects.Properties.Resources.SaveAs;
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
             this.saveAsToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
             | System.Windows.Forms.Keys.S)));

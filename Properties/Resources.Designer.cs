@@ -83,6 +83,16 @@ namespace PaintDotNet.Effects.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Bold {
+            get {
+                object obj = ResourceManager.GetObject("Bold", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Bulb {
             get {
                 object obj = ResourceManager.GetObject("Bulb", resourceCulture);
@@ -233,6 +243,16 @@ namespace PaintDotNet.Effects.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Italic {
+            get {
+                object obj = ResourceManager.GetObject("Italic", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap New {
             get {
                 object obj = ResourceManager.GetObject("New", resourceCulture);
@@ -353,6 +373,16 @@ namespace PaintDotNet.Effects.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap SaveAs {
+            get {
+                object obj = ResourceManager.GetObject("SaveAs", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap SaveAsDll {
             get {
                 object obj = ResourceManager.GetObject("SaveAsDll", resourceCulture);
@@ -406,6 +436,16 @@ namespace PaintDotNet.Effects.Properties {
         internal static System.Drawing.Bitmap Uncomment {
             get {
                 object obj = ResourceManager.GetObject("Uncomment", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Underline {
+            get {
+                object obj = ResourceManager.GetObject("Underline", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
