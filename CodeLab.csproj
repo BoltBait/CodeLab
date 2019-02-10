@@ -152,8 +152,6 @@
       <DependentUpon>CodeLabConfigDialog.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="BuildForm.resx">
       <SubType>Designer</SubType>
       <DependentUpon>BuildForm.cs</DependentUpon>
@@ -183,12 +181,13 @@
       <SubType>Designer</SubType>
       <DependentUpon>ViewSrc.cs</DependentUpon>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="FileNew.resx">
       <DependentUpon>FileNew.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include=".editorconfig" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Photo.png" />
@@ -210,6 +209,24 @@
     <EmbeddedResource Include="Icons\11ReseedButton.png" />
     <EmbeddedResource Include="Icons\12MultiTextBox.png" />
     <EmbeddedResource Include="Icons\13RollControl.png" />
+    <EmbeddedResource Include="Icons\14FilenameControl.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\Keyword.png" />
+    <EmbeddedResource Include="Icons\Type.png" />
+    <EmbeddedResource Include="Icons\Var.png" />
+    <EmbeddedResource Include="Icons\Class.png" />
+    <EmbeddedResource Include="Icons\Enum.png" />
+    <EmbeddedResource Include="Icons\Struct.png" />
+    <EmbeddedResource Include="Icons\Const.png" />
+    <EmbeddedResource Include="Icons\EnumItem.png" />
+    <EmbeddedResource Include="Icons\Event.png" />
+    <EmbeddedResource Include="Icons\Field.png" />
+    <EmbeddedResource Include="Icons\Method.png" />
+    <EmbeddedResource Include="Icons\Property.png" />
+    <EmbeddedResource Include="Icons\Snippet.png" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include="Icons\About.png" />
     <None Include="Icons\Renumber.png" />
     <None Include="Icons\Redo.png" />
@@ -219,93 +236,38 @@
     <None Include="Icons\Handle.png" />
     <None Include="Icons\Search.png" />
     <None Include="Icons\Replace.png" />
-    <EmbeddedResource Include="Icons\Event.png" />
-    <EmbeddedResource Include="Icons\Field.png" />
-    <EmbeddedResource Include="Icons\Method.png" />
-    <EmbeddedResource Include="Icons\Property.png" />
-    <None Include="Icons\Copy.png" />
     <None Include="Icons\Cut.png" />
+    <None Include="Icons\Copy.png" />
+    <None Include="Icons\Paste.png" />
     <None Include="Icons\New.png" />
     <None Include="Icons\Open.png" />
-    <None Include="Icons\Paste.png" />
-    <None Include="Icons\Save.png" />
     <None Include="Icons\Comment.png" />
     <None Include="Icons\Indent.png" />
     <None Include="Icons\Uncomment.png" />
     <None Include="Icons\Unindent.png" />
+    <None Include="Icons\Save.png" />
+    <None Include="Icons\SaveAs.png" />
     <None Include="Icons\SaveAsDll.png" />
     <None Include="Icons\FormDesigner.png" />
     <None Include="Icons\SelectAll.png" />
     <None Include="Icons\HelpTopics.png" />
     <None Include="Icons\Updates.png" />
-    <EmbeddedResource Include="Icons\Keyword.png" />
-    <EmbeddedResource Include="Icons\Type.png" />
-    <EmbeddedResource Include="Icons\Var.png" />
-    <EmbeddedResource Include="Icons\Class.png" />
-    <EmbeddedResource Include="Icons\Enum.png" />
-    <EmbeddedResource Include="Icons\Struct.png" />
-    <EmbeddedResource Include="Icons\Const.png" />
-    <EmbeddedResource Include="Icons\EnumItem.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include=".editorconfig" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Icons\WordPad.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Icons\ParagraphLeft.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Icons\InsertPicture.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Icons\ParagraphCenter.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Icons\SuperScript.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Icons\Subscript.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Icons\IncreaseFontSize.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Icons\DecreaseFontSize.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Icons\Bullets.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Icons\Format.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Icons\PlayButton.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Icons\Snippet.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Icons\Bulb.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Icons\Untitled.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Icons\Bold.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Icons\Italic.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Icons\Underline.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Icons\SaveAs.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Icons\14FilenameControl.png" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="jacobslusser.ScintillaNET.Signed">
