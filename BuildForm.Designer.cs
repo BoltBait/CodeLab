@@ -99,11 +99,14 @@ namespace PaintDotNet.Effects
             this.WarningLabel = new System.Windows.Forms.Label();
             this.MenuIcon = new System.Windows.Forms.PictureBox();
             this.GenSlnButton = new System.Windows.Forms.Button();
+            this.sampleImage = new System.Windows.Forms.PictureBox();
+            this.sampleLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.MajorVersion)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.MinorVersion)).BeginInit();
             this.toolStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MenuIcon)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.sampleImage)).BeginInit();
             this.SuspendLayout();
             // 
             // ButtonCancel
@@ -111,7 +114,7 @@ namespace PaintDotNet.Effects
             this.ButtonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.ButtonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.ButtonCancel.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.ButtonCancel.Location = new System.Drawing.Point(618, 439);
+            this.ButtonCancel.Location = new System.Drawing.Point(618, 580);
             this.ButtonCancel.Name = "ButtonCancel";
             this.ButtonCancel.Size = new System.Drawing.Size(75, 23);
             this.ButtonCancel.TabIndex = 22;
@@ -124,7 +127,7 @@ namespace PaintDotNet.Effects
             this.ButtonSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.ButtonSave.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.ButtonSave.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonSave.Location = new System.Drawing.Point(537, 439);
+            this.ButtonSave.Location = new System.Drawing.Point(537, 580);
             this.ButtonSave.Name = "ButtonSave";
             this.ButtonSave.Size = new System.Drawing.Size(75, 23);
             this.ButtonSave.TabIndex = 21;
@@ -284,7 +287,7 @@ namespace PaintDotNet.Effects
             // 
             this.ViewSourceButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.ViewSourceButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.ViewSourceButton.Location = new System.Drawing.Point(279, 438);
+            this.ViewSourceButton.Location = new System.Drawing.Point(279, 579);
             this.ViewSourceButton.Name = "ViewSourceButton";
             this.ViewSourceButton.Size = new System.Drawing.Size(75, 23);
             this.ViewSourceButton.TabIndex = 87;
@@ -562,7 +565,7 @@ namespace PaintDotNet.Effects
             this.RichHelpContent.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.RichHelpContent.Location = new System.Drawing.Point(278, 179);
             this.RichHelpContent.Name = "RichHelpContent";
-            this.RichHelpContent.Size = new System.Drawing.Size(414, 240);
+            this.RichHelpContent.Size = new System.Drawing.Size(414, 381);
             this.RichHelpContent.TabIndex = 19;
             this.RichHelpContent.Text = "";
             this.RichHelpContent.KeyDown += new System.Windows.Forms.KeyEventHandler(this.RichHelpContent_KeyDown);
@@ -827,7 +830,7 @@ namespace PaintDotNet.Effects
             // 
             this.GenSlnButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.GenSlnButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.GenSlnButton.Location = new System.Drawing.Point(360, 438);
+            this.GenSlnButton.Location = new System.Drawing.Point(360, 579);
             this.GenSlnButton.Name = "GenSlnButton";
             this.GenSlnButton.Size = new System.Drawing.Size(125, 23);
             this.GenSlnButton.TabIndex = 88;
@@ -835,12 +838,31 @@ namespace PaintDotNet.Effects
             this.GenSlnButton.UseVisualStyleBackColor = true;
             this.GenSlnButton.Click += new System.EventHandler(this.GenSlnButton_Click);
             // 
+            // sampleImage
+            // 
+            this.sampleImage.Location = new System.Drawing.Point(30, 452);
+            this.sampleImage.Name = "sampleImage";
+            this.sampleImage.Size = new System.Drawing.Size(200, 150);
+            this.sampleImage.TabIndex = 89;
+            this.sampleImage.TabStop = false;
+            // 
+            // sampleLabel
+            // 
+            this.sampleLabel.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold);
+            this.sampleLabel.Location = new System.Drawing.Point(6, 436);
+            this.sampleLabel.Name = "sampleLabel";
+            this.sampleLabel.Size = new System.Drawing.Size(243, 124);
+            this.sampleLabel.TabIndex = 90;
+            this.sampleLabel.Text = "Sample Image Detected:";
+            // 
             // BuildForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.CancelButton = this.ButtonCancel;
-            this.ClientSize = new System.Drawing.Size(717, 475);
+            this.ClientSize = new System.Drawing.Size(717, 616);
+            this.Controls.Add(this.sampleImage);
+            this.Controls.Add(this.sampleLabel);
             this.Controls.Add(this.GenSlnButton);
             this.Controls.Add(this.ViewSourceButton);
             this.Controls.Add(this.toolStrip1);
@@ -889,7 +911,7 @@ namespace PaintDotNet.Effects
             this.Controls.Add(this.ButtonCancel);
             this.Controls.Add(this.DecimalSymbol);
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(733, 513);
+            this.MinimumSize = new System.Drawing.Size(733, 655);
             this.Name = "BuildForm";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
@@ -902,6 +924,7 @@ namespace PaintDotNet.Effects
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MenuIcon)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.sampleImage)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -979,5 +1002,7 @@ namespace PaintDotNet.Effects
         private System.Windows.Forms.Label WarningLabel;
         private System.Windows.Forms.Button ViewSourceButton;
         private System.Windows.Forms.Button GenSlnButton;
+        private System.Windows.Forms.PictureBox sampleImage;
+        private System.Windows.Forms.Label sampleLabel;
     }
 }
