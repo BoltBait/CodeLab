@@ -11,7 +11,7 @@
 // TO THE USE OF THIS CODE.  NO LICENSE, EXPRESS OR IMPLIED, BY ESTOPPEL OR
 // OTHERWISE, TO ANY INTELLECTUAL PROPERTY RIGHTS IS GRANTED HEREIN.
 //
-// Latest distribution: http://www.BoltBait.com/pdn/codelab
+// Latest distribution: https://www.BoltBait.com/pdn/codelab
 /////////////////////////////////////////////////////////////////////////////////
 
 using PaintDotNet.AppModel;
@@ -30,10 +30,10 @@ namespace PaintDotNet.Effects
     internal partial class CodeLabConfigDialog : EffectConfigDialog
     {
         private const string ThisVersion = "4.1"; // Remember to change it in CodeLab.cs too!
-        private const string WebUpdateFile = "http://www.boltbait.com/versions.txt"; // The web site to check for updates
+        private const string WebUpdateFile = "https://www.boltbait.com/versions.txt"; // The web site to check for updates
         private const string ThisApplication = "1"; // in the WebUpadteFile, CodeLab is application #1
         // format of the versions.txt file:  application number;current version;URL to download current version
-        // for example: 1;2.13;http://boltbait.com/pdn/CodeLab/CodeLab213.zip
+        // for example: 1;2.13;https://boltbait.com/pdn/CodeLab/CodeLab213.zip
         // each application on its own line
         #region Constructor
         private const string WindowTitle = "CodeLab v" + ThisVersion;
@@ -1568,7 +1568,7 @@ namespace PaintDotNet.Effects
         #region Help menu Event functions
         private void helpTopicsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Services.GetService<IShellService>().LaunchUrl(null, "http://www.BoltBait.com/pdn/codelab/help");
+            Services.GetService<IShellService>().LaunchUrl(null, "https://www.BoltBait.com/pdn/codelab/help");
         }
 
         private void checkForUpdatesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1591,7 +1591,7 @@ namespace PaintDotNet.Effects
 
         private void changesInThisVersionToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Services.GetService<IShellService>().LaunchUrl(null, "http://www.boltbait.com/pdn/codelab/history.asp#v" + ThisVersion);
+            Services.GetService<IShellService>().LaunchUrl(null, "https://www.boltbait.com/pdn/codelab/history.asp#v" + ThisVersion);
         }
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
