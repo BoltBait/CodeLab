@@ -343,14 +343,14 @@ namespace PaintDotNet.Effects
             EffectPart += "        }\r\n";
             EffectPart += "\r\n";
             EffectPart += "        public " + NameSpace + "Plugin()\r\n";
-            EffectPart += "            : base(StaticName, StaticIcon, SubmenuName, ";
+            EffectPart += "            : base(StaticName, StaticIcon, SubmenuName, new EffectOptions() { Flags = ";
 
             // Set Effect Flags
             string Configurable = (UserControls.Count != 0) ? "EffectFlags.Configurable" : "EffectFlags.None";
             string AliasSelection = (ForceAliasSelection) ? " | EffectFlags.ForceAliasedSelectionQuality" : "";
             string SingleThreaded = (ForceSingleThreaded) ? " | EffectFlags.SingleThreaded" : "";
 
-            EffectPart += Configurable + AliasSelection + SingleThreaded + ")\r\n";
+            EffectPart += Configurable + AliasSelection + SingleThreaded + " })\r\n";
             EffectPart += "        {\r\n";
             foreach (UIElement u in UserControls)
             {

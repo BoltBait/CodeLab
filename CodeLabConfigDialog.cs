@@ -1,8 +1,8 @@
 ﻿/////////////////////////////////////////////////////////////////////////////////
 // CodeLab for Paint.NET
 // Copyright ©2006 Rick Brewster, Tom Jackson. All Rights Reserved.
-// Portions Copyright ©2007-2018 BoltBait. All Rights Reserved.
-// Portions Copyright ©2016-2018 Jason Wendt. All Rights Reserved.
+// Portions Copyright ©2007-2019 BoltBait. All Rights Reserved.
+// Portions Copyright ©2016-2019 Jason Wendt. All Rights Reserved.
 // Portions Copyright ©Microsoft Corporation. All Rights Reserved.
 //
 // THE CODELAB DEVELOPERS MAKE NO WARRANTY OF ANY KIND REGARDING THE CODE. THEY
@@ -1596,7 +1596,7 @@ namespace PaintDotNet.Effects
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show(WindowTitle + "\nCopyright © 2006-2018, All Rights Reserved.\n\nTom Jackson:\tInitial Code, Compile to DLL\n\nDavid Issel:\tEffect UI Creation, Effect Icons, Effect Help\n\t\tSystem, Editor Enhancements (including\n\t\tCode Templates, CodeLab Updater, Bug\n\t\tFixes), and Coding Tutorials\n\nJason Wendt:\tMigration to ScintillaNET editor control,\n\t\tIntelligent Assistance (including code\n\t\tcompletion with snippets and tips),\n\t\tDebug Output, Dark Theme, Bug Fixes", "About CodeLab", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show(WindowTitle + "\nCopyright © 2006-2019, All Rights Reserved.\n\nTom Jackson:\tInitial Code, Compile to DLL\n\nDavid Issel:\tEffect UI Creation, Effect Icons, Effect Help\n\t\tSystem, Editor Enhancements (including\n\t\tCode Templates, CodeLab Updater, Bug\n\t\tFixes), and Coding Tutorials\n\nJason Wendt:\tMigration to ScintillaNET editor control,\n\t\tIntelligent Assistance (including code\n\t\tcompletion with snippets and tips),\n\t\tDebug Output, Dark Theme, Bug Fixes", "About CodeLab", MessageBoxButtons.OK, MessageBoxIcon.Information);
             txtCode.Focus();
         }
         #endregion
