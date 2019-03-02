@@ -25,7 +25,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("C#|development|plugin|build|builder|code|coding|script|scripting")]
 [assembly: AssemblyCompany("BoltBait")]
 [assembly: AssemblyProduct("CodeLab")]
-[assembly: AssemblyCopyright("Copyright ©2018 BoltBait")]
+[assembly: AssemblyCopyright("Copyright ©2019 BoltBait")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]
@@ -58,7 +58,7 @@ namespace PaintDotNet.Effects
             }
         }
 
-        public CodeLab() : base("CodeLab", StaticImage, "Advanced", EffectFlags.Configurable)
+        public CodeLab() : base("CodeLab", StaticImage, "Advanced", new EffectOptions() { Flags = EffectFlags.Configurable })
         {
         }
 
