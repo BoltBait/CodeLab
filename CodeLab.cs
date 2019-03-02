@@ -11,7 +11,7 @@
 // TO THE USE OF THIS CODE.  NO LICENSE, EXPRESS OR IMPLIED, BY ESTOPPEL OR
 // OTHERWISE, TO ANY INTELLECTUAL PROPERTY RIGHTS IS GRANTED HEREIN.
 //
-// Latest distribution: http://www.BoltBait.com/pdn/codelab
+// Latest distribution: https://www.BoltBait.com/pdn/codelab
 /////////////////////////////////////////////////////////////////////////////////
 
 using System;
@@ -41,7 +41,7 @@ namespace PaintDotNet.Effects
         public string Copyright => base.GetType().Assembly.GetCustomAttribute<AssemblyDescriptionAttribute>().Description;
         public string DisplayName => base.GetType().Assembly.GetCustomAttribute<AssemblyProductAttribute>().Product;
         public Version Version => base.GetType().Assembly.GetName().Version;
-        public Uri WebsiteUri => new Uri("http://www.boltbait.com/pdn/CodeLab/");
+        public Uri WebsiteUri => new Uri("https://www.boltbait.com/pdn/CodeLab/");
     }
 
     [PluginSupportInfo(typeof(PluginSupportInfo), DisplayName = "CodeLab")]

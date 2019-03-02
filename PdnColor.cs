@@ -11,7 +11,7 @@
 // TO THE USE OF THIS CODE.  NO LICENSE, EXPRESS OR IMPLIED, BY ESTOPPEL OR
 // OTHERWISE, TO ANY INTELLECTUAL PROPERTY RIGHTS IS GRANTED HEREIN.
 //
-// Latest distribution: http://www.BoltBait.com/pdn/codelab
+// Latest distribution: https://www.BoltBait.com/pdn/codelab
 /////////////////////////////////////////////////////////////////////////////////
 using System;
 using System.Drawing;
