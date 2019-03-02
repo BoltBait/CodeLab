@@ -285,6 +285,47 @@ namespace PaintDotNet.Effects
             SetIcon(iconPath);
             #endregion
 
+            #region Load sample image
+            // See if a sample image exists
+            string samplePath = Path.ChangeExtension(resourcePath, ".sample.png");
+            if (File.Exists(samplePath))
+            {
+                Bitmap SampleImage;
+                try
+                {
+                    using (var bmpTemp = new Bitmap(samplePath))
+                    {
+                        SampleImage = new Bitmap(bmpTemp);
+                    }
+                    if ((SampleImage.Width != 200) || (SampleImage.Height != 150))
+                    {
+                        sampleLabel.Text = "The sample image " + Path.GetFileName(samplePath) + " was detected, but it was the wrong size. PNG file must be 200x150 pixels. You may continue without a sample image.";
+                        sampleLabel.Visible = true;
+                        sampleImage.Visible = false;
+                    }
+                    else
+                    {
+                        sampleImage.Image = SampleImage;
+                        sampleLabel.Text = "Sample Image Detected:";
+                        sampleLabel.Visible = true;
+                        sampleImage.Visible = true;
+                    }
+                }
+                catch
+                {
+                    sampleLabel.Text = "Something went wrong trying to load your sample image.";
+                    sampleLabel.Visible = true;
+                    sampleImage.Visible = false;
+                }
+            }
+            else
+            {
+                sampleLabel.Text = Path.GetFileName(samplePath) + " not detected.  If you would like to include a sample image, create a PNG file of size 200x150 and place it in the same directory as your source file.";
+                sampleLabel.Visible = true;
+                sampleImage.Visible = false;
+            }
+            #endregion
+
             UpdateReadOnlyFields();
         }
         #endregion
@@ -292,6 +333,10 @@ namespace PaintDotNet.Effects
         #region Build / Cancel buttons
         private void ButtonCancel_Click(object sender, EventArgs e)
         {
+            if (sampleImage.Image != null)
+            {
+                sampleImage.Image.Dispose();
+            }
             DialogResult = DialogResult.Cancel;
             this.Close();
         }
