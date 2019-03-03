@@ -333,10 +333,6 @@ namespace PaintDotNet.Effects
         #region Build / Cancel buttons
         private void ButtonCancel_Click(object sender, EventArgs e)
         {
-            if (sampleImage.Image != null)
-            {
-                sampleImage.Image.Dispose();
-            }
             DialogResult = DialogResult.Cancel;
             this.Close();
         }
