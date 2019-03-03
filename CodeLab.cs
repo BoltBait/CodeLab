@@ -78,19 +78,13 @@ namespace PaintDotNet.Effects
         {
             get
             {
-                if (getScalingFactor() > 1)
+                string resource = (getScalingFactor() > 1) ?
+                        "PaintDotNet.Effects.Icons.CodeLab32.png" :
+                        "PaintDotNet.Effects.Icons.CodeLab.png";
+
+                using (Stream imageStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resource))
                 {
-                    using (Stream imageStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("PaintDotNet.Effects.Icons.CodeLab32.png"))
-                    {
-                        return Image.FromStream(imageStream);
-                    }
-                }
-                else
-                {
-                    using (Stream imageStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("PaintDotNet.Effects.Icons.CodeLab.png"))
-                    {
-                        return Image.FromStream(imageStream);
-                    }
+                    return Image.FromStream(imageStream);
                 }
             }
         }
