@@ -19,7 +19,6 @@ using System.Drawing;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Windows.Forms;
 
 [assembly: AssemblyTitle("CodeLab plugin for Paint.NET")]
 [assembly: AssemblyDescription("C# Code Editor for Paint.NET Plugin Development")]
