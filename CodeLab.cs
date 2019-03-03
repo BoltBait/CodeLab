@@ -19,6 +19,7 @@ using System.Drawing;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Windows.Forms;
 
 [assembly: AssemblyTitle("CodeLab plugin for Paint.NET")]
 [assembly: AssemblyDescription("C# Code Editor for Paint.NET Plugin Development")]
@@ -47,13 +48,50 @@ namespace PaintDotNet.Effects
     [PluginSupportInfo(typeof(PluginSupportInfo), DisplayName = "CodeLab")]
     public class CodeLab : Effect
     {
+        [DllImport("gdi32.dll")]
+        static extern int GetDeviceCaps(IntPtr hdc, int nIndex);
+        public enum DeviceCap
+        {
+            VERTRES = 10,
+            LOGPIXELSY = 90,
+            DESKTOPVERTRES = 117,
+        }
+
+        private static float getScalingFactor()
+        {
+            int LogicalScreenHeight;
+            int PhysicalScreenHeight;
+            int logpixelsy;
+            using (Graphics g = Graphics.FromHwnd(IntPtr.Zero))
+            {
+                IntPtr desktop = g.GetHdc();
+                LogicalScreenHeight = GetDeviceCaps(desktop, (int)DeviceCap.VERTRES);
+                PhysicalScreenHeight = GetDeviceCaps(desktop, (int)DeviceCap.DESKTOPVERTRES);
+                logpixelsy = GetDeviceCaps(desktop, (int)DeviceCap.LOGPIXELSY);
+                g.ReleaseHdc();
+            }
+            float screenScalingFactor = (float)PhysicalScreenHeight / (float)LogicalScreenHeight;
+            float dpiScalingFactor = (float)logpixelsy / (float)96;
+            return Math.Max(screenScalingFactor, dpiScalingFactor);
+        }
+
         private static Image StaticImage
         {
             get
             {
-                using (Stream imageStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("PaintDotNet.Effects.Icons.CodeLab.png"))
+                if (getScalingFactor() > 1)
                 {
-                    return Image.FromStream(imageStream);
+                    using (Stream imageStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("PaintDotNet.Effects.Icons.CodeLab32.png"))
+                    {
+                        return Image.FromStream(imageStream);
+                    }
+                }
+                else
+                {
+                    using (Stream imageStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("PaintDotNet.Effects.Icons.CodeLab.png"))
+                    {
+                        return Image.FromStream(imageStream);
+                    }
                 }
             }
         }
