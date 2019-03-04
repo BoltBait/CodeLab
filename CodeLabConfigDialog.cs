@@ -909,8 +909,9 @@ namespace PaintDotNet.Effects
                 string fullPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
                 fullPath = Path.Combine(fullPath, FileName);
                 fullPath = Path.ChangeExtension(fullPath, ".dll");
+                bool isClassic = this.Services.GetService<IAppInfoService>().InstallType == AppInstallType.Classic;
                 // Let the user pick the submenu, menu name, and icon
-                BuildForm myBuildForm = new BuildForm(FileName.Trim(), txtCode.Text, FullScriptPath);
+                BuildForm myBuildForm = new BuildForm(FileName.Trim(), txtCode.Text, FullScriptPath, isClassic);
                 if (myBuildForm.ShowDialog() == DialogResult.OK)
                 {
                     // Everything is OK, BUILD IT!

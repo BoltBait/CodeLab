@@ -48,8 +48,9 @@ namespace PaintDotNet.Effects
         internal string RTZPath = "";
         private string FullScriptText = "";
         private string FileName = "";
+        private readonly bool isClassic;
 
-        internal BuildForm(string ScriptName, string ScriptText, string ScriptPath)
+        internal BuildForm(string ScriptName, string ScriptText, string ScriptPath, bool isClassic)
         {
             InitializeComponent();
 
@@ -69,6 +70,8 @@ namespace PaintDotNet.Effects
                     control.BackColor = PdnTheme.BackColor;
                 }
             }
+
+            this.isClassic = isClassic;
 
             WarningLabel.Visible = false;
 
@@ -1135,6 +1138,12 @@ namespace PaintDotNet.Effects
 
         private void GenSlnButton_Click(object sender, EventArgs e)
         {
+            if (!this.isClassic)
+            {
+                MessageBox.Show("Due to technical reasons, this feature is only available on classic installations of paint.net.", "Generate VS Solution", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
             if (!UpdateAllValues())
             {
                 return;
