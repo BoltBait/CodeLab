@@ -255,13 +255,13 @@ namespace PaintDotNet.Effects
                 sw.WriteLine("    CD /D \"%~dp0\"");
                 sw.WriteLine("");
                 sw.WriteLine(":: End Get ADMIN Privs");
-                sw.WriteLine(":: Read registry to find paint.net install directory");
-                sw.WriteLine("reg query HKLM\\SOFTWARE\\Paint.NET /v TARGETDIR 2>nul || (echo Sorry, I can't find paint.net! & goto store)");
+                sw.WriteLine(":: Read registry to find Paint.NET install directory");
+                sw.WriteLine("reg query HKLM\\SOFTWARE\\Paint.NET /v TARGETDIR 2>nul || (echo Sorry, I can't find Paint.NET! & goto store)");
                 sw.WriteLine("set PDN_DIR=");
                 sw.WriteLine("for /f \"tokens=2,*\" %%a in ('reg query HKLM\\SOFTWARE\\Paint.NET /v TARGETDIR ^| findstr TARGETDIR') do (");
                 sw.WriteLine("  set PDN_DIR=%%b");
                 sw.WriteLine(")");
-                sw.WriteLine("if not defined PDN_DIR (echo Sorry, I can't find paint.net! & goto store)");
+                sw.WriteLine("if not defined PDN_DIR (echo Sorry, I can't find Paint.NET! & goto store)");
                 sw.WriteLine(":: End read registry");
                 sw.WriteLine(":: Now do install");
                 sw.WriteLine("@echo off");

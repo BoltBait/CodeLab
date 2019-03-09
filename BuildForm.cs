@@ -1140,7 +1140,7 @@ namespace PaintDotNet.Effects
         {
             if (!this.isClassic)
             {
-                MessageBox.Show("Due to technical reasons, this feature is only available on classic installations of paint.net.", "Generate VS Solution", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Due to technical reasons, this feature is only available on classic installations of Paint.NET.", "Generate Visual Studio Solution", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 

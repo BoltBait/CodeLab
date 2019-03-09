@@ -165,7 +165,7 @@ namespace PaintDotNet.Effects
             }
 
             string AssemblyInfoPart = "";
-            AssemblyInfoPart += "[assembly: AssemblyTitle(\"" + FileName + " plugin for paint.net\")]\r\n";
+            AssemblyInfoPart += "[assembly: AssemblyTitle(\"" + FileName + " plugin for Paint.NET\")]\r\n";
             AssemblyInfoPart += "[assembly: AssemblyDescription(\"" + Description + "\")]\r\n";
             AssemblyInfoPart += "[assembly: AssemblyConfiguration(\"" + KeyWords.ToLower() + "\")]\r\n";
             AssemblyInfoPart += "[assembly: AssemblyCompany(\"" + Author + "\")]\r\n";
