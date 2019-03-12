@@ -47,38 +47,11 @@ namespace PaintDotNet.Effects
     [PluginSupportInfo(typeof(PluginSupportInfo), DisplayName = "CodeLab")]
     public class CodeLab : Effect
     {
-        [DllImport("gdi32.dll")]
-        static extern int GetDeviceCaps(IntPtr hdc, int nIndex);
-        public enum DeviceCap
-        {
-            VERTRES = 10,
-            LOGPIXELSY = 90,
-            DESKTOPVERTRES = 117,
-        }
-
-        private static float getScalingFactor()
-        {
-            int LogicalScreenHeight;
-            int PhysicalScreenHeight;
-            int logpixelsy;
-            using (Graphics g = Graphics.FromHwnd(IntPtr.Zero))
-            {
-                IntPtr desktop = g.GetHdc();
-                LogicalScreenHeight = GetDeviceCaps(desktop, (int)DeviceCap.VERTRES);
-                PhysicalScreenHeight = GetDeviceCaps(desktop, (int)DeviceCap.DESKTOPVERTRES);
-                logpixelsy = GetDeviceCaps(desktop, (int)DeviceCap.LOGPIXELSY);
-                g.ReleaseHdc();
-            }
-            float screenScalingFactor = (float)PhysicalScreenHeight / (float)LogicalScreenHeight;
-            float dpiScalingFactor = (float)logpixelsy / (float)96;
-            return Math.Max(screenScalingFactor, dpiScalingFactor);
-        }
-
         private static Image StaticImage
         {
             get
             {
-                string resource = (getScalingFactor() > 1) ?
+                string resource = (UIScaleFactor.Current.Scale > 1) ?
                         "PaintDotNet.Effects.Icons.CodeLab32.png" :
                         "PaintDotNet.Effects.Icons.CodeLab.png";
 
