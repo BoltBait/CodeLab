@@ -915,7 +915,7 @@ namespace PaintDotNet.Effects
                 if (myBuildForm.ShowDialog() == DialogResult.OK)
                 {
                     // Everything is OK, BUILD IT!
-                    if (ScriptBuilder.BuildDll(txtCode.Text, FullScriptPath, myBuildForm.SubMenuStr, myBuildForm.MenuStr, myBuildForm.IconPathStr, myBuildForm.Author, myBuildForm.MajorVer, myBuildForm.MinorVer, myBuildForm.Support, myBuildForm.WindowTitleTextStr, myBuildForm.isAdjustment, myBuildForm.Description, myBuildForm.KeyWords, myBuildForm.ForceAliasSelection, myBuildForm.ForceSingleThreaded, myBuildForm.HelpType, myBuildForm.HelpStr))
+                    if (ScriptBuilder.BuildDll(txtCode.Text, FullScriptPath, myBuildForm.SubMenuStr, myBuildForm.MenuStr, myBuildForm.IconPathStr, myBuildForm.Author, myBuildForm.MajorVer, myBuildForm.MinorVer, myBuildForm.Support, myBuildForm.WindowTitleTextStr, myBuildForm.isAdjustment, myBuildForm.Description, myBuildForm.KeyWords, myBuildForm.ForceAliasSelection, myBuildForm.ForceSingleThreaded, myBuildForm.ForceLegacyROI, myBuildForm.HelpType, myBuildForm.HelpStr))
                     {
                         string zipPath = Path.ChangeExtension(fullPath, ".zip");
                         MessageBox.Show("Build succeeded!\r\n\r\nFile \"" + zipPath.Trim() + "\" created.\r\n\r\nYou will need to right-click 'Extract All...' the file on your desktop to run the install.bat file and restart Paint.NET to see it in the Effects menu.", "Build Finished", MessageBoxButtons.OK, MessageBoxIcon.Information);

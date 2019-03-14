@@ -147,7 +147,7 @@ namespace PaintDotNet.Effects
             return false;
         }
 
-        internal static bool BuildDll(string scriptText, string scriptPath, string submenuname, string menuname, string iconpath, string Author, int MajorVersion, int MinorVersion, string SupportURL, string WindowTitleStr, bool isAdjustment, string Description, string KeyWords, bool ForceAliasSelection, bool ForceSingleThreaded, HelpType HelpType, string HelpText)
+        internal static bool BuildDll(string scriptText, string scriptPath, string submenuname, string menuname, string iconpath, string Author, int MajorVersion, int MinorVersion, string SupportURL, string WindowTitleStr, bool isAdjustment, string Description, string KeyWords, bool ForceAliasSelection, bool ForceSingleThreaded, bool forceLegacyROI, HelpType HelpType, string HelpText)
         {
             string FileName = Path.GetFileNameWithoutExtension(scriptPath);
 
@@ -163,7 +163,7 @@ namespace PaintDotNet.Effects
             string NameSpace = Regex.Replace(FileName, @"[^\w]", "") + "Effect";
 
             // Generate code
-            string SourceCode = ScriptWriter.FullSourceCode(scriptText, FileName, isAdjustment, submenuname, menuname, iconpath, SupportURL, ForceAliasSelection, ForceSingleThreaded, Author, MajorVersion, MinorVersion, Description, KeyWords, WindowTitleStr, HelpType, HelpText);
+            string SourceCode = ScriptWriter.FullSourceCode(scriptText, FileName, isAdjustment, submenuname, menuname, iconpath, SupportURL, ForceAliasSelection, ForceSingleThreaded, forceLegacyROI, Author, MajorVersion, MinorVersion, Description, KeyWords, WindowTitleStr, HelpType, HelpText);
 
             internalError = null;
             // Compile code
@@ -381,7 +381,7 @@ namespace PaintDotNet.Effects
             string SourceCode =
                 ScriptWriter.UsingPartCode +
                 ScriptWriter.NamespacePart(FileName) +
-                ScriptWriter.EffectPart(UserControls, FileName, string.Empty, FileName, string.Empty, false, false) +
+                ScriptWriter.EffectPart(UserControls, FileName, string.Empty, FileName, string.Empty, false, false, false) +
                 ScriptWriter.PropertyPart(UserControls, false, FileName, "FULL UI PREVIEW - Temporarily renders to canvas", 0, string.Empty) +
                 ScriptWriter.SetRenderPart(UserControls, true, preRenderRegex.IsMatch(scriptText)) +
                 ScriptWriter.RenderLoopPart(UserControls) +
@@ -428,7 +428,7 @@ namespace PaintDotNet.Effects
             string SourceCode =
                 ScriptWriter.UsingPartCode +
                 ScriptWriter.NamespacePart(FileName) +
-                ScriptWriter.EffectPart(UserControls, FileName, string.Empty, "UI PREVIEW - Does NOT Render to canvas", string.Empty, false, false) +
+                ScriptWriter.EffectPart(UserControls, FileName, string.Empty, "UI PREVIEW - Does NOT Render to canvas", string.Empty, false, false, false) +
                 ScriptWriter.PropertyPart(UserControls, false, FileName, string.Empty, 0, string.Empty) +
                 ScriptWriter.SetRenderPart(UserControls, true, false) +
                 ScriptWriter.RenderLoopPart(UserControls) +
