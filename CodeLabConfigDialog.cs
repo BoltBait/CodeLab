@@ -911,11 +911,11 @@ namespace PaintDotNet.Effects
                 fullPath = Path.ChangeExtension(fullPath, ".dll");
                 bool isClassic = this.Services.GetService<IAppInfoService>().InstallType == AppInstallType.Classic;
                 // Let the user pick the submenu, menu name, and icon
-                BuildForm myBuildForm = new BuildForm(FileName.Trim(), txtCode.Text, FullScriptPath, isClassic);
-                if (myBuildForm.ShowDialog() == DialogResult.OK)
+                BuildForm buildForm = new BuildForm(FileName.Trim(), txtCode.Text, FullScriptPath, isClassic);
+                if (buildForm.ShowDialog() == DialogResult.OK)
                 {
                     // Everything is OK, BUILD IT!
-                    if (ScriptBuilder.BuildDll(txtCode.Text, FullScriptPath, myBuildForm.SubMenuStr, myBuildForm.MenuStr, myBuildForm.IconPathStr, myBuildForm.Author, myBuildForm.MajorVer, myBuildForm.MinorVer, myBuildForm.Support, myBuildForm.WindowTitleTextStr, myBuildForm.isAdjustment, myBuildForm.Description, myBuildForm.KeyWords, myBuildForm.ForceAliasSelection, myBuildForm.ForceSingleThreaded, myBuildForm.ForceLegacyROI, myBuildForm.HelpType, myBuildForm.HelpStr))
+                    if (ScriptBuilder.BuildDll(txtCode.Text, FullScriptPath, buildForm.SubMenu, buildForm.MenuItemName, buildForm.IconPath, buildForm.Author, buildForm.MajorVer, buildForm.MinorVer, buildForm.URL, buildForm.WindowTitle, buildForm.isAdjustment, buildForm.Description, buildForm.KeyWords, buildForm.ForceAliasSelection, buildForm.ForceSingleThreaded, buildForm.ForceLegacyROI, buildForm.HelpType, buildForm.HelpStr))
                     {
                         string zipPath = Path.ChangeExtension(fullPath, ".zip");
                         MessageBox.Show("Build succeeded!\r\n\r\nFile \"" + zipPath.Trim() + "\" created.\r\n\r\nYou will need to right-click 'Extract All...' the file on your desktop to run the install.bat file and restart Paint.NET to see it in the Effects menu.", "Build Finished", MessageBoxButtons.OK, MessageBoxIcon.Information);

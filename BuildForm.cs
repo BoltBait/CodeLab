@@ -27,14 +27,12 @@ namespace PaintDotNet.Effects
     internal partial class BuildForm : Form
     {
         #region Constructor
-        internal string IconPathStr = "";
-        internal string SubMenuStr = "";
-        internal string MenuStr = "";
-        internal string CreateConfigOverride = "";
-        internal string WindowTitleTextStr = "";
-        internal int ConfigType = 0;
+        internal string IconPath = "";
+        internal string SubMenu = "";
+        internal string MenuItemName = "";
+        internal string WindowTitle = "";
         internal string Author = "";
-        internal string Support = "";
+        internal string URL = "";
         internal int MajorVer = 0;
         internal int MinorVer = 0;
         internal bool isAdjustment = false;
@@ -153,26 +151,16 @@ namespace PaintDotNet.Effects
             // Preload Description
             Regex REDesc = new Regex(@"//[\s-[\r\n]]*Desc[\s-[\r\n]]*:[\s-[\r\n]]*(?<desclabel>.*)(?=\r?\n|$)", RegexOptions.IgnoreCase);
             Match mds = REDesc.Match(ScriptText);
-            if (mds.Success)
-            {
-                DescriptionBox.Text = mds.Groups["desclabel"].Value.Trim();
-            }
-            else
-            {
-                DescriptionBox.Text = ScriptName + " selected pixels";
-            }
+            DescriptionBox.Text = mds.Success ?
+                mds.Groups["desclabel"].Value.Trim() :
+                ScriptName + " selected pixels";
 
             // Preload Keywords
             Regex REWords = new Regex(@"//[\s-[\r\n]]*KeyWords[\s-[\r\n]]*:[\s-[\r\n]]*(?<wordslabel>.*)(?=\r?\n|$)", RegexOptions.IgnoreCase);
             Match mkw = REWords.Match(ScriptText);
-            if (mkw.Success)
-            {
-                KeyWordsBox.Text = mkw.Groups["wordslabel"].Value.Trim();
-            }
-            else
-            {
-                KeyWordsBox.Text = ScriptName;
-            }
+            KeyWordsBox.Text = mkw.Success ?
+                mkw.Groups["wordslabel"].Value.Trim() :
+                ScriptName;
 
             // Preload Support URL
             Regex RESupport = new Regex(@"//[\s-[\r\n]]*URL[\s-[\r\n]]*:[\s-[\r\n]]*(?<urllabel>.*)(?=\r?\n|$)", RegexOptions.IgnoreCase);
@@ -183,31 +171,16 @@ namespace PaintDotNet.Effects
             }
 
             // Preload Force Aliased Selection
-            ForceAliasSelectionBox.Checked = false;
             Regex REAlias = new Regex(@"//[\s-[\r\n]]*(Force\s*Aliased\s*Selection|FAS)[\s-[\r\n]]*(?=\r?\n|$)", RegexOptions.IgnoreCase);
-            Match mas = REAlias.Match(ScriptText);
-            if (mas.Success)
-            {
-                ForceAliasSelectionBox.Checked = true;
-            }
+            ForceAliasSelectionBox.Checked = REAlias.IsMatch(ScriptText);
 
             // Preload Force Single Threaded
-            ForceSingleThreadedBox.Checked = false;
             Regex RESingle = new Regex(@"//[\s-[\r\n]]*(Force\s*Single\s*Threaded|FST)[\s-[\r\n]]*(?=\r?\n|$)", RegexOptions.IgnoreCase);
-            Match mst = RESingle.Match(ScriptText);
-            if (mst.Success)
-            {
-                ForceSingleThreadedBox.Checked = true;
-            }
+            ForceSingleThreadedBox.Checked = RESingle.IsMatch(ScriptText);
 
             // Preload Force Legacy ROI
-            forceLegacyRoiBox.Checked = false;
             Regex RELegacy = new Regex(@"//[\s-[\r\n]]*(Force\s*Legacy\s*ROI|FLR)[\s-[\r\n]]*(?=\r?\n|$)", RegexOptions.IgnoreCase);
-            Match mlr = RELegacy.Match(ScriptText);
-            if (mlr.Success)
-            {
-                forceLegacyRoiBox.Checked = true;
-            }
+            forceLegacyRoiBox.Checked = RELegacy.IsMatch(ScriptText);
             #endregion
 
             #region Load Help Text
@@ -355,8 +328,8 @@ namespace PaintDotNet.Effects
             MajorVer = (int)MajorVersion.Value;
             MinorVer = (int)MinorVersion.Value;
             Author = AuthorName.Text.Replace('\\', '/');
-            Support = SupportURL.Text.Replace('\\', '/');
-            WindowTitleTextStr = WindowTitleText.Text.Trim().Replace('\\', '/');
+            URL = SupportURL.Text.Replace('\\', '/');
+            WindowTitle = WindowTitleText.Text.Trim().Replace('\\', '/');
             isAdjustment = AdjustmentRadio.Checked;
             Description = DescriptionBox.Text.Trim().Replace('\\', '/');
             KeyWords = KeyWordsBox.Text.Trim().Replace('\\', '/');
@@ -386,9 +359,8 @@ namespace PaintDotNet.Effects
 
             if (MenuName.Text.Trim() != "")
             {
-                MenuStr = MenuName.Text.Trim().Replace('\\', '/');
-                SubMenuStr = SubMenuName.Text.Trim().Replace('\\','/');
-                CreateConfigOverride = "";
+                MenuItemName = MenuName.Text.Trim().Replace('\\', '/');
+                SubMenu = SubMenuName.Text.Trim().Replace('\\','/');
             }
             else
             {
@@ -424,7 +396,7 @@ namespace PaintDotNet.Effects
             if (!File.Exists(filePath))
             {
                 MenuIcon.Image = null;
-                IconPathStr = "";
+                IconPath = "";
                 return;
             }
 
@@ -438,7 +410,7 @@ namespace PaintDotNet.Effects
             {
                 // If any errors happen, assume the file is invalid.
                 MenuIcon.Image = null;
-                IconPathStr = "";
+                IconPath = "";
                 return;
             }
 
@@ -446,14 +418,14 @@ namespace PaintDotNet.Effects
             if ((newicon.Width != 16) || (newicon.Height != 16))
             {
                 MenuIcon.Image = null;
-                IconPathStr = "";
+                IconPath = "";
                 MessageBox.Show("PNG file must be 16 x 16 pixels", "Improper File Selected");
                 return;
             }
 
             // Load the icon to the message box
             MenuIcon.Image = newicon;
-            IconPathStr = filePath;
+            IconPath = filePath;
         }
 
         private void ButtonIcon_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -1140,7 +1112,7 @@ namespace PaintDotNet.Effects
                 return;
             }
 
-            string SourceCode = ScriptWriter.FullSourceCode(FullScriptText, FileName, isAdjustment, SubMenuName.Text, MenuName.Text, IconPathStr, Support, ForceAliasSelection, ForceSingleThreaded, ForceLegacyROI, Author, MajorVer, MinorVer, Description, KeyWords, WindowTitleTextStr, HelpType, HelpStr);
+            string SourceCode = ScriptWriter.FullSourceCode(FullScriptText, FileName, isAdjustment, SubMenuName.Text, MenuName.Text, IconPath, URL, ForceAliasSelection, ForceSingleThreaded, ForceLegacyROI, Author, MajorVer, MinorVer, Description, KeyWords, WindowTitle, HelpType, HelpStr);
             using (ViewSrc VSW = new ViewSrc("Full Source Code", SourceCode, true))
             {
                 VSW.ShowDialog();
@@ -1174,8 +1146,8 @@ namespace PaintDotNet.Effects
 
                 if (fbd.ShowDialog() == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
                 {
-                    string SourceCode = ScriptWriter.FullSourceCode(FullScriptText, FileName, isAdjustment, SubMenuName.Text, MenuName.Text, IconPathStr, Support, ForceAliasSelection, ForceSingleThreaded, ForceLegacyROI, Author, MajorVer, MinorVer, Description, KeyWords, WindowTitleTextStr, HelpType, HelpStr);
-                    Solution.Generate(fbd.SelectedPath, FileName, SourceCode, IconPathStr);
+                    string SourceCode = ScriptWriter.FullSourceCode(FullScriptText, FileName, isAdjustment, SubMenuName.Text, MenuName.Text, IconPath, URL, ForceAliasSelection, ForceSingleThreaded, ForceLegacyROI, Author, MajorVer, MinorVer, Description, KeyWords, WindowTitle, HelpType, HelpStr);
+                    Solution.Generate(fbd.SelectedPath, FileName, SourceCode, IconPath);
 
                     Settings.LastSlnDirectory = fbd.SelectedPath;
                 }
