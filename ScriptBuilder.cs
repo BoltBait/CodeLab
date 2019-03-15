@@ -34,6 +34,8 @@ namespace PaintDotNet.Effects
         private static Effect userScriptObject;
         private static int lineOffset;
         private static string internalError;
+        private const string defaultOptions = " /unsafe /optimize";
+        private static readonly Regex preRenderRegex = new Regex(@"void PreRender\(Surface dst, Surface src\)(\s)*{(.|\s)*}", RegexOptions.Singleline);
 
         #region Properties
         internal static Effect UserScriptObject => userScriptObject;
@@ -66,7 +68,7 @@ namespace PaintDotNet.Effects
             param.IncludeDebugInformation = false;
             param.GenerateExecutable = false;
             param.WarningLevel = 0;     // Turn off all warnings
-            param.CompilerOptions = " /unsafe /optimize";
+            param.CompilerOptions = defaultOptions;
 
             // Get all loaded assemblies
             Assembly[] allLoadedAssemblies = AppDomain.CurrentDomain.GetAssemblies();
@@ -75,15 +77,16 @@ namespace PaintDotNet.Effects
             string effectsPluginsPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             string fileTypePluignsPath = Path.Combine(Directory.GetParent(effectsPluginsPath).FullName, "FileTypes");
 
-            foreach (Assembly activeAssembly in allLoadedAssemblies)
+            foreach (Assembly assembly in allLoadedAssemblies)
             {
                 try
                 {
                     // Ignore assemblies in the Effects and FileTypes directories
-                    if (!activeAssembly.Location.StartsWith(effectsPluginsPath, StringComparison.Ordinal) && !activeAssembly.Location.StartsWith(fileTypePluignsPath, StringComparison.Ordinal))
+                    if (!assembly.Location.StartsWith(effectsPluginsPath, StringComparison.Ordinal) &&
+                        !assembly.Location.StartsWith(fileTypePluignsPath, StringComparison.Ordinal))
                     {
                         // Make assembly accessible to the plugin being written in the editor
-                        param.ReferencedAssemblies.Add(activeAssembly.Location);
+                        param.ReferencedAssemblies.Add(assembly.Location);
                     }
                 }
                 catch
@@ -97,8 +100,6 @@ namespace PaintDotNet.Effects
 
         internal static bool Build(string scriptText, bool debug)
         {
-            Regex preRenderRegex = new Regex(@"void PreRender\(Surface dst, Surface src\)(\s)*{(.|\s)*}", RegexOptions.Singleline);
-
             // Generate code
             string SourceCode =
                 ScriptWriter.UsingPartCode +
@@ -147,7 +148,7 @@ namespace PaintDotNet.Effects
             return false;
         }
 
-        internal static bool BuildDll(string scriptText, string scriptPath, string submenuname, string menuname, string iconpath, string Author, int MajorVersion, int MinorVersion, string SupportURL, string WindowTitleStr, bool isAdjustment, string Description, string KeyWords, bool ForceAliasSelection, bool ForceSingleThreaded, bool forceLegacyROI, HelpType HelpType, string HelpText)
+        internal static bool BuildDll(string scriptText, string scriptPath, string subMenuname, string menuName, string iconPath, string author, int majorVersion, int minorVersion, string supportURL, string windowTitle, bool isAdjustment, string description, string keyWords, bool forceAliasSelection, bool forceSingleThreaded, bool forceLegacyROI, HelpType helpType, string helpText)
         {
             string FileName = Path.GetFileNameWithoutExtension(scriptPath);
 
@@ -163,55 +164,40 @@ namespace PaintDotNet.Effects
             string NameSpace = Regex.Replace(FileName, @"[^\w]", "") + "Effect";
 
             // Generate code
-            string SourceCode = ScriptWriter.FullSourceCode(scriptText, FileName, isAdjustment, submenuname, menuname, iconpath, SupportURL, ForceAliasSelection, ForceSingleThreaded, forceLegacyROI, Author, MajorVersion, MinorVersion, Description, KeyWords, WindowTitleStr, HelpType, HelpText);
+            string SourceCode = ScriptWriter.FullSourceCode(scriptText, FileName, isAdjustment, subMenuname, menuName, iconPath, supportURL, forceAliasSelection, forceSingleThreaded, forceLegacyROI, author, majorVersion, minorVersion, description, keyWords, windowTitle, helpType, helpText);
 
             internalError = null;
             // Compile code
             try
             {
-                string oldargs = param.CompilerOptions;
-                if (File.Exists(iconpath))
+                string newCompilerOptions = defaultOptions;
+                if (File.Exists(iconPath))
                 {
                     // If an icon is specified and exists, add it to the build as an imbedded resource to the same namespace as the effect.
-                    param.CompilerOptions = param.CompilerOptions + " /res:\"" + iconpath + "\",\"" + NameSpace + "." + Path.GetFileName(iconpath) + "\" ";
+                    newCompilerOptions += " /res:\"" + iconPath + "\",\"" + NameSpace + "." + Path.GetFileName(iconPath) + "\" ";
 
                     // If an icon exists, see if a sample image exists
-                    string samplepath = Path.ChangeExtension(iconpath, ".sample.png");
+                    string samplepath = Path.ChangeExtension(iconPath, ".sample.png");
                     if (File.Exists(samplepath))
                     {
                         // If an image exists in the icon directory with a ".sample.png" extension, add it to the build as an imbedded resource.
-                        param.CompilerOptions = param.CompilerOptions + " /res:\"" + samplepath + "\",\"" + NameSpace + "." + Path.GetFileName(samplepath) + "\" ";
+                        newCompilerOptions += " /res:\"" + samplepath + "\",\"" + NameSpace + "." + Path.GetFileName(samplepath) + "\" ";
                     }
                 }
                 string HelpPath = Path.ChangeExtension(scriptPath, ".rtz");
-                if (HelpType == HelpType.RichText && File.Exists(HelpPath))
+                if (helpType == HelpType.RichText && File.Exists(HelpPath))
                 {
                     // If an help file exists in the source directory with a ".rtz" extension, add it to the build as an imbedded resource.
-                    param.CompilerOptions = param.CompilerOptions + " /res:\"" + HelpPath + "\",\"" + NameSpace + "." + Path.GetFileName(HelpPath) + "\" ";
+                    newCompilerOptions += " /res:\"" + HelpPath + "\",\"" + NameSpace + "." + Path.GetFileName(HelpPath) + "\" ";
                 }
 
-                param.CompilerOptions = param.CompilerOptions + " /debug- /target:library /out:\"" + dllPath + "\"";
+                newCompilerOptions += " /debug- /target:library /out:\"" + dllPath + "\"";
 
-                try
-                {
-                    result = cscp.CompileAssemblyFromSource(param, SourceCode);
-                }
-                catch (Exception x)
-                {
-                    if (x.Message.Contains("Could not find file"))
-                    {
-                        // ignore this error
-                    }
-                    else
-                    {
-                        throw new Exception(x.Message, x);
-                    }
-                }
+                param.CompilerOptions = newCompilerOptions;
+                result = cscp.CompileAssemblyFromSource(param, SourceCode);
+                param.CompilerOptions = defaultOptions;
 
                 lineOffset = (SourceCode.Substring(0, SourceCode.IndexOf("#region User Entered Code", StringComparison.Ordinal)) + "\r\n").CountLines();
-
-                param.CompilerOptions = oldargs;
-
 
                 if (result.Errors.HasErrors)
                 {
@@ -373,7 +359,6 @@ namespace PaintDotNet.Effects
         internal static bool BuildFullPreview(string scriptText)
         {
             const string FileName = "PreviewEffect";
-            Regex preRenderRegex = new Regex(@"void PreRender\(Surface dst, Surface src\)(\s)*{(.|\s)*}", RegexOptions.Singleline);
 
             // Generate code
             List<UIElement> UserControls = UIElement.ProcessUIControls(scriptText);
