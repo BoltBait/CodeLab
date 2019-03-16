@@ -1927,6 +1927,8 @@ namespace PaintDotNet.Effects
             }
 
             LoadFile(filePath);
+            txtCode.Focus();
+            Build();
         }
         #endregion
 
