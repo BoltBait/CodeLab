@@ -262,7 +262,7 @@ namespace PaintDotNet.Effects
             return CategoryPart;
         }
 
-        internal static string EffectPart(List<UIElement> UserControls, string FileName, string submenuname, string menuname, string iconpath, bool ForceAliasSelection, bool ForceSingleThreaded, bool forceLegacyROI)
+        internal static string EffectPart(List<UIElement> UserControls, string FileName, string submenuname, string menuname, string iconpath, EffectFlags effectFlags,  bool forceLegacyROI)
         {
             menuname = menuname.Trim().Replace('"', '\'');
             if (menuname.Length == 0)
@@ -347,13 +347,14 @@ namespace PaintDotNet.Effects
 
             // Set Effect Flags
             string Configurable = (UserControls.Count != 0) ? "EffectFlags.Configurable" : "EffectFlags.None";
-            string AliasSelection = (ForceAliasSelection) ? " | EffectFlags.ForceAliasedSelectionQuality" : "";
-            string SingleThreaded = (ForceSingleThreaded) ? " | EffectFlags.SingleThreaded" : "";
+            string AliasSelection = effectFlags.HasFlag(EffectFlags.ForceAliasedSelectionQuality) ? " | EffectFlags.ForceAliasedSelectionQuality" : "";
+            string SingleThreaded = effectFlags.HasFlag(EffectFlags.SingleThreaded) ? " | EffectFlags.SingleThreaded" : "";
+            string SingleRender = effectFlags.HasFlag(EffectFlags.SingleRenderCall) ? " | EffectFlags.SingleRenderCall" : "";
 
             // Legacy ROI
             string RenderingSchedule = (forceLegacyROI) ? ", RenderingSchedule = EffectRenderingSchedule.SmallHorizontalStrips" : "";
 
-            EffectPart += Configurable + AliasSelection + SingleThreaded + RenderingSchedule + " })\r\n";
+            EffectPart += Configurable + AliasSelection + SingleThreaded + SingleRender + RenderingSchedule + " })\r\n";
             EffectPart += "        {\r\n";
             foreach (UIElement u in UserControls)
             {
@@ -1180,7 +1181,7 @@ namespace PaintDotNet.Effects
             return append_code;
         }
 
-        internal static string FullSourceCode(string SourceCode, string FileName, bool isAdjustment, string submenuname, string menuname, string iconpath, string SupportURL, bool ForceAliasSelection, bool ForceSingleThreaded, bool forceLegacyROI, string Author, int MajorVersion, int MinorVersion, string Description, string KeyWords, string WindowTitleStr, HelpType HelpType, string HelpText)
+        internal static string FullSourceCode(string SourceCode, string FileName, bool isAdjustment, string submenuname, string menuname, string iconpath, string SupportURL, EffectFlags effectFlags, bool forceLegacyROI, string Author, int MajorVersion, int MinorVersion, string Description, string KeyWords, string WindowTitleStr, HelpType HelpType, string HelpText)
         {
             List<UIElement> UserControls = UIElement.ProcessUIControls(SourceCode);
             Regex preRenderRegex = new Regex(@"void PreRender\(Surface dst, Surface src\)(\s)*{(.|\s)*}", RegexOptions.Singleline);
@@ -1190,7 +1191,7 @@ namespace PaintDotNet.Effects
             string sNamespacePart = NamespacePart(FileName);
             string sSupportInfoPart = SupportInfoPart(menuname, SupportURL);
             string sCategoryPart = CategoryPart(isAdjustment);
-            string sEffectPart = EffectPart(UserControls, FileName, submenuname, menuname, iconpath, ForceAliasSelection, ForceSingleThreaded, forceLegacyROI);
+            string sEffectPart = EffectPart(UserControls, FileName, submenuname, menuname, iconpath, effectFlags, forceLegacyROI);
             string sHelpPart = HelpPart(SourceCode.Contains("OnWindowHelpButtonClicked"), HelpType, HelpText);
             string sPropertyPart = PropertyPart(UserControls, SourceCode.Contains("OnWindowHelpButtonClicked"), FileName, WindowTitleStr, HelpType, HelpText);
             string sSetRenderPart = SetRenderPart(UserControls, true, preRenderRegex.IsMatch(SourceCode));

@@ -38,8 +38,7 @@ namespace PaintDotNet.Effects
         internal bool isAdjustment = false;
         internal string Description = "";
         internal string KeyWords = "";
-        internal bool ForceAliasSelection = false;
-        internal bool ForceSingleThreaded = false;
+        internal EffectFlags EffectFlags = EffectFlags.None;
         internal bool ForceLegacyROI = false;
         internal HelpType HelpType = 0;
         internal string HelpStr = "";
@@ -333,9 +332,13 @@ namespace PaintDotNet.Effects
             isAdjustment = AdjustmentRadio.Checked;
             Description = DescriptionBox.Text.Trim().Replace('\\', '/');
             KeyWords = KeyWordsBox.Text.Trim().Replace('\\', '/');
-            ForceAliasSelection = ForceAliasSelectionBox.Checked;
-            ForceSingleThreaded = ForceSingleThreadedBox.Checked;
             ForceLegacyROI = forceLegacyRoiBox.Checked;
+
+            this.EffectFlags = EffectFlags.None;
+            if (ForceAliasSelectionBox.Checked) this.EffectFlags |= EffectFlags.ForceAliasedSelectionQuality;
+            if (ForceSingleThreadedBox.Checked) this.EffectFlags |= EffectFlags.SingleThreaded;
+            if (forceSingleRenderBox.Checked) this.EffectFlags |= EffectFlags.SingleRenderCall;
+
             if (radioButtonNone.Checked)
             {
                 HelpStr = "";
@@ -1112,7 +1115,7 @@ namespace PaintDotNet.Effects
                 return;
             }
 
-            string SourceCode = ScriptWriter.FullSourceCode(FullScriptText, FileName, isAdjustment, SubMenuName.Text, MenuName.Text, IconPath, URL, ForceAliasSelection, ForceSingleThreaded, ForceLegacyROI, Author, MajorVer, MinorVer, Description, KeyWords, WindowTitle, HelpType, HelpStr);
+            string SourceCode = ScriptWriter.FullSourceCode(FullScriptText, FileName, isAdjustment, SubMenuName.Text, MenuName.Text, IconPath, URL, EffectFlags, ForceLegacyROI, Author, MajorVer, MinorVer, Description, KeyWords, WindowTitle, HelpType, HelpStr);
             using (ViewSrc VSW = new ViewSrc("Full Source Code", SourceCode, true))
             {
                 VSW.ShowDialog();
@@ -1146,7 +1149,7 @@ namespace PaintDotNet.Effects
 
                 if (fbd.ShowDialog() == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
                 {
-                    string SourceCode = ScriptWriter.FullSourceCode(FullScriptText, FileName, isAdjustment, SubMenuName.Text, MenuName.Text, IconPath, URL, ForceAliasSelection, ForceSingleThreaded, ForceLegacyROI, Author, MajorVer, MinorVer, Description, KeyWords, WindowTitle, HelpType, HelpStr);
+                    string SourceCode = ScriptWriter.FullSourceCode(FullScriptText, FileName, isAdjustment, SubMenuName.Text, MenuName.Text, IconPath, URL, EffectFlags, ForceLegacyROI, Author, MajorVer, MinorVer, Description, KeyWords, WindowTitle, HelpType, HelpStr);
                     Solution.Generate(fbd.SelectedPath, FileName, SourceCode, IconPath);
 
                     Settings.LastSlnDirectory = fbd.SelectedPath;

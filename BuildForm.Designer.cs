@@ -102,6 +102,7 @@ namespace PaintDotNet.Effects
             this.sampleImage = new System.Windows.Forms.PictureBox();
             this.sampleLabel = new System.Windows.Forms.Label();
             this.forceLegacyRoiBox = new System.Windows.Forms.CheckBox();
+            this.forceSingleRenderBox = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.MajorVersion)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.MinorVersion)).BeginInit();
             this.toolStrip1.SuspendLayout();
@@ -261,9 +262,9 @@ namespace PaintDotNet.Effects
             this.ForceAliasSelectionBox.AutoSize = true;
             this.ForceAliasSelectionBox.Location = new System.Drawing.Point(19, 405);
             this.ForceAliasSelectionBox.Name = "ForceAliasSelectionBox";
-            this.ForceAliasSelectionBox.Size = new System.Drawing.Size(105, 17);
+            this.ForceAliasSelectionBox.Size = new System.Drawing.Size(107, 17);
             this.ForceAliasSelectionBox.TabIndex = 11;
-            this.ForceAliasSelectionBox.Text = "Aliased selection";
+            this.ForceAliasSelectionBox.Text = "Aliased Selection";
             this.toolTip1.SetToolTip(this.ForceAliasSelectionBox, "Normally, selections are anti-aliased.\r\nThis will force a selection to be aliased" +
         ".\r\nIt is useful if you are modifying the alpha values\r\nalong the marching ants b" +
         "oundary.");
@@ -457,11 +458,11 @@ namespace PaintDotNet.Effects
             // ForceSingleThreadedBox
             // 
             this.ForceSingleThreadedBox.AutoSize = true;
-            this.ForceSingleThreadedBox.Location = new System.Drawing.Point(130, 405);
+            this.ForceSingleThreadedBox.Location = new System.Drawing.Point(132, 405);
             this.ForceSingleThreadedBox.Name = "ForceSingleThreadedBox";
-            this.ForceSingleThreadedBox.Size = new System.Drawing.Size(100, 17);
+            this.ForceSingleThreadedBox.Size = new System.Drawing.Size(104, 17);
             this.ForceSingleThreadedBox.TabIndex = 12;
-            this.ForceSingleThreadedBox.Text = "Single threaded";
+            this.ForceSingleThreadedBox.Text = "Single Threaded";
             this.ForceSingleThreadedBox.UseVisualStyleBackColor = true;
             // 
             // label8
@@ -866,12 +867,23 @@ namespace PaintDotNet.Effects
             this.forceLegacyRoiBox.Text = "Legacy ROI";
             this.forceLegacyRoiBox.UseVisualStyleBackColor = true;
             // 
+            // forceSingleRenderBox
+            // 
+            this.forceSingleRenderBox.AutoSize = true;
+            this.forceSingleRenderBox.Location = new System.Drawing.Point(132, 428);
+            this.forceSingleRenderBox.Name = "forceSingleRenderBox";
+            this.forceSingleRenderBox.Size = new System.Drawing.Size(113, 17);
+            this.forceSingleRenderBox.TabIndex = 92;
+            this.forceSingleRenderBox.Text = "Single Render Call";
+            this.forceSingleRenderBox.UseVisualStyleBackColor = true;
+            // 
             // BuildForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.CancelButton = this.ButtonCancel;
             this.ClientSize = new System.Drawing.Size(717, 637);
+            this.Controls.Add(this.forceSingleRenderBox);
             this.Controls.Add(this.forceLegacyRoiBox);
             this.Controls.Add(this.sampleImage);
             this.Controls.Add(this.sampleLabel);
@@ -1017,5 +1029,6 @@ namespace PaintDotNet.Effects
         private System.Windows.Forms.PictureBox sampleImage;
         private System.Windows.Forms.Label sampleLabel;
         private System.Windows.Forms.CheckBox forceLegacyRoiBox;
+        private System.Windows.Forms.CheckBox forceSingleRenderBox;
     }
 }
