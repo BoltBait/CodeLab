@@ -2032,13 +2032,11 @@ namespace PaintDotNet.Effects
             {
                 foreach (string filePath in droppedFiles)
                 {
-                    if (!Path.GetExtension(filePath).Equals(".cs", StringComparison.OrdinalIgnoreCase) ||
-                        !File.Exists(filePath))
+                    if (Path.GetExtension(filePath).Equals(".cs", StringComparison.OrdinalIgnoreCase) &&
+                        File.Exists(filePath))
                     {
-                        continue;
+                        LoadFile(filePath);
                     }
-
-                    LoadFile(filePath);
                 }
 
                 txtCode.Focus();

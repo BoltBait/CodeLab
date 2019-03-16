@@ -343,18 +343,17 @@ namespace PaintDotNet.Effects
             EffectPart += "        }\r\n";
             EffectPart += "\r\n";
             EffectPart += "        public " + NameSpace + "Plugin()\r\n";
-            EffectPart += "            : base(StaticName, StaticIcon, SubmenuName, new EffectOptions() { Flags = ";
 
             // Set Effect Flags
-            string Configurable = (UserControls.Count != 0) ? "EffectFlags.Configurable" : "EffectFlags.None";
-            string AliasSelection = effectFlags.HasFlag(EffectFlags.ForceAliasedSelectionQuality) ? " | EffectFlags.ForceAliasedSelectionQuality" : "";
-            string SingleThreaded = effectFlags.HasFlag(EffectFlags.SingleThreaded) ? " | EffectFlags.SingleThreaded" : "";
-            string SingleRender = effectFlags.HasFlag(EffectFlags.SingleRenderCall) ? " | EffectFlags.SingleRenderCall" : "";
+            string flags = (UserControls.Count != 0) ? "EffectFlags.Configurable" : "EffectFlags.None";
+            if (effectFlags.HasFlag(EffectFlags.ForceAliasedSelectionQuality)) flags += " | EffectFlags.ForceAliasedSelectionQuality";
+            if (effectFlags.HasFlag(EffectFlags.SingleThreaded)) flags += " | EffectFlags.SingleThreaded";
+            if (effectFlags.HasFlag(EffectFlags.SingleRenderCall)) flags += " | EffectFlags.SingleRenderCall";
 
             // Legacy ROI
-            string RenderingSchedule = (forceLegacyROI) ? ", RenderingSchedule = EffectRenderingSchedule.SmallHorizontalStrips" : "";
+            string renderingSchedule = forceLegacyROI ? ", RenderingSchedule = EffectRenderingSchedule.SmallHorizontalStrips" : "";
 
-            EffectPart += Configurable + AliasSelection + SingleThreaded + SingleRender + RenderingSchedule + " })\r\n";
+            EffectPart += "            : base(StaticName, StaticIcon, SubmenuName, new EffectOptions() { Flags = " + flags + renderingSchedule + " })\r\n";
             EffectPart += "        {\r\n";
             foreach (UIElement u in UserControls)
             {
