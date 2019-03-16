@@ -180,6 +180,10 @@ namespace PaintDotNet.Effects
             // Preload Force Legacy ROI
             Regex RELegacy = new Regex(@"//[\s-[\r\n]]*(Force\s*Legacy\s*ROI|FLR)[\s-[\r\n]]*(?=\r?\n|$)", RegexOptions.IgnoreCase);
             forceLegacyRoiBox.Checked = RELegacy.IsMatch(ScriptText);
+
+            // Preload Single Render Call
+            Regex RESingleRenderCall = new Regex(@"//[\s-[\r\n]]*(Force\s*Single\s*Render\s*Call|FSR)[\s-[\r\n]]*(?=\r?\n|$)", RegexOptions.IgnoreCase);
+            forceSingleRenderBox.Checked = RESingleRenderCall.IsMatch(ScriptText);
             #endregion
 
             #region Load Help Text
