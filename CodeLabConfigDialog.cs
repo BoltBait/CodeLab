@@ -1988,5 +1988,38 @@ namespace PaintDotNet.Effects
             this.Text = FileName + " - " + WindowTitle;
         }
         #endregion
+
+        protected override void OnDragEnter(DragEventArgs drgevent)
+        {
+            base.OnDragEnter(drgevent);
+
+            if (drgevent.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                drgevent.Effect = DragDropEffects.Copy;
+            }
+        }
+
+        protected override void OnDragDrop(DragEventArgs drgevent)
+        {
+            base.OnDragDrop(drgevent);
+
+            if (drgevent.Data.GetDataPresent(DataFormats.FileDrop) &&
+                drgevent.Data.GetData(DataFormats.FileDrop) is string[] droppedFiles)
+            {
+                foreach (string filePath in droppedFiles)
+                {
+                    if (!Path.GetExtension(filePath).Equals(".cs", StringComparison.OrdinalIgnoreCase) ||
+                        !File.Exists(filePath))
+                    {
+                        continue;
+                    }
+
+                    LoadFile(filePath);
+                }
+
+                txtCode.Focus();
+                Build();
+            }
+        }
     }
 }
