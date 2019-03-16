@@ -44,8 +44,7 @@ namespace PaintDotNet.Effects
         public Uri WebsiteUri => new Uri("https://www.boltbait.com/pdn/CodeLab/");
     }
 
-    [PluginSupportInfo(typeof(PluginSupportInfo), DisplayName = "CodeLab")]
-    public class CodeLab : Effect
+    public abstract class CodeLab : Effect
     {
         private static Image StaticImage
         {
@@ -62,7 +61,14 @@ namespace PaintDotNet.Effects
             }
         }
 
-        public CodeLab() : base("CodeLab", StaticImage, "Advanced", new EffectOptions() { Flags = EffectFlags.Configurable })
+        protected CodeLab(string extendedName, EffectFlags flags, bool useLegacyROI)
+            : base(
+                "CodeLab" + extendedName,
+                StaticImage,
+                "Advanced",
+                useLegacyROI ?
+                    new EffectOptions() { Flags = EffectFlags.Configurable | flags, RenderingSchedule = EffectRenderingSchedule.SmallHorizontalStrips } :
+                    new EffectOptions() { Flags = EffectFlags.Configurable | flags})
         {
         }
 
@@ -142,6 +148,38 @@ namespace PaintDotNet.Effects
         {
             userEffect?.Dispose();
             base.OnDispose(disposing);
+        }
+    }
+
+    [PluginSupportInfo(typeof(PluginSupportInfo), DisplayName = "CodeLab")]
+    public class CodeLabRegular : CodeLab
+    {
+        public CodeLabRegular() : base(string.Empty, EffectFlags.None, false)
+        {
+        }
+    }
+
+    [PluginSupportInfo(typeof(PluginSupportInfo), DisplayName = "CodeLab")]
+    public class CodeLabLegacyROI : CodeLab
+    {
+        public CodeLabLegacyROI() : base(" - Legacy ROI", EffectFlags.None, true)
+        {
+        }
+    }
+
+    [PluginSupportInfo(typeof(PluginSupportInfo), DisplayName = "CodeLab")]
+    public class CodeLabAliased : CodeLab
+    {
+        public CodeLabAliased() : base(" - Aliased Selection", EffectFlags.ForceAliasedSelectionQuality, false)
+        {
+        }
+    }
+
+    [PluginSupportInfo(typeof(PluginSupportInfo), DisplayName = "CodeLab")]
+    public class CodeLabSingleRender : CodeLab
+    {
+        public CodeLabSingleRender() : base(" - Single Render Call", EffectFlags.SingleRenderCall, false)
+        {
         }
     }
 }
