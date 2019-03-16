@@ -119,7 +119,7 @@ namespace PaintDotNet.Effects
             this.ButtonCancel.Location = new System.Drawing.Point(618, 600);
             this.ButtonCancel.Name = "ButtonCancel";
             this.ButtonCancel.Size = new System.Drawing.Size(75, 23);
-            this.ButtonCancel.TabIndex = 22;
+            this.ButtonCancel.TabIndex = 26;
             this.ButtonCancel.Text = "Cancel";
             this.ButtonCancel.UseVisualStyleBackColor = true;
             this.ButtonCancel.Click += new System.EventHandler(this.ButtonCancel_Click);
@@ -132,7 +132,7 @@ namespace PaintDotNet.Effects
             this.ButtonSave.Location = new System.Drawing.Point(537, 600);
             this.ButtonSave.Name = "ButtonSave";
             this.ButtonSave.Size = new System.Drawing.Size(75, 23);
-            this.ButtonSave.TabIndex = 21;
+            this.ButtonSave.TabIndex = 25;
             this.ButtonSave.Text = "Build";
             this.ButtonSave.UseVisualStyleBackColor = true;
             this.ButtonSave.Click += new System.EventHandler(this.ButtonSave_Click);
@@ -279,7 +279,7 @@ namespace PaintDotNet.Effects
             this.PreviewHelpButton.Location = new System.Drawing.Point(667, 24);
             this.PreviewHelpButton.Name = "PreviewHelpButton";
             this.PreviewHelpButton.Size = new System.Drawing.Size(26, 23);
-            this.PreviewHelpButton.TabIndex = 23;
+            this.PreviewHelpButton.TabIndex = 16;
             this.PreviewHelpButton.Text = "?";
             this.toolTip1.SetToolTip(this.PreviewHelpButton, "Preview Help Content");
             this.PreviewHelpButton.UseVisualStyleBackColor = false;
@@ -292,7 +292,7 @@ namespace PaintDotNet.Effects
             this.ViewSourceButton.Location = new System.Drawing.Point(279, 600);
             this.ViewSourceButton.Name = "ViewSourceButton";
             this.ViewSourceButton.Size = new System.Drawing.Size(75, 23);
-            this.ViewSourceButton.TabIndex = 87;
+            this.ViewSourceButton.TabIndex = 23;
             this.ViewSourceButton.Text = "View Source";
             this.toolTip1.SetToolTip(this.ViewSourceButton, "View complete source code that will be built");
             this.ViewSourceButton.UseVisualStyleBackColor = true;
@@ -492,7 +492,7 @@ namespace PaintDotNet.Effects
             this.radioButtonNone.Location = new System.Drawing.Point(288, 27);
             this.radioButtonNone.Name = "radioButtonNone";
             this.radioButtonNone.Size = new System.Drawing.Size(51, 17);
-            this.radioButtonNone.TabIndex = 13;
+            this.radioButtonNone.TabIndex = 15;
             this.radioButtonNone.TabStop = true;
             this.radioButtonNone.Text = "None";
             this.radioButtonNone.UseVisualStyleBackColor = true;
@@ -504,7 +504,7 @@ namespace PaintDotNet.Effects
             this.radioButtonURL.Location = new System.Drawing.Point(288, 51);
             this.radioButtonURL.Name = "radioButtonURL";
             this.radioButtonURL.Size = new System.Drawing.Size(75, 17);
-            this.radioButtonURL.TabIndex = 14;
+            this.radioButtonURL.TabIndex = 17;
             this.radioButtonURL.TabStop = true;
             this.radioButtonURL.Text = "Help URL:";
             this.radioButtonURL.UseVisualStyleBackColor = true;
@@ -516,7 +516,7 @@ namespace PaintDotNet.Effects
             this.radioButtonPlain.Location = new System.Drawing.Point(288, 78);
             this.radioButtonPlain.Name = "radioButtonPlain";
             this.radioButtonPlain.Size = new System.Drawing.Size(71, 17);
-            this.radioButtonPlain.TabIndex = 16;
+            this.radioButtonPlain.TabIndex = 19;
             this.radioButtonPlain.TabStop = true;
             this.radioButtonPlain.Text = "Plain text:";
             this.radioButtonPlain.UseVisualStyleBackColor = true;
@@ -528,7 +528,7 @@ namespace PaintDotNet.Effects
             this.radioButtonRich.Location = new System.Drawing.Point(288, 134);
             this.radioButtonRich.Name = "radioButtonRich";
             this.radioButtonRich.Size = new System.Drawing.Size(70, 17);
-            this.radioButtonRich.TabIndex = 18;
+            this.radioButtonRich.TabIndex = 21;
             this.radioButtonRich.TabStop = true;
             this.radioButtonRich.Text = "Rich text:";
             this.radioButtonRich.UseVisualStyleBackColor = true;
@@ -541,7 +541,7 @@ namespace PaintDotNet.Effects
             this.HelpURL.Location = new System.Drawing.Point(369, 50);
             this.HelpURL.Name = "HelpURL";
             this.HelpURL.Size = new System.Drawing.Size(323, 20);
-            this.HelpURL.TabIndex = 15;
+            this.HelpURL.TabIndex = 18;
             this.HelpURL.Text = "http://www.getpaint.net/redirect/plugins.html";
             // 
             // HelpPlainText
@@ -555,7 +555,7 @@ namespace PaintDotNet.Effects
             this.HelpPlainText.Name = "HelpPlainText";
             this.HelpPlainText.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.HelpPlainText.Size = new System.Drawing.Size(323, 53);
-            this.HelpPlainText.TabIndex = 17;
+            this.HelpPlainText.TabIndex = 20;
             // 
             // RichHelpContent
             // 
@@ -568,7 +568,7 @@ namespace PaintDotNet.Effects
             this.RichHelpContent.Location = new System.Drawing.Point(278, 179);
             this.RichHelpContent.Name = "RichHelpContent";
             this.RichHelpContent.Size = new System.Drawing.Size(414, 401);
-            this.RichHelpContent.TabIndex = 19;
+            this.RichHelpContent.TabIndex = 22;
             this.RichHelpContent.Text = "";
             this.RichHelpContent.KeyDown += new System.Windows.Forms.KeyEventHandler(this.RichHelpContent_KeyDown);
             // 
@@ -835,7 +835,7 @@ namespace PaintDotNet.Effects
             this.GenSlnButton.Location = new System.Drawing.Point(360, 600);
             this.GenSlnButton.Name = "GenSlnButton";
             this.GenSlnButton.Size = new System.Drawing.Size(125, 23);
-            this.GenSlnButton.TabIndex = 88;
+            this.GenSlnButton.TabIndex = 24;
             this.GenSlnButton.Text = "Generate VS Solution";
             this.GenSlnButton.UseVisualStyleBackColor = true;
             this.GenSlnButton.Click += new System.EventHandler(this.GenSlnButton_Click);
@@ -863,7 +863,7 @@ namespace PaintDotNet.Effects
             this.forceLegacyRoiBox.Location = new System.Drawing.Point(19, 428);
             this.forceLegacyRoiBox.Name = "forceLegacyRoiBox";
             this.forceLegacyRoiBox.Size = new System.Drawing.Size(83, 17);
-            this.forceLegacyRoiBox.TabIndex = 91;
+            this.forceLegacyRoiBox.TabIndex = 13;
             this.forceLegacyRoiBox.Text = "Legacy ROI";
             this.forceLegacyRoiBox.UseVisualStyleBackColor = true;
             // 
@@ -873,7 +873,7 @@ namespace PaintDotNet.Effects
             this.forceSingleRenderBox.Location = new System.Drawing.Point(132, 428);
             this.forceSingleRenderBox.Name = "forceSingleRenderBox";
             this.forceSingleRenderBox.Size = new System.Drawing.Size(113, 17);
-            this.forceSingleRenderBox.TabIndex = 92;
+            this.forceSingleRenderBox.TabIndex = 14;
             this.forceSingleRenderBox.Text = "Single Render Call";
             this.forceSingleRenderBox.UseVisualStyleBackColor = true;
             // 
