@@ -203,6 +203,13 @@ namespace PaintDotNet.Effects
             return char.ToLowerInvariant(c);
         }
 
+        internal static string GetEnumValue(this FieldInfo fieldInfo)
+        {
+            object value = fieldInfo.GetValue(null);
+            Type type = Enum.GetUnderlyingType(fieldInfo.FieldType);
+            return Convert.ChangeType(value, type).ToString();
+        }
+
         internal static string GetterSetter(this PropertyInfo property)
         {
             if (property.CanRead && property.CanWrite)

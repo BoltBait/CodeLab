@@ -173,7 +173,7 @@ namespace PaintDotNet.Effects
                         {
                             fieldTypeName = "Enum Value";
                             fieldType = IntelliType.EnumItem;
-                            fieldValue = $" ({(int)field.GetValue(null)})";
+                            fieldValue = $" ({field.GetEnumValue()})";
                         }
                         else if (field.IsLiteral && !field.IsInitOnly)
                         {
