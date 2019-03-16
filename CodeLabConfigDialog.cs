@@ -357,6 +357,44 @@ namespace PaintDotNet.Effects
             FinishTokenUpdate();
         }
 
+        private void LoadFile(string filePath)
+        {
+            string fileContents = null;
+            try
+            {
+                fileContents = File.ReadAllText(filePath);
+            }
+            catch
+            {
+                return;
+            }
+
+            if (fileContents == null)
+            {
+                return;
+            }
+
+            AddToRecents(filePath);
+
+            FullScriptPath = filePath;
+            FileName = Path.GetFileNameWithoutExtension(filePath);
+
+            if (tabStrip1.SelectedTabGuid == Guid.Empty && txtCode.IsVirgin)
+            {
+                UpdateTabProperties();
+            }
+            else
+            {
+                tabStrip1.NewTab(FileName, FullScriptPath);
+            }
+
+            txtCode.Text = fileContents;
+            txtCode.ExecuteCmd(Command.ScrollToEnd); // Workaround for a scintilla bug
+            txtCode.ExecuteCmd(Command.ScrollToStart);
+            txtCode.EmptyUndoBuffer();
+            txtCode.SetSavePoint();
+        }
+
         private DialogResult PromptToSave()
         {
             DialogResult dr = MessageBox.Show(this, $"Do you want to save changes to '{FileName}'?", "Script Editor", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
@@ -461,52 +499,6 @@ namespace PaintDotNet.Effects
 
             sfd.Dispose();
             return saved;
-        }
-
-        private bool LoadScript()
-        {
-            OpenFileDialog ofd = new OpenFileDialog
-            {
-                Title = "Load User Script",
-                DefaultExt = ".cs",
-                Filter = "C# Code Files (*.CS)|*.cs",
-                Multiselect = false,
-                InitialDirectory = Settings.LastSourceDirectory
-            };
-
-            bool loaded = false;
-            if (ofd.ShowDialog() == DialogResult.OK)
-            {
-                AddToRecents(ofd.FileName);
-
-                FullScriptPath = ofd.FileName;
-                FileName = Path.GetFileNameWithoutExtension(ofd.FileName);
-
-                if (tabStrip1.SelectedTabGuid == Guid.Empty && txtCode.IsVirgin)
-                {
-                    UpdateTabProperties();
-                }
-                else
-                {
-                    tabStrip1.NewTab(FileName, FullScriptPath);
-                }
-
-                try
-                {
-                    Settings.LastSourceDirectory = Path.GetDirectoryName(ofd.FileName);
-                    txtCode.Text = File.ReadAllText(ofd.FileName);
-                    txtCode.ExecuteCmd(Command.ScrollToEnd); // Workaround for a scintilla bug
-                    txtCode.ExecuteCmd(Command.ScrollToStart);
-                    txtCode.EmptyUndoBuffer();
-                    loaded = true;
-                }
-                catch
-                {
-                }
-            }
-
-            ofd.Dispose();
-            return loaded;
         }
 
         private void txtCode_BuildNeeded(object sender, EventArgs e)
@@ -867,10 +859,26 @@ namespace PaintDotNet.Effects
             txtCode.Focus();
         }
 
-        private void OpenFile()
+        private void Open()
         {
-            LoadScript();
-            txtCode.SetSavePoint();
+            OpenFileDialog ofd = new OpenFileDialog
+            {
+                Title = "Load User Script",
+                DefaultExt = ".cs",
+                Filter = "C# Code Files (*.CS)|*.cs",
+                Multiselect = false,
+                InitialDirectory = Settings.LastSourceDirectory
+            };
+
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                Settings.LastSourceDirectory = Path.GetDirectoryName(ofd.FileName);
+
+                LoadFile(ofd.FileName);
+            }
+
+            ofd.Dispose();
+
             txtCode.Focus();
             Build();
         }
@@ -1056,7 +1064,7 @@ namespace PaintDotNet.Effects
 
         private void loadToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            OpenFile();
+            Open();
         }
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1689,7 +1697,7 @@ namespace PaintDotNet.Effects
 
         private void OpenButton_Click(object sender, EventArgs e)
         {
-            OpenFile();
+            Open();
         }
 
         private void SaveButton_Click(object sender, EventArgs e)
@@ -1918,27 +1926,7 @@ namespace PaintDotNet.Effects
                 return;
             }
 
-            AddToRecents(filePath);
-
-            FullScriptPath = filePath;
-            FileName = Path.GetFileNameWithoutExtension(filePath);
-
-            if (tabStrip1.SelectedTabGuid == Guid.Empty && txtCode.IsVirgin)
-            {
-                UpdateTabProperties();
-            }
-            else
-            {
-                tabStrip1.NewTab(FileName, FullScriptPath);
-            }
-
-            txtCode.Text = File.ReadAllText(filePath);
-            txtCode.ExecuteCmd(Command.ScrollToEnd); // Workaround for a scintilla bug
-            txtCode.ExecuteCmd(Command.ScrollToStart);
-            txtCode.EmptyUndoBuffer();
-            txtCode.SetSavePoint();
-            txtCode.Focus();
-            Build();
+            LoadFile(filePath);
         }
         #endregion
 
