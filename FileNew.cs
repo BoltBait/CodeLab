@@ -22,7 +22,7 @@ namespace PaintDotNet.Effects
     {
         internal string CodeTemplate;
 
-        internal FileNew()
+        internal FileNew(string EffectFlag)
         {
             InitializeComponent();
 
@@ -43,6 +43,19 @@ namespace PaintDotNet.Effects
             FinalPixelOpCode.Text = "Pass Through";
             EffectCode.Text = "---------Copy--------->";
             dstLabel.Text = "DST\r\nIMAGE";
+
+            if (EffectFlag.Contains("Aliased Selection"))
+            {
+                FAS.Checked = true;
+            }
+            else if (EffectFlag.Contains("Legacy ROI"))
+            {
+                LROI.Checked = true;
+            }
+            else if (EffectFlag.Contains("Single Render Call"))
+            {
+                SRC.Checked = true;
+            }
         }
 
         private void DoIt_Click(object sender, EventArgs e)

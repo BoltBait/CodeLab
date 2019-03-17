@@ -857,7 +857,7 @@ namespace PaintDotNet.Effects
         #region Common functions for button/menu events
         private void CreateNewFile()
         {
-            FileNew fn = new FileNew();
+            FileNew fn = new FileNew(this.EffectFlag);
             if (fn.ShowDialog() == DialogResult.OK)
             {
                 FileName = "Untitled";
