@@ -58,6 +58,14 @@ namespace PaintDotNet.Effects
             {
                 code += "// Force Single Threaded\r\n";
             }
+            if (LROI.Checked)
+            {
+                code += "// Force Legacy ROI\r\n";
+            }
+            if (SRC.Checked)
+            {
+                code += "// Force Single Render Call\r\n";
+            }
             string controls = "1";
             string destcode = "dst[x,y]";
             string srccode = "src[x,y]";
