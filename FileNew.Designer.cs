@@ -436,7 +436,7 @@ namespace PaintDotNet.Effects
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(150, 322);
+            this.label7.Location = new System.Drawing.Point(151, 333);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(34, 13);
             this.label7.TabIndex = 27;
@@ -571,7 +571,6 @@ namespace PaintDotNet.Effects
             this.Controls.Add(this.CustomHelp);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.label8);
-            this.Controls.Add(this.BlendArrow);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.dstLabel);
             this.Controls.Add(this.srcLabel);
@@ -599,6 +598,7 @@ namespace PaintDotNet.Effects
             this.Controls.Add(this.pictureBox5);
             this.Controls.Add(this.pictureBox6);
             this.Controls.Add(this.pictureBox7);
+            this.Controls.Add(this.BlendArrow);
             this.Controls.Add(this.label7);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
