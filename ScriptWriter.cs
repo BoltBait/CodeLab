@@ -262,7 +262,7 @@ namespace PaintDotNet.Effects
             return CategoryPart;
         }
 
-        internal static string EffectPart(List<UIElement> UserControls, string FileName, string submenuname, string menuname, string iconpath, EffectFlags effectFlags,  bool forceLegacyROI)
+        internal static string EffectPart(List<UIElement> UserControls, string FileName, string submenuname, string menuname, string iconpath, EffectFlags effectFlags, EffectRenderingSchedule renderingSchedule)
         {
             menuname = menuname.Trim().Replace('"', '\'');
             if (menuname.Length == 0)
@@ -348,12 +348,19 @@ namespace PaintDotNet.Effects
             string flags = (UserControls.Count != 0) ? "EffectFlags.Configurable" : "EffectFlags.None";
             if (effectFlags.HasFlag(EffectFlags.ForceAliasedSelectionQuality)) flags += " | EffectFlags.ForceAliasedSelectionQuality";
             if (effectFlags.HasFlag(EffectFlags.SingleThreaded)) flags += " | EffectFlags.SingleThreaded";
-            if (effectFlags.HasFlag(EffectFlags.SingleRenderCall)) flags += " | EffectFlags.SingleRenderCall";
 
-            // Legacy ROI
-            string renderingSchedule = forceLegacyROI ? ", RenderingSchedule = EffectRenderingSchedule.SmallHorizontalStrips" : "";
+            // Rendering Schedule
+            string schedule = string.Empty;
+            if (renderingSchedule == EffectRenderingSchedule.SmallHorizontalStrips)
+            {
+                schedule = ", RenderingSchedule = EffectRenderingSchedule.SmallHorizontalStrips";
+            }
+            else if (renderingSchedule == EffectRenderingSchedule.None)
+            {
+                schedule = ", RenderingSchedule = EffectRenderingSchedule.None";
+            }
 
-            EffectPart += "            : base(StaticName, StaticIcon, SubmenuName, new EffectOptions() { Flags = " + flags + renderingSchedule + " })\r\n";
+            EffectPart += "            : base(StaticName, StaticIcon, SubmenuName, new EffectOptions() { Flags = " + flags + schedule + " })\r\n";
             EffectPart += "        {\r\n";
             foreach (UIElement u in UserControls)
             {
@@ -1180,7 +1187,7 @@ namespace PaintDotNet.Effects
             return append_code;
         }
 
-        internal static string FullSourceCode(string SourceCode, string FileName, bool isAdjustment, string submenuname, string menuname, string iconpath, string SupportURL, EffectFlags effectFlags, bool forceLegacyROI, string Author, int MajorVersion, int MinorVersion, string Description, string KeyWords, string WindowTitleStr, HelpType HelpType, string HelpText)
+        internal static string FullSourceCode(string SourceCode, string FileName, bool isAdjustment, string submenuname, string menuname, string iconpath, string SupportURL, EffectFlags effectFlags, EffectRenderingSchedule renderingSchedule, string Author, int MajorVersion, int MinorVersion, string Description, string KeyWords, string WindowTitleStr, HelpType HelpType, string HelpText)
         {
             List<UIElement> UserControls = UIElement.ProcessUIControls(SourceCode);
             Regex preRenderRegex = new Regex(@"void PreRender\(Surface dst, Surface src\)(\s)*{(.|\s)*}", RegexOptions.Singleline);
@@ -1190,7 +1197,7 @@ namespace PaintDotNet.Effects
             string sNamespacePart = NamespacePart(FileName);
             string sSupportInfoPart = SupportInfoPart(menuname, SupportURL);
             string sCategoryPart = CategoryPart(isAdjustment);
-            string sEffectPart = EffectPart(UserControls, FileName, submenuname, menuname, iconpath, effectFlags, forceLegacyROI);
+            string sEffectPart = EffectPart(UserControls, FileName, submenuname, menuname, iconpath, effectFlags, renderingSchedule);
             string sHelpPart = HelpPart(SourceCode.Contains("OnWindowHelpButtonClicked"), HelpType, HelpText);
             string sPropertyPart = PropertyPart(UserControls, SourceCode.Contains("OnWindowHelpButtonClicked"), FileName, WindowTitleStr, HelpType, HelpText);
             string sSetRenderPart = SetRenderPart(UserControls, true, preRenderRegex.IsMatch(SourceCode));

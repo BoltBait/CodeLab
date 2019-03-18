@@ -61,14 +61,8 @@ namespace PaintDotNet.Effects
             }
         }
 
-        protected CodeLab(string extendedName, EffectFlags flags, bool useLegacyROI)
-            : base(
-                "CodeLab" + extendedName,
-                StaticImage,
-                "Advanced",
-                useLegacyROI ?
-                    new EffectOptions() { Flags = EffectFlags.Configurable | flags, RenderingSchedule = EffectRenderingSchedule.SmallHorizontalStrips } :
-                    new EffectOptions() { Flags = EffectFlags.Configurable | flags})
+        protected CodeLab(string extendedName, EffectFlags flags, EffectRenderingSchedule renderingSchedule)
+            : base("CodeLab" + extendedName, StaticImage, "Advanced", new EffectOptions() { Flags = EffectFlags.Configurable | flags, RenderingSchedule = renderingSchedule })
         {
         }
 
@@ -154,7 +148,7 @@ namespace PaintDotNet.Effects
     [PluginSupportInfo(typeof(PluginSupportInfo), DisplayName = "CodeLab")]
     public class CodeLabRegular : CodeLab
     {
-        public CodeLabRegular() : base(string.Empty, EffectFlags.None, false)
+        public CodeLabRegular() : base(string.Empty, EffectFlags.None, EffectRenderingSchedule.DefaultTilesForCpuRendering)
         {
         }
     }
@@ -162,7 +156,7 @@ namespace PaintDotNet.Effects
     [PluginSupportInfo(typeof(PluginSupportInfo), DisplayName = "CodeLab")]
     public class CodeLabLegacyROI : CodeLab
     {
-        public CodeLabLegacyROI() : base(" - Legacy ROI", EffectFlags.None, true)
+        public CodeLabLegacyROI() : base(" - Legacy ROI", EffectFlags.None, EffectRenderingSchedule.SmallHorizontalStrips)
         {
         }
     }
@@ -170,7 +164,7 @@ namespace PaintDotNet.Effects
     [PluginSupportInfo(typeof(PluginSupportInfo), DisplayName = "CodeLab")]
     public class CodeLabAliased : CodeLab
     {
-        public CodeLabAliased() : base(" - Aliased Selection", EffectFlags.ForceAliasedSelectionQuality, false)
+        public CodeLabAliased() : base(" - Aliased Selection", EffectFlags.ForceAliasedSelectionQuality, EffectRenderingSchedule.DefaultTilesForCpuRendering)
         {
         }
     }
@@ -178,7 +172,7 @@ namespace PaintDotNet.Effects
     [PluginSupportInfo(typeof(PluginSupportInfo), DisplayName = "CodeLab")]
     public class CodeLabSingleRender : CodeLab
     {
-        public CodeLabSingleRender() : base(" - Single Render Call", EffectFlags.SingleRenderCall, false)
+        public CodeLabSingleRender() : base(" - Single Render Call", EffectFlags.None, EffectRenderingSchedule.None)
         {
         }
     }

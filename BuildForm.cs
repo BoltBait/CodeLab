@@ -39,7 +39,7 @@ namespace PaintDotNet.Effects
         internal string Description = "";
         internal string KeyWords = "";
         internal EffectFlags EffectFlags = EffectFlags.None;
-        internal bool ForceLegacyROI = false;
+        internal EffectRenderingSchedule RenderingSchedule = EffectRenderingSchedule.DefaultTilesForCpuRendering;
         internal HelpType HelpType = 0;
         internal string HelpStr = "";
         private string HelpFileName = "";
@@ -336,12 +336,20 @@ namespace PaintDotNet.Effects
             isAdjustment = AdjustmentRadio.Checked;
             Description = DescriptionBox.Text.Trim().Replace('\\', '/');
             KeyWords = KeyWordsBox.Text.Trim().Replace('\\', '/');
-            ForceLegacyROI = forceLegacyRoiBox.Checked;
+
+            this.RenderingSchedule = EffectRenderingSchedule.DefaultTilesForCpuRendering;
+            if (forceLegacyRoiBox.Checked)
+            {
+                this.RenderingSchedule = EffectRenderingSchedule.SmallHorizontalStrips;
+            }
+            else if (forceSingleRenderBox.Checked)
+            {
+                this.RenderingSchedule = EffectRenderingSchedule.None;
+            }
 
             this.EffectFlags = EffectFlags.None;
             if (ForceAliasSelectionBox.Checked) this.EffectFlags |= EffectFlags.ForceAliasedSelectionQuality;
             if (ForceSingleThreadedBox.Checked) this.EffectFlags |= EffectFlags.SingleThreaded;
-            if (forceSingleRenderBox.Checked) this.EffectFlags |= EffectFlags.SingleRenderCall;
 
             if (radioButtonNone.Checked)
             {
@@ -1119,7 +1127,7 @@ namespace PaintDotNet.Effects
                 return;
             }
 
-            string SourceCode = ScriptWriter.FullSourceCode(FullScriptText, FileName, isAdjustment, SubMenuName.Text, MenuName.Text, IconPath, URL, EffectFlags, ForceLegacyROI, Author, MajorVer, MinorVer, Description, KeyWords, WindowTitle, HelpType, HelpStr);
+            string SourceCode = ScriptWriter.FullSourceCode(FullScriptText, FileName, isAdjustment, SubMenuName.Text, MenuName.Text, IconPath, URL, EffectFlags, RenderingSchedule, Author, MajorVer, MinorVer, Description, KeyWords, WindowTitle, HelpType, HelpStr);
             using (ViewSrc VSW = new ViewSrc("Full Source Code", SourceCode, true))
             {
                 VSW.ShowDialog();
@@ -1153,10 +1161,28 @@ namespace PaintDotNet.Effects
 
                 if (fbd.ShowDialog() == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
                 {
-                    string SourceCode = ScriptWriter.FullSourceCode(FullScriptText, FileName, isAdjustment, SubMenuName.Text, MenuName.Text, IconPath, URL, EffectFlags, ForceLegacyROI, Author, MajorVer, MinorVer, Description, KeyWords, WindowTitle, HelpType, HelpStr);
+                    string SourceCode = ScriptWriter.FullSourceCode(FullScriptText, FileName, isAdjustment, SubMenuName.Text, MenuName.Text, IconPath, URL, EffectFlags, RenderingSchedule, Author, MajorVer, MinorVer, Description, KeyWords, WindowTitle, HelpType, HelpStr);
                     Solution.Generate(fbd.SelectedPath, FileName, SourceCode, IconPath);
 
                     Settings.LastSlnDirectory = fbd.SelectedPath;
+                }
+            }
+        }
+
+        private void ForceROI_CheckedChanged(object sender, EventArgs e)
+        {
+            if (sender == forceLegacyRoiBox)
+            {
+                if (forceLegacyRoiBox.Checked && forceSingleRenderBox.Checked)
+                {
+                    forceSingleRenderBox.Checked = false;
+                }
+            }
+            else if (sender == forceSingleRenderBox)
+            {
+                if (forceSingleRenderBox.Checked && forceLegacyRoiBox.Checked)
+                {
+                    forceLegacyRoiBox.Checked = false;
                 }
             }
         }

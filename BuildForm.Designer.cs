@@ -866,6 +866,7 @@ namespace PaintDotNet.Effects
             this.forceLegacyRoiBox.TabIndex = 13;
             this.forceLegacyRoiBox.Text = "Legacy ROI";
             this.forceLegacyRoiBox.UseVisualStyleBackColor = true;
+            this.forceLegacyRoiBox.CheckedChanged += new System.EventHandler(this.ForceROI_CheckedChanged);
             // 
             // forceSingleRenderBox
             // 
@@ -876,6 +877,7 @@ namespace PaintDotNet.Effects
             this.forceSingleRenderBox.TabIndex = 14;
             this.forceSingleRenderBox.Text = "Single Render Call";
             this.forceSingleRenderBox.UseVisualStyleBackColor = true;
+            this.forceSingleRenderBox.CheckedChanged += new System.EventHandler(this.ForceROI_CheckedChanged);
             // 
             // BuildForm
             // 
