@@ -212,7 +212,7 @@ namespace PaintDotNet.Effects
 
             // PDN Theme
             ApplyTheme();
-            txtCode.Theme = (PdnTheme.BackColor.R < 128 && PdnTheme.BackColor.G < 128 && PdnTheme.BackColor.B < 128) ? Theme.Dark : Theme.Light;
+            txtCode.Theme = PdnTheme.Theme;
 
             ResetScript();
             Build();
@@ -751,8 +751,7 @@ namespace PaintDotNet.Effects
 
         private void ApplyTheme()
         {
-            PdnTheme.ForeColor = this.ForeColor;
-            PdnTheme.BackColor = this.BackColor;
+            PdnTheme.SetColors(this.ForeColor, this.BackColor);
             toolStrip1.Renderer = PdnTheme.Renderer;
             tabStrip1.Renderer = PdnTheme.TabRenderer;
             menuStrip1.Renderer = PdnTheme.Renderer;
@@ -1583,7 +1582,7 @@ namespace PaintDotNet.Effects
             this.ForeColor = OriginalForeColor;
             this.BackColor = OriginalBackColor;
             ApplyTheme();
-            txtCode.Theme = (PdnTheme.BackColor.R < 128 && PdnTheme.BackColor.G < 128 && PdnTheme.BackColor.B < 128) ? Theme.Dark : Theme.Light;
+            txtCode.Theme = PdnTheme.Theme;
             Settings.EditorTheme = Theme.Auto;
             lightToolStripMenuItem.CheckState = CheckState.Unchecked;
             darkToolStripMenuItem.CheckState = CheckState.Unchecked;
