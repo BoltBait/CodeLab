@@ -1622,5 +1622,23 @@ namespace PaintDotNet.Effects
                 SurfaceCode.Enabled = true;
             }
         }
+
+        private void ForceROI_CheckedChanged(object sender, EventArgs e)
+        {
+            if (sender == LROI)
+            {
+                if (LROI.Checked && SRC.Checked)
+                {
+                    SRC.Checked = false;
+                }
+            }
+            else if (sender == SRC)
+            {
+                if (SRC.Checked && LROI.Checked)
+                {
+                    LROI.Checked = false;
+                }
+            }
+        }
     }
 }

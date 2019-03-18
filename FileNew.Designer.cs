@@ -541,6 +541,7 @@ namespace PaintDotNet.Effects
             this.SRC.TabIndex = 22;
             this.SRC.Text = "Single Render Call";
             this.SRC.UseVisualStyleBackColor = true;
+            this.SRC.CheckedChanged += new System.EventHandler(this.ForceROI_CheckedChanged);
             // 
             // LROI
             // 
@@ -551,6 +552,7 @@ namespace PaintDotNet.Effects
             this.LROI.TabIndex = 23;
             this.LROI.Text = "Legacy ROI";
             this.LROI.UseVisualStyleBackColor = true;
+            this.LROI.CheckedChanged += new System.EventHandler(this.ForceROI_CheckedChanged);
             // 
             // FileNew
             // 
