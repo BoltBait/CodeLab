@@ -29,7 +29,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]
-[assembly: AssemblyVersion("4.1.*")]
+[assembly: AssemblyVersion("4.2.*")]
 // The next line is for the ScintillaNET text editor control.  This way you don't have to use the "copy attributes" option in IL Merge.
 [assembly: Guid("f8ac48e7-9378-482d-8c7f-92c8408dd4f2")]
 
