@@ -363,7 +363,7 @@ namespace PaintDotNet.Effects
             this.SupportURL.Name = "SupportURL";
             this.SupportURL.Size = new System.Drawing.Size(192, 20);
             this.SupportURL.TabIndex = 10;
-            this.SupportURL.Text = "http://www.getpaint.net/redirect/plugins.html";
+            this.SupportURL.Text = "https://www.getpaint.net/redirect/plugins.html";
             // 
             // label19
             // 
@@ -542,7 +542,7 @@ namespace PaintDotNet.Effects
             this.HelpURL.Name = "HelpURL";
             this.HelpURL.Size = new System.Drawing.Size(323, 20);
             this.HelpURL.TabIndex = 18;
-            this.HelpURL.Text = "http://www.getpaint.net/redirect/plugins.html";
+            this.HelpURL.Text = "https://www.getpaint.net/redirect/plugins.html";
             // 
             // HelpPlainText
             // 
