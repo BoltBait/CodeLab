@@ -46,20 +46,7 @@ namespace PaintDotNet.Effects
 
     public abstract class CodeLab : Effect
     {
-        private static Image StaticImage
-        {
-            get
-            {
-                string resource = (UIScaleFactor.Current.Scale > 1) ?
-                        "PaintDotNet.Effects.Icons.CodeLab32.png" :
-                        "PaintDotNet.Effects.Icons.CodeLab.png";
-
-                using (Stream imageStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resource))
-                {
-                    return Image.FromStream(imageStream);
-                }
-            }
-        }
+        private static Image StaticImage => ResUtil.GetImage("CodeLab");
 
         protected CodeLab(string extendedName, EffectFlags flags, EffectRenderingSchedule renderingSchedule)
             : base("CodeLab" + extendedName, StaticImage, "Advanced", new EffectOptions() { Flags = EffectFlags.Configurable | flags, RenderingSchedule = renderingSchedule })

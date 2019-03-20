@@ -129,26 +129,26 @@
             this.changesInThisVersionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.NewButton = new System.Windows.Forms.ToolStripButton();
-            this.OpenButton = new System.Windows.Forms.ToolStripButton();
-            this.SaveButton = new System.Windows.Forms.ToolStripButton();
-            this.SaveDLLButton = new System.Windows.Forms.ToolStripButton();
+            this.NewButton = new PaintDotNet.Effects.ScaledToolStripButton();
+            this.OpenButton = new PaintDotNet.Effects.ScaledToolStripButton();
+            this.SaveButton = new PaintDotNet.Effects.ScaledToolStripButton();
+            this.SaveDLLButton = new PaintDotNet.Effects.ScaledToolStripButton();
             this.toolStripSeparator14 = new System.Windows.Forms.ToolStripSeparator();
-            this.UIDesignerButton = new System.Windows.Forms.ToolStripButton();
-            this.RunButton = new System.Windows.Forms.ToolStripButton();
+            this.UIDesignerButton = new PaintDotNet.Effects.ScaledToolStripButton();
+            this.RunButton = new PaintDotNet.Effects.ScaledToolStripButton();
             this.toolStripSeparator15 = new System.Windows.Forms.ToolStripSeparator();
-            this.SelectAllButton = new System.Windows.Forms.ToolStripButton();
-            this.CutButton = new System.Windows.Forms.ToolStripButton();
-            this.CopyButton = new System.Windows.Forms.ToolStripButton();
-            this.PasteButton = new System.Windows.Forms.ToolStripButton();
+            this.SelectAllButton = new PaintDotNet.Effects.ScaledToolStripButton();
+            this.CutButton = new PaintDotNet.Effects.ScaledToolStripButton();
+            this.CopyButton = new PaintDotNet.Effects.ScaledToolStripButton();
+            this.PasteButton = new PaintDotNet.Effects.ScaledToolStripButton();
             this.toolStripSeparator16 = new System.Windows.Forms.ToolStripSeparator();
-            this.UndoButton = new System.Windows.Forms.ToolStripButton();
-            this.RedoButton = new System.Windows.Forms.ToolStripButton();
+            this.UndoButton = new PaintDotNet.Effects.ScaledToolStripButton();
+            this.RedoButton = new PaintDotNet.Effects.ScaledToolStripButton();
             this.toolStripSeparator17 = new System.Windows.Forms.ToolStripSeparator();
-            this.IndentButton = new System.Windows.Forms.ToolStripButton();
-            this.UndentButton = new System.Windows.Forms.ToolStripButton();
-            this.CommentButton = new System.Windows.Forms.ToolStripButton();
-            this.UnCommentButton = new System.Windows.Forms.ToolStripButton();
+            this.IndentButton = new PaintDotNet.Effects.ScaledToolStripButton();
+            this.UndentButton = new PaintDotNet.Effects.ScaledToolStripButton();
+            this.CommentButton = new PaintDotNet.Effects.ScaledToolStripButton();
+            this.UnCommentButton = new PaintDotNet.Effects.ScaledToolStripButton();
             this.txtCode = new PaintDotNet.Effects.CodeTextBox();
             this.ShowErrors = new System.Windows.Forms.CheckBox();
             this.OutputTextBox = new System.Windows.Forms.TextBox();
@@ -1050,7 +1050,7 @@
             // NewButton
             // 
             this.NewButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.NewButton.Image = global::PaintDotNet.Effects.Properties.Resources.New;
+            this.NewButton.ImageName = "New";
             this.NewButton.Name = "NewButton";
             this.NewButton.Size = new System.Drawing.Size(23, 22);
             this.NewButton.Text = "New File";
@@ -1060,7 +1060,7 @@
             // OpenButton
             // 
             this.OpenButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.OpenButton.Image = global::PaintDotNet.Effects.Properties.Resources.Open;
+            this.OpenButton.ImageName = "Open";
             this.OpenButton.Name = "OpenButton";
             this.OpenButton.Size = new System.Drawing.Size(23, 22);
             this.OpenButton.Text = "FileOpen";
@@ -1070,7 +1070,7 @@
             // SaveButton
             // 
             this.SaveButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.SaveButton.Image = global::PaintDotNet.Effects.Properties.Resources.Save;
+            this.SaveButton.ImageName = "Save";
             this.SaveButton.Name = "SaveButton";
             this.SaveButton.Size = new System.Drawing.Size(23, 22);
             this.SaveButton.Text = "SaveSource";
@@ -1080,7 +1080,7 @@
             // SaveDLLButton
             // 
             this.SaveDLLButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.SaveDLLButton.Image = global::PaintDotNet.Effects.Properties.Resources.SaveAsDll;
+            this.SaveDLLButton.ImageName = "SaveAsDll";
             this.SaveDLLButton.Name = "SaveDLLButton";
             this.SaveDLLButton.Size = new System.Drawing.Size(23, 22);
             this.SaveDLLButton.Text = "Build DLL";
@@ -1095,7 +1095,7 @@
             // UIDesignerButton
             // 
             this.UIDesignerButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.UIDesignerButton.Image = global::PaintDotNet.Effects.Properties.Resources.FormDesigner;
+            this.UIDesignerButton.ImageName = "FormDesigner";
             this.UIDesignerButton.Name = "UIDesignerButton";
             this.UIDesignerButton.Size = new System.Drawing.Size(23, 22);
             this.UIDesignerButton.Text = "UIDesigner";
@@ -1105,7 +1105,7 @@
             // RunButton
             // 
             this.RunButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.RunButton.Image = global::PaintDotNet.Effects.Properties.Resources.PlayButton;
+            this.RunButton.ImageName = "PlayButton";
             this.RunButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.RunButton.Name = "RunButton";
             this.RunButton.Size = new System.Drawing.Size(23, 22);
@@ -1120,7 +1120,7 @@
             // SelectAllButton
             // 
             this.SelectAllButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.SelectAllButton.Image = global::PaintDotNet.Effects.Properties.Resources.SelectAll;
+            this.SelectAllButton.ImageName = "SelectAll";
             this.SelectAllButton.Name = "SelectAllButton";
             this.SelectAllButton.Size = new System.Drawing.Size(23, 22);
             this.SelectAllButton.Text = "SelectAll";
@@ -1130,7 +1130,7 @@
             // CutButton
             // 
             this.CutButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.CutButton.Image = global::PaintDotNet.Effects.Properties.Resources.Cut;
+            this.CutButton.ImageName = "Cut";
             this.CutButton.Name = "CutButton";
             this.CutButton.Size = new System.Drawing.Size(23, 22);
             this.CutButton.Text = "Cut";
@@ -1140,7 +1140,7 @@
             // CopyButton
             // 
             this.CopyButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.CopyButton.Image = global::PaintDotNet.Effects.Properties.Resources.Copy;
+            this.CopyButton.ImageName = "Copy";
             this.CopyButton.Name = "CopyButton";
             this.CopyButton.Size = new System.Drawing.Size(23, 22);
             this.CopyButton.Text = "Copy";
@@ -1150,7 +1150,7 @@
             // PasteButton
             // 
             this.PasteButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.PasteButton.Image = global::PaintDotNet.Effects.Properties.Resources.Paste;
+            this.PasteButton.ImageName = "Paste";
             this.PasteButton.Name = "PasteButton";
             this.PasteButton.Size = new System.Drawing.Size(23, 22);
             this.PasteButton.Text = "Paste";
@@ -1165,7 +1165,7 @@
             // UndoButton
             // 
             this.UndoButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.UndoButton.Image = global::PaintDotNet.Effects.Properties.Resources.Undo;
+            this.UndoButton.ImageName = "Undo";
             this.UndoButton.Name = "UndoButton";
             this.UndoButton.Size = new System.Drawing.Size(23, 22);
             this.UndoButton.Text = "Undo";
@@ -1175,7 +1175,7 @@
             // RedoButton
             // 
             this.RedoButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.RedoButton.Image = global::PaintDotNet.Effects.Properties.Resources.Redo;
+            this.RedoButton.ImageName = "Redo";
             this.RedoButton.Name = "RedoButton";
             this.RedoButton.Size = new System.Drawing.Size(23, 22);
             this.RedoButton.Text = "Redo";
@@ -1190,7 +1190,7 @@
             // IndentButton
             // 
             this.IndentButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.IndentButton.Image = global::PaintDotNet.Effects.Properties.Resources.Indent;
+            this.IndentButton.ImageName = "Indent";
             this.IndentButton.Name = "IndentButton";
             this.IndentButton.Size = new System.Drawing.Size(23, 22);
             this.IndentButton.Text = "Indent";
@@ -1200,7 +1200,7 @@
             // UndentButton
             // 
             this.UndentButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.UndentButton.Image = global::PaintDotNet.Effects.Properties.Resources.Unindent;
+            this.UndentButton.ImageName = "Unindent";
             this.UndentButton.Name = "UndentButton";
             this.UndentButton.Size = new System.Drawing.Size(23, 22);
             this.UndentButton.Text = "Unindent";
@@ -1210,7 +1210,7 @@
             // CommentButton
             // 
             this.CommentButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.CommentButton.Image = global::PaintDotNet.Effects.Properties.Resources.Comment;
+            this.CommentButton.ImageName = "Comment";
             this.CommentButton.Name = "CommentButton";
             this.CommentButton.Size = new System.Drawing.Size(23, 22);
             this.CommentButton.Text = "CommentSelection";
@@ -1220,7 +1220,7 @@
             // UnCommentButton
             // 
             this.UnCommentButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.UnCommentButton.Image = global::PaintDotNet.Effects.Properties.Resources.Uncomment;
+            this.UnCommentButton.ImageName = "Uncomment";
             this.UnCommentButton.Name = "UnCommentButton";
             this.UnCommentButton.Size = new System.Drawing.Size(23, 22);
             this.UnCommentButton.Text = "Uncomment";
@@ -1442,26 +1442,26 @@
         private System.Windows.Forms.ToolStripMenuItem changesInThisVersionToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem opacity100MenuItem;
         private System.Windows.Forms.ToolStrip toolStrip1;
-        private System.Windows.Forms.ToolStripButton OpenButton;
-        private System.Windows.Forms.ToolStripButton SaveButton;
-        private System.Windows.Forms.ToolStripButton SaveDLLButton;
+        private ScaledToolStripButton OpenButton;
+        private ScaledToolStripButton SaveButton;
+        private ScaledToolStripButton SaveDLLButton;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator14;
-        private System.Windows.Forms.ToolStripButton UIDesignerButton;
+        private ScaledToolStripButton UIDesignerButton;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator15;
-        private System.Windows.Forms.ToolStripButton CutButton;
-        private System.Windows.Forms.ToolStripButton CopyButton;
-        private System.Windows.Forms.ToolStripButton PasteButton;
-        private System.Windows.Forms.ToolStripButton SelectAllButton;
+        private ScaledToolStripButton CutButton;
+        private ScaledToolStripButton CopyButton;
+        private ScaledToolStripButton PasteButton;
+        private ScaledToolStripButton SelectAllButton;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator16;
-        private System.Windows.Forms.ToolStripButton UndoButton;
-        private System.Windows.Forms.ToolStripButton RedoButton;
+        private ScaledToolStripButton UndoButton;
+        private ScaledToolStripButton RedoButton;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator17;
-        private System.Windows.Forms.ToolStripButton IndentButton;
-        private System.Windows.Forms.ToolStripButton UndentButton;
-        private System.Windows.Forms.ToolStripButton CommentButton;
-        private System.Windows.Forms.ToolStripButton UnCommentButton;
+        private ScaledToolStripButton IndentButton;
+        private ScaledToolStripButton UndentButton;
+        private ScaledToolStripButton CommentButton;
+        private ScaledToolStripButton UnCommentButton;
         private System.Windows.Forms.CheckBox ShowErrors;
-        private System.Windows.Forms.ToolStripButton NewButton;
+        private ScaledToolStripButton NewButton;
         private System.Windows.Forms.ToolStripMenuItem themeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem lightToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem darkToolStripMenuItem;
@@ -1471,7 +1471,7 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator18;
         private System.Windows.Forms.ToolStripMenuItem formatDocMenuItem;
         private System.Windows.Forms.ToolStripMenuItem previewEffectMenuItem;
-        private System.Windows.Forms.ToolStripButton RunButton;
+        private ScaledToolStripButton RunButton;
         private System.Windows.Forms.ToolStripMenuItem autoToolStripMenuItem;
         private System.Windows.Forms.TextBox OutputTextBox;
         private System.Windows.Forms.Button ClearOutput;

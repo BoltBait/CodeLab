@@ -69,21 +69,25 @@ namespace PaintDotNet.Effects
 
             SizeF dpi = new SizeF(this.AutoScaleDimensions.Width / 96f, this.AutoScaleDimensions.Height / 96f);
             imgList.ImageSize = new Size((int)Math.Round(16 * dpi.Width), (int)Math.Round(16 * dpi.Height));
-            imgList.Images.Add("00", Image.FromStream(Assembly.GetExecutingAssembly().GetManifestResourceStream("PaintDotNet.Effects.Icons.00int.png")));
-            imgList.Images.Add("01", Image.FromStream(Assembly.GetExecutingAssembly().GetManifestResourceStream("PaintDotNet.Effects.Icons.01CheckBox.png")));
-            imgList.Images.Add("02", Image.FromStream(Assembly.GetExecutingAssembly().GetManifestResourceStream("PaintDotNet.Effects.Icons.02ColorWheel.png")));
-            imgList.Images.Add("03", Image.FromStream(Assembly.GetExecutingAssembly().GetManifestResourceStream("PaintDotNet.Effects.Icons.03AngleChooser.png")));
-            imgList.Images.Add("04", Image.FromStream(Assembly.GetExecutingAssembly().GetManifestResourceStream("PaintDotNet.Effects.Icons.04PanSlider.png")));
-            imgList.Images.Add("05", Image.FromStream(Assembly.GetExecutingAssembly().GetManifestResourceStream("PaintDotNet.Effects.Icons.05TextBox.png")));
-            imgList.Images.Add("06", Image.FromStream(Assembly.GetExecutingAssembly().GetManifestResourceStream("PaintDotNet.Effects.Icons.06DoubleSlider.png")));
-            imgList.Images.Add("07", Image.FromStream(Assembly.GetExecutingAssembly().GetManifestResourceStream("PaintDotNet.Effects.Icons.07DropDown.png")));
-            imgList.Images.Add("08", Image.FromStream(Assembly.GetExecutingAssembly().GetManifestResourceStream("PaintDotNet.Effects.Icons.08BlendOps.png")));
-            imgList.Images.Add("09", Image.FromStream(Assembly.GetExecutingAssembly().GetManifestResourceStream("PaintDotNet.Effects.Icons.09Fonts.png")));
-            imgList.Images.Add("10", Image.FromStream(Assembly.GetExecutingAssembly().GetManifestResourceStream("PaintDotNet.Effects.Icons.10RadioButton.png")));
-            imgList.Images.Add("11", Image.FromStream(Assembly.GetExecutingAssembly().GetManifestResourceStream("PaintDotNet.Effects.Icons.11ReseedButton.png")));
-            imgList.Images.Add("12", Image.FromStream(Assembly.GetExecutingAssembly().GetManifestResourceStream("PaintDotNet.Effects.Icons.12MultiTextBox.png")));
-            imgList.Images.Add("13", Image.FromStream(Assembly.GetExecutingAssembly().GetManifestResourceStream("PaintDotNet.Effects.Icons.13RollControl.png")));
-            imgList.Images.Add("14", Image.FromStream(Assembly.GetExecutingAssembly().GetManifestResourceStream("PaintDotNet.Effects.Icons.14FilenameControl.png")));
+            imgList.Images.AddRange(new Image[]
+            {
+                ResUtil.GetImage("00int"),
+                ResUtil.GetImage("01CheckBox"),
+                ResUtil.GetImage("02ColorWheel"),
+                ResUtil.GetImage("03AngleChooser"),
+                ResUtil.GetImage("04PanSlider"),
+                ResUtil.GetImage("05TextBox"),
+                ResUtil.GetImage("06DoubleSlider"),
+                ResUtil.GetImage("07DropDown"),
+                ResUtil.GetImage("08BlendOps"),
+                ResUtil.GetImage("09Fonts"),
+                ResUtil.GetImage("10RadioButton"),
+                ResUtil.GetImage("11ReseedButton"),
+                ResUtil.GetImage("12MultiTextBox"),
+                ResUtil.GetImage("13RollControl"),
+                ResUtil.GetImage("14FilenameControl")
+            });
+
             ControlListView.SmallImageList = imgList;
 
             DefaultColorComboBox.DropDownWidth = DefaultColorComboBox.Width * 2;

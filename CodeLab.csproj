@@ -75,6 +75,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="ScaledToolStripControls.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="ScriptBuilder.cs" />
     <Compile Include="ScriptWriter.cs" />
     <Compile Include="Settings.cs" />
@@ -139,6 +142,7 @@
     <Compile Include="FindAndReplace.Designer.cs">
       <DependentUpon>FindAndReplace.cs</DependentUpon>
     </Compile>
+    <Compile Include="ResUtil.cs" />
     <Compile Include="ViewSrc.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -275,7 +279,26 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Icons\CodeLab32.png" />
+    <EmbeddedResource Include="Icons\CodeLab.32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\New.32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\BadIcon.png" />
+    <EmbeddedResource Include="Icons\Copy.32.png" />
+    <EmbeddedResource Include="Icons\Cut.32.png" />
+    <EmbeddedResource Include="Icons\Indent.32.png" />
+    <EmbeddedResource Include="Icons\Open.32.png" />
+    <EmbeddedResource Include="Icons\Paste.32.png" />
+    <EmbeddedResource Include="Icons\Redo.32.png" />
+    <EmbeddedResource Include="Icons\Save.32.png" />
+    <EmbeddedResource Include="Icons\SaveAsDll.32.png" />
+    <EmbeddedResource Include="Icons\Undo.32.png" />
+    <EmbeddedResource Include="Icons\Unindent.32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\PlayButton.32.png" />
   </ItemGroup>
   <PropertyGroup>
     <PostBuildEvent>if $(ConfigurationName) == Release (
