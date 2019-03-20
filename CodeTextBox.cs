@@ -51,7 +51,7 @@ namespace PaintDotNet.Effects
         private const int Preprocessor = 64;
 
         private readonly ToolStrip lightBulbMenu = new ToolStrip();
-        private readonly ToolStripDropDownButton bulbIcon = new ToolStripDropDownButton();
+        private readonly ScaledToolStripDropDownButton bulbIcon = new ScaledToolStripDropDownButton();
         private readonly ToolStripMenuItem renameVarMenuItem = new ToolStripMenuItem();
 
         private readonly Dictionary<Guid, ScintillaNET.Document> docCollection = new Dictionary<Guid, ScintillaNET.Document>();
@@ -440,7 +440,7 @@ namespace PaintDotNet.Effects
             this.bulbIcon.AutoToolTip = false;
             this.bulbIcon.DisplayStyle = ToolStripItemDisplayStyle.Image;
             this.bulbIcon.DropDownItems.Add(this.renameVarMenuItem);
-            this.bulbIcon.Image = Properties.Resources.Bulb;
+            this.bulbIcon.ImageName = "Bulb";
             this.bulbIcon.Name = "bulbIcon";
             this.bulbIcon.Size = new Size(29, 22);
             this.bulbIcon.Text = "Bulb Icon";

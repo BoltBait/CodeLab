@@ -1,7 +1,6 @@
 ﻿using System.Drawing;
 using System.IO;
 using System.Reflection;
-using System.Resources;
 
 namespace PaintDotNet.Effects
 {
@@ -9,8 +8,7 @@ namespace PaintDotNet.Effects
     {
         private static readonly bool hiDpi = UIScaleFactor.Current.Scale > 1;
         private static readonly Assembly assembly = Assembly.GetExecutingAssembly();
-        private static readonly Image badIcon;
-        private static ResourceManager resManager = new ResourceManager("PaintDotNet.Effects.Properties.Resources", assembly);
+        private static readonly Image emptyImage = new Bitmap(16, 16);
 
         internal static Image GetImage(string resName)
         {
@@ -26,31 +24,17 @@ namespace PaintDotNet.Effects
                 }
             }
 
-            resource = hiDpi ?
-                $"{resName}.32" :
-                $"{resName}";
-
-            object obj = resManager.GetObject(resource);
-
-            if (obj != null && obj is Bitmap bitmap)
-            {
-                return bitmap;
-            }
-
-            return badIcon;
-        }
-
-        static ResUtil()
-        {
-            string resource = hiDpi ?
-                $"PaintDotNet.Effects.Icons.BadIcon.32.png" :
-                $"PaintDotNet.Effects.Icons.BadIcon.png";
+            resource = $"PaintDotNet.Effects.Icons.{resName}.png";
 
             using (Stream imageStream = assembly.GetManifestResourceStream(resource))
             {
-                badIcon = Image.FromStream(imageStream);
+                if (imageStream != null)
+                {
+                    return Image.FromStream(imageStream);
+                }
             }
-        }
 
+            return emptyImage;
+        }
     }
 }
