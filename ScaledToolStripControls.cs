@@ -4,27 +4,16 @@ using System.Windows.Forms;
 
 namespace PaintDotNet.Effects
 {
-    public sealed class ScaledToolStripButton : ToolStripButton
+    public class ScaledToolStripButton : ToolStripButton
     {
-        public ScaledToolStripButton()
-        {
-            this.DisplayStyle = ToolStripItemDisplayStyle.Image;
-        }
-
         private string imageName = string.Empty;
 
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public override Image Image
         {
-            get
-            {
-                return base.Image;
-            }
-            set
-            {
-                base.Image = value;
-            }
+            get => base.Image;
+            set => base.Image = value;
         }
 
         [Category("Appearance")]
@@ -50,24 +39,14 @@ namespace PaintDotNet.Effects
 
     public sealed class ScaledToolStripMenuItem : ToolStripMenuItem
     {
-        public ScaledToolStripMenuItem()
-        {
-        }
-
         private string imageName = string.Empty;
 
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public override Image Image
         {
-            get
-            {
-                return base.Image;
-            }
-            set
-            {
-                base.Image = value;
-            }
+            get => base.Image;
+            set => base.Image = value;
         }
 
         [Category("Appearance")]

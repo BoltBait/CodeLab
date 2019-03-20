@@ -42,7 +42,11 @@ namespace PaintDotNet.Effects
 
         static ResUtil()
         {
-            using (Stream imageStream = assembly.GetManifestResourceStream("PaintDotNet.Effects.Icons.BadIcon.png"))
+            string resource = hiDpi ?
+                $"PaintDotNet.Effects.Icons.BadIcon.32.png" :
+                $"PaintDotNet.Effects.Icons.BadIcon.png";
+
+            using (Stream imageStream = assembly.GetManifestResourceStream(resource))
             {
                 badIcon = Image.FromStream(imageStream);
             }

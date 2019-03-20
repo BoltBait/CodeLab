@@ -53,8 +53,8 @@
             this.untitledTab.AutoToolTip = false;
             this.untitledTab.Checked = true;
             this.untitledTab.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.untitledTab.Image = global::PaintDotNet.Effects.Properties.Resources.Untitled;
             this.untitledTab.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.untitledTab.ImageName = "Untitled";
             this.untitledTab.Margin = new System.Windows.Forms.Padding(0, 5, 3, 0);
             this.untitledTab.Name = "untitledTab";
             this.untitledTab.Size = new System.Drawing.Size(94, 20);
