@@ -250,8 +250,8 @@
             // 
             // ErrorCodeMenuItem
             // 
-            this.ErrorCodeMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("ErrorCodeMenuItem.Image")));
             this.ErrorCodeMenuItem.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.ErrorCodeMenuItem.ImageName = "Search";
             this.ErrorCodeMenuItem.Name = "ErrorCodeMenuItem";
             this.ErrorCodeMenuItem.Size = new System.Drawing.Size(179, 22);
             this.ErrorCodeMenuItem.Text = "Look up Error Code";

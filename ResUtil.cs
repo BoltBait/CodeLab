@@ -24,13 +24,16 @@ namespace PaintDotNet.Effects
                 }
             }
 
-            resource = $"PaintDotNet.Effects.Icons.{resName}.png";
-
-            using (Stream imageStream = assembly.GetManifestResourceStream(resource))
+            if (hiDpi)
             {
-                if (imageStream != null)
+                resource = $"PaintDotNet.Effects.Icons.{resName}.png";
+
+                using (Stream imageStream = assembly.GetManifestResourceStream(resource))
                 {
-                    return Image.FromStream(imageStream);
+                    if (imageStream != null)
+                    {
+                        return Image.FromStream(imageStream);
+                    }
                 }
             }
 

@@ -708,7 +708,7 @@ namespace PaintDotNet.Effects
             // ColorButton
             // 
             this.ColorButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.ColorButton.ImageName = "ColorWheel";
+            this.ColorButton.ImageName = "02ColorWheel";
             this.ColorButton.Name = "ColorButton";
             this.ColorButton.Size = new System.Drawing.Size(23, 22);
             this.ColorButton.Text = "Color";
