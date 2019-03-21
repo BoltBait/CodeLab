@@ -322,6 +322,17 @@
     <EmbeddedResource Include="Icons\SuperScript.32.png" />
     <EmbeddedResource Include="Icons\Underline.32.png" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\Class.32.png" />
+    <EmbeddedResource Include="Icons\Const.32.png" />
+    <EmbeddedResource Include="Icons\Event.32.png" />
+    <EmbeddedResource Include="Icons\Field.32.png" />
+    <EmbeddedResource Include="Icons\Keyword.32.png" />
+    <EmbeddedResource Include="Icons\Method.32.png" />
+    <EmbeddedResource Include="Icons\Property.32.png" />
+    <EmbeddedResource Include="Icons\Snippet.32.png" />
+    <EmbeddedResource Include="Icons\Struct.32.png" />
+  </ItemGroup>
   <PropertyGroup>
     <PostBuildEvent>if $(ConfigurationName) == Release (
     "C:\Program Files (x86)\Microsoft\ILMerge\ILMerge.exe" /ndebug /targetplatform:4.0,"C:\Windows\Microsoft.NET\Framework\v4.0.30319" /out:"$(TargetDir)Desktop\CodeLab.dll" "$(TargetDir)CodeLab.dll" "$(TargetDir)ScintillaNET.dll"

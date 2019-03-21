@@ -10,11 +10,11 @@
    viewBox="0 0 16 16"
    version="1.1"
    id="svg10"
-   sodipodi:docname="EnumItem.svg"
+   sodipodi:docname="Class.svg"
    inkscape:version="0.92.4 (5da689c313, 2019-01-14)"
-   inkscape:export-filename="C:\Users\Kalama\Documents\GitHub\CodeLab-bb\Icons\Enum.32.png"
-   inkscape:export-xdpi="192"
-   inkscape:export-ydpi="192"><metadata
+   inkscape:export-filename="C:\Users\Kalama\Documents\GitHub\CodeLab-bb\Icons\Class.1.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96"><metadata
    id="metadata16">
   <rdf:RDF>
     <cc:Work
@@ -41,9 +41,9 @@
    id="namedview12"
    showgrid="false"
    showguides="false"
-   inkscape:zoom="10.429825"
-   inkscape:cx="-25.208789"
-   inkscape:cy="2.0927121"
+   inkscape:zoom="29.5"
+   inkscape:cx="2.5666173"
+   inkscape:cy="9.1888752"
    inkscape:window-x="-8"
    inkscape:window-y="-8"
    inkscape:window-maximized="1"
@@ -60,9 +60,10 @@
    inkscape:export-xdpi="96"
    inkscape:export-ydpi="96">
   <path
-     style="fill:#4d82b8;fill-opacity:1"
-     d="m 6,2 v 4 h 7 v 1 h -2 v 2 h 4 V 2 Z m 2,2 h 5 V 5 H 8 Z M 1,7 v 7 h 9 V 7 Z m 2,3 h 5 v 1 H 3 Z"
-     id="path4645"
-     inkscape:connector-curvature="0" />
+     style="fill:#e78e46;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     d="m 1,6.0000004 5,-5 3,3 -2,2 h 4 l 2,-2 2,2 -3,3 -2,-2 H 9 V 11 h 3 l 1,-1 2,2 -3,3 -2,-2 1,-1 H 8 V 7.0000004 H 6 l -2,2 z"
+     id="path1141"
+     inkscape:connector-curvature="0"
+     sodipodi:nodetypes="cccccccccccccccccccccc" />
 </g>
 </svg>
