@@ -68,6 +68,7 @@ namespace PaintDotNet.Effects
             this.NoStyle = new System.Windows.Forms.RadioButton();
             this.SRC = new System.Windows.Forms.CheckBox();
             this.LROI = new System.Windows.Forms.CheckBox();
+            this.label3 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.BlendArrow)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -83,10 +84,10 @@ namespace PaintDotNet.Effects
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button1.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.button1.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.button1.Location = new System.Drawing.Point(287, 524);
+            this.button1.Location = new System.Drawing.Point(542, 459);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 30;
+            this.button1.TabIndex = 1;
             this.button1.Text = "Cancel";
             this.button1.UseVisualStyleBackColor = true;
             // 
@@ -97,7 +98,7 @@ namespace PaintDotNet.Effects
             this.label1.Location = new System.Drawing.Point(16, 13);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(64, 13);
-            this.label1.TabIndex = 1;
+            this.label1.TabIndex = 2;
             this.label1.Text = "Loop style:";
             // 
             // BasicStyle
@@ -107,7 +108,7 @@ namespace PaintDotNet.Effects
             this.BasicStyle.Location = new System.Drawing.Point(35, 30);
             this.BasicStyle.Name = "BasicStyle";
             this.BasicStyle.Size = new System.Drawing.Size(51, 17);
-            this.BasicStyle.TabIndex = 2;
+            this.BasicStyle.TabIndex = 3;
             this.BasicStyle.TabStop = true;
             this.BasicStyle.Text = "Basic";
             this.BasicStyle.UseVisualStyleBackColor = true;
@@ -115,10 +116,10 @@ namespace PaintDotNet.Effects
             // AdvancedStyle
             // 
             this.AdvancedStyle.AutoSize = true;
-            this.AdvancedStyle.Location = new System.Drawing.Point(104, 30);
+            this.AdvancedStyle.Location = new System.Drawing.Point(35, 53);
             this.AdvancedStyle.Name = "AdvancedStyle";
             this.AdvancedStyle.Size = new System.Drawing.Size(155, 17);
-            this.AdvancedStyle.TabIndex = 3;
+            this.AdvancedStyle.TabIndex = 4;
             this.AdvancedStyle.Text = "Advanced (unsafe pointers)";
             this.AdvancedStyle.UseVisualStyleBackColor = true;
             // 
@@ -126,49 +127,49 @@ namespace PaintDotNet.Effects
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(16, 60);
+            this.label2.Location = new System.Drawing.Point(16, 106);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(204, 13);
-            this.label2.TabIndex = 5;
+            this.label2.TabIndex = 6;
             this.label2.Text = "Choose the variables you might need:";
             // 
             // CenterCode
             // 
             this.CenterCode.AutoSize = true;
-            this.CenterCode.Location = new System.Drawing.Point(35, 77);
+            this.CenterCode.Location = new System.Drawing.Point(35, 125);
             this.CenterCode.Name = "CenterCode";
             this.CenterCode.Size = new System.Drawing.Size(223, 17);
-            this.CenterCode.TabIndex = 6;
+            this.CenterCode.TabIndex = 7;
             this.CenterCode.Text = "Center of the selection (CenterX, CenterY)";
             this.CenterCode.UseVisualStyleBackColor = true;
             // 
             // PrimaryColorCode
             // 
             this.PrimaryColorCode.AutoSize = true;
-            this.PrimaryColorCode.Location = new System.Drawing.Point(35, 101);
+            this.PrimaryColorCode.Location = new System.Drawing.Point(35, 149);
             this.PrimaryColorCode.Name = "PrimaryColorCode";
             this.PrimaryColorCode.Size = new System.Drawing.Size(189, 17);
-            this.PrimaryColorCode.TabIndex = 7;
+            this.PrimaryColorCode.TabIndex = 8;
             this.PrimaryColorCode.Text = "Primary Color and Secondary Color";
             this.PrimaryColorCode.UseVisualStyleBackColor = true;
             // 
             // PenWidthCode
             // 
             this.PenWidthCode.AutoSize = true;
-            this.PenWidthCode.Location = new System.Drawing.Point(230, 124);
+            this.PenWidthCode.Location = new System.Drawing.Point(35, 195);
             this.PenWidthCode.Name = "PenWidthCode";
             this.PenWidthCode.Size = new System.Drawing.Size(84, 17);
-            this.PenWidthCode.TabIndex = 9;
+            this.PenWidthCode.TabIndex = 10;
             this.PenWidthCode.Text = "Brush Width";
             this.PenWidthCode.UseVisualStyleBackColor = true;
             // 
             // SelectionCode
             // 
             this.SelectionCode.AutoSize = true;
-            this.SelectionCode.Location = new System.Drawing.Point(35, 420);
+            this.SelectionCode.Location = new System.Drawing.Point(32, 244);
             this.SelectionCode.Name = "SelectionCode";
             this.SelectionCode.Size = new System.Drawing.Size(192, 17);
-            this.SelectionCode.TabIndex = 17;
+            this.SelectionCode.TabIndex = 12;
             this.SelectionCode.Text = "Selection boundary (marching ants)";
             this.SelectionCode.UseVisualStyleBackColor = true;
             // 
@@ -193,10 +194,10 @@ namespace PaintDotNet.Effects
             "Reflect",
             "Screen",
             "Xor"});
-            this.BlendingCode.Location = new System.Drawing.Point(199, 329);
+            this.BlendingCode.Location = new System.Drawing.Point(455, 196);
             this.BlendingCode.Name = "BlendingCode";
             this.BlendingCode.Size = new System.Drawing.Size(163, 21);
-            this.BlendingCode.TabIndex = 13;
+            this.BlendingCode.TabIndex = 28;
             this.BlendingCode.SelectedIndexChanged += new System.EventHandler(this.BlendingCode_SelectedIndexChanged);
             // 
             // EffectCode
@@ -241,10 +242,10 @@ namespace PaintDotNet.Effects
             "------Unfocus------>",
             "------Vignette------>",
             "-----Zoom Blur----->"});
-            this.EffectCode.Location = new System.Drawing.Point(126, 189);
+            this.EffectCode.Location = new System.Drawing.Point(382, 56);
             this.EffectCode.Name = "EffectCode";
             this.EffectCode.Size = new System.Drawing.Size(141, 21);
-            this.EffectCode.TabIndex = 11;
+            this.EffectCode.TabIndex = 22;
             // 
             // DoIt
             // 
@@ -252,7 +253,7 @@ namespace PaintDotNet.Effects
             this.DoIt.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.DoIt.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.DoIt.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.DoIt.Location = new System.Drawing.Point(166, 524);
+            this.DoIt.Location = new System.Drawing.Point(421, 459);
             this.DoIt.Name = "DoIt";
             this.DoIt.Size = new System.Drawing.Size(115, 23);
             this.DoIt.TabIndex = 0;
@@ -268,29 +269,29 @@ namespace PaintDotNet.Effects
             "Pass Through",
             "Desaturate",
             "Invert"});
-            this.PixelOpCode.Location = new System.Drawing.Point(245, 274);
+            this.PixelOpCode.Location = new System.Drawing.Point(501, 141);
             this.PixelOpCode.Name = "PixelOpCode";
             this.PixelOpCode.Size = new System.Drawing.Size(117, 21);
-            this.PixelOpCode.TabIndex = 12;
+            this.PixelOpCode.TabIndex = 26;
             // 
             // textBox1
             // 
             this.textBox1.AutoSize = true;
             this.textBox1.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox1.Location = new System.Drawing.Point(19, 398);
+            this.textBox1.Location = new System.Drawing.Point(16, 223);
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(105, 13);
-            this.textBox1.TabIndex = 16;
-            this.textBox1.Text = "Additional editing:";
+            this.textBox1.Size = new System.Drawing.Size(82, 13);
+            this.textBox1.TabIndex = 11;
+            this.textBox1.Text = "Code samples:";
             // 
             // HsvColorMode
             // 
             this.HsvColorMode.AutoSize = true;
-            this.HsvColorMode.Location = new System.Drawing.Point(35, 444);
+            this.HsvColorMode.Location = new System.Drawing.Point(32, 268);
             this.HsvColorMode.Name = "HsvColorMode";
-            this.HsvColorMode.Size = new System.Drawing.Size(107, 17);
-            this.HsvColorMode.TabIndex = 18;
-            this.HsvColorMode.Text = "Hsv Color Editing";
+            this.HsvColorMode.Size = new System.Drawing.Size(110, 17);
+            this.HsvColorMode.TabIndex = 13;
+            this.HsvColorMode.Text = "HSV Color Editing";
             this.HsvColorMode.UseVisualStyleBackColor = true;
             // 
             // FinalPixelOpCode
@@ -301,19 +302,19 @@ namespace PaintDotNet.Effects
             "Pass Through",
             "Desaturate",
             "Invert"});
-            this.FinalPixelOpCode.Location = new System.Drawing.Point(245, 384);
+            this.FinalPixelOpCode.Location = new System.Drawing.Point(501, 251);
             this.FinalPixelOpCode.Name = "FinalPixelOpCode";
             this.FinalPixelOpCode.Size = new System.Drawing.Size(117, 21);
-            this.FinalPixelOpCode.TabIndex = 15;
+            this.FinalPixelOpCode.TabIndex = 30;
             // 
             // label4
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(16, 155);
+            this.label4.Location = new System.Drawing.Point(272, 13);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(163, 13);
-            this.label4.TabIndex = 10;
+            this.label4.TabIndex = 20;
             this.label4.Text = "Pixel flow for complex effects:";
             // 
             // srcLabel
@@ -321,10 +322,10 @@ namespace PaintDotNet.Effects
             this.srcLabel.AutoSize = true;
             this.srcLabel.BackColor = System.Drawing.Color.Black;
             this.srcLabel.ForeColor = System.Drawing.Color.White;
-            this.srcLabel.Location = new System.Drawing.Point(57, 189);
+            this.srcLabel.Location = new System.Drawing.Point(313, 56);
             this.srcLabel.Name = "srcLabel";
             this.srcLabel.Size = new System.Drawing.Size(41, 26);
-            this.srcLabel.TabIndex = 24;
+            this.srcLabel.TabIndex = 21;
             this.srcLabel.Text = "SRC\r\nIMAGE";
             this.srcLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
@@ -333,10 +334,10 @@ namespace PaintDotNet.Effects
             this.dstLabel.AutoSize = true;
             this.dstLabel.BackColor = System.Drawing.Color.Black;
             this.dstLabel.ForeColor = System.Drawing.Color.White;
-            this.dstLabel.Location = new System.Drawing.Point(300, 189);
+            this.dstLabel.Location = new System.Drawing.Point(556, 56);
             this.dstLabel.Name = "dstLabel";
             this.dstLabel.Size = new System.Drawing.Size(41, 26);
-            this.dstLabel.TabIndex = 25;
+            this.dstLabel.TabIndex = 23;
             this.dstLabel.Text = "DST\r\nIMAGE";
             this.dstLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
@@ -345,17 +346,17 @@ namespace PaintDotNet.Effects
             this.label6.AutoSize = true;
             this.label6.BackColor = System.Drawing.Color.Black;
             this.label6.ForeColor = System.Drawing.Color.White;
-            this.label6.Location = new System.Drawing.Point(300, 469);
+            this.label6.Location = new System.Drawing.Point(556, 336);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(41, 26);
-            this.label6.TabIndex = 29;
+            this.label6.TabIndex = 31;
             this.label6.Text = "FINAL\r\nIMAGE";
             this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // BlendArrow
             // 
             this.BlendArrow.Image = global::PaintDotNet.Effects.Properties.Resources.BlendArrow;
-            this.BlendArrow.Location = new System.Drawing.Point(35, 247);
+            this.BlendArrow.Location = new System.Drawing.Point(291, 114);
             this.BlendArrow.Name = "BlendArrow";
             this.BlendArrow.Size = new System.Drawing.Size(153, 104);
             this.BlendArrow.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -366,7 +367,7 @@ namespace PaintDotNet.Effects
             // pictureBox3
             // 
             this.pictureBox3.Image = global::PaintDotNet.Effects.Properties.Resources.Photo;
-            this.pictureBox3.Location = new System.Drawing.Point(276, 448);
+            this.pictureBox3.Location = new System.Drawing.Point(532, 315);
             this.pictureBox3.Name = "pictureBox3";
             this.pictureBox3.Size = new System.Drawing.Size(85, 64);
             this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -376,7 +377,7 @@ namespace PaintDotNet.Effects
             // pictureBox2
             // 
             this.pictureBox2.Image = global::PaintDotNet.Effects.Properties.Resources.Photo;
-            this.pictureBox2.Location = new System.Drawing.Point(276, 172);
+            this.pictureBox2.Location = new System.Drawing.Point(532, 39);
             this.pictureBox2.Name = "pictureBox2";
             this.pictureBox2.Size = new System.Drawing.Size(85, 64);
             this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -386,7 +387,7 @@ namespace PaintDotNet.Effects
             // pictureBox1
             // 
             this.pictureBox1.Image = global::PaintDotNet.Effects.Properties.Resources.Photo;
-            this.pictureBox1.Location = new System.Drawing.Point(35, 172);
+            this.pictureBox1.Location = new System.Drawing.Point(291, 39);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(85, 64);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -396,7 +397,7 @@ namespace PaintDotNet.Effects
             // pictureBox4
             // 
             this.pictureBox4.Image = global::PaintDotNet.Effects.Properties.Resources.DownArrow;
-            this.pictureBox4.Location = new System.Drawing.Point(308, 245);
+            this.pictureBox4.Location = new System.Drawing.Point(564, 112);
             this.pictureBox4.Name = "pictureBox4";
             this.pictureBox4.Size = new System.Drawing.Size(24, 24);
             this.pictureBox4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -406,7 +407,7 @@ namespace PaintDotNet.Effects
             // pictureBox5
             // 
             this.pictureBox5.Image = global::PaintDotNet.Effects.Properties.Resources.DownArrow;
-            this.pictureBox5.Location = new System.Drawing.Point(308, 300);
+            this.pictureBox5.Location = new System.Drawing.Point(564, 167);
             this.pictureBox5.Name = "pictureBox5";
             this.pictureBox5.Size = new System.Drawing.Size(24, 24);
             this.pictureBox5.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -416,7 +417,7 @@ namespace PaintDotNet.Effects
             // pictureBox6
             // 
             this.pictureBox6.Image = global::PaintDotNet.Effects.Properties.Resources.DownArrow;
-            this.pictureBox6.Location = new System.Drawing.Point(308, 355);
+            this.pictureBox6.Location = new System.Drawing.Point(564, 222);
             this.pictureBox6.Name = "pictureBox6";
             this.pictureBox6.Size = new System.Drawing.Size(24, 24);
             this.pictureBox6.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -426,7 +427,7 @@ namespace PaintDotNet.Effects
             // pictureBox7
             // 
             this.pictureBox7.Image = global::PaintDotNet.Effects.Properties.Resources.DownArrow;
-            this.pictureBox7.Location = new System.Drawing.Point(308, 410);
+            this.pictureBox7.Location = new System.Drawing.Point(564, 277);
             this.pictureBox7.Name = "pictureBox7";
             this.pictureBox7.Size = new System.Drawing.Size(24, 24);
             this.pictureBox7.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -436,7 +437,7 @@ namespace PaintDotNet.Effects
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(151, 333);
+            this.label7.Location = new System.Drawing.Point(408, 198);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(34, 13);
             this.label7.TabIndex = 27;
@@ -445,38 +446,38 @@ namespace PaintDotNet.Effects
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(199, 274);
+            this.label8.Location = new System.Drawing.Point(455, 143);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(43, 13);
-            this.label8.TabIndex = 26;
+            this.label8.TabIndex = 25;
             this.label8.Text = "PixelOp";
             // 
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(199, 388);
+            this.label9.Location = new System.Drawing.Point(455, 253);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(43, 13);
-            this.label9.TabIndex = 28;
+            this.label9.TabIndex = 29;
             this.label9.Text = "PixelOp";
             // 
             // CustomHelp
             // 
             this.CustomHelp.AutoSize = true;
-            this.CustomHelp.Location = new System.Drawing.Point(169, 444);
+            this.CustomHelp.Location = new System.Drawing.Point(32, 291);
             this.CustomHelp.Name = "CustomHelp";
             this.CustomHelp.Size = new System.Drawing.Size(86, 17);
-            this.CustomHelp.TabIndex = 19;
+            this.CustomHelp.TabIndex = 14;
             this.CustomHelp.Text = "Custom Help";
             this.CustomHelp.UseVisualStyleBackColor = true;
             // 
             // PaletteCode
             // 
             this.PaletteCode.AutoSize = true;
-            this.PaletteCode.Location = new System.Drawing.Point(35, 124);
+            this.PaletteCode.Location = new System.Drawing.Point(35, 172);
             this.PaletteCode.Name = "PaletteCode";
             this.PaletteCode.Size = new System.Drawing.Size(154, 17);
-            this.PaletteCode.TabIndex = 8;
+            this.PaletteCode.TabIndex = 9;
             this.PaletteCode.Text = "Current and Default Palette";
             this.PaletteCode.UseVisualStyleBackColor = true;
             // 
@@ -492,30 +493,30 @@ namespace PaintDotNet.Effects
             // FAS
             // 
             this.FAS.AutoSize = true;
-            this.FAS.Location = new System.Drawing.Point(35, 468);
+            this.FAS.Location = new System.Drawing.Point(32, 337);
             this.FAS.Name = "FAS";
             this.FAS.Size = new System.Drawing.Size(137, 17);
-            this.FAS.TabIndex = 20;
+            this.FAS.TabIndex = 16;
             this.FAS.Text = "Force Aliased Selection";
             this.FAS.UseVisualStyleBackColor = true;
             // 
             // ST
             // 
             this.ST.AutoSize = true;
-            this.ST.Location = new System.Drawing.Point(169, 468);
+            this.ST.Location = new System.Drawing.Point(32, 384);
             this.ST.Name = "ST";
             this.ST.Size = new System.Drawing.Size(104, 17);
-            this.ST.TabIndex = 21;
+            this.ST.TabIndex = 18;
             this.ST.Text = "Single Threaded";
             this.ST.UseVisualStyleBackColor = true;
             // 
             // SurfaceCode
             // 
             this.SurfaceCode.AutoSize = true;
-            this.SurfaceCode.Location = new System.Drawing.Point(35, 370);
+            this.SurfaceCode.Location = new System.Drawing.Point(390, 86);
             this.SurfaceCode.Name = "SurfaceCode";
             this.SurfaceCode.Size = new System.Drawing.Size(133, 17);
-            this.SurfaceCode.TabIndex = 14;
+            this.SurfaceCode.TabIndex = 24;
             this.SurfaceCode.Text = "Create a WRK surface";
             this.SurfaceCode.UseVisualStyleBackColor = true;
             this.SurfaceCode.CheckedChanged += new System.EventHandler(this.SurfaceCode_CheckedChanged);
@@ -523,10 +524,10 @@ namespace PaintDotNet.Effects
             // NoStyle
             // 
             this.NoStyle.AutoSize = true;
-            this.NoStyle.Location = new System.Drawing.Point(277, 30);
+            this.NoStyle.Location = new System.Drawing.Point(35, 76);
             this.NoStyle.Name = "NoStyle";
             this.NoStyle.Size = new System.Drawing.Size(85, 17);
-            this.NoStyle.TabIndex = 4;
+            this.NoStyle.TabIndex = 5;
             this.NoStyle.TabStop = true;
             this.NoStyle.Text = "None (GDI+)";
             this.NoStyle.UseVisualStyleBackColor = true;
@@ -535,10 +536,10 @@ namespace PaintDotNet.Effects
             // SRC
             // 
             this.SRC.AutoSize = true;
-            this.SRC.Location = new System.Drawing.Point(35, 492);
+            this.SRC.Location = new System.Drawing.Point(32, 361);
             this.SRC.Name = "SRC";
             this.SRC.Size = new System.Drawing.Size(113, 17);
-            this.SRC.TabIndex = 22;
+            this.SRC.TabIndex = 17;
             this.SRC.Text = "Single Render Call";
             this.SRC.UseVisualStyleBackColor = true;
             this.SRC.CheckedChanged += new System.EventHandler(this.ForceROI_CheckedChanged);
@@ -546,22 +547,32 @@ namespace PaintDotNet.Effects
             // LROI
             // 
             this.LROI.AutoSize = true;
-            this.LROI.Location = new System.Drawing.Point(169, 492);
+            this.LROI.Location = new System.Drawing.Point(32, 408);
             this.LROI.Name = "LROI";
             this.LROI.Size = new System.Drawing.Size(83, 17);
-            this.LROI.TabIndex = 23;
+            this.LROI.TabIndex = 19;
             this.LROI.Text = "Legacy ROI";
             this.LROI.UseVisualStyleBackColor = true;
             this.LROI.CheckedChanged += new System.EventHandler(this.ForceROI_CheckedChanged);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(16, 319);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(90, 13);
+            this.label3.TabIndex = 15;
+            this.label3.Text = "Render options:";
             // 
             // FileNew
             // 
             this.AcceptButton = this.DoIt;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.AutoSize = true;
             this.CancelButton = this.button1;
-            this.ClientSize = new System.Drawing.Size(374, 564);
+            this.ClientSize = new System.Drawing.Size(631, 494);
+            this.Controls.Add(this.label3);
             this.Controls.Add(this.LROI);
             this.Controls.Add(this.SRC);
             this.Controls.Add(this.NoStyle);
@@ -665,5 +676,6 @@ namespace PaintDotNet.Effects
         private System.Windows.Forms.RadioButton NoStyle;
         private System.Windows.Forms.CheckBox SRC;
         private System.Windows.Forms.CheckBox LROI;
+        private System.Windows.Forms.Label label3;
     }
 }
