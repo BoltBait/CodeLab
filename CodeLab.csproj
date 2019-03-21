@@ -217,7 +217,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Icons\Keyword.png" />
-    <EmbeddedResource Include="Icons\Type.png" />
     <EmbeddedResource Include="Icons\Var.png" />
     <EmbeddedResource Include="Icons\Class.png" />
     <EmbeddedResource Include="Icons\Enum.png" />
@@ -303,6 +302,25 @@
   <ItemGroup>
     <EmbeddedResource Include="Icons\BadIcon.32.png" />
     <EmbeddedResource Include="Icons\Untitled.32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\14FilenameControl.32.png" />
+    <EmbeddedResource Include="Icons\About.32.png" />
+    <EmbeddedResource Include="Icons\Bold.32.png" />
+    <EmbeddedResource Include="Icons\Bullets.32.png" />
+    <EmbeddedResource Include="Icons\Enum.32.png" />
+    <EmbeddedResource Include="Icons\EnumItem.32.png" />
+    <EmbeddedResource Include="Icons\Exit.32.png" />
+    <EmbeddedResource Include="Icons\HelpTopics.32.png" />
+    <EmbeddedResource Include="Icons\InsertPicture.32.png" />
+    <EmbeddedResource Include="Icons\Italic.32.png" />
+    <EmbeddedResource Include="Icons\ParagraphCenter.32.png" />
+    <EmbeddedResource Include="Icons\ParagraphLeft.32.png" />
+    <EmbeddedResource Include="Icons\SaveAs.32.png" />
+    <EmbeddedResource Include="Icons\Search.32.png" />
+    <EmbeddedResource Include="Icons\SubScript.32.png" />
+    <EmbeddedResource Include="Icons\SuperScript.32.png" />
+    <EmbeddedResource Include="Icons\Underline.32.png" />
   </ItemGroup>
   <PropertyGroup>
     <PostBuildEvent>if $(ConfigurationName) == Release (
