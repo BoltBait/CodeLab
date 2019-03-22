@@ -681,7 +681,7 @@ namespace PaintDotNet.Effects
             // SubScriptButton
             // 
             this.SubScriptButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.SubScriptButton.ImageName = "Subscript";
+            this.SubScriptButton.ImageName = "SubScript";
             this.SubScriptButton.Name = "SubScriptButton";
             this.SubScriptButton.Size = new System.Drawing.Size(23, 22);
             this.SubScriptButton.Text = "Subscript";

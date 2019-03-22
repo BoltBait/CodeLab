@@ -19,7 +19,7 @@
       <dc:format>image/svg+xml</dc:format>
       <dc:type
          rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-      <dc:title></dc:title>
+      <dc:title />
     </cc:Work>
   </rdf:RDF>
 </metadata>
@@ -38,13 +38,14 @@
    inkscape:window-height="1018"
    id="namedview16"
    showgrid="false"
-   inkscape:zoom="41.7193"
-   inkscape:cx="11.547143"
-   inkscape:cy="10.037496"
+   inkscape:zoom="29.5"
+   inkscape:cx="7.6419251"
+   inkscape:cy="6.3180432"
    inkscape:window-x="-8"
    inkscape:window-y="-8"
    inkscape:window-maximized="1"
    inkscape:current-layer="svg14" />
+
 
 
 
@@ -56,15 +57,9 @@
    inkscape:connector-curvature="0"
    sodipodi:nodetypes="scccccccsccccs" />
 <path
-   d="m4.25 0c-1.3070984 0-2.25 1.1080036-2.25 2.375v1.875 7.197266c-1.07146171.240703-2 1.02521-2 2.177734 0 1.346001 1.1942339 2.375 2.5 2.375h5.84375a5.5 5.5 0 0 1 -1.0800781-1h-4.7636719c-.7653589 0-1.5-.649877-1.5-1.375 0-.725124.7346407-1.375 1.5-1.375h.5v-8-1.875c0-.8105224.4795984-1.375 1.25-1.375h9.25c.76536 0 1.5.6498765 1.5 1.375s-.73464 1.375-1.5 1.375h-.5v2.4648438a5.5 5.5 0 0 1 1 .3925781v-2.0546875c1.071462-.2407031 2-1.0252107 2-2.1777344 0-1.3460015-1.194234-2.375-2.5-2.375z"
+   d="M 4.25 0 C 2.9429016 0 2 1.1080036 2 2.375 L 2 4.25 L 2 11.447266 C 0.92853829 11.687969 0 12.472476 0 13.625 C 0 14.852471 0.99494775 15.806562 2.1601562 15.966797 C 2.1717444 15.987584 2.2636663 16 2.5 16 L 8.34375 16 L 11.75 16 C 13.057099 16 14 14.891996 14 13.625 L 14 11.75 L 14 6.6074219 L 14 4.5527344 C 15.071462 4.3120313 16 3.5275237 16 2.375 C 16 1.0289985 14.805766 0 13.5 0 L 4.25 0 z M 4.25 1 L 13.5 1 C 14.26536 1 15 1.6498765 15 2.375 C 15 3.0684766 14.32772 3.6870311 13.599609 3.7402344 C 13.569901 3.7326652 13.537265 3.7339775 13.5 3.75 L 13 3.75 L 13 6.2148438 L 13 11.75 L 13 13.625 C 13 14.435522 12.520402 15 11.75 15 L 7.2636719 15 L 2.5 15 C 1.7346411 15 1 14.350123 1 13.625 C 1 12.899876 1.7346407 12.25 2.5 12.25 L 3 12.25 L 3 4.25 L 3 2.375 C 3 1.5644776 3.4795984 1 4.25 1 z "
    id="path12"
-   fill="#808080" />
-<path
-   id="path842"
-   d="M 11.75,16 C 13.057099,16 14,14.891996 14,13.625 V 11.75 4.5527344 C 13.825816,4.2899879 13.789605,3.6254823 13.5,3.7500004 H 13 V 11.75 13.625 C 13,14.435522 12.520402,15 11.75,15 H 2.5 C 0.887784,15.564813 3.711565,15.216257 1.629941,15.374789 4.218671,15.642154 1.194234,16 2.5,16 Z"
-   inkscape:connector-curvature="0"
-   style="fill:#808080"
-   sodipodi:nodetypes="sscccccssccss" />
+   style="fill:#808080;fill-opacity:1" />
 <text
    xml:space="preserve"
    style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:8px;line-height:1.25;font-family:'Segoe UI';-inkscape-font-specification:'Segoe UI Bold';letter-spacing:0px;word-spacing:0px;fill:#808080;fill-opacity:1;stroke:none"

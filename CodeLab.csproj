@@ -254,13 +254,12 @@
     <EmbeddedResource Include="Icons\FormDesigner.png" />
     <EmbeddedResource Include="Icons\SelectAll.png" />
     <EmbeddedResource Include="Icons\HelpTopics.png" />
-    <EmbeddedResource Include="Icons\Updates.png" />
     <EmbeddedResource Include="Icons\WordPad.png" />
     <EmbeddedResource Include="Icons\ParagraphLeft.png" />
     <EmbeddedResource Include="Icons\InsertPicture.png" />
     <EmbeddedResource Include="Icons\ParagraphCenter.png" />
     <EmbeddedResource Include="Icons\SuperScript.png" />
-    <EmbeddedResource Include="Icons\Subscript.png" />
+    <EmbeddedResource Include="Icons\SubScript.png" />
     <EmbeddedResource Include="Icons\IncreaseFontSize.png" />
     <EmbeddedResource Include="Icons\DecreaseFontSize.png" />
     <EmbeddedResource Include="Icons\Bullets.png" />
@@ -284,7 +283,6 @@
     <EmbeddedResource Include="Icons\New.32.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Icons\BadIcon.png" />
     <EmbeddedResource Include="Icons\Copy.32.png" />
     <EmbeddedResource Include="Icons\Cut.32.png" />
     <EmbeddedResource Include="Icons\Indent.32.png" />
@@ -300,7 +298,6 @@
     <EmbeddedResource Include="Icons\PlayButton.32.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Icons\BadIcon.32.png" />
     <EmbeddedResource Include="Icons\Untitled.32.png" />
   </ItemGroup>
   <ItemGroup>
@@ -332,6 +329,30 @@
     <EmbeddedResource Include="Icons\Property.32.png" />
     <EmbeddedResource Include="Icons\Snippet.32.png" />
     <EmbeddedResource Include="Icons\Struct.32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\02ColorWheel.32.png" />
+    <EmbeddedResource Include="Icons\Var.32.png" />
+    <EmbeddedResource Include="Icons\WordPad.32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\00int.32.png" />
+    <EmbeddedResource Include="Icons\01CheckBox.32.png" />
+    <EmbeddedResource Include="Icons\03AngleChooser.32.png" />
+    <EmbeddedResource Include="Icons\04PanSlider.32.png" />
+    <EmbeddedResource Include="Icons\05TextBox.32.png" />
+    <EmbeddedResource Include="Icons\06DoubleSlider.32.png" />
+    <EmbeddedResource Include="Icons\07DropDown.32.png" />
+    <EmbeddedResource Include="Icons\08BlendOps.32.png" />
+    <EmbeddedResource Include="Icons\09Fonts.32.png" />
+    <EmbeddedResource Include="Icons\10RadioButton.32.png" />
+    <EmbeddedResource Include="Icons\11ReseedButton.32.png" />
+    <EmbeddedResource Include="Icons\12MultiTextBox.32.png" />
+    <EmbeddedResource Include="Icons\13RollControl.32.png" />
+    <EmbeddedResource Include="Icons\Comment.32.png" />
+    <EmbeddedResource Include="Icons\Replace.32.png" />
+    <EmbeddedResource Include="Icons\SelectAll.32.png" />
+    <EmbeddedResource Include="Icons\UnComment.32.png" />
   </ItemGroup>
   <PropertyGroup>
     <PostBuildEvent>if $(ConfigurationName) == Release (
