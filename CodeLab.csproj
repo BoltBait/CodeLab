@@ -354,6 +354,13 @@
     <EmbeddedResource Include="Icons\SelectAll.32.png" />
     <EmbeddedResource Include="Icons\UnComment.32.png" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\DecreaseFontSize.32png.png" />
+    <EmbeddedResource Include="Icons\Format.32.png" />
+    <EmbeddedResource Include="Icons\FormDesigner.32.png" />
+    <EmbeddedResource Include="Icons\IncreaseFontSize.32png.png" />
+    <EmbeddedResource Include="Icons\newpaper.32.png" />
+  </ItemGroup>
   <PropertyGroup>
     <PostBuildEvent>if $(ConfigurationName) == Release (
     "C:\Program Files (x86)\Microsoft\ILMerge\ILMerge.exe" /ndebug /targetplatform:4.0,"C:\Windows\Microsoft.NET\Framework\v4.0.30319" /out:"$(TargetDir)Desktop\CodeLab.dll" "$(TargetDir)CodeLab.dll" "$(TargetDir)ScintillaNET.dll"
