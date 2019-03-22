@@ -10,8 +10,8 @@
    viewBox="0 0 16 16"
    version="1.1"
    id="svg8"
-   sodipodi:docname="Newpaper.svg"
-   inkscape:export-filename="C:\Users\Kalama\Documents\GitHub\CodeLab-bb\Icons\Newpaper.32.png"
+   sodipodi:docname="Newspaper.svg"
+   inkscape:export-filename="C:\Users\Kalama\Documents\GitHub\CodeLab-bb\Icons\Newspaper.32.png"
    inkscape:export-xdpi="192"
    inkscape:export-ydpi="192"
    inkscape:version="0.92.4 (5da689c313, 2019-01-14)"><metadata
@@ -52,7 +52,7 @@
    id="namedview10"
    showgrid="false"
    inkscape:zoom="45.254834"
-   inkscape:cx="5.0318526"
+   inkscape:cx="1.441076"
    inkscape:cy="8.0735361"
    inkscape:window-x="-8"
    inkscape:window-y="-8"
@@ -60,13 +60,13 @@
    inkscape:current-layer="svg8" />
 
 
+
      /&amp;gt;
  <path
-   style="display:none;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-   d="M 0.63529148,2.703078 0.5,13.5 h 15 v -8 L 12.827359,2.7306989 Z"
-   id="path839"
-   inkscape:connector-curvature="0"
-   sodipodi:nodetypes="cccccc" />
+   style="fill:#ffffff;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;fill-opacity:1"
+   d="m 0.5,2.5 h 12 l 3,3 v 8 h -15 z"
+   id="path828"
+   inkscape:connector-curvature="0" />
 <path
    style="fill:none;stroke:#808080;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
    d="M 12.648438 2.3515625 L 15.648438 5.3515625 L 12.648438 2.3515625 z M 0.5 2.5 L 0.5 13.5 L 15.5 13.5 L 15.5 5.5 L 12.5 5.5 L 12.5 2.5 L 0.5 2.5 z "

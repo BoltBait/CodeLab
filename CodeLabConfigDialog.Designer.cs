@@ -241,7 +241,7 @@
             // 
             // FullErrorMenuItem
             // 
-            this.FullErrorMenuItem.ImageName = "newspaper";
+            this.FullErrorMenuItem.ImageName = "Newspaper";
             this.FullErrorMenuItem.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.FullErrorMenuItem.Name = "FullErrorMenuItem";
             this.FullErrorMenuItem.Size = new System.Drawing.Size(179, 22);
@@ -1002,7 +1002,7 @@
             // 
             // changesInThisVersionToolStripMenuItem
             // 
-            this.changesInThisVersionToolStripMenuItem.ImageName = "newspaper";
+            this.changesInThisVersionToolStripMenuItem.ImageName = "Newspaper";
             this.changesInThisVersionToolStripMenuItem.Name = "changesInThisVersionToolStripMenuItem";
             this.changesInThisVersionToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
             this.changesInThisVersionToolStripMenuItem.Text = "Changes in this version...";
