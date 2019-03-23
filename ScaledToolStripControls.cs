@@ -26,12 +26,6 @@ namespace PaintDotNet.Effects
                 this.Image = ResUtil.GetImage(imageName);
             }
         }
-
-        // Execute on mid-session DPI change
-        internal void SetImage()
-        {
-            this.Image = ResUtil.GetImage(imageName);
-        }
     }
 
     public sealed class ScaledToolStripMenuItem : ToolStripMenuItem
@@ -56,12 +50,6 @@ namespace PaintDotNet.Effects
                 this.Image = ResUtil.GetImage(imageName);
             }
         }
-
-        // Execute on mid-session DPI change
-        internal void SetImage()
-        {
-            this.Image = ResUtil.GetImage(imageName);
-        }
     }
 
     public sealed class ScaledToolStripDropDownButton : ToolStripDropDownButton
@@ -76,12 +64,6 @@ namespace PaintDotNet.Effects
                 imageName = value.Trim();
                 this.Image = ResUtil.GetImage(imageName);
             }
-        }
-
-        // Execute on mid-session DPI change
-        internal void SetImage()
-        {
-            this.Image = ResUtil.GetImage(imageName);
         }
     }
 
@@ -98,12 +80,6 @@ namespace PaintDotNet.Effects
                 imageName = value.Trim();
                 this.Image = ResUtil.GetImage(imageName);
             }
-        }
-
-        // Execute on mid-session DPI change
-        internal void SetImage()
-        {
-            this.Image = ResUtil.GetImage(imageName);
         }
     }
 }
