@@ -232,8 +232,8 @@
             // 
             // CopyErrorMenuItem
             // 
-            this.CopyErrorMenuItem.ImageName = "Copy";
             this.CopyErrorMenuItem.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.CopyErrorMenuItem.ImageName = "Copy";
             this.CopyErrorMenuItem.Name = "CopyErrorMenuItem";
             this.CopyErrorMenuItem.Size = new System.Drawing.Size(179, 22);
             this.CopyErrorMenuItem.Text = "Copy Error Message";
@@ -241,8 +241,8 @@
             // 
             // FullErrorMenuItem
             // 
-            this.FullErrorMenuItem.ImageName = "Newspaper";
             this.FullErrorMenuItem.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.FullErrorMenuItem.ImageName = "Newspaper";
             this.FullErrorMenuItem.Name = "FullErrorMenuItem";
             this.FullErrorMenuItem.Size = new System.Drawing.Size(179, 22);
             this.FullErrorMenuItem.Text = "Read Full Error";
@@ -463,7 +463,7 @@
             this.newToolStripMenuItem.ImageName = "New";
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
             this.newToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(234, 22);
             this.newToolStripMenuItem.Text = "&New";
             this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
             // 
@@ -472,7 +472,7 @@
             this.loadToolStripMenuItem.ImageName = "Open";
             this.loadToolStripMenuItem.Name = "loadToolStripMenuItem";
             this.loadToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.loadToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
+            this.loadToolStripMenuItem.Size = new System.Drawing.Size(234, 22);
             this.loadToolStripMenuItem.Text = "&Open...";
             this.loadToolStripMenuItem.Click += new System.EventHandler(this.loadToolStripMenuItem_Click);
             // 
@@ -481,7 +481,7 @@
             this.openRecentToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.NoRecentsToolStripMenuItem});
             this.openRecentToolStripMenuItem.Name = "openRecentToolStripMenuItem";
-            this.openRecentToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
+            this.openRecentToolStripMenuItem.Size = new System.Drawing.Size(234, 22);
             this.openRecentToolStripMenuItem.Text = "Open &Recent";
             this.openRecentToolStripMenuItem.DropDownOpening += new System.EventHandler(this.openRecentToolStripMenuItem_DropDownOpening);
             // 
@@ -497,7 +497,7 @@
             this.saveToolStripMenuItem.ImageName = "Save";
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
             this.saveToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(234, 22);
             this.saveToolStripMenuItem.Text = "&Save";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
@@ -507,28 +507,28 @@
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
             this.saveAsToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
             | System.Windows.Forms.Keys.S)));
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(234, 22);
             this.saveAsToolStripMenuItem.Text = "Save &As...";
             this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(230, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(231, 6);
             // 
             // saveAsDLLToolStripMenuItem
             // 
             this.saveAsDLLToolStripMenuItem.ImageName = "SaveAsDll";
             this.saveAsDLLToolStripMenuItem.Name = "saveAsDLLToolStripMenuItem";
             this.saveAsDLLToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.B)));
-            this.saveAsDLLToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
+            this.saveAsDLLToolStripMenuItem.Size = new System.Drawing.Size(234, 22);
             this.saveAsDLLToolStripMenuItem.Text = "&Build DLL...";
             this.saveAsDLLToolStripMenuItem.Click += new System.EventHandler(this.saveAsDLLToolStripMenuItem_Click);
             // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(230, 6);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(231, 6);
             // 
             // userInterfaceDesignerToolStripMenuItem
             // 
@@ -536,7 +536,7 @@
             this.userInterfaceDesignerToolStripMenuItem.Name = "userInterfaceDesignerToolStripMenuItem";
             this.userInterfaceDesignerToolStripMenuItem.ShortcutKeyDisplayString = "Ctrl+I";
             this.userInterfaceDesignerToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.I)));
-            this.userInterfaceDesignerToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
+            this.userInterfaceDesignerToolStripMenuItem.Size = new System.Drawing.Size(234, 22);
             this.userInterfaceDesignerToolStripMenuItem.Text = "User Interface Designer";
             this.userInterfaceDesignerToolStripMenuItem.Click += new System.EventHandler(this.userInterfaceDesignerToolStripMenuItem_Click);
             // 
@@ -546,7 +546,7 @@
             this.userInterfaceRenumberToolStripMenuItem.Name = "userInterfaceRenumberToolStripMenuItem";
             this.userInterfaceRenumberToolStripMenuItem.ShortcutKeyDisplayString = "Ctrl+R";
             this.userInterfaceRenumberToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.R)));
-            this.userInterfaceRenumberToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
+            this.userInterfaceRenumberToolStripMenuItem.Size = new System.Drawing.Size(234, 22);
             this.userInterfaceRenumberToolStripMenuItem.Text = "Renumber UI Variables";
             this.userInterfaceRenumberToolStripMenuItem.Click += new System.EventHandler(this.userInterfaceRenumberToolStripMenuItem_Click);
             // 
@@ -555,20 +555,20 @@
             this.previewEffectMenuItem.ImageName = "PlayButton";
             this.previewEffectMenuItem.Name = "previewEffectMenuItem";
             this.previewEffectMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.P)));
-            this.previewEffectMenuItem.Size = new System.Drawing.Size(233, 22);
+            this.previewEffectMenuItem.Size = new System.Drawing.Size(234, 22);
             this.previewEffectMenuItem.Text = "&Preview Effect";
             this.previewEffectMenuItem.Click += new System.EventHandler(this.previewEffectMenuItem_Click);
             // 
             // toolStripSeparator7
             // 
             this.toolStripSeparator7.Name = "toolStripSeparator7";
-            this.toolStripSeparator7.Size = new System.Drawing.Size(230, 6);
+            this.toolStripSeparator7.Size = new System.Drawing.Size(231, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.ImageName = "Exit";
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(234, 22);
             this.exitToolStripMenuItem.Text = "E&xit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -1043,7 +1043,7 @@
             this.toolStrip1.Location = new System.Drawing.Point(0, 24);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Padding = new System.Windows.Forms.Padding(5, 0, 0, 0);
-            this.toolStrip1.Size = new System.Drawing.Size(772, 25);
+            this.toolStrip1.Size = new System.Drawing.Size(772, 27);
             this.toolStrip1.TabIndex = 14;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -1052,7 +1052,8 @@
             this.NewButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.NewButton.ImageName = "New";
             this.NewButton.Name = "NewButton";
-            this.NewButton.Size = new System.Drawing.Size(23, 22);
+            this.NewButton.Padding = new System.Windows.Forms.Padding(2);
+            this.NewButton.Size = new System.Drawing.Size(24, 24);
             this.NewButton.Text = "New File";
             this.NewButton.ToolTipText = "New (Ctrl+N)";
             this.NewButton.Click += new System.EventHandler(this.NewButton_Click);
@@ -1062,7 +1063,8 @@
             this.OpenButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.OpenButton.ImageName = "Open";
             this.OpenButton.Name = "OpenButton";
-            this.OpenButton.Size = new System.Drawing.Size(23, 22);
+            this.OpenButton.Padding = new System.Windows.Forms.Padding(2);
+            this.OpenButton.Size = new System.Drawing.Size(24, 24);
             this.OpenButton.Text = "FileOpen";
             this.OpenButton.ToolTipText = "Open (Ctrl+O)";
             this.OpenButton.Click += new System.EventHandler(this.OpenButton_Click);
@@ -1072,7 +1074,8 @@
             this.SaveButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.SaveButton.ImageName = "Save";
             this.SaveButton.Name = "SaveButton";
-            this.SaveButton.Size = new System.Drawing.Size(23, 22);
+            this.SaveButton.Padding = new System.Windows.Forms.Padding(2);
+            this.SaveButton.Size = new System.Drawing.Size(24, 24);
             this.SaveButton.Text = "SaveSource";
             this.SaveButton.ToolTipText = "Save (Ctrl+S)";
             this.SaveButton.Click += new System.EventHandler(this.SaveButton_Click);
@@ -1082,7 +1085,8 @@
             this.SaveDLLButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.SaveDLLButton.ImageName = "SaveAsDll";
             this.SaveDLLButton.Name = "SaveDLLButton";
-            this.SaveDLLButton.Size = new System.Drawing.Size(23, 22);
+            this.SaveDLLButton.Padding = new System.Windows.Forms.Padding(2);
+            this.SaveDLLButton.Size = new System.Drawing.Size(24, 24);
             this.SaveDLLButton.Text = "Build DLL";
             this.SaveDLLButton.ToolTipText = "Build DLL (Ctrl+B)";
             this.SaveDLLButton.Click += new System.EventHandler(this.SaveDLLButton_Click);
@@ -1090,14 +1094,15 @@
             // toolStripSeparator14
             // 
             this.toolStripSeparator14.Name = "toolStripSeparator14";
-            this.toolStripSeparator14.Size = new System.Drawing.Size(6, 25);
+            this.toolStripSeparator14.Size = new System.Drawing.Size(6, 27);
             // 
             // UIDesignerButton
             // 
             this.UIDesignerButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.UIDesignerButton.ImageName = "FormDesigner";
             this.UIDesignerButton.Name = "UIDesignerButton";
-            this.UIDesignerButton.Size = new System.Drawing.Size(23, 22);
+            this.UIDesignerButton.Padding = new System.Windows.Forms.Padding(2);
+            this.UIDesignerButton.Size = new System.Drawing.Size(24, 24);
             this.UIDesignerButton.Text = "UIDesigner";
             this.UIDesignerButton.ToolTipText = "Interface Designer (Ctrl+I)";
             this.UIDesignerButton.Click += new System.EventHandler(this.UIDesignerButton_Click);
@@ -1108,21 +1113,23 @@
             this.RunButton.ImageName = "PlayButton";
             this.RunButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.RunButton.Name = "RunButton";
-            this.RunButton.Size = new System.Drawing.Size(23, 22);
+            this.RunButton.Padding = new System.Windows.Forms.Padding(2);
+            this.RunButton.Size = new System.Drawing.Size(24, 24);
             this.RunButton.Text = "Preview Effect (Ctrl+P)";
             this.RunButton.Click += new System.EventHandler(this.RunButton_Click);
             // 
             // toolStripSeparator15
             // 
             this.toolStripSeparator15.Name = "toolStripSeparator15";
-            this.toolStripSeparator15.Size = new System.Drawing.Size(6, 25);
+            this.toolStripSeparator15.Size = new System.Drawing.Size(6, 27);
             // 
             // SelectAllButton
             // 
             this.SelectAllButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.SelectAllButton.ImageName = "SelectAll";
             this.SelectAllButton.Name = "SelectAllButton";
-            this.SelectAllButton.Size = new System.Drawing.Size(23, 22);
+            this.SelectAllButton.Padding = new System.Windows.Forms.Padding(2);
+            this.SelectAllButton.Size = new System.Drawing.Size(24, 24);
             this.SelectAllButton.Text = "SelectAll";
             this.SelectAllButton.ToolTipText = "Select All (Ctrl+A)";
             this.SelectAllButton.Click += new System.EventHandler(this.SelectAllButton_Click);
@@ -1132,7 +1139,8 @@
             this.CutButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.CutButton.ImageName = "Cut";
             this.CutButton.Name = "CutButton";
-            this.CutButton.Size = new System.Drawing.Size(23, 22);
+            this.CutButton.Padding = new System.Windows.Forms.Padding(2);
+            this.CutButton.Size = new System.Drawing.Size(24, 24);
             this.CutButton.Text = "Cut";
             this.CutButton.ToolTipText = "Cut (Ctrl+X)";
             this.CutButton.Click += new System.EventHandler(this.CutButton_Click);
@@ -1142,7 +1150,8 @@
             this.CopyButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.CopyButton.ImageName = "Copy";
             this.CopyButton.Name = "CopyButton";
-            this.CopyButton.Size = new System.Drawing.Size(23, 22);
+            this.CopyButton.Padding = new System.Windows.Forms.Padding(2);
+            this.CopyButton.Size = new System.Drawing.Size(24, 24);
             this.CopyButton.Text = "Copy";
             this.CopyButton.ToolTipText = "Copy (Ctrl+C)";
             this.CopyButton.Click += new System.EventHandler(this.CopyButton_Click);
@@ -1152,7 +1161,8 @@
             this.PasteButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.PasteButton.ImageName = "Paste";
             this.PasteButton.Name = "PasteButton";
-            this.PasteButton.Size = new System.Drawing.Size(23, 22);
+            this.PasteButton.Padding = new System.Windows.Forms.Padding(2);
+            this.PasteButton.Size = new System.Drawing.Size(24, 24);
             this.PasteButton.Text = "Paste";
             this.PasteButton.ToolTipText = "Paste (Ctrl+V)";
             this.PasteButton.Click += new System.EventHandler(this.PasteButton_Click);
@@ -1160,14 +1170,15 @@
             // toolStripSeparator16
             // 
             this.toolStripSeparator16.Name = "toolStripSeparator16";
-            this.toolStripSeparator16.Size = new System.Drawing.Size(6, 25);
+            this.toolStripSeparator16.Size = new System.Drawing.Size(6, 27);
             // 
             // UndoButton
             // 
             this.UndoButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.UndoButton.ImageName = "Undo";
             this.UndoButton.Name = "UndoButton";
-            this.UndoButton.Size = new System.Drawing.Size(23, 22);
+            this.UndoButton.Padding = new System.Windows.Forms.Padding(2);
+            this.UndoButton.Size = new System.Drawing.Size(24, 24);
             this.UndoButton.Text = "Undo";
             this.UndoButton.ToolTipText = "Undo (Ctrl+Z)";
             this.UndoButton.Click += new System.EventHandler(this.UndoButton_Click);
@@ -1177,7 +1188,8 @@
             this.RedoButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.RedoButton.ImageName = "Redo";
             this.RedoButton.Name = "RedoButton";
-            this.RedoButton.Size = new System.Drawing.Size(23, 22);
+            this.RedoButton.Padding = new System.Windows.Forms.Padding(2);
+            this.RedoButton.Size = new System.Drawing.Size(24, 24);
             this.RedoButton.Text = "Redo";
             this.RedoButton.ToolTipText = "Redo (Ctrl+Y)";
             this.RedoButton.Click += new System.EventHandler(this.RedoButton_Click);
@@ -1185,14 +1197,15 @@
             // toolStripSeparator17
             // 
             this.toolStripSeparator17.Name = "toolStripSeparator17";
-            this.toolStripSeparator17.Size = new System.Drawing.Size(6, 25);
+            this.toolStripSeparator17.Size = new System.Drawing.Size(6, 27);
             // 
             // IndentButton
             // 
             this.IndentButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.IndentButton.ImageName = "Indent";
             this.IndentButton.Name = "IndentButton";
-            this.IndentButton.Size = new System.Drawing.Size(23, 22);
+            this.IndentButton.Padding = new System.Windows.Forms.Padding(2);
+            this.IndentButton.Size = new System.Drawing.Size(24, 24);
             this.IndentButton.Text = "Indent";
             this.IndentButton.ToolTipText = "Indent (Tab)";
             this.IndentButton.Click += new System.EventHandler(this.IndentButton_Click);
@@ -1202,7 +1215,8 @@
             this.UndentButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.UndentButton.ImageName = "Unindent";
             this.UndentButton.Name = "UndentButton";
-            this.UndentButton.Size = new System.Drawing.Size(23, 22);
+            this.UndentButton.Padding = new System.Windows.Forms.Padding(2);
+            this.UndentButton.Size = new System.Drawing.Size(24, 24);
             this.UndentButton.Text = "Unindent";
             this.UndentButton.ToolTipText = "Unindent (Shift+Tab)";
             this.UndentButton.Click += new System.EventHandler(this.UndentButton_Click);
@@ -1212,7 +1226,8 @@
             this.CommentButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.CommentButton.ImageName = "Comment";
             this.CommentButton.Name = "CommentButton";
-            this.CommentButton.Size = new System.Drawing.Size(23, 22);
+            this.CommentButton.Padding = new System.Windows.Forms.Padding(2);
+            this.CommentButton.Size = new System.Drawing.Size(24, 24);
             this.CommentButton.Text = "CommentSelection";
             this.CommentButton.ToolTipText = "Comment Selection (Ctrl+K)";
             this.CommentButton.Click += new System.EventHandler(this.CommentButton_Click);
@@ -1222,7 +1237,8 @@
             this.UnCommentButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.UnCommentButton.ImageName = "Uncomment";
             this.UnCommentButton.Name = "UnCommentButton";
-            this.UnCommentButton.Size = new System.Drawing.Size(23, 22);
+            this.UnCommentButton.Padding = new System.Windows.Forms.Padding(2);
+            this.UnCommentButton.Size = new System.Drawing.Size(24, 24);
             this.UnCommentButton.Text = "Uncomment";
             this.UnCommentButton.ToolTipText = "Uncomment Selection (Ctrl+U)";
             this.UnCommentButton.Click += new System.EventHandler(this.UnCommentButton_Click);
@@ -1311,9 +1327,9 @@
             // 
             this.tabStrip1.AutoSize = true;
             this.tabStrip1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.tabStrip1.Location = new System.Drawing.Point(0, 49);
+            this.tabStrip1.Location = new System.Drawing.Point(0, 51);
             this.tabStrip1.Name = "tabStrip1";
-            this.tabStrip1.Size = new System.Drawing.Size(775, 25);
+            this.tabStrip1.Size = new System.Drawing.Size(772, 25);
             this.tabStrip1.TabIndex = 20;
             this.tabStrip1.SelectedTabChanged += new System.EventHandler(this.tabStrip1_SelectedIndexChanged);
             this.tabStrip1.NewTabCreated += new System.EventHandler<PaintDotNet.Effects.TabEventArgs>(this.tabStrip1_NewTabCreated);

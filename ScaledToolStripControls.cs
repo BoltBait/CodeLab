@@ -6,6 +6,11 @@ namespace PaintDotNet.Effects
 {
     public class ScaledToolStripButton : ToolStripButton
     {
+        public ScaledToolStripButton()
+        {
+            this.Padding = new Padding(2);
+        }
+
         private string imageName = string.Empty;
 
         [Browsable(false)]
