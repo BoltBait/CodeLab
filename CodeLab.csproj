@@ -75,6 +75,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="ScaledToolStripControls.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="ScriptBuilder.cs" />
     <Compile Include="ScriptWriter.cs" />
     <Compile Include="Settings.cs" />
@@ -139,6 +142,7 @@
     <Compile Include="FindAndReplace.Designer.cs">
       <DependentUpon>FindAndReplace.cs</DependentUpon>
     </Compile>
+    <Compile Include="ResUtil.cs" />
     <Compile Include="ViewSrc.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -159,7 +163,6 @@
     <EmbeddedResource Include="ColorWindow.resx">
       <DependentUpon>ColorWindow.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Icons\CodeLab.png" />
     <EmbeddedResource Include="PdnColor.resx">
       <DependentUpon>PdnColor.cs</DependentUpon>
     </EmbeddedResource>
@@ -212,8 +215,24 @@
     <EmbeddedResource Include="Icons\14FilenameControl.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Icons\00int.32.png" />
+    <EmbeddedResource Include="Icons\01CheckBox.32.png" />
+    <EmbeddedResource Include="Icons\02ColorWheel.32.png" />
+    <EmbeddedResource Include="Icons\03AngleChooser.32.png" />
+    <EmbeddedResource Include="Icons\04PanSlider.32.png" />
+    <EmbeddedResource Include="Icons\05TextBox.32.png" />
+    <EmbeddedResource Include="Icons\06DoubleSlider.32.png" />
+    <EmbeddedResource Include="Icons\07DropDown.32.png" />
+    <EmbeddedResource Include="Icons\08BlendOps.32.png" />
+    <EmbeddedResource Include="Icons\09Fonts.32.png" />
+    <EmbeddedResource Include="Icons\10RadioButton.32.png" />
+    <EmbeddedResource Include="Icons\11ReseedButton.32.png" />
+    <EmbeddedResource Include="Icons\12MultiTextBox.32.png" />
+    <EmbeddedResource Include="Icons\13RollControl.32.png" />
+    <EmbeddedResource Include="Icons\14FilenameControl.32.png" />
+  </ItemGroup>
+  <ItemGroup>
     <EmbeddedResource Include="Icons\Keyword.png" />
-    <EmbeddedResource Include="Icons\Type.png" />
     <EmbeddedResource Include="Icons\Var.png" />
     <EmbeddedResource Include="Icons\Class.png" />
     <EmbeddedResource Include="Icons\Enum.png" />
@@ -227,55 +246,107 @@
     <EmbeddedResource Include="Icons\Snippet.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Icons\About.png" />
-    <None Include="Icons\Renumber.png" />
-    <None Include="Icons\Redo.png" />
-    <None Include="Icons\Undo.png" />
-    <None Include="Icons\Exit.png" />
-    <None Include="Icons\newspaper.png" />
-    <None Include="Icons\Handle.png" />
-    <None Include="Icons\Search.png" />
-    <None Include="Icons\Replace.png" />
-    <None Include="Icons\Cut.png" />
-    <None Include="Icons\Copy.png" />
-    <None Include="Icons\Paste.png" />
-    <None Include="Icons\New.png" />
-    <None Include="Icons\Open.png" />
-    <None Include="Icons\Comment.png" />
-    <None Include="Icons\Indent.png" />
-    <None Include="Icons\Uncomment.png" />
-    <None Include="Icons\Unindent.png" />
-    <None Include="Icons\Save.png" />
-    <None Include="Icons\SaveAs.png" />
-    <None Include="Icons\SaveAsDll.png" />
-    <None Include="Icons\FormDesigner.png" />
-    <None Include="Icons\SelectAll.png" />
-    <None Include="Icons\HelpTopics.png" />
-    <None Include="Icons\Updates.png" />
-    <None Include="Icons\WordPad.png" />
-    <None Include="Icons\ParagraphLeft.png" />
-    <None Include="Icons\InsertPicture.png" />
-    <None Include="Icons\ParagraphCenter.png" />
-    <None Include="Icons\SuperScript.png" />
-    <None Include="Icons\Subscript.png" />
-    <None Include="Icons\IncreaseFontSize.png" />
-    <None Include="Icons\DecreaseFontSize.png" />
-    <None Include="Icons\Bullets.png" />
-    <None Include="Icons\Format.png" />
-    <None Include="Icons\PlayButton.png" />
-    <None Include="Icons\Bulb.png" />
-    <None Include="Icons\Untitled.png" />
-    <None Include="Icons\Bold.png" />
-    <None Include="Icons\Italic.png" />
-    <None Include="Icons\Underline.png" />
+    <EmbeddedResource Include="Icons\Class.32.png" />
+    <EmbeddedResource Include="Icons\Const.32.png" />
+    <EmbeddedResource Include="Icons\Enum.32.png" />
+    <EmbeddedResource Include="Icons\EnumItem.32.png" />
+    <EmbeddedResource Include="Icons\Event.32.png" />
+    <EmbeddedResource Include="Icons\Field.32.png" />
+    <EmbeddedResource Include="Icons\Keyword.32.png" />
+    <EmbeddedResource Include="Icons\Method.32.png" />
+    <EmbeddedResource Include="Icons\Property.32.png" />
+    <EmbeddedResource Include="Icons\Snippet.32.png" />
+    <EmbeddedResource Include="Icons\Struct.32.png" />
+    <EmbeddedResource Include="Icons\Var.32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\CodeLab.png" />
+    <EmbeddedResource Include="Icons\About.png" />
+    <EmbeddedResource Include="Icons\Renumber.png" />
+    <EmbeddedResource Include="Icons\Redo.png" />
+    <EmbeddedResource Include="Icons\Undo.png" />
+    <EmbeddedResource Include="Icons\Exit.png" />
+    <EmbeddedResource Include="Icons\Newspaper.png" />
+    <EmbeddedResource Include="Icons\Handle.png" />
+    <EmbeddedResource Include="Icons\Search.png" />
+    <EmbeddedResource Include="Icons\Replace.png" />
+    <EmbeddedResource Include="Icons\Cut.png" />
+    <EmbeddedResource Include="Icons\Copy.png" />
+    <EmbeddedResource Include="Icons\Paste.png" />
+    <EmbeddedResource Include="Icons\New.png" />
+    <EmbeddedResource Include="Icons\Open.png" />
+    <EmbeddedResource Include="Icons\Comment.png" />
+    <EmbeddedResource Include="Icons\Indent.png" />
+    <EmbeddedResource Include="Icons\Uncomment.png" />
+    <EmbeddedResource Include="Icons\Unindent.png" />
+    <EmbeddedResource Include="Icons\Save.png" />
+    <EmbeddedResource Include="Icons\SaveAs.png" />
+    <EmbeddedResource Include="Icons\SaveAsDll.png" />
+    <EmbeddedResource Include="Icons\FormDesigner.png" />
+    <EmbeddedResource Include="Icons\SelectAll.png" />
+    <EmbeddedResource Include="Icons\HelpTopics.png" />
+    <EmbeddedResource Include="Icons\WordPad.png" />
+    <EmbeddedResource Include="Icons\ParagraphLeft.png" />
+    <EmbeddedResource Include="Icons\InsertPicture.png" />
+    <EmbeddedResource Include="Icons\ParagraphCenter.png" />
+    <EmbeddedResource Include="Icons\SuperScript.png" />
+    <EmbeddedResource Include="Icons\SubScript.png" />
+    <EmbeddedResource Include="Icons\IncreaseFontSize.png" />
+    <EmbeddedResource Include="Icons\DecreaseFontSize.png" />
+    <EmbeddedResource Include="Icons\Bullets.png" />
+    <EmbeddedResource Include="Icons\Format.png" />
+    <EmbeddedResource Include="Icons\PlayButton.png" />
+    <EmbeddedResource Include="Icons\Bulb.png" />
+    <EmbeddedResource Include="Icons\Untitled.png" />
+    <EmbeddedResource Include="Icons\Bold.png" />
+    <EmbeddedResource Include="Icons\Italic.png" />
+    <EmbeddedResource Include="Icons\Underline.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\CodeLab.32.png" />
+    <EmbeddedResource Include="Icons\New.32.png" />
+    <EmbeddedResource Include="Icons\Copy.32.png" />
+    <EmbeddedResource Include="Icons\Cut.32.png" />
+    <EmbeddedResource Include="Icons\Indent.32.png" />
+    <EmbeddedResource Include="Icons\Open.32.png" />
+    <EmbeddedResource Include="Icons\Paste.32.png" />
+    <EmbeddedResource Include="Icons\Redo.32.png" />
+    <EmbeddedResource Include="Icons\Save.32.png" />
+    <EmbeddedResource Include="Icons\SaveAsDll.32.png" />
+    <EmbeddedResource Include="Icons\Undo.32.png" />
+    <EmbeddedResource Include="Icons\Unindent.32.png" />
+    <EmbeddedResource Include="Icons\Comment.32.png" />
+    <EmbeddedResource Include="Icons\Replace.32.png" />
+    <EmbeddedResource Include="Icons\SelectAll.32.png" />
+    <EmbeddedResource Include="Icons\Uncomment.32.png" />
+    <EmbeddedResource Include="Icons\PlayButton.32.png" />
+    <EmbeddedResource Include="Icons\Untitled.32.png" />
+    <EmbeddedResource Include="Icons\About.32.png" />
+    <EmbeddedResource Include="Icons\Bold.32.png" />
+    <EmbeddedResource Include="Icons\Bullets.32.png" />
+    <EmbeddedResource Include="Icons\Exit.32.png" />
+    <EmbeddedResource Include="Icons\HelpTopics.32.png" />
+    <EmbeddedResource Include="Icons\InsertPicture.32.png" />
+    <EmbeddedResource Include="Icons\Italic.32.png" />
+    <EmbeddedResource Include="Icons\ParagraphCenter.32.png" />
+    <EmbeddedResource Include="Icons\ParagraphLeft.32.png" />
+    <EmbeddedResource Include="Icons\SaveAs.32.png" />
+    <EmbeddedResource Include="Icons\Search.32.png" />
+    <EmbeddedResource Include="Icons\SubScript.32.png" />
+    <EmbeddedResource Include="Icons\SuperScript.32.png" />
+    <EmbeddedResource Include="Icons\Underline.32.png" />
+    <EmbeddedResource Include="Icons\WordPad.32.png" />
+    <EmbeddedResource Include="Icons\DecreaseFontSize.32png.png" />
+    <EmbeddedResource Include="Icons\Format.32.png" />
+    <EmbeddedResource Include="Icons\FormDesigner.32.png" />
+    <EmbeddedResource Include="Icons\IncreaseFontSize.32png.png" />
+    <EmbeddedResource Include="Icons\Newspaper.32.png" />
+    <EmbeddedResource Include="Icons\Renumber.32.png" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="jacobslusser.ScintillaNET.Signed">
       <Version>3.6.3</Version>
     </PackageReference>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Icons\CodeLab32.png" />
   </ItemGroup>
   <PropertyGroup>
     <PostBuildEvent>if $(ConfigurationName) == Release (

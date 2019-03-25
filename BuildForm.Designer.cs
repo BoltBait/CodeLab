@@ -73,26 +73,26 @@ namespace PaintDotNet.Effects
             this.HelpPlainText = new System.Windows.Forms.TextBox();
             this.RichHelpContent = new System.Windows.Forms.RichTextBox();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.OpenButton = new System.Windows.Forms.ToolStripButton();
-            this.SaveButton = new System.Windows.Forms.ToolStripButton();
-            this.WordPadButton = new System.Windows.Forms.ToolStripButton();
+            this.OpenButton = new PaintDotNet.Effects.ScaledToolStripButton();
+            this.SaveButton = new PaintDotNet.Effects.ScaledToolStripButton();
+            this.WordPadButton = new PaintDotNet.Effects.ScaledToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.BoldButton = new System.Windows.Forms.ToolStripButton();
-            this.ItalicsButton = new System.Windows.Forms.ToolStripButton();
-            this.UnderlineButton = new System.Windows.Forms.ToolStripButton();
-            this.SuperScriptButton = new System.Windows.Forms.ToolStripButton();
-            this.SubScriptButton = new System.Windows.Forms.ToolStripButton();
-            this.LargeFontButton = new System.Windows.Forms.ToolStripButton();
-            this.SmallFontButton = new System.Windows.Forms.ToolStripButton();
-            this.ColorButton = new System.Windows.Forms.ToolStripButton();
+            this.BoldButton = new PaintDotNet.Effects.ScaledToolStripButton();
+            this.ItalicsButton = new PaintDotNet.Effects.ScaledToolStripButton();
+            this.UnderlineButton = new PaintDotNet.Effects.ScaledToolStripButton();
+            this.SuperScriptButton = new PaintDotNet.Effects.ScaledToolStripButton();
+            this.SubScriptButton = new PaintDotNet.Effects.ScaledToolStripButton();
+            this.LargeFontButton = new PaintDotNet.Effects.ScaledToolStripButton();
+            this.SmallFontButton = new PaintDotNet.Effects.ScaledToolStripButton();
+            this.ColorButton = new PaintDotNet.Effects.ScaledToolStripButton();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-            this.InsertImageButton = new System.Windows.Forms.ToolStripButton();
-            this.BulletButton = new System.Windows.Forms.ToolStripButton();
+            this.InsertImageButton = new PaintDotNet.Effects.ScaledToolStripButton();
+            this.BulletButton = new PaintDotNet.Effects.ScaledToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.IndentButton = new System.Windows.Forms.ToolStripButton();
-            this.UnindentButton = new System.Windows.Forms.ToolStripButton();
-            this.ParagraphLeftButton = new System.Windows.Forms.ToolStripButton();
-            this.CenterButton = new System.Windows.Forms.ToolStripButton();
+            this.IndentButton = new PaintDotNet.Effects.ScaledToolStripButton();
+            this.UnindentButton = new PaintDotNet.Effects.ScaledToolStripButton();
+            this.ParagraphLeftButton = new PaintDotNet.Effects.ScaledToolStripButton();
+            this.CenterButton = new PaintDotNet.Effects.ScaledToolStripButton();
             this.panel1 = new System.Windows.Forms.Panel();
             this.PreviewLabel = new System.Windows.Forms.Label();
             this.PlainTextLabel = new System.Windows.Forms.Label();
@@ -606,7 +606,7 @@ namespace PaintDotNet.Effects
             // OpenButton
             // 
             this.OpenButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.OpenButton.Image = global::PaintDotNet.Effects.Properties.Resources.Open;
+            this.OpenButton.ImageName = "Open";
             this.OpenButton.Name = "OpenButton";
             this.OpenButton.Size = new System.Drawing.Size(23, 22);
             this.OpenButton.Text = "Open";
@@ -616,7 +616,7 @@ namespace PaintDotNet.Effects
             // SaveButton
             // 
             this.SaveButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.SaveButton.Image = global::PaintDotNet.Effects.Properties.Resources.Save;
+            this.SaveButton.ImageName = "Save";
             this.SaveButton.Name = "SaveButton";
             this.SaveButton.Size = new System.Drawing.Size(23, 22);
             this.SaveButton.Text = "Save";
@@ -626,7 +626,7 @@ namespace PaintDotNet.Effects
             // WordPadButton
             // 
             this.WordPadButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.WordPadButton.Image = global::PaintDotNet.Effects.Properties.Resources.WordPad;
+            this.WordPadButton.ImageName = "WordPad";
             this.WordPadButton.Name = "WordPadButton";
             this.WordPadButton.Size = new System.Drawing.Size(23, 22);
             this.WordPadButton.Text = "Edit in WordPad";
@@ -641,7 +641,7 @@ namespace PaintDotNet.Effects
             // BoldButton
             // 
             this.BoldButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.BoldButton.Image = global::PaintDotNet.Effects.Properties.Resources.Bold;
+            this.BoldButton.ImageName = "Bold";
             this.BoldButton.Name = "BoldButton";
             this.BoldButton.Size = new System.Drawing.Size(23, 22);
             this.BoldButton.Text = "Bold";
@@ -651,7 +651,7 @@ namespace PaintDotNet.Effects
             // ItalicsButton
             // 
             this.ItalicsButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.ItalicsButton.Image = global::PaintDotNet.Effects.Properties.Resources.Italic;
+            this.ItalicsButton.ImageName = "Italic";
             this.ItalicsButton.Name = "ItalicsButton";
             this.ItalicsButton.Size = new System.Drawing.Size(23, 22);
             this.ItalicsButton.Text = "Italics";
@@ -661,7 +661,7 @@ namespace PaintDotNet.Effects
             // UnderlineButton
             // 
             this.UnderlineButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.UnderlineButton.Image = global::PaintDotNet.Effects.Properties.Resources.Underline;
+            this.UnderlineButton.ImageName = "Underline";
             this.UnderlineButton.Name = "UnderlineButton";
             this.UnderlineButton.Size = new System.Drawing.Size(23, 22);
             this.UnderlineButton.Text = "Underline";
@@ -671,7 +671,7 @@ namespace PaintDotNet.Effects
             // SuperScriptButton
             // 
             this.SuperScriptButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.SuperScriptButton.Image = global::PaintDotNet.Effects.Properties.Resources.SuperScript;
+            this.SuperScriptButton.ImageName = "SuperScript";
             this.SuperScriptButton.Name = "SuperScriptButton";
             this.SuperScriptButton.Size = new System.Drawing.Size(23, 22);
             this.SuperScriptButton.Text = "SuperScript";
@@ -681,7 +681,7 @@ namespace PaintDotNet.Effects
             // SubScriptButton
             // 
             this.SubScriptButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.SubScriptButton.Image = global::PaintDotNet.Effects.Properties.Resources.Subscript;
+            this.SubScriptButton.ImageName = "SubScript";
             this.SubScriptButton.Name = "SubScriptButton";
             this.SubScriptButton.Size = new System.Drawing.Size(23, 22);
             this.SubScriptButton.Text = "Subscript";
@@ -690,7 +690,7 @@ namespace PaintDotNet.Effects
             // LargeFontButton
             // 
             this.LargeFontButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.LargeFontButton.Image = global::PaintDotNet.Effects.Properties.Resources.IncreaseFontSize;
+            this.LargeFontButton.ImageName = "IncreaseFontSize";
             this.LargeFontButton.Name = "LargeFontButton";
             this.LargeFontButton.Size = new System.Drawing.Size(23, 22);
             this.LargeFontButton.Text = "Increase Font Size";
@@ -699,7 +699,7 @@ namespace PaintDotNet.Effects
             // SmallFontButton
             // 
             this.SmallFontButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.SmallFontButton.Image = global::PaintDotNet.Effects.Properties.Resources.DecreaseFontSize;
+            this.SmallFontButton.ImageName = "DecreaseFontSize";
             this.SmallFontButton.Name = "SmallFontButton";
             this.SmallFontButton.Size = new System.Drawing.Size(23, 22);
             this.SmallFontButton.Text = "Decrease Font Size";
@@ -708,7 +708,7 @@ namespace PaintDotNet.Effects
             // ColorButton
             // 
             this.ColorButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.ColorButton.Image = global::PaintDotNet.Effects.Properties.Resources.ColorWheel;
+            this.ColorButton.ImageName = "02ColorWheel";
             this.ColorButton.Name = "ColorButton";
             this.ColorButton.Size = new System.Drawing.Size(23, 22);
             this.ColorButton.Text = "Color";
@@ -723,7 +723,7 @@ namespace PaintDotNet.Effects
             // InsertImageButton
             // 
             this.InsertImageButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.InsertImageButton.Image = global::PaintDotNet.Effects.Properties.Resources.InsertPicture;
+            this.InsertImageButton.ImageName = "InsertPicture";
             this.InsertImageButton.Name = "InsertImageButton";
             this.InsertImageButton.Size = new System.Drawing.Size(23, 22);
             this.InsertImageButton.Text = "Insert Image";
@@ -732,7 +732,7 @@ namespace PaintDotNet.Effects
             // BulletButton
             // 
             this.BulletButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.BulletButton.Image = global::PaintDotNet.Effects.Properties.Resources.Bullets;
+            this.BulletButton.ImageName = "Bullets";
             this.BulletButton.Name = "BulletButton";
             this.BulletButton.Size = new System.Drawing.Size(23, 22);
             this.BulletButton.Text = "Bullets";
@@ -746,7 +746,7 @@ namespace PaintDotNet.Effects
             // IndentButton
             // 
             this.IndentButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.IndentButton.Image = global::PaintDotNet.Effects.Properties.Resources.Indent;
+            this.IndentButton.ImageName = "Indent";
             this.IndentButton.Name = "IndentButton";
             this.IndentButton.Size = new System.Drawing.Size(23, 22);
             this.IndentButton.Text = "Indent";
@@ -755,7 +755,7 @@ namespace PaintDotNet.Effects
             // UnindentButton
             // 
             this.UnindentButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.UnindentButton.Image = global::PaintDotNet.Effects.Properties.Resources.Unindent;
+            this.UnindentButton.ImageName = "Unindent";
             this.UnindentButton.Name = "UnindentButton";
             this.UnindentButton.Size = new System.Drawing.Size(23, 22);
             this.UnindentButton.Text = "Unindent";
@@ -764,7 +764,7 @@ namespace PaintDotNet.Effects
             // ParagraphLeftButton
             // 
             this.ParagraphLeftButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.ParagraphLeftButton.Image = global::PaintDotNet.Effects.Properties.Resources.ParagraphLeft;
+            this.ParagraphLeftButton.ImageName = "ParagraphLeft";
             this.ParagraphLeftButton.Name = "ParagraphLeftButton";
             this.ParagraphLeftButton.Size = new System.Drawing.Size(23, 22);
             this.ParagraphLeftButton.Text = "Align Left";
@@ -773,7 +773,7 @@ namespace PaintDotNet.Effects
             // CenterButton
             // 
             this.CenterButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.CenterButton.Image = global::PaintDotNet.Effects.Properties.Resources.ParagraphCenter;
+            this.CenterButton.ImageName = "ParagraphCenter";
             this.CenterButton.Name = "CenterButton";
             this.CenterButton.Size = new System.Drawing.Size(23, 22);
             this.CenterButton.Text = "Center";
@@ -1002,28 +1002,28 @@ namespace PaintDotNet.Effects
         private System.Windows.Forms.TextBox HelpPlainText;
         private System.Windows.Forms.RichTextBox RichHelpContent;
         private System.Windows.Forms.ToolStrip toolStrip1;
-        private System.Windows.Forms.ToolStripButton BoldButton;
-        private System.Windows.Forms.ToolStripButton ItalicsButton;
-        private System.Windows.Forms.ToolStripButton UnderlineButton;
-        private System.Windows.Forms.ToolStripButton SuperScriptButton;
-        private System.Windows.Forms.ToolStripButton SubScriptButton;
+        private ScaledToolStripButton BoldButton;
+        private ScaledToolStripButton ItalicsButton;
+        private ScaledToolStripButton UnderlineButton;
+        private ScaledToolStripButton SuperScriptButton;
+        private ScaledToolStripButton SubScriptButton;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label PreviewLabel;
-        private System.Windows.Forms.ToolStripButton LargeFontButton;
-        private System.Windows.Forms.ToolStripButton SmallFontButton;
-        private System.Windows.Forms.ToolStripButton IndentButton;
-        private System.Windows.Forms.ToolStripButton UnindentButton;
-        private System.Windows.Forms.ToolStripButton ParagraphLeftButton;
-        private System.Windows.Forms.ToolStripButton CenterButton;
-        private System.Windows.Forms.ToolStripButton BulletButton;
-        private System.Windows.Forms.ToolStripButton OpenButton;
-        private System.Windows.Forms.ToolStripButton SaveButton;
+        private ScaledToolStripButton LargeFontButton;
+        private ScaledToolStripButton SmallFontButton;
+        private ScaledToolStripButton IndentButton;
+        private ScaledToolStripButton UnindentButton;
+        private ScaledToolStripButton ParagraphLeftButton;
+        private ScaledToolStripButton CenterButton;
+        private ScaledToolStripButton BulletButton;
+        private ScaledToolStripButton OpenButton;
+        private ScaledToolStripButton SaveButton;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.Label PlainTextLabel;
-        private System.Windows.Forms.ToolStripButton WordPadButton;
-        private System.Windows.Forms.ToolStripButton InsertImageButton;
-        private System.Windows.Forms.ToolStripButton ColorButton;
+        private ScaledToolStripButton WordPadButton;
+        private ScaledToolStripButton InsertImageButton;
+        private ScaledToolStripButton ColorButton;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.Label WarningLabel;
         private System.Windows.Forms.Button ViewSourceButton;

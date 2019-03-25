@@ -1,0 +1,6 @@
+<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+  <path d="m1 7.5h14" fill="none" stroke="#fff"/>
+  <path d="m.5 6.5v2h15v-2z" fill="none" stroke="#b3b3b3"/>
+  <path d="m4 1h7v10l-3.5 3-3.5-3z" fill="#4d82b8"/>
+  <text fill="#fff" font-family="Segoe UI" font-size="10.666667" letter-spacing="0" word-spacing="0" x="4.520834" y="10"><tspan x="4.520834" y="10">F</tspan></text>
+</svg>

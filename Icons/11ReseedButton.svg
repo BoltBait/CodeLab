@@ -1,0 +1,4 @@
+<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+  <path d="m.5 1.5v12h15v-12z" fill="#e1e1e1" stroke="#adadad"/>
+  <text font-family="Segoe UI" font-size="8.000118" letter-spacing="0" stroke-width="1.000015" transform="scale(1.0000149 .99998512)" word-spacing="0" x="1.015588" y="10.406404"><tspan dx="0 0" stroke-width="1.000015" x="1.015588" y="10.406404">Rnd</tspan></text>
+</svg>

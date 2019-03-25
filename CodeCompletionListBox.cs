@@ -58,20 +58,23 @@ namespace PaintDotNet.Effects
 
             imageList.ImageSize = new Size((int)Math.Round(16 * dpi.Width), (int)Math.Round(16 * dpi.Height));
             imageList.ColorDepth = ColorDepth.Depth32Bit;
-            imageList.Images.Add(new Bitmap(this.GetType(), "Icons.Method.png"));
-            imageList.Images.Add(new Bitmap(this.GetType(), "Icons.Property.png"));
-            imageList.Images.Add(new Bitmap(this.GetType(), "Icons.Event.png"));
-            imageList.Images.Add(new Bitmap(this.GetType(), "Icons.Field.png"));
-            imageList.Images.Add(new Bitmap(this.GetType(), "Icons.Keyword.png"));
-            imageList.Images.Add(new Bitmap(this.GetType(), "Icons.Type.png"));
-            imageList.Images.Add(new Bitmap(this.GetType(), "Icons.Var.png"));
-            imageList.Images.Add(new Bitmap(this.GetType(), "Icons.Class.png"));
-            imageList.Images.Add(new Bitmap(this.GetType(), "Icons.Struct.png"));
-            imageList.Images.Add(new Bitmap(this.GetType(), "Icons.Enum.png"));
-            imageList.Images.Add(new Bitmap(this.GetType(), "Icons.Const.png"));
-            imageList.Images.Add(new Bitmap(this.GetType(), "Icons.EnumItem.png"));
-            imageList.Images.Add(new Bitmap(this.GetType(), "Icons.Snippet.png"));
-            imageList.Images.Add(new Bitmap(16, 16));
+            imageList.Images.AddRange(new Image[]
+            {
+                ResUtil.GetImage("Method"),
+                ResUtil.GetImage("Property"),
+                ResUtil.GetImage("Event"),
+                ResUtil.GetImage("Field"),
+                ResUtil.GetImage("Keyword"),
+                ResUtil.GetImage("Type"),
+                ResUtil.GetImage("Var"),
+                ResUtil.GetImage("Class"),
+                ResUtil.GetImage("Struct"),
+                ResUtil.GetImage("Enum"),
+                ResUtil.GetImage("Const"),
+                ResUtil.GetImage("EnumItem"),
+                ResUtil.GetImage("Snippet"),
+                new Bitmap(16, 16) // TODO: icon for constructor
+            });
         }
 
         protected override void OnMouseEnter(EventArgs e)

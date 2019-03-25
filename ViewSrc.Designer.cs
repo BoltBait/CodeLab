@@ -32,8 +32,8 @@ namespace PaintDotNet.Effects
             this.TextSrcBox = new System.Windows.Forms.TextBox();
             this.ButtonClose = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.CopyButton = new System.Windows.Forms.Button();
-            this.SaveButton = new System.Windows.Forms.Button();
+            this.CopyButton = new PaintDotNet.Effects.ScaledButton();
+            this.SaveButton = new PaintDotNet.Effects.ScaledButton();
             this.SuspendLayout();
             // 
             // TextSrcBox
@@ -70,7 +70,7 @@ namespace PaintDotNet.Effects
             this.CopyButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.CopyButton.FlatAppearance.BorderSize = 0;
             this.CopyButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.CopyButton.Image = global::PaintDotNet.Effects.Properties.Resources.Copy;
+            this.CopyButton.ImageName = "Copy";
             this.CopyButton.Location = new System.Drawing.Point(13, 311);
             this.CopyButton.Name = "CopyButton";
             this.CopyButton.Size = new System.Drawing.Size(27, 23);
@@ -85,7 +85,7 @@ namespace PaintDotNet.Effects
             this.SaveButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.SaveButton.FlatAppearance.BorderSize = 0;
             this.SaveButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SaveButton.Image = global::PaintDotNet.Effects.Properties.Resources.Save;
+            this.SaveButton.ImageName = "Save";
             this.SaveButton.Location = new System.Drawing.Point(46, 311);
             this.SaveButton.Name = "SaveButton";
             this.SaveButton.Size = new System.Drawing.Size(27, 23);
@@ -121,8 +121,8 @@ namespace PaintDotNet.Effects
 
         private System.Windows.Forms.TextBox TextSrcBox;
         private System.Windows.Forms.Button ButtonClose;
-        private System.Windows.Forms.Button SaveButton;
-        private System.Windows.Forms.Button CopyButton;
+        private ScaledButton SaveButton;
+        private ScaledButton CopyButton;
         private System.Windows.Forms.ToolTip toolTip1;
     }
 }

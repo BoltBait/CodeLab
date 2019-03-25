@@ -146,16 +146,6 @@ namespace PaintDotNet.Effects
             return count;
         }
 
-        internal static Bitmap ResizeForDPI(this Image image, SizeF dpi)
-        {
-            Size newSize = new Size
-            {
-                Width = (int)Math.Round(image.Width * dpi.Width / 96f),
-                Height = (int)Math.Round(image.Height * dpi.Height / 96f),
-            };
-            return new Bitmap(image, newSize);
-        }
-
         internal static string GetDisplayName(this Type type)
         {
             return (type.IsGenericType) ? type.GetGenericName() : type.GetAliasName();

@@ -85,7 +85,14 @@ namespace PaintDotNet.Effects
                 activeTab.ToolTipText = (value.IsNullOrEmpty()) ? activeTab.Title : value;
 
                 string imagePath = Path.ChangeExtension(value, ".png");
-                activeTab.Image = File.Exists(imagePath) ? new Bitmap(imagePath) : Properties.Resources.Untitled;
+                if (File.Exists(imagePath))
+                {
+                    activeTab.Image = new Bitmap(imagePath);
+                }
+                else
+                {
+                    activeTab.ImageName = "Untitled";
+                }
             }
         }
 
@@ -294,7 +301,7 @@ namespace PaintDotNet.Effects
         }
     }
 
-    public sealed class Tab : ToolStripButton
+    public sealed class Tab : ScaledToolStripButton
     {
         internal int Index { get; set; }
         internal Guid Guid { get; }
@@ -322,7 +329,14 @@ namespace PaintDotNet.Effects
             this.AutoToolTip = false;
 
             string imagePath = System.IO.Path.ChangeExtension(path, ".png");
-            this.Image = File.Exists(imagePath) ? new Bitmap(imagePath) : Properties.Resources.Untitled;
+            if (File.Exists(imagePath))
+            {
+                this.Image = new Bitmap(imagePath);
+            }
+            else
+            {
+                this.ImageName = "Untitled";
+            }
             this.Text = title;
             this.ToolTipText = path.IsNullOrEmpty() ? title : path;
             this.Guid = Guid.NewGuid();

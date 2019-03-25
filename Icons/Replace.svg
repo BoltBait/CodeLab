@@ -1,0 +1,6 @@
+<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+  <text style="font-weight:bold;font-size:10.700223;font-family:Segoe UI;letter-spacing:0;word-spacing:0;fill:#808080;stroke-width:1.003146" transform="scale(1.0064114 .99362948)" x=".298742" y="8.927084"><tspan fill="#808080" font-family="Segoe UI" font-weight="bold" stroke-width="1.003146" x=".298742" y="8.927084">b</tspan></text>
+  <text style="font-weight:bold;font-size:9.838247;font-family:Segoe UI;letter-spacing:0;word-spacing:0;fill:#808080;stroke-width:.922336" transform="scale(1.0318631 .96912084)" x="10.228384" y="14.330799"><tspan fill="#808080" font-family="Segoe UI" font-weight="bold" stroke-width=".922336" x="10.228384" y="14.330799">a</tspan></text>
+  <path d="m7.3089667 14.128964 2.1908206-1.74587-2.1842129-1.754128" fill="none" stroke="#4d82b8" stroke-linecap="round" stroke-linejoin="round" stroke-width=".875001"/>
+  <path d="m4.6452318 11.952c-.9664655.008075-1.7564865-.76846-1.7645614-1.734926-.00203-.2423669-.1987737-.4358549-.4411406-.4338299-.2423667.002-.435855.198774-.43383.4411399.012112 1.449699 1.1971435 2.614728 2.6468422 2.602616h4.347458v-.875z" fill="#4d82b8" stroke-width=".437501"/>
+</svg>
