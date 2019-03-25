@@ -155,6 +155,10 @@
             this.ClearOutput = new System.Windows.Forms.Button();
             this.ShowOutput = new System.Windows.Forms.CheckBox();
             this.tabStrip1 = new PaintDotNet.Effects.TabStrip();
+            this.FormatDocButton = new PaintDotNet.Effects.ScaledToolStripButton();
+            this.toolStripSeparator21 = new System.Windows.Forms.ToolStripSeparator();
+            this.FindButton = new PaintDotNet.Effects.ScaledToolStripButton();
+            this.ReplaceButton = new PaintDotNet.Effects.ScaledToolStripButton();
             this.errorListMenu.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -1039,7 +1043,11 @@
             this.IndentButton,
             this.UndentButton,
             this.CommentButton,
-            this.UnCommentButton});
+            this.UnCommentButton,
+            this.FormatDocButton,
+            this.toolStripSeparator21,
+            this.FindButton,
+            this.ReplaceButton});
             this.toolStrip1.Location = new System.Drawing.Point(0, 24);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Padding = new System.Windows.Forms.Padding(5, 0, 0, 0);
@@ -1336,6 +1344,44 @@
             this.tabStrip1.TabClosingAndDirty += new System.EventHandler<System.ComponentModel.CancelEventArgs>(this.tabStrip1_TabClosingAndDirty);
             this.tabStrip1.TabClosed += new System.EventHandler<PaintDotNet.Effects.TabEventArgs>(this.tabStrip1_TabClosed);
             // 
+            // FormatDocButton
+            // 
+            this.FormatDocButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.FormatDocButton.ImageName = "Format";
+            this.FormatDocButton.Name = "FormatDocButton";
+            this.FormatDocButton.Padding = new System.Windows.Forms.Padding(2);
+            this.FormatDocButton.Size = new System.Drawing.Size(24, 24);
+            this.FormatDocButton.Text = "Format Document";
+            this.FormatDocButton.ToolTipText = "Format Document (Ctrl+Q)";
+            this.FormatDocButton.Click += new System.EventHandler(this.FormatDocButton_Click);
+            // 
+            // toolStripSeparator21
+            // 
+            this.toolStripSeparator21.Name = "toolStripSeparator21";
+            this.toolStripSeparator21.Size = new System.Drawing.Size(6, 27);
+            // 
+            // FindButton
+            // 
+            this.FindButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.FindButton.ImageName = "Search";
+            this.FindButton.Name = "FindButton";
+            this.FindButton.Padding = new System.Windows.Forms.Padding(2);
+            this.FindButton.Size = new System.Drawing.Size(24, 24);
+            this.FindButton.Text = "Find";
+            this.FindButton.ToolTipText = "Find (Ctrl+F)";
+            this.FindButton.Click += new System.EventHandler(this.FindButton_Click);
+            // 
+            // ReplaceButton
+            // 
+            this.ReplaceButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.ReplaceButton.ImageName = "Replace";
+            this.ReplaceButton.Name = "ReplaceButton";
+            this.ReplaceButton.Padding = new System.Windows.Forms.Padding(2);
+            this.ReplaceButton.Size = new System.Drawing.Size(24, 24);
+            this.ReplaceButton.Text = "Replace";
+            this.ReplaceButton.ToolTipText = "Replace (Ctrl+H)";
+            this.ReplaceButton.Click += new System.EventHandler(this.ReplaceButton_Click);
+            // 
             // CodeLabConfigDialog
             // 
             this.AllowDrop = true;
@@ -1503,5 +1549,9 @@
         private ScaledToolStripMenuItem ErrorCodeMenuItem;
         private TabStrip tabStrip1;
         private ScaledToolStripMenuItem saveToolStripMenuItem;
+        private ScaledToolStripButton FormatDocButton;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator21;
+        private ScaledToolStripButton FindButton;
+        private ScaledToolStripButton ReplaceButton;
     }
 }

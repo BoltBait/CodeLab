@@ -1027,6 +1027,11 @@ namespace PaintDotNet.Effects
             txtCode.FindAndReplace(true);
         }
 
+        private void FormatDocument()
+        {
+            txtCode.FormatDocument();
+        }
+
         private void UndoCommand()
         {
             txtCode.Undo();
@@ -1200,6 +1205,11 @@ namespace PaintDotNet.Effects
         private void uncommentSelectionToolStripMenuItem_Click(object sender, EventArgs e)
         {
             UnCommentCommand();
+        }
+
+        private void formatDocMenuItem_Click(object sender, EventArgs e)
+        {
+            FormatDocument();
         }
         #endregion
 
@@ -1788,9 +1798,19 @@ namespace PaintDotNet.Effects
             UnCommentCommand();
         }
 
-        private void formatDocMenuItem_Click(object sender, EventArgs e)
+        private void FormatDocButton_Click(object sender, EventArgs e)
         {
-            txtCode.FormatDocument();
+            FormatDocument();
+        }
+
+        private void FindButton_Click(object sender, EventArgs e)
+        {
+            FindCommand();
+        }
+
+        private void ReplaceButton_Click(object sender, EventArgs e)
+        {
+            ReplaceCommand();
         }
 
         private void UpdateToolBarButtons()
