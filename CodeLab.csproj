@@ -342,6 +342,7 @@
     <EmbeddedResource Include="Icons\IncreaseFontSize.32png.png" />
     <EmbeddedResource Include="Icons\Newspaper.32.png" />
     <EmbeddedResource Include="Icons\Renumber.32.png" />
+    <EmbeddedResource Include="Icons\Bulb.32.png" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="jacobslusser.ScintillaNET.Signed">
