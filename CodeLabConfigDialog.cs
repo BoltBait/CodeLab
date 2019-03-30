@@ -1638,7 +1638,9 @@ namespace PaintDotNet.Effects
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show(WindowTitle + "\nCopyright © 2006-2019, All Rights Reserved.\n\nTom Jackson:\tInitial Code, Compile to DLL\n\nDavid Issel:\tEffect UI Creation, Effect Icons, Effect Help\n\t\tSystem, Editor Enhancements (including\n\t\tCode Templates, CodeLab Updater, Bug\n\t\tFixes), and Coding Tutorials\n\nJason Wendt:\tMigration to ScintillaNET editor control,\n\t\tIntelligent Assistance (including code\n\t\tcompletion with snippets and tips),\n\t\tDebug Output, Dark Theme, Bug Fixes", "About CodeLab", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            AboutBox about = new AboutBox(WindowTitle);
+            about.ShowDialog();
+            //MessageBox.Show(WindowTitle + "\nCopyright © 2006-2019, All Rights Reserved.\n\nTom Jackson:\tInitial Code, Compile to DLL\n\nDavid Issel:\tEffect UI Creation, Effect Icons, Effect Help\n\t\tSystem, Editor Enhancements (including\n\t\tFile New Templates, CodeLab Updater,\n\t\tBug Fixes), Coding Tutorials and Installer\n\nJason Wendt:\tMigration to ScintillaNET editor control,\n\t\tIntelligent Assistance (including code\n\t\tcompletion with snippets and tips),\n\t\tDebug Output, Dark Theme, Bug Fixes,\n\t\tHiDPI icons, and Live Effect Preview", "About CodeLab", MessageBoxButtons.OK, MessageBoxIcon.Information);
             txtCode.Focus();
         }
         #endregion
@@ -2032,6 +2034,7 @@ namespace PaintDotNet.Effects
         }
         #endregion
 
+        #region Drag-and-Drop
         protected override void OnDragEnter(DragEventArgs drgevent)
         {
             base.OnDragEnter(drgevent);
@@ -2062,5 +2065,6 @@ namespace PaintDotNet.Effects
                 Build();
             }
         }
+        #endregion
     }
 }
