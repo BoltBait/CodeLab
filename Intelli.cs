@@ -82,7 +82,8 @@ namespace PaintDotNet.Effects
                 { "using", " (resource&)\n{\n    \n}" },
                 { "switch", " (variable&)\n{\n    case 0:\n        break;\n    default:\n        break;\n}" },
                 { "#region", " MyRegion&\n\n#endregion" },
-                { "#if", " true&\n\n#endif" }
+                { "#if", " true&\n\n#endif" },
+                { "try", "\n{\n    &\n}\ncatch (Exception ex)\n{\n    \n}" }
             };
 
             Variables = new Dictionary<string, Type>();
