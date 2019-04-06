@@ -584,7 +584,7 @@ namespace PaintDotNet.Effects
             this.ClearCmdKey(Keys.Control | Keys.P); // Preview Effect
 
             // CaretLineVisibleAlways
-            this.DirectMessage(2655, new IntPtr(1), IntPtr.Zero);
+            this.CaretLineVisibleAlways = true;
 
             // Disable scintilla's own context menu
             this.UsePopup(false);

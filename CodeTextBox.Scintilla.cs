@@ -1,5 +1,8 @@
 ﻿// This file contains "patches" to Scintilla.NET that are not yet available in the NuGet release.
-// To be deleted in the future. NOTE: The "Allow Unsafe Code" option can be disable when this file is deleted.
+// To be deleted in the future. NOTE: The "Allow Unsafe Code" option can be disabled when this file is deleted.
+
+// Substyles --- https://github.com/jacobslusser/ScintillaNET/pull/443
+// CaretLineVisibleAlways --- https://github.com/jacobslusser/ScintillaNET/pull/389
 
 using System;
 using System.Text;
@@ -8,6 +11,19 @@ namespace PaintDotNet.Effects
 {
     public partial class CodeTextBox
     {
+        internal bool CaretLineVisibleAlways
+        {
+            get
+            {
+                return (DirectMessage(2654, IntPtr.Zero, IntPtr.Zero) != IntPtr.Zero);
+            }
+            set
+            {
+                var visibleAlways = (value ? new IntPtr(1) : IntPtr.Zero);
+                DirectMessage(2655, visibleAlways, IntPtr.Zero);
+            }
+        }
+
         internal int AllocateSubstyles(int styleBase, int numberStyles)
         {
             return this.DirectMessage(4020, new IntPtr(styleBase), new IntPtr(numberStyles)).ToInt32();
