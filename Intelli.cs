@@ -168,16 +168,13 @@ namespace PaintDotNet.Effects
                         AllTypes.Add(name, type);
                     }
 
-                    try
+                    if (type != typeof(TypedReference))
                     {
                         Type arrayType = type.MakeArrayType();
                         if (!AllTypes.ContainsKey(arrayType.Name))
                         {
                             AllTypes.Add(arrayType.Name, arrayType);
                         }
-                    }
-                    catch
-                    {
                     }
 
                     if ((type.Namespace == "Microsoft.Win32" || type.Namespace == "PaintDotNet" || type.Namespace == "PaintDotNet.Effects" || type.Namespace == "System" ||
