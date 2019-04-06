@@ -22,6 +22,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
@@ -33,6 +34,7 @@
     <WarningLevel>4</WarningLevel>
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>false</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -74,6 +76,10 @@
     </Compile>
     <Compile Include="BuildForm.Designer.cs">
       <DependentUpon>BuildForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CodeTextBox.Scintilla.cs">
+      <DependentUpon>CodeTextBox.cs</DependentUpon>
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="IntelliTip.cs">
       <SubType>Component</SubType>

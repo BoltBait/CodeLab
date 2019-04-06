@@ -34,7 +34,7 @@ using System.Windows.Forms;
 
 namespace PaintDotNet.Effects
 {
-    public sealed class CodeTextBox : Scintilla
+    public sealed partial class CodeTextBox : Scintilla
     {
         private readonly Timer timer = new Timer();
         private readonly IntelliBox iBox = new IntelliBox();
@@ -49,6 +49,7 @@ namespace PaintDotNet.Effects
         private readonly SizeF dpi = new SizeF(1f, 1f);
         private Theme theme;
         private const int Preprocessor = 64;
+        private int indexForPurpleWords = -1;
 
         private readonly ToolStrip lightBulbMenu = new ToolStrip();
         private readonly ScaledToolStripDropDownButton bulbIcon = new ScaledToolStripDropDownButton();
@@ -221,6 +222,11 @@ namespace PaintDotNet.Effects
                             this.Styles[Style.Cpp.Preprocessor + i].BackColor = Color.FromArgb(30, 30, 30);
                             this.Styles[Style.Cpp.Regex + i].ForeColor = Color.Gainsboro;
                             this.Styles[Style.Cpp.Regex + i].BackColor = Color.FromArgb(30, 30, 30);
+                            if (indexForPurpleWords > 0)
+                            {
+                                this.Styles[indexForPurpleWords + i].ForeColor = Color.FromArgb(216, 160, 223);
+                                this.Styles[indexForPurpleWords + i].BackColor = Color.FromArgb(30, 30, 30);
+                            }
                         }
 
                         // Line Numbers
@@ -312,6 +318,11 @@ namespace PaintDotNet.Effects
                             this.Styles[Style.Cpp.Preprocessor + i].BackColor = Color.White;
                             this.Styles[Style.Cpp.Regex + i].ForeColor = Color.Black;
                             this.Styles[Style.Cpp.Regex + i].BackColor = Color.White;
+                            if (indexForPurpleWords > 0)
+                            {
+                                this.Styles[indexForPurpleWords + i].ForeColor = Color.FromArgb(143, 8, 196);
+                                this.Styles[indexForPurpleWords + i].BackColor = Color.White;
+                            }
                         }
 
                         // Line Numbers
@@ -489,12 +500,10 @@ namespace PaintDotNet.Effects
             this.Indicators[Indicator.ObjectHighlightDef].Alpha = 204;
             this.Indicators[Indicator.ObjectHighlightDef].OutlineAlpha = 255;
 
+            indexForPurpleWords = this.AllocateSubstyles(Style.Cpp.Identifier, 1);
+
             // Set the keywords for Syntax Highlighting
-            this.SetKeywords(1, string.Join(" ", Intelli.AllTypes.Keys) + " " + string.Join(" ", Intelli.UserDefinedTypes.Keys));
-            this.SetKeywords(0, "stackalloc unchecked protected namespace interface volatile readonly override operator internal implicit explicit delegate "
-                + "continue abstract virtual private partial foreach finally default decimal checked ushort unsafe typeof switch struct string static sizeof "
-                + "sealed return public params object extern double while using ulong throw short sbyte float fixed false event const class catch break void "
-                + "uint true this null long lock goto enum else char case byte bool base try ref out new int for is in if do as var");
+            UpdateSyntaxHighlighting();
 
             // Vertical indent guides
             this.IndentationGuides = IndentView.None;
@@ -3115,10 +3124,11 @@ namespace PaintDotNet.Effects
         internal void UpdateSyntaxHighlighting()
         {
             this.SetKeywords(1, string.Join(" ", Intelli.AllTypes.Keys) + " " + string.Join(" ", Intelli.UserDefinedTypes.Keys));
-            this.SetKeywords(0, "stackalloc unchecked protected namespace interface volatile readonly override operator internal implicit explicit delegate "
-                + "continue abstract virtual private partial foreach finally default decimal checked ushort unsafe typeof switch struct string static sizeof "
-                + "sealed return public params object extern double while using ulong throw short sbyte float fixed false event const class catch break void "
-                + "uint true this null long lock goto enum else char case byte bool base try ref out new int for is in if do as var");
+            this.SetKeywords(0, "abstract as base bool byte char checked class const decimal delegate double enum event explicit extern "
+                + "false fixed float implicit in int interface internal is lock long namespace new null object operator out override "
+                + "params partial private protected public readonly ref sbyte sealed short sizeof stackalloc static string struct "
+                + "this true typeof uint unchecked unsafe ulong ushort using var virtual void volatile");
+            this.SetIdentifiers(indexForPurpleWords, "break case catch continue default do else finally for foreach goto if return throw try switch while");
         }
 
         internal void FormatDocument()
@@ -3486,6 +3496,7 @@ namespace PaintDotNet.Effects
             this.Document = newDocument;
 
             this.Lexer = Lexer.Cpp;
+            indexForPurpleWords = this.AllocateSubstyles(Style.Cpp.Identifier, 1);
             this.UpdateSyntaxHighlighting();
 
             this.SetProperty("fold", "1");
