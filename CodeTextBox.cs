@@ -2830,7 +2830,9 @@ namespace PaintDotNet.Effects
 
         protected override void OnInsertCheck(InsertCheckEventArgs e)
         {
-            if (e.Text.EndsWith("\r", StringComparison.Ordinal) || e.Text.EndsWith("\n", StringComparison.Ordinal))
+            if (e.Text.Equals("\r\n", StringComparison.Ordinal) ||
+                e.Text.Equals("\r", StringComparison.Ordinal) ||
+                e.Text.Equals("\n", StringComparison.Ordinal))
             {
                 int line = this.LineFromPosition(e.Position);
                 e.Text += new string(' ', this.Lines[line].Indentation);
