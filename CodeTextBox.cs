@@ -2802,6 +2802,7 @@ namespace PaintDotNet.Effects
 
                         this.Selections[0].CaretVirtualSpace = indent;
                         this.Selections[0].AnchorVirtualSpace = indent;
+                        this.ChooseCaretX();
                     }
                 }
             }
@@ -3087,6 +3088,7 @@ namespace PaintDotNet.Effects
             if (this.Selections[0].AnchorVirtualSpace > 0)
             {
                 this.Selections[0].CaretVirtualSpace = this.Selections[0].AnchorVirtualSpace;
+                this.ChooseCaretX();
             }
         }
         #endregion
