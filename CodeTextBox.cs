@@ -2804,6 +2804,11 @@ namespace PaintDotNet.Effects
                         this.Selections[0].AnchorVirtualSpace = indent;
                         this.ChooseCaretX();
                     }
+                    else
+                    {
+                        this.Selections[0].CaretVirtualSpace = 0;
+                        this.Selections[0].AnchorVirtualSpace = 0;
+                    }
                 }
             }
 
