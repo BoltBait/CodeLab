@@ -613,6 +613,10 @@ namespace PaintDotNet.Effects
                 {
                     return strippedText.Substring(posIndex, strippedText.Length - posIndex);
                 }
+                else if (posIndex - 1 == 0)
+                {
+                    return strippedText.Substring(posIndex - 1, strippedText.Length - (posIndex - 1));
+                }
 
                 posIndex--;
             }
@@ -640,6 +644,10 @@ namespace PaintDotNet.Effects
                 {
                     tokenPositions.Add(tokenPos);
                     break;
+                }
+                else if (tokenPos - 1 == 0)
+                {
+                    tokenPositions.Add(tokenPos - 1);
                 }
 
                 tokenPos--;
