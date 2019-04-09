@@ -5,6 +5,9 @@ namespace PaintDotNet.Effects
 {
     internal sealed class IntelliTip : ToolTip
     {
+        internal bool Visible => visibile;
+        private bool visibile = false;
+
         internal IntelliTip()
         {
             this.UseFading = false;
@@ -30,6 +33,18 @@ namespace PaintDotNet.Effects
         {
             this.ForeColor = foreColor;
             this.BackColor = backColor;
+        }
+
+        internal new void Show(string text, IWin32Window window, int x, int y)
+        {
+            base.Show(text, window, x, y);
+            visibile = true;
+        }
+
+        internal new void Hide(IWin32Window win)
+        {
+            base.Hide(win);
+            visibile = false;
         }
     }
 }

@@ -51,6 +51,8 @@ namespace PaintDotNet.Effects
         private const int Preprocessor = 64;
         private int indexForPurpleWords = -1;
 
+        private int dwellWordPos = -1;
+
         private readonly ToolStrip lightBulbMenu = new ToolStrip();
         private readonly ScaledToolStripDropDownButton bulbIcon = new ScaledToolStripDropDownButton();
         private readonly ToolStripMenuItem renameVarMenuItem = new ToolStripMenuItem();
@@ -3440,18 +3442,27 @@ namespace PaintDotNet.Effects
         #region Editor ToolTip Functions
         protected override void OnDwellStart(DwellEventArgs e)
         {
+            base.OnDwellStart(e);
+
+            if (intelliTip.Visible)
+            {
+                return;
+            }
+
             if (lightBulbMenu.Visible)
             {
                 lightBulbMenu.Hide();
             }
 
-            string tooltipText = this.GetIntelliTip(e.Position);
+            dwellWordPos = this.WordStartPosition(e.Position, true);
+
+            string tooltipText = null;
 
             // If there's an error here, we'll show that instead
             if (ScriptBuilder.Errors.Count > 0)
             {
-                int wordStartPos = this.WordStartPosition(e.Position, false);
-                int wordEndPos = this.WordEndPosition(e.Position, false);
+                int wordStartPos = this.WordStartPosition(e.Position, true);
+                int wordEndPos = this.WordEndPosition(e.Position, true);
                 foreach (ScriptError error in ScriptBuilder.Errors)
                 {
                     int errorPos = this.Lines[error.Line - 1].Position + error.Column;
@@ -3461,6 +3472,11 @@ namespace PaintDotNet.Effects
                         break;
                     }
                 }
+            }
+
+            if (tooltipText == null)
+            {
+                tooltipText = this.GetIntelliTip(e.Position);
             }
 
             if (tooltipText.Length > 0)
@@ -3476,18 +3492,21 @@ namespace PaintDotNet.Effects
                                                    this.PointYFromPosition(e.Position) + this.Lines[this.CurrentLine].Height);
                 lightBulbMenu.Show();
             }
-
-            base.OnDwellStart(e);
         }
 
-        protected override void OnDwellEnd(DwellEventArgs e)
+        protected override void OnMouseMove(MouseEventArgs e)
         {
-            if (intelliTip.Active)
-            {
-                intelliTip.Hide(this);
-            }
+            base.OnMouseMove(e);
 
-            base.OnDwellEnd(e);
+            if (intelliTip.Visible)
+            {
+                int pos = this.CharPositionFromPointClose(e.X, e.Y);
+                int wordStartPos = this.WordStartPosition(pos, true);
+                if (wordStartPos != dwellWordPos)
+                {
+                    intelliTip.Hide(this);
+                }
+            }
         }
         #endregion
 
