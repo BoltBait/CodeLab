@@ -2051,11 +2051,12 @@ namespace PaintDotNet.Effects
                         this.BeginUndoAction();
 
                         // Insert the snippet
+                        string indent = new string(' ', this.Lines[this.CurrentLine].Indentation);
                         int startPos = this.CurrentPosition;
                         string[] lines = Intelli.Snippets[prevWord].Split('\n');
                         for (int i = 0; i < lines.Length; i++)
                         {
-                            string line = (i == lines.Length - 1) ? lines[i] : lines[i] + "\r\n";
+                            string line = (i == lines.Length - 1) ? lines[i] : lines[i] + "\r\n" + indent;
                             this.AddText(line);
                         }
                         int endPos = this.CurrentPosition;
