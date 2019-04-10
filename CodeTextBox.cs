@@ -50,6 +50,7 @@ namespace PaintDotNet.Effects
         private Theme theme;
         private const int Preprocessor = 64;
         private int indexForPurpleWords = -1;
+        private int previousLine = 0;
 
         private int dwellWordPos = -1;
 
@@ -2782,6 +2783,45 @@ namespace PaintDotNet.Effects
                 }
             }
 
+            if (e.Change.HasFlag(UpdateChange.Selection))
+            {
+                if (this.CurrentLine != previousLine)
+                {
+                    previousLine = this.CurrentLine;
+
+                    int lineLength = this.Lines[this.CurrentLine].Text.TrimEnd(new char[] { '\r', '\n' }).Length;
+                    bool noSelection = this.SelectionStart == this.SelectionEnd;
+                    if (noSelection && lineLength == 0)
+                    {
+                        int indent = 0;
+                        int lineIndex = this.CurrentLine - 1;
+                        while (lineIndex >= 0)
+                        {
+                            string lineText = this.Lines[lineIndex].Text.Trim();
+                            if (lineText.Length > 0)
+                            {
+                                indent = lineText.EndsWith("{", StringComparison.Ordinal) ?
+                                    this.Lines[lineIndex].Indentation + this.TabWidth:
+                                    this.Lines[lineIndex].Indentation;
+
+                                break;
+                            }
+
+                            lineIndex--;
+                        }
+
+                        this.Selections[0].CaretVirtualSpace = indent;
+                        this.Selections[0].AnchorVirtualSpace = indent;
+                        this.ChooseCaretX();
+                    }
+                    else
+                    {
+                        this.Selections[0].CaretVirtualSpace = 0;
+                        this.Selections[0].AnchorVirtualSpace = 0;
+                    }
+                }
+            }
+
             if (e.Change.HasFlag(UpdateChange.Selection) || e.Change.HasFlag(UpdateChange.Content))
             {
                 if (MapEnabled)
@@ -2836,23 +2876,6 @@ namespace PaintDotNet.Effects
                     }
                 }
             }
-        }
-
-        protected override void OnInsertCheck(InsertCheckEventArgs e)
-        {
-            if (e.Text.Equals("\r\n", StringComparison.Ordinal) ||
-                e.Text.Equals("\r", StringComparison.Ordinal) ||
-                e.Text.Equals("\n", StringComparison.Ordinal))
-            {
-                int line = this.LineFromPosition(e.Position);
-                e.Text += new string(' ', this.Lines[line].Indentation);
-                if (this.Lines[line].Text.Trim().EndsWith("{", StringComparison.Ordinal))
-                {
-                    e.Text += new string(' ', this.TabWidth);
-                }
-            }
-
-            base.OnInsertCheck(e);
         }
 
         protected override void OnCharAdded(CharAddedEventArgs e)
@@ -3071,6 +3094,17 @@ namespace PaintDotNet.Effects
             UpdateIndicatorBar();
 
             base.OnMarginClick(e);
+        }
+
+        protected override void OnMouseClick(MouseEventArgs e)
+        {
+            base.OnMouseClick(e);
+
+            if (this.Selections[0].AnchorVirtualSpace > 0)
+            {
+                this.Selections[0].CaretVirtualSpace = this.Selections[0].AnchorVirtualSpace;
+                this.ChooseCaretX();
+            }
         }
         #endregion
 
