@@ -1129,18 +1129,18 @@ namespace PaintDotNet.Effects
                     }
                     else if (currentType == IntelliType.Type && Intelli.UserDefinedTypes.ContainsKey(word))
                     {
-                        int typePos = this.TargetStart;
+                        int typePos = this.TargetStart - 1;
 
                         // Skip over white space
-                        while (char.IsWhiteSpace(this.GetCharAt(typePos - 1).ToChar()) && typePos > InvalidPosition)
+                        while (char.IsWhiteSpace(this.GetCharAt(typePos).ToChar()) && typePos > InvalidPosition)
                         {
                             typePos--;
                         }
 
-                        //int style = this.GetStyleAt(typePos);
-                        //if (style == Style.Cpp.Word || style == Style.Cpp.Word + Preprocessor ||
-                        //    style == Style.Cpp.Word2 || style == Style.Cpp.Word2 + Preprocessor)
-                        //{
+                        int style = this.GetStyleAt(typePos);
+                        if (style == Style.Cpp.Word || style == Style.Cpp.Word + Preprocessor ||
+                            style == Style.Cpp.Word2 || style == Style.Cpp.Word2 + Preprocessor)
+                        {
                             string foundType = this.GetWordFromPosition(typePos);
 
                             Type t = Intelli.UserDefinedTypes[word];
@@ -1150,24 +1150,24 @@ namespace PaintDotNet.Effects
                             {
                                 this.IndicatorCurrent = Indicator.ObjectHighlightDef;
                             }
-                        //}
+                        }
 
                     }
                     else if (Intelli.UserScript.Contains(word, true))
                     {
-                        int typePos = this.TargetStart;
+                        int typePos = this.TargetStart - 1;
 
                         // Skip over white space
-                        while (char.IsWhiteSpace(this.GetCharAt(typePos - 1).ToChar()) && typePos > InvalidPosition)
+                        while (char.IsWhiteSpace(this.GetCharAt(typePos).ToChar()) && typePos > InvalidPosition)
                         {
                             typePos--;
                         }
 
-                        //int style = this.GetStyleAt(typePos);
-                        //if (style == Style.Cpp.Word || style == Style.Cpp.Word + Preprocessor ||
-                        //    style == Style.Cpp.Word2 || style == Style.Cpp.Word2 + Preprocessor ||
-                        //    style == Style.Cpp.Identifier || style == Style.Cpp.Identifier + Preprocessor)
-                        //{
+                        int style = this.GetStyleAt(typePos);
+                        if (style == Style.Cpp.Word || style == Style.Cpp.Word + Preprocessor ||
+                            style == Style.Cpp.Word2 || style == Style.Cpp.Word2 + Preprocessor ||
+                            style == Style.Cpp.Identifier || style == Style.Cpp.Identifier + Preprocessor)
+                        {
                             string foundType = this.GetWordFromPosition(typePos);
                             Type t = null;
                             if (Intelli.AllTypes.ContainsKey(foundType))
@@ -1193,7 +1193,7 @@ namespace PaintDotNet.Effects
                                     this.IndicatorCurrent = Indicator.ObjectHighlightDef;
                                 }
                             }
-                        //}
+                        }
                     }
                     #endregion
 
@@ -1925,12 +1925,12 @@ namespace PaintDotNet.Effects
                         this.SearchFlags = SearchFlags.MatchCase | SearchFlags.WholeWord;
                         while (this.SearchInTarget(lastWords) != InvalidPosition)
                         {
-                            int typePos = this.TargetStart;
+                            int typePos = this.TargetStart - 1;
                             int memberPos = this.TargetStart;
                             this.SetTargetRange(this.TargetEnd, this.TextLength);
 
                             // Skip over white space
-                            while (char.IsWhiteSpace(this.GetCharAt(typePos - 1).ToChar()) && typePos > InvalidPosition)
+                            while (char.IsWhiteSpace(this.GetCharAt(typePos).ToChar()) && typePos > InvalidPosition)
                             {
                                 typePos--;
                             }
