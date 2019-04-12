@@ -30,6 +30,16 @@ namespace PaintDotNet.Effects
             base.OnRenderItemText(e);
         }
 
+        protected override void OnRenderArrow(ToolStripArrowRenderEventArgs e)
+        {
+            if (e.Item.Enabled)
+            {
+                e.ArrowColor = PdnTheme.ForeColor;
+            }
+
+            base.OnRenderArrow(e);
+        }
+
         private sealed class ThemeColorTable : ProfessionalColorTable
         {
             internal ThemeColorTable()
