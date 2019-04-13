@@ -47,18 +47,19 @@ namespace PaintDotNet.Effects
 
         public override object Clone()
         {
-            CodeLabConfigToken sect = new CodeLabConfigToken();
-            sect.UserCode = this.UserCode;
-            sect.UserScriptObject = this.UserScriptObject;
-            sect.LastExceptions = this.LastExceptions; //Reference copy INTENDED.
-            sect.Output = this.Output;
-            sect.ScriptName = this.ScriptName;
-            sect.ScriptPath = this.ScriptPath;
-            sect.Dirty = this.Dirty;
-            sect.Preview = this.Preview;
-            sect.PreviewToken = this.PreviewToken;
-            sect.Bookmarks = this.Bookmarks;
-            return sect;
+            return new CodeLabConfigToken
+            {
+                UserCode = this.UserCode,
+                UserScriptObject = this.UserScriptObject,
+                LastExceptions = this.LastExceptions, //Reference copy INTENDED.
+                Output = this.Output,
+                ScriptName = this.ScriptName,
+                ScriptPath = this.ScriptPath,
+                Dirty = this.Dirty,
+                Preview = this.Preview,
+                PreviewToken = this.PreviewToken,
+                Bookmarks = this.Bookmarks
+            };
         }
     }
 }

@@ -14,7 +14,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -89,26 +88,27 @@ namespace PaintDotNet.Effects
             const string blockComments = @"/\*(.*?)\*/";
             const string lineComments = @"//(.*?)\r?\n";
 
-            return Regex.Replace(str,
-                                 blockComments + "|" + lineComments,
-                                 match =>
-                                 {
-                                     if (match.Value.StartsWith("//", StringComparison.Ordinal))
-                                     {
-                                         return "\r\n";
-                                     }
-                                     if (match.Value.StartsWith("/*", StringComparison.Ordinal))
-                                     {
-                                         string newLines = "";
-                                         for (int i = 0; i < match.Value.CountLines(); i++)
-                                         {
-                                             newLines += "\r\n";
-                                         }
-                                         return newLines;
-                                     }
-                                     return match.Value;
-                                 },
-                                 RegexOptions.Singleline);
+            return Regex.Replace(
+                str,
+                blockComments + "|" + lineComments,
+                match =>
+                {
+                    if (match.Value.StartsWith("//", StringComparison.Ordinal))
+                    {
+                        return "\r\n";
+                    }
+                    if (match.Value.StartsWith("/*", StringComparison.Ordinal))
+                    {
+                        string newLines = "";
+                        for (int i = 0; i < match.Value.CountLines(); i++)
+                        {
+                            newLines += "\r\n";
+                        }
+                        return newLines;
+                    }
+                    return match.Value;
+                },
+                RegexOptions.Singleline);
         }
 
         internal static string StripParens(this string str)

@@ -44,8 +44,8 @@ namespace PaintDotNet.Effects
         private string UpdateVER = "";
         private bool preview = false;
         private EffectConfigToken previewToken = null;
-        private Color OriginalForeColor;
-        private Color OriginalBackColor;
+        private readonly Color OriginalForeColor;
+        private readonly Color OriginalBackColor;
         private string effectFlag = null;
 
         private string EffectFlag

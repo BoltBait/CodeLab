@@ -464,7 +464,7 @@ namespace PaintDotNet.Effects
             this.renameVarMenuItem.Name = "renameVarMenuItem";
             this.renameVarMenuItem.Size = new Size(152, 22);
             this.renameVarMenuItem.Text = "Rename";
-            this.renameVarMenuItem.Click += renameVar_Click;
+            this.renameVarMenuItem.Click += RenameVar_Click;
 
             #region ScintillaNET Initializers
             this.StyleResetDefault();
@@ -1339,7 +1339,7 @@ namespace PaintDotNet.Effects
                     // We at the last iteration. Get information for the toolTip
 
                     string precedingType = mi[0].DeclaringType.GetDisplayName();
-                    string returnType = string.Empty;
+                    string returnType;
 
                     switch (mi[0].MemberType)
                     {
@@ -1561,7 +1561,7 @@ namespace PaintDotNet.Effects
                 return null;
             }
 
-            Type type = null;
+            Type type;
             if (Intelli.Variables.ContainsKey(tokens[0]))
             {
                 type = Intelli.Variables[tokens[0]];
@@ -2840,7 +2840,6 @@ namespace PaintDotNet.Effects
                     HighlightWordUsage();
 
                     int bracePos1 = InvalidPosition;
-                    int bracePos2 = InvalidPosition;
 
                     // Is there a closed brace to the left or an open brace to the right?
                     if (caretPos > 0 && IsBrace(this.GetCharAt(caretPos - 1), false))
@@ -2857,7 +2856,7 @@ namespace PaintDotNet.Effects
                     if (bracePos1 > InvalidPosition && (style == Style.Cpp.Operator || style == Style.Cpp.Operator + Preprocessor))
                     {
                         // Find the matching brace
-                        bracePos2 = this.BraceMatch(bracePos1);
+                        int bracePos2 = this.BraceMatch(bracePos1);
                         if (bracePos2 == InvalidPosition)
                         {
                             this.BraceBadLight(bracePos1);
@@ -2935,7 +2934,7 @@ namespace PaintDotNet.Effects
                 this.Margins[LeftMargin.CodeFolding].Width = this.Lines[0].Height;
             }
 
-            this.WhitespaceSize = getDpiX((this.Zoom >= 2) ? 2 : 1);
+            this.WhitespaceSize = GetDpiX((this.Zoom >= 2) ? 2 : 1);
 
             UpdateIndicatorBar();
 
@@ -3402,7 +3401,7 @@ namespace PaintDotNet.Effects
             HighlightWordUsage();
         }
 
-        private void renameVar_Click(object sender, EventArgs e)
+        private void RenameVar_Click(object sender, EventArgs e)
         {
             RenameVariable();
             OnBuildNeeded();
@@ -3446,7 +3445,7 @@ namespace PaintDotNet.Effects
             return count;
         }
 
-        private int getDpiX(int value) => (int)Math.Round(value * dpi.Width);
+        private int GetDpiX(int value) => (int)Math.Round(value * dpi.Width);
 
         internal bool IsIndicatorOn(int indicator, int position)
         {
