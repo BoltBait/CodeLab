@@ -633,7 +633,7 @@ namespace PaintDotNet.Effects
             int tokenPos = position;
             while (tokenPos > 0)
             {
-                char c = this.GetCharAt(tokenPos - 1).ToChar();
+                char c = this.GetCharAt(tokenPos - 1);
 
                 if (c == ')')
                 {
@@ -677,7 +677,7 @@ namespace PaintDotNet.Effects
             int numEnd = numStart;
             while (numEnd <= this.TextLength)
             {
-                char curChar = this.GetCharAt(numEnd).ToChar();
+                char curChar = this.GetCharAt(numEnd);
 
                 if (curChar == '.')
                 {
@@ -700,7 +700,7 @@ namespace PaintDotNet.Effects
                 return null;
             }
 
-            char suffix = this.GetCharAt(numEnd + 1).ToChar().ToUpperInvariant();
+            char suffix = this.GetCharAt(numEnd + 1).ToUpperInvariant();
             switch (suffix)
             {
                 case 'F':
@@ -712,7 +712,7 @@ namespace PaintDotNet.Effects
                 case 'M':
                     return typeof(decimal);
                 case 'U':
-                    return (this.GetCharAt(numEnd + 2).ToChar().ToUpperInvariant() == 'L') ? typeof(ulong) : typeof(uint);
+                    return (this.GetCharAt(numEnd + 2).ToUpperInvariant() == 'L') ? typeof(ulong) : typeof(uint);
                 default:
                     return (foundDecimal) ? typeof(double) : typeof(int);
             }
@@ -830,32 +830,32 @@ namespace PaintDotNet.Effects
 
                     if (type.IsGenericType)
                     {
-                        if (this.GetCharAt(varPos).ToChar() != '<')
+                        if (this.GetCharAt(varPos) != '<')
                         {
                             continue;
                         }
 
-                        while (this.GetCharAt(varPos - 1).ToChar() != '>' && varPos <= methodEnd)
+                        while (this.GetCharAt(varPos - 1) != '>' && varPos <= methodEnd)
                         {
                             varPos++;
                         }
                     }
 
                     // Ensure there's at least one space after the type
-                    if (!char.IsWhiteSpace(this.GetCharAt(varPos).ToChar()))
+                    if (!char.IsWhiteSpace(this.GetCharAt(varPos)))
                     {
                         continue;
                     }
 
                     // Skip over white space
-                    while (char.IsWhiteSpace(this.GetCharAt(varPos).ToChar()) && varPos <= methodEnd)
+                    while (char.IsWhiteSpace(this.GetCharAt(varPos)) && varPos <= methodEnd)
                     {
                         varPos++;
                     }
 
                     // find the semi-colon
                     int semiColonPos = varPos;
-                    while (this.GetCharAt(semiColonPos).ToChar() != ';' && semiColonPos <= methodEnd)
+                    while (this.GetCharAt(semiColonPos) != ';' && semiColonPos <= methodEnd)
                     {
                         semiColonPos++;
                     }
@@ -872,7 +872,7 @@ namespace PaintDotNet.Effects
 
                     for (int i = 0; i < varCount; i++)
                     {
-                        while (char.IsWhiteSpace(this.GetCharAt(varPos).ToChar()) && varPos <= methodEnd)
+                        while (char.IsWhiteSpace(this.GetCharAt(varPos)) && varPos <= methodEnd)
                         {
                             varPos++;
                         }
@@ -1132,7 +1132,7 @@ namespace PaintDotNet.Effects
                         int typePos = this.TargetStart - 1;
 
                         // Skip over white space
-                        while (char.IsWhiteSpace(this.GetCharAt(typePos).ToChar()) && typePos > InvalidPosition)
+                        while (char.IsWhiteSpace(this.GetCharAt(typePos)) && typePos > InvalidPosition)
                         {
                             typePos--;
                         }
@@ -1158,7 +1158,7 @@ namespace PaintDotNet.Effects
                         int typePos = this.TargetStart - 1;
 
                         // Skip over white space
-                        while (char.IsWhiteSpace(this.GetCharAt(typePos).ToChar()) && typePos > InvalidPosition)
+                        while (char.IsWhiteSpace(this.GetCharAt(typePos)) && typePos > InvalidPosition)
                         {
                             typePos--;
                         }
@@ -1433,7 +1433,7 @@ namespace PaintDotNet.Effects
             }
 
             int paramStart = this.WordEndPosition(position, true);
-            if (this.GetCharAt(paramStart).ToChar() != '(')
+            if (this.GetCharAt(paramStart) != '(')
             {
                 return defaultOverload;
             }
@@ -1806,7 +1806,7 @@ namespace PaintDotNet.Effects
                     this.SetTargetRange(this.TargetEnd, this.TextLength);
 
                     // Skip over white space
-                    while (char.IsWhiteSpace(this.GetCharAt(typePos).ToChar()) && typePos <= this.TextLength)
+                    while (char.IsWhiteSpace(this.GetCharAt(typePos)) && typePos <= this.TextLength)
                     {
                         typePos++;
                     }
@@ -1930,7 +1930,7 @@ namespace PaintDotNet.Effects
                             this.SetTargetRange(this.TargetEnd, this.TextLength);
 
                             // Skip over white space
-                            while (char.IsWhiteSpace(this.GetCharAt(typePos).ToChar()) && typePos > InvalidPosition)
+                            while (char.IsWhiteSpace(this.GetCharAt(typePos)) && typePos > InvalidPosition)
                             {
                                 typePos--;
                             }
@@ -2404,13 +2404,13 @@ namespace PaintDotNet.Effects
         private void NonMemberIntelliBox(int position)
         {
             // Ensure there's no words immediately to the left and right
-            if (char.IsLetterOrDigit(this.GetCharAt(position - 1).ToChar()) || char.IsLetterOrDigit(this.GetCharAt(position + 1).ToChar()))
+            if (char.IsLetterOrDigit(this.GetCharAt(position - 1)) || char.IsLetterOrDigit(this.GetCharAt(position + 1)))
             {
                 return;
             }
 
             int prevCharPos = position - 1;
-            while (char.IsWhiteSpace(this.GetCharAt(prevCharPos).ToChar()) && prevCharPos > 0)
+            while (char.IsWhiteSpace(this.GetCharAt(prevCharPos)) && prevCharPos > 0)
             {
                 prevCharPos--;
             }
@@ -2432,7 +2432,7 @@ namespace PaintDotNet.Effects
             }
 
             // Ensure previous word is not Type or Variable
-            if (char.IsLetterOrDigit(this.GetCharAt(prevCharPos).ToChar()))
+            if (char.IsLetterOrDigit(this.GetCharAt(prevCharPos)))
             {
                 string preWord = this.GetWordFromPosition(prevCharPos);
                 if (Intelli.AllTypes.ContainsKey(preWord) || Intelli.UserDefinedTypes.ContainsKey(preWord) || Intelli.Variables.ContainsKey(preWord) || preWord == "void" || preWord == "var")
@@ -2455,7 +2455,7 @@ namespace PaintDotNet.Effects
                 }
             }
 
-            iBox.Populate(this.GetCharAt(position).ToChar());
+            iBox.Populate(this.GetCharAt(position));
             ShowIntelliBox(position, false);
         }
 
@@ -2973,7 +2973,7 @@ namespace PaintDotNet.Effects
                 }
 
                 int nonSpacePos = wordStartPos;
-                while (!char.IsWhiteSpace(this.GetCharAt(nonSpacePos).ToChar()) && nonSpacePos <= endPos)
+                while (!char.IsWhiteSpace(this.GetCharAt(nonSpacePos)) && nonSpacePos <= endPos)
                 {
                     nonSpacePos++;
                 }
@@ -3453,6 +3453,11 @@ namespace PaintDotNet.Effects
             uint bitmask = this.IndicatorAllOnFor(position);
             int flag = (1 << indicator);
             return ((bitmask & flag) == flag);
+        }
+
+        private new char GetCharAt(int position)
+        {
+            return base.GetCharAt(position).ToChar();
         }
 
         private int maxLineNumberCharLength;
