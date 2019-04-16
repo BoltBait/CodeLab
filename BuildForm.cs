@@ -379,7 +379,7 @@ namespace PaintDotNet.Effects
             }
             else
             {
-                MessageBox.Show("Please enter a menu name.", "Error");
+                FlexibleMessageBox.Show("Please enter a menu name.", "Error");
                 MenuName.Focus();
                 return false;
             }
@@ -434,7 +434,7 @@ namespace PaintDotNet.Effects
             {
                 MenuIcon.Image = null;
                 IconPath = "";
-                MessageBox.Show("PNG file must be 16 x 16 pixels", "Improper File Selected");
+                FlexibleMessageBox.Show("PNG file must be 16 x 16 pixels", "Improper File Selected");
                 return;
             }
 
@@ -622,11 +622,12 @@ namespace PaintDotNet.Effects
                 }
                 else
                 {
-                    MessageBox.Show("Specified URL should start with 'http://' or 'https://'\r\n\r\nFix your URL and try again.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    FlexibleMessageBox.Show("Specified URL should start with 'http://' or 'https://'\r\n\r\nFix your URL and try again.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             else if (radioButtonPlain.Checked)
             {
+                // This message box is not "Flexible" because we're trying to simulate what Paint.NET will be showing for a plain text help box.
                 MessageBox.Show(HelpPlainText.Text, MenuName.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             else if (radioButtonRich.Checked)
@@ -1068,7 +1069,7 @@ namespace PaintDotNet.Effects
                 }
                 else
                 {
-                    MessageBox.Show("There was a problem opening the image.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    FlexibleMessageBox.Show("There was a problem opening the image.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
@@ -1138,7 +1139,7 @@ namespace PaintDotNet.Effects
         {
             if (!this.isClassic)
             {
-                MessageBox.Show("Due to technical reasons, this feature is only available on classic installations of Paint.NET.", "Generate Visual Studio Solution", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                FlexibleMessageBox.Show("Due to technical reasons, this feature is only available on classic installations of Paint.NET.", "Generate Visual Studio Solution", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 

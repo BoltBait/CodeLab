@@ -65,12 +65,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AboutBox.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="AboutBox.Designer.cs">
-      <DependentUpon>AboutBox.cs</DependentUpon>
-    </Compile>
     <Compile Include="BuildForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -84,6 +78,7 @@
     <Compile Include="IntelliTip.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="MessageBox.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -166,9 +161,6 @@
     <Compile Include="IndicatorBar.cs">
       <SubType>Component</SubType>
     </Compile>
-    <EmbeddedResource Include="AboutBox.resx">
-      <DependentUpon>AboutBox.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="CodeLabConfigDialog.resx">
       <DependentUpon>CodeLabConfigDialog.cs</DependentUpon>
       <SubType>Designer</SubType>

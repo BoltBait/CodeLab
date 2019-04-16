@@ -72,7 +72,7 @@ namespace PaintDotNet.Effects
                 }
                 catch
                 {
-                    MessageBox.Show("Error saving source file.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    FlexibleMessageBox.Show("Error saving source file.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
 
