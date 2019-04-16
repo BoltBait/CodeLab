@@ -2095,7 +2095,7 @@ namespace PaintDotNet.Effects
                 {
                     if (!GoToDefinition())
                     {
-                        MessageBox.Show("Cannot navigate to the symbol under the caret.", "CodeLab", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        FlexibleMessageBox.Show("Cannot navigate to the symbol under the caret.", "CodeLab", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                 }
             }

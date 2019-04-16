@@ -310,17 +310,17 @@ namespace PaintDotNet.Effects
             Build();
             if (errorList.Items.Count != 0)
             {
-                MessageBox.Show("Before you can preview your effect, you must resolve all code errors.", "Build Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                FlexibleMessageBox.Show("Before you can preview your effect, you must resolve all code errors.", "Build Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             else
             {
                 if (!ScriptBuilder.BuildFullPreview(txtCode.Text))
                 {
-                    MessageBox.Show("Something went wrong, and the Preview can't be run.", "Preview Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    FlexibleMessageBox.Show("Something went wrong, and the Preview can't be run.", "Preview Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 else if (!ScriptBuilder.UserScriptObject.Options.Flags.HasFlag(EffectFlags.Configurable))
                 {
-                    MessageBox.Show("There are no UI controls, so the Preview can't be displayed.", "Preview Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    FlexibleMessageBox.Show("There are no UI controls, so the Preview can't be displayed.", "Preview Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 else
                 {
@@ -421,7 +421,7 @@ namespace PaintDotNet.Effects
 
         private DialogResult PromptToSave()
         {
-            DialogResult dr = MessageBox.Show(this, $"Do you want to save changes to '{FileName}'?", "Script Editor", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+            DialogResult dr = FlexibleMessageBox.Show(this, $"Do you want to save changes to '{FileName}'?", "Script Editor", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
             switch (dr)
             {
                 case DialogResult.Yes:
@@ -499,7 +499,7 @@ namespace PaintDotNet.Effects
                 if (!char.IsLetter(Path.GetFileName(sfd.FileName), 0))
                 {
                     e.Cancel = true;
-                    MessageBox.Show("The filename must begin with a letter.", "Save User Script", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    FlexibleMessageBox.Show("The filename must begin with a letter.", "Save User Script", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             };
 
@@ -667,7 +667,7 @@ namespace PaintDotNet.Effects
             {
                 e.Cancel = (tabStrip1.TabCount == 1) ?
                     PromptToSave() == DialogResult.Cancel :
-                    MessageBox.Show("There are one or more Tabs with unsaved changes. These changes will be lost if CodeLab is closed.\r\n\r\nWould you like to return to CodeLab, so these files can be saved?", "Unsaved changes", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes;
+                    FlexibleMessageBox.Show("There are one or more Tabs with unsaved changes. These changes will be lost if CodeLab is closed.\r\n\r\nWould you like to return to CodeLab, so these files can be saved?", "Unsaved changes", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes;
             }
 
             base.OnFormClosing(e);
@@ -771,7 +771,7 @@ namespace PaintDotNet.Effects
             {
                 if (txtCode.Focused) // only popup if code editor has focus (otherwise, we might be doing something that we shouldn't interrupt)
                 {
-                    if (MessageBox.Show("An update to CodeLab is available.\n\nWould you like to download CodeLab v" + UpdateVER + "?\n\n(This will not close your current CodeLab session.)", "CodeLab Updater", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
+                    if (FlexibleMessageBox.Show("An update to CodeLab is available.\n\nWould you like to download CodeLab v" + UpdateVER + "?\n\n(This will not close your current CodeLab session.)", "CodeLab Updater", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
                     {
                         Services.GetService<IShellService>().LaunchUrl(null, UpdateURL);
                     }
@@ -785,11 +785,11 @@ namespace PaintDotNet.Effects
             {
                 if (UpdateVER == ThisVersion)
                 {
-                    MessageBox.Show("You are up-to-date!", "CodeLab Updater", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    FlexibleMessageBox.Show("You are up-to-date!", "CodeLab Updater", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else
                 {
-                    MessageBox.Show("I'm not sure if you are up-to-date.\n\nI was not able to reach the update website.\n\nTry again later.", "CodeLab Updater", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    FlexibleMessageBox.Show("I'm not sure if you are up-to-date.\n\nI was not able to reach the update website.\n\nTry again later.", "CodeLab Updater", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
         }
@@ -929,11 +929,11 @@ namespace PaintDotNet.Effects
             Build();
             if (errorList.Items.Count != 0)
             {
-                MessageBox.Show("Before you can build a DLL, you must resolve all code errors.", "Build Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                FlexibleMessageBox.Show("Before you can build a DLL, you must resolve all code errors.", "Build Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             else if (FileName.Length == 0 || FileName == "Untitled")
             {
-                MessageBox.Show("Before you can build a DLL, you must first save your source file using the File > Save as... menu.", "Build Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                FlexibleMessageBox.Show("Before you can build a DLL, you must first save your source file using the File > Save as... menu.", "Build Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             else
             {
@@ -949,12 +949,12 @@ namespace PaintDotNet.Effects
                     if (ScriptBuilder.BuildDll(txtCode.Text, FullScriptPath, buildForm.SubMenu, buildForm.MenuItemName, buildForm.IconPath, buildForm.Author, buildForm.MajorVer, buildForm.MinorVer, buildForm.URL, buildForm.WindowTitle, buildForm.isAdjustment, buildForm.Description, buildForm.KeyWords, buildForm.EffectFlags, buildForm.RenderingSchedule, buildForm.HelpType, buildForm.HelpStr))
                     {
                         string zipPath = Path.ChangeExtension(fullPath, ".zip");
-                        MessageBox.Show("Build succeeded!\r\n\r\nFile \"" + zipPath.Trim() + "\" created.\r\n\r\nYou will need to right-click 'Extract All...' the file on your desktop to run the install.bat file and restart Paint.NET to see it in the Effects menu.", "Build Finished", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        FlexibleMessageBox.Show("Build succeeded!\r\n\r\nFile \"" + zipPath.Trim() + "\" created.\r\n\r\nYou will need to right-click 'Extract All...' the file on your desktop to run the install.bat file and restart Paint.NET to see it in the Effects menu.", "Build Finished", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                     else
                     {
                         DisplayErrors();
-                        MessageBox.Show("I'm sorry, I was not able to build the DLL.\r\n\r\nPerhaps the file already exists and is marked 'read only' or is in use by Paint.NET.  There may be other build errors listed in the box below.", "Build Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        FlexibleMessageBox.Show("I'm sorry, I was not able to build the DLL.\r\n\r\nPerhaps the file already exists and is marked 'read only' or is in use by Paint.NET.  There may be other build errors listed in the box below.", "Build Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }
@@ -1638,9 +1638,7 @@ namespace PaintDotNet.Effects
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            AboutBox about = new AboutBox(WindowTitle);
-            about.ShowDialog();
-            //MessageBox.Show(WindowTitle + "\nCopyright © 2006-2019, All Rights Reserved.\n\nTom Jackson:\tInitial Code, Compile to DLL\n\nDavid Issel:\tEffect UI Creation, Effect Icons, Effect Help\n\t\tSystem, Editor Enhancements (including\n\t\tFile New Templates, CodeLab Updater,\n\t\tBug Fixes), Coding Tutorials and Installer\n\nJason Wendt:\tMigration to ScintillaNET editor control,\n\t\tIntelligent Assistance (including code\n\t\tcompletion with snippets and tips),\n\t\tDebug Output, Dark Theme, Bug Fixes,\n\t\tHiDPI icons, and Live Effect Preview", "About CodeLab", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            FlexibleMessageBox.Show(WindowTitle + "\nCopyright © 2006-2019, All Rights Reserved.\n\nTom Jackson:\tInitial Code, Compile to DLL\n\nDavid Issel:\tEffect UI Creation, Effect Icons, Effect Help\n\t\tSystem, Editor Enhancements (including\n\t\tFile New Templates, CodeLab Updater,\n\t\tBug Fixes), Coding Tutorials and Installer\n\nJason Wendt:\tMigration to ScintillaNET editor control,\n\t\tIntelligent Assistance (including code\n\t\tcompletion with snippets and tips),\n\t\tDebug Output, Dark Theme, Bug Fixes,\n\t\tHiDPI icons, and Live Effect Preview\n\nJörg Reichert:\tFlexibleMessageBox", "About CodeLab", MessageBoxButtons.OK, MessageBoxIcon.Information);
             txtCode.Focus();
         }
         #endregion
@@ -1955,7 +1953,7 @@ namespace PaintDotNet.Effects
 
         private void ClearRecents_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("Are you sure you want to clear the Open Recent list?", "CodeLab", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            if (FlexibleMessageBox.Show("Are you sure you want to clear the Open Recent list?", "CodeLab", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 Settings.RecentDocs = string.Empty;
             }
@@ -1966,7 +1964,7 @@ namespace PaintDotNet.Effects
             string filePath = (sender as ToolStripMenuItem)?.ToolTipText;
             if (!File.Exists(filePath))
             {
-                MessageBox.Show("File not found.\n" + filePath, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                FlexibleMessageBox.Show("File not found.\n" + filePath, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 txtCode.Focus();
                 return;
             }
