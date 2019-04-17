@@ -16,7 +16,7 @@ using System.Windows.Forms;
 
 namespace PaintDotNet.Effects
 {
-    public class FlexibleMessageBox
+    public static class FlexibleMessageBox
     {
         #region Public statics
 
@@ -222,7 +222,7 @@ namespace PaintDotNet.Effects
         /// The form to show the customized message box.
         /// It is defined as an internal class to keep the public interface of the FlexibleMessageBox clean.
         /// </summary>
-        class FlexibleMessageBoxForm : Form
+        private class FlexibleMessageBoxForm : Form
         {
             #region Form-Designer generated code
 
@@ -367,7 +367,6 @@ namespace PaintDotNet.Effects
                 this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
                 this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
                 this.Text = "<Caption>";
-                this.Shown += new System.EventHandler(this.FlexibleMessageBoxForm_Shown);
                 ((System.ComponentModel.ISupportInitialize)(this.FlexibleMessageBoxFormBindingSource)).EndInit();
                 this.panel1.ResumeLayout(false);
                 ((System.ComponentModel.ISupportInitialize)(this.pictureBoxForIcon)).EndInit();
@@ -388,8 +387,8 @@ namespace PaintDotNet.Effects
             #region Private constants
 
             //These separators are used for the "copy to clipboard" standard operation, triggered by Ctrl + C (behavior and clipboard format is like in a standard MessageBox)
-            private static readonly String STANDARD_MESSAGEBOX_SEPARATOR_LINES = "---------------------------\n";
-            private static readonly String STANDARD_MESSAGEBOX_SEPARATOR_SPACES = "   ";
+            private const string STANDARD_MESSAGEBOX_SEPARATOR_LINES = "---------------------------\n";
+            private const string STANDARD_MESSAGEBOX_SEPARATOR_SPACES = "   ";
 
             //These are the possible buttons (in a standard MessageBox)
             private enum ButtonID { OK = 0, CANCEL, YES, NO, ABORT, RETRY, IGNORE };
@@ -397,11 +396,11 @@ namespace PaintDotNet.Effects
             //These are the buttons texts for different languages. 
             //If you want to add a new language, add it here and in the GetButtonText-Function
             private enum TwoLetterISOLanguageID { en, de, es, it, ru };
-            private static readonly String[] BUTTON_TEXTS_ENGLISH_EN = { "OK", "Cancel", "&Yes", "&No", "&Abort", "&Retry", "&Ignore" }; //Note: This is also the fallback language
-            private static readonly String[] BUTTON_TEXTS_GERMAN_DE = { "OK", "Abbrechen", "&Ja", "&Nein", "&Abbrechen", "&Wiederholen", "&Ignorieren" };
-            private static readonly String[] BUTTON_TEXTS_SPANISH_ES = { "Aceptar", "Cancelar", "&Sí", "&No", "&Abortar", "&Reintentar", "&Ignorar" };
-            private static readonly String[] BUTTON_TEXTS_ITALIAN_IT = { "OK", "Annulla", "&Sì", "&No", "&Interrompi", "&Riprova", "&Ignora" };
-            private static readonly String[] BUTTON_TEXTS_RUSSIAN_RU = { "OK", "Отмена", "Да", "Нет", "Прервать", "Повтор", "Пропустить" };
+            private static readonly string[] BUTTON_TEXTS_ENGLISH_EN = { "OK", "Cancel", "&Yes", "&No", "&Abort", "&Retry", "&Ignore" }; //Note: This is also the fallback language
+            private static readonly string[] BUTTON_TEXTS_GERMAN_DE = { "OK", "Abbrechen", "&Ja", "&Nein", "&Abbrechen", "&Wiederholen", "&Ignorieren" };
+            private static readonly string[] BUTTON_TEXTS_SPANISH_ES = { "Aceptar", "Cancelar", "&Sí", "&No", "&Abortar", "&Reintentar", "&Ignorar" };
+            private static readonly string[] BUTTON_TEXTS_ITALIAN_IT = { "OK", "Annulla", "&Sì", "&No", "&Interrompi", "&Riprova", "&Ignora" };
+            private static readonly string[] BUTTON_TEXTS_RUSSIAN_RU = { "OK", "Отмена", "Да", "Нет", "Прервать", "Повтор", "Пропустить" };
 
             #endregion
 
@@ -409,7 +408,7 @@ namespace PaintDotNet.Effects
 
             private MessageBoxDefaultButton defaultButton;
             private int visibleButtonsCount;
-            private TwoLetterISOLanguageID languageID = TwoLetterISOLanguageID.en;
+            private readonly TwoLetterISOLanguageID languageID = TwoLetterISOLanguageID.en;
 
             #endregion
 
@@ -748,10 +747,11 @@ namespace PaintDotNet.Effects
             /// <summary>
             /// Handles the Shown event of the FlexibleMessageBoxForm control.
             /// </summary>
-            /// <param name="sender">The source of the event.</param>
             /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-            private void FlexibleMessageBoxForm_Shown(object sender, EventArgs e)
+            protected override void OnShown(EventArgs e)
             {
+                base.OnShown(e);
+
                 int buttonIndexToFocus = 1;
                 Button buttonToFocus;
 
@@ -809,7 +809,6 @@ namespace PaintDotNet.Effects
                 {
                     Cursor.Current = Cursors.Default;
                 }
-
             }
 
             /// <summary>
@@ -817,7 +816,7 @@ namespace PaintDotNet.Effects
             /// </summary>
             /// <param name="sender">The source of the event.</param>
             /// <param name="e">The <see cref="System.Windows.Forms.KeyEventArgs"/> instance containing the event data.</param>
-            void FlexibleMessageBoxForm_KeyUp(object sender, KeyEventArgs e)
+            private void FlexibleMessageBoxForm_KeyUp(object sender, KeyEventArgs e)
             {
                 //Handle standard key strikes for clipboard copy: "Ctrl + C" and "Ctrl + Insert"
                 if (e.Control && (e.KeyCode == Keys.C || e.KeyCode == Keys.Insert))
