@@ -421,10 +421,10 @@ namespace PaintDotNet.Effects
 
         private DialogResult PromptToSave()
         {
-            DialogResult dr = FlexibleMessageBox.Show(this, $"Do you want to save changes to '{FileName}'?", "Script Editor", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
-            switch (dr)
+            int buttonPressed = (int)FlexibleMessageBox.Show(this, $"Do you want to save changes to '{FileName}'?", "Unsaved Changes", new string[] { "Save","Discard","Cancel" }, MessageBoxIcon.Question);
+            switch (buttonPressed)
             {
-                case DialogResult.Yes:
+                case 1: // Save
                     if (!SaveScript())
                     {
                         txtCode.Focus();
@@ -432,9 +432,9 @@ namespace PaintDotNet.Effects
                     }
                     txtCode.SetSavePoint();
                     return DialogResult.None;
-                case DialogResult.No:
+                case 2: // Discard
                     return DialogResult.None;
-                case DialogResult.Cancel:
+                case 3: // Cancel
                     txtCode.Focus();
                     return DialogResult.Cancel;
             }
