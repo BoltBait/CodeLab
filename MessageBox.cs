@@ -5,7 +5,7 @@
  *  Version:        1.3
  *  Published at:   http://www.codeproject.com/Articles/601900/FlexibleMessageBox
  *  
- *  Bug fixes and enhancements by David Issel (aka BoltBait)
+ *  Bug fixes and enhancements ©2019 by BoltBait
  */
 using System;
 using System.Diagnostics;
@@ -396,11 +396,12 @@ namespace PaintDotNet.Effects
 
             //These are the buttons texts for different languages. 
             //If you want to add a new language, add it here and in the GetButtonText-Function
-            private enum TwoLetterISOLanguageID { en, de, es, it };
+            private enum TwoLetterISOLanguageID { en, de, es, it, ru };
             private static readonly String[] BUTTON_TEXTS_ENGLISH_EN = { "OK", "Cancel", "&Yes", "&No", "&Abort", "&Retry", "&Ignore" }; //Note: This is also the fallback language
             private static readonly String[] BUTTON_TEXTS_GERMAN_DE = { "OK", "Abbrechen", "&Ja", "&Nein", "&Abbrechen", "&Wiederholen", "&Ignorieren" };
             private static readonly String[] BUTTON_TEXTS_SPANISH_ES = { "Aceptar", "Cancelar", "&Sí", "&No", "&Abortar", "&Reintentar", "&Ignorar" };
             private static readonly String[] BUTTON_TEXTS_ITALIAN_IT = { "OK", "Annulla", "&Sì", "&No", "&Interrompi", "&Riprova", "&Ignora" };
+            private static readonly String[] BUTTON_TEXTS_RUSSIAN_RU = { "OK", "Отмена", "Да", "Нет", "Прервать", "Повтор", "Пропустить" };
 
             #endregion
 
@@ -469,6 +470,7 @@ namespace PaintDotNet.Effects
                     case TwoLetterISOLanguageID.de: return BUTTON_TEXTS_GERMAN_DE[buttonTextArrayIndex];
                     case TwoLetterISOLanguageID.es: return BUTTON_TEXTS_SPANISH_ES[buttonTextArrayIndex];
                     case TwoLetterISOLanguageID.it: return BUTTON_TEXTS_ITALIAN_IT[buttonTextArrayIndex];
+                    case TwoLetterISOLanguageID.ru: return BUTTON_TEXTS_RUSSIAN_RU[buttonTextArrayIndex];
 
                     default: return BUTTON_TEXTS_ENGLISH_EN[buttonTextArrayIndex];
                 }
@@ -591,7 +593,7 @@ namespace PaintDotNet.Effects
                 }
                 switch (buttons.Length)
                 {
-                    case 1:
+                    case 1:  // returns 1 - Pressing ESC returns 1
                         flexibleMessageBoxForm.visibleButtonsCount = 1;
                         flexibleMessageBoxForm.button3.Visible = true;
                         flexibleMessageBoxForm.button3.Text = buttons[0];
@@ -599,7 +601,7 @@ namespace PaintDotNet.Effects
 
                         flexibleMessageBoxForm.CancelButton = flexibleMessageBoxForm.button3;
                         break;
-                    case 2:
+                    case 2:  // returns 1 or 2 - Pressing ESC returns 2
                         flexibleMessageBoxForm.visibleButtonsCount = 2;
                         flexibleMessageBoxForm.button2.Visible = true;
                         flexibleMessageBoxForm.button2.Text = buttons[0];
@@ -611,7 +613,7 @@ namespace PaintDotNet.Effects
 
                         flexibleMessageBoxForm.CancelButton = flexibleMessageBoxForm.button3;
                         break;
-                    case 3:
+                    case 3:  // returns 1 or 2 or 3 - Pressing ESC returns 3
                         flexibleMessageBoxForm.visibleButtonsCount = 3;
                         flexibleMessageBoxForm.button1.Visible = true;
                         flexibleMessageBoxForm.button1.Text = buttons[0];
@@ -628,6 +630,8 @@ namespace PaintDotNet.Effects
                         flexibleMessageBoxForm.CancelButton = flexibleMessageBoxForm.button3;
                         break;
                 }
+                flexibleMessageBoxForm.ControlBox = false;
+
                 //Set default button (used in FlexibleMessageBoxForm_Shown)
                 flexibleMessageBoxForm.defaultButton = defaultButton;
             }
