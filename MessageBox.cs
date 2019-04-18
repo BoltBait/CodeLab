@@ -364,7 +364,8 @@ namespace PaintDotNet.Effects
                 this.MinimumSize = new System.Drawing.Size(276, 140);
                 this.Name = "FlexibleMessageBoxForm";
                 this.ShowIcon = false;
-                this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
+                this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Auto;
+                this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
                 this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
                 this.Text = "<Caption>";
                 ((System.ComponentModel.ISupportInitialize)(this.FlexibleMessageBoxFormBindingSource)).EndInit();
