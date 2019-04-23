@@ -41,24 +41,28 @@ namespace PaintDotNet.Effects
         private readonly FindAndReplace findPanel = new FindAndReplace();
         private readonly IntelliTip intelliTip = new IntelliTip();
         private readonly IndicatorBar indicatorBar = new IndicatorBar();
-        private int posAtIBox = InvalidPosition;
-        private int varToRenamePos = InvalidPosition;
-        private string varToRename = string.Empty;
         private readonly List<int> errorLines = new List<int>();
         private readonly List<int> matchLines = new List<int>();
         private readonly SizeF dpi = new SizeF(1f, 1f);
-        private Theme theme;
-        private const int Preprocessor = 64;
-        private int indexForPurpleWords = -1;
-        private int previousLine = 0;
-
-        private int dwellWordPos = -1;
-
         private readonly ToolStrip lightBulbMenu = new ToolStrip();
         private readonly ScaledToolStripDropDownButton bulbIcon = new ScaledToolStripDropDownButton();
         private readonly ToolStripMenuItem renameVarMenuItem = new ToolStripMenuItem();
-
         private readonly Dictionary<Guid, ScintillaNET.Document> docCollection = new Dictionary<Guid, ScintillaNET.Document>();
+        private const int Preprocessor = 64;
+
+        #region Variables for different states
+        private Theme theme;
+        private int posAtIBox = InvalidPosition;
+        private int varToRenamePos = InvalidPosition;
+        private string varToRename = string.Empty;
+        private int previousLine = 0;
+        private int dwellWordPos = InvalidPosition;
+        private int lastCaretPos = 0;
+        private bool mapScroll = false;
+        private bool Replacing = false;
+        private int maxLineNumberCharLength = 0;
+        private int indexForPurpleWords = -1;
+        #endregion
 
         #region Properties
         internal int[] Bookmarks
@@ -2689,34 +2693,6 @@ namespace PaintDotNet.Effects
             base.Dispose(disposing);
         }
 
-        private int lastCaretPos = 0;
-        private bool mapScroll = false;
-        private static bool IsBrace(int c, bool openBrace)
-        {
-            if (openBrace)
-            {
-                switch (c)
-                {
-                    case '(':
-                    case '[':
-                    case '{':
-                    case '<':
-                        return true;
-                }
-            }
-            else
-            {
-                switch (c)
-                {
-                    case ')':
-                    case ']':
-                    case '}':
-                    case '>':
-                        return true;
-                }
-            }
-            return false;
-        }
         protected override void OnUpdateUI(UpdateUIEventArgs e)
         {
             base.OnUpdateUI(e);
@@ -2943,7 +2919,6 @@ namespace PaintDotNet.Effects
             base.OnZoomChanged(e);
         }
 
-        private bool Replacing;
         protected override void OnTextChanged(EventArgs e)
         {
             AdjustLineNumbersWidth();
@@ -3461,7 +3436,6 @@ namespace PaintDotNet.Effects
             return base.GetCharAt(position).ToChar();
         }
 
-        private int maxLineNumberCharLength;
         private void AdjustLineNumbersWidth()
         {
             if (this.Margins[LeftMargin.LineNumbers].Width > 0) // Line Numbers Visible/Enabled?
@@ -3477,6 +3451,33 @@ namespace PaintDotNet.Effects
                     this.maxLineNumberCharLength = newLineNumberCharLength;
                 }
             }
+        }
+
+        private static bool IsBrace(int c, bool openBrace)
+        {
+            if (openBrace)
+            {
+                switch (c)
+                {
+                    case '(':
+                    case '[':
+                    case '{':
+                    case '<':
+                        return true;
+                }
+            }
+            else
+            {
+                switch (c)
+                {
+                    case ')':
+                    case ']':
+                    case '}':
+                    case '>':
+                        return true;
+                }
+            }
+            return false;
         }
         #endregion
 
