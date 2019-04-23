@@ -2078,12 +2078,14 @@ namespace PaintDotNet.Effects
                 else if (e.Control && e.KeyCode == Keys.J)
                 {
                     int startPos = this.WordStartPosition(this.CurrentPosition, true);
-                    if (this.GetTextRange(startPos - 1, 1).Equals("."))
+                    if (this.GetCharAt(startPos - 1).Equals('.'))
                     {
                         MemberIntelliBox(startPos - 1);
                         if (iBox.Visible)
                         {
                             this.SetEmptySelection(startPos);
+                            string memberName = this.GetWordFromPosition(this.CurrentPosition);
+                            iBox.FindAndSelect(memberName);
                         }
                     }
                     else

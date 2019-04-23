@@ -636,6 +636,31 @@ namespace PaintDotNet.Effects
             }
         }
 
+        internal void FindAndSelect(string itemName)
+        {
+            for (int i = 0; i < this.Items.Count; i++)
+            {
+                if (this.Items[i] is IntelliBoxItem intelliItem &&
+                    intelliItem.Text.Equals(itemName, StringComparison.OrdinalIgnoreCase))
+                {
+                    this.SelectedIndex = i;
+                    this.TopIndex = i;
+                    return;
+                }
+            }
+
+            for (int i = 0; i < this.Items.Count; i++)
+            {
+                if (this.Items[i] is IntelliBoxItem intelliItem &&
+                    intelliItem.Text.StartsWith(itemName, StringComparison.OrdinalIgnoreCase))
+                {
+                    this.SelectedIndex = i;
+                    this.TopIndex = i;
+                    return;
+                }
+            }
+        }
+
         private class IntelliBoxItem : IComparable, IEquatable<IntelliBoxItem>
         {
             public int CompareTo(object obj)
