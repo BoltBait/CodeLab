@@ -2016,7 +2016,8 @@ namespace PaintDotNet.Effects
             if (iBox.Visible && iBox.MouseOver && e is HandledMouseEventArgs args)
             {
                 args.Handled = true;
-                iBox.TopIndex -= Math.Sign(e.Delta) * SystemInformation.MouseWheelScrollLines;
+                int newTopIndex = iBox.TopIndex - Math.Sign(e.Delta) * SystemInformation.MouseWheelScrollLines;
+                iBox.TopIndex = newTopIndex.Clamp(0, iBox.Items.Count - 1);
             }
 
             base.OnMouseWheel(e);
