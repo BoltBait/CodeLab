@@ -2013,11 +2013,10 @@ namespace PaintDotNet.Effects
 
         protected override void OnMouseWheel(MouseEventArgs e)
         {
-            if (iBox.Visible && iBox.MouseOver)
+            if (iBox.Visible && iBox.MouseOver && e is HandledMouseEventArgs args)
             {
-                ((HandledMouseEventArgs)e).Handled = true;
-                int scrollTo = iBox.SelectedIndex - Math.Sign(e.Delta) * SystemInformation.MouseWheelScrollLines;
-                iBox.SelectedIndex = scrollTo.Clamp(0, iBox.Items.Count - 1);
+                args.Handled = true;
+                iBox.TopIndex -= Math.Sign(e.Delta) * SystemInformation.MouseWheelScrollLines;
             }
 
             base.OnMouseWheel(e);
