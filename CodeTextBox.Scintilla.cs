@@ -3,6 +3,7 @@
 
 // Substyles --- https://github.com/jacobslusser/ScintillaNET/pull/443
 // CaretLineVisibleAlways --- https://github.com/jacobslusser/ScintillaNET/pull/389
+// InternalFocusFlag --- https://github.com/jacobslusser/ScintillaNET/pull/448
 
 using System;
 using System.Text;
@@ -11,6 +12,19 @@ namespace PaintDotNet.Effects
 {
     public partial class CodeTextBox
     {
+        internal bool InternalFocusFlag
+        {
+            get
+            {
+                return (DirectMessage(2381, IntPtr.Zero, IntPtr.Zero) != IntPtr.Zero);
+            }
+            set
+            {
+                var focus = (value ? new IntPtr(1) : IntPtr.Zero);
+                DirectMessage(2380, focus, IntPtr.Zero);
+            }
+        }
+
         internal bool CaretLineVisibleAlways
         {
             get

@@ -3032,11 +3032,7 @@ namespace PaintDotNet.Effects
             // Scintilla doesn't hide its caret, if it loses focus to a child control
             if (this.ContainsFocus)
             {
-                Control focusedControl = this.FindFocus();
-                this.Focus();
-                this.Enabled = false; // Force it to lose focus to a non-child control
-                this.Enabled = true;
-                focusedControl.Focus();
+                this.InternalFocusFlag = false;
             }
 
             base.OnLostFocus(e);
