@@ -24,6 +24,11 @@ namespace PaintDotNet.Effects
     {
         internal static string InsertLineBreaks(this string original, int maxCharWidth)
         {
+            if (original.Length <= maxCharWidth)
+            {
+                return original;
+            }
+
             List<string> splitOriginal = new List<string>();
             for (int i = 0; i < original.Length; i += maxCharWidth)
             {
@@ -31,27 +36,23 @@ namespace PaintDotNet.Effects
 
                 if (i + segmentLength >= original.Length)
                 {
-                    while (i + segmentLength > original.Length)
-                    {
-                        segmentLength--;
-                    }
+                    segmentLength -= i + segmentLength - original.Length;
                 }
                 else
                 {
-                    while (original.Substring(i + segmentLength, 1) != " ")
+                    while (!char.IsWhiteSpace(original[i + segmentLength]))
                     {
                         segmentLength--;
                     }
                     segmentLength++;
                 }
 
-
                 splitOriginal.Add(original.Substring(i, segmentLength));
 
                 i -= maxCharWidth - segmentLength;
             }
 
-            return string.Join("\r\n", splitOriginal.ToArray());
+            return string.Join("\r\n", splitOriginal);
         }
 
         internal static bool IsNullOrEmpty(this string str)
