@@ -73,7 +73,7 @@ namespace PaintDotNet.Effects
                 ResUtil.GetImage("Const"),
                 ResUtil.GetImage("EnumItem"),
                 ResUtil.GetImage("Snippet"),
-                new Bitmap(16, 16) // TODO: icon for constructor
+                ResUtil.EmptyImage // TODO: icon for constructor
             });
         }
 

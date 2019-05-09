@@ -8,7 +8,7 @@ namespace PaintDotNet.Effects
     {
         private static readonly bool hiDpi = UIScaleFactor.Current.Scale > 1;
         private static readonly Assembly assembly = Assembly.GetExecutingAssembly();
-        private static readonly Image emptyImage = new Bitmap(16, 16);
+        internal static readonly Image EmptyImage = new Bitmap(16, 16);
 
         internal static Image GetImage(string resName)
         {
@@ -37,7 +37,7 @@ namespace PaintDotNet.Effects
                 }
             }
 
-            return emptyImage;
+            return EmptyImage;
         }
     }
 }
