@@ -127,6 +127,23 @@ namespace PaintDotNet.Effects
             return new string(str.Where(c => char.IsUpper(c)).ToArray());
         }
 
+        internal static string FirstCharToUpper(this string str)
+        {
+            if (string.IsNullOrEmpty(str) || !char.IsLetter(str[0]))
+            {
+                return str;
+            }
+
+            char capped = char.ToUpperInvariant(str[0]);
+
+            if (str.Length == 1)
+            {
+                return capped.ToString();
+            }
+
+            return capped + str.Substring(1, str.Length - 1);
+        }
+
         internal static bool Contains(this string source, string value, StringComparison comparisonType)
         {
             return source?.IndexOf(value, comparisonType) >= 0;

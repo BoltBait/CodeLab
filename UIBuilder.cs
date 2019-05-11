@@ -106,12 +106,11 @@ namespace PaintDotNet.Effects
         {
             ControlListView.Clear();
             enabledWhenField.Items.Clear();
-            int Count = 0;
+
             foreach (UIElement uie in MasterList)
             {
                 ControlListView.Items.Add(uie.ToString(), (int)uie.ElementType);
-                Count++;
-                enabledWhenField.Items.Add("Amount" + Count.ToString() + " - " + uie.Name);
+                enabledWhenField.Items.Add(uie.Identifier + " - " + uie.Name);
             }
 
             if (enabledWhenField.Items.Count > 0)
@@ -132,11 +131,9 @@ namespace PaintDotNet.Effects
                 Update_Click(null, null);
             }
             UIControlsText = "";
-            int ElementCount = 0;
             foreach (UIElement uie in MasterList)
             {
-                ElementCount++;
-                UIControlsText += uie.ToSourceString(ElementCount, PC);
+                UIControlsText += uie.ToSourceString();
             }
         }
 
@@ -159,7 +156,9 @@ namespace PaintDotNet.Effects
         {
             ElementType elementType = Enum.IsDefined(typeof(ElementType), ControlType.SelectedIndex) ? (ElementType)ControlType.SelectedIndex : ElementType.IntSlider;
             string defaultStr = (elementType == ElementType.ColorWheel) ? DefaultColorComboBox.SelectedItem.ToString() : ControlDef.Text;
-            MasterList.Add(new UIElement(elementType, ControlName.Text, ControlMin.Text, ControlMax.Text, defaultStr, OptionsText.Text, ControlStyle.SelectedIndex, rbEnabledWhen.Checked, enabledWhenField.SelectedIndex, (enabledWhenCondition.SelectedIndex != 0)));
+            string identifier = "Amount" + (MasterList.Count + 1);
+            string enableIndentifer = (this.rbEnabledWhen.Checked) ? MasterList[enabledWhenField.SelectedIndex].Identifier : string.Empty;
+            MasterList.Add(new UIElement(elementType, ControlName.Text, ControlMin.Text, ControlMax.Text, defaultStr, OptionsText.Text, ControlStyle.SelectedIndex, rbEnabledWhen.Checked, enableIndentifer, (enabledWhenCondition.SelectedIndex != 0), identifier));
             refreshListView(MasterList.Count - 1);
             dirty = false;
         }
@@ -530,11 +529,14 @@ namespace PaintDotNet.Effects
 
         private void Update_Click(object sender, EventArgs e)
         {
+            int CurrentItem = (ControlListView.SelectedItems.Count > 0) ? ControlListView.SelectedItems[0].Index : -1;
+
             ElementType elementType = Enum.IsDefined(typeof(ElementType), ControlType.SelectedIndex) ? (ElementType)ControlType.SelectedIndex : ElementType.IntSlider;
             string defaultStr = (elementType == ElementType.ColorWheel) ? DefaultColorComboBox.SelectedItem.ToString() : ControlDef.Text;
-            UIElement uiElement = new UIElement(elementType, ControlName.Text, ControlMin.Text, ControlMax.Text, defaultStr, OptionsText.Text, ControlStyle.SelectedIndex, rbEnabledWhen.Checked, enabledWhenField.SelectedIndex, (enabledWhenCondition.SelectedIndex != 0));
+            string identifier = (CurrentItem > -1) ? MasterList[CurrentItem].Identifier : "Amount" + (MasterList.Count + 1);
+            string enableIndentifer = (this.rbEnabledWhen.Checked) ? MasterList[enabledWhenField.SelectedIndex].Identifier : string.Empty;
+            UIElement uiElement = new UIElement(elementType, ControlName.Text, ControlMin.Text, ControlMax.Text, defaultStr, OptionsText.Text, ControlStyle.SelectedIndex, rbEnabledWhen.Checked, enableIndentifer, (enabledWhenCondition.SelectedIndex != 0), identifier);
 
-            int CurrentItem = (ControlListView.SelectedItems.Count > 0) ? ControlListView.SelectedItems[0].Index : -1;
             if (CurrentItem > -1)
             {
                 MasterList.RemoveAt(CurrentItem);
@@ -602,7 +604,14 @@ namespace PaintDotNet.Effects
             {
                 rbEnabled.Checked = false;
                 rbEnabledWhen.Checked = true;
-                enabledWhenField.SelectedIndex = (CurrentElement.EnableLinkVar > enabledWhenField.Items.Count) ? 0 : CurrentElement.EnableLinkVar;
+                for (int i = 0; i < enabledWhenField.Items.Count; i++)
+                {
+                    if (enabledWhenField.Items[i].ToString().StartsWith(CurrentElement.Identifier))
+                    {
+                        enabledWhenField.SelectedIndex = i;
+                        break;
+                    }
+                }
                 enabledWhenCondition.SelectedIndex = (CurrentElement.EnableSwap) ? 1 : 0;
             }
             else
@@ -926,11 +935,9 @@ namespace PaintDotNet.Effects
         private void PreviewButton_Click(object sender, EventArgs e)
         {
             UIControlsText = "";
-            int ElementCount = 0;
             foreach (UIElement uie in MasterList)
             {
-                ElementCount++;
-                UIControlsText += uie.ToSourceString(ElementCount, PC);
+                UIControlsText += uie.ToSourceString();
             }
             if (!ScriptBuilder.BuildUiPreview(UIControlsText))
             {
@@ -1084,9 +1091,11 @@ namespace PaintDotNet.Effects
         //  12  White-Blue
         private const int MaxStyles = 12;
         internal bool EnabledWhen = false;
-        internal int EnableLinkVar = 0;
         internal bool EnableSwap = false;
-        private readonly string[] NewSourceCodeType = {
+        internal string EnableIdentifier = string.Empty;
+        internal readonly string Identifier = "Amount";
+
+        private static readonly string[] NewSourceCodeType = {
             "IntSliderControl",         // 0
             "CheckboxControl",          // 1
             "ColorWheelControl",        // 2
@@ -1142,12 +1151,12 @@ namespace PaintDotNet.Effects
                 }
             }
             // process those UI controls
-            string[] SrcLines = UIControlsText.Split('\n');
+            string[] SrcLines = UIControlsText.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
             List<UIElement> UserControls = new List<UIElement>();
             foreach (string s in SrcLines)
             {
                 string Line = s.Trim();
-                if (Line != "" && !Line.StartsWith("//", StringComparison.Ordinal))
+                if (Line.Length > 0 && !Line.StartsWith("//", StringComparison.Ordinal))
                 {
                     UserControls.Add(new UIElement(Line));
                 }
@@ -1155,7 +1164,7 @@ namespace PaintDotNet.Effects
             return UserControls;
         }
 
-        internal UIElement(ElementType eType, string eName, string eMin, string eMax, string eDefault, string eOptions, int eStyle, bool eEnabled, int eTargetAmount, bool eSwap)
+        internal UIElement(ElementType eType, string eName, string eMin, string eMax, string eDefault, string eOptions, int eStyle, bool eEnabled, string targetIdentifier, bool eSwap, string identifier)
         {
             Name = eName;
             ElementType = eType;
@@ -1168,7 +1177,7 @@ namespace PaintDotNet.Effects
             int NameLength;
             Style = Math.Max(0, Math.Min(MaxStyles, eStyle));
             EnabledWhen = eEnabled;
-            EnableLinkVar = eTargetAmount;
+            EnableIdentifier = targetIdentifier;
             EnableSwap = eSwap;
 
             string EnabledDescription = "";
@@ -1179,7 +1188,7 @@ namespace PaintDotNet.Effects
                 {
                     EnabledDescription += "!";
                 }
-                EnabledDescription += "Amount" + (EnableLinkVar + 1).ToString() + "} ";
+                EnabledDescription += targetIdentifier + "} ";
             }
 
             switch (eType)
@@ -1308,17 +1317,26 @@ namespace PaintDotNet.Effects
                     Description = Name.Substring(0, NameLength) + EnabledDescription;
                     break;
             }
+
+            Identifier = identifier;
         }
 
-        internal UIElement(string RawSourceLine)
+        private UIElement(string RawSourceLine)
         {
-            Regex REAmt = new Regex(@"\s*(?<type>.*)\s+Amount\d+\s*=\s*(?<default>.*);\s*\/{2}(?<rawcomment>.*)");
+            Regex REAmt = new Regex(@"\s*(?<type>.*)\s+(?<identifier>.+\b)\s*=\s*(?<default>.*);\s*\/{2}(?<rawcomment>.*)");
+            Match m = REAmt.Match(RawSourceLine);
+            if (!m.Success)
+            {
+                // don't understand raw source line
+                return;
+            }
+
             Regex REColorOnly = new Regex(@"\s*\[\s*(?<defcolor>.*)\s*\](?<label>.*)");
             Regex REMaxOnly = new Regex(@"\s*\[\s*(?<maximum>\-?\d+.*\d*)\s*\](?<label>.*)");
             Regex REMinMax = new Regex(@"\s*\[\s*(?<minimum>\-?\d+.*\d*)\s*\,\s*(?<maximum>\-?\d+.*\d*)\s*\](?<label>.*)");
             Regex REMinMaxStyle = new Regex(@"\s*\[\s*(?<minimum>\-?\d+.*\d*)\s*\,\s*(?<maximum>\-?\d+.*\d*)\s*\,\s*(?<style>\-?\d+.*\d*)\s*\](?<label>.*)");
             Regex RELabel = new Regex(@"\s*(?<label>.*)");
-            Regex REEnabled = new Regex(@"\s*{(?<swap>\!?)Amount(?<digits>\d+)\s*}\s*(?<label>.*)");
+            Regex REEnabled = new Regex(@"\s*{(?<swap>\!?)(?<identifier>.+\b)\s*}\s*(?<label>.*)");
 
             string MinimumStr = "";
             string MaximumStr = "";
@@ -1327,15 +1345,6 @@ namespace PaintDotNet.Effects
             string LabelStr = "";
             string TypeStr = "";
             string StyleStr = "0";
-
-            int NameLength;
-
-            Match m = REAmt.Match(RawSourceLine);
-            if (!m.Success)
-            {
-                // don't understand raw source line
-                return;
-            }
 
             Match m0 = REMinMaxStyle.Match(m.Groups["rawcomment"].Value);
             if (m0.Success)
@@ -1386,21 +1395,14 @@ namespace PaintDotNet.Effects
             Match me = REEnabled.Match(LabelStr);
             if (me.Success)
             {
-                string dgts = me.Groups["digits"].Value.Trim();
-                string swap = me.Groups["swap"].Value.Trim();
                 LabelStr = me.Groups["label"].Value.Trim();
-                if (!int.TryParse(dgts, out EnableLinkVar))
-                {
-                    EnableLinkVar = 0;
-                    EnabledWhen = false;
-                    EnableSwap = false;
-                }
-                else
-                {
-                    EnableLinkVar--;
-                    EnabledWhen = true;
-                    EnableSwap = (swap == "!");
-                }
+
+                string identifier = me.Groups["identifier"].Value;
+                string swap = me.Groups["swap"].Value.Trim();
+
+                EnableIdentifier = identifier;
+                EnabledWhen = true;
+                EnableSwap = (swap == "!");
             }
 
             DefaultStr = m.Groups["default"].Value.Trim();
@@ -1606,9 +1608,10 @@ namespace PaintDotNet.Effects
                 {
                     EnabledDescription += "!";
                 }
-                EnabledDescription += "Amount" + (EnableLinkVar + 1).ToString() + "} ";
+                EnabledDescription += EnableIdentifier + "} ";
             }
 
+            int NameLength;
             switch (ElementType)
             {
                 case ElementType.IntSlider:
@@ -1680,6 +1683,8 @@ namespace PaintDotNet.Effects
                 default:
                     break;
             }
+
+            Identifier = m.Groups["identifier"].Value;
         }
 
         public override string ToString()
@@ -1687,12 +1692,9 @@ namespace PaintDotNet.Effects
             return Description;
         }
 
-        internal string ToSourceString(int ItemNumber, ColorBgra PC)
+        internal string ToSourceString()
         {
-            string SourceCode = "";
-
-            SourceCode += NewSourceCodeType[(int)ElementType] + " ";
-            SourceCode += "Amount" + ItemNumber.ToString();
+            string SourceCode = NewSourceCodeType[(int)ElementType] + " " + Identifier;
             switch (ElementType)
             {
                 case ElementType.IntSlider:
@@ -1719,7 +1721,7 @@ namespace PaintDotNet.Effects
                     SourceCode += "; // [" + Min.ToString() + "," + Max.ToString() + "] ";
                     break;
                 case ElementType.ColorWheel:
-                    Color c = Color.White;
+                    Color c;
                     if (ColorDefault.Length == 0 || ColorDefault == "PrimaryColor")
                     {
                         c = Color.Black;
@@ -1793,6 +1795,7 @@ namespace PaintDotNet.Effects
                 default:
                     break;
             }
+
             if (EnabledWhen)
             {
                 SourceCode += "{";
@@ -1800,11 +1803,9 @@ namespace PaintDotNet.Effects
                 {
                     SourceCode += "!";
                 }
-                SourceCode += "Amount" + (EnableLinkVar + 1).ToString();
-                SourceCode += "} ";
+                SourceCode += EnableIdentifier + "} ";
             }
-            SourceCode += Name;
-            SourceCode += "\r\n";
+            SourceCode += Name + "\r\n";
 
             return SourceCode;
         }
