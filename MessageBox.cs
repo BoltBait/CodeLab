@@ -323,6 +323,7 @@ namespace PaintDotNet.Effects
                 // button2
                 // 
                 this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+                this.button2.AutoSize = true;
                 this.button2.DialogResult = System.Windows.Forms.DialogResult.OK;
                 this.button2.Location = new System.Drawing.Point(92, 67);
                 this.button2.MinimumSize = new System.Drawing.Size(0, 24);
@@ -390,6 +391,8 @@ namespace PaintDotNet.Effects
             //These separators are used for the "copy to clipboard" standard operation, triggered by Ctrl + C (behavior and clipboard format is like in a standard MessageBox)
             private const string STANDARD_MESSAGEBOX_SEPARATOR_LINES = "---------------------------\n";
             private const string STANDARD_MESSAGEBOX_SEPARATOR_SPACES = "   ";
+
+            private const int ButtonMargin = 12;
 
             //These are the possible buttons (in a standard MessageBox)
             private enum ButtonID { OK = 0, CANCEL, YES, NO, ABORT, RETRY, IGNORE };
@@ -602,14 +605,17 @@ namespace PaintDotNet.Effects
                         flexibleMessageBoxForm.CancelButton = flexibleMessageBoxForm.button3;
                         break;
                     case 2:  // returns 1 or 2 - Pressing ESC returns 2
+                        flexibleMessageBoxForm.button3.Visible = true;
+                        flexibleMessageBoxForm.button3.Text = buttons[1];
+                        flexibleMessageBoxForm.button3.DialogResult = DialogResult.Cancel;
+
                         flexibleMessageBoxForm.visibleButtonsCount = 2;
                         flexibleMessageBoxForm.button2.Visible = true;
                         flexibleMessageBoxForm.button2.Text = buttons[0];
                         flexibleMessageBoxForm.button2.DialogResult = DialogResult.OK;
-
-                        flexibleMessageBoxForm.button3.Visible = true;
-                        flexibleMessageBoxForm.button3.Text = buttons[1];
-                        flexibleMessageBoxForm.button3.DialogResult = DialogResult.Cancel;
+                        flexibleMessageBoxForm.button2.Location = new Point(
+                            flexibleMessageBoxForm.button3.Location.X - ButtonMargin - flexibleMessageBoxForm.button2.Bounds.Width,
+                            flexibleMessageBoxForm.button2.Location.Y);
 
                         flexibleMessageBoxForm.CancelButton = flexibleMessageBoxForm.button3;
                         break;
