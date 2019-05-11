@@ -30,6 +30,8 @@ namespace PaintDotNet.Effects
         private ColorBgra PC;
         private bool dirty = false;
         private readonly List<UIElement> MasterList = new List<UIElement>();
+        private readonly HashSet<string> IDList = new HashSet<string>();
+        private string currentID;
 
         internal UIBuilder(string UserScriptText, ColorBgra PrimaryColor)
         {
@@ -97,6 +99,10 @@ namespace PaintDotNet.Effects
             DefaultColorComboBox.Items.AddRange(GetColorNames());
 
             MasterList = UIElement.ProcessUIControls(UserScriptText);
+            foreach (UIElement element in MasterList)
+            {
+                IDList.Add(element.Identifier);
+            }
             refreshListView(0);
             dirty = false;
             PC = PrimaryColor;
@@ -142,6 +148,7 @@ namespace PaintDotNet.Effects
             int CurrentItem = (ControlListView.SelectedItems.Count > 0) ? ControlListView.SelectedItems[0].Index : - 1;
             if (CurrentItem > -1)
             {
+                IDList.Remove(MasterList[CurrentItem].Identifier);
                 MasterList.RemoveAt(CurrentItem);
             }
             if (CurrentItem >= MasterList.Count)
@@ -156,9 +163,14 @@ namespace PaintDotNet.Effects
         {
             ElementType elementType = Enum.IsDefined(typeof(ElementType), ControlType.SelectedIndex) ? (ElementType)ControlType.SelectedIndex : ElementType.IntSlider;
             string defaultStr = (elementType == ElementType.ColorWheel) ? DefaultColorComboBox.SelectedItem.ToString() : ControlDef.Text;
-            string identifier = "Amount" + (MasterList.Count + 1);
+            string identifier = ControlID.Text.Trim();
+            if (identifier.Length == 0 || IDList.Contains(identifier))
+            {
+                identifier = "Amount" + (MasterList.Count + 1);
+            }
             string enableIndentifer = (this.rbEnabledWhen.Checked) ? MasterList[enabledWhenField.SelectedIndex].Identifier : string.Empty;
             MasterList.Add(new UIElement(elementType, ControlName.Text, ControlMin.Text, ControlMax.Text, defaultStr, OptionsText.Text, ControlStyle.SelectedIndex, rbEnabledWhen.Checked, enableIndentifer, (enabledWhenCondition.SelectedIndex != 0), identifier));
+            IDList.Add(identifier);
             refreshListView(MasterList.Count - 1);
             dirty = false;
         }
@@ -533,7 +545,7 @@ namespace PaintDotNet.Effects
 
             ElementType elementType = Enum.IsDefined(typeof(ElementType), ControlType.SelectedIndex) ? (ElementType)ControlType.SelectedIndex : ElementType.IntSlider;
             string defaultStr = (elementType == ElementType.ColorWheel) ? DefaultColorComboBox.SelectedItem.ToString() : ControlDef.Text;
-            string identifier = (CurrentItem > -1) ? MasterList[CurrentItem].Identifier : "Amount" + (MasterList.Count + 1);
+            string identifier = !string.IsNullOrWhiteSpace(ControlID.Text) ? ControlID.Text.Trim() : "Amount" + (MasterList.Count + 1);
             string enableIndentifer = (this.rbEnabledWhen.Checked) ? MasterList[enabledWhenField.SelectedIndex].Identifier : string.Empty;
             UIElement uiElement = new UIElement(elementType, ControlName.Text, ControlMin.Text, ControlMax.Text, defaultStr, OptionsText.Text, ControlStyle.SelectedIndex, rbEnabledWhen.Checked, enableIndentifer, (enabledWhenCondition.SelectedIndex != 0), identifier);
 
@@ -546,6 +558,7 @@ namespace PaintDotNet.Effects
             else
             {
                 MasterList.Add(uiElement);
+                IDList.Add(identifier);
                 refreshListView(MasterList.Count - 1);
             }
             dirty = false;
@@ -744,6 +757,9 @@ namespace PaintDotNet.Effects
                 default:
                     break;
             }
+
+            this.currentID = CurrentElement.Identifier;
+            ControlID.Text = CurrentElement.Identifier;
         }
 
         private void DefaultColorComboBox_DrawItem(object sender, DrawItemEventArgs e)
@@ -1060,6 +1076,15 @@ namespace PaintDotNet.Effects
                 ControlDef.Text = dDef.ToString();
             }
             dirty = true;
+        }
+
+        private void ControlID_TextChanged(object sender, EventArgs e)
+        {
+            dirty = true;
+            string newID = ControlID.Text.Trim();
+            bool error = (newID.Length == 0 || (newID != this.currentID && IDList.Contains(newID)) || !newID.IsCSharpIndentifier());
+            ControlID.ForeColor = error ? Color.Black : this.ForeColor;
+            ControlID.BackColor = error ? Color.FromArgb(246, 97, 81) : this.BackColor;
         }
     }
 
@@ -1689,7 +1714,7 @@ namespace PaintDotNet.Effects
 
         public override string ToString()
         {
-            return Description;
+            return Identifier + " — " + Description;
         }
 
         internal string ToSourceString()
