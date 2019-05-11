@@ -66,6 +66,8 @@ namespace PaintDotNet.Effects
             this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.PreviewButton = new System.Windows.Forms.Button();
+            this.ControlID = new System.Windows.Forms.TextBox();
+            this.labelIdent = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label22
@@ -80,7 +82,7 @@ namespace PaintDotNet.Effects
             // ControlMax
             // 
             this.ControlMax.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.ControlMax.Location = new System.Drawing.Point(309, 303);
+            this.ControlMax.Location = new System.Drawing.Point(309, 333);
             this.ControlMax.Name = "ControlMax";
             this.ControlMax.Size = new System.Drawing.Size(55, 20);
             this.ControlMax.TabIndex = 11;
@@ -92,7 +94,7 @@ namespace PaintDotNet.Effects
             // 
             this.MaximumLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.MaximumLabel.AutoSize = true;
-            this.MaximumLabel.Location = new System.Drawing.Point(256, 307);
+            this.MaximumLabel.Location = new System.Drawing.Point(256, 337);
             this.MaximumLabel.Name = "MaximumLabel";
             this.MaximumLabel.Size = new System.Drawing.Size(54, 13);
             this.MaximumLabel.TabIndex = 10;
@@ -101,7 +103,7 @@ namespace PaintDotNet.Effects
             // ControlDef
             // 
             this.ControlDef.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.ControlDef.Location = new System.Drawing.Point(186, 303);
+            this.ControlDef.Location = new System.Drawing.Point(186, 333);
             this.ControlDef.Name = "ControlDef";
             this.ControlDef.Size = new System.Drawing.Size(42, 20);
             this.ControlDef.TabIndex = 9;
@@ -113,7 +115,7 @@ namespace PaintDotNet.Effects
             // 
             this.DefaultLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.DefaultLabel.AutoSize = true;
-            this.DefaultLabel.Location = new System.Drawing.Point(132, 307);
+            this.DefaultLabel.Location = new System.Drawing.Point(132, 337);
             this.DefaultLabel.Name = "DefaultLabel";
             this.DefaultLabel.Size = new System.Drawing.Size(44, 13);
             this.DefaultLabel.TabIndex = 7;
@@ -123,7 +125,7 @@ namespace PaintDotNet.Effects
             // 
             this.MinimumLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.MinimumLabel.AutoSize = true;
-            this.MinimumLabel.Location = new System.Drawing.Point(39, 307);
+            this.MinimumLabel.Location = new System.Drawing.Point(39, 337);
             this.MinimumLabel.Name = "MinimumLabel";
             this.MinimumLabel.Size = new System.Drawing.Size(51, 13);
             this.MinimumLabel.TabIndex = 54;
@@ -132,7 +134,7 @@ namespace PaintDotNet.Effects
             // ControlMin
             // 
             this.ControlMin.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.ControlMin.Location = new System.Drawing.Point(88, 303);
+            this.ControlMin.Location = new System.Drawing.Point(88, 333);
             this.ControlMin.Name = "ControlMin";
             this.ControlMin.Size = new System.Drawing.Size(32, 20);
             this.ControlMin.TabIndex = 6;
@@ -143,7 +145,7 @@ namespace PaintDotNet.Effects
             // ControlName
             // 
             this.ControlName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.ControlName.Location = new System.Drawing.Point(56, 247);
+            this.ControlName.Location = new System.Drawing.Point(56, 277);
             this.ControlName.Name = "ControlName";
             this.ControlName.Size = new System.Drawing.Size(150, 20);
             this.ControlName.TabIndex = 4;
@@ -172,7 +174,7 @@ namespace PaintDotNet.Effects
             "Multi-Line String",
             "3D Roll Control",
             "Filename Control"});
-            this.ControlType.Location = new System.Drawing.Point(56, 274);
+            this.ControlType.Location = new System.Drawing.Point(56, 304);
             this.ControlType.MaxDropDownItems = 12;
             this.ControlType.Name = "ControlType";
             this.ControlType.Size = new System.Drawing.Size(150, 21);
@@ -184,7 +186,7 @@ namespace PaintDotNet.Effects
             // 
             this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(16, 279);
+            this.label3.Location = new System.Drawing.Point(16, 309);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(34, 13);
             this.label3.TabIndex = 51;
@@ -222,7 +224,7 @@ namespace PaintDotNet.Effects
             // 
             this.Add.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.Add.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.Add.Location = new System.Drawing.Point(270, 237);
+            this.Add.Location = new System.Drawing.Point(270, 267);
             this.Add.Name = "Add";
             this.Add.Size = new System.Drawing.Size(38, 23);
             this.Add.TabIndex = 2;
@@ -236,7 +238,7 @@ namespace PaintDotNet.Effects
             this.Delete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.Delete.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Delete.ForeColor = System.Drawing.Color.Red;
-            this.Delete.Location = new System.Drawing.Point(349, 207);
+            this.Delete.Location = new System.Drawing.Point(349, 206);
             this.Delete.Name = "Delete";
             this.Delete.Size = new System.Drawing.Size(23, 23);
             this.Delete.TabIndex = 20;
@@ -250,7 +252,7 @@ namespace PaintDotNet.Effects
             this.Cancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.Cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.Cancel.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.Cancel.Location = new System.Drawing.Point(297, 370);
+            this.Cancel.Location = new System.Drawing.Point(297, 400);
             this.Cancel.Name = "Cancel";
             this.Cancel.Size = new System.Drawing.Size(75, 23);
             this.Cancel.TabIndex = 17;
@@ -264,7 +266,7 @@ namespace PaintDotNet.Effects
             this.OK.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.OK.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.OK.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.OK.Location = new System.Drawing.Point(216, 370);
+            this.OK.Location = new System.Drawing.Point(216, 400);
             this.OK.Name = "OK";
             this.OK.Size = new System.Drawing.Size(75, 23);
             this.OK.TabIndex = 16;
@@ -277,7 +279,7 @@ namespace PaintDotNet.Effects
             // 
             this.UpdateBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.UpdateBtn.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.UpdateBtn.Location = new System.Drawing.Point(316, 237);
+            this.UpdateBtn.Location = new System.Drawing.Point(316, 267);
             this.UpdateBtn.Name = "UpdateBtn";
             this.UpdateBtn.Size = new System.Drawing.Size(56, 23);
             this.UpdateBtn.TabIndex = 3;
@@ -290,7 +292,7 @@ namespace PaintDotNet.Effects
             // 
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(16, 249);
+            this.label1.Location = new System.Drawing.Point(16, 279);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(38, 13);
             this.label1.TabIndex = 87;
@@ -300,7 +302,7 @@ namespace PaintDotNet.Effects
             // 
             this.OptionsText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.OptionsText.Location = new System.Drawing.Point(68, 303);
+            this.OptionsText.Location = new System.Drawing.Point(68, 333);
             this.OptionsText.Name = "OptionsText";
             this.OptionsText.Size = new System.Drawing.Size(297, 20);
             this.OptionsText.TabIndex = 6;
@@ -311,7 +313,7 @@ namespace PaintDotNet.Effects
             // 
             this.OptionsLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.OptionsLabel.AutoSize = true;
-            this.OptionsLabel.Location = new System.Drawing.Point(16, 307);
+            this.OptionsLabel.Location = new System.Drawing.Point(16, 337);
             this.OptionsLabel.Name = "OptionsLabel";
             this.OptionsLabel.Size = new System.Drawing.Size(46, 13);
             this.OptionsLabel.TabIndex = 88;
@@ -331,7 +333,7 @@ namespace PaintDotNet.Effects
             this.ControlListView.MultiSelect = false;
             this.ControlListView.Name = "ControlListView";
             this.ControlListView.ShowGroups = false;
-            this.ControlListView.Size = new System.Drawing.Size(328, 201);
+            this.ControlListView.Size = new System.Drawing.Size(328, 200);
             this.ControlListView.TabIndex = 0;
             this.ControlListView.UseCompatibleStateImageBehavior = false;
             this.ControlListView.View = System.Windows.Forms.View.List;
@@ -344,7 +346,7 @@ namespace PaintDotNet.Effects
             this.DefaultColorComboBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.DefaultColorComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.DefaultColorComboBox.DropDownWidth = 150;
-            this.DefaultColorComboBox.Location = new System.Drawing.Point(173, 303);
+            this.DefaultColorComboBox.Location = new System.Drawing.Point(173, 333);
             this.DefaultColorComboBox.MaxDropDownItems = 10;
             this.DefaultColorComboBox.Name = "DefaultColorComboBox";
             this.DefaultColorComboBox.Size = new System.Drawing.Size(81, 21);
@@ -362,7 +364,7 @@ namespace PaintDotNet.Effects
             this.rbEnabled.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.rbEnabled.AutoSize = true;
             this.rbEnabled.Checked = true;
-            this.rbEnabled.Location = new System.Drawing.Point(18, 331);
+            this.rbEnabled.Location = new System.Drawing.Point(18, 361);
             this.rbEnabled.Name = "rbEnabled";
             this.rbEnabled.Size = new System.Drawing.Size(64, 17);
             this.rbEnabled.TabIndex = 12;
@@ -375,7 +377,7 @@ namespace PaintDotNet.Effects
             // 
             this.rbEnabledWhen.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.rbEnabledWhen.AutoSize = true;
-            this.rbEnabledWhen.Location = new System.Drawing.Point(82, 331);
+            this.rbEnabledWhen.Location = new System.Drawing.Point(82, 361);
             this.rbEnabledWhen.Name = "rbEnabledWhen";
             this.rbEnabledWhen.Size = new System.Drawing.Size(93, 17);
             this.rbEnabledWhen.TabIndex = 13;
@@ -393,7 +395,7 @@ namespace PaintDotNet.Effects
             this.enabledWhenField.FormattingEnabled = true;
             this.enabledWhenField.Items.AddRange(new object[] {
             "Amount99"});
-            this.enabledWhenField.Location = new System.Drawing.Point(171, 330);
+            this.enabledWhenField.Location = new System.Drawing.Point(171, 360);
             this.enabledWhenField.Name = "enabledWhenField";
             this.enabledWhenField.Size = new System.Drawing.Size(79, 21);
             this.enabledWhenField.TabIndex = 14;
@@ -409,7 +411,7 @@ namespace PaintDotNet.Effects
             this.enabledWhenCondition.Items.AddRange(new object[] {
             "is checked, 0",
             "not checked, 0"});
-            this.enabledWhenCondition.Location = new System.Drawing.Point(256, 330);
+            this.enabledWhenCondition.Location = new System.Drawing.Point(256, 360);
             this.enabledWhenCondition.Name = "enabledWhenCondition";
             this.enabledWhenCondition.Size = new System.Drawing.Size(108, 21);
             this.enabledWhenCondition.TabIndex = 15;
@@ -420,7 +422,7 @@ namespace PaintDotNet.Effects
             // 
             this.StyleLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.StyleLabel.AutoSize = true;
-            this.StyleLabel.Location = new System.Drawing.Point(212, 279);
+            this.StyleLabel.Location = new System.Drawing.Point(212, 309);
             this.StyleLabel.Name = "StyleLabel";
             this.StyleLabel.Size = new System.Drawing.Size(33, 13);
             this.StyleLabel.TabIndex = 89;
@@ -447,7 +449,7 @@ namespace PaintDotNet.Effects
             "White-Red",
             "White-Green",
             "White-Blue"});
-            this.ControlStyle.Location = new System.Drawing.Point(247, 274);
+            this.ControlStyle.Location = new System.Drawing.Point(247, 304);
             this.ControlStyle.Name = "ControlStyle";
             this.ControlStyle.Size = new System.Drawing.Size(117, 23);
             this.ControlStyle.TabIndex = 5;
@@ -458,7 +460,7 @@ namespace PaintDotNet.Effects
             // 
             this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.label2.Location = new System.Drawing.Point(13, 238);
+            this.label2.Location = new System.Drawing.Point(13, 237);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(215, 1);
             this.label2.TabIndex = 90;
@@ -468,7 +470,7 @@ namespace PaintDotNet.Effects
             this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label4.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.label4.Location = new System.Drawing.Point(13, 360);
+            this.label4.Location = new System.Drawing.Point(13, 390);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(358, 1);
             this.label4.TabIndex = 91;
@@ -478,7 +480,7 @@ namespace PaintDotNet.Effects
             this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label5.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.label5.Location = new System.Drawing.Point(227, 265);
+            this.label5.Location = new System.Drawing.Point(227, 295);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(144, 1);
             this.label5.TabIndex = 92;
@@ -487,25 +489,25 @@ namespace PaintDotNet.Effects
             // 
             this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label6.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.label6.Location = new System.Drawing.Point(13, 238);
+            this.label6.Location = new System.Drawing.Point(13, 237);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(1, 124);
+            this.label6.Size = new System.Drawing.Size(1, 155);
             this.label6.TabIndex = 93;
             // 
             // label7
             // 
             this.label7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label7.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.label7.Location = new System.Drawing.Point(227, 238);
+            this.label7.Location = new System.Drawing.Point(227, 237);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(1, 29);
+            this.label7.Size = new System.Drawing.Size(1, 60);
             this.label7.TabIndex = 94;
             // 
             // label8
             // 
             this.label8.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.label8.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.label8.Location = new System.Drawing.Point(370, 265);
+            this.label8.Location = new System.Drawing.Point(370, 295);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(1, 97);
             this.label8.TabIndex = 95;
@@ -514,7 +516,7 @@ namespace PaintDotNet.Effects
             // 
             this.PreviewButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.PreviewButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.PreviewButton.Location = new System.Drawing.Point(12, 370);
+            this.PreviewButton.Location = new System.Drawing.Point(12, 400);
             this.PreviewButton.Name = "PreviewButton";
             this.PreviewButton.Size = new System.Drawing.Size(75, 23);
             this.PreviewButton.TabIndex = 96;
@@ -522,11 +524,32 @@ namespace PaintDotNet.Effects
             this.PreviewButton.UseVisualStyleBackColor = true;
             this.PreviewButton.Click += new System.EventHandler(this.PreviewButton_Click);
             // 
+            // ControlID
+            // 
+            this.ControlID.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.ControlID.Location = new System.Drawing.Point(56, 247);
+            this.ControlID.Name = "ControlID";
+            this.ControlID.Size = new System.Drawing.Size(150, 20);
+            this.ControlID.TabIndex = 97;
+            this.ControlID.TextChanged += new System.EventHandler(this.ControlID_TextChanged);
+            // 
+            // labelIdent
+            // 
+            this.labelIdent.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.labelIdent.AutoSize = true;
+            this.labelIdent.Location = new System.Drawing.Point(16, 249);
+            this.labelIdent.Name = "labelIdent";
+            this.labelIdent.Size = new System.Drawing.Size(21, 13);
+            this.labelIdent.TabIndex = 98;
+            this.labelIdent.Text = "ID:";
+            // 
             // UIBuilder
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(383, 402);
+            this.ClientSize = new System.Drawing.Size(383, 432);
+            this.Controls.Add(this.labelIdent);
+            this.Controls.Add(this.ControlID);
             this.Controls.Add(this.PreviewButton);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.label7);
@@ -614,5 +637,7 @@ namespace PaintDotNet.Effects
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Button PreviewButton;
+        private System.Windows.Forms.TextBox ControlID;
+        private System.Windows.Forms.Label labelIdent;
     }
 }
