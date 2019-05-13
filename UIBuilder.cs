@@ -619,7 +619,7 @@ namespace PaintDotNet.Effects
                 rbEnabledWhen.Checked = true;
                 for (int i = 0; i < enabledWhenField.Items.Count; i++)
                 {
-                    if (enabledWhenField.Items[i].ToString().StartsWith(CurrentElement.Identifier))
+                    if (enabledWhenField.Items[i].ToString().StartsWith(CurrentElement.EnableIdentifier))
                     {
                         enabledWhenField.SelectedIndex = i;
                         break;
