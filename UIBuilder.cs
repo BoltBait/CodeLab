@@ -1090,17 +1090,17 @@ namespace PaintDotNet.Effects
 
     internal class UIElement
     {
-        private string Description = "";
-        internal string Name = "";
-        internal ElementType ElementType = ElementType.IntSlider;
-        internal int Min = 0;
-        internal int Max = 100;
-        internal int Default = 0;
-        internal string ColorDefault = "PrimaryColor";
-        internal double dMin = 0;
-        internal double dMax = 100;
-        internal double dDefault = 0;
-        internal int Style = 0;
+        private readonly string Description = "";
+        internal readonly string Name = "";
+        internal readonly ElementType ElementType = ElementType.IntSlider;
+        internal readonly int Min = 0;
+        internal readonly int Max = 100;
+        internal readonly int Default = 0;
+        internal readonly string ColorDefault = "PrimaryColor";
+        internal readonly double dMin = 0;
+        internal readonly double dMax = 100;
+        internal readonly double dDefault = 0;
+        internal readonly int Style = 0;
         //   0  Default           Default
         //   1  Hue               Alpha
         //   2  Hue Centered      Default no Reset
@@ -1115,9 +1115,9 @@ namespace PaintDotNet.Effects
         //  11  White-Green
         //  12  White-Blue
         private const int MaxStyles = 12;
-        internal bool EnabledWhen = false;
-        internal bool EnableSwap = false;
-        internal string EnableIdentifier = string.Empty;
+        internal readonly bool EnabledWhen = false;
+        internal readonly bool EnableSwap = false;
+        internal readonly string EnableIdentifier = string.Empty;
         internal readonly string Identifier = "Amount";
 
         private static readonly string[] NewSourceCodeType = {
