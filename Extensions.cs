@@ -141,7 +141,7 @@ namespace PaintDotNet.Effects
                 return capped.ToString();
             }
 
-            return capped + str.Substring(1, str.Length - 1);
+            return capped + str.Substring(1);
         }
 
         internal static bool Contains(this string source, string value, StringComparison comparisonType)

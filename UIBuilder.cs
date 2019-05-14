@@ -1499,8 +1499,7 @@ namespace PaintDotNet.Effects
             }
             else if (TypeStr == "string")
             {
-                if (!int.TryParse(MinimumStr, out int min)) min = 0;
-                elementType = (min > 0) ? ElementType.MultiLineTextbox : ElementType.Textbox;
+                elementType = (int.TryParse(MinimumStr, out int min) && min > 0) ? ElementType.MultiLineTextbox : ElementType.Textbox;
             }
             else if (TypeStr == "byte")
             {
@@ -1527,19 +1526,16 @@ namespace PaintDotNet.Effects
             }
             else if (TypeStr == "double")
             {
-                double fMax, fMin, fDefault;
-                if (!double.TryParse(MaximumStr, NumberStyles.Float, CultureInfo.InvariantCulture, out fMax)) fMax = 10;
-                if (!double.TryParse(MinimumStr, NumberStyles.Float, CultureInfo.InvariantCulture, out fMin)) fMin = 0;
-                if (!double.TryParse(DefaultStr, NumberStyles.Float, CultureInfo.InvariantCulture, out fDefault)) fDefault = 0;
-
-                int iMax, iMin, iDefault;
-                if (!int.TryParse(MaximumStr, out iMax)) iMax = 180;
-                if (!int.TryParse(MinimumStr, out iMin)) iMin = -180;
-                if (!int.TryParse(DefaultStr, out iDefault)) iDefault = 45;
-
-                elementType = ((iMin == -180) && (fMin == -180) && (iMax == 180) && (fMax == 180) && (iDefault == 45) && (fDefault == 45)) ?
-                    ElementType.AngleChooser :
-                    ElementType.DoubleSlider;
+                if (int.TryParse(MinimumStr, out int iMin) && (iMin == -180) &&
+                    int.TryParse(MaximumStr, out int iMax) && (iMax == 180) &&
+                    int.TryParse(DefaultStr, out int iDefault) && (iDefault == 45))
+                {
+                    elementType = ElementType.AngleChooser;
+                }
+                else
+                {
+                    elementType = ElementType.DoubleSlider;
+                }
             }
             #endregion
             else
@@ -1599,9 +1595,7 @@ namespace PaintDotNet.Effects
 
             int pipeIndex = LabelStr.IndexOf('|');
             string name = (pipeIndex > -1) ? LabelStr.Substring(0, pipeIndex) : LabelStr;
-            string options = (pipeIndex > -1 && pipeIndex < LabelStr.Length) ?
-                LabelStr.Substring(pipeIndex + 1, LabelStr.Length - pipeIndex - 1) :
-                string.Empty;
+            string options = (pipeIndex > -1) ? LabelStr.Substring(pipeIndex + 1) : string.Empty;
 
             return new UIElement(elementType, name, dMin.ToString(), dMax.ToString(), defaultValue, options, style, enabled, targetID, swap, id);
         }
@@ -1734,11 +1728,11 @@ namespace PaintDotNet.Effects
             if ((ElementType == ElementType.DropDown) || (ElementType == ElementType.RadioButtons))
             {
                 int BarLoc = Name.IndexOf("|", StringComparison.Ordinal);
-                if (BarLoc == -1) return null;
+                if (BarLoc == -1) return Array.Empty<string>();
                 string Options = Name.Substring(BarLoc + 1);
                 return Options.Split('|');
             }
-            return null;
+            return Array.Empty<string>();
         }
 
         internal string ToShortName()

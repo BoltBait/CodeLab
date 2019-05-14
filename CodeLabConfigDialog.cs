@@ -62,7 +62,7 @@ namespace PaintDotNet.Effects
                     string name = this.Effect.Name;
                     int dashIndex = name.IndexOf('-');
                     this.effectFlag = dashIndex > 0 ?
-                        " (" + name.Substring(dashIndex + 2, name.Length - dashIndex - 2) + ")" :
+                        " (" + name.Substring(dashIndex + 2) + ")" :
                         string.Empty;
                     return this.effectFlag;
                 }

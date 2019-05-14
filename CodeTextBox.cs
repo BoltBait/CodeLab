@@ -618,11 +618,11 @@ namespace PaintDotNet.Effects
 
                 if (!(char.IsLetterOrDigit(c) || c == '_' || c == '.'))
                 {
-                    return strippedText.Substring(posIndex, strippedText.Length - posIndex);
+                    return strippedText.Substring(posIndex);
                 }
                 else if (posIndex - 1 == 0)
                 {
-                    return strippedText.Substring(posIndex - 1, strippedText.Length - (posIndex - 1));
+                    return strippedText.Substring(posIndex - 1);
                 }
 
                 posIndex--;
