@@ -1083,8 +1083,8 @@ namespace PaintDotNet.Effects
             dirty = true;
             string newID = ControlID.Text.Trim();
             bool error = (newID.Length == 0 || (newID != this.currentID && IDList.Contains(newID)) || !newID.IsCSharpIndentifier());
-            ControlID.ForeColor = error ? Color.Black : this.ForeColor;
-            ControlID.BackColor = error ? Color.FromArgb(246, 97, 81) : this.BackColor;
+            ControlID.ForeColor = error ? Color.Black : Color.Black;
+            ControlID.BackColor = error ? Color.FromArgb(246, 97, 81) : Color.White;
         }
     }
 
