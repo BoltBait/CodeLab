@@ -15,6 +15,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
@@ -57,7 +58,24 @@ namespace PaintDotNet.Effects
                 }
             }
         }
+
         private static Type userScript;
+        private static readonly MethodInfo[] extMethods;
+
+        internal static MethodInfo[] GetExtensionMethod(this Type extendedType, string methodName)
+        {
+            return (from method in extMethods
+                    where method.Name == methodName
+                    where method.GetParameters()[0].ParameterType == extendedType
+                    select method).ToArray();
+        }
+
+        internal static MethodInfo[] GetExtensionMethods(this Type extendedType)
+        {
+            return (from method in extMethods
+                    where method.GetParameters()[0].ParameterType == extendedType
+                    select method).ToArray();
+        }
 
         static Intelli()
         {
@@ -150,6 +168,8 @@ namespace PaintDotNet.Effects
             assemblies.Add(typeof(Effect).Assembly.GetName());
             assemblies.AddRange(typeof(Effect).Assembly.GetReferencedAssemblies());
 
+            List<MethodInfo> extMethodsList = new List<MethodInfo>();
+
             foreach (AssemblyName a in assemblies)
             {
                 if (a.Name.Equals("PaintDotNet.Framework") || a.Name.Equals("PaintDotNet.Resources") || a.Name.Equals("PaintDotNet.SystemLayer"))
@@ -186,9 +206,20 @@ namespace PaintDotNet.Effects
                     )
                     {
                         AutoCompleteTypes.Add(type.Name, type);
+
+                        // Gather extensions methods contained in each type
+                        if (type.IsSealed && !type.IsGenericType && !type.IsNested && type.IsOrHasExtension())
+                        {
+                            extMethodsList.AddRange(
+                                from method in type.GetMethods(BindingFlags.Static | BindingFlags.Public)
+                                where method.IsOrHasExtension()
+                                select method);
+                        }
                     }
                 }
             }
+
+            extMethods = extMethodsList.ToArray();
         }
     }
 

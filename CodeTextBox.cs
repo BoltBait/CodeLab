@@ -983,6 +983,7 @@ namespace PaintDotNet.Effects
 
             // if the first token is a variable of a known type
             Type type;
+            bool isStatic = false;
             if (Intelli.Variables.ContainsKey(tokens[0]))
             {
                 type = Intelli.Variables[tokens[0]];
@@ -994,10 +995,12 @@ namespace PaintDotNet.Effects
             else if (Intelli.AllTypes.ContainsKey(tokens[0]))
             {
                 type = Intelli.AllTypes[tokens[0]];
+                isStatic = true;
             }
             else if (Intelli.UserDefinedTypes.ContainsKey(tokens[0]))
             {
                 type = Intelli.UserDefinedTypes[tokens[0]];
+                isStatic = true;
             }
             else if (Intelli.UserScript.Contains(tokens[0], false))
             {
@@ -1020,11 +1023,16 @@ namespace PaintDotNet.Effects
                 // get the member information for this token
                 MemberInfo[] mi = (i == 1 && type == Intelli.UserScript) ?
                     type.GetMember(tokens[i], BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic) :
-                    type.GetMember(tokens[i]);
+                    type.GetMember(tokens[i], (isStatic ? BindingFlags.Static : BindingFlags.Instance) | BindingFlags.Public);
 
                 if (mi.Length == 0)
                 {
-                    return IntelliType.None;
+                    mi = type.GetExtensionMethod(tokens[i]);
+
+                    if (mi.Length == 0)
+                    {
+                        return IntelliType.None;
+                    }
                 }
 
                 if (i == tokens.Length - 1)
@@ -1294,6 +1302,7 @@ namespace PaintDotNet.Effects
             }
 
             // if the first token is a variable of a known type
+            bool isStatic = false;
             if (Intelli.Variables.ContainsKey(tokens[0]))
             {
                 type = Intelli.Variables[tokens[0]];
@@ -1305,10 +1314,12 @@ namespace PaintDotNet.Effects
             else if (Intelli.AllTypes.ContainsKey(tokens[0]))
             {
                 type = Intelli.AllTypes[tokens[0]];
+                isStatic = true;
             }
             else if (Intelli.UserDefinedTypes.ContainsKey(tokens[0]))
             {
                 type = Intelli.UserDefinedTypes[tokens[0]];
+                isStatic = true;
             }
             else if (Intelli.UserScript.Contains(tokens[0], false))
             {
@@ -1331,11 +1342,16 @@ namespace PaintDotNet.Effects
                 // get the member information for this token
                 MemberInfo[] mi = (i == 1 && type == Intelli.UserScript) ?
                     type.GetMember(tokens[i], BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic) :
-                    type.GetMember(tokens[i]);
+                    type.GetMember(tokens[i], (isStatic ? BindingFlags.Static : BindingFlags.Instance) | BindingFlags.Public);
 
                 if (mi.Length == 0)
                 {
-                    return string.Empty;
+                    mi = type.GetExtensionMethod(tokens[i]);
+
+                    if (mi.Length == 0)
+                    {
+                        return string.Empty;
+                    }
                 }
 
                 if (i == tokens.Length - 1)
@@ -1362,11 +1378,20 @@ namespace PaintDotNet.Effects
                                 }
                             }
 
-                            Tuple<int, string> method = GetOverload(mi, position);
-                            returnType = ((MethodInfo)mi[method.Item1]).ReturnType.GetDisplayName();
+                            Tuple<int, string> overload = GetOverload(mi, position);
+                            MethodInfo method = (MethodInfo)mi[overload.Item1];
+
+                            string ext = string.Empty;
+                            if (method.IsOrHasExtension())
+                            {
+                                precedingType = method.ExtendingType().GetDisplayName();
+                                ext = "Extension ";
+                            }
+
+                            returnType = method.ReturnType.GetDisplayName();
                             string overloads = (mi.Length > 1) ? $" (+ {mi.Length - 1} overloads)" : string.Empty;
 
-                            return $"{returnType} - {precedingType}.{mi[method.Item1].Name}({method.Item2}){overloads}\n{mi[0].MemberType}";
+                            return $"{returnType} - {precedingType}.{method.Name}({overload.Item2}){overloads}\n{ext}{method.MemberType}";
                         case MemberTypes.Field:
                             FieldInfo field = (FieldInfo)mi[0];
                             returnType = field.FieldType.GetDisplayName();
@@ -1566,6 +1591,7 @@ namespace PaintDotNet.Effects
             }
 
             Type type;
+            bool isStatic = false;
             if (Intelli.Variables.ContainsKey(tokens[0]))
             {
                 type = Intelli.Variables[tokens[0]];
@@ -1577,10 +1603,12 @@ namespace PaintDotNet.Effects
             else if (Intelli.AllTypes.ContainsKey(tokens[0]))
             {
                 type = Intelli.AllTypes[tokens[0]];
+                isStatic = true;
             }
             else if (Intelli.UserDefinedTypes.ContainsKey(tokens[0]))
             {
                 type = Intelli.UserDefinedTypes[tokens[0]];
+                isStatic = true;
             }
             else if (Intelli.UserScript.Contains(tokens[0], false))
             {
@@ -1603,11 +1631,16 @@ namespace PaintDotNet.Effects
                 // get the member information for this token
                 MemberInfo[] mi = (i == 1 && type == Intelli.UserScript) ?
                     type.GetMember(tokens[i], BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic) :
-                    type.GetMember(tokens[i]);
+                    type.GetMember(tokens[i], (isStatic ? BindingFlags.Static : BindingFlags.Instance) | BindingFlags.Public);
 
                 if (mi.Length == 0)
                 {
-                    return null;
+                    mi = type.GetExtensionMethod(tokens[i]);
+
+                    if (mi.Length == 0)
+                    {
+                        return null;
+                    }
                 }
 
                 int memberIndex = 0;
@@ -1667,6 +1700,7 @@ namespace PaintDotNet.Effects
 
             // if the first token is a variable of a known type
             Type type;
+            bool isStatic = false;
             if (Intelli.Variables.ContainsKey(tokens[0]))
             {
                 type = Intelli.Variables[tokens[0]];
@@ -1678,10 +1712,12 @@ namespace PaintDotNet.Effects
             else if (Intelli.AllTypes.ContainsKey(tokens[0]))
             {
                 type = Intelli.AllTypes[tokens[0]];
+                isStatic = true;
             }
             else if (Intelli.UserDefinedTypes.ContainsKey(tokens[0]))
             {
                 type = Intelli.UserDefinedTypes[tokens[0]];
+                isStatic = true;
             }
             else if (Intelli.UserScript.Contains(tokens[0], false))
             {
@@ -1704,11 +1740,16 @@ namespace PaintDotNet.Effects
                 // get the member information for this token
                 MemberInfo[] mi = (i == 1 && type == Intelli.UserScript) ?
                     type.GetMember(tokens[i], BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic) :
-                    type.GetMember(tokens[i]);
+                    type.GetMember(tokens[i], (isStatic ? BindingFlags.Static : BindingFlags.Instance) | BindingFlags.Public);
 
                 if (mi.Length == 0)
                 {
-                    return null;
+                    mi = type.GetExtensionMethod(tokens[i]);
+
+                    if (mi.Length == 0)
+                    {
+                        return null;
+                    }
                 }
 
                 if (i == tokens.Length - 1)
@@ -1864,6 +1905,7 @@ namespace PaintDotNet.Effects
             }
 
             Type type;
+            bool isStatic = false;
             // if the first token is a variable of a known type
             if (Intelli.Variables.ContainsKey(tokens[0]))
             {
@@ -1876,6 +1918,7 @@ namespace PaintDotNet.Effects
             else if (Intelli.AllTypes.ContainsKey(tokens[0]))
             {
                 type = Intelli.AllTypes[tokens[0]];
+                isStatic = true;
             }
             else if (Intelli.UserScript.Contains(tokens[0], false))
             {
@@ -1898,11 +1941,16 @@ namespace PaintDotNet.Effects
                 // get the member information for this token
                 MemberInfo[] mi = (i == 1 && type == Intelli.UserScript) ?
                     type.GetMember(tokens[i], BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic) :
-                    type.GetMember(tokens[i]);
+                    type.GetMember(tokens[i], (isStatic ? BindingFlags.Static : BindingFlags.Instance) | BindingFlags.Public);
 
                 if (mi.Length == 0)
                 {
-                    return false;
+                    mi = type.GetExtensionMethod(tokens[i]);
+
+                    if (mi.Length == 0)
+                    {
+                        return false;
+                    }
                 }
 
                 if (i == tokens.Length - 1)

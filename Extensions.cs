@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 
 namespace PaintDotNet.Effects
@@ -235,10 +236,25 @@ namespace PaintDotNet.Effects
             List<string> methodParams = new List<string>();
             foreach (ParameterInfo param in method.GetParameters())
             {
+                if (param.Position == 0 && method.IsOrHasExtension())
+                {
+                    continue;
+                }
+
                 methodParams.Add($"{(param.ParameterType.IsByRef ? "ref " : string.Empty)}{param.ParameterType.GetDisplayName()} {param.Name}");
             }
 
             return methodParams.Join(", ");
+        }
+
+        internal static bool IsOrHasExtension(this MemberInfo method)
+        {
+            return method.IsDefined(typeof(ExtensionAttribute), false);
+        }
+
+        internal static Type ExtendingType(this MethodInfo method)
+        {
+            return method.GetParameters()[0].ParameterType;
         }
 
         internal static Type GetReturnType(this MemberInfo member)

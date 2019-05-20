@@ -221,6 +221,18 @@ namespace PaintDotNet.Effects
                         break;
                 }
             }
+
+            if (!isStatic)
+            {
+                foreach (MethodInfo methodInfo in type.GetExtensionMethods())
+                {
+                    string methodParameters = $"({methodInfo.Params()})";
+                    string returnType = methodInfo.ReturnType.GetDisplayName();
+                    string toolTip = $"{returnType} - {methodInfo.Name}{methodParameters}\nExtension {methodInfo.MemberType}";
+                    unFilteredItems.Add(new IntelliBoxItem(methodInfo.Name + methodParameters, methodInfo.Name, toolTip, IntelliType.Method));
+                }
+            }
+
             unFilteredItems.Sort();
             this.Items.AddRange(unFilteredItems.ToArray());
 
