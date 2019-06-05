@@ -74,7 +74,7 @@ namespace PaintDotNet.Effects
         {
             get
             {
-                int regValue = (int)regKey.GetValue("ErrorBox", 1);
+                int regValue = (int)regKey.GetValue("ErrorBox", 0);
                 return regValue == 1;
             }
             set
@@ -89,7 +89,7 @@ namespace PaintDotNet.Effects
         {
             get
             {
-                return (string)regKey.GetValue("FontFamily", "Courier New");
+                return (string)regKey.GetValue("FontFamily", "Consolas");
             }
             set
             {
@@ -227,7 +227,7 @@ namespace PaintDotNet.Effects
         {
             get
             {
-                int regValue = (int)regKey.GetValue("ToolBar", 0);
+                int regValue = (int)regKey.GetValue("ToolBar", 1);
                 return regValue == 1;
             }
             set
