@@ -3283,7 +3283,8 @@ namespace PaintDotNet.Effects
                         lineIndent -= this.TabWidth;
                     }
                 }
-                else if (trimmedLine.StartsWith("using", StringComparison.Ordinal) || trimmedLine.StartsWith("if", StringComparison.Ordinal) || trimmedLine.StartsWith("else", StringComparison.Ordinal))
+                else if (trimmedLine.StartsWith("using", StringComparison.Ordinal) || trimmedLine.StartsWith("else", StringComparison.Ordinal) ||
+                        (trimmedLine.StartsWith("if", StringComparison.Ordinal) && !trimmedLine.EndsWith(";", StringComparison.Ordinal)))
                 {
                     codeBlock = true;
                 }
