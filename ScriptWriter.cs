@@ -934,136 +934,134 @@ namespace PaintDotNet.Effects
 
         internal static string HelpPart(bool OnWindowHelpButtonClickedExists, HelpType HelpType, string HelpText)
         {
-            HelpText = HelpText.Replace('"', '\'');
-            string HelpPart = "";
-            // If the user didn't include an OnWindowHelpButtonClicked function, we'll add our own UBB help solution
-            if (!OnWindowHelpButtonClickedExists)
+            if (OnWindowHelpButtonClickedExists || HelpType == HelpType.None || HelpType == HelpType.PlainText || HelpText.Length == 0)
             {
-                if ((HelpText != "") && (HelpType > 0))
-                {
-                    if (HelpType == HelpType.URL)
-                    {
-                        HelpPart += "        private void OnWindowHelpButtonClicked(IWin32Window owner, string helpContent)\r\n";
-                        HelpPart += "        {\r\n";
-                        HelpPart += "            if (helpContent.ToLower().StartsWith(\"http://\") || helpContent.ToLower().StartsWith(\"https://\"))\r\n";
-                        HelpPart += "            {\r\n";
-                        HelpPart += "                PaintDotNet.ServiceProviderExtensions.GetService<IShellService>(Services).LaunchUrl(null, helpContent);\r\n";
-                        HelpPart += "            }\r\n";
-                        HelpPart += "        }\r\n";
-                        HelpPart += "\r\n";
-                    }
-                    else if (HelpType == HelpType.RichText)
-                    {
-                        HelpPart += "        RichTextBox rtb_HelpBox;\r\n";
-                        HelpPart += "        Button btn_HelpBoxOKButton;\r\n";
-                        HelpPart += "\r\n";
-                        HelpPart += "        private void rtb_LinkClicked(object sender, System.Windows.Forms.LinkClickedEventArgs e)\r\n";
-                        HelpPart += "        {\r\n";
-                        HelpPart += "            PaintDotNet.ServiceProviderExtensions.GetService<IShellService>(Services).LaunchUrl(null, e.LinkText);\r\n";
-                        HelpPart += "            btn_HelpBoxOKButton.Focus();\r\n";
-                        HelpPart += "        }\r\n";
-                        HelpPart += "\r\n";
-                        HelpPart += "        private static string LoadLocalizedString(string libraryName, uint ident, string defaultText)\r\n";
-                        HelpPart += "        {\r\n";
-                        HelpPart += "            IntPtr libraryHandle = GetModuleHandle(libraryName);\r\n";
-                        HelpPart += "            if (libraryHandle != IntPtr.Zero)\r\n";
-                        HelpPart += "            {\r\n";
-                        HelpPart += "                System.Text.StringBuilder sb = new System.Text.StringBuilder(1024);\r\n";
-                        HelpPart += "                if (LoadString(libraryHandle, ident, sb, 1024) > 0)\r\n";
-                        HelpPart += "                {\r\n";
-                        HelpPart += "                    return sb.ToString();\r\n";
-                        HelpPart += "                }\r\n";
-                        HelpPart += "            }\r\n";
-                        HelpPart += "            return defaultText;\r\n";
-                        HelpPart += "        }\r\n";
-                        HelpPart += "\r\n";
-                        HelpPart += "        [DllImport(\"kernel32.dll\", CharSet = CharSet.Auto)]\r\n";
-                        HelpPart += "        private static extern IntPtr GetModuleHandle(string lpModuleName);\r\n";
-                        HelpPart += "\r\n";
-                        HelpPart += "        [DllImport(\"user32.dll\", CharSet = CharSet.Auto)]\r\n";
-                        HelpPart += "        private static extern int LoadString(IntPtr hInstance, uint uID, System.Text.StringBuilder lpBuffer, int nBufferMax);\r\n";
-                        HelpPart += "\r\n";
-                        HelpPart += "        public static string DecompressString(string compressedText)\r\n";
-                        HelpPart += "        {\r\n";
-                        HelpPart += "            byte[] gZipBuffer = Convert.FromBase64String(compressedText);\r\n";
-                        HelpPart += "            using (var memoryStream = new MemoryStream())\r\n";
-                        HelpPart += "            {\r\n";
-                        HelpPart += "                int dataLength = BitConverter.ToInt32(gZipBuffer, 0);\r\n";
-                        HelpPart += "                memoryStream.Write(gZipBuffer, 4, gZipBuffer.Length - 4);\r\n";
-                        HelpPart += "\r\n";
-                        HelpPart += "                var buffer = new byte[dataLength];\r\n";
-                        HelpPart += "\r\n";
-                        HelpPart += "                memoryStream.Position = 0;\r\n";
-                        HelpPart += "                using (var gZipStream = new GZipStream(memoryStream, CompressionMode.Decompress))\r\n";
-                        HelpPart += "                {\r\n";
-                        HelpPart += "                    gZipStream.Read(buffer, 0, buffer.Length);\r\n";
-                        HelpPart += "                }\r\n";
-                        HelpPart += "\r\n";
-                        HelpPart += "                return System.Text.Encoding.UTF8.GetString(buffer);\r\n";
-                        HelpPart += "            }\r\n";
-                        HelpPart += "        }\r\n";
-                        HelpPart += "\r\n";
-                        HelpPart += "        private void OnWindowHelpButtonClicked(IWin32Window owner, string helpContent)\r\n";
-                        HelpPart += "        {\r\n";
-                        HelpPart += "            var assembly = Assembly.GetExecutingAssembly();\r\n";
-                        HelpPart += "            var resourceName = helpContent; // helpContent has the resource name in it.\r\n";
-                        HelpPart += "            string result = \"\";\r\n";
-                        HelpPart += "            using (Stream stream = assembly.GetManifestResourceStream(resourceName))\r\n";
-                        HelpPart += "            using (StreamReader reader = new StreamReader(stream))\r\n";
-                        HelpPart += "            {\r\n";
-                        HelpPart += "                result = reader.ReadToEnd();\r\n";
-                        HelpPart += "            }\r\n";
-                        HelpPart += "\r\n";
-                        HelpPart += "            using (Form form = new Form())\r\n";
-                        HelpPart += "            {\r\n";
-                        HelpPart += "                form.SuspendLayout();\r\n";
-                        HelpPart += "                form.AutoScaleDimensions = new SizeF(96F, 96F);\r\n";
-                        HelpPart += "                form.AutoScaleMode = AutoScaleMode.Dpi;\r\n";
-                        HelpPart += "                form.Text = StaticName + \" - \" + LoadLocalizedString(\"user32.dll\",808,\"Help\");\r\n";
-                        HelpPart += "                form.AutoSize = false;\r\n";
-                        HelpPart += "                form.ClientSize = new Size(564, 392);\r\n";
-                        HelpPart += "                form.MinimumSize = new Size(330, 282);\r\n";
-                        HelpPart += "                form.FormBorderStyle = FormBorderStyle.Sizable;\r\n";
-                        HelpPart += "                form.ShowInTaskbar = false;\r\n";
-                        HelpPart += "                form.MinimizeBox = false;\r\n";
-                        HelpPart += "                form.StartPosition = FormStartPosition.CenterParent;\r\n";
-                        HelpPart += "                if (StaticIcon != null)\r\n";
-                        HelpPart += "                {\r\n";
-                        HelpPart += "                    form.Icon = Icon.FromHandle(((Bitmap)StaticIcon).GetHicon());\r\n";
-                        HelpPart += "                }\r\n";
-                        HelpPart += "                else\r\n";
-                        HelpPart += "                {\r\n";
-                        HelpPart += "                    form.ShowIcon = false;\r\n";
-                        HelpPart += "                }\r\n";
-                        HelpPart += "                btn_HelpBoxOKButton = new Button();\r\n";
-                        HelpPart += "                btn_HelpBoxOKButton.AutoSize = true;\r\n";
-                        HelpPart += "                btn_HelpBoxOKButton.Text = LoadLocalizedString(\"user32.dll\",800,\"OK\");\r\n";
-                        HelpPart += "                btn_HelpBoxOKButton.DialogResult = DialogResult.Cancel;\r\n";
-                        HelpPart += "                btn_HelpBoxOKButton.Size = new Size(84, 24);\r\n";
-                        HelpPart += "                btn_HelpBoxOKButton.Location = new Point(472, 359);\r\n";
-                        HelpPart += "                btn_HelpBoxOKButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;\r\n";
-                        HelpPart += "                form.Controls.Add(btn_HelpBoxOKButton);\r\n";
-                        HelpPart += "                rtb_HelpBox = new RichTextBox();\r\n";
-                        HelpPart += "                rtb_HelpBox.Size = new Size(564, 350);\r\n";
-                        HelpPart += "                rtb_HelpBox.Location = new Point(0, 0);\r\n";
-                        HelpPart += "                rtb_HelpBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Bottom | AnchorStyles.Right;\r\n";
-                        HelpPart += "                rtb_HelpBox.DetectUrls = true;\r\n";
-                        HelpPart += "                rtb_HelpBox.WordWrap = true;\r\n";
-                        HelpPart += "                rtb_HelpBox.ScrollBars = RichTextBoxScrollBars.ForcedVertical;\r\n";
-                        HelpPart += "                rtb_HelpBox.BorderStyle = BorderStyle.None;\r\n";
-                        HelpPart += "                rtb_HelpBox.Font = new Font(rtb_HelpBox.SelectionFont.Name, 10f);\r\n";
-                        HelpPart += "                rtb_HelpBox.LinkClicked += new LinkClickedEventHandler(rtb_LinkClicked);\r\n";
-                        HelpPart += "                rtb_HelpBox.ReadOnly = false;\r\n";
-                        HelpPart += "                rtb_HelpBox.Rtf = DecompressString(result);\r\n";
-                        HelpPart += "                rtb_HelpBox.ReadOnly = true;\r\n";
-                        HelpPart += "                form.Controls.Add(rtb_HelpBox);\r\n";
-                        HelpPart += "                form.ResumeLayout();\r\n";
-                        HelpPart += "                form.ShowDialog();\r\n";
-                        HelpPart += "            }\r\n";
-                        HelpPart += "        }\r\n";
-                        HelpPart += "\r\n";
-                    }
-                }
+                return string.Empty;
+            }
+
+            // If the user didn't include an OnWindowHelpButtonClicked function, we'll add our own UBB help solution
+            string HelpPart = "";
+            if (HelpType == HelpType.URL)
+            {
+                HelpPart += "        private void OnWindowHelpButtonClicked(IWin32Window owner, string helpContent)\r\n";
+                HelpPart += "        {\r\n";
+                HelpPart += "            if (helpContent.ToLower().StartsWith(\"http://\") || helpContent.ToLower().StartsWith(\"https://\"))\r\n";
+                HelpPart += "            {\r\n";
+                HelpPart += "                PaintDotNet.ServiceProviderExtensions.GetService<IShellService>(Services).LaunchUrl(null, helpContent);\r\n";
+                HelpPart += "            }\r\n";
+                HelpPart += "        }\r\n";
+                HelpPart += "\r\n";
+            }
+            else if (HelpType == HelpType.RichText)
+            {
+                HelpPart += "        RichTextBox rtb_HelpBox;\r\n";
+                HelpPart += "        Button btn_HelpBoxOKButton;\r\n";
+                HelpPart += "\r\n";
+                HelpPart += "        private void rtb_LinkClicked(object sender, System.Windows.Forms.LinkClickedEventArgs e)\r\n";
+                HelpPart += "        {\r\n";
+                HelpPart += "            PaintDotNet.ServiceProviderExtensions.GetService<IShellService>(Services).LaunchUrl(null, e.LinkText);\r\n";
+                HelpPart += "            btn_HelpBoxOKButton.Focus();\r\n";
+                HelpPart += "        }\r\n";
+                HelpPart += "\r\n";
+                HelpPart += "        private static string LoadLocalizedString(string libraryName, uint ident, string defaultText)\r\n";
+                HelpPart += "        {\r\n";
+                HelpPart += "            IntPtr libraryHandle = GetModuleHandle(libraryName);\r\n";
+                HelpPart += "            if (libraryHandle != IntPtr.Zero)\r\n";
+                HelpPart += "            {\r\n";
+                HelpPart += "                System.Text.StringBuilder sb = new System.Text.StringBuilder(1024);\r\n";
+                HelpPart += "                if (LoadString(libraryHandle, ident, sb, 1024) > 0)\r\n";
+                HelpPart += "                {\r\n";
+                HelpPart += "                    return sb.ToString();\r\n";
+                HelpPart += "                }\r\n";
+                HelpPart += "            }\r\n";
+                HelpPart += "            return defaultText;\r\n";
+                HelpPart += "        }\r\n";
+                HelpPart += "\r\n";
+                HelpPart += "        [DllImport(\"kernel32.dll\", CharSet = CharSet.Auto)]\r\n";
+                HelpPart += "        private static extern IntPtr GetModuleHandle(string lpModuleName);\r\n";
+                HelpPart += "\r\n";
+                HelpPart += "        [DllImport(\"user32.dll\", CharSet = CharSet.Auto)]\r\n";
+                HelpPart += "        private static extern int LoadString(IntPtr hInstance, uint uID, System.Text.StringBuilder lpBuffer, int nBufferMax);\r\n";
+                HelpPart += "\r\n";
+                HelpPart += "        public static string DecompressString(string compressedText)\r\n";
+                HelpPart += "        {\r\n";
+                HelpPart += "            byte[] gZipBuffer = Convert.FromBase64String(compressedText);\r\n";
+                HelpPart += "            using (var memoryStream = new MemoryStream())\r\n";
+                HelpPart += "            {\r\n";
+                HelpPart += "                int dataLength = BitConverter.ToInt32(gZipBuffer, 0);\r\n";
+                HelpPart += "                memoryStream.Write(gZipBuffer, 4, gZipBuffer.Length - 4);\r\n";
+                HelpPart += "\r\n";
+                HelpPart += "                var buffer = new byte[dataLength];\r\n";
+                HelpPart += "\r\n";
+                HelpPart += "                memoryStream.Position = 0;\r\n";
+                HelpPart += "                using (var gZipStream = new GZipStream(memoryStream, CompressionMode.Decompress))\r\n";
+                HelpPart += "                {\r\n";
+                HelpPart += "                    gZipStream.Read(buffer, 0, buffer.Length);\r\n";
+                HelpPart += "                }\r\n";
+                HelpPart += "\r\n";
+                HelpPart += "                return System.Text.Encoding.UTF8.GetString(buffer);\r\n";
+                HelpPart += "            }\r\n";
+                HelpPart += "        }\r\n";
+                HelpPart += "\r\n";
+                HelpPart += "        private void OnWindowHelpButtonClicked(IWin32Window owner, string helpContent)\r\n";
+                HelpPart += "        {\r\n";
+                HelpPart += "            var assembly = Assembly.GetExecutingAssembly();\r\n";
+                HelpPart += "            var resourceName = helpContent; // helpContent has the resource name in it.\r\n";
+                HelpPart += "            string result = \"\";\r\n";
+                HelpPart += "            using (Stream stream = assembly.GetManifestResourceStream(resourceName))\r\n";
+                HelpPart += "            using (StreamReader reader = new StreamReader(stream))\r\n";
+                HelpPart += "            {\r\n";
+                HelpPart += "                result = reader.ReadToEnd();\r\n";
+                HelpPart += "            }\r\n";
+                HelpPart += "\r\n";
+                HelpPart += "            using (Form form = new Form())\r\n";
+                HelpPart += "            {\r\n";
+                HelpPart += "                form.SuspendLayout();\r\n";
+                HelpPart += "                form.AutoScaleDimensions = new SizeF(96F, 96F);\r\n";
+                HelpPart += "                form.AutoScaleMode = AutoScaleMode.Dpi;\r\n";
+                HelpPart += "                form.Text = StaticName + \" - \" + LoadLocalizedString(\"user32.dll\",808,\"Help\");\r\n";
+                HelpPart += "                form.AutoSize = false;\r\n";
+                HelpPart += "                form.ClientSize = new Size(564, 392);\r\n";
+                HelpPart += "                form.MinimumSize = new Size(330, 282);\r\n";
+                HelpPart += "                form.FormBorderStyle = FormBorderStyle.Sizable;\r\n";
+                HelpPart += "                form.ShowInTaskbar = false;\r\n";
+                HelpPart += "                form.MinimizeBox = false;\r\n";
+                HelpPart += "                form.StartPosition = FormStartPosition.CenterParent;\r\n";
+                HelpPart += "                if (StaticIcon != null)\r\n";
+                HelpPart += "                {\r\n";
+                HelpPart += "                    form.Icon = Icon.FromHandle(((Bitmap)StaticIcon).GetHicon());\r\n";
+                HelpPart += "                }\r\n";
+                HelpPart += "                else\r\n";
+                HelpPart += "                {\r\n";
+                HelpPart += "                    form.ShowIcon = false;\r\n";
+                HelpPart += "                }\r\n";
+                HelpPart += "                btn_HelpBoxOKButton = new Button();\r\n";
+                HelpPart += "                btn_HelpBoxOKButton.AutoSize = true;\r\n";
+                HelpPart += "                btn_HelpBoxOKButton.Text = LoadLocalizedString(\"user32.dll\",800,\"OK\");\r\n";
+                HelpPart += "                btn_HelpBoxOKButton.DialogResult = DialogResult.Cancel;\r\n";
+                HelpPart += "                btn_HelpBoxOKButton.Size = new Size(84, 24);\r\n";
+                HelpPart += "                btn_HelpBoxOKButton.Location = new Point(472, 359);\r\n";
+                HelpPart += "                btn_HelpBoxOKButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;\r\n";
+                HelpPart += "                form.Controls.Add(btn_HelpBoxOKButton);\r\n";
+                HelpPart += "                rtb_HelpBox = new RichTextBox();\r\n";
+                HelpPart += "                rtb_HelpBox.Size = new Size(564, 350);\r\n";
+                HelpPart += "                rtb_HelpBox.Location = new Point(0, 0);\r\n";
+                HelpPart += "                rtb_HelpBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Bottom | AnchorStyles.Right;\r\n";
+                HelpPart += "                rtb_HelpBox.DetectUrls = true;\r\n";
+                HelpPart += "                rtb_HelpBox.WordWrap = true;\r\n";
+                HelpPart += "                rtb_HelpBox.ScrollBars = RichTextBoxScrollBars.ForcedVertical;\r\n";
+                HelpPart += "                rtb_HelpBox.BorderStyle = BorderStyle.None;\r\n";
+                HelpPart += "                rtb_HelpBox.Font = new Font(rtb_HelpBox.SelectionFont.Name, 10f);\r\n";
+                HelpPart += "                rtb_HelpBox.LinkClicked += new LinkClickedEventHandler(rtb_LinkClicked);\r\n";
+                HelpPart += "                rtb_HelpBox.ReadOnly = false;\r\n";
+                HelpPart += "                rtb_HelpBox.Rtf = DecompressString(result);\r\n";
+                HelpPart += "                rtb_HelpBox.ReadOnly = true;\r\n";
+                HelpPart += "                form.Controls.Add(rtb_HelpBox);\r\n";
+                HelpPart += "                form.ResumeLayout();\r\n";
+                HelpPart += "                form.ShowDialog();\r\n";
+                HelpPart += "            }\r\n";
+                HelpPart += "        }\r\n";
+                HelpPart += "\r\n";
             }
 
             return HelpPart;
