@@ -33,7 +33,7 @@ namespace PaintDotNet.Effects
         private static Assembly userAssembly;
         private static Effect userScriptObject;
         private static int lineOffset;
-        private static string internalError;
+        private static string exceptionMsg;
         private const string defaultOptions = " /unsafe /optimize";
         private static readonly Regex preRenderRegex = new Regex(@"void PreRender\(Surface dst, Surface src\)(\s)*{(.|\s)*}", RegexOptions.Singleline);
 
@@ -41,6 +41,7 @@ namespace PaintDotNet.Effects
         internal static Effect UserScriptObject => userScriptObject;
         internal static int LineOffset => lineOffset;
         internal static int ColumnOffset => 9;
+        internal static string Exception => exceptionMsg;
         internal static List<ScriptError> Errors
         {
             get
@@ -53,9 +54,9 @@ namespace PaintDotNet.Effects
                         errorList.Add(new ScriptError(err));
                     }
                 }
-                if (!internalError.IsNullOrEmpty())
+                if (!exceptionMsg.IsNullOrEmpty())
                 {
-                    errorList.Add(new ScriptError(internalError));
+                    errorList.Add(new ScriptError(exceptionMsg));
                 }
                 return errorList;
             }
@@ -108,7 +109,7 @@ namespace PaintDotNet.Effects
                 ScriptWriter.UserEnteredPart(scriptText) +
                 ScriptWriter.append_code;
 
-            internalError = null;
+            exceptionMsg = null;
             userScriptObject = null;
             // Compile code
             try
@@ -143,7 +144,7 @@ namespace PaintDotNet.Effects
             }
             catch (Exception ex)
             {
-                internalError = ex.Message;
+                exceptionMsg = ex.Message;
             }
             return false;
         }
@@ -166,7 +167,7 @@ namespace PaintDotNet.Effects
             // Generate code
             string SourceCode = ScriptWriter.FullSourceCode(scriptText, FileName, isAdjustment, subMenuname, menuName, iconPath, supportURL, effectFlags, renderingSchedule, author, majorVersion, minorVersion, description, keyWords, windowTitle, helpType, helpText);
 
-            internalError = null;
+            exceptionMsg = null;
             // Compile code
             try
             {
@@ -343,15 +344,7 @@ namespace PaintDotNet.Effects
             }
             catch (Exception ex)
             {
-                if (!File.Exists(dllPath))
-                {
-                    //userScriptObject = null;
-                    internalError = ex.Message;
-                }
-                else
-                {
-                    return true;
-                }
+                exceptionMsg = ex.Message;
             }
             return false;
         }
@@ -373,7 +366,7 @@ namespace PaintDotNet.Effects
                 ScriptWriter.UserEnteredPart(scriptText) +
                 ScriptWriter.EndPart();
 
-            internalError = null;
+            exceptionMsg = null;
             userScriptObject = null;
             // Compile code
             try
@@ -397,7 +390,7 @@ namespace PaintDotNet.Effects
             }
             catch (Exception ex)
             {
-                internalError = ex.Message;
+                exceptionMsg = ex.Message;
             }
             return false;
         }

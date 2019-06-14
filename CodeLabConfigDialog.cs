@@ -954,7 +954,8 @@ namespace PaintDotNet.Effects
                     else
                     {
                         DisplayErrors();
-                        FlexibleMessageBox.Show("I'm sorry, I was not able to build the DLL.\r\n\r\nPerhaps the file already exists and is marked 'read only' or is in use by Paint.NET.  There may be other build errors listed in the box below.", "Build Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        string error = (ScriptBuilder.Exception != null) ? ScriptBuilder.Exception.InsertLineBreaks(100) : "Please check for build errors in the Errors List.";
+                        FlexibleMessageBox.Show("I'm sorry, I was not able to build the DLL.\r\n\r\n" + error, "Build Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }
