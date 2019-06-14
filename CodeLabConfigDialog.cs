@@ -930,34 +930,45 @@ namespace PaintDotNet.Effects
             if (errorList.Items.Count != 0)
             {
                 FlexibleMessageBox.Show("Before you can build a DLL, you must resolve all code errors.", "Build Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
             }
-            else if (FileName.Length == 0 || FileName == "Untitled")
+
+            string fileName = FileName.Trim();
+            if (fileName.Length == 0 || fileName == "Untitled")
             {
                 FlexibleMessageBox.Show("Before you can build a DLL, you must first save your source file using the File > Save as... menu.", "Build Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            bool isClassic = this.Services.GetService<IAppInfoService>().InstallType == AppInstallType.Classic;
+            BuildForm buildForm = new BuildForm(fileName, txtCode.Text, FullScriptPath, isClassic);
+            if (buildForm.ShowDialog() != DialogResult.OK)
+            {
+                return;
+            }
+
+            bool buildSucceeded = ScriptBuilder.BuildDll(
+                txtCode.Text, FullScriptPath, buildForm.SubMenu, buildForm.MenuItemName, buildForm.IconPath, buildForm.Author, buildForm.MajorVer, buildForm.MinorVer, buildForm.URL,
+                buildForm.WindowTitle, buildForm.isAdjustment, buildForm.Description, buildForm.KeyWords, buildForm.EffectFlags, buildForm.RenderingSchedule, buildForm.HelpType, buildForm.HelpStr);
+
+            buildForm.Dispose();
+
+            if (buildSucceeded)
+            {
+                string fullPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
+                fullPath = Path.Combine(fullPath, fileName);
+                string zipPath = Path.ChangeExtension(fullPath, ".zip");
+
+                string succeeded = "Build succeeded!\r\n\r\n" +
+                    "File \"" + zipPath + "\" created.\r\n\r\n" +
+                    "You will need to right-click 'Extract All...' the file on your desktop to run the install.bat file and restart Paint.NET to see it in the Effects menu.";
+                FlexibleMessageBox.Show(succeeded, "Build Finished", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             else
             {
-                string fullPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
-                fullPath = Path.Combine(fullPath, FileName);
-                fullPath = Path.ChangeExtension(fullPath, ".dll");
-                bool isClassic = this.Services.GetService<IAppInfoService>().InstallType == AppInstallType.Classic;
-                // Let the user pick the submenu, menu name, and icon
-                BuildForm buildForm = new BuildForm(FileName.Trim(), txtCode.Text, FullScriptPath, isClassic);
-                if (buildForm.ShowDialog() == DialogResult.OK)
-                {
-                    // Everything is OK, BUILD IT!
-                    if (ScriptBuilder.BuildDll(txtCode.Text, FullScriptPath, buildForm.SubMenu, buildForm.MenuItemName, buildForm.IconPath, buildForm.Author, buildForm.MajorVer, buildForm.MinorVer, buildForm.URL, buildForm.WindowTitle, buildForm.isAdjustment, buildForm.Description, buildForm.KeyWords, buildForm.EffectFlags, buildForm.RenderingSchedule, buildForm.HelpType, buildForm.HelpStr))
-                    {
-                        string zipPath = Path.ChangeExtension(fullPath, ".zip");
-                        FlexibleMessageBox.Show("Build succeeded!\r\n\r\nFile \"" + zipPath.Trim() + "\" created.\r\n\r\nYou will need to right-click 'Extract All...' the file on your desktop to run the install.bat file and restart Paint.NET to see it in the Effects menu.", "Build Finished", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    }
-                    else
-                    {
-                        DisplayErrors();
-                        string error = (ScriptBuilder.Exception != null) ? ScriptBuilder.Exception.InsertLineBreaks(100) : "Please check for build errors in the Errors List.";
-                        FlexibleMessageBox.Show("I'm sorry, I was not able to build the DLL.\r\n\r\n" + error, "Build Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                }
+                DisplayErrors();
+                string error = (ScriptBuilder.Exception != null) ? ScriptBuilder.Exception.InsertLineBreaks(100) : "Please check for build errors in the Errors List.";
+                FlexibleMessageBox.Show("I'm sorry, I was not able to build the DLL.\r\n\r\n" + error, "Build Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
