@@ -17,6 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace PaintDotNet.Effects
@@ -382,7 +383,7 @@ namespace PaintDotNet.Effects
             string PropertyPart = "";
             if (UserControls.Count == 0)
             {
-                // generate empty OnCreatePropertyCollection()
+                // No controls, so no User Interface. Generate an empty OnCreatePropertyCollection()
                 PropertyPart += "        protected override PropertyCollection OnCreatePropertyCollection()\r\n";
                 PropertyPart += "        {\r\n";
                 PropertyPart += "            return PropertyCollection.CreateEmpty();\r\n";
@@ -391,9 +392,6 @@ namespace PaintDotNet.Effects
 
                 return PropertyPart;
             }
-
-            HelpText = HelpText.Replace('"', '\'');
-            string NameSpace = Regex.Replace(FileName, @"[^\w]", "") + "Effect";
 
             // Enumerate the user controls
             PropertyPart += "        public enum PropertyNames\r\n";
@@ -436,69 +434,49 @@ namespace PaintDotNet.Effects
                 }
             }
 
-            foreach (UIElement u in UserControls)
+            // if we have a random number generator control, include the following lines...
+            if (UserControls.Any(u => u.ElementType == ElementType.ReseedButton))
             {
-                if (u.ElementType == ElementType.ReseedButton)
-                {
-                    // if we have a random number generator control, include the following lines...
-                    PropertyPart += "        [ThreadStatic]\r\n";
-                    PropertyPart += "        private static Random RandomNumber;\r\n";
-                    PropertyPart += "\r\n";
-                    PropertyPart += "        private int randomSeed;\r\n";
-                    PropertyPart += "        private int instanceSeed;\r\n";
-                    PropertyPart += "\r\n";
-                    // ... only once!
-                    break;
-                }
+                PropertyPart += "        [ThreadStatic]\r\n";
+                PropertyPart += "        private static Random RandomNumber;\r\n";
+                PropertyPart += "\r\n";
+                PropertyPart += "        private int randomSeed;\r\n";
+                PropertyPart += "        private int instanceSeed;\r\n";
+                PropertyPart += "\r\n";
             }
 
             // generate OnCreatePropertyCollection()
             PropertyPart += "\r\n";
             PropertyPart += "        protected override PropertyCollection OnCreatePropertyCollection()\r\n";
             PropertyPart += "        {\r\n";
-            PropertyPart += "            List<Property> props = new List<Property>();\r\n";
-            PropertyPart += "\r\n";
 
             // Check to see if we're including a color wheel without an alpha slider
-            foreach (UIElement u in UserControls)
+            if (UserControls.Any(u => (u.ElementType == ElementType.ColorWheel && !(u.Style == 1 || u.Style == 3))))
             {
-                if (u.ElementType == ElementType.ColorWheel && !(u.Style == 1 || u.Style == 3))
-                {
-                    PropertyPart += "            ColorBgra PrimaryColor = EnvironmentParameters.PrimaryColor.NewAlpha(byte.MaxValue);\r\n";
-                    PropertyPart += "            ColorBgra SecondaryColor = EnvironmentParameters.SecondaryColor.NewAlpha(byte.MaxValue);\r\n";
-                    PropertyPart += "\r\n";
-                    // only include it once
-                    break;
-                }
+                PropertyPart += "            ColorBgra PrimaryColor = EnvironmentParameters.PrimaryColor.NewAlpha(byte.MaxValue);\r\n";
+                PropertyPart += "            ColorBgra SecondaryColor = EnvironmentParameters.SecondaryColor.NewAlpha(byte.MaxValue);\r\n";
+                PropertyPart += "\r\n";
             }
 
             // Check to see if we're including a user selectable blending mode
-            foreach (UIElement u in UserControls)
+            if (UserControls.Any(u => u.ElementType == ElementType.BinaryPixelOp))
             {
-                if (u.ElementType == ElementType.BinaryPixelOp)
-                {
-                    PropertyPart += "            // setup for a user selected blend mode\r\n";
-                    PropertyPart += "            PaintDotNet.AppModel.IEnumLocalizerFactory factory = (PaintDotNet.AppModel.IEnumLocalizerFactory)this.Services.GetService(typeof(PaintDotNet.AppModel.IEnumLocalizerFactory));\r\n";
-                    PropertyPart += "            PaintDotNet.AppModel.IEnumLocalizer blendModeLocalizer = factory.Create(typeof(LayerBlendMode));\r\n";
-                    PropertyPart += "            IList<PaintDotNet.AppModel.ILocalizedEnumValue> blendModes = blendModeLocalizer.GetLocalizedEnumValues();\r\n";
-                    PropertyPart += "            object[] blendModesArray = blendModes.Select(lev => lev.EnumValue).ToArrayEx();\r\n";
-                    PropertyPart += "            int defaultBlendModeIndex = blendModesArray.IndexOf(LayerBlendMode.Normal);\r\n";
-                    PropertyPart += "\r\n";
-                    // only include it once
-                    break;
-                }
+                PropertyPart += "            // setup for a user selected blend mode\r\n";
+                PropertyPart += "            IEnumLocalizerFactory factory = (IEnumLocalizerFactory)this.Services.GetService(typeof(IEnumLocalizerFactory));\r\n";
+                PropertyPart += "            IEnumLocalizer blendModeLocalizer = factory.Create(typeof(LayerBlendMode));\r\n";
+                PropertyPart += "            IList<ILocalizedEnumValue> blendModes = blendModeLocalizer.GetLocalizedEnumValues();\r\n";
+                PropertyPart += "            object[] blendModesArray = blendModes.Select(lev => lev.EnumValue).ToArrayEx();\r\n";
+                PropertyPart += "            int defaultBlendModeIndex = blendModesArray.IndexOf(LayerBlendMode.Normal);\r\n";
+                PropertyPart += "\r\n";
             }
 
+            PropertyPart += "            List<Property> props = new List<Property>();\r\n";
+            PropertyPart += "\r\n";
+
             int ColorControlCount = 0;
-            bool RulesRequired = false;
 
             foreach (UIElement u in UserControls)
             {
-                if (u.EnabledWhen)
-                {
-                    RulesRequired = true;
-                }
-
                 string propertyName = u.Identifier.FirstCharToUpper();
 
                 switch (u.ElementType)
@@ -580,8 +558,15 @@ namespace PaintDotNet.Effects
                         PropertyPart += "            props.Add(new DoubleProperty(PropertyNames." + propertyName + ", " + u.dDefault.ToString(CultureInfo.InvariantCulture) + ", " + u.dMin.ToString(CultureInfo.InvariantCulture) + ", " + u.dMax.ToString(CultureInfo.InvariantCulture) + "));\r\n";
                         break;
                     case ElementType.DropDown:
-                        PropertyPart += "            " + propertyName + "Options " + propertyName + "Default = (Enum.IsDefined(typeof(" + propertyName + "Options), " + u.Default.ToString() + ")) ? (" + propertyName + "Options)" + u.Default.ToString() + " : 0;\r\n";
-                        PropertyPart += "            props.Add(StaticListChoiceProperty.CreateForEnum<" + propertyName + "Options>(PropertyNames." + propertyName + ", " + propertyName + "Default, false));\r\n";
+                        if (u.Default > 0)
+                        {
+                            PropertyPart += "            " + propertyName + "Options " + propertyName + "Default = (Enum.IsDefined(typeof(" + propertyName + "Options), " + u.Default.ToString() + ")) ? (" + propertyName + "Options)" + u.Default.ToString() + " : 0;\r\n";
+                            PropertyPart += "            props.Add(StaticListChoiceProperty.CreateForEnum<" + propertyName + "Options>(PropertyNames." + propertyName + ", " + propertyName + "Default, false));\r\n";
+                        }
+                        else
+                        {
+                            PropertyPart += "            props.Add(StaticListChoiceProperty.CreateForEnum<" + propertyName + "Options>(PropertyNames." + propertyName + ", 0, false));\r\n";
+                        }
                         break;
                     case ElementType.BinaryPixelOp:
                         PropertyPart += "            props.Add(new StaticListChoiceProperty(PropertyNames." + propertyName + ", blendModesArray, defaultBlendModeIndex, false));\r\n";
@@ -591,8 +576,15 @@ namespace PaintDotNet.Effects
                         PropertyPart += "            props.Add(new StaticListChoiceProperty(PropertyNames." + propertyName + ", " + propertyName + "FontFamilies, 0, false));\r\n";
                         break;
                     case ElementType.RadioButtons:
-                        PropertyPart += "            " + propertyName + "Options " + propertyName + "Default = (Enum.IsDefined(typeof(" + propertyName + "Options), " + u.Default.ToString() + ")) ? (" + propertyName + "Options)" + u.Default.ToString() + " : 0;\r\n";
-                        PropertyPart += "            props.Add(StaticListChoiceProperty.CreateForEnum<" + propertyName + "Options>(PropertyNames." + propertyName + ", " + propertyName + "Default, false));\r\n";
+                        if (u.Default > 0)
+                        {
+                            PropertyPart += "            " + propertyName + "Options " + propertyName + "Default = (Enum.IsDefined(typeof(" + propertyName + "Options), " + u.Default.ToString() + ")) ? (" + propertyName + "Options)" + u.Default.ToString() + " : 0;\r\n";
+                            PropertyPart += "            props.Add(StaticListChoiceProperty.CreateForEnum<" + propertyName + "Options>(PropertyNames." + propertyName + ", " + propertyName + "Default, false));\r\n";
+                        }
+                        else
+                        {
+                            PropertyPart += "            props.Add(StaticListChoiceProperty.CreateForEnum<" + propertyName + "Options>(PropertyNames." + propertyName + ", 0, false));\r\n";
+                        }
                         break;
                     case ElementType.ReseedButton:
                         PropertyPart += "            props.Add(new Int32Property(PropertyNames." + propertyName + ", 0, 0, 255));\r\n";
@@ -611,7 +603,7 @@ namespace PaintDotNet.Effects
                 }
             }
 
-            if (RulesRequired)
+            if (UserControls.Any(u => u.EnabledWhen))
             {
                 PropertyPart += "\r\n";
                 PropertyPart += "            List<PropertyCollectionRule> propRules = new List<PropertyCollectionRule>();\r\n";
@@ -624,16 +616,7 @@ namespace PaintDotNet.Effects
                         continue;
                     }
 
-                    int index = -1;
-                    for (int i = 0; i < UserControls.Count; i++)
-                    {
-                        UIElement element = UserControls[i];
-                        if (element.Identifier == u.EnableIdentifier)
-                        {
-                            index = i;
-                            break;
-                        }
-                    }
+                    int index = UserControls.FindIndex(element => element.Identifier == u.EnableIdentifier);
 
                     if (index < 0)
                     {
@@ -694,34 +677,25 @@ namespace PaintDotNet.Effects
             PropertyPart += "\r\n";
             PropertyPart += "        protected override ControlInfo OnCreateConfigUI(PropertyCollection props)\r\n";
             PropertyPart += "        {\r\n";
+
+            if (UserControls.Any(u => u.ElementType == ElementType.BinaryPixelOp))
+            {
+                PropertyPart += "            // setup for a user selected blend mode\r\n";
+                PropertyPart += "            IEnumLocalizerFactory factory = (IEnumLocalizerFactory)this.Services.GetService(typeof(IEnumLocalizerFactory));\r\n";
+                PropertyPart += "            IEnumLocalizer blendModeLocalizer = factory.Create(typeof(LayerBlendMode));\r\n";
+                PropertyPart += "            IList<ILocalizedEnumValue> blendModes = blendModeLocalizer.GetLocalizedEnumValues();\r\n";
+                PropertyPart += "\r\n";
+            }
+
+            if (UserControls.Any(u => u.ElementType == ElementType.PanSlider))
+            {
+                PropertyPart += "            Rectangle selection = EnvironmentParameters.GetSelection(EnvironmentParameters.SourceSurface.Bounds).GetBoundsInt();\r\n";
+                PropertyPart += "            ImageResource imageResource = ImageResource.FromImage(EnvironmentParameters.SourceSurface.CreateAliasedBitmap(selection));\r\n";
+                PropertyPart += "\r\n";
+            }
+
             PropertyPart += "            ControlInfo configUI = CreateDefaultConfigUI(props);\r\n";
             PropertyPart += "\r\n";
-
-            foreach (UIElement u in UserControls)
-            {
-                if (u.ElementType == ElementType.BinaryPixelOp)
-                {
-                    PropertyPart += "            // setup for a user selected blend mode\r\n";
-                    PropertyPart += "            PaintDotNet.AppModel.IEnumLocalizerFactory factory = (PaintDotNet.AppModel.IEnumLocalizerFactory)this.Services.GetService(typeof(PaintDotNet.AppModel.IEnumLocalizerFactory));\r\n";
-                    PropertyPart += "            PaintDotNet.AppModel.IEnumLocalizer blendModeLocalizer = factory.Create(typeof(LayerBlendMode));\r\n";
-                    PropertyPart += "            IList<PaintDotNet.AppModel.ILocalizedEnumValue> blendModes = blendModeLocalizer.GetLocalizedEnumValues();\r\n";
-                    PropertyPart += "\r\n";
-                    // only include once
-                    break;
-                }
-            }
-
-            foreach (UIElement u in UserControls)
-            {
-                if (u.ElementType == ElementType.PanSlider)
-                {
-                    PropertyPart += "            Rectangle selection = EnvironmentParameters.GetSelection(EnvironmentParameters.SourceSurface.Bounds).GetBoundsInt();\r\n";
-                    PropertyPart += "            ImageResource imageResource = ImageResource.FromImage(EnvironmentParameters.SourceSurface.CreateAliasedBitmap(selection));\r\n";
-                    PropertyPart += "\r\n";
-                    // only include once
-                    break;
-                }
-            }
 
             foreach (UIElement u in UserControls)
             {
@@ -784,11 +758,12 @@ namespace PaintDotNet.Effects
                             break;
                     }
                 }
+
                 if (u.ElementType == ElementType.Checkbox)
                 {
                     PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.Description, \"" + u.Name + "\");\r\n";
                 }
-                if (u.ElementType == ElementType.ColorWheel)
+                else if (u.ElementType == ElementType.ColorWheel)
                 {
                     PropertyPart += "            configUI.SetPropertyControlType(PropertyNames." + propertyName + ", PropertyControlType.ColorWheel);\r\n";
                     if (u.Style == 2 || u.Style == 3)
@@ -796,12 +771,12 @@ namespace PaintDotNet.Effects
                         PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.ShowResetButton, false);\r\n";
                     }
                 }
-                if (u.ElementType == ElementType.AngleChooser)
+                else if (u.ElementType == ElementType.AngleChooser)
                 {
                     PropertyPart += "            configUI.SetPropertyControlType(PropertyNames." + propertyName + ", PropertyControlType.AngleChooser);\r\n";
                     PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.DecimalPlaces, 3);\r\n";
                 }
-                if (u.ElementType == ElementType.PanSlider)
+                else if (u.ElementType == ElementType.PanSlider)
                 {
                     PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.SliderSmallChangeX, 0.05);\r\n";
                     PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.SliderLargeChangeX, 0.25);\r\n";
@@ -812,7 +787,7 @@ namespace PaintDotNet.Effects
                     PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.DecimalPlaces, 3);\r\n";
                     PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.StaticImageUnderlay, imageResource);\r\n";
                 }
-                if (u.ElementType == ElementType.DoubleSlider)
+                else if (u.ElementType == ElementType.DoubleSlider)
                 {
                     PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.SliderLargeChange, 0.25);\r\n";
                     PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.SliderSmallChange, 0.05);\r\n";
@@ -822,7 +797,7 @@ namespace PaintDotNet.Effects
                         PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.DecimalPlaces, 3);\r\n";
                     }
                 }
-                if (u.ElementType == ElementType.DropDown)
+                else if (u.ElementType == ElementType.DropDown)
                 {
                     PropertyPart += "            PropertyControlInfo " + propertyName + "Control = configUI.FindControlForPropertyName(PropertyNames." + propertyName + ");\r\n";
                     byte OptionCount = 0;
@@ -832,15 +807,15 @@ namespace PaintDotNet.Effects
                         PropertyPart += "            " + propertyName + "Control.SetValueDisplayName(" + propertyName + "Options." + propertyName + "Option" + OptionCount.ToString() + ", \"" + entry.Trim() + "\");\r\n";
                     }
                 }
-                if (u.ElementType == ElementType.BinaryPixelOp)
+                else if (u.ElementType == ElementType.BinaryPixelOp)
                 {
                     PropertyPart += "            PropertyControlInfo " + propertyName + "blendOpControl = configUI.FindControlForPropertyName(PropertyNames." + propertyName + ");\r\n";
-                    PropertyPart += "            foreach (PaintDotNet.AppModel.ILocalizedEnumValue blendOpValue in blendModes)\r\n";
+                    PropertyPart += "            foreach (ILocalizedEnumValue blendOpValue in blendModes)\r\n";
                     PropertyPart += "            {\r\n";
                     PropertyPart += "                " + propertyName + "blendOpControl.SetValueDisplayName(blendOpValue.EnumValue, blendOpValue.LocalizedName);\r\n";
                     PropertyPart += "            }\r\n";
                 }
-                if (u.ElementType == ElementType.FontFamily)
+                else if (u.ElementType == ElementType.FontFamily)
                 {
                     PropertyPart += "            PropertyControlInfo " + propertyName + "FontFamilyControl = configUI.FindControlForPropertyName(PropertyNames." + propertyName + ");\r\n";
                     PropertyPart += "            FontFamily[] " + propertyName + "FontFamilies = new InstalledFontCollection().Families;\r\n";
@@ -849,7 +824,7 @@ namespace PaintDotNet.Effects
                     PropertyPart += "                " + propertyName + "FontFamilyControl.SetValueDisplayName(ff, ff.Name);\r\n";
                     PropertyPart += "            }\r\n";
                 }
-                if (u.ElementType == ElementType.RadioButtons)
+                else if (u.ElementType == ElementType.RadioButtons)
                 {
                     PropertyPart += "            configUI.SetPropertyControlType(PropertyNames." + propertyName + ", PropertyControlType.RadioButton);\r\n";
                     PropertyPart += "            PropertyControlInfo " + propertyName + "Control = configUI.FindControlForPropertyName(PropertyNames." + propertyName + ");\r\n";
@@ -860,17 +835,17 @@ namespace PaintDotNet.Effects
                         PropertyPart += "            " + propertyName + "Control.SetValueDisplayName(" + propertyName + "Options." + propertyName + "Option" + OptionCount.ToString() + ", \"" + entry.Trim() + "\");\r\n";
                     }
                 }
-                if (u.ElementType == ElementType.ReseedButton)
+                else if (u.ElementType == ElementType.ReseedButton)
                 {
                     PropertyPart += "            configUI.SetPropertyControlType(PropertyNames." + propertyName + ", PropertyControlType.IncrementButton);\r\n";
                     PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.ButtonText, \"" + u.Name + "\");\r\n";
                 }
-                if (u.ElementType == ElementType.MultiLineTextbox)
+                else if (u.ElementType == ElementType.MultiLineTextbox)
                 {
                     PropertyPart += "            configUI.SetPropertyControlType(PropertyNames." + propertyName + ", PropertyControlType.TextBox);\r\n";
                     PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.Multiline, true);\r\n";
                 }
-                if (u.ElementType == ElementType.RollBall)
+                else if (u.ElementType == ElementType.RollBall)
                 {
                     PropertyPart += "            configUI.SetPropertyControlType(PropertyNames." + propertyName + ", PropertyControlType.RollBallAndSliders);\r\n";
                     PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.UpDownIncrementX, 0.01);\r\n";
@@ -878,7 +853,7 @@ namespace PaintDotNet.Effects
                     PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.UpDownIncrementZ, 0.01);\r\n";
                     PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.DecimalPlaces, 3);\r\n";
                 }
-                if (u.ElementType == ElementType.Filename)
+                else if (u.ElementType == ElementType.Filename)
                 {
                     PropertyPart += "            configUI.SetPropertyControlType(PropertyNames." + propertyName + ", PropertyControlType.FileChooser);\r\n";
                     PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.FileTypes, new string[] { ";
@@ -893,11 +868,11 @@ namespace PaintDotNet.Effects
             PropertyPart += "\r\n";
 
             // generate OnCustomizeConfigUIWindowProperties()
-            if (WindowTitleStr != "" || ((HelpText != "") && (HelpType > 0)) || OnWindowHelpButtonClickedExists)
+            if (WindowTitleStr.Length > 0 || ((HelpText.Length > 0) && (HelpType != HelpType.None)) || OnWindowHelpButtonClickedExists)
             {
                 PropertyPart += "        protected override void OnCustomizeConfigUIWindowProperties(PropertyCollection props)\r\n";
                 PropertyPart += "        {\r\n";
-                if (WindowTitleStr != "")
+                if (WindowTitleStr.Length > 0)
                 {
                     PropertyPart += "            // Change the effect's window title\r\n";
                     PropertyPart += "            props[ControlInfoPropertyNames.WindowTitle].Value = \"" + WindowTitleStr.Replace("\"", "''") + "\";\r\n";
@@ -906,24 +881,27 @@ namespace PaintDotNet.Effects
                 {
                     PropertyPart += "            props[ControlInfoPropertyNames.WindowHelpContentType].Value = WindowHelpContentType.CustomViaCallback;\r\n";
                 }
-                if ((HelpText != "") && (HelpType > 0))
+                if ((HelpText.Length > 0) && (HelpType != HelpType.None))
                 {
+                    string helpContent = HelpText.Replace('"', '\'').Replace("\n", "\\n").Replace("\r", "").Replace("\t", "\\t").Replace("\"", "\\\"");
+
                     PropertyPart += "            // Add help button to effect UI\r\n";
                     if (HelpType == HelpType.URL)
                     {
                         PropertyPart += "            props[ControlInfoPropertyNames.WindowHelpContentType].Value = WindowHelpContentType.CustomViaCallback;\r\n";
-                        PropertyPart += "            props[ControlInfoPropertyNames.WindowHelpContent].Value = \"" + HelpText.Replace("\n", "\\n").Replace("\r", "").Replace("\t", "\\t").Replace("\"", "\\\"") + "\";\r\n";
+                        PropertyPart += "            props[ControlInfoPropertyNames.WindowHelpContent].Value = \"" + helpContent + "\";\r\n";
                     }
                     else if (HelpType == HelpType.PlainText)
                     {
                         PropertyPart += "            props[ControlInfoPropertyNames.WindowHelpContentType].Value = WindowHelpContentType.PlainText;\r\n";
-                        PropertyPart += "            props[ControlInfoPropertyNames.WindowHelpContent].Value = \"" + HelpText.Replace("\n", "\\n").Replace("\r", "").Replace("\t", "\\t").Replace("\"", "\\\"") + "\";\r\n";
+                        PropertyPart += "            props[ControlInfoPropertyNames.WindowHelpContent].Value = \"" + helpContent + "\";\r\n";
                     }
                     else if (HelpType == HelpType.RichText)
                     {
                         // We have to add custom help
+                        string NameSpace = Regex.Replace(FileName, @"[^\w]", "") + "Effect";
                         PropertyPart += "            props[ControlInfoPropertyNames.WindowHelpContentType].Value = WindowHelpContentType.CustomViaCallback;\r\n";
-                        PropertyPart += "            props[ControlInfoPropertyNames.WindowHelpContent].Value = \"" + NameSpace + "." + HelpText.Replace("\n", "\\n").Replace("\r", "").Replace("\t", "\\t").Replace("\"", "\\\"") + "\";\r\n";
+                        PropertyPart += "            props[ControlInfoPropertyNames.WindowHelpContent].Value = \"" + NameSpace + "." + helpContent + "\";\r\n";
                     }
                 }
                 PropertyPart += "            base.OnCustomizeConfigUIWindowProperties(props);\r\n";
