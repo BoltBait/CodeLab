@@ -378,7 +378,7 @@ namespace PaintDotNet.Effects
             return EffectPart;
         }
 
-        internal static string PropertyPart(UIElement[] UserControls, bool OnWindowHelpButtonClickedExists, string FileName, string WindowTitleStr, HelpType HelpType, string HelpText)
+        internal static string PropertyPart(UIElement[] UserControls, string FileName, string WindowTitleStr, HelpType HelpType, string HelpText)
         {
             string PropertyPart = "";
             if (UserControls.Length == 0)
@@ -868,7 +868,7 @@ namespace PaintDotNet.Effects
             PropertyPart += "\r\n";
 
             // generate OnCustomizeConfigUIWindowProperties()
-            if (WindowTitleStr.Length > 0 || ((HelpText.Length > 0) && (HelpType != HelpType.None)) || OnWindowHelpButtonClickedExists)
+            if (WindowTitleStr.Length > 0 || HelpType == HelpType.Custom || ((HelpText.Length > 0) && (HelpType != HelpType.None)))
             {
                 PropertyPart += "        protected override void OnCustomizeConfigUIWindowProperties(PropertyCollection props)\r\n";
                 PropertyPart += "        {\r\n";
@@ -877,7 +877,7 @@ namespace PaintDotNet.Effects
                     PropertyPart += "            // Change the effect's window title\r\n";
                     PropertyPart += "            props[ControlInfoPropertyNames.WindowTitle].Value = \"" + WindowTitleStr.Replace("\"", "''") + "\";\r\n";
                 }
-                if (OnWindowHelpButtonClickedExists)
+                if (HelpType == HelpType.Custom)
                 {
                     PropertyPart += "            props[ControlInfoPropertyNames.WindowHelpContentType].Value = WindowHelpContentType.CustomViaCallback;\r\n";
                 }
@@ -912,14 +912,13 @@ namespace PaintDotNet.Effects
             return PropertyPart;
         }
 
-        internal static string HelpPart(bool OnWindowHelpButtonClickedExists, HelpType HelpType, string HelpText)
+        internal static string HelpPart(HelpType HelpType, string HelpText)
         {
-            if (OnWindowHelpButtonClickedExists || HelpType == HelpType.None || HelpType == HelpType.PlainText || HelpText.Length == 0)
+            if (HelpType == HelpType.PlainText || HelpType == HelpType.None || HelpType == HelpType.Custom ||  HelpText.Length == 0)
             {
                 return string.Empty;
             }
 
-            // If the user didn't include an OnWindowHelpButtonClicked function, we'll add our own UBB help solution
             string HelpPart = "";
             if (HelpType == HelpType.URL)
             {
@@ -1201,8 +1200,8 @@ namespace PaintDotNet.Effects
             string sSupportInfoPart = SupportInfoPart(menuname, SupportURL);
             string sCategoryPart = CategoryPart(isAdjustment);
             string sEffectPart = EffectPart(UserControls, FileName, submenuname, menuname, iconpath, effectFlags, renderingSchedule);
-            string sHelpPart = HelpPart(SourceCode.Contains("OnWindowHelpButtonClicked"), HelpType, HelpText);
-            string sPropertyPart = PropertyPart(UserControls, SourceCode.Contains("OnWindowHelpButtonClicked"), FileName, WindowTitleStr, HelpType, HelpText);
+            string sHelpPart = HelpPart(HelpType, HelpText);
+            string sPropertyPart = PropertyPart(UserControls, FileName, WindowTitleStr, HelpType, HelpText);
             string sSetRenderPart = SetRenderPart(UserControls, true, preRenderRegex.IsMatch(SourceCode));
             string sRenderLoopPart = RenderLoopPart(UserControls);
             string sUserEnteredPart = UserEnteredPart(SourceCode);

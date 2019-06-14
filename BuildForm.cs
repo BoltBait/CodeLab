@@ -47,6 +47,7 @@ namespace PaintDotNet.Effects
         private string FullScriptText = "";
         private string FileName = "";
         private readonly bool isClassic;
+        private readonly bool customHelp;
 
         internal BuildForm(string ScriptName, string ScriptText, string ScriptPath, bool isClassic)
         {
@@ -280,6 +281,17 @@ namespace PaintDotNet.Effects
                         // If something went wrong, don't crash, just assume the file is invalid
                     }
                 }
+
+                if (Regex.IsMatch(ScriptText, @"void OnWindowHelpButtonClicked\(IWin32Window owner, string helpContent\)(\s)*{(.|\s)*}", RegexOptions.Singleline))
+                {
+                    customHelp = true;
+                    radioButtonNone.Checked = true;
+                    radioButtonNone.Text = "Custom";
+
+                    radioButtonURL.Enabled = false;
+                    radioButtonPlain.Enabled = false;
+                    radioButtonRich.Enabled = false;
+                }
             }
             else
             {
@@ -375,7 +387,7 @@ namespace PaintDotNet.Effects
             if (radioButtonNone.Checked)
             {
                 HelpStr = "";
-                HelpType = HelpType.None;
+                HelpType = customHelp ? HelpType.Custom : HelpType.None;
             }
             if (radioButtonURL.Checked)
             {
@@ -1215,6 +1227,7 @@ namespace PaintDotNet.Effects
         None,
         URL,
         PlainText,
-        RichText
+        RichText,
+        Custom
     }
 }
