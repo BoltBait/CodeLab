@@ -83,6 +83,9 @@ namespace PaintDotNet.Effects
             FullScriptText = ScriptText;
             FileName = ScriptName;
 
+            // Will the plugin have a User Interface
+            bool hasUI = UIElement.ProcessUIControls(ScriptText).Length > 0;
+
             // Preload submenu name
             Regex RESubMenu = new Regex(@"//[\s-[\r\n]]*SubMenu[\s-[\r\n]]*:[\s-[\r\n]]*(?<sublabel>.*)(?=\r?\n|$)", RegexOptions.IgnoreCase);
             Match msm = RESubMenu.Match(ScriptText);
@@ -111,12 +114,21 @@ namespace PaintDotNet.Effects
             }
 
             // Preload window title
-            Regex RETitle = new Regex(@"//[\s-[\r\n]]*Title[\s-[\r\n]]*:[\s-[\r\n]]*(?<titlelabel>.*)(?=\r?\n|$)", RegexOptions.IgnoreCase);
-            Match wtn = RETitle.Match(ScriptText);
-            if (wtn.Success)
+            if (hasUI)
             {
-                WindowTitleText.Text = wtn.Groups["titlelabel"].Value.Trim();
+                Regex RETitle = new Regex(@"//[\s-[\r\n]]*Title[\s-[\r\n]]*:[\s-[\r\n]]*(?<titlelabel>.*)(?=\r?\n|$)", RegexOptions.IgnoreCase);
+                Match wtn = RETitle.Match(ScriptText);
+                if (wtn.Success)
+                {
+                    WindowTitleText.Text = wtn.Groups["titlelabel"].Value.Trim();
+                }
             }
+            else
+            {
+                label3.Enabled = false;
+                WindowTitleText.Enabled = false;
+            }
+
 
             // Preload version checking for period
             Regex REVersion = new Regex(@"//[\s-[\r\n]]*Version[\s-[\r\n]]*:[\s-[\r\n]]*(?<majorversionlabel>\d+)\.(?<minorversionlabel>\d+)(?=\r?\n|$)", RegexOptions.IgnoreCase);
@@ -186,60 +198,45 @@ namespace PaintDotNet.Effects
             forceSingleRenderBox.Checked = RESingleRenderCall.IsMatch(ScriptText);
             #endregion
 
-            #region Load Help Text
-            // Preload help text
-            Regex REHelp = new Regex(@"//[\s-[\r\n]]*Help[\s-[\r\n]]*:[\s-[\r\n]]*(?<helptext>.*)(?=\r?\n|$)", RegexOptions.IgnoreCase);
-            Match hlp = REHelp.Match(ScriptText);
-            if (hlp.Success)
-            {
-                HelpStr = hlp.Groups["helptext"].Value.Trim();
-                if (HelpStr.StartsWith("http://", StringComparison.OrdinalIgnoreCase) || HelpStr.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
-                {
-                    HelpURL.Text = HelpStr;
-                    radioButtonURL.Checked = true;
-                }
-                else
-                {
-                    HelpPlainText.Text = HelpStr.Replace("\\\\t", "[t]").Replace("\\\\n", "[n]").Replace("\\n", "\r\n").Replace("\\t", "\t").Replace("[t]", "\\\\t").Replace("[n]", "\\\\n");
-                    radioButtonPlain.Checked = true;
-                }
-            }
-
-            if (HelpPlainText.Text.Length == 0)
-            {
-                HelpPlainText.Text = $"{MenuName.Text} v{MajorVersion.Value}{DecimalSymbol.Text}{MinorVersion.Value}\r\nCopyright ©{DateTime.Now.Year} by {AuthorName.Text}\r\nAll rights reserved.";
-                if (radioButtonNone.Checked)
-                {
-                    radioButtonPlain.Checked = true;
-                }
-            }
-
             string resourcePath = Path.Combine(Path.GetDirectoryName(ScriptPath), ScriptName);
 
-            // See if a help file exists
-            try
+            #region Load Help Text
+            if (hasUI)
             {
-                string rtfPath = Path.ChangeExtension(resourcePath, ".rtf");
-                if (File.Exists(rtfPath))
+                // Preload help text
+                Regex REHelp = new Regex(@"//[\s-[\r\n]]*Help[\s-[\r\n]]*:[\s-[\r\n]]*(?<helptext>.*)(?=\r?\n|$)", RegexOptions.IgnoreCase);
+                Match hlp = REHelp.Match(ScriptText);
+                if (hlp.Success)
                 {
-                    RichHelpContent.Rtf = File.ReadAllText(rtfPath);
-                    radioButtonRich.Checked = true;
+                    HelpStr = hlp.Groups["helptext"].Value.Trim();
+                    if (HelpStr.StartsWith("http://", StringComparison.OrdinalIgnoreCase) || HelpStr.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
+                    {
+                        HelpURL.Text = HelpStr;
+                        radioButtonURL.Checked = true;
+                    }
+                    else
+                    {
+                        HelpPlainText.Text = HelpStr.Replace("\\\\t", "[t]").Replace("\\\\n", "[n]").Replace("\\n", "\r\n").Replace("\\t", "\t").Replace("[t]", "\\\\t").Replace("[n]", "\\\\n");
+                        radioButtonPlain.Checked = true;
+                    }
                 }
-            }
-            catch
-            {
-                // If something went wrong, don't crash, just assume the file is invalid
-            }
 
-            if (RichHelpContent.Text.Length == 0)
-            {
+                if (HelpPlainText.Text.Length == 0)
+                {
+                    HelpPlainText.Text = $"{MenuName.Text} v{MajorVersion.Value}{DecimalSymbol.Text}{MinorVersion.Value}\r\nCopyright ©{DateTime.Now.Year} by {AuthorName.Text}\r\nAll rights reserved.";
+                    if (radioButtonNone.Checked)
+                    {
+                        radioButtonPlain.Checked = true;
+                    }
+                }
+
+                // See if a help file exists
                 try
                 {
-                    string rtzPath = Path.ChangeExtension(resourcePath, ".rtz");
-                    if (File.Exists(rtzPath))
+                    string rtfPath = Path.ChangeExtension(resourcePath, ".rtf");
+                    if (File.Exists(rtfPath))
                     {
-                        string compressedContents = File.ReadAllText(rtzPath);
-                        RichHelpContent.Rtf = DecompressString(compressedContents);
+                        RichHelpContent.Rtf = File.ReadAllText(rtfPath);
                         radioButtonRich.Checked = true;
                     }
                 }
@@ -247,24 +244,48 @@ namespace PaintDotNet.Effects
                 {
                     // If something went wrong, don't crash, just assume the file is invalid
                 }
-            }
 
-            if (RichHelpContent.Text.Length == 0)
-            {
-                try
+                if (RichHelpContent.Text.Length == 0)
                 {
-                    string txtPath = Path.ChangeExtension(resourcePath, ".txt");
-                    if (File.Exists(txtPath))
+                    try
                     {
-                        RichHelpContent.Text = File.ReadAllText(txtPath);
-                        ChangeUBBtoRTF();
-                        radioButtonRich.Checked = true;
+                        string rtzPath = Path.ChangeExtension(resourcePath, ".rtz");
+                        if (File.Exists(rtzPath))
+                        {
+                            string compressedContents = File.ReadAllText(rtzPath);
+                            RichHelpContent.Rtf = DecompressString(compressedContents);
+                            radioButtonRich.Checked = true;
+                        }
+                    }
+                    catch
+                    {
+                        // If something went wrong, don't crash, just assume the file is invalid
                     }
                 }
-                catch
+
+                if (RichHelpContent.Text.Length == 0)
                 {
-                    // If something went wrong, don't crash, just assume the file is invalid
+                    try
+                    {
+                        string txtPath = Path.ChangeExtension(resourcePath, ".txt");
+                        if (File.Exists(txtPath))
+                        {
+                            RichHelpContent.Text = File.ReadAllText(txtPath);
+                            ChangeUBBtoRTF();
+                            radioButtonRich.Checked = true;
+                        }
+                    }
+                    catch
+                    {
+                        // If something went wrong, don't crash, just assume the file is invalid
+                    }
                 }
+            }
+            else
+            {
+                radioButtonURL.Enabled = false;
+                radioButtonPlain.Enabled = false;
+                radioButtonRich.Enabled = false;
             }
             #endregion
 
