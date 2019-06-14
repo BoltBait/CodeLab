@@ -881,7 +881,7 @@ namespace PaintDotNet.Effects
                 {
                     PropertyPart += "            props[ControlInfoPropertyNames.WindowHelpContentType].Value = WindowHelpContentType.CustomViaCallback;\r\n";
                 }
-                if ((HelpText.Length > 0) && (HelpType != HelpType.None))
+                else if ((HelpText.Length > 0) && (HelpType != HelpType.None))
                 {
                     string helpContent = HelpText.Replace('"', '\'').Replace("\n", "\\n").Replace("\r", "").Replace("\t", "\\t").Replace("\"", "\\\"");
 
