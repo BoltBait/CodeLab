@@ -98,7 +98,7 @@ namespace PaintDotNet.Effects
             DefaultColorComboBox.Items.Add("SecondaryColor");
             DefaultColorComboBox.Items.AddRange(GetColorNames());
 
-            MasterList = UIElement.ProcessUIControls(UserScriptText);
+            MasterList.AddRange(UIElement.ProcessUIControls(UserScriptText));
             foreach (UIElement element in MasterList)
             {
                 IDList.Add(element.Identifier);
@@ -1138,7 +1138,7 @@ namespace PaintDotNet.Effects
             "FilenameControl"           // 14
         };
 
-        internal static List<UIElement> ProcessUIControls(string SourceCode)
+        internal static UIElement[] ProcessUIControls(string SourceCode)
         {
             string UIControlsText = "";
             Regex REUIControlsContainer = new Regex(@"\#region UICode(?<sublabel>.*?)\#endregion", RegexOptions.Singleline | RegexOptions.IgnoreCase);
@@ -1169,12 +1169,13 @@ namespace PaintDotNet.Effects
                         }
                     }
                 }
-                else
-                {
-                    // No UI controls found
-                    UIControlsText = "";
-                }
             }
+
+            if (UIControlsText.Length == 0)
+            {
+                return Array.Empty<UIElement>();
+            }
+
             // process those UI controls
             string[] SrcLines = UIControlsText.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
             List<UIElement> UserControls = new List<UIElement>();
@@ -1192,7 +1193,8 @@ namespace PaintDotNet.Effects
                     UserControls.Add(element);
                 }
             }
-            return UserControls;
+
+            return UserControls.ToArray();
         }
 
         internal UIElement(ElementType eType, string eName, string eMin, string eMax, string eDefault, string eOptions, int eStyle, bool eEnabled, string targetIdentifier, bool eSwap, string identifier)

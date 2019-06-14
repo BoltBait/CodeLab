@@ -263,7 +263,7 @@ namespace PaintDotNet.Effects
             return CategoryPart;
         }
 
-        internal static string EffectPart(List<UIElement> UserControls, string FileName, string submenuname, string menuname, string iconpath, EffectFlags effectFlags, EffectRenderingSchedule renderingSchedule)
+        internal static string EffectPart(UIElement[] UserControls, string FileName, string submenuname, string menuname, string iconpath, EffectFlags effectFlags, EffectRenderingSchedule renderingSchedule)
         {
             menuname = menuname.Trim().Replace('"', '\'');
             if (menuname.Length == 0)
@@ -346,7 +346,7 @@ namespace PaintDotNet.Effects
             EffectPart += "        public " + NameSpace + "Plugin()\r\n";
 
             // Set Effect Flags
-            string flags = (UserControls.Count != 0) ? "EffectFlags.Configurable" : "EffectFlags.None";
+            string flags = (UserControls.Length != 0) ? "EffectFlags.Configurable" : "EffectFlags.None";
             if (effectFlags.HasFlag(EffectFlags.ForceAliasedSelectionQuality)) flags += " | EffectFlags.ForceAliasedSelectionQuality";
             if (effectFlags.HasFlag(EffectFlags.SingleThreaded)) flags += " | EffectFlags.SingleThreaded";
 
@@ -378,10 +378,10 @@ namespace PaintDotNet.Effects
             return EffectPart;
         }
 
-        internal static string PropertyPart(List<UIElement> UserControls, bool OnWindowHelpButtonClickedExists, string FileName, string WindowTitleStr, HelpType HelpType, string HelpText)
+        internal static string PropertyPart(UIElement[] UserControls, bool OnWindowHelpButtonClickedExists, string FileName, string WindowTitleStr, HelpType HelpType, string HelpText)
         {
             string PropertyPart = "";
-            if (UserControls.Count == 0)
+            if (UserControls.Length == 0)
             {
                 // No controls, so no User Interface. Generate an empty OnCreatePropertyCollection()
                 PropertyPart += "        protected override PropertyCollection OnCreatePropertyCollection()\r\n";
@@ -616,7 +616,7 @@ namespace PaintDotNet.Effects
                         continue;
                     }
 
-                    int index = UserControls.FindIndex(element => element.Identifier == u.EnableIdentifier);
+                    int index = Array.FindIndex(UserControls, element => element.Identifier == u.EnableIdentifier);
 
                     if (index < 0)
                     {
@@ -1047,7 +1047,7 @@ namespace PaintDotNet.Effects
             return HelpPart;
         }
 
-        internal static string SetRenderPart(List<UIElement> UserControls, bool toDll, bool PreRenderExists)
+        internal static string SetRenderPart(UIElement[] UserControls, bool toDll, bool PreRenderExists)
         {
             string SetRenderPart = "";
             if (!toDll && !PreRenderExists)
@@ -1059,7 +1059,7 @@ namespace PaintDotNet.Effects
             SetRenderPart += "        protected override void OnSetRenderInfo(" + tokenType + " newToken, RenderArgs dstArgs, RenderArgs srcArgs)\r\n";
             SetRenderPart += "        {\r\n";
 
-            if (toDll && UserControls.Count > 0)
+            if (toDll && UserControls.Length > 0)
             {
                 foreach (UIElement u in UserControls)
                 {
@@ -1132,7 +1132,7 @@ namespace PaintDotNet.Effects
             return SetRenderPart;
         }
 
-        internal static string RenderLoopPart(List<UIElement> UserControls)
+        internal static string RenderLoopPart(UIElement[] UserControls)
         {
             string RenderLoopPart = "";
             RenderLoopPart += "        protected override unsafe void OnRender(Rectangle[] rois, int startIndex, int length)\r\n";
@@ -1192,7 +1192,7 @@ namespace PaintDotNet.Effects
 
         internal static string FullSourceCode(string SourceCode, string FileName, bool isAdjustment, string submenuname, string menuname, string iconpath, string SupportURL, EffectFlags effectFlags, EffectRenderingSchedule renderingSchedule, string Author, int MajorVersion, int MinorVersion, string Description, string KeyWords, string WindowTitleStr, HelpType HelpType, string HelpText)
         {
-            List<UIElement> UserControls = UIElement.ProcessUIControls(SourceCode);
+            UIElement[] UserControls = UIElement.ProcessUIControls(SourceCode);
             Regex preRenderRegex = new Regex(@"void PreRender\(Surface dst, Surface src\)(\s)*{(.|\s)*}", RegexOptions.Singleline);
 
             string sUsingPart = UsingPartCode;

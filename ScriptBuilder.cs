@@ -104,7 +104,7 @@ namespace PaintDotNet.Effects
             string SourceCode =
                 ScriptWriter.UsingPartCode +
                 ScriptWriter.prepend_code +
-                ScriptWriter.SetRenderPart(new List<UIElement>(), false, preRenderRegex.IsMatch(scriptText)) +
+                ScriptWriter.SetRenderPart(Array.Empty<UIElement>(), false, preRenderRegex.IsMatch(scriptText)) +
                 ScriptWriter.UserEnteredPart(scriptText) +
                 ScriptWriter.append_code;
 
@@ -361,7 +361,7 @@ namespace PaintDotNet.Effects
             const string FileName = "PreviewEffect";
 
             // Generate code
-            List<UIElement> UserControls = UIElement.ProcessUIControls(scriptText);
+            UIElement[] UserControls = UIElement.ProcessUIControls(scriptText);
 
             string SourceCode =
                 ScriptWriter.UsingPartCode +
@@ -408,7 +408,7 @@ namespace PaintDotNet.Effects
             uiCode = "#region UICode\r\n" + uiCode + "\r\n#endregion\r\n";
 
             // Generate code
-            List<UIElement> UserControls = UIElement.ProcessUIControls(uiCode);
+            UIElement[] UserControls = UIElement.ProcessUIControls(uiCode);
 
             string SourceCode =
                 ScriptWriter.UsingPartCode +
