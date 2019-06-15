@@ -87,7 +87,8 @@ namespace PaintDotNet.Effects
                 ResUtil.GetImage("11ReseedButton"),
                 ResUtil.GetImage("12MultiTextBox"),
                 ResUtil.GetImage("13RollControl"),
-                ResUtil.GetImage("14FilenameControl")
+                ResUtil.GetImage("14FilenameControl"),
+                ResUtil.GetImage("15Uri")
             });
 
             ControlListView.SmallImageList = imgList;
@@ -163,6 +164,7 @@ namespace PaintDotNet.Effects
         {
             ElementType elementType = Enum.IsDefined(typeof(ElementType), ControlType.SelectedIndex) ? (ElementType)ControlType.SelectedIndex : ElementType.IntSlider;
             string defaultStr = (elementType == ElementType.ColorWheel) ? DefaultColorComboBox.SelectedItem.ToString() : ControlDef.Text;
+            if (elementType == ElementType.Uri) defaultStr = OptionsText.Text.Trim();
             string identifier = ControlID.Text.Trim();
             if (identifier.Length == 0 || IDList.Contains(identifier))
             {
@@ -502,6 +504,28 @@ namespace PaintDotNet.Effects
                 ControlStyle.SelectedIndex = 0;
                 OptionsText.Text = "png|jpg|gif|bmp";
             }
+            else if (ControlType.Text == "Web Link")
+            {
+                OptionsLabel.Visible = true;
+                OptionsText.Visible = true;
+                DefaultColorComboBox.Visible = false;
+                ControlMin.Visible = false;
+                ControlMax.Visible = false;
+                ControlDef.Visible = false;
+                MinimumLabel.Visible = false;
+                MaximumLabel.Visible = false;
+                DefaultLabel.Visible = false;
+                ControlDef.Enabled = false;
+                ControlMax.Enabled = false;
+                ControlMin.Enabled = false;
+                ControlMax.Text = "255";
+                ControlMin.Text = "0";
+                ControlDef.Text = "0";
+                StyleLabel.Enabled = false;
+                ControlStyle.Enabled = false;
+                ControlStyle.SelectedIndex = 0;
+                OptionsText.Text = "https://www.GetPaint.net";
+            }
         }
 
         private void FillStyleDropDown(int Style)
@@ -545,6 +569,7 @@ namespace PaintDotNet.Effects
 
             ElementType elementType = Enum.IsDefined(typeof(ElementType), ControlType.SelectedIndex) ? (ElementType)ControlType.SelectedIndex : ElementType.IntSlider;
             string defaultStr = (elementType == ElementType.ColorWheel) ? DefaultColorComboBox.SelectedItem.ToString() : ControlDef.Text;
+            if (elementType == ElementType.Uri) defaultStr = OptionsText.Text.Trim();
             string identifier = !string.IsNullOrWhiteSpace(ControlID.Text) ? ControlID.Text.Trim() : "Amount" + (MasterList.Count + 1);
             string enableIndentifer = (this.rbEnabledWhen.Checked) ? MasterList[enabledWhenField.SelectedIndex].Identifier : string.Empty;
             UIElement uiElement = new UIElement(elementType, ControlName.Text, ControlMin.Text, ControlMax.Text, defaultStr, OptionsText.Text, ControlStyle.SelectedIndex, rbEnabledWhen.Checked, enableIndentifer, (enabledWhenCondition.SelectedIndex != 0), identifier);
@@ -753,6 +778,14 @@ namespace PaintDotNet.Effects
                     BarLoc = CurrentElement.Name.IndexOf("|", StringComparison.Ordinal);
                     OptionsText.Text = CurrentElement.Name.Substring(BarLoc + 1);
                     ControlName.Text = CurrentElement.ToShortName();
+                    break;
+                case ElementType.Uri:
+                    ControlType.Text = "Web Link";
+                    ControlStyle.SelectedIndex = 0;
+                    ControlMin.Text = CurrentElement.Min.ToString();
+                    ControlMax.Text = CurrentElement.Max.ToString();
+                    ControlDef.Text = CurrentElement.Default.ToString();
+                    OptionsText.Text = CurrentElement.Link;
                     break;
                 default:
                     break;
@@ -1119,6 +1152,7 @@ namespace PaintDotNet.Effects
         internal readonly bool EnableSwap = false;
         internal readonly string EnableIdentifier = string.Empty;
         internal readonly string Identifier = "Amount";
+        internal readonly string Link = "";
 
         private static readonly string[] NewSourceCodeType = {
             "IntSliderControl",         // 0
@@ -1135,7 +1169,8 @@ namespace PaintDotNet.Effects
             "ReseedButtonControl",      // 11
             "MultiLineTextboxControl",  // 12
             "RollControl",              // 13
-            "FilenameControl"           // 14
+            "FilenameControl",          // 14
+            "Uri"                       // 15
         };
 
         internal static UIElement[] ProcessUIControls(string SourceCode)
@@ -1336,6 +1371,13 @@ namespace PaintDotNet.Effects
                     if (NameLength == -1) NameLength = Name.Length;
                     Description = Name.Substring(0, NameLength) + EnabledDescription;
                     break;
+                case ElementType.Uri:
+                    Min = 0;
+                    Max = 255;
+                    Default = 0;
+                    Link = eDefault;
+                    Description = eName + " (Web Link)" + EnabledDescription;
+                    break;
             }
 
             Identifier = identifier;
@@ -1486,6 +1528,10 @@ namespace PaintDotNet.Effects
             {
                 elementType = ElementType.Filename;
             }
+            else if (TypeStr == "Uri")
+            {
+                elementType = ElementType.Uri;
+            }
             #region Detections for legacy scripts
             else if (TypeStr == "bool")
             {
@@ -1560,7 +1606,7 @@ namespace PaintDotNet.Effects
                 dMin = 0;
             }
 
-            string defaultValue;
+            string defaultValue = "";
             if (elementType == ElementType.ColorWheel)
             {
                 if (DefaultColor.EndsWith("?!", StringComparison.Ordinal)) // Alpha - No Reset
@@ -1582,6 +1628,16 @@ namespace PaintDotNet.Effects
                 {
                     defaultValue = DefaultColor;
                     style = 0;
+                }
+            }
+            else if (elementType == ElementType.Uri)
+            {
+                string pattern = @"""(?<uri>.*?[^\\])""";
+                Regex REUri = new Regex(pattern);
+                Match muri = REUri.Match(DefaultStr);
+                if (muri.Success)
+                {
+                    defaultValue = muri.Groups["uri"].Value;
                 }
             }
             else
@@ -1707,6 +1763,9 @@ namespace PaintDotNet.Effects
                 case ElementType.Filename:
                     SourceCode += " = @\"\"; // ";
                     break;
+                case ElementType.Uri:
+                    SourceCode += " = new Uri(\"" + Link + "\"); // ";
+                    break;
                 default:
                     break;
             }
@@ -1778,6 +1837,7 @@ namespace PaintDotNet.Effects
         ReseedButton,
         MultiLineTextbox,
         RollBall,
-        Filename
+        Filename,
+        Uri
     }
 }

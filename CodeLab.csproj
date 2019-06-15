@@ -360,6 +360,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Icons\CodeLab.64.png" />
+    <EmbeddedResource Include="Icons\15Uri.png" />
   </ItemGroup>
   <PropertyGroup>
     <PostBuildEvent>if $(ConfigurationName) == Release (

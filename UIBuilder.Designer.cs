@@ -342,7 +342,8 @@ namespace PaintDotNet.Effects
             "Reseed Button",
             "Multi-Line String",
             "3D Roll Control",
-            "Filename Control"});
+            "Filename Control",
+            "Web Link"});
             this.ControlType.Location = new System.Drawing.Point(75, 34);
             this.ControlType.MaxDropDownItems = 12;
             this.ControlType.Name = "ControlType";
