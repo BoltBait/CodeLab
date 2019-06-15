@@ -196,6 +196,11 @@ namespace PaintDotNet.Effects
                         unFilteredItems.Add(new IntelliBoxItem(field.Name, field.Name, toolTip, fieldType));
                         break;
                     case MemberTypes.NestedType:
+                        if (!isStatic)
+                        {
+                            continue;
+                        }
+
                         Type nestedType = (Type)memberInfo;
                         IntelliType intelliType = IntelliType.Type;
                         string subType = "Type";
