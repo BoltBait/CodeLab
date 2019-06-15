@@ -705,7 +705,17 @@ namespace PaintDotNet.Effects
             {
                 string propertyName = u.Identifier.FirstCharToUpper();
 
-                PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.DisplayName, " + ((u.ElementType == ElementType.Checkbox || u.ElementType == ElementType.ReseedButton) ? "string.Empty" : "\"" + u.ToShortName() + "\"") + ");\r\n";
+                if (u.ElementType == ElementType.Checkbox ||
+                    u.ElementType == ElementType.ReseedButton ||
+                    u.ElementType == ElementType.Uri)
+                {
+                    PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.DisplayName, string.Empty);\r\n";
+                }
+                else
+                {
+                    PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.DisplayName, " + "\"" + u.ToShortName() + "\"" + ");\r\n";
+                }
+
                 if ((u.ElementType == ElementType.IntSlider || u.ElementType == ElementType.DoubleSlider) && u.Style > 0)
                 {
                     switch (u.Style)
@@ -864,6 +874,10 @@ namespace PaintDotNet.Effects
                     PropertyPart += u.ToAllowableFileTypes();
                     PropertyPart += " });\r\n";
                     PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.AllowAllFiles, true);\r\n";
+                }
+                else if (u.ElementType == ElementType.Uri)
+                {
+                    PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.Description, \"" + u.Name + "\");\r\n";
                 }
             }
             PropertyPart += "\r\n";
