@@ -598,6 +598,9 @@ namespace PaintDotNet.Effects
                     case ElementType.Filename:
                         PropertyPart += "            props.Add(new StringProperty(PropertyNames." + propertyName + ", \"\"));\r\n";
                         break;
+                    case ElementType.Uri:
+                        PropertyPart += "            props.Add(new UriProperty(PropertyNames." + propertyName + ", new Uri(\"" + u.Link + "\")));\r\n";
+                        break;
                     default:
                         break;
                 }
@@ -659,8 +662,9 @@ namespace PaintDotNet.Effects
                         case ElementType.RollBall:
                             PropertyPart += "            propRules.Add(new ReadOnlyBoundToValueRule<Tuple<double, double, double>, DoubleVector3Property>(PropertyNames." + propertyName + ", PropertyNames." + propertyName2 + ", Tuple.Create(0d,0d,0d), " + (!u.EnableSwap).ToString().ToLower() + "));\r\n";
                             break;
-                            //BinaryPixelOp
-                            //FontFamily
+                        //BinaryPixelOp
+                        //FontFamily
+                        //Uri
                     }
                 }
                 PropertyPart += "\r\n";
