@@ -550,7 +550,7 @@ namespace PaintDotNet.Effects
                 string errorMsg = (errorList.SelectedItem is ScriptError error) ? error.ErrorText : errorList.SelectedItem.ToString();
                 if (!errorMsg.IsNullOrEmpty())
                 {
-                    Clipboard.SetText(errorMsg);
+                    System.Windows.Forms.Clipboard.SetText(errorMsg);
                 }
             }
         }

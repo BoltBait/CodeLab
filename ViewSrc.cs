@@ -81,7 +81,7 @@ namespace PaintDotNet.Effects
 
         private void CopyButton_Click(object sender, EventArgs e)
         {
-            Clipboard.SetText(TextSrcBox.Text);
+            System.Windows.Forms.Clipboard.SetText(TextSrcBox.Text);
         }
     }
 }

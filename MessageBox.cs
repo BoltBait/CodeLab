@@ -842,7 +842,7 @@ namespace PaintDotNet.Effects
                                          + STANDARD_MESSAGEBOX_SEPARATOR_LINES;
 
                     //Set text in clipboard
-                    Clipboard.SetText(textForClipboard);
+                    System.Windows.Forms.Clipboard.SetText(textForClipboard);
                 }
             }
 

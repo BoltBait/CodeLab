@@ -832,14 +832,14 @@ namespace PaintDotNet.Effects
 
         private void InsertImage(Image img)
         {
-            IDataObject obj = Clipboard.GetDataObject();
-            Clipboard.Clear();
+            IDataObject obj = System.Windows.Forms.Clipboard.GetDataObject();
+            System.Windows.Forms.Clipboard.Clear();
 
-            Clipboard.SetImage(img);
+            System.Windows.Forms.Clipboard.SetImage(img);
             RichHelpContent.Paste();
 
-            Clipboard.Clear();
-            Clipboard.SetDataObject(obj);
+            System.Windows.Forms.Clipboard.Clear();
+            System.Windows.Forms.Clipboard.SetDataObject(obj);
         }
 
         private void DoColor()
