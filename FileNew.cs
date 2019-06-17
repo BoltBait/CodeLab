@@ -692,22 +692,7 @@ namespace PaintDotNet.Effects
             // setup for using the clipboard
             if (EffectCode.Text.Contains("Clipboard"))
             {
-                code += cr;
-                code += "// Setup for getting an image from the clipboard" + cr;
-                code += "protected Surface img" + cr;
-                code += "{" + cr;
-                code += "    get" + cr;
-                code += "    {" + cr;
-                code += "        if (!readClipboard)" + cr;
-                code += "        {" + cr;
-                code += "            readClipboard = true;" + cr;
-                code += "            _img = Services.GetService<IClipboardService>().TryGetSurface();" + cr;
-                code += "        }" + cr;
-                code += cr;
-                code += "        return _img;" + cr;
-                code += "    }" + cr;
-                code += "}" + cr;
-                code += "private Surface _img = null;" + cr;
+                code += "private Surface clipboardSurface = null;" + cr;
                 code += "private bool readClipboard = false;" + cr;
                 code += cr;
             }
@@ -731,8 +716,8 @@ namespace PaintDotNet.Effects
                 }
                 if (EffectCode.Text.Contains("Clipboard"))
                 {
-                    code += "        if (_img != null) _img.Dispose();" + cr;
-                    code += "        _img = null;" + cr;
+                    code += "        if (clipboardSurface != null) clipboardSurface.Dispose();" + cr;
+                    code += "        clipboardSurface = null;" + cr;
                 }
                 code += "    }" + cr;
                 code += cr;
@@ -753,7 +738,15 @@ namespace PaintDotNet.Effects
                 code += cr;
             }
 
-            if (EffectCode.Text.Contains("Gaussian Blur"))
+            if (EffectCode.Text.Contains("Clipboard"))
+            {
+                code += "    if (!readClipboard)" + cr;
+                code += "    {" + cr;
+                code += "        readClipboard = true;" + cr;
+                code += "        clipboardSurface = Services.GetService<IClipboardService>().TryGetSurface();" + cr;
+                code += "    }" + cr;
+            }
+            else if (EffectCode.Text.Contains("Gaussian Blur"))
             {
                 code += "    blurProps = blurEffect.CreatePropertyCollection();" + cr;
                 code += "    PropertyBasedEffectConfigToken BlurParameters = new PropertyBasedEffectConfigToken(blurProps);" + cr;
@@ -1439,9 +1432,9 @@ namespace PaintDotNet.Effects
                 {
                     code += "            if (IsCancelRequested) return;" + cr;
                     code += "            // If clipboard has an image, get it" + cr;
-                    code += "            if (img != null)" + cr;
+                    code += "            if (clipboardSurface != null)" + cr;
                     code += "            {" + cr;
-                    code += "                CurrentPixel = img.GetBilinearSampleWrapped(x, y);" + cr;
+                    code += "                CurrentPixel = clipboardSurface.GetBilinearSampleWrapped(x, y);" + cr;
                     code += "            }" + cr;
                 }
                 code += cr;
