@@ -712,7 +712,7 @@ namespace PaintDotNet.Effects
                 code += cr;
             }
 
-            if (SurfaceCode.Checked || EffectName.Length > 0)
+            if (SurfaceCode.Checked || EffectName.Length > 0 || EffectCode.Text.Contains("Clipboard"))
             {
                 code += "protected override void OnDispose(bool disposing)" + cr;
                 code += "{" + cr;
@@ -728,6 +728,11 @@ namespace PaintDotNet.Effects
                 {
                     code += "        if (" + EffectName + " != null) " + EffectName + ".Dispose();" + cr;
                     code += "        " + EffectName + " = null;" + cr;
+                }
+                if (EffectCode.Text.Contains("Clipboard"))
+                {
+                    code += "        if (_img != null) _img.Dispose();" + cr;
+                    code += "        _img = null;" + cr;
                 }
                 code += "    }" + cr;
                 code += cr;
