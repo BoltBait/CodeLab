@@ -222,6 +222,7 @@
     <EmbeddedResource Include="Icons\12MultiTextBox.png" />
     <EmbeddedResource Include="Icons\13RollControl.png" />
     <EmbeddedResource Include="Icons\14FilenameControl.png" />
+    <EmbeddedResource Include="Icons\15Uri.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Icons\00int.32.png" />
@@ -239,6 +240,7 @@
     <EmbeddedResource Include="Icons\12MultiTextBox.32.png" />
     <EmbeddedResource Include="Icons\13RollControl.32.png" />
     <EmbeddedResource Include="Icons\14FilenameControl.32.png" />
+    <EmbeddedResource Include="Icons\15Uri.32.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Icons\Keyword.png" />
@@ -360,7 +362,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Icons\CodeLab.64.png" />
-    <EmbeddedResource Include="Icons\15Uri.png" />
   </ItemGroup>
   <PropertyGroup>
     <PostBuildEvent>if $(ConfigurationName) == Release (
