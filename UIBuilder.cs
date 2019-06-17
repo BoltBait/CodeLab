@@ -180,6 +180,12 @@ namespace PaintDotNet.Effects
         private void ControlType_SelectedIndexChanged(object sender, EventArgs e)
         {
             dirty = true;
+
+            // reset options
+            OptionsLabel.Text = "Options:";
+            toolTip1.SetToolTip(this.OptionsText, "Separate options with the vertical bar character (|)");
+
+            // setup UI based on selected control type
             if (ControlType.Text == "Integer Slider")
             {
                 OptionsLabel.Visible = false;
@@ -525,6 +531,8 @@ namespace PaintDotNet.Effects
                 ControlStyle.Enabled = false;
                 ControlStyle.SelectedIndex = 0;
                 OptionsText.Text = "https://www.GetPaint.net";
+                OptionsLabel.Text = "URL:";
+                toolTip1.SetToolTip(this.OptionsText, "URL must begin with 'http://' or 'https://' to be valid.");
             }
         }
 
@@ -1118,6 +1126,43 @@ namespace PaintDotNet.Effects
             bool error = (newID.Length == 0 || (newID != this.currentID && IDList.Contains(newID)) || !newID.IsCSharpIndentifier());
             ControlID.ForeColor = error ? Color.Black : Color.Black;
             ControlID.BackColor = error ? Color.FromArgb(246, 97, 81) : Color.White;
+        }
+
+        private void OptionsText_TextChanged(object sender, EventArgs e)
+        {
+            dirty = true;
+            string newOptions = OptionsText.Text.Trim().ToLowerInvariant();
+            bool error = false;
+            if (ControlType.Text == "Web Link")
+            {
+                // Make sure the URL is valid.
+                if (!(newOptions.StartsWith("http://") || newOptions.StartsWith("https://")))
+                {
+                    error = true;
+                }
+                else
+                {
+                    try
+                    {
+                        Uri uri = new Uri(newOptions);
+                    }
+                    catch
+                    {
+                        error = true;
+                    }
+                }
+            }
+            else
+            {
+                // Make sure it looks like options (should contain at least one | character.
+                // Although not TECHNICALLY required... let's make it required anyway.
+                if (!newOptions.Contains("|"))
+                {
+                    error = true;
+                }
+            }
+            OptionsText.ForeColor = error ? Color.Black : Color.Black;
+            OptionsText.BackColor = error ? Color.FromArgb(246, 97, 81) : Color.White;
         }
     }
 

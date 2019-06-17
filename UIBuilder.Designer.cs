@@ -202,6 +202,7 @@ namespace PaintDotNet.Effects
             this.OptionsText.TabIndex = 11;
             this.toolTip1.SetToolTip(this.OptionsText, "Separate options with the vertical bar character (|)");
             this.OptionsText.Visible = false;
+            this.OptionsText.TextChanged += new System.EventHandler(this.OptionsText_TextChanged);
             // 
             // UpdateBtn
             // 
