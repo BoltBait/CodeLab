@@ -974,7 +974,6 @@ namespace PaintDotNet.Effects
 
         private void UIDesigner()
         {
-            txtCode.ReNumberUIVariables();
             // User Interface Designer
             UIBuilder myUIBuilderForm = new UIBuilder(txtCode.Text, ColorBgra.Black);  // This should be the current Primary color
             if (myUIBuilderForm.ShowDialog() == DialogResult.OK)
@@ -1125,11 +1124,6 @@ namespace PaintDotNet.Effects
         private void userInterfaceDesignerToolStripMenuItem_Click(object sender, EventArgs e)
         {
             UIDesigner();
-        }
-
-        private void userInterfaceRenumberToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            txtCode.ReNumberUIVariables();
         }
 
         private void previewEffectMenuItem_Click(object sender, EventArgs e)

@@ -71,7 +71,6 @@
             this.saveAsDLLToolStripMenuItem = new PaintDotNet.Effects.ScaledToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.userInterfaceDesignerToolStripMenuItem = new PaintDotNet.Effects.ScaledToolStripMenuItem();
-            this.userInterfaceRenumberToolStripMenuItem = new PaintDotNet.Effects.ScaledToolStripMenuItem();
             this.previewEffectMenuItem = new PaintDotNet.Effects.ScaledToolStripMenuItem();
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new PaintDotNet.Effects.ScaledToolStripMenuItem();
@@ -454,7 +453,6 @@
             this.saveAsDLLToolStripMenuItem,
             this.toolStripSeparator4,
             this.userInterfaceDesignerToolStripMenuItem,
-            this.userInterfaceRenumberToolStripMenuItem,
             this.previewEffectMenuItem,
             this.toolStripSeparator7,
             this.exitToolStripMenuItem});
@@ -543,16 +541,6 @@
             this.userInterfaceDesignerToolStripMenuItem.Size = new System.Drawing.Size(234, 22);
             this.userInterfaceDesignerToolStripMenuItem.Text = "User Interface Designer";
             this.userInterfaceDesignerToolStripMenuItem.Click += new System.EventHandler(this.userInterfaceDesignerToolStripMenuItem_Click);
-            // 
-            // userInterfaceRenumberToolStripMenuItem
-            // 
-            this.userInterfaceRenumberToolStripMenuItem.ImageName = "Renumber";
-            this.userInterfaceRenumberToolStripMenuItem.Name = "userInterfaceRenumberToolStripMenuItem";
-            this.userInterfaceRenumberToolStripMenuItem.ShortcutKeyDisplayString = "Ctrl+R";
-            this.userInterfaceRenumberToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.R)));
-            this.userInterfaceRenumberToolStripMenuItem.Size = new System.Drawing.Size(234, 22);
-            this.userInterfaceRenumberToolStripMenuItem.Text = "Renumber UI Variables";
-            this.userInterfaceRenumberToolStripMenuItem.Click += new System.EventHandler(this.userInterfaceRenumberToolStripMenuItem_Click);
             // 
             // previewEffectMenuItem
             // 
@@ -1491,7 +1479,6 @@
         private ScaledToolStripMenuItem indentToolStripMenuItem1;
         private ScaledToolStripMenuItem unindentToolStripMenuItem1;
         private ScaledToolStripMenuItem userInterfaceDesignerToolStripMenuItem;
-        private ScaledToolStripMenuItem userInterfaceRenumberToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
         private ScaledToolStripMenuItem helpTopicsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem checkForUpdatesToolStripMenuItem;

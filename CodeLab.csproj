@@ -273,7 +273,6 @@
   <ItemGroup>
     <EmbeddedResource Include="Icons\CodeLab.png" />
     <EmbeddedResource Include="Icons\About.png" />
-    <EmbeddedResource Include="Icons\Renumber.png" />
     <EmbeddedResource Include="Icons\Redo.png" />
     <EmbeddedResource Include="Icons\Undo.png" />
     <EmbeddedResource Include="Icons\Exit.png" />
@@ -352,7 +351,6 @@
     <EmbeddedResource Include="Icons\FormDesigner.32.png" />
     <EmbeddedResource Include="Icons\IncreaseFontSize.32png.png" />
     <EmbeddedResource Include="Icons\Newspaper.32.png" />
-    <EmbeddedResource Include="Icons\Renumber.32.png" />
     <EmbeddedResource Include="Icons\Bulb.32.png" />
   </ItemGroup>
   <ItemGroup>

@@ -587,6 +587,7 @@ namespace PaintDotNet.Effects
             this.ClearCmdKey(Keys.Control | Keys.H); // Find and Replace
             this.ClearCmdKey(Keys.Control | Keys.J); // Open IntelliBox
             this.ClearCmdKey(Keys.Control | Keys.Q); // Format Document
+            this.ClearCmdKey(Keys.Control | Keys.R); // unassigned
             this.ClearCmdKey(Keys.Control | Keys.G); // unassigned
             this.ClearCmdKey(Keys.Control | Keys.P); // Preview Effect
 
@@ -3297,92 +3298,6 @@ namespace PaintDotNet.Effects
                 }
             }
             this.EndUndoAction();
-        }
-
-        internal void ReNumberUIVariables()
-        {
-            if (!this.Text.Contains("#region UICode") || !this.Text.Contains("#endregion"))
-            {
-                return;
-            }
-
-            int start = this.Text.IndexOf("#region UICode", StringComparison.Ordinal) + 16;
-            int length = this.Text.IndexOf("#endregion", StringComparison.Ordinal) - start;
-            string[] UiCodeText = this.GetTextRange(start, length).Split('\n');
-            List<string> UIlist = new List<string>();
-            foreach (string item in UiCodeText)
-            {
-                string trimmed = item.Trim();
-                if (trimmed.Length > 0)
-                {
-                    UIlist.Add(trimmed);
-                }
-            }
-
-            bool needReNumbering = false;
-            for (int i = 0; i < UIlist.Count; i++)
-            {
-                if (!UIlist[i].Contains("Amount" + (i + 1).ToString()))
-                {
-                    needReNumbering = true;
-                    break;
-                }
-            }
-
-            if (!needReNumbering)
-            {
-                return;
-            }
-
-            Regex REAmt = new Regex(@"\s*(?<type>.*)\s+Amount(?<amt>\d+)\s*=\s*(?<default>.*);\s*\/{2}(?<rawcomment>.*)");
-            List<KeyValuePair<int, int>> data = new List<KeyValuePair<int, int>>();
-            for (int i = 0; i < UIlist.Count; i++)
-            {
-                Match m = REAmt.Match(UIlist[i]);
-                if (!m.Success)
-                {
-                    continue;
-                }
-
-                if (int.TryParse(m.Groups["amt"].Value, out int fm))
-                {
-                    data.Add(new KeyValuePair<int, int>(fm, i + 1));
-                }
-            }
-
-            const string modifier = "_R!e!N!u!M!b!E!r_";
-            this.BeginUndoAction();
-            for (int i = 0; i < data.Count; i++)
-            {
-                Replace("Amount" + data[i].Key.ToString(), "Amount" + modifier + data[i].Value.ToString(), SearchFlags.MatchCase | SearchFlags.WholeWord);
-            }
-
-            Replace(modifier, string.Empty, SearchFlags.None);
-            this.EndUndoAction();
-
-            OnBuildNeeded();
-
-
-            void Replace(string oldValue, string newValue, SearchFlags searchFlags)
-            {
-                if (oldValue.Length == 0)
-                {
-                    return;
-                }
-
-                // Search the document
-                this.TargetWholeDocument();
-                this.SearchFlags = searchFlags;
-
-                while (this.SearchInTarget(oldValue) != InvalidPosition)
-                {
-                    // Replace the instance with new string
-                    this.ReplaceTarget(newValue);
-
-                    // Search the remainder of the document
-                    this.SetTargetRange(this.TargetEnd, this.TextLength);
-                }
-            }
         }
 
         internal void RenameVariable()
