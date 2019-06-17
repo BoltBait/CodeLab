@@ -2847,6 +2847,17 @@ namespace PaintDotNet.Effects
                         this.Selections[0].AnchorVirtualSpace = 0;
                     }
                 }
+                else if (this.Selections[0].AnchorVirtualSpace != this.Selections[0].CaretVirtualSpace)
+                {
+                    this.Selections[0].CaretVirtualSpace = this.Selections[0].AnchorVirtualSpace;
+                    this.ChooseCaretX();
+                }
+                else if (this.Selections[0].AnchorVirtualSpace == this.Selections[0].CaretVirtualSpace)
+                {
+                    this.Selections[0].CaretVirtualSpace = 0;
+                    this.Selections[0].AnchorVirtualSpace = 0;
+                    this.ChooseCaretX();
+                }
             }
 
             if (e.Change.HasFlag(UpdateChange.Selection) || e.Change.HasFlag(UpdateChange.Content))
@@ -3115,17 +3126,6 @@ namespace PaintDotNet.Effects
             UpdateIndicatorBar();
 
             base.OnMarginClick(e);
-        }
-
-        protected override void OnMouseClick(MouseEventArgs e)
-        {
-            base.OnMouseClick(e);
-
-            if (this.Selections[0].AnchorVirtualSpace > 0)
-            {
-                this.Selections[0].CaretVirtualSpace = this.Selections[0].AnchorVirtualSpace;
-                this.ChooseCaretX();
-            }
         }
         #endregion
 
