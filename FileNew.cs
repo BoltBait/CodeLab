@@ -2,6 +2,7 @@
 // CodeLab for Paint.NET
 // Portions Copyright ©2007-2018 BoltBait. All Rights Reserved.
 // Portions Copyright ©2018 Jason Wendt. All Rights Reserved.
+// Portions Copyright ©2019 Nicholas Hayes. All Rights Reserved.
 // Portions Copyright ©Microsoft Corporation. All Rights Reserved.
 //
 // THE CODELAB DEVELOPERS MAKE NO WARRANTY OF ANY KIND REGARDING THE CODE. THEY
@@ -691,67 +692,12 @@ namespace PaintDotNet.Effects
             // setup for using the clipboard
             if (EffectCode.Text.Contains("Clipboard"))
             {
-                code += cr;
-                code += "// Setup for getting an image from the clipboard" + cr;
-                code += "protected Surface img" + cr;
-                code += "{" + cr;
-                code += "    get" + cr;
-                code += "    {" + cr;
-                code += "        if (_img != null)" + cr;
-                code += "            return _img;" + cr;
-                code += "        else" + cr;
-                code += "        {" + cr;
-                code += "            Thread t = new Thread(new ThreadStart(GetImageFromClipboard));" + cr;
-                code += "            t.SetApartmentState(ApartmentState.STA);" + cr;
-                code += "            t.Start();" + cr;
-                code += "            t.Join();" + cr;
-                code += "            return _img;" + cr;
-                code += "        }" + cr;
-                code += "    }" + cr;
-                code += "}" + cr;
-                code += "private Surface _img = null;" + cr;
-                code += "private void GetImageFromClipboard()" + cr;
-                code += "{" + cr;
-                code += "    Bitmap aimg = null;" + cr;
-                code += "    IDataObject clippy;" + cr;
-                code += "    try" + cr;
-                code += "    {" + cr;
-                code += "        clippy = Clipboard.GetDataObject();" + cr;
-                code += "        if (clippy != null)" + cr;
-                code += "        {" + cr;
-                code += "            if (Clipboard.ContainsData(\"PNG\"))" + cr;
-                code += "            {" + cr;
-                code += "                // Handle bitmaps with transparency" + cr;
-                code += "                Object png_object = Clipboard.GetData(\"PNG\");" + cr;
-                code += "                if (png_object is MemoryStream)" + cr;
-                code += "                {" + cr;
-                code += "                    MemoryStream png_stream = png_object as MemoryStream;" + cr;
-                code += "                    aimg = (Bitmap)Image.FromStream(png_stream);" + cr;
-                code += "                }" + cr;
-                code += "            }" + cr;
-                code += "            else if (clippy.GetDataPresent(DataFormats.Bitmap))" + cr;
-                code += "            {" + cr;
-                code += "                // If that didn't work, try bitmaps without transparency" + cr;
-                code += "                aimg = (Bitmap)clippy.GetData(typeof(Bitmap));" + cr;
-                code += "            }" + cr;
-                code += "        }" + cr;
-                code += "    }" + cr;
-                code += "    catch (Exception)" + cr;
-                code += "    {" + cr;
-                code += "    }" + cr;
-                code += "    if (aimg != null)" + cr;
-                code += "    {" + cr;
-                code += "        _img = Surface.CopyFromBitmap(aimg);" + cr;
-                code += "    }" + cr;
-                code += "    else" + cr;
-                code += "    {" + cr;
-                code += "        _img = null;" + cr;
-                code += "    }" + cr;
-                code += "}" + cr;
+                code += "private Surface clipboardSurface = null;" + cr;
+                code += "private bool readClipboard = false;" + cr;
                 code += cr;
             }
 
-            if (SurfaceCode.Checked || EffectName.Length > 0)
+            if (SurfaceCode.Checked || EffectName.Length > 0 || EffectCode.Text.Contains("Clipboard"))
             {
                 code += "protected override void OnDispose(bool disposing)" + cr;
                 code += "{" + cr;
@@ -767,6 +713,11 @@ namespace PaintDotNet.Effects
                 {
                     code += "        if (" + EffectName + " != null) " + EffectName + ".Dispose();" + cr;
                     code += "        " + EffectName + " = null;" + cr;
+                }
+                if (EffectCode.Text.Contains("Clipboard"))
+                {
+                    code += "        if (clipboardSurface != null) clipboardSurface.Dispose();" + cr;
+                    code += "        clipboardSurface = null;" + cr;
                 }
                 code += "    }" + cr;
                 code += cr;
@@ -787,7 +738,15 @@ namespace PaintDotNet.Effects
                 code += cr;
             }
 
-            if (EffectCode.Text.Contains("Gaussian Blur"))
+            if (EffectCode.Text.Contains("Clipboard"))
+            {
+                code += "    if (!readClipboard)" + cr;
+                code += "    {" + cr;
+                code += "        readClipboard = true;" + cr;
+                code += "        clipboardSurface = Services.GetService<IClipboardService>().TryGetSurface();" + cr;
+                code += "    }" + cr;
+            }
+            else if (EffectCode.Text.Contains("Gaussian Blur"))
             {
                 code += "    blurProps = blurEffect.CreatePropertyCollection();" + cr;
                 code += "    PropertyBasedEffectConfigToken BlurParameters = new PropertyBasedEffectConfigToken(blurProps);" + cr;
@@ -1473,9 +1432,9 @@ namespace PaintDotNet.Effects
                 {
                     code += "            if (IsCancelRequested) return;" + cr;
                     code += "            // If clipboard has an image, get it" + cr;
-                    code += "            if (img != null)" + cr;
+                    code += "            if (clipboardSurface != null)" + cr;
                     code += "            {" + cr;
-                    code += "                CurrentPixel = img.GetBilinearSampleWrapped(x, y);" + cr;
+                    code += "                CurrentPixel = clipboardSurface.GetBilinearSampleWrapped(x, y);" + cr;
                     code += "            }" + cr;
                 }
                 code += cr;

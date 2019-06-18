@@ -89,6 +89,7 @@ namespace PaintDotNet.Effects
             + "using PaintDotNet;\r\n"
             + "using PaintDotNet.Effects;\r\n"
             + "using PaintDotNet.AppModel;\r\n"
+            + "using PaintDotNet.Clipboard;\r\n"
             + "using PaintDotNet.IndirectUI;\r\n"
             + "using PaintDotNet.Collections;\r\n"
             + "using PaintDotNet.PropertySystem;\r\n"
