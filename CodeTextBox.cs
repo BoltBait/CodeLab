@@ -53,8 +53,6 @@ namespace PaintDotNet.Effects
         #region Variables for different states
         private Theme theme;
         private int posAtIBox = InvalidPosition;
-        private int varToRenamePos = InvalidPosition;
-        private string varToRename = string.Empty;
         private int previousLine = 0;
         private int dwellWordPos = InvalidPosition;
         private int lastCaretPos = 0;
@@ -468,7 +466,7 @@ namespace PaintDotNet.Effects
             this.renameVarMenuItem.Name = "renameVarMenuItem";
             this.renameVarMenuItem.Size = new Size(152, 22);
             this.renameVarMenuItem.Text = "Rename";
-            this.renameVarMenuItem.Click += RenameVar_Click;
+            this.renameVarMenuItem.Click += RenameButton_Click;
 
             #region ScintillaNET Initializers
             this.StyleResetDefault();
@@ -495,11 +493,11 @@ namespace PaintDotNet.Effects
             this.Indicators[Indicator.ObjectHighlight].OutlineAlpha = 255;
 
             // Set the styles for variable rename
-            this.Indicators[Indicator.VariableRename].Style = IndicatorStyle.DotBox;
-            this.Indicators[Indicator.VariableRename].Under = true;
-            this.Indicators[Indicator.VariableRename].ForeColor = Color.DimGray;
-            this.Indicators[Indicator.VariableRename].OutlineAlpha = 255;
-            this.Indicators[Indicator.VariableRename].Alpha = 0;
+            this.Indicators[Indicator.Rename].Style = IndicatorStyle.DotBox;
+            this.Indicators[Indicator.Rename].Under = true;
+            this.Indicators[Indicator.Rename].ForeColor = Color.DimGray;
+            this.Indicators[Indicator.Rename].OutlineAlpha = 255;
+            this.Indicators[Indicator.Rename].Alpha = 0;
 
             // Set the styles for focused Object Definition
             this.Indicators[Indicator.ObjectHighlightDef].Style = IndicatorStyle.StraightBox;
@@ -2083,7 +2081,7 @@ namespace PaintDotNet.Effects
                 if (e.KeyCode == Keys.Escape)
                 {
                     // Clear indicator for variable renaming
-                    ClearVarToRename();
+                    ClearRenaming();
                 }
                 else if (e.KeyCode == Keys.Tab)
                 {
@@ -2597,15 +2595,6 @@ namespace PaintDotNet.Effects
 
             this.Focus();
         }
-
-        private void ClearVarToRename()
-        {
-            varToRename = string.Empty;
-            varToRenamePos = InvalidPosition;
-
-            this.IndicatorCurrent = Indicator.VariableRename;
-            this.IndicatorClearRange(0, this.TextLength);
-        }
         #endregion
 
         #region Find and Replace functions
@@ -2997,56 +2986,16 @@ namespace PaintDotNet.Effects
                 this.SetTargetRange(oldRange.Item1, oldRange.Item2);
             }
 
-            // Adjust or disable indicator for Variable Renaming
-            int wordStartPos = this.WordStartPosition(this.CurrentPosition, true);
-            int wordEndPos = this.WordEndPosition(this.CurrentPosition, true) - 1;
-            if (IsIndicatorOn(Indicator.VariableRename, wordStartPos) || IsIndicatorOn(Indicator.VariableRename, wordEndPos) || this.CurrentPosition == varToRenamePos)
-            {
-                int endPos = wordStartPos;
-                while (IsIndicatorOn(Indicator.VariableRename, endPos) && endPos <= this.TextLength)
-                {
-                    endPos++;
-                }
-
-                int nonSpacePos = wordStartPos;
-                while (!char.IsWhiteSpace(this.GetCharAt(nonSpacePos)) && nonSpacePos <= endPos)
-                {
-                    nonSpacePos++;
-                }
-
-                if ((endPos == nonSpacePos - 1 || endPos == nonSpacePos) && this.GetWordFromPosition(this.CurrentPosition) != varToRename)
-                {
-                    int length = this.WordEndPosition(this.CurrentPosition, true) - wordStartPos;
-
-                    this.IndicatorCurrent = Indicator.VariableRename;
-                    this.IndicatorFillRange(wordStartPos, length);
-                }
-                else
-                {
-                    ClearVarToRename();
-                }
-            }
-            else
-            {
-                ClearVarToRename();
-            }
+            AdjustRenaming();
 
             base.OnTextChanged(e);
         }
 
         protected override void OnBeforeDelete(BeforeModificationEventArgs e)
         {
-            // Set indicator for Variable Renaming?
-            int wordStartPos = this.WordStartPosition(e.Position, true);
-            if (e.Source == ModificationSource.User && GetIntelliType(wordStartPos) == IntelliType.Variable &&
-                !IsIndicatorOn(Indicator.VariableRename, wordStartPos) && e.Text.Trim().Length > 0 && !Replacing)
+            if (e.Source == ModificationSource.User && e.Text.Trim().Length > 0 && !Replacing)
             {
-                varToRenamePos = wordStartPos;
-                varToRename = this.GetWordFromPosition(e.Position);
-                int length = this.WordEndPosition(e.Position, true) - wordStartPos;
-
-                this.IndicatorCurrent = Indicator.VariableRename;
-                this.IndicatorFillRange(wordStartPos, length);
+                SetUpRenaming(e.Position);
             }
 
             base.OnBeforeDelete(e);
@@ -3054,17 +3003,9 @@ namespace PaintDotNet.Effects
 
         protected override void OnBeforeInsert(BeforeModificationEventArgs e)
         {
-            // Set indicator for Variable Renaming?
-            int wordStartPos = this.WordStartPosition(e.Position, true);
-            if (e.Source == ModificationSource.User && GetIntelliType(wordStartPos) == IntelliType.Variable &&
-                !IsIndicatorOn(Indicator.VariableRename, wordStartPos) && e.Text.Trim().Length > 0 && !Replacing)
+            if (e.Source == ModificationSource.User && e.Text.Trim().Length > 0 && !Replacing)
             {
-                varToRenamePos = wordStartPos;
-                varToRename = this.GetWordFromPosition(e.Position);
-                int length = this.WordEndPosition(e.Position, true) - wordStartPos;
-
-                this.IndicatorCurrent = Indicator.VariableRename;
-                this.IndicatorFillRange(wordStartPos, length);
+                SetUpRenaming(e.Position);
             }
 
             base.OnBeforeInsert(e);
@@ -3299,19 +3240,87 @@ namespace PaintDotNet.Effects
             }
             this.EndUndoAction();
         }
+        #endregion
 
-        internal void RenameVariable()
+        #region Renaming
+        private void SetUpRenaming(int position)
         {
-            this.SetEmptySelection(varToRenamePos);
-            string newVar = this.GetWordFromPosition(varToRenamePos);
+            int wordStartPos = this.WordStartPosition(position, true);
+            IntelliType intelliType = GetIntelliType(wordStartPos);
+            if (IsIndicatorOn(Indicator.Rename, wordStartPos) ||
+                (intelliType != IntelliType.Variable && intelliType != IntelliType.Field))
+            {
+                return;
+            }
 
-            ParseLocalVariables(this.CurrentPosition);
+            RenameInfo.Position = wordStartPos;
+            RenameInfo.Identifier = this.GetWordFromPosition(position);
+            RenameInfo.IntelliType = intelliType;
+
+            int length = this.WordEndPosition(position, true) - wordStartPos;
+
+            this.IndicatorCurrent = Indicator.Rename;
+            this.IndicatorFillRange(wordStartPos, length);
+        }
+
+        private void AdjustRenaming()
+        {
+            int wordStartPos = this.WordStartPosition(this.CurrentPosition, true);
+            int wordEndPos = this.WordEndPosition(this.CurrentPosition, true) - 1;
+            if (IsIndicatorOn(Indicator.Rename, wordStartPos) || IsIndicatorOn(Indicator.Rename, wordEndPos) || this.CurrentPosition == RenameInfo.Position)
+            {
+                int endPos = wordStartPos;
+                while (IsIndicatorOn(Indicator.Rename, endPos) && endPos <= this.TextLength)
+                {
+                    endPos++;
+                }
+
+                int nonSpacePos = wordStartPos;
+                while (!char.IsWhiteSpace(this.GetCharAt(nonSpacePos)) && nonSpacePos <= endPos)
+                {
+                    nonSpacePos++;
+                }
+
+                if ((endPos == nonSpacePos - 1 || endPos == nonSpacePos) && this.GetWordFromPosition(this.CurrentPosition) != RenameInfo.Identifier)
+                {
+                    int length = this.WordEndPosition(this.CurrentPosition, true) - wordStartPos;
+
+                    this.IndicatorCurrent = Indicator.Rename;
+                    this.IndicatorFillRange(wordStartPos, length);
+                }
+                else
+                {
+                    ClearRenaming();
+                }
+            }
+            else
+            {
+                ClearRenaming();
+            }
+        }
+
+        private void ClearRenaming()
+        {
+            RenameInfo.Clear();
+
+            this.IndicatorCurrent = Indicator.Rename;
+            this.IndicatorClearRange(0, this.TextLength);
+        }
+
+        private void DoRename()
+        {
+            this.SetEmptySelection(RenameInfo.Position);
+            string newName = this.GetWordFromPosition(RenameInfo.Position);
 
             // re-add the old variable to dictionary.
             // it will be automatically removed during the next ParseVariables();
-            if (!Intelli.Variables.ContainsKey(varToRename))
+            if (RenameInfo.IntelliType == IntelliType.Variable)
             {
-                Intelli.Variables.Add(varToRename, Intelli.Variables[newVar]);
+                ParseLocalVariables(this.CurrentPosition);
+                if (!Intelli.Variables.ContainsKey(RenameInfo.Identifier))
+                {
+                    Intelli.Variables.Add(RenameInfo.Identifier, Intelli.Variables[newName]);
+                }
             }
 
             // Search the document
@@ -3319,12 +3328,12 @@ namespace PaintDotNet.Effects
             this.SearchFlags = SearchFlags.MatchCase | SearchFlags.WholeWord;
 
             this.BeginUndoAction();
-            while (this.SearchInTarget(varToRename) != InvalidPosition)
+            while (this.SearchInTarget(RenameInfo.Identifier) != InvalidPosition)
             {
-                if (GetIntelliType(this.TargetStart) == IntelliType.Variable)
+                if (GetIntelliType(this.TargetStart) == RenameInfo.IntelliType)
                 {
                     // Replace the instance with new string
-                    this.ReplaceTarget(newVar);
+                    this.ReplaceTarget(newName);
                 }
 
                 // Search the remainder of the document
@@ -3332,15 +3341,19 @@ namespace PaintDotNet.Effects
             }
             this.EndUndoAction();
 
-            ClearVarToRename();
+            ClearRenaming();
 
-            ParseLocalVariables(this.CurrentPosition);
+            if (RenameInfo.IntelliType == IntelliType.Variable)
+            {
+                ParseLocalVariables(this.CurrentPosition);
+            }
+
             HighlightWordUsage();
         }
 
-        private void RenameVar_Click(object sender, EventArgs e)
+        private void RenameButton_Click(object sender, EventArgs e)
         {
-            RenameVariable();
+            DoRename();
             OnBuildNeeded();
         }
         #endregion
@@ -3487,9 +3500,9 @@ namespace PaintDotNet.Effects
                 intelliTip.Show(tooltipText, this, e.X, y);
             }
 
-            if (this.IsIndicatorOn(Indicator.VariableRename, e.Position))
+            if (this.IsIndicatorOn(Indicator.Rename, e.Position))
             {
-                renameVarMenuItem.Text = $"Rename '{varToRename}' to '{this.GetWordFromPosition(e.Position)}'";
+                renameVarMenuItem.Text = $"Rename '{RenameInfo.Identifier}' to '{this.GetWordFromPosition(e.Position)}'";
                 lightBulbMenu.Location = new Point(this.PointXFromPosition(e.Position) - lightBulbMenu.Width - 10,
                                                    this.PointYFromPosition(e.Position) + this.Lines[this.CurrentLine].Height);
                 lightBulbMenu.Show();
@@ -3668,7 +3681,7 @@ namespace PaintDotNet.Effects
             internal const int Error = 8;
             internal const int ObjectHighlight = 9;
             internal const int ObjectHighlightDef = 10;
-            internal const int VariableRename = 11;
+            internal const int Rename = 11;
             internal const int Find = 12;
         }
 
@@ -3686,6 +3699,20 @@ namespace PaintDotNet.Effects
             internal const uint Mask = (1 << 3);
         }
         #endregion
+
+        private static class RenameInfo
+        {
+            internal static int Position = InvalidPosition;
+            internal static string Identifier = string.Empty;
+            internal static IntelliType IntelliType = IntelliType.None;
+
+            internal static void Clear()
+            {
+                Position = InvalidPosition;
+                Identifier = string.Empty;
+                IntelliType = IntelliType.None;
+            }
+        }
     }
 
     public enum Theme
