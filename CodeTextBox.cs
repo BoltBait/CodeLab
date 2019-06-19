@@ -3253,7 +3253,7 @@ namespace PaintDotNet.Effects
                 return;
             }
 
-            if (intelliType == IntelliType.Field && GetDeclaringType(position).FullName != "PaintDotNet.Effects.UserScript")
+            if (intelliType == IntelliType.Field && GetDeclaringType(position).FullName != Intelli.UserScriptFullName)
             {
                 return;
             }

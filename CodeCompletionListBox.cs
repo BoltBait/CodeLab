@@ -118,7 +118,7 @@ namespace PaintDotNet.Effects
 
             foreach (MemberInfo memberInfo in members)
             {
-                if ((!memberInfo.ReflectedType.IsVisible && memberInfo.DeclaringType?.DeclaringType?.FullName != "PaintDotNet.Effects.UserScript") ||
+                if ((!memberInfo.ReflectedType.IsVisible && memberInfo.DeclaringType?.DeclaringType?.FullName != Intelli.UserScriptFullName) ||
                     memberInfo.ReflectedType.IsSpecialName || memberInfo.GetCustomAttribute<ObsoleteAttribute>() != null)
                 {
                     continue;

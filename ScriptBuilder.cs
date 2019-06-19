@@ -134,7 +134,7 @@ namespace PaintDotNet.Effects
                         userScriptObject = (Effect)type.GetConstructor(Type.EmptyTypes).Invoke(null);
                         Intelli.UserScript = type;
                     }
-                    else if (type.DeclaringType != null && type.DeclaringType.FullName.StartsWith("PaintDotNet.Effects.UserScript", StringComparison.Ordinal) && !Intelli.UserDefinedTypes.ContainsKey(type.Name))
+                    else if (type.DeclaringType != null && type.DeclaringType.FullName.StartsWith(Intelli.UserScriptFullName, StringComparison.Ordinal) && !Intelli.UserDefinedTypes.ContainsKey(type.Name))
                     {
                         Intelli.UserDefinedTypes.Add(type.Name, type);
                     }

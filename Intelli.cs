@@ -59,6 +59,8 @@ namespace PaintDotNet.Effects
             }
         }
 
+        internal const string UserScriptFullName = "PaintDotNet.Effects.UserScript";
+
         private static Type userScript;
         private static readonly MethodInfo[] extMethods;
 
