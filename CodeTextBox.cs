@@ -3253,6 +3253,11 @@ namespace PaintDotNet.Effects
                 return;
             }
 
+            if (intelliType == IntelliType.Field && GetDeclaringType(position).FullName != "PaintDotNet.Effects.UserScript")
+            {
+                return;
+            }
+
             RenameInfo.Position = wordStartPos;
             RenameInfo.Identifier = this.GetWordFromPosition(position);
             RenameInfo.IntelliType = intelliType;
