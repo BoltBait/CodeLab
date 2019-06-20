@@ -20,6 +20,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -137,10 +138,16 @@ namespace PaintDotNet.Effects
                         }
 
                         string methodParameters = $"({methodInfo.Params()})";
+                        string genericArgs = string.Empty;
+                        if (methodInfo.IsGenericMethod)
+                        {
+                            Type[] args = methodInfo.GetGenericArguments();
+                            genericArgs = $"<{args.Select(t => t.Name).Join(", ")}>";
+                        }
 
                         returnType = methodInfo.ReturnType.GetDisplayName();
-                        toolTip = $"{returnType} - {methodInfo.Name}{methodParameters}\n{methodInfo.MemberType}";
-                        unFilteredItems.Add(new IntelliBoxItem(methodInfo.Name + methodParameters, methodInfo.Name, toolTip, IntelliType.Method));
+                        toolTip = $"{returnType} - {methodInfo.Name}{genericArgs}{methodParameters}\n{methodInfo.MemberType}";
+                        unFilteredItems.Add(new IntelliBoxItem(methodInfo.Name + genericArgs + methodParameters, methodInfo.Name, toolTip, IntelliType.Method));
                         break;
                     case MemberTypes.Property:
                         PropertyInfo property = (PropertyInfo)memberInfo;
@@ -231,10 +238,16 @@ namespace PaintDotNet.Effects
             {
                 foreach (MethodInfo methodInfo in type.GetExtensionMethods())
                 {
+                    string genericArgs = string.Empty;
+                    if (methodInfo.IsGenericMethod)
+                    {
+                        Type[] args = methodInfo.GetGenericArguments();
+                        genericArgs = $"<{args.Select(t => t.Name).Join(", ")}>";
+                    }
                     string methodParameters = $"({methodInfo.Params()})";
                     string returnType = methodInfo.ReturnType.GetDisplayName();
-                    string toolTip = $"{returnType} - {methodInfo.Name}{methodParameters}\nExtension {methodInfo.MemberType}";
-                    unFilteredItems.Add(new IntelliBoxItem(methodInfo.Name + methodParameters, methodInfo.Name, toolTip, IntelliType.Method));
+                    string toolTip = $"{returnType} - {methodInfo.Name}{genericArgs}{methodParameters}\nExtension {methodInfo.MemberType}";
+                    unFilteredItems.Add(new IntelliBoxItem(methodInfo.Name + genericArgs + methodParameters, methodInfo.Name, toolTip, IntelliType.Method));
                 }
             }
 
