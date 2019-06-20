@@ -68,14 +68,14 @@ namespace PaintDotNet.Effects
         {
             return (from method in extMethods
                     where method.Name == methodName
-                    where method.GetParameters()[0].ParameterType == extendedType
+                    where method.GetParameters()[0].ParameterType == extendedType || extendedType.IsSubclassOf(method.GetParameters()[0].ParameterType) || extendedType.GetInterfaces().Any(t => t == method.GetParameters()[0].ParameterType)
                     select method).ToArray();
         }
 
         internal static MethodInfo[] GetExtensionMethods(this Type extendedType)
         {
             return (from method in extMethods
-                    where method.GetParameters()[0].ParameterType == extendedType
+                    where method.GetParameters()[0].ParameterType == extendedType || extendedType.IsSubclassOf(method.GetParameters()[0].ParameterType) || extendedType.GetInterfaces().Any(t => t == method.GetParameters()[0].ParameterType)
                     select method).ToArray();
         }
 
@@ -190,6 +190,15 @@ namespace PaintDotNet.Effects
                         AllTypes.Add(name, type);
                     }
 
+                    // Gather extensions methods contained in each type
+                    if (type.IsSealed && !type.IsGenericType && !type.IsNested && type.IsOrHasExtension())
+                    {
+                        extMethodsList.AddRange(
+                            from method in type.GetMethods(BindingFlags.Static | BindingFlags.Public)
+                            where method.IsOrHasExtension()
+                            select method);
+                    }
+
                     if ((type.Namespace == "Microsoft.Win32" || type.Namespace == "PaintDotNet" || type.Namespace == "PaintDotNet.Effects" || type.Namespace == "System" ||
                         type.Namespace == "System.Collections.Generic" || type.Namespace == "System.Diagnostics" || type.Namespace == "System.IO.Compression" ||
                         type.Namespace == "System.Drawing" || type.Namespace == "System.Drawing.Drawing2D" || type.Namespace == "System.Drawing.Text" ||
@@ -199,15 +208,6 @@ namespace PaintDotNet.Effects
                     )
                     {
                         AutoCompleteTypes.Add(type.Name, type);
-
-                        // Gather extensions methods contained in each type
-                        if (type.IsSealed && !type.IsGenericType && !type.IsNested && type.IsOrHasExtension())
-                        {
-                            extMethodsList.AddRange(
-                                from method in type.GetMethods(BindingFlags.Static | BindingFlags.Public)
-                                where method.IsOrHasExtension()
-                                select method);
-                        }
                     }
                 }
             }

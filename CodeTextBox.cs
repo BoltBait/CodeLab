@@ -1022,14 +1022,15 @@ namespace PaintDotNet.Effects
                     type.GetMember(tokens[i], BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic) :
                     type.GetMember(tokens[i], (isStatic ? BindingFlags.Static : BindingFlags.Instance) | BindingFlags.Public);
 
+                if (mi.Length == 0 || mi[0].MemberType == MemberTypes.Method)
+                {
+                    MemberInfo[] ext = type.GetExtensionMethod(tokens[i]);
+                    mi = mi.Concat(ext).ToArray();
+                }
+
                 if (mi.Length == 0)
                 {
-                    mi = type.GetExtensionMethod(tokens[i]);
-
-                    if (mi.Length == 0)
-                    {
-                        return IntelliType.None;
-                    }
+                    return IntelliType.None;
                 }
 
                 if (i == tokens.Length - 1)
@@ -1336,14 +1337,15 @@ namespace PaintDotNet.Effects
                     type.GetMember(tokens[i], BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic) :
                     type.GetMember(tokens[i], (isStatic ? BindingFlags.Static : BindingFlags.Instance) | BindingFlags.Public);
 
+                if (mi.Length == 0 || mi[0].MemberType == MemberTypes.Method)
+                {
+                    MemberInfo[] ext = type.GetExtensionMethod(tokens[i]);
+                    mi = mi.Concat(ext).ToArray();
+                }
+
                 if (mi.Length == 0)
                 {
-                    mi = type.GetExtensionMethod(tokens[i]);
-
-                    if (mi.Length == 0)
-                    {
-                        return string.Empty;
-                    }
+                    return string.Empty;
                 }
 
                 if (i == tokens.Length - 1)
@@ -1466,14 +1468,16 @@ namespace PaintDotNet.Effects
             }
             paramStart++;
 
-            string[] paramArray = this.GetTextRange(paramStart, paramEnd - paramStart).Split(',');
+            string[] paramArray = this.GetTextRange(paramStart, paramEnd - paramStart).Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
 
             Tuple<int, int> oldRange = new Tuple<int, int>(this.TargetStart, this.TargetEnd);
             this.SearchFlags = SearchFlags.MatchCase;
             for (int i = 0; i < mi.Length; i++)
             {
-                ParameterInfo[] paramInfo = ((MethodInfo)mi[i]).GetParameters();
-                if (paramInfo.Length != paramArray.Length)
+                MethodInfo method = (MethodInfo)mi[i];
+                ParameterInfo[] paramInfo = method.GetParameters();
+                int paramLength = method.IsOrHasExtension() ? paramInfo.Length - 1 : paramInfo.Length;
+                if (paramLength != paramArray.Length)
                 {
                     continue;
                 }
@@ -1482,7 +1486,7 @@ namespace PaintDotNet.Effects
                 List<string> paraNames = new List<string>();
 
                 this.SetTargetRange(paramStart, paramEnd);
-                for (int j = 0; j < paramInfo.Length; j++)
+                for (int j = 0; j < paramLength; j++)
                 {
                     int paramPos = InvalidPosition;
                     if (this.SearchInTarget(paramArray[j].Trim()) != InvalidPosition)
@@ -1620,14 +1624,15 @@ namespace PaintDotNet.Effects
                     type.GetMember(tokens[i], BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic) :
                     type.GetMember(tokens[i], (isStatic ? BindingFlags.Static : BindingFlags.Instance) | BindingFlags.Public);
 
+                if (mi.Length == 0 || mi[0].MemberType == MemberTypes.Method)
+                {
+                    MemberInfo[] ext = type.GetExtensionMethod(tokens[i]);
+                    mi = mi.Concat(ext).ToArray();
+                }
+
                 if (mi.Length == 0)
                 {
-                    mi = type.GetExtensionMethod(tokens[i]);
-
-                    if (mi.Length == 0)
-                    {
-                        return null;
-                    }
+                    return null;
                 }
 
                 int memberIndex = 0;
@@ -1724,14 +1729,15 @@ namespace PaintDotNet.Effects
                     type.GetMember(tokens[i], BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic) :
                     type.GetMember(tokens[i], (isStatic ? BindingFlags.Static : BindingFlags.Instance) | BindingFlags.Public);
 
+                if (mi.Length == 0 || mi[0].MemberType == MemberTypes.Method)
+                {
+                    MemberInfo[] ext = type.GetExtensionMethod(tokens[i]);
+                    mi = mi.Concat(ext).ToArray();
+                }
+
                 if (mi.Length == 0)
                 {
-                    mi = type.GetExtensionMethod(tokens[i]);
-
-                    if (mi.Length == 0)
-                    {
-                        return null;
-                    }
+                    return null;
                 }
 
                 if (i == tokens.Length - 1)
@@ -1920,14 +1926,15 @@ namespace PaintDotNet.Effects
                     type.GetMember(tokens[i], BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic) :
                     type.GetMember(tokens[i], (isStatic ? BindingFlags.Static : BindingFlags.Instance) | BindingFlags.Public);
 
+                if (mi.Length == 0 || mi[0].MemberType == MemberTypes.Method)
+                {
+                    MemberInfo[] ext = type.GetExtensionMethod(tokens[i]);
+                    mi = mi.Concat(ext).ToArray();
+                }
+
                 if (mi.Length == 0)
                 {
-                    mi = type.GetExtensionMethod(tokens[i]);
-
-                    if (mi.Length == 0)
-                    {
-                        return false;
-                    }
+                    return false;
                 }
 
                 if (i == tokens.Length - 1)
