@@ -1004,13 +1004,8 @@ namespace PaintDotNet.Effects
             else if (Intelli.UserScript.Contains(tokens[0], false))
             {
                 type = Intelli.UserScript;
-                string newTokens = type.Name + "." + string.Join(".", tokens);
-                tokens = newTokens.Split(separator, StringSplitOptions.RemoveEmptyEntries);
-
-                int[] newPositions = new int[tokenPos.Length + 1];
-                newPositions[0] = InvalidPosition;
-                Array.Copy(tokenPos, 0, newPositions, 1, tokenPos.Length);
-                tokenPos = newPositions;
+                tokens = tokens.Prepend(type.Name).ToArray();
+                tokenPos = tokenPos.Prepend(InvalidPosition).ToArray();
             }
             else
             {
@@ -1323,13 +1318,8 @@ namespace PaintDotNet.Effects
             else if (Intelli.UserScript.Contains(tokens[0], false))
             {
                 type = Intelli.UserScript;
-                string newTokens = type.Name + "." + string.Join(".", tokens);
-                tokens = newTokens.Split(separator, StringSplitOptions.RemoveEmptyEntries);
-
-                int[] newPositions = new int[tokenPos.Length + 1];
-                newPositions[0] = InvalidPosition;
-                Array.Copy(tokenPos, 0, newPositions, 1, tokenPos.Length);
-                tokenPos = newPositions;
+                tokens = tokens.Prepend(type.Name).ToArray();
+                tokenPos = tokenPos.Prepend(InvalidPosition).ToArray();
             }
             else
             {
@@ -1612,13 +1602,8 @@ namespace PaintDotNet.Effects
             else if (Intelli.UserScript.Contains(tokens[0], false))
             {
                 type = Intelli.UserScript;
-                string newTokens = type.Name + "." + string.Join(".", tokens);
-                tokens = newTokens.Split('.');
-
-                int[] newPositions = new int[tokenPos.Length + 1];
-                newPositions[0] = InvalidPosition;
-                Array.Copy(tokenPos, 0, newPositions, 1, tokenPos.Length);
-                tokenPos = newPositions;
+                tokens = tokens.Prepend(type.Name).ToArray();
+                tokenPos = tokenPos.Prepend(InvalidPosition).ToArray();
             }
             else
             {
@@ -1721,13 +1706,8 @@ namespace PaintDotNet.Effects
             else if (Intelli.UserScript.Contains(tokens[0], false))
             {
                 type = Intelli.UserScript;
-                string newTokens = type.Name + "." + string.Join(".", tokens);
-                tokens = newTokens.Split(separator, StringSplitOptions.RemoveEmptyEntries);
-
-                int[] newPositions = new int[tokenPos.Length + 1];
-                newPositions[0] = InvalidPosition;
-                Array.Copy(tokenPos, 0, newPositions, 1, tokenPos.Length);
-                tokenPos = newPositions;
+                tokens = tokens.Prepend(type.Name).ToArray();
+                tokenPos = tokenPos.Prepend(InvalidPosition).ToArray();
             }
             else
             {
@@ -1922,13 +1902,8 @@ namespace PaintDotNet.Effects
             else if (Intelli.UserScript.Contains(tokens[0], false))
             {
                 type = Intelli.UserScript;
-                string newTokens = type.Name + "." + string.Join(".", tokens);
-                tokens = newTokens.Split(separator, StringSplitOptions.RemoveEmptyEntries);
-
-                int[] newPositions = new int[tokenPos.Length + 1];
-                newPositions[0] = InvalidPosition;
-                Array.Copy(tokenPos, 0, newPositions, 1, tokenPos.Length);
-                tokenPos = newPositions;
+                tokens = tokens.Prepend(type.Name).ToArray();
+                tokenPos = tokenPos.Prepend(InvalidPosition).ToArray();
             }
             else
             {
