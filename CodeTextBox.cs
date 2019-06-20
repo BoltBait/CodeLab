@@ -2508,14 +2508,8 @@ namespace PaintDotNet.Effects
                 return;
             }
 
-            string[] lastWords = GetLastWords(position).Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
-            if (lastWords.Length == 0)
-            {
-                return;
-            }
-
-            string lastWord = lastWords.Last();
-            bool isStatic = (Intelli.AllTypes.ContainsKey(lastWord) || Intelli.UserDefinedTypes.ContainsKey(lastWord));
+            IntelliType intelliType = GetIntelliType(position);
+            bool isStatic = (intelliType == IntelliType.Class || intelliType == IntelliType.Enum || intelliType == IntelliType.Struct || intelliType == IntelliType.Interface || intelliType == IntelliType.Type);
 
             iBox.Populate(type, isStatic);
 
