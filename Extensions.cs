@@ -123,6 +123,11 @@ namespace PaintDotNet.Effects
             return Regex.Replace(str, @"\{(?:\{[^{}]*\}|[^{}])*\}", string.Empty);
         }
 
+        internal static string StripAngleBrackets(this string str)
+        {
+            return Regex.Replace(str, @"\<(?:\<[^<>]*\>|[^<>])*\>", string.Empty);
+        }
+
         internal static string GetInitials(this string str)
         {
             return new string(str.Where(c => char.IsUpper(c)).ToArray());
@@ -210,6 +215,33 @@ namespace PaintDotNet.Effects
         internal static char ToLowerInvariant(this char c)
         {
             return char.ToLowerInvariant(c);
+        }
+
+        internal static Type GetGenericReturnType(this MethodInfo method, string args)
+        {
+            string[] argArray = args.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+            if (argArray.Length == 0)
+            {
+                return null;
+            }
+
+            List<Type> argTypes = new List<Type>();
+            foreach (string arg in argArray)
+            {
+                if (Intelli.AllTypes.TryGetValue(arg.Trim(), out Type t))
+                {
+                    argTypes.Add(t);
+                }
+            }
+
+            try
+            {
+                return method.MakeGenericMethod(argTypes.ToArray()).ReturnType;
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         internal static string GetEnumValue(this FieldInfo fieldInfo)
