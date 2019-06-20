@@ -811,14 +811,17 @@ namespace PaintDotNet.Effects
             this.SearchFlags = SearchFlags.MatchCase | SearchFlags.WholeWord;
             foreach (string word in docWords)
             {
+                bool isArray = word.Contains("[]", StringComparison.Ordinal);
+                string typeStr = isArray ? word.Replace("[]", string.Empty) : word;
+
                 Type type;
-                if (Intelli.AllTypes.ContainsKey(word))
+                if (Intelli.AllTypes.ContainsKey(typeStr))
                 {
-                    type = Intelli.AllTypes[word];
+                    type = isArray ? Intelli.AllTypes[typeStr].MakeArrayType() : Intelli.AllTypes[typeStr];
                 }
-                else if (Intelli.UserDefinedTypes.ContainsKey(word))
+                else if (Intelli.UserDefinedTypes.ContainsKey(typeStr))
                 {
-                    type = Intelli.UserDefinedTypes[word];
+                    type = isArray ? Intelli.UserDefinedTypes[typeStr].MakeArrayType() : Intelli.UserDefinedTypes[typeStr];
                 }
                 else
                 {

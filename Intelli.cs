@@ -190,15 +190,6 @@ namespace PaintDotNet.Effects
                         AllTypes.Add(name, type);
                     }
 
-                    if (type != typeof(TypedReference))
-                    {
-                        Type arrayType = type.MakeArrayType();
-                        if (!AllTypes.ContainsKey(arrayType.Name))
-                        {
-                            AllTypes.Add(arrayType.Name, arrayType);
-                        }
-                    }
-
                     if ((type.Namespace == "Microsoft.Win32" || type.Namespace == "PaintDotNet" || type.Namespace == "PaintDotNet.Effects" || type.Namespace == "System" ||
                         type.Namespace == "System.Collections.Generic" || type.Namespace == "System.Diagnostics" || type.Namespace == "System.IO.Compression" ||
                         type.Namespace == "System.Drawing" || type.Namespace == "System.Drawing.Drawing2D" || type.Namespace == "System.Drawing.Text" ||
