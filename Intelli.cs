@@ -149,22 +149,6 @@ namespace PaintDotNet.Effects
 
             AutoCompleteTypes = new Dictionary<string, Type>(AllTypes);
 
-            AllTypes.Add("bool[]", typeof(bool).MakeArrayType());
-            AllTypes.Add("byte[]", typeof(byte).MakeArrayType());
-            AllTypes.Add("sbyte[]", typeof(sbyte).MakeArrayType());
-            AllTypes.Add("char[]", typeof(char).MakeArrayType());
-            AllTypes.Add("decimal[]", typeof(decimal).MakeArrayType());
-            AllTypes.Add("double[]", typeof(double).MakeArrayType());
-            AllTypes.Add("float[]", typeof(float).MakeArrayType());
-            AllTypes.Add("int[]", typeof(int).MakeArrayType());
-            AllTypes.Add("uint[]", typeof(uint).MakeArrayType());
-            AllTypes.Add("long[]", typeof(long).MakeArrayType());
-            AllTypes.Add("ulong[]", typeof(ulong).MakeArrayType());
-            AllTypes.Add("object[]", typeof(object).MakeArrayType());
-            AllTypes.Add("short[]", typeof(short).MakeArrayType());
-            AllTypes.Add("ushort[]", typeof(ushort).MakeArrayType());
-            AllTypes.Add("string[]", typeof(string).MakeArrayType());
-
             // Add the referenced assembly types
             List<AssemblyName> assemblies = new List<AssemblyName>();
             assemblies.Add(typeof(Effect).Assembly.GetName());
