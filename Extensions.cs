@@ -279,9 +279,9 @@ namespace PaintDotNet.Effects
             return methodParams.Join(", ");
         }
 
-        internal static bool IsOrHasExtension(this MemberInfo method)
+        internal static bool IsOrHasExtension(this MemberInfo member)
         {
-            return method.IsDefined(typeof(ExtensionAttribute), false);
+            return member.IsDefined(typeof(ExtensionAttribute), false);
         }
 
         internal static Type ExtendingType(this MethodInfo method)

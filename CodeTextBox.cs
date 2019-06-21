@@ -811,7 +811,7 @@ namespace PaintDotNet.Effects
             this.SearchFlags = SearchFlags.MatchCase | SearchFlags.WholeWord;
             foreach (string word in docWords)
             {
-                bool isArray = word.Contains("[]", StringComparison.Ordinal);
+                bool isArray = word.EndsWith("[]", StringComparison.Ordinal);
                 string typeStr = isArray ? word.Replace("[]", string.Empty) : word;
 
                 Type type;
@@ -1170,7 +1170,6 @@ namespace PaintDotNet.Effects
                                 this.IndicatorCurrent = Indicator.ObjectHighlightDef;
                             }
                         }
-
                     }
                     else if (Intelli.UserScript.Contains(word, true))
                     {
@@ -1251,7 +1250,6 @@ namespace PaintDotNet.Effects
                 Type numType = GetNumberType(position);
                 return (numType != null) ? $"{numType.GetObjectType()} - {numType.Namespace}.{numType.Name}" : string.Empty;
             }
-
 
             string lastWords = GetLastWords(this.WordEndPosition(position, true));
             if (lastWords.Length == 0)
@@ -1461,7 +1459,6 @@ namespace PaintDotNet.Effects
                     {
                         type = mi[0].GetReturnType();
                     }
-
 
                     if (type == null)
                     {
@@ -3541,7 +3538,7 @@ namespace PaintDotNet.Effects
             string tooltipText = null;
 
             // If there's an error here, we'll show that instead
-            if (ScriptBuilder.Errors.Count > 0)
+            if (ScriptBuilder.Errors.Length > 0)
             {
                 int wordStartPos = this.WordStartPosition(e.Position, true);
                 int wordEndPos = this.WordEndPosition(e.Position, true);

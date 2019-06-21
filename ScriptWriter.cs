@@ -714,7 +714,7 @@ namespace PaintDotNet.Effects
                 }
                 else
                 {
-                    PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.DisplayName, " + "\"" + u.ToShortName() + "\"" + ");\r\n";
+                    PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.DisplayName, \"" + u.ToShortName() + "\");\r\n";
                 }
 
                 if ((u.ElementType == ElementType.IntSlider || u.ElementType == ElementType.DoubleSlider) && u.Style > 0)
@@ -908,7 +908,7 @@ namespace PaintDotNet.Effects
                     if (HelpType == HelpType.URL)
                     {
                         PropertyPart += "            props[ControlInfoPropertyNames.WindowHelpContentType].Value = WindowHelpContentType.CustomViaCallback;\r\n";
-                        PropertyPart += "            props[ControlInfoPropertyNames.WindowHelpContent].Value = \"" + helpContent + "\";\r\n";
+                        PropertyPart += "            props[ControlInfoPropertyNames.WindowHelpContent].Value = \"" + helpContent.ToLower() + "\";\r\n";
                     }
                     else if (HelpType == HelpType.PlainText)
                     {
@@ -943,7 +943,7 @@ namespace PaintDotNet.Effects
             {
                 HelpPart += "        private void OnWindowHelpButtonClicked(IWin32Window owner, string helpContent)\r\n";
                 HelpPart += "        {\r\n";
-                HelpPart += "            if (helpContent.ToLower().StartsWith(\"http://\") || helpContent.ToLower().StartsWith(\"https://\"))\r\n";
+                HelpPart += "            if (helpContent.StartsWith(\"http://\", StringComparison.OrdinalIgnoreCase) || helpContent.StartsWith(\"https://\", StringComparison.OrdinalIgnoreCase))\r\n";
                 HelpPart += "            {\r\n";
                 HelpPart += "                PaintDotNet.ServiceProviderExtensions.GetService<IShellService>(Services).LaunchUrl(null, helpContent);\r\n";
                 HelpPart += "            }\r\n";

@@ -51,7 +51,6 @@ namespace PaintDotNet.Effects
                 }
             }
 
-
             if (ControlType.ItemHeight < 18)
             {
                 ControlType.ItemHeight = 18;
@@ -652,7 +651,7 @@ namespace PaintDotNet.Effects
                 rbEnabledWhen.Checked = true;
                 for (int i = 0; i < enabledWhenField.Items.Count; i++)
                 {
-                    if (enabledWhenField.Items[i].ToString().StartsWith(CurrentElement.EnableIdentifier))
+                    if (enabledWhenField.Items[i].ToString().StartsWith(CurrentElement.EnableIdentifier, StringComparison.Ordinal))
                     {
                         enabledWhenField.SelectedIndex = i;
                         break;
@@ -1136,7 +1135,7 @@ namespace PaintDotNet.Effects
             if (ControlType.Text == "Web Link")
             {
                 // Make sure the URL is valid.
-                if (!(newOptions.StartsWith("http://") || newOptions.StartsWith("https://")))
+                if (!(newOptions.StartsWith("http://", StringComparison.OrdinalIgnoreCase) || newOptions.StartsWith("https://", StringComparison.OrdinalIgnoreCase)))
                 {
                     error = true;
                 }
@@ -1677,8 +1676,7 @@ namespace PaintDotNet.Effects
             }
             else if (elementType == ElementType.Uri)
             {
-                string pattern = @"""(?<uri>.*?[^\\])""";
-                Regex REUri = new Regex(pattern);
+                Regex REUri = new Regex(@"""(?<uri>.*?[^\\])""");
                 Match muri = REUri.Match(DefaultStr);
                 if (muri.Success)
                 {

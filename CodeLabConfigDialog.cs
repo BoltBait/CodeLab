@@ -312,32 +312,29 @@ namespace PaintDotNet.Effects
             {
                 FlexibleMessageBox.Show("Before you can preview your effect, you must resolve all code errors.", "Build Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+            else if (!ScriptBuilder.BuildFullPreview(txtCode.Text))
+            {
+                FlexibleMessageBox.Show("Something went wrong, and the Preview can't be run.", "Preview Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else if (!ScriptBuilder.UserScriptObject.Options.Flags.HasFlag(EffectFlags.Configurable))
+            {
+                FlexibleMessageBox.Show("There are no UI controls, so the Preview can't be displayed.", "Preview Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
             else
             {
-                if (!ScriptBuilder.BuildFullPreview(txtCode.Text))
+                ScriptBuilder.UserScriptObject.EnvironmentParameters = this.Effect.EnvironmentParameters;
+                using (EffectConfigDialog previewDialog = ScriptBuilder.UserScriptObject.CreateConfigDialog())
                 {
-                    FlexibleMessageBox.Show("Something went wrong, and the Preview can't be run.", "Preview Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                else if (!ScriptBuilder.UserScriptObject.Options.Flags.HasFlag(EffectFlags.Configurable))
-                {
-                    FlexibleMessageBox.Show("There are no UI controls, so the Preview can't be displayed.", "Preview Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                else
-                {
-                    ScriptBuilder.UserScriptObject.EnvironmentParameters = this.Effect.EnvironmentParameters;
-                    using (EffectConfigDialog previewDialog = ScriptBuilder.UserScriptObject.CreateConfigDialog())
-                    {
-                        preview = true;
-                        previewToken = previewDialog.EffectToken;
-                        previewDialog.EffectTokenChanged += (sender, e) => FinishTokenUpdate();
+                    preview = true;
+                    previewToken = previewDialog.EffectToken;
+                    previewDialog.EffectTokenChanged += (sender, e) => FinishTokenUpdate();
 
-                        previewDialog.ShowDialog();
-                    }
-
-                    preview = false;
-                    previewToken = null;
-                    Build();
+                    previewDialog.ShowDialog();
                 }
+
+                preview = false;
+                previewToken = null;
+                Build();
             }
             tmrCompile.Enabled = true;
         }
@@ -352,7 +349,7 @@ namespace PaintDotNet.Effects
             ShowErrors.Text = "Show Errors List";
             ShowErrors.ForeColor = this.ForeColor;
 
-            if (ScriptBuilder.Errors.Count == 0)
+            if (ScriptBuilder.Errors.Length == 0)
             {
                 txtCode.UpdateIndicatorBar();
                 return;

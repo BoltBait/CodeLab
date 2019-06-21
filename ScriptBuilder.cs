@@ -42,7 +42,7 @@ namespace PaintDotNet.Effects
         internal static int LineOffset => lineOffset;
         internal static int ColumnOffset => 9;
         internal static string Exception => exceptionMsg;
-        internal static List<ScriptError> Errors
+        internal static ScriptError[] Errors
         {
             get
             {
@@ -58,7 +58,7 @@ namespace PaintDotNet.Effects
                 {
                     errorList.Add(new ScriptError(exceptionMsg));
                 }
-                return errorList;
+                return errorList.ToArray();
             }
         }
         #endregion
@@ -360,7 +360,7 @@ namespace PaintDotNet.Effects
                 ScriptWriter.UsingPartCode +
                 ScriptWriter.NamespacePart(FileName) +
                 ScriptWriter.EffectPart(UserControls, FileName, string.Empty, FileName, string.Empty, EffectFlags.None, EffectRenderingSchedule.DefaultTilesForCpuRendering) +
-                ScriptWriter.PropertyPart(UserControls, FileName, "FULL UI PREVIEW - Temporarily renders to canvas", 0, string.Empty) +
+                ScriptWriter.PropertyPart(UserControls, FileName, "FULL UI PREVIEW - Temporarily renders to canvas", HelpType.None, string.Empty) +
                 ScriptWriter.SetRenderPart(UserControls, true, preRenderRegex.IsMatch(scriptText)) +
                 ScriptWriter.RenderLoopPart(UserControls) +
                 ScriptWriter.UserEnteredPart(scriptText) +
@@ -407,7 +407,7 @@ namespace PaintDotNet.Effects
                 ScriptWriter.UsingPartCode +
                 ScriptWriter.NamespacePart(FileName) +
                 ScriptWriter.EffectPart(UserControls, FileName, string.Empty, "UI PREVIEW - Does NOT Render to canvas", string.Empty, EffectFlags.None, EffectRenderingSchedule.DefaultTilesForCpuRendering) +
-                ScriptWriter.PropertyPart(UserControls, FileName, string.Empty, 0, string.Empty) +
+                ScriptWriter.PropertyPart(UserControls, FileName, string.Empty, HelpType.None, string.Empty) +
                 ScriptWriter.SetRenderPart(UserControls, true, false) +
                 ScriptWriter.RenderLoopPart(UserControls) +
                 uiCode +
