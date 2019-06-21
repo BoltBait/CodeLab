@@ -2010,17 +2010,19 @@ namespace PaintDotNet.Effects
 
                 if (i == tokens.Length - 1)
                 {
-                    string typeName = (type.IsGenericType) ? mi[0].DeclaringType.Name.Replace("`", "-") : mi[0].DeclaringType.Name;
-                    string fullName = $"{mi[0].DeclaringType.Namespace}.{typeName}.{mi[0].Name}";
+                    int memberIndex = (mi[0].MemberType == MemberTypes.Method) ? GetOverload(mi, tokenPos[i]).Item1 : 0;
+                    MemberInfo member = mi[memberIndex];
+                    string typeName = (type.IsGenericType) ? member.DeclaringType.Name.Replace("`", "-") : member.DeclaringType.Name;
+                    string fullName = $"{member.DeclaringType.Namespace}.{typeName}.{member.Name}";
 
                     if (fullName.Length == 0)
                     {
                         return false;
                     }
 
-                    if (mi[0].DeclaringType == Intelli.UserScript)
+                    if (member.DeclaringType == Intelli.UserScript)
                     {
-                        string returnType = mi[0].GetReturnType()?.GetDisplayName();
+                        string returnType = member.GetReturnType()?.GetDisplayName();
 
                         if (returnType.Length == 0)
                         {
