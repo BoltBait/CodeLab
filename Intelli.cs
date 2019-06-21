@@ -114,38 +114,39 @@ namespace PaintDotNet.Effects
 
             UserDefinedTypes = new Dictionary<string, Type>();
 
-            AllTypes = new Dictionary<string, Type>();
-
-            // Add the predefined aliases of types in the System namespace
-            AllTypes.Add("bool", typeof(bool));
-            AllTypes.Add("byte", typeof(byte));
-            AllTypes.Add("sbyte", typeof(sbyte));
-            AllTypes.Add("char", typeof(char));
-            AllTypes.Add("decimal", typeof(decimal));
-            AllTypes.Add("double", typeof(double));
-            AllTypes.Add("float", typeof(float));
-            AllTypes.Add("int", typeof(int));
-            AllTypes.Add("uint", typeof(uint));
-            AllTypes.Add("long", typeof(long));
-            AllTypes.Add("ulong", typeof(ulong));
-            AllTypes.Add("object", typeof(object));
-            AllTypes.Add("short", typeof(short));
-            AllTypes.Add("ushort", typeof(ushort));
-            AllTypes.Add("string", typeof(string));
-
-            AllTypes.Add("IntSliderControl", typeof(int));
-            AllTypes.Add("CheckboxControl", typeof(bool));
-            AllTypes.Add("ColorWheelControl", typeof(ColorBgra));
-            AllTypes.Add("AngleControl", typeof(double));
-            AllTypes.Add("PanSliderControl", typeof(Pair<double, double>));
-            AllTypes.Add("TextboxControl", typeof(string));
-            AllTypes.Add("FilenameControl", typeof(string));
-            AllTypes.Add("DoubleSliderControl", typeof(double));
-            AllTypes.Add("RollControl", typeof(Tuple<double, double, double>));
-            AllTypes.Add("ListBoxControl", typeof(byte));
-            AllTypes.Add("RadioButtonControl", typeof(byte));
-            AllTypes.Add("ReseedButtonControl", typeof(byte));
-            AllTypes.Add("MultiLineTextboxControl", typeof(string));
+            AllTypes = new Dictionary<string, Type>
+            {
+                // Add the predefined aliases of types in the System namespace
+                { "bool", typeof(bool) },
+                { "byte", typeof(byte) },
+                { "sbyte", typeof(sbyte) },
+                { "char", typeof(char) },
+                { "decimal", typeof(decimal) },
+                { "double", typeof(double) },
+                { "float", typeof(float) },
+                { "int", typeof(int) },
+                { "uint", typeof(uint) },
+                { "long", typeof(long) },
+                { "ulong", typeof(ulong) },
+                { "object", typeof(object) },
+                { "short", typeof(short) },
+                { "ushort", typeof(ushort) },
+                { "string", typeof(string) },
+                // Add the aliases for the UI controls
+                { "IntSliderControl", typeof(int) },
+                { "CheckboxControl", typeof(bool) },
+                { "ColorWheelControl", typeof(ColorBgra) },
+                { "AngleControl", typeof(double) },
+                { "PanSliderControl", typeof(Pair<double, double>) },
+                { "TextboxControl", typeof(string) },
+                { "FilenameControl", typeof(string) },
+                { "DoubleSliderControl", typeof(double) },
+                { "RollControl", typeof(Tuple<double, double, double>) },
+                { "ListBoxControl", typeof(byte) },
+                { "RadioButtonControl", typeof(byte) },
+                { "ReseedButtonControl", typeof(byte) },
+                { "MultiLineTextboxControl", typeof(string) }
+            };
 
             AutoCompleteTypes = new Dictionary<string, Type>(AllTypes);
 
