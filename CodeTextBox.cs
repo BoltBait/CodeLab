@@ -1425,7 +1425,8 @@ namespace PaintDotNet.Effects
                             else
                             {
                                 fieldTypeName = "Field";
-                                fieldValue = $" ( {field.GetValue(null)} )";
+                                string value = field.GetValue(null)?.ToString();
+                                fieldValue = (value?.Length > 0) ? $" ( {value} )" : string.Empty;
                             }
 
                             return $"{returnType} - {precedingType}.{mi[0].Name}{fieldValue}\n{fieldTypeName}";
@@ -1806,7 +1807,8 @@ namespace PaintDotNet.Effects
                 if (i == tokens.Length - 1)
                 {
                     // We at the last iteration. Get the DeclaringType
-                    return mi[0].DeclaringType;
+                    int memberIndex = (mi[0].MemberType == MemberTypes.Method) ? GetOverload(mi, tokenPos[i]).Item1 : 0;
+                    return mi[memberIndex].DeclaringType;
                 }
                 else
                 {
@@ -2507,7 +2509,7 @@ namespace PaintDotNet.Effects
                 return;
             }
 
-            IntelliType intelliType = GetIntelliType(position);
+            IntelliType intelliType = GetIntelliType(position - 1);
             bool isStatic = (intelliType == IntelliType.Class || intelliType == IntelliType.Enum || intelliType == IntelliType.Struct || intelliType == IntelliType.Interface || intelliType == IntelliType.Type);
 
             iBox.Populate(type, isStatic);
@@ -3314,7 +3316,7 @@ namespace PaintDotNet.Effects
                 return;
             }
 
-            if (intelliType == IntelliType.Field && GetDeclaringType(position).FullName != Intelli.UserScriptFullName)
+            if (intelliType == IntelliType.Field && GetDeclaringType(wordStartPos)?.FullName != Intelli.UserScriptFullName)
             {
                 return;
             }
