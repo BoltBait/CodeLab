@@ -1279,6 +1279,34 @@ namespace PaintDotNet.Effects
             if (Intelli.AllTypes.ContainsKey(lastWords))
             {
                 type = Intelli.AllTypes[lastWords];
+
+                if (type.IsClass || type.IsValueType)
+                {
+                    int newPos = this.WordStartPosition(position, true) - 1;
+                    int parenPos = this.WordEndPosition(position, true);
+                    if (newPos > InvalidPosition && this.GetWordFromPosition(newPos).Equals("new", StringComparison.Ordinal) && this.GetCharAt(parenPos).Equals('('))
+                    {
+                        // Constructor
+                        ConstructorInfo[] ctors = type.GetConstructors();
+
+                        if (type.IsValueType && this.GetCharAt(parenPos + 1).Equals(')'))
+                        {
+                            string overloads = (ctors.Length > 0) ? $" (+ {ctors.Length} overloads)" : string.Empty;
+                            return $"{type.Name}.{type.Name}(){overloads}\nConstructor";
+                        }
+
+                        if (ctors.Length > 0)
+                        {
+                            int otherOverloads = type.IsValueType ? ctors.Length : ctors.Length - 1;
+                            string overloads1 = (otherOverloads > 0) ? $" (+ {otherOverloads} overloads)" : string.Empty;
+
+                            Tuple<int, string> overload = GetOverload(ctors, position);
+                            ConstructorInfo constructor = ctors[overload.Item1];
+                            return $"{constructor.DeclaringType.Name}.{type.Name}({overload.Item2}){overloads1}\nConstructor";
+                        }
+                    }
+                }
+
                 string typeName = type.GetObjectType();
 
                 string name = (type.IsGenericType) ? type.GetGenericName() : type.Name;
@@ -1490,7 +1518,7 @@ namespace PaintDotNet.Effects
 
         private Tuple<int, string> GetOverload(MemberInfo[] mi, int position)
         {
-            Tuple<int, string> defaultOverload = new Tuple<int, string>(0, ((MethodInfo)mi[0]).Params());
+            Tuple<int, string> defaultOverload = new Tuple<int, string>(0, ((MethodBase)mi[0]).Params());
 
             if (mi.Length == 1)
             {
@@ -1525,7 +1553,7 @@ namespace PaintDotNet.Effects
             this.SearchFlags = SearchFlags.MatchCase;
             for (int i = 0; i < mi.Length; i++)
             {
-                MethodInfo method = (MethodInfo)mi[i];
+                MethodBase method = (MethodBase)mi[i];
                 if (method.IsGenericMethod != isGeneric)
                 {
                     continue;
@@ -2509,8 +2537,7 @@ namespace PaintDotNet.Effects
                 return;
             }
 
-            IntelliType intelliType = GetIntelliType(position - 1);
-            bool isStatic = (intelliType == IntelliType.Class || intelliType == IntelliType.Enum || intelliType == IntelliType.Struct || intelliType == IntelliType.Interface || intelliType == IntelliType.Type);
+            bool isStatic = GetIntelliType(position - 1) == IntelliType.Type;
 
             iBox.Populate(type, isStatic);
 
@@ -2577,12 +2604,6 @@ namespace PaintDotNet.Effects
 
         private void ConstructorIntelliBox(int position)
         {
-            string word = this.GetWordFromPosition(position);
-            if (!Intelli.AllTypes.ContainsKey(word) && !Intelli.UserDefinedTypes.ContainsKey(word))
-            {
-                return;
-            }
-
             int style = this.GetStyleAt(this.WordStartPosition(position, true));
             if (style != Style.Cpp.Word && style != Style.Cpp.Word + Preprocessor &&
                 style != Style.Cpp.Word2 && style != Style.Cpp.Word2 + Preprocessor)
@@ -2590,7 +2611,23 @@ namespace PaintDotNet.Effects
                 return;
             }
 
+            if (GetIntelliType(position - 1) != IntelliType.Type)
+            {
+                return;
+            }
+
+            string word = this.GetWordFromPosition(position);
+            if (!Intelli.AllTypes.ContainsKey(word) && !Intelli.UserDefinedTypes.ContainsKey(word))
+            {
+                return;
+            }
+
             Type type = Intelli.AllTypes.ContainsKey(word) ? Intelli.AllTypes[word] : Intelli.UserDefinedTypes[word];
+            if (type.IsEnum || type.IsInterface || !(type.IsClass || type.IsValueType))
+            {
+                return;
+            }
+
             iBox.Populate(type);
             ShowIntelliBox(position, false);
         }

@@ -74,7 +74,7 @@ namespace PaintDotNet.Effects
                 ResUtil.GetImage("Const"),
                 ResUtil.GetImage("EnumItem"),
                 ResUtil.GetImage("Snippet"),
-                ResUtil.EmptyImage // TODO: icon for constructor
+                ResUtil.GetImage("Method") // Use the Method icon for constructor
             });
         }
 
@@ -485,7 +485,7 @@ namespace PaintDotNet.Effects
             intelliTypeFilter = IntelliType.None;
             membersInBox = false;
 
-            if (!type.IsEnum && type.IsValueType)
+            if (type.IsValueType)
             {
                 unFilteredItems.Add(new IntelliBoxItem($"{type.Name}()", string.Empty, $"{type.Name}()", IntelliType.Constructor));
             }
@@ -493,7 +493,7 @@ namespace PaintDotNet.Effects
             foreach (ConstructorInfo constructor in type.GetConstructors())
             {
                 string toolTip = $"{type.Name}({constructor.Params()})";
-                unFilteredItems.Add(new IntelliBoxItem(toolTip, string.Empty, toolTip, IntelliType.Constructor));
+                unFilteredItems.Add(new IntelliBoxItem(toolTip, string.Empty, toolTip + "\nConstructor", IntelliType.Constructor));
             }
 
             this.Items.AddRange(unFilteredItems.ToArray());
