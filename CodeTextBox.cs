@@ -2248,6 +2248,14 @@ namespace PaintDotNet.Effects
                         FlexibleMessageBox.Show("Cannot navigate to the symbol under the caret.", "CodeLab", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                 }
+                else if (e.Alt && e.KeyCode == Keys.Up)
+                {
+                    this.ExecuteCmd(Command.MoveSelectedLinesUp);
+                }
+                else if (e.Alt && e.KeyCode == Keys.Down)
+                {
+                    this.ExecuteCmd(Command.MoveSelectedLinesDown);
+                }
             }
             else if (e.Alt && e.KeyCode == Keys.L)
             {
