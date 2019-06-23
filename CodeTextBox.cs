@@ -2238,7 +2238,7 @@ namespace PaintDotNet.Effects
                     }
                     else
                     {
-                        NonMemberIntelliBox(this.CurrentPosition - 1);
+                        NonMemberIntelliBox(this.CurrentPosition);
                     }
                 }
                 else if (e.KeyCode == Keys.F12)
@@ -2477,19 +2477,6 @@ namespace PaintDotNet.Effects
                     iBox.Visible = false;
                 }
             }
-            else
-            {
-                // Letter or number typed, search for it in the listview
-                int wordStartPos = this.WordStartPosition(this.CurrentPosition, true);
-
-                if (this.GetCharAt(wordStartPos - 1).Equals('#'))
-                {
-                    wordStartPos--;
-                }
-
-                string charsEntered = this.GetTextRange(wordStartPos, this.CurrentPosition - wordStartPos) + e.KeyValue.ToChar().ToLowerInvariant();
-                iBox.Filter(charsEntered);
-            }
 
             base.OnKeyDown(e);
         }
@@ -2547,7 +2534,7 @@ namespace PaintDotNet.Effects
         private void NonMemberIntelliBox(int position)
         {
             // Ensure there's no words immediately to the left and right
-            if (char.IsLetterOrDigit(this.GetCharAt(position - 1)) || char.IsLetterOrDigit(this.GetCharAt(position + 1)))
+            if ((position > 0 && char.IsLetterOrDigit(this.GetCharAt(position - 1))) || char.IsLetterOrDigit(this.GetCharAt(position + 1)))
             {
                 return;
             }
@@ -3007,16 +2994,34 @@ namespace PaintDotNet.Effects
 
         protected override void OnCharAdded(CharAddedEventArgs e)
         {
-            if (e.Char == '}')
+            if (iBox.Visible)
             {
-                if (this.Lines[this.CurrentLine].Text.Trim() == "}") //Check whether the bracket is the only thing on the line.. For cases like "if() { }".
+                string word = this.GetWordFromPosition(this.CurrentPosition);
+                if (word.IsCSharpIndentifier())
                 {
-                    this.Lines[this.CurrentLine].Indentation -= this.TabWidth;
+                    int wordStartPos = this.WordStartPosition(this.CurrentPosition, true);
+                    if (wordStartPos > 0 && this.GetCharAt(wordStartPos - 1).Equals('#'))
+                    {
+                        word = "#" + word;
+                    }
+
+                    iBox.Filter(word);
+                }
+                else
+                {
+                    iBox.Visible = false;
                 }
             }
-            else if (!iBox.Visible)
+            else
             {
-                if (e.Char == '.')
+                if (e.Char == '}')
+                {
+                    if (this.Lines[this.CurrentLine].Text.Trim() == "}") //Check whether the bracket is the only thing on the line.. For cases like "if() { }".
+                    {
+                        this.Lines[this.CurrentLine].Indentation -= this.TabWidth;
+                    }
+                }
+                else if (e.Char == '.')
                 {
                     MemberIntelliBox(this.CurrentPosition - 1);
                 }
