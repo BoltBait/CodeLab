@@ -2455,27 +2455,22 @@ namespace PaintDotNet.Effects
                 e.Handled = true;
                 this.Focus();
             }
-            else if ((e.KeyValue < 48) || (e.KeyValue >= 58 && e.KeyValue <= 64) || (e.KeyValue >= 91 && e.KeyValue <= 96) || e.KeyValue > 122)
+            else if (e.KeyCode == Keys.Return)
             {
-                // Use currently selected item
-                if (e.KeyCode == Keys.Return)
+                if (iBox.Matches)
                 {
-                    if (iBox.Matches)
-                    {
-                        e.SuppressKeyPress = true;
-                        e.Handled = true;
-                        ConfirmIntelliBox();
-                    }
-                    else
-                    {
-                        iBox.Visible = false;
-                    }
+                    e.SuppressKeyPress = true;
+                    e.Handled = true;
+                    ConfirmIntelliBox();
                 }
-                // Just close the box and don't use anything
-                else if (e.KeyCode == Keys.Escape)
+                else
                 {
                     iBox.Visible = false;
                 }
+            }
+            else if (e.KeyCode == Keys.Escape)
+            {
+                iBox.Visible = false;
             }
 
             base.OnKeyDown(e);
