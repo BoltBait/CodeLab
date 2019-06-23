@@ -3039,6 +3039,13 @@ namespace PaintDotNet.Effects
                         NonMemberIntelliBox(this.CurrentPosition - 1);
                     }
                 }
+                else if (e.Char == ' ')
+                {
+                    if (this.GetWordFromPosition(this.CurrentPosition - 1).Equals("new", StringComparison.Ordinal))
+                    {
+                        NonMemberIntelliBox(this.CurrentPosition);
+                    }
+                }
             }
 
             base.OnCharAdded(e);
