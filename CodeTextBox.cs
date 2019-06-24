@@ -1087,7 +1087,8 @@ namespace PaintDotNet.Effects
             this.IndicatorCurrent = Indicator.ObjectHighlightDef;
             this.IndicatorClearRange(0, this.TextLength);
 
-            int position = this.CurrentPosition;
+            int position = this.WordStartPosition(this.CurrentPosition, true);
+            ParseLocalVariables(position);
             IntelliType currentType = GetIntelliType(position);
             if (currentType == IntelliType.None)
             {
