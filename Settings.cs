@@ -12,138 +12,63 @@ namespace PaintDotNet.Effects
 
         internal static bool Bookmarks
         {
-            get
-            {
-                int regValue = (int)regKey.GetValue("Bookmarks", 0);
-                return regValue == 1;
-            }
-            set
-            {
-                int regValue = value ? 1 : 0;
-                regKey.SetValue("Bookmarks", regValue, RegistryValueKind.DWord);
-                regKey.Flush();
-            }
+            get => GetRegValue("Bookmarks", false);
+            set => SetRegValue("Bookmarks", value);
         }
 
         internal static bool CheckForUpdates
         {
-            get
-            {
-                int regValue = (int)regKey.GetValue("CheckForUpdates", 0);
-                return regValue == 1;
-            }
-            set
-            {
-                int regValue = value ? 1 : 0;
-                regKey.SetValue("CheckForUpdates", regValue, RegistryValueKind.DWord);
-                regKey.Flush();
-            }
+            get => GetRegValue("CheckForUpdates", false);
+            set => SetRegValue("CheckForUpdates", value);
         }
 
         internal static bool CodeFolding
         {
-            get
-            {
-                int regValue = (int)regKey.GetValue("CodeFolding", 0);
-                return regValue == 1;
-            }
-            set
-            {
-                int regValue = value ? 1 : 0;
-                regKey.SetValue("CodeFolding", regValue, RegistryValueKind.DWord);
-                regKey.Flush();
-            }
+            get => GetRegValue("CodeFolding", false);
+            set => SetRegValue("CodeFolding", value);
         }
 
         internal static Theme EditorTheme
         {
-            get
-            {
-                int regValue = (int)regKey.GetValue("EditorTheme", 0);
-                return Enum.IsDefined(typeof(Theme), regValue) ? (Theme)regValue : Theme.Auto;
-            }
-            set
-            {
-                int regValue = (int)value;
-                regKey.SetValue("EditorTheme", regValue, RegistryValueKind.DWord);
-                regKey.Flush();
-            }
+            get => GetRegValue("EditorTheme", Theme.Auto);
+            set => SetRegValue("EditorTheme", value);
         }
 
         internal static bool ErrorBox
         {
-            get
-            {
-                int regValue = (int)regKey.GetValue("ErrorBox", 0);
-                return regValue == 1;
-            }
-            set
-            {
-                int regValue = value ? 1 : 0;
-                regKey.SetValue("ErrorBox", regValue, RegistryValueKind.DWord);
-                regKey.Flush();
-            }
+            get => GetRegValue("ErrorBox", false);
+            set => SetRegValue("ErrorBox", value);
         }
 
         internal static string FontFamily
         {
-            get
-            {
-                return (string)regKey.GetValue("FontFamily", "Consolas");
-            }
-            set
-            {
-                regKey.SetValue("FontFamily", value, RegistryValueKind.String);
-                regKey.Flush();
-            }
+            get => GetRegValue("FontFamily", "Consolas");
+            set => SetRegValue("FontFamily", value);
         }
 
         internal static bool LargeFonts
         {
-            get
-            {
-                int regValue = (int)regKey.GetValue("LargeFonts", 0);
-                return regValue == 1;
-            }
-            set
-            {
-                int regValue = value ? 1 : 0;
-                regKey.SetValue("LargeFonts", regValue, RegistryValueKind.DWord);
-                regKey.Flush();
-            }
+            get => GetRegValue("LargeFonts", false);
+            set => SetRegValue("LargeFonts", value);
         }
 
         internal static string LastSlnDirectory
         {
-            get
-            {
-                return (string)regKey.GetValue("LastSlnDir", documentsPath);
-            }
-            set
-            {
-                regKey.SetValue("LastSlnDir", value, RegistryValueKind.String);
-                regKey.Flush();
-            }
+            get => GetRegValue("LastSlnDir", documentsPath);
+            set => SetRegValue("LastSlnDir", value);
         }
 
         internal static string LastSourceDirectory
         {
-            get
-            {
-                return (string)regKey.GetValue("LastSourceDir", desktopPath);
-            }
-            set
-            {
-                regKey.SetValue("LastSourceDir", value, RegistryValueKind.String);
-                regKey.Flush();
-            }
+            get => GetRegValue("LastSourceDir", desktopPath);
+            set => SetRegValue("LastSourceDir", value);
         }
 
         internal static DateTime LatestUpdateCheck
         {
             get
             {
-                string regValue = (string)regKey.GetValue("LatestUpdateCheck", string.Empty);
+                string regValue = GetRegValue("LatestUpdateCheck", string.Empty);
                 if (DateTime.TryParseExact(regValue, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateTime))
                 {
                     return dateTime;
@@ -151,121 +76,57 @@ namespace PaintDotNet.Effects
                 else
                 {
                     string newRegValue = DateTime.Now.ToString("yyyy-MM-dd");
-                    regKey.SetValue("LatestUpdateCheck", newRegValue, RegistryValueKind.String);
-                    regKey.Flush();
+                    SetRegValue("LatestUpdateCheck", newRegValue);
                     return DateTime.Now - TimeSpan.FromDays(8);
                 }
             }
             set
             {
                 string regValue = value.ToString("yyyy-MM-dd");
-                regKey.SetValue("LatestUpdateCheck", regValue, RegistryValueKind.String);
-                regKey.Flush();
+                SetRegValue("LatestUpdateCheck", regValue);
             }
         }
 
         internal static bool LineNumbers
         {
-            get
-            {
-                int regValue = (int)regKey.GetValue("LineNumbers", 0);
-                return regValue == 1;
-            }
-            set
-            {
-                int regValue = value ? 1 : 0;
-                regKey.SetValue("LineNumbers", regValue, RegistryValueKind.DWord);
-                regKey.Flush();
-            }
+            get => GetRegValue("LineNumbers", false);
+            set => SetRegValue("LineNumbers", value);
         }
 
         internal static bool Map
         {
-            get
-            {
-                int regValue = (int)regKey.GetValue("Map", 0);
-                return regValue == 1;
-            }
-            set
-            {
-                int regValue = value ? 1 : 0;
-                regKey.SetValue("Map", regValue, RegistryValueKind.DWord);
-                regKey.Flush();
-            }
+            get => GetRegValue("Map", false);
+            set => SetRegValue("Map", value);
         }
 
         internal static bool Output
         {
-            get
-            {
-                int regValue = (int)regKey.GetValue("Output", 0);
-                return regValue == 1;
-            }
-            set
-            {
-                int regValue = value ? 1 : 0;
-                regKey.SetValue("Output", regValue, RegistryValueKind.DWord);
-                regKey.Flush();
-            }
+            get => GetRegValue("Output", false);
+            set => SetRegValue("Output", value);
         }
 
         internal static string RecentDocs
         {
-            get
-            {
-                return (string)regKey.GetValue("RecentDocs", string.Empty);
-            }
-
-            set
-            {
-                regKey.SetValue("RecentDocs", value, RegistryValueKind.String);
-                regKey.Flush();
-            }
+            get => GetRegValue("RecentDocs", string.Empty);
+            set => SetRegValue("RecentDocs", value);
         }
 
         internal static bool ToolBar
         {
-            get
-            {
-                int regValue = (int)regKey.GetValue("ToolBar", 1);
-                return regValue == 1;
-            }
-            set
-            {
-                int regValue = value ? 1 : 0;
-                regKey.SetValue("ToolBar", regValue, RegistryValueKind.DWord);
-                regKey.Flush();
-            }
+            get => GetRegValue("ToolBar", true);
+            set => SetRegValue("ToolBar", value);
         }
 
         internal static bool WhiteSpace
         {
-            get
-            {
-                int regValue = (int)regKey.GetValue("WhiteSpace", 0);
-                return regValue == 1;
-            }
-            set
-            {
-                int regValue = value ? 1 : 0;
-                regKey.SetValue("WhiteSpace", regValue, RegistryValueKind.DWord);
-                regKey.Flush();
-            }
+            get => GetRegValue("WhiteSpace", false);
+            set => SetRegValue("WhiteSpace", value);
         }
 
         internal static bool WordWrap
         {
-            get
-            {
-                int regValue = (int)regKey.GetValue("WordWrap", 0);
-                return regValue == 1;
-            }
-            set
-            {
-                int regValue = value ? 1 : 0;
-                regKey.SetValue("WordWrap", regValue, RegistryValueKind.DWord);
-                regKey.Flush();
-            }
+            get => GetRegValue("WordWrap", false);
+            set => SetRegValue("WordWrap", value);
         }
 
         static Settings()
@@ -279,6 +140,56 @@ namespace PaintDotNet.Effects
 
             desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
             documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+        }
+
+        private static TType GetRegValue<TType>(string valueName, TType defaultValue)
+        {
+            if (defaultValue is bool b)
+            {
+                int defaultInt = b ? 1 : 0;
+                int regValue = (int)regKey.GetValue(valueName, defaultInt);
+                object boolObj = regValue == 1;
+                return (TType)boolObj;
+            }
+            else if (defaultValue is string str)
+            {
+                return (TType)regKey.GetValue(valueName, str);
+            }
+            else if (defaultValue is Theme theme)
+            {
+                int defaultTheme = (int)theme;
+                int regValue = (int)regKey.GetValue(valueName, defaultTheme);
+                object themeObj = Enum.IsDefined(typeof(Theme), regValue) ? (Theme)regValue : Theme.Auto;
+                return (TType)themeObj;
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        private static void SetRegValue<TType>(string valueName, TType value)
+        {
+            if (value is bool b)
+            {
+                int regValue = b ? 1 : 0;
+                regKey.SetValue(valueName, regValue, RegistryValueKind.DWord);
+            }
+            else if (value is string str)
+            {
+                regKey.SetValue(valueName, str, RegistryValueKind.String);
+            }
+            else if (value is Theme theme)
+            {
+                int regValue = (int)theme;
+                regKey.SetValue(valueName, regValue, RegistryValueKind.DWord);
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+
+            regKey.Flush();
         }
     }
 }
