@@ -289,6 +289,11 @@ namespace PaintDotNet.Effects
             return method.GetParameters()[0].ParameterType;
         }
 
+        internal static bool Extends(this MethodInfo method, Type type)
+        {
+            return method.ExtendingType().IsAssignableFrom(type);
+        }
+
         internal static Type GetReturnType(this MemberInfo member)
         {
             switch (member.MemberType)

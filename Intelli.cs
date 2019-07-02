@@ -66,17 +66,12 @@ namespace PaintDotNet.Effects
 
         internal static MethodInfo[] GetExtensionMethod(this Type extendedType, string methodName)
         {
-            return (from method in extMethods
-                    where method.Name == methodName
-                    where method.GetParameters()[0].ParameterType == extendedType || extendedType.IsSubclassOf(method.GetParameters()[0].ParameterType) || extendedType.GetInterfaces().Any(t => t == method.GetParameters()[0].ParameterType)
-                    select method).ToArray();
+            return extMethods.Where(method => method.Name == methodName && method.Extends(extendedType)).ToArray();
         }
 
         internal static MethodInfo[] GetExtensionMethods(this Type extendedType)
         {
-            return (from method in extMethods
-                    where method.GetParameters()[0].ParameterType == extendedType || extendedType.IsSubclassOf(method.GetParameters()[0].ParameterType) || extendedType.GetInterfaces().Any(t => t == method.GetParameters()[0].ParameterType)
-                    select method).ToArray();
+            return extMethods.Where(method => method.Extends(extendedType)).ToArray();
         }
 
         static Intelli()
