@@ -743,7 +743,7 @@ namespace PaintDotNet.Effects
                 code += "    if (!readClipboard)" + cr;
                 code += "    {" + cr;
                 code += "        readClipboard = true;" + cr;
-                code += "        clipboardSurface = Services.GetService<IClipboardService>().TryGetSurface();" + cr;
+                code += "        clipboardSurface = PaintDotNet.ServiceProviderExtensions.GetService<IClipboardService>(Services).TryGetSurface();" + cr;
                 code += "    }" + cr;
             }
             else if (EffectCode.Text.Contains("Gaussian Blur"))
