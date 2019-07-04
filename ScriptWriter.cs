@@ -462,7 +462,7 @@ namespace PaintDotNet.Effects
             if (UserControls.Any(u => u.ElementType == ElementType.BinaryPixelOp))
             {
                 PropertyPart += "            // setup for a user selected blend mode\r\n";
-                PropertyPart += "            IEnumLocalizerFactory factory = (IEnumLocalizerFactory)this.Services.GetService(typeof(IEnumLocalizerFactory));\r\n";
+                PropertyPart += "            IEnumLocalizerFactory factory = Services.GetService<IEnumLocalizerFactory>();\r\n";
                 PropertyPart += "            IEnumLocalizer blendModeLocalizer = factory.Create(typeof(LayerBlendMode));\r\n";
                 PropertyPart += "            IList<ILocalizedEnumValue> blendModes = blendModeLocalizer.GetLocalizedEnumValues();\r\n";
                 PropertyPart += "            object[] blendModesArray = blendModes.Select(lev => lev.EnumValue).ToArrayEx();\r\n";
@@ -685,7 +685,7 @@ namespace PaintDotNet.Effects
             if (UserControls.Any(u => u.ElementType == ElementType.BinaryPixelOp))
             {
                 PropertyPart += "            // setup for a user selected blend mode\r\n";
-                PropertyPart += "            IEnumLocalizerFactory factory = (IEnumLocalizerFactory)this.Services.GetService(typeof(IEnumLocalizerFactory));\r\n";
+                PropertyPart += "            IEnumLocalizerFactory factory = Services.GetService<IEnumLocalizerFactory>();\r\n";
                 PropertyPart += "            IEnumLocalizer blendModeLocalizer = factory.Create(typeof(LayerBlendMode));\r\n";
                 PropertyPart += "            IList<ILocalizedEnumValue> blendModes = blendModeLocalizer.GetLocalizedEnumValues();\r\n";
                 PropertyPart += "\r\n";
@@ -944,7 +944,7 @@ namespace PaintDotNet.Effects
                 HelpPart += "        {\r\n";
                 HelpPart += "            if (helpContent.StartsWith(\"http://\", StringComparison.OrdinalIgnoreCase) || helpContent.StartsWith(\"https://\", StringComparison.OrdinalIgnoreCase))\r\n";
                 HelpPart += "            {\r\n";
-                HelpPart += "                PaintDotNet.ServiceProviderExtensions.GetService<IShellService>(Services).LaunchUrl(null, helpContent);\r\n";
+                HelpPart += "                Services.GetService<IShellService>().LaunchUrl(null, helpContent);\r\n";
                 HelpPart += "            }\r\n";
                 HelpPart += "        }\r\n";
                 HelpPart += "\r\n";
@@ -956,7 +956,7 @@ namespace PaintDotNet.Effects
                 HelpPart += "\r\n";
                 HelpPart += "        private void rtb_LinkClicked(object sender, System.Windows.Forms.LinkClickedEventArgs e)\r\n";
                 HelpPart += "        {\r\n";
-                HelpPart += "            PaintDotNet.ServiceProviderExtensions.GetService<IShellService>(Services).LaunchUrl(null, e.LinkText);\r\n";
+                HelpPart += "            Services.GetService<IShellService>().LaunchUrl(null, e.LinkText);\r\n";
                 HelpPart += "            btn_HelpBoxOKButton.Focus();\r\n";
                 HelpPart += "        }\r\n";
                 HelpPart += "\r\n";

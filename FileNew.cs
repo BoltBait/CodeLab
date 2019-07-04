@@ -743,7 +743,7 @@ namespace PaintDotNet.Effects
                 code += "    if (!readClipboard)" + cr;
                 code += "    {" + cr;
                 code += "        readClipboard = true;" + cr;
-                code += "        clipboardSurface = PaintDotNet.ServiceProviderExtensions.GetService<IClipboardService>(Services).TryGetSurface();" + cr;
+                code += "        clipboardSurface = Services.GetService<IClipboardService>().TryGetSurface();" + cr;
                 code += "    }" + cr;
             }
             else if (EffectCode.Text.Contains("Gaussian Blur"))
@@ -1084,8 +1084,8 @@ namespace PaintDotNet.Effects
             if (PaletteCode.Checked)
             {
                 code += "    // Delete these lines if you don't need the current or default palette" + cr;
-                code += "    IReadOnlyList<ColorBgra> DefaultColors = PaintDotNet.ServiceProviderExtensions.GetService<IPalettesService>(Services).DefaultPalette;" + cr;
-                code += "    IReadOnlyList<ColorBgra> CurrentColors = PaintDotNet.ServiceProviderExtensions.GetService<IPalettesService>(Services).CurrentPalette; " + cr;
+                code += "    IReadOnlyList<ColorBgra> DefaultColors = Services.GetService<IPalettesService>().DefaultPalette;" + cr;
+                code += "    IReadOnlyList<ColorBgra> CurrentColors = Services.GetService<IPalettesService>().CurrentPalette; " + cr;
                 code += cr;
             }
             if (PenWidthCode.Checked)
