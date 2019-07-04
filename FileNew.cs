@@ -1077,8 +1077,8 @@ namespace PaintDotNet.Effects
             if (PrimaryColorCode.Checked)
             {
                 code += "    // Delete these lines if you don't need the primary or secondary color" + cr;
-                code += "    ColorBgra PrimaryColor = (ColorBgra)EnvironmentParameters.PrimaryColor;" + cr;
-                code += "    ColorBgra SecondaryColor = (ColorBgra)EnvironmentParameters.SecondaryColor;" + cr;
+                code += "    ColorBgra PrimaryColor = EnvironmentParameters.PrimaryColor;" + cr;
+                code += "    ColorBgra SecondaryColor = EnvironmentParameters.SecondaryColor;" + cr;
                 code += cr;
             }
             if (PaletteCode.Checked)
