@@ -841,6 +841,14 @@ namespace PaintDotNet.Effects
                             continue;
                         }
 
+                        if (type.IsConstructedGenericType)
+                        {
+                            type = type.GetGenericTypeDefinition();
+                        }
+
+                        string args = GetGenericArgs(varPos);
+                        type = type.MakeGenericType(args);
+
                         while (this.GetCharAt(varPos - 1) != '>' && varPos <= methodEnd)
                         {
                             varPos++;

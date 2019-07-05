@@ -219,24 +219,11 @@ namespace PaintDotNet.Effects
 
         internal static Type GetGenericReturnType(this MethodInfo method, string args)
         {
-            string[] argArray = args.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-            if (argArray.Length == 0)
-            {
-                return null;
-            }
-
-            List<Type> argTypes = new List<Type>();
-            foreach (string arg in argArray)
-            {
-                if (Intelli.AllTypes.TryGetValue(arg.Trim(), out Type t))
-                {
-                    argTypes.Add(t);
-                }
-            }
+            Type[] types = StringToTypeArray(args);
 
             try
             {
-                return method.MakeGenericMethod(argTypes.ToArray()).ReturnType;
+                return method.MakeGenericMethod(types).ReturnType;
             }
             catch
             {
@@ -344,6 +331,45 @@ namespace PaintDotNet.Effects
             }
 
             return typeAliases.ContainsKey(typeName) ? typeAliases[typeName] : typeName;
+        }
+
+        internal static Type MakeGenericType(this Type type, string args)
+        {
+            Type[] types = StringToTypeArray(args);
+
+            try
+            {
+                return type.MakeGenericType(types);
+            }
+            catch
+            {
+                return type;
+            }
+        }
+
+        private static Type[] StringToTypeArray(string types)
+        {
+            if (types.Length == 0)
+            {
+                return Array.Empty<Type>();
+            }
+
+            string[] argArray = types.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+            if (argArray.Length == 0)
+            {
+                return Array.Empty<Type>();
+            }
+
+            List<Type> argTypes = new List<Type>();
+            foreach (string arg in argArray)
+            {
+                if (Intelli.AllTypes.TryGetValue(arg.Trim(), out Type t))
+                {
+                    argTypes.Add(t);
+                }
+            }
+
+            return argTypes.ToArray();
         }
 
         private static readonly Dictionary<string, string> typeAliases;
