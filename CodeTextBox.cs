@@ -2727,6 +2727,7 @@ namespace PaintDotNet.Effects
         private void FindPanel_ReplaceAllClicked(object sender, EventArgs e)
         {
             Replace(findPanel.Term, findPanel.Replacement, findPanel.Flags);
+            OnBuildNeeded();
         }
 
         private void FindPanel_FindNextClicked(object sender, EventArgs e)
