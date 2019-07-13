@@ -452,7 +452,10 @@ namespace PaintDotNet.Effects
             try
             {
                 // Load the file as a bitmap
-                newicon = new Bitmap(filePath);
+                using (var bmpTemp = new Bitmap(filePath))
+                {
+                    newicon = new Bitmap(bmpTemp);
+                }
             }
             catch
             {
