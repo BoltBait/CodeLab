@@ -87,7 +87,7 @@ namespace PaintDotNet.Effects
                 string imagePath = Path.ChangeExtension(value, ".png");
                 if (File.Exists(imagePath))
                 {
-                    activeTab.Image = new Bitmap(imagePath);
+                    activeTab.Image = ResUtil.GetBitmapFromFile(imagePath);
                 }
                 else
                 {
@@ -331,7 +331,7 @@ namespace PaintDotNet.Effects
             string imagePath = System.IO.Path.ChangeExtension(path, ".png");
             if (File.Exists(imagePath))
             {
-                this.Image = new Bitmap(imagePath);
+                this.Image = ResUtil.GetBitmapFromFile(imagePath);
             }
             else
             {

@@ -39,5 +39,22 @@ namespace PaintDotNet.Effects
 
             return EmptyImage;
         }
+
+        internal static Bitmap GetBitmapFromFile(string filePath)
+        {
+            try
+            {
+                // This is the BKM for loading bitmaps from files without locking the file.
+                // This pattern should always be used when loading a bitmap from a file.
+                using (Bitmap bmpTemp = new Bitmap(filePath))
+                {
+                    return new Bitmap(bmpTemp);
+                }
+            }
+            catch
+            {
+                return null;
+            }
+        }
     }
 }
