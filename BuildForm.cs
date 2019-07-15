@@ -312,13 +312,9 @@ namespace PaintDotNet.Effects
             string samplePath = Path.ChangeExtension(resourcePath, ".sample.png");
             if (File.Exists(samplePath))
             {
-                Bitmap SampleImage;
-                try
+                Bitmap SampleImage = ResUtil.GetBitmapFromFile(samplePath);
+                if (SampleImage != null)
                 {
-                    using (var bmpTemp = new Bitmap(samplePath))
-                    {
-                        SampleImage = new Bitmap(bmpTemp);
-                    }
                     if ((SampleImage.Width != 200) || (SampleImage.Height != 150))
                     {
                         sampleLabel.Text = "The sample image " + Path.GetFileName(samplePath) + " was detected, but it was the wrong size. PNG file must be 200x150 pixels. You may continue without a sample image.";
@@ -333,7 +329,7 @@ namespace PaintDotNet.Effects
                         sampleImage.Visible = true;
                     }
                 }
-                catch
+                else
                 {
                     sampleLabel.Text = "Something went wrong trying to load your sample image.";
                     sampleLabel.Visible = true;
@@ -448,18 +444,9 @@ namespace PaintDotNet.Effects
                 return;
             }
 
-            Bitmap newicon;
-            try
+            Bitmap newicon = ResUtil.GetBitmapFromFile(filePath);
+            if (newicon is null)
             {
-                // Load the file as a bitmap
-                using (var bmpTemp = new Bitmap(filePath))
-                {
-                    newicon = new Bitmap(bmpTemp);
-                }
-            }
-            catch
-            {
-                // If any errors happen, assume the file is invalid.
                 MenuIcon.Image = null;
                 IconPath = "";
                 return;

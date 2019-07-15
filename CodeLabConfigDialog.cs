@@ -1923,7 +1923,7 @@ namespace PaintDotNet.Effects
                 string imagePath = Path.ChangeExtension(itemPath, ".png");
                 if (File.Exists(imagePath))
                 {
-                    recentItem.Image = new Bitmap(imagePath);
+                    recentItem.Image = ResUtil.GetBitmapFromFile(imagePath);
                 }
 
                 recentsList.Add(recentItem);
