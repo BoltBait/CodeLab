@@ -191,5 +191,14 @@ namespace PaintDotNet.Effects
 
             regKey.Flush();
         }
+
+        internal static void CloseRegKey()
+        {
+            if (regKey != null)
+            {
+                regKey.Close();
+                regKey.Dispose();
+            }
+        }
     }
 }

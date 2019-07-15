@@ -667,6 +667,8 @@ namespace PaintDotNet.Effects
                     (int)FlexibleMessageBox.Show("There are one or more Tabs with unsaved changes. These changes will be lost if CodeLab is closed.\r\n\r\nWould you like to return to CodeLab, so these files can be saved?", "Unsaved changes", new string[] { "Return to CodeLab", "Discard changes" }, MessageBoxIcon.Warning) == 1;
             }
 
+            Settings.CloseRegKey();
+
             base.OnFormClosing(e);
         }
 
