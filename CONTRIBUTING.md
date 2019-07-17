@@ -2,9 +2,9 @@
 
 #### Before You Begin
 
-- Install Paint.NET version 4.0.6
+- Install Paint.NET version 4.2
 
-- Install Visual Studio 2017 Community Edition (C# options)
+- Install Visual Studio 2019 Community Edition (C# options)
 
 - Visit the following page and install ILMerge:
 
