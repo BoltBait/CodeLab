@@ -1683,6 +1683,10 @@ namespace PaintDotNet.Effects
                     defaultValue = muri.Groups["uri"].Value;
                 }
             }
+            else if (elementType == ElementType.Checkbox)
+            {
+                defaultValue = DefaultStr.Contains("true", StringComparison.OrdinalIgnoreCase) ? "1" : "0";
+            }
             else
             {
                 if (!double.TryParse(DefaultStr, NumberStyles.Float, CultureInfo.InvariantCulture, out double dDefault))
