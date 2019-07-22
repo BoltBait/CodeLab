@@ -6,7 +6,7 @@ namespace PaintDotNet.Effects
 {
     internal static class Settings
     {
-        private static readonly RegistryKey regKey;
+        private static RegistryKey regKey = null;
         private static readonly string desktopPath;
         private static readonly string documentsPath;
 
@@ -131,19 +131,31 @@ namespace PaintDotNet.Effects
 
         static Settings()
         {
-            regKey = Registry.CurrentUser.OpenSubKey("Software\\CodeLab", true);
-            if (regKey == null)
-            {
-                Registry.CurrentUser.CreateSubKey("Software\\CodeLab").Flush();
-                regKey = Registry.CurrentUser.OpenSubKey("Software\\CodeLab", true);
-            }
-
+            OpenRegKey();
             desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
             documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
         }
 
+        internal static void OpenRegKey()
+        {
+            if (regKey == null)
+            {
+                regKey = Registry.CurrentUser.OpenSubKey("Software\\CodeLab", true);
+                if (regKey == null)
+                {
+                    Registry.CurrentUser.CreateSubKey("Software\\CodeLab").Flush();
+                    regKey = Registry.CurrentUser.OpenSubKey("Software\\CodeLab", true);
+                }
+            }
+        }
+
         private static TType GetRegValue<TType>(string valueName, TType defaultValue)
         {
+            if (regKey == null)
+            {
+                OpenRegKey();
+            }
+
             if (defaultValue is bool b)
             {
                 int defaultInt = b ? 1 : 0;
@@ -170,6 +182,11 @@ namespace PaintDotNet.Effects
 
         private static void SetRegValue<TType>(string valueName, TType value)
         {
+            if (regKey == null)
+            {
+                OpenRegKey();
+            }
+
             if (value is bool b)
             {
                 int regValue = b ? 1 : 0;
@@ -198,6 +215,7 @@ namespace PaintDotNet.Effects
             {
                 regKey.Close();
                 regKey.Dispose();
+                regKey = null;
             }
         }
     }
