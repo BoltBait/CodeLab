@@ -85,6 +85,11 @@ namespace PaintDotNet.Effects
             return true;
         }
 
+        internal static bool IsWebAddress(this string str)
+        {
+            return str.Length > 0 && (str.StartsWith("http://", StringComparison.OrdinalIgnoreCase) || str.StartsWith("https://", StringComparison.OrdinalIgnoreCase));
+        }
+
         internal static string StripComments(this string str)
         {
             const string blockComments = @"/\*(.*?)\*/";

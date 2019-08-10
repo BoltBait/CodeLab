@@ -1135,7 +1135,7 @@ namespace PaintDotNet.Effects
             if (ControlType.Text == "Web Link")
             {
                 // Make sure the URL is valid.
-                if (!(newOptions.StartsWith("http://", StringComparison.OrdinalIgnoreCase) || newOptions.StartsWith("https://", StringComparison.OrdinalIgnoreCase)))
+                if (!newOptions.IsWebAddress())
                 {
                     error = true;
                 }

@@ -210,7 +210,7 @@ namespace PaintDotNet.Effects
                 if (hlp.Success)
                 {
                     HelpStr = hlp.Groups["helptext"].Value.Trim();
-                    if (HelpStr.StartsWith("http://", StringComparison.OrdinalIgnoreCase) || HelpStr.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
+                    if (HelpStr.IsWebAddress())
                     {
                         HelpURL.Text = HelpStr;
                         radioButtonURL.Checked = true;
@@ -639,7 +639,7 @@ namespace PaintDotNet.Effects
         {
             if (radioButtonURL.Checked)
             {
-                if (HelpURL.Text.StartsWith("http://", StringComparison.OrdinalIgnoreCase) || HelpURL.Text.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
+                if (HelpURL.Text.IsWebAddress())
                 {
                     Process.Start(HelpURL.Text);
                 }

@@ -200,7 +200,7 @@ namespace PaintDotNet.Effects
         {
             menuname = menuname.Replace('"', '\'');
             SupportURL = SupportURL.Trim();
-            if (SupportURL.Length == 0)
+            if (!SupportURL.IsWebAddress())
             {
                 SupportURL = "https://www.getpaint.net/redirect/plugins.html";
             }
