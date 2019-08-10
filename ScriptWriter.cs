@@ -215,6 +215,7 @@ namespace PaintDotNet.Effects
             SupportInfoPart += "                return base.GetType().Assembly.GetCustomAttribute<AssemblyCopyrightAttribute>().Copyright;\r\n";
             SupportInfoPart += "            }\r\n";
             SupportInfoPart += "        }\r\n";
+            SupportInfoPart += "\r\n";
             SupportInfoPart += "        public string Copyright\r\n";
             SupportInfoPart += "        {\r\n";
             SupportInfoPart += "            get\r\n";
