@@ -1604,7 +1604,7 @@ namespace PaintDotNet.Effects
                         break;
                     }
 
-                    if (!varType.IsByRef && paramName.StartsWith("ref", StringComparison.Ordinal) || paramName.StartsWith("out", StringComparison.Ordinal))
+                    if (!varType.IsByRef && (paramName.StartsWith("ref", StringComparison.Ordinal) || paramName.StartsWith("out", StringComparison.Ordinal)))
                     {
                         varType = varType.MakeByRefType();
                     }
