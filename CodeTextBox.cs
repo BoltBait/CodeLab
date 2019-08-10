@@ -952,7 +952,8 @@ namespace PaintDotNet.Effects
             int style = this.GetStyleAt(position);
             if (style != Style.Cpp.Word && style != Style.Cpp.Word + Preprocessor &&
                 style != Style.Cpp.Word2 && style != Style.Cpp.Word2 + Preprocessor &&
-                style != Style.Cpp.Identifier && style != Style.Cpp.Identifier + Preprocessor)
+                style != Style.Cpp.Identifier && style != Style.Cpp.Identifier + Preprocessor &&
+                style != Style.Cpp.Default)
             {
                 return IntelliType.None;
             }
