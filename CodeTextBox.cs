@@ -1584,7 +1584,8 @@ namespace PaintDotNet.Effects
                 for (int j = 0; j < paramLength; j++)
                 {
                     int paramPos = InvalidPosition;
-                    if (this.SearchInTarget(paramArray[j].Trim()) != InvalidPosition)
+                    string paramName = paramArray[j].Trim();
+                    if (this.SearchInTarget(paramName) != InvalidPosition)
                     {
                         paramPos = this.TargetEnd;
                         this.SetTargetRange(this.TargetEnd, paramEnd);
@@ -1597,14 +1598,25 @@ namespace PaintDotNet.Effects
                     }
 
                     Type varType = GetReturnType(paramPos);
-                    if (varType == null || !(varType == paramInfo[j].ParameterType || varType.IsSubclassOf(paramInfo[j].ParameterType)))
+                    if (varType == null)
                     {
                         match = false;
                         break;
                     }
 
+                    if (!varType.IsByRef && paramName.StartsWith("ref", StringComparison.Ordinal) || paramName.StartsWith("out", StringComparison.Ordinal))
+                    {
+                        varType = varType.MakeByRefType();
+                    }
+
                     ParameterInfo param = paramInfo[j];
-                    paraNames.Add($"{(param.ParameterType.IsByRef ? "ref " : string.Empty)}{param.ParameterType.GetDisplayName()} {param.Name}");
+                    if (!(varType == param.ParameterType || varType.IsSubclassOf(param.ParameterType)))
+                    {
+                        match = false;
+                        break;
+                    }
+
+                    paraNames.Add(param.BuildParamString());
                 }
 
                 if (!match)

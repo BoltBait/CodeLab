@@ -265,10 +265,16 @@ namespace PaintDotNet.Effects
                     continue;
                 }
 
-                methodParams.Add($"{(param.ParameterType.IsByRef ? "ref " : string.Empty)}{param.ParameterType.GetDisplayName()} {param.Name}");
+                methodParams.Add(param.BuildParamString());
             }
 
             return methodParams.Join(", ");
+        }
+
+        internal static string BuildParamString(this ParameterInfo parameterInfo)
+        {
+            string modifier = parameterInfo.IsOut ? "out " : parameterInfo.ParameterType.IsByRef ? "ref " : string.Empty;
+            return $"{modifier}{parameterInfo.ParameterType.GetDisplayName()} {parameterInfo.Name}";
         }
 
         internal static bool IsOrHasExtension(this MemberInfo member)
