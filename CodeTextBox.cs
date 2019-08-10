@@ -588,6 +588,8 @@ namespace PaintDotNet.Effects
             this.ClearCmdKey(Keys.Control | Keys.R); // unassigned
             this.ClearCmdKey(Keys.Control | Keys.G); // unassigned
             this.ClearCmdKey(Keys.Control | Keys.P); // Preview Effect
+            this.ClearCmdKey(Keys.Control | Keys.OemOpenBrackets); // unassigned
+            this.ClearCmdKey(Keys.Control | Keys.OemCloseBrackets); // Go to matching brace
 
             // CaretLineVisibleAlways
             this.CaretLineVisibleAlways = true;
@@ -2248,6 +2250,37 @@ namespace PaintDotNet.Effects
                     else
                     {
                         NonMemberIntelliBox(this.CurrentPosition);
+                    }
+                }
+                else if (e.Control && e.KeyCode == Keys.OemCloseBrackets)
+                {
+                    int bracePos1 = InvalidPosition;
+                    int caretPos = this.CurrentPosition;
+
+                    if (caretPos > 0 && (IsBrace(this.GetCharAt(caretPos - 1), true) || IsBrace(this.GetCharAt(caretPos - 1), false)))
+                    {
+                        bracePos1 = caretPos - 1;
+                    }
+                    else if (IsBrace(this.GetCharAt(caretPos), true) || IsBrace(this.GetCharAt(caretPos), false))
+                    {
+                        bracePos1 = caretPos;
+                    }
+
+                    int style = this.GetStyleAt(bracePos1);
+
+                    if (bracePos1 > InvalidPosition && (style == Style.Cpp.Operator || style == Style.Cpp.Operator + Preprocessor))
+                    {
+                        int bracePos2 = this.BraceMatch(bracePos1);
+                        if (bracePos2 != InvalidPosition)
+                        {
+                            if (IsBrace(this.GetCharAt(bracePos2), false))
+                            {
+                                bracePos2++;
+                            }
+
+                            this.SetEmptySelection(bracePos2);
+                            this.ScrollCaret();
+                        }
                     }
                 }
                 else if (e.KeyCode == Keys.F12)
