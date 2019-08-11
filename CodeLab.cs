@@ -79,7 +79,7 @@ namespace PaintDotNet.Effects
                     sect.LastExceptions.Add(exc);
                     dstArgs.Surface.CopySurface(srcArgs.Surface);
                     sect.UserScriptObject = null;
-                    userEffect.Dispose();
+                    userEffect?.Dispose();
                     userEffect = null;
                 }
             }
@@ -101,7 +101,7 @@ namespace PaintDotNet.Effects
                     sect.LastExceptions.Add(exc);
                     dstArgs.Surface.CopySurface(srcArgs.Surface);
                     sect.UserScriptObject = null;
-                    userEffect.Dispose();
+                    userEffect?.Dispose();
                     userEffect = null;
                 }
 
@@ -126,7 +126,12 @@ namespace PaintDotNet.Effects
 
         protected override void OnDispose(bool disposing)
         {
-            userEffect?.Dispose();
+            if (disposing)
+            {
+                userEffect?.Dispose();
+                userEffect = null;
+            }
+
             base.OnDispose(disposing);
         }
     }
