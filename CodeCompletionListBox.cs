@@ -691,21 +691,11 @@ namespace PaintDotNet.Effects
             }
         }
 
-        private class IntelliBoxItem : IComparable, IEquatable<IntelliBoxItem>
+        private class IntelliBoxItem : IComparable<IntelliBoxItem>, IEquatable<IntelliBoxItem>
         {
-            public int CompareTo(object obj)
+            public int CompareTo(IntelliBoxItem other)
             {
-                if (obj == null)
-                {
-                    return 0;
-                }
-
-                if (obj is IntelliBoxItem other)
-                {
-                    return (string.Compare(this.Text, other.Text, StringComparison.OrdinalIgnoreCase));
-                }
-
-                return 0;
+                return string.Compare(this.Text, other.Text, StringComparison.OrdinalIgnoreCase);
             }
             public bool Equals(IntelliBoxItem other)
             {
