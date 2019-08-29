@@ -266,8 +266,8 @@ namespace PaintDotNet.Effects
 
             ignore = true;
             hexBox.Text = (showAlpha) ?
-                    _colorval.ToArgb().ToString("X8") :
-                    hexBox.Text = _colorval.ToArgb().ToString("X8").Substring(2);
+                _colorval.ToArgb().ToString("X8") :
+                _colorval.ToArgb().ToString("X8").Substring(2);
             ignore = false;
 
             colorWheelBox.Refresh();
@@ -314,8 +314,8 @@ namespace PaintDotNet.Effects
             greenBox.Value = _colorval.G;
             blueBox.Value = _colorval.B;
             hexBox.Text = (showAlpha) ?
-                    _colorval.ToArgb().ToString("X8") :
-                    hexBox.Text = _colorval.ToArgb().ToString("X8").Substring(2);
+                _colorval.ToArgb().ToString("X8") :
+                _colorval.ToArgb().ToString("X8").Substring(2);
             ignore = false;
 
             UpdateColorSliders();
@@ -343,7 +343,7 @@ namespace PaintDotNet.Effects
                 _colorval = HSVColor.ToColor(MasterAlpha, MasterHue, MasterSat, MasterVal);
                 hexBox.Text = (showAlpha) ?
                     _colorval.ToArgb().ToString("X8") :
-                    hexBox.Text = _colorval.ToArgb().ToString("X8").Substring(2);
+                    _colorval.ToArgb().ToString("X8").Substring(2);
 
                 return;
             }
