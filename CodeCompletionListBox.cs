@@ -74,7 +74,9 @@ namespace PaintDotNet.Effects
                 ResUtil.GetImage("Const"),
                 ResUtil.GetImage("EnumItem"),
                 ResUtil.GetImage("Snippet"),
-                ResUtil.GetImage("Method") // Use the Method icon for constructor
+                ResUtil.GetImage("Method"), // Use the Method icon for Constructor
+                ResUtil.GetImage("Var"), // Use the Variable icon for Parameter
+                ResUtil.GetImage("Interface")
             });
         }
 
@@ -307,10 +309,8 @@ namespace PaintDotNet.Effects
                 }
                 else if (t.IsInterface)
                 {
-                    // Disabled simply because I don't think they're useful in the context of CodeLab
-                    //baseType = "interface";
-                    //icon = IntelliTypes.Interface;
-                    continue;
+                    baseType = "interface";
+                    icon = IntelliType.Interface;
                 }
 
                 string toolTip = $"{baseType} - {t.Namespace}.{realName}\nType";
@@ -345,10 +345,8 @@ namespace PaintDotNet.Effects
                 }
                 else if (t.IsInterface)
                 {
-                    // Disabled simply because I don't think they're useful in the context of CodeLab
-                    //baseType = "interface";
-                    //icon = IntelliTypes.Interface;
-                    continue;
+                    baseType = "interface";
+                    icon = IntelliType.Interface;
                 }
 
                 string toolTip = $"{baseType} - {t.DeclaringType.Name}.{realName}\nType";
@@ -366,7 +364,7 @@ namespace PaintDotNet.Effects
             {
                 string type = Intelli.Parameters[para].GetDisplayName();
                 string toolTip = $"{type} - {para}\nParameter";
-                unFilteredItems.Add(new IntelliBoxItem(para, para, toolTip, IntelliType.Variable)); // use the var icon
+                unFilteredItems.Add(new IntelliBoxItem(para, para, toolTip, IntelliType.Parameter));
             }
 
             foreach (string key in Intelli.Keywords)

@@ -2372,6 +2372,12 @@ namespace PaintDotNet.Effects
                 e.Handled = true;
                 iBox.Filter(IntelliType.Snippet);
             }
+            else if (e.Alt && e.KeyCode == Keys.I)
+            {
+                e.SuppressKeyPress = true;
+                e.Handled = true;
+                iBox.Filter(IntelliType.Interface);
+            }
             else if (e.KeyCode == Keys.OemPeriod)
             {
                 if (iBox.Matches)
