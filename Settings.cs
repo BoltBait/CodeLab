@@ -7,8 +7,8 @@ namespace PaintDotNet.Effects
     internal static class Settings
     {
         private static RegistryKey regKey = null;
-        private static readonly string desktopPath;
-        private static readonly string documentsPath;
+        private static readonly string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
+        private static readonly string documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 
         internal static bool Bookmarks
         {
@@ -127,13 +127,6 @@ namespace PaintDotNet.Effects
         {
             get => GetRegValue("WordWrap", false);
             set => SetRegValue("WordWrap", value);
-        }
-
-        static Settings()
-        {
-            OpenRegKey();
-            desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
-            documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
         }
 
         internal static void OpenRegKey()

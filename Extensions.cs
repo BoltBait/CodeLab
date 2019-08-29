@@ -383,44 +383,39 @@ namespace PaintDotNet.Effects
             return argTypes.ToArray();
         }
 
-        private static readonly Dictionary<string, string> typeAliases;
-
-        static Extensions()
+        private static readonly Dictionary<string, string> typeAliases = new Dictionary<string, string>
         {
-            typeAliases = new Dictionary<string, string>
-            {
-                { "Byte", "byte" },
-                { "SByte", "sbyte" },
-                { "Int16", "short" },
-                { "UInt16", "ushort" },
-                { "Int32", "int" },
-                { "UInt32", "uint" },
-                { "Int64", "long" },
-                { "UInt64", "ulong" },
-                { "Single", "float" },
-                { "Double", "double" },
-                { "Decimal", "decimal" },
-                { "Boolean", "bool" },
-                { "Char", "char" },
-                { "String", "string" },
-                { "Object", "object" },
-                { "Byte[]", "byte[]" },
-                { "SByte[]", "sbyte[]" },
-                { "Int16[]", "short[]" },
-                { "UInt16[]", "ushort[]" },
-                { "Int32[]", "int[]" },
-                { "UInt32[]", "uint[]" },
-                { "Int64[]", "long[]" },
-                { "UInt64[]", "ulong[]" },
-                { "Single[]", "float[]" },
-                { "Double[]", "double[]" },
-                { "Decimal[]", "decimal[]" },
-                { "Boolean[]", "bool[]" },
-                { "Char[]", "char[]" },
-                { "String[]", "string[]" },
-                { "Object[]", "object[]" },
-                { "Void", "void" }
-            };
-        }
+            { "Byte", "byte" },
+            { "SByte", "sbyte" },
+            { "Int16", "short" },
+            { "UInt16", "ushort" },
+            { "Int32", "int" },
+            { "UInt32", "uint" },
+            { "Int64", "long" },
+            { "UInt64", "ulong" },
+            { "Single", "float" },
+            { "Double", "double" },
+            { "Decimal", "decimal" },
+            { "Boolean", "bool" },
+            { "Char", "char" },
+            { "String", "string" },
+            { "Object", "object" },
+            { "Byte[]", "byte[]" },
+            { "SByte[]", "sbyte[]" },
+            { "Int16[]", "short[]" },
+            { "UInt16[]", "ushort[]" },
+            { "Int32[]", "int[]" },
+            { "UInt32[]", "uint[]" },
+            { "Int64[]", "long[]" },
+            { "UInt64[]", "ulong[]" },
+            { "Single[]", "float[]" },
+            { "Double[]", "double[]" },
+            { "Decimal[]", "decimal[]" },
+            { "Boolean[]", "bool[]" },
+            { "Char[]", "char[]" },
+            { "String[]", "string[]" },
+            { "Object[]", "object[]" },
+            { "Void", "void" }
+        };
     }
 }
