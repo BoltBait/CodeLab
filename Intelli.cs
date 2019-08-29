@@ -174,9 +174,8 @@ namespace PaintDotNet.Effects
                     if (type.IsSealed && !type.IsGenericType && !type.IsNested && type.IsOrHasExtension())
                     {
                         extMethodsList.AddRange(
-                            from method in type.GetMethods(BindingFlags.Static | BindingFlags.Public)
-                            where method.IsOrHasExtension()
-                            select method);
+                            type.GetMethods(BindingFlags.Static | BindingFlags.Public)
+                            .Where(method => method.IsOrHasExtension()));
                     }
 
                     if ((type.Namespace == "Microsoft.Win32" || type.Namespace == "PaintDotNet" || type.Namespace == "PaintDotNet.Effects" || type.Namespace == "PaintDotNet.AppModel" || type.Namespace == "System" ||
