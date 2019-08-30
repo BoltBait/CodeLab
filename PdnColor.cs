@@ -54,7 +54,7 @@ namespace PaintDotNet.Effects
         }
 
         #region Control Properties
-        [Category("Data")]
+        [Category(nameof(CategoryAttribute.Data))]
         public Color Color
         {
             get => HSVColor.ToColor(MasterAlpha, MasterHue, MasterSat, MasterVal);
@@ -72,7 +72,7 @@ namespace PaintDotNet.Effects
             }
         }
 
-        [Category("Behavior")]
+        [Category(nameof(CategoryAttribute.Behavior))]
         public bool ShowAlpha
         {
             get => showAlpha;
@@ -98,7 +98,7 @@ namespace PaintDotNet.Effects
         #endregion
 
         #region Event Handler
-        [Category("Action")]
+        [Category(nameof(CategoryAttribute.Action))]
         public event EventHandler ValueChanged;
         protected void OnValueChanged()
         {
@@ -613,7 +613,7 @@ namespace PaintDotNet.Effects
     public class ColorSlider : PictureBox
     {
         #region Properties
-        [Category("Data")]
+        [Category(nameof(CategoryAttribute.Data))]
         public float Value
         {
             get => this.value;
@@ -625,14 +625,14 @@ namespace PaintDotNet.Effects
             }
         }
 
-        [Category("Behavior")]
+        [Category(nameof(CategoryAttribute.Behavior))]
         public int MaxValue
         {
             get => this.maxValue;
             set => this.maxValue = value;
         }
 
-        [Category("Appearance")]
+        [Category(nameof(CategoryAttribute.Appearance))]
         public Color[] Colors
         {
             get => this.colors;
@@ -645,7 +645,7 @@ namespace PaintDotNet.Effects
         #endregion
 
         #region Event handler
-        [Category("Action")]
+        [Category(nameof(CategoryAttribute.Action))]
         public event EventHandler ValueChanged;
         protected void OnValueChanged()
         {

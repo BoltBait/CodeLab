@@ -177,7 +177,7 @@ namespace PaintDotNet.Effects
             get => !(this.CanUndo || this.CanRedo) && this.Text.Equals(ScriptWriter.DefaultCode);
         }
 
-        [Category("Appearance")]
+        [Category(nameof(CategoryAttribute.Appearance))]
         [RefreshProperties(RefreshProperties.All)]
         [DefaultValue(Theme.Light)]
         public Theme Theme

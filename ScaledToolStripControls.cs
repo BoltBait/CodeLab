@@ -21,7 +21,7 @@ namespace PaintDotNet.Effects
             set => base.Image = value;
         }
 
-        [Category("Appearance")]
+        [Category(nameof(CategoryAttribute.Appearance))]
         public string ImageName
         {
             get => imageName;
@@ -45,7 +45,7 @@ namespace PaintDotNet.Effects
             set => base.Image = value;
         }
 
-        [Category("Appearance")]
+        [Category(nameof(CategoryAttribute.Appearance))]
         public string ImageName
         {
             get => imageName;
@@ -84,7 +84,7 @@ namespace PaintDotNet.Effects
             set => base.Image = value;
         }
 
-        [Category("Appearance")]
+        [Category(nameof(CategoryAttribute.Appearance))]
         public string ImageName
         {
             get => imageName;
