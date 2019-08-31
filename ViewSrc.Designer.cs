@@ -48,7 +48,7 @@ namespace PaintDotNet.Effects
             this.TextSrcBox.Name = "TextSrcBox";
             this.TextSrcBox.ReadOnly = true;
             this.TextSrcBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.TextSrcBox.Size = new System.Drawing.Size(523, 291);
+            this.TextSrcBox.Size = new System.Drawing.Size(559, 305);
             this.TextSrcBox.TabIndex = 1;
             this.TextSrcBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextSrcBox_KeyDown);
             // 
@@ -57,7 +57,7 @@ namespace PaintDotNet.Effects
             this.ButtonClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.ButtonClose.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.ButtonClose.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.ButtonClose.Location = new System.Drawing.Point(461, 313);
+            this.ButtonClose.Location = new System.Drawing.Point(497, 327);
             this.ButtonClose.Name = "ButtonClose";
             this.ButtonClose.Size = new System.Drawing.Size(75, 23);
             this.ButtonClose.TabIndex = 0;
@@ -71,7 +71,7 @@ namespace PaintDotNet.Effects
             this.CopyButton.FlatAppearance.BorderSize = 0;
             this.CopyButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.CopyButton.ImageName = "Copy";
-            this.CopyButton.Location = new System.Drawing.Point(13, 311);
+            this.CopyButton.Location = new System.Drawing.Point(13, 325);
             this.CopyButton.Name = "CopyButton";
             this.CopyButton.Size = new System.Drawing.Size(27, 23);
             this.CopyButton.TabIndex = 3;
@@ -86,7 +86,7 @@ namespace PaintDotNet.Effects
             this.SaveButton.FlatAppearance.BorderSize = 0;
             this.SaveButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.SaveButton.ImageName = "Save";
-            this.SaveButton.Location = new System.Drawing.Point(46, 311);
+            this.SaveButton.Location = new System.Drawing.Point(46, 325);
             this.SaveButton.Name = "SaveButton";
             this.SaveButton.Size = new System.Drawing.Size(27, 23);
             this.SaveButton.TabIndex = 2;
@@ -100,18 +100,17 @@ namespace PaintDotNet.Effects
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.CancelButton = this.ButtonClose;
-            this.ClientSize = new System.Drawing.Size(548, 348);
+            this.ClientSize = new System.Drawing.Size(584, 362);
             this.Controls.Add(this.CopyButton);
             this.Controls.Add(this.SaveButton);
             this.Controls.Add(this.ButtonClose);
             this.Controls.Add(this.TextSrcBox);
-            this.MaximizeBox = false;
             this.MinimizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(300, 200);
             this.Name = "ViewSrc";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Full Source Code";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.ResumeLayout(false);
             this.PerformLayout();
 

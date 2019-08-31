@@ -37,6 +37,14 @@ namespace PaintDotNet.Effects
             SaveButton.Visible = ShowSaveButton;
         }
 
+        protected override void OnShown(EventArgs e)
+        {
+            base.OnShown(e);
+
+            TextSrcBox.Select(0, 0);
+            TextSrcBox.Focus();
+        }
+
         private void ButtonClose_Click(object sender, EventArgs e)
         {
             this.Close();
