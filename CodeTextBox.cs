@@ -1434,8 +1434,9 @@ namespace PaintDotNet.Effects
                             if (method.IsGenericMethod)
                             {
                                 string args = GetGenericArgs(tokenPos[i]);
-                                returnType = method.GetGenericReturnType(args).GetDisplayName();
-                                genericArgs = $"<{args}>";
+                                MethodInfo genericMethod = method.MakeGenericMethod(args);
+                                returnType = genericMethod.ReturnType.GetDisplayName();
+                                genericArgs = $"<{genericMethod.GetGenericArguments().Select(t => t.GetDisplayName()).Join(", ")}>";
                             }
 
                             string overloads = (mi.Length > 1) ? $" (+ {mi.Length - 1} overloads)" : string.Empty;

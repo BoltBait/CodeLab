@@ -222,6 +222,20 @@ namespace PaintDotNet.Effects
             return char.ToLowerInvariant(c);
         }
 
+        internal static MethodInfo MakeGenericMethod(this MethodInfo method, string args)
+        {
+            Type[] types = StringToTypeArray(args);
+
+            try
+            {
+                return method.MakeGenericMethod(types);
+            }
+            catch
+            {
+                return method;
+            }
+        }
+
         internal static Type GetGenericReturnType(this MethodInfo method, string args)
         {
             Type[] types = StringToTypeArray(args);
