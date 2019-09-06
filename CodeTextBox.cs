@@ -2584,7 +2584,7 @@ namespace PaintDotNet.Effects
         {
             Type type = GetReturnType(position);
 
-            if (type == null)
+            if (type == null || type == typeof(void))
             {
                 return;
             }
