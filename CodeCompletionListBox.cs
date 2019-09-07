@@ -122,7 +122,7 @@ namespace PaintDotNet.Effects
             foreach (MemberInfo memberInfo in members)
             {
                 if ((!memberInfo.ReflectedType.IsVisible && memberInfo.DeclaringType?.DeclaringType?.FullName != Intelli.UserScriptFullName) ||
-                    memberInfo.ReflectedType.IsSpecialName || memberInfo.GetCustomAttribute<ObsoleteAttribute>() != null)
+                    memberInfo.ReflectedType.IsSpecialName || memberInfo.IsDefined(typeof(ObsoleteAttribute), false))
                 {
                     continue;
                 }
@@ -382,7 +382,7 @@ namespace PaintDotNet.Effects
             MemberInfo[] members = Intelli.UserScript.GetMembers(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
             foreach (MemberInfo memberInfo in members)
             {
-                if (memberInfo.GetCustomAttribute<ObsoleteAttribute>() != null)
+                if (memberInfo.IsDefined(typeof(ObsoleteAttribute), false))
                 {
                     continue;
                 }
