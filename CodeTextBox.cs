@@ -1573,8 +1573,12 @@ namespace PaintDotNet.Effects
                 }
 
                 ParameterInfo[] paramInfo = method.GetParameters();
-                int paramLength = method.IsOrHasExtension() ? paramInfo.Length - 1 : paramInfo.Length;
-                if (paramLength != paramArray.Length)
+                if (method.IsOrHasExtension())
+                {
+                    paramInfo = paramInfo.Skip(1).ToArray();
+                }
+
+                if (paramInfo.Length != paramArray.Length)
                 {
                     continue;
                 }
@@ -1583,7 +1587,7 @@ namespace PaintDotNet.Effects
                 List<string> paraNames = new List<string>();
 
                 this.SetTargetRange(paramStart, paramEnd);
-                for (int j = 0; j < paramLength; j++)
+                for (int j = 0; j < paramInfo.Length; j++)
                 {
                     int paramPos = InvalidPosition;
                     string paramName = paramArray[j].Trim();
