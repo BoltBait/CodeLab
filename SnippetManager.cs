@@ -38,6 +38,13 @@ namespace PaintDotNet.Effects
             {
                 this.SnippetList.SelectedIndex = 0;
             }
+            else
+            {
+                this.SnippetName.Enabled = false;
+                this.SnippetBody.Enabled = false;
+                this.DeleteButton.Enabled = false;
+                this.UpdateButton.Enabled = false;
+            }
         }
 
         protected override void OnClosing(CancelEventArgs e)
