@@ -73,6 +73,7 @@ namespace PaintDotNet.Effects
 
         public CodeLabConfigDialog()
         {
+            Task.Run(() => Intelli.Keywords); // Forces the Intelli class to start initializing in the background
             InitializeComponent();
 
             #region Load Settings from registry
@@ -215,7 +216,7 @@ namespace PaintDotNet.Effects
             txtCode.Theme = PdnTheme.Theme;
 
             ResetScript();
-            Build();
+            BuildAsync();
             txtCode.Focus();
         }
         #endregion
