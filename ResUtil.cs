@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.IO;
 using System.Reflection;
 
@@ -55,6 +56,13 @@ namespace PaintDotNet.Effects
             {
                 return null;
             }
+        }
+
+        internal static Icon CreateIcon(string resName)
+        {
+            Bitmap resBmp = GetImage(resName) as Bitmap;
+            IntPtr hIcon = resBmp.GetHicon();
+            return Icon.FromHandle(hIcon);
         }
     }
 }

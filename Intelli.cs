@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using System.Web.Script.Serialization;
 
 namespace PaintDotNet.Effects
 {
@@ -87,19 +88,21 @@ namespace PaintDotNet.Effects
                 "#endif", "#endregion"
             };
 
-            Snippets = new Dictionary<string, string>
-            {
-                { "if", " (true&)\n{\n    \n}" },
-                { "else", "\n{\n    &\n}" },
-                { "while", " (true&)\n{\n    break;\n}" },
-                { "for", " (int i = 0; i < length&; i++)\n{\n    \n}" },
-                { "foreach", " (var item in collection&)\n{\n    \n}" },
-                { "using", " (resource&)\n{\n    \n}" },
-                { "switch", " (variable&)\n{\n    case 0:\n        break;\n    default:\n        break;\n}" },
-                { "#region", " MyRegion&\n\n#endregion" },
-                { "#if", " true&\n\n#endif" },
-                { "try", "\n{\n    &\n}\ncatch (Exception ex)\n{\n    \n}" }
-            };
+            JavaScriptSerializer ser = new JavaScriptSerializer();
+            Snippets = ser.Deserialize<Dictionary<string, string>>(Settings.Snippets) ??
+                new Dictionary<string, string>()
+                {
+                    { "if", "if (true$)\r\n{\r\n    \r\n}" },
+                    { "else", "else\r\n{\r\n    $\r\n}" },
+                    { "while", "while (true$)\r\n{\r\n    break;\r\n}" },
+                    { "for", "for (int i = 0; i < length$; i++)\r\n{\r\n    \r\n}" },
+                    { "foreach", "foreach (var item in collection$)\r\n{\r\n    \r\n}" },
+                    { "using", "using (resource$)\r\n{\r\n    \r\n}" },
+                    { "switch", "switch (variable$)\r\n{\r\n    case 0:\r\n        break;\r\n    default:\r\n        break;\r\n}" },
+                    { "#region", "#region MyRegion$\r\n\r\n#endregion" },
+                    { "#if", "#if true$\r\n\r\n#endif" },
+                    { "try", "try\r\n{\r\n    $\r\n}\r\ncatch (Exception ex)\r\n{\r\n    \r\n}" }
+                };
 
             Variables = new Dictionary<string, Type>();
 

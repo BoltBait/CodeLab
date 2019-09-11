@@ -2069,5 +2069,13 @@ namespace PaintDotNet.Effects
             }
         }
         #endregion
+
+        private void ScaledToolStripButton1_Click(object sender, EventArgs e)
+        {
+            using (SnippetManager snippetManager = new SnippetManager())
+            {
+                snippetManager.ShowDialog();
+            }
+        }
     }
 }

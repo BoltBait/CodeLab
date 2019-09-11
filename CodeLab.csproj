@@ -59,6 +59,7 @@
     </Reference>
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Windows.Forms">
       <Name>System.Windows.Forms</Name>
     </Reference>
@@ -70,6 +71,9 @@
     </Compile>
     <Compile Include="BuildForm.Designer.cs">
       <DependentUpon>BuildForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ChildFormBase.cs">
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="CodeTextBox.Scintilla.cs">
       <DependentUpon>CodeTextBox.cs</DependentUpon>
@@ -90,6 +94,12 @@
     <Compile Include="ScriptBuilder.cs" />
     <Compile Include="ScriptWriter.cs" />
     <Compile Include="Settings.cs" />
+    <Compile Include="SnippetManager.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SnippetManager.Designer.cs">
+      <DependentUpon>SnippetManager.cs</DependentUpon>
+    </Compile>
     <Compile Include="SolutionGenerator.cs" />
     <Compile Include="TabStrip.cs">
       <SubType>UserControl</SubType>
@@ -171,6 +181,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ColorWindow.resx">
       <DependentUpon>ColorWindow.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="PdnColor.resx">
       <DependentUpon>PdnColor.cs</DependentUpon>
@@ -178,6 +189,9 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SnippetManager.resx">
+      <DependentUpon>SnippetManager.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="TabStrip.resx">
       <DependentUpon>TabStrip.cs</DependentUpon>
@@ -313,6 +327,8 @@
     <EmbeddedResource Include="Icons\Bold.png" />
     <EmbeddedResource Include="Icons\Italic.png" />
     <EmbeddedResource Include="Icons\Underline.png" />
+    <EmbeddedResource Include="Icons\Add.png" />
+    <EmbeddedResource Include="Icons\Json.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Icons\CodeLab.32.png" />
@@ -354,6 +370,8 @@
     <EmbeddedResource Include="Icons\IncreaseFontSize.32png.png" />
     <EmbeddedResource Include="Icons\Newspaper.32.png" />
     <EmbeddedResource Include="Icons\Bulb.32.png" />
+    <EmbeddedResource Include="Icons\Add.32.png" />
+    <EmbeddedResource Include="Icons\Json.32.png" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="jacobslusser.ScintillaNET.Signed">

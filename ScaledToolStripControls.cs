@@ -61,6 +61,15 @@ namespace PaintDotNet.Effects
     {
         private string imageName = string.Empty;
 
+        [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public override Image Image
+        {
+            get => base.Image;
+            set => base.Image = value;
+        }
+
+        [Category(nameof(CategoryAttribute.Appearance))]
         public string ImageName
         {
             get => imageName;

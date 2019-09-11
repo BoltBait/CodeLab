@@ -175,6 +175,14 @@ namespace PaintDotNet.Effects
             return count;
         }
 
+        internal static void ForEach<T>(this IEnumerable<T> ie, Action<T> action)
+        {
+            foreach (T i in ie)
+            {
+                action(i);
+            }
+        }
+
         internal static string GetDisplayName(this Type type)
         {
             return (type.IsGenericType) ? type.GetGenericName() : type.GetAliasName();

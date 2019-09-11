@@ -581,15 +581,28 @@ namespace PaintDotNet.Effects
             this.MouseDwellTime = 250;
 
             // Free up default HotKeys, so they can be used for other things
-            this.ClearCmdKey(Keys.Control | Keys.F); // Find
-            this.ClearCmdKey(Keys.Control | Keys.H); // Find and Replace
-            this.ClearCmdKey(Keys.Control | Keys.J); // Open IntelliBox
-            this.ClearCmdKey(Keys.Control | Keys.Q); // Format Document
-            this.ClearCmdKey(Keys.Control | Keys.R); // unassigned
-            this.ClearCmdKey(Keys.Control | Keys.G); // unassigned
-            this.ClearCmdKey(Keys.Control | Keys.P); // Preview Effect
-            this.ClearCmdKey(Keys.Control | Keys.OemOpenBrackets); // unassigned
-            this.ClearCmdKey(Keys.Control | Keys.OemCloseBrackets); // Go to matching brace
+            // or just to disable undesired features (see comments for defaults)
+            this.ClearCmdKey(Keys.Control | Keys.B); // Insert u002
+            this.ClearCmdKey(Keys.Control | Keys.D); // Duplicate Line
+            this.ClearCmdKey(Keys.Control | Keys.E); // Insert u005
+            this.ClearCmdKey(Keys.Control | Keys.F); // Insert u006
+            this.ClearCmdKey(Keys.Control | Keys.G); // Insert u007
+            this.ClearCmdKey(Keys.Control | Keys.H); // Insert u008
+            this.ClearCmdKey(Keys.Control | Keys.I); // Insert u009 (Tab)
+            this.ClearCmdKey(Keys.Control | Keys.J); // Insert u00A (Line Feed)
+            this.ClearCmdKey(Keys.Control | Keys.K); // Insert u00B
+            this.ClearCmdKey(Keys.Control | Keys.L); // Remove Line
+            this.ClearCmdKey(Keys.Control | Keys.M); // Insert u00D (Carriage Return)
+            this.ClearCmdKey(Keys.Control | Keys.N); // Insert u00E
+            this.ClearCmdKey(Keys.Control | Keys.O); // Insert u00F
+            this.ClearCmdKey(Keys.Control | Keys.P); // Insert u010
+            this.ClearCmdKey(Keys.Control | Keys.Q); // Insert u011
+            this.ClearCmdKey(Keys.Control | Keys.R); // Insert u012
+            this.ClearCmdKey(Keys.Control | Keys.S); // Insert u0013
+            this.ClearCmdKey(Keys.Control | Keys.T); // Swap Lines
+            this.ClearCmdKey(Keys.Control | Keys.W); // Inset u0017
+            this.ClearCmdKey(Keys.Control | Keys.OemOpenBrackets); // Go To Previous Code Block
+            this.ClearCmdKey(Keys.Control | Keys.OemCloseBrackets); // Go To Next Code Block
 
             // CaretLineVisibleAlways
             this.CaretLineVisibleAlways = true;
@@ -2218,6 +2231,7 @@ namespace PaintDotNet.Effects
                     if (this.GetCharAt(prevWordStartPos - 1).Equals('#'))
                     {
                         prevWord = "#" + prevWord;
+                        prevWordStartPos--;
                     }
 
                     if (Intelli.Snippets.ContainsKey(prevWord) && prevWordEndPos == this.CurrentPosition)
@@ -2227,10 +2241,12 @@ namespace PaintDotNet.Effects
 
                         this.BeginUndoAction();
 
+                        this.DeleteRange(prevWordStartPos, prevWordEndPos - prevWordStartPos);
+
                         // Insert the snippet
                         string indent = new string(' ', this.Lines[this.CurrentLine].Indentation);
                         int startPos = this.CurrentPosition;
-                        string[] lines = Intelli.Snippets[prevWord].Split('\n');
+                        string[] lines = Intelli.Snippets[prevWord].Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
                         for (int i = 0; i < lines.Length; i++)
                         {
                             string line = (i == lines.Length - 1) ? lines[i] : lines[i] + "\r\n" + indent;
@@ -2241,7 +2257,7 @@ namespace PaintDotNet.Effects
                         // move caret/selection to the correct location
                         this.SearchFlags = SearchFlags.None;
                         this.SetTargetRange(startPos, endPos);
-                        if (this.SearchInTarget("&") != InvalidPosition)
+                        if (this.SearchInTarget("$") != InvalidPosition)
                         {
                             this.DeleteRange(this.TargetStart, 1);
                             this.SelectionStart = this.WordStartPosition(this.TargetStart, true);
