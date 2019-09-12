@@ -30,7 +30,6 @@ namespace PaintDotNet.Effects
         private static readonly CSharpCodeProvider cscp = new CSharpCodeProvider();
         private static readonly CompilerParameters param = new CompilerParameters();
         private static CompilerResults result;
-        private static Assembly userAssembly;
         private static Effect userScriptObject;
         private static int lineOffset;
         private static string exceptionMsg;
@@ -124,10 +123,9 @@ namespace PaintDotNet.Effects
                     return false;
                 }
 
-                userAssembly = result.CompiledAssembly;
                 Intelli.UserDefinedTypes.Clear();
 
-                foreach (Type type in userAssembly.GetTypes())
+                foreach (Type type in result.CompiledAssembly.GetTypes())
                 {
                     if (type.IsSubclassOf(typeof(Effect)) && !type.IsAbstract)
                     {
@@ -378,8 +376,7 @@ namespace PaintDotNet.Effects
                     return false;
                 }
 
-                userAssembly = result.CompiledAssembly;
-                foreach (Type type in userAssembly.GetTypes())
+                foreach (Type type in result.CompiledAssembly.GetTypes())
                 {
                     if (type.IsSubclassOf(typeof(PropertyBasedEffect)) && !type.IsAbstract)
                     {
@@ -425,8 +422,7 @@ namespace PaintDotNet.Effects
                     return false;
                 }
 
-                userAssembly = result.CompiledAssembly;
-                foreach (Type type in userAssembly.GetTypes())
+                foreach (Type type in result.CompiledAssembly.GetTypes())
                 {
                     if (type.IsSubclassOf(typeof(PropertyBasedEffect)) && !type.IsAbstract)
                     {
