@@ -1289,7 +1289,7 @@
             this.SnippetManButton.Padding = new System.Windows.Forms.Padding(2);
             this.SnippetManButton.Size = new System.Drawing.Size(24, 24);
             this.SnippetManButton.Text = "Snippet Manager";
-            this.SnippetManButton.Click += new System.EventHandler(this.ScaledToolStripButton1_Click);
+            this.SnippetManButton.Click += new System.EventHandler(this.SnippetManButton_Click);
             // 
             // txtCode
             // 
