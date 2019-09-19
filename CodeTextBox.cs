@@ -1256,7 +1256,8 @@ namespace PaintDotNet.Effects
             if (style == Style.Cpp.Comment || style == Style.Cpp.Comment + Preprocessor ||
                 style == Style.Cpp.CommentLine || style == Style.Cpp.CommentLine + Preprocessor ||
                 style == Style.Cpp.Preprocessor || style == Style.Cpp.Preprocessor + Preprocessor ||
-                style == Style.Cpp.Operator || style == Style.Cpp.Operator + Preprocessor)
+                style == Style.Cpp.Operator || style == Style.Cpp.Operator + Preprocessor ||
+                style == Style.Cpp.Default || style == Style.Cpp.Default + Preprocessor)
             {
                 return string.Empty;
             }
@@ -1669,7 +1670,9 @@ namespace PaintDotNet.Effects
             int style = this.GetStyleAt(position - 1);
             if (style == Style.Cpp.Comment || style == Style.Cpp.Comment + Preprocessor ||
                 style == Style.Cpp.CommentLine || style == Style.Cpp.CommentLine + Preprocessor ||
-                style == Style.Cpp.Preprocessor || style == Style.Cpp.Preprocessor + Preprocessor)
+                style == Style.Cpp.Preprocessor || style == Style.Cpp.Preprocessor + Preprocessor ||
+                style == Style.Cpp.Operator || style == Style.Cpp.Operator + Preprocessor ||
+                style == Style.Cpp.Default || style == Style.Cpp.Default + Preprocessor)
             {
                 return null;
             }
@@ -1934,7 +1937,8 @@ namespace PaintDotNet.Effects
             if (style == Style.Cpp.Comment || style == Style.Cpp.Comment + Preprocessor ||
                 style == Style.Cpp.CommentLine || style == Style.Cpp.CommentLine + Preprocessor ||
                 style == Style.Cpp.Preprocessor || style == Style.Cpp.Preprocessor + Preprocessor ||
-                style == Style.Cpp.Operator || style == Style.Cpp.Operator + Preprocessor)
+                style == Style.Cpp.Operator || style == Style.Cpp.Operator + Preprocessor ||
+                style == Style.Cpp.Default || style == Style.Cpp.Default + Preprocessor)
             {
                 return false;
             }
