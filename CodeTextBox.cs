@@ -1550,11 +1550,13 @@ namespace PaintDotNet.Effects
             }
 
             bool isGeneric = false;
+            string genericArgs = null;
             int paramStart = this.WordEndPosition(position, true);
             char openBrace = this.GetCharAt(paramStart);
             if (openBrace == '<')
             {
                 isGeneric = true;
+                genericArgs = GetGenericArgs(position);
                 paramStart = this.BraceMatch(paramStart) + 1;
                 openBrace = this.GetCharAt(paramStart);
             }
@@ -1578,9 +1580,22 @@ namespace PaintDotNet.Effects
             for (int i = 0; i < mi.Length; i++)
             {
                 MethodBase method = (MethodBase)mi[i];
-                if (method.IsGenericMethod != isGeneric)
+                if (method.IsGenericMethod)
                 {
-                    continue;
+                    if (!isGeneric)
+                    {
+                        continue;
+                    }
+
+                    if (method.IsGenericMethodDefinition && method is MethodInfo methodInfo)
+                    {
+                        method = methodInfo.MakeGenericMethod(genericArgs);
+
+                        if (method.IsGenericMethodDefinition)
+                        {
+                            continue;
+                        }
+                    }
                 }
 
                 ParameterInfo[] paramInfo = method.GetParameters();
