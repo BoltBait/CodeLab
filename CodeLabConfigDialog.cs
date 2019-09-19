@@ -244,8 +244,6 @@ namespace PaintDotNet.Effects
                 FileName = sect.ScriptName;
                 FullScriptPath = sect.ScriptPath;
                 txtCode.Text = sect.UserCode;
-                txtCode.ExecuteCmd(Command.ScrollToEnd); // Workaround for a scintilla bug
-                txtCode.ExecuteCmd(Command.ScrollToStart);
                 txtCode.EmptyUndoBuffer();
                 if (!sect.Dirty)
                 {
@@ -411,8 +409,6 @@ namespace PaintDotNet.Effects
             }
 
             txtCode.Text = fileContents;
-            txtCode.ExecuteCmd(Command.ScrollToEnd); // Workaround for a scintilla bug
-            txtCode.ExecuteCmd(Command.ScrollToStart);
             txtCode.EmptyUndoBuffer();
             txtCode.SetSavePoint();
         }
@@ -872,8 +868,6 @@ namespace PaintDotNet.Effects
                 }
 
                 txtCode.Text = fn.CodeTemplate;
-                txtCode.ExecuteCmd(Command.ScrollToEnd); // Workaround for a scintilla bug
-                txtCode.ExecuteCmd(Command.ScrollToStart);
                 txtCode.EmptyUndoBuffer();
                 Build();
             }
