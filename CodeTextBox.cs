@@ -1097,6 +1097,8 @@ namespace PaintDotNet.Effects
                     {
                         return IntelliType.None;
                     }
+
+                    isStatic = (mi[0].MemberType == MemberTypes.NestedType);
                 }
             }
 
@@ -1519,6 +1521,8 @@ namespace PaintDotNet.Effects
                     {
                         return string.Empty;
                     }
+
+                    isStatic = (mi[0].MemberType == MemberTypes.NestedType);
                 }
             }
 
@@ -1790,6 +1794,8 @@ namespace PaintDotNet.Effects
                 {
                     return null;
                 }
+
+                isStatic = (mi[0].MemberType == MemberTypes.NestedType);
             }
 
             return type;
@@ -1912,6 +1918,8 @@ namespace PaintDotNet.Effects
                     {
                         return null;
                     }
+
+                    isStatic = (mi[0].MemberType == MemberTypes.NestedType);
                 }
             }
 
@@ -2199,6 +2207,8 @@ namespace PaintDotNet.Effects
                     {
                         return false;
                     }
+
+                    isStatic = (mi[0].MemberType == MemberTypes.NestedType);
                 }
             }
 
