@@ -344,7 +344,7 @@ namespace PaintDotNet.Effects
                 }
 
                 posClicked = e.Y;
-                Invalidate();
+                Refresh(); // Need to redraw very quickly here. Refresh() rather than Invalidate().
                 OnScroll(new ScrollEventArgs(ScrollEventType.ThumbTrack, this.Value));
             }
         }
