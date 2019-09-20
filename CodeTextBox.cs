@@ -471,7 +471,7 @@ namespace PaintDotNet.Effects
             #region ScintillaNET Initializers
             this.StyleResetDefault();
             this.Theme = Theme.Light;
-            this.Styles[Style.Default].Font = "Courier New";
+            this.Styles[Style.Default].Font = "Consolas";
             this.Styles[Style.Default].Size = 10;
             //this.StyleClearAll();
 
@@ -3167,20 +3167,7 @@ namespace PaintDotNet.Effects
 
         protected override void OnZoomChanged(EventArgs e)
         {
-            if (this.Margins[LeftMargin.LineNumbers].Width > 0) // Line Numbers Visible/Enabled?
-            {
-                this.Margins[LeftMargin.LineNumbers].Width = this.TextWidth(Style.LineNumber, new string('9', maxLineNumberCharLength + 1)) + 2;
-            }
-
-            if (this.Margins[LeftMargin.Bookmarks].Width > 0) // Bookmarks Visible/Enabled?
-            {
-                this.Margins[LeftMargin.Bookmarks].Width = this.Lines[0].Height;
-            }
-
-            if (this.Margins[LeftMargin.CodeFolding].Width > 0) // Folding Visible/Enabled?
-            {
-                this.Margins[LeftMargin.CodeFolding].Width = this.Lines[0].Height;
-            }
+            UpdateMarginWidths();
 
             this.WhitespaceSize = GetDpiX((this.Zoom >= 2) ? 2 : 1);
 
@@ -3649,6 +3636,24 @@ namespace PaintDotNet.Effects
                     this.Margins[LeftMargin.LineNumbers].Width = this.TextWidth(Style.LineNumber, new string('9', newLineNumberCharLength + 1)) + 2;
                     this.maxLineNumberCharLength = newLineNumberCharLength;
                 }
+            }
+        }
+
+        internal void UpdateMarginWidths()
+        {
+            if (this.Margins[LeftMargin.LineNumbers].Width > 0) // Line Numbers Visible/Enabled?
+            {
+                this.Margins[LeftMargin.LineNumbers].Width = this.TextWidth(Style.LineNumber, new string('9', maxLineNumberCharLength + 1)) + 2;
+            }
+
+            if (this.Margins[LeftMargin.Bookmarks].Width > 0) // Bookmarks Visible/Enabled?
+            {
+                this.Margins[LeftMargin.Bookmarks].Width = this.Lines[0].Height;
+            }
+
+            if (this.Margins[LeftMargin.CodeFolding].Width > 0) // Folding Visible/Enabled?
+            {
+                this.Margins[LeftMargin.CodeFolding].Width = this.Lines[0].Height;
             }
         }
 

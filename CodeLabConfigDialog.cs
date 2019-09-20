@@ -1458,10 +1458,7 @@ namespace PaintDotNet.Effects
             fontsEnvyRMenuItem.Checked = false;
             fontsHackMenuItem.Checked = false;
             fontsVerdanaMenuItem.Checked = false;
-            Settings.FontFamily = "Courier New";
-            txtCode.Styles[Style.Default].Font = "Courier New";
-            OutputTextBox.Font = new Font("Courier New", OutputTextBox.Font.Size);
-            errorList.Font = new Font("Courier New", errorList.Font.Size);
+            ChangeFont("Courier New");
             txtCode.Focus();
         }
 
@@ -1472,10 +1469,7 @@ namespace PaintDotNet.Effects
             fontsEnvyRMenuItem.Checked = false;
             fontsHackMenuItem.Checked = false;
             fontsVerdanaMenuItem.Checked = false;
-            Settings.FontFamily = "Consolas";
-            txtCode.Styles[Style.Default].Font = "Consolas";
-            OutputTextBox.Font = new Font("Consolas", OutputTextBox.Font.Size);
-            errorList.Font = new Font("Consolas", errorList.Font.Size);
+            ChangeFont("Consolas");
             txtCode.Focus();
         }
 
@@ -1486,10 +1480,7 @@ namespace PaintDotNet.Effects
             fontsEnvyRMenuItem.Checked = true;
             fontsHackMenuItem.Checked = false;
             fontsVerdanaMenuItem.Checked = false;
-            Settings.FontFamily = "Envy Code R";
-            txtCode.Styles[Style.Default].Font = "Envy Code R";
-            OutputTextBox.Font = new Font("Envy Code R", OutputTextBox.Font.Size);
-            errorList.Font = new Font("Envy Code R", errorList.Font.Size);
+            ChangeFont("Envy Code R");
             txtCode.Focus();
         }
 
@@ -1500,10 +1491,7 @@ namespace PaintDotNet.Effects
             fontsEnvyRMenuItem.Checked = false;
             fontsHackMenuItem.Checked = true;
             fontsVerdanaMenuItem.Checked = false;
-            Settings.FontFamily = "Hack";
-            txtCode.Styles[Style.Default].Font = "Hack";
-            OutputTextBox.Font = new Font("Hack", OutputTextBox.Font.Size);
-            errorList.Font = new Font("Hack", errorList.Font.Size);
+            ChangeFont("Hack");
             txtCode.Focus();
         }
 
@@ -1514,11 +1502,17 @@ namespace PaintDotNet.Effects
             fontsEnvyRMenuItem.Checked = false;
             fontsHackMenuItem.Checked = false;
             fontsVerdanaMenuItem.Checked = true;
-            Settings.FontFamily = "Verdana";
-            txtCode.Styles[Style.Default].Font = "Verdana";
-            OutputTextBox.Font = new Font("Verdana", OutputTextBox.Font.Size);
-            errorList.Font = new Font("Verdana", errorList.Font.Size);
+            ChangeFont("Verdana");
             txtCode.Focus();
+        }
+
+        private void ChangeFont(string fontName)
+        {
+            Settings.FontFamily = fontName;
+            txtCode.Styles[Style.Default].Font = fontName;
+            txtCode.UpdateMarginWidths();
+            OutputTextBox.Font = new Font(fontName, OutputTextBox.Font.Size);
+            errorList.Font = new Font(fontName, errorList.Font.Size);
         }
 
         private void opacity50MenuItem_Click(object sender, EventArgs e)
