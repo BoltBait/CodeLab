@@ -244,20 +244,6 @@ namespace PaintDotNet.Effects
             }
         }
 
-        internal static Type GetGenericReturnType(this MethodInfo method, string args)
-        {
-            Type[] types = StringToTypeArray(args);
-
-            try
-            {
-                return method.MakeGenericMethod(types).ReturnType;
-            }
-            catch
-            {
-                return null;
-            }
-        }
-
         internal static string GetEnumValue(this FieldInfo fieldInfo)
         {
             object value = fieldInfo.GetValue(null);

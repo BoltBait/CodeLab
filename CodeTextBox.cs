@@ -1076,21 +1076,9 @@ namespace PaintDotNet.Effects
                 }
                 else
                 {
-                    if (mi[0].MemberType == MemberTypes.Method)
-                    {
-                        int memberIndex = GetOverloadIndex(mi, tokenPos[i]);
-                        MethodInfo method = (MethodInfo)mi[memberIndex];
-                        type = method.ReturnType;
-                        if (method.IsGenericMethod)
-                        {
-                            string args = GetGenericArgs(tokenPos[i]);
-                            type = method.GetGenericReturnType(args);
-                        }
-                    }
-                    else
-                    {
-                        type = mi[0].GetReturnType();
-                    }
+                    type = (mi[0].MemberType == MemberTypes.Method) ?
+                        GetOverload(mi.Cast<MethodInfo>(), tokenPos[i]).ReturnType :
+                        mi[0].GetReturnType();
 
                     // stop to prevent null ref on next iteration
                     if (type == null)
@@ -1328,8 +1316,7 @@ namespace PaintDotNet.Effects
                             int otherOverloads = type.IsValueType ? ctors.Length : ctors.Length - 1;
                             string overloads1 = (otherOverloads > 0) ? $" (+ {otherOverloads} overloads)" : string.Empty;
 
-                            int overload = GetOverloadIndex(ctors, position);
-                            ConstructorInfo constructor = ctors[overload];
+                            ConstructorInfo constructor = GetOverload(ctors, position);
                             return $"{constructor.DeclaringType.Name}.{type.Name}({constructor.Params()}){overloads1}\nConstructor";
                         }
                     }
@@ -1435,8 +1422,7 @@ namespace PaintDotNet.Effects
                                 }
                             }
 
-                            int overload = GetOverloadIndex(mi, position);
-                            MethodInfo method = (MethodInfo)mi[overload];
+                            MethodInfo method = GetOverload(mi.Cast<MethodInfo>(), position);
 
                             string ext = string.Empty;
                             if (method.IsOrHasExtension())
@@ -1445,16 +1431,11 @@ namespace PaintDotNet.Effects
                                 ext = "Extension ";
                             }
 
-                            string genericArgs = string.Empty;
-                            returnType = method.ReturnType.GetDisplayName();
-                            if (method.IsGenericMethod)
-                            {
-                                string args = GetGenericArgs(tokenPos[i]);
-                                method = method.MakeGenericMethod(args);
-                                returnType = method.ReturnType.GetDisplayName();
-                                genericArgs = $"<{method.GetGenericArguments().Select(t => t.GetDisplayName()).Join(", ")}>";
-                            }
+                            string genericArgs = method.IsGenericMethod ?
+                                $"<{method.GetGenericArguments().Select(t => t.GetDisplayName()).Join(", ")}>" :
+                                string.Empty;
 
+                            returnType = method.ReturnType.GetDisplayName();
                             string overloads = (mi.Length > 1) ? $" (+ {mi.Length - 1} overloads)" : string.Empty;
 
                             return $"{returnType} - {precedingType}.{method.Name}{genericArgs}({method.Params()}){overloads}\n{ext}{method.MemberType}";
@@ -1502,21 +1483,9 @@ namespace PaintDotNet.Effects
                 }
                 else
                 {
-                    if (mi[0].MemberType == MemberTypes.Method)
-                    {
-                        int memberIndex = GetOverloadIndex(mi, tokenPos[i]);
-                        MethodInfo method = (MethodInfo)mi[memberIndex];
-                        type = method.ReturnType;
-                        if (method.IsGenericMethod)
-                        {
-                            string args = GetGenericArgs(tokenPos[i]);
-                            type = method.GetGenericReturnType(args);
-                        }
-                    }
-                    else
-                    {
-                        type = mi[0].GetReturnType();
-                    }
+                    type = (mi[0].MemberType == MemberTypes.Method) ?
+                        GetOverload(mi.Cast<MethodInfo>(), tokenPos[i]).ReturnType :
+                        mi[0].GetReturnType();
 
                     if (type == null)
                     {
@@ -1547,13 +1516,9 @@ namespace PaintDotNet.Effects
             return this.GetTextRange(openPos + 1, closePos - openPos - 1);
         }
 
-        private int GetOverloadIndex(MemberInfo[] mi, int position)
+        private T GetOverload<T>(IEnumerable<T> mi, int position)
+            where T : MethodBase
         {
-            if (mi.Length == 1)
-            {
-                return 0;
-            }
-
             bool isGeneric = false;
             string genericArgs = null;
             int paramStart = this.WordEndPosition(position, true);
@@ -1566,15 +1531,26 @@ namespace PaintDotNet.Effects
                 openBrace = this.GetCharAt(paramStart);
             }
 
+            T defaultOverload = mi.First();
+            if (isGeneric && defaultOverload is MethodInfo defaultMethod && defaultMethod.IsGenericMethodDefinition)
+            {
+                defaultOverload = defaultMethod.MakeGenericMethod(genericArgs) as T;
+            }
+
+            if (mi.Count() == 1)
+            {
+                return defaultOverload;
+            }
+
             if (openBrace != '(')
             {
-                return 0;
+                return defaultOverload;
             }
 
             int paramEnd = this.BraceMatch(paramStart);
             if (paramEnd == InvalidPosition)
             {
-                return 0;
+                return defaultOverload;
             }
             paramStart++;
 
@@ -1582,9 +1558,9 @@ namespace PaintDotNet.Effects
 
             Tuple<int, int> oldRange = new Tuple<int, int>(this.TargetStart, this.TargetEnd);
             this.SearchFlags = SearchFlags.MatchCase;
-            for (int i = 0; i < mi.Length; i++)
+            for (int i = 0; i < mi.Count(); i++)
             {
-                MethodBase method = (MethodBase)mi[i];
+                T method = mi.ElementAt(i);
                 if (method.IsGenericMethod)
                 {
                     if (!isGeneric)
@@ -1594,7 +1570,7 @@ namespace PaintDotNet.Effects
 
                     if (method.IsGenericMethodDefinition && method is MethodInfo methodInfo)
                     {
-                        method = methodInfo.MakeGenericMethod(genericArgs);
+                        method = methodInfo.MakeGenericMethod(genericArgs) as T;
 
                         if (method.IsGenericMethodDefinition)
                         {
@@ -1658,11 +1634,11 @@ namespace PaintDotNet.Effects
                 }
 
                 this.SetTargetRange(oldRange.Item1, oldRange.Item2);
-                return i;
+                return method;
             }
 
             this.SetTargetRange(oldRange.Item1, oldRange.Item2);
-            return 0;
+            return defaultOverload;
         }
 
         private Type GetReturnType(int position)
@@ -1776,21 +1752,9 @@ namespace PaintDotNet.Effects
                     return null;
                 }
 
-                if (mi[0].MemberType == MemberTypes.Method)
-                {
-                    int memberIndex = GetOverloadIndex(mi, tokenPos[i]);
-                    MethodInfo method = (MethodInfo)mi[memberIndex];
-                    type = method.ReturnType;
-                    if (method.IsGenericMethod)
-                    {
-                        string args = GetGenericArgs(tokenPos[i]);
-                        type = method.GetGenericReturnType(args);
-                    }
-                }
-                else
-                {
-                    type = mi[0].GetReturnType();
-                }
+                type = (mi[0].MemberType == MemberTypes.Method) ?
+                        GetOverload(mi.Cast<MethodInfo>(), tokenPos[i]).ReturnType :
+                        mi[0].GetReturnType();
 
                 if (type == null)
                 {
@@ -1894,26 +1858,15 @@ namespace PaintDotNet.Effects
                 if (i == tokens.Length - 1)
                 {
                     // We at the last iteration. Get the DeclaringType
-                    int memberIndex = (mi[0].MemberType == MemberTypes.Method) ? GetOverloadIndex(mi, tokenPos[i]) : 0;
-                    return mi[memberIndex].DeclaringType;
+                    return (mi[0].MemberType == MemberTypes.Method) ?
+                        GetOverload(mi.Cast<MethodInfo>(), tokenPos[i]).DeclaringType :
+                        mi[0].DeclaringType;
                 }
                 else
                 {
-                    if (mi[0].MemberType == MemberTypes.Method)
-                    {
-                        int memberIndex = GetOverloadIndex(mi, tokenPos[i]);
-                        MethodInfo method = (MethodInfo)mi[memberIndex];
-                        type = method.ReturnType;
-                        if (method.IsGenericMethod)
-                        {
-                            string args = GetGenericArgs(tokenPos[i]);
-                            type = method.GetGenericReturnType(args);
-                        }
-                    }
-                    else
-                    {
-                        type = mi[0].GetReturnType();
-                    }
+                    type = (mi[0].MemberType == MemberTypes.Method) ?
+                        GetOverload(mi.Cast<MethodInfo>(), tokenPos[i]).ReturnType :
+                        mi[0].GetReturnType();
 
                     // stop to prevent null ref on next iteration
                     if (type == null)
@@ -2102,8 +2055,10 @@ namespace PaintDotNet.Effects
 
                 if (i == tokens.Length - 1)
                 {
-                    int memberIndex = (mi[0].MemberType == MemberTypes.Method) ? GetOverloadIndex(mi, tokenPos[i]) : 0;
-                    MemberInfo member = mi[memberIndex];
+                    MemberInfo member = (mi[0].MemberType == MemberTypes.Method) ?
+                        GetOverload(mi.Cast<MethodInfo>(), tokenPos[i]) :
+                        mi[0];
+
                     string typeName = (type.IsGenericType) ? member.DeclaringType.Name.Replace("`", "-") : member.DeclaringType.Name;
                     string fullName = $"{member.DeclaringType.Namespace}.{typeName}.{member.Name}";
 
@@ -2190,21 +2145,9 @@ namespace PaintDotNet.Effects
                 }
                 else
                 {
-                    if (mi[0].MemberType == MemberTypes.Method)
-                    {
-                        int memberIndex = GetOverloadIndex(mi, tokenPos[i]);
-                        MethodInfo method = (MethodInfo)mi[memberIndex];
-                        type = method.ReturnType;
-                        if (method.IsGenericMethod)
-                        {
-                            string args = GetGenericArgs(tokenPos[i]);
-                            type = method.GetGenericReturnType(args);
-                        }
-                    }
-                    else
-                    {
-                        type = mi[0].GetReturnType();
-                    }
+                    type = (mi[0].MemberType == MemberTypes.Method) ?
+                        GetOverload(mi.Cast<MethodInfo>(), tokenPos[i]).ReturnType :
+                        mi[0].GetReturnType();
 
                     if (type == null)
                     {
