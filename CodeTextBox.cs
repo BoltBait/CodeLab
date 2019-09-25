@@ -1554,10 +1554,42 @@ namespace PaintDotNet.Effects
             }
             paramStart++;
 
-            string[] paramArray = this.GetTextRange(paramStart, paramEnd - paramStart).Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] paramWords = this.GetTextRange(paramStart, paramEnd - paramStart).Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
 
             Tuple<int, int> oldRange = new Tuple<int, int>(this.TargetStart, this.TargetEnd);
             this.SearchFlags = SearchFlags.MatchCase;
+            this.SetTargetRange(paramStart, paramEnd);
+            List<Type> paramTypes = new List<Type>(paramWords.Length);
+            for (int i = 0; i < paramWords.Length; i++)
+            {
+                int paramPos = InvalidPosition;
+                string paramName = paramWords[i].Trim();
+                if (this.SearchInTarget(paramName) != InvalidPosition)
+                {
+                    paramPos = this.TargetEnd;
+                    this.SetTargetRange(this.TargetEnd, paramEnd);
+                }
+
+                if (paramPos == InvalidPosition)
+                {
+                    return defaultOverload;
+                }
+
+                Type paramType = GetReturnType(paramPos);
+                if (paramType == null)
+                {
+                    return defaultOverload;
+                }
+
+                if (!paramType.IsByRef && (paramName.StartsWith("ref", StringComparison.Ordinal) || paramName.StartsWith("out", StringComparison.Ordinal)))
+                {
+                    paramType = paramType.MakeByRefType();
+                }
+
+                paramTypes.Add(paramType);
+            }
+            this.SetTargetRange(oldRange.Item1, oldRange.Item2);
+
             for (int i = 0; i < mi.Count(); i++)
             {
                 T method = mi.ElementAt(i);
@@ -1585,43 +1617,17 @@ namespace PaintDotNet.Effects
                     paramInfo = paramInfo.Skip(1).ToArray();
                 }
 
-                if (paramInfo.Length != paramArray.Length)
+                if (paramInfo.Length != paramTypes.Count)
                 {
                     continue;
                 }
 
                 bool match = true;
-                this.SetTargetRange(paramStart, paramEnd);
                 for (int j = 0; j < paramInfo.Length; j++)
                 {
-                    int paramPos = InvalidPosition;
-                    string paramName = paramArray[j].Trim();
-                    if (this.SearchInTarget(paramName) != InvalidPosition)
-                    {
-                        paramPos = this.TargetEnd;
-                        this.SetTargetRange(this.TargetEnd, paramEnd);
-                    }
-
-                    if (paramPos == InvalidPosition)
-                    {
-                        match = false;
-                        break;
-                    }
-
-                    Type varType = GetReturnType(paramPos);
-                    if (varType == null)
-                    {
-                        match = false;
-                        break;
-                    }
-
-                    if (!varType.IsByRef && (paramName.StartsWith("ref", StringComparison.Ordinal) || paramName.StartsWith("out", StringComparison.Ordinal)))
-                    {
-                        varType = varType.MakeByRefType();
-                    }
-
                     ParameterInfo param = paramInfo[j];
-                    if (!(varType == param.ParameterType || varType.IsSubclassOf(param.ParameterType)))
+                    Type paramType = paramTypes[j];
+                    if (!(paramType == param.ParameterType || paramType.IsSubclassOf(param.ParameterType)))
                     {
                         match = false;
                         break;
@@ -1633,11 +1639,9 @@ namespace PaintDotNet.Effects
                     continue;
                 }
 
-                this.SetTargetRange(oldRange.Item1, oldRange.Item2);
                 return method;
             }
 
-            this.SetTargetRange(oldRange.Item1, oldRange.Item2);
             return defaultOverload;
         }
 
