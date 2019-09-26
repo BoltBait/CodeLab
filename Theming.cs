@@ -208,4 +208,11 @@ namespace PaintDotNet.Effects
             }
         }
     }
+
+    public enum Theme
+    {
+        Auto,
+        Light,
+        Dark
+    }
 }

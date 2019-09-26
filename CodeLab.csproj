@@ -107,7 +107,7 @@
     <Compile Include="TabStrip.Designer.cs">
       <DependentUpon>TabStrip.cs</DependentUpon>
     </Compile>
-    <Compile Include="ThemeRenderer.cs" />
+    <Compile Include="Theming.cs" />
     <Compile Include="CodeLab.cs">
       <SubType>Code</SubType>
     </Compile>
