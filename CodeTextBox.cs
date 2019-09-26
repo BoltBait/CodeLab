@@ -992,102 +992,24 @@ namespace PaintDotNet.Effects
                 return IntelliType.Type;
             }
 
-            // since we have periods in our last works, let's see what we can do...
-            char[] separator = { '.' };
-            string[] tokens = lastWords.Split(separator, StringSplitOptions.RemoveEmptyEntries);
-            if (tokens.Length == 0)
+            MemberInfo[] memberInfo = GetMember(position);
+            if (memberInfo == null)
             {
                 return IntelliType.None;
             }
 
-            int[] tokenPos = GetLastWordsPos(position);
-
-            if (tokens.Length != tokenPos.Length)
+            switch (memberInfo[0].MemberType)
             {
-                return IntelliType.None;
-            }
-
-            // if the first token is a variable of a known type
-            Type type;
-            bool isStatic = false;
-            if (Intelli.Variables.ContainsKey(tokens[0]))
-            {
-                type = Intelli.Variables[tokens[0]];
-            }
-            else if (Intelli.Parameters.ContainsKey(tokens[0]))
-            {
-                type = Intelli.Parameters[tokens[0]];
-            }
-            else if (Intelli.AllTypes.ContainsKey(tokens[0]))
-            {
-                type = Intelli.AllTypes[tokens[0]];
-                isStatic = true;
-            }
-            else if (Intelli.UserDefinedTypes.ContainsKey(tokens[0]))
-            {
-                type = Intelli.UserDefinedTypes[tokens[0]];
-                isStatic = true;
-            }
-            else if (Intelli.UserScript.Contains(tokens[0], false))
-            {
-                type = Intelli.UserScript;
-                tokens = tokens.Prepend(type.Name).ToArray();
-                tokenPos = tokenPos.Prepend(InvalidPosition).ToArray();
-            }
-            else
-            {
-                return IntelliType.None;
-            }
-
-            for (int i = 1; i < tokens.Length; i++)
-            {
-                // get the member information for this token
-                MemberInfo[] mi = (i == 1 && type == Intelli.UserScript) ?
-                    type.GetMember(tokens[i], BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic) :
-                    type.GetMember(tokens[i], (isStatic ? BindingFlags.Static : BindingFlags.Instance) | BindingFlags.Public);
-
-                if (mi.Length == 0 || mi[0].MemberType == MemberTypes.Method)
-                {
-                    MemberInfo[] ext = type.GetExtensionMethod(tokens[i]);
-                    mi = mi.Concat(ext).ToArray();
-                }
-
-                if (mi.Length == 0)
-                {
-                    return IntelliType.None;
-                }
-
-                if (i == tokens.Length - 1)
-                {
-                    // We at the last iteration. Get the IntelliType
-                    switch (mi[0].MemberType)
-                    {
-                        case MemberTypes.Property:
-                            return IntelliType.Property;
-                        case MemberTypes.Method:
-                            return IntelliType.Method;
-                        case MemberTypes.Field:
-                            return IntelliType.Field;
-                        case MemberTypes.Event:
-                            return IntelliType.Event;
-                        case MemberTypes.NestedType:
-                            return IntelliType.Type;
-                    }
-                }
-                else
-                {
-                    type = (mi[0].MemberType == MemberTypes.Method) ?
-                        GetOverload(mi.Cast<MethodInfo>(), tokenPos[i]).ReturnType :
-                        mi[0].GetReturnType();
-
-                    // stop to prevent null ref on next iteration
-                    if (type == null)
-                    {
-                        return IntelliType.None;
-                    }
-
-                    isStatic = (mi[0].MemberType == MemberTypes.NestedType);
-                }
+                case MemberTypes.Property:
+                    return IntelliType.Property;
+                case MemberTypes.Method:
+                    return IntelliType.Method;
+                case MemberTypes.Field:
+                    return IntelliType.Field;
+                case MemberTypes.Event:
+                    return IntelliType.Event;
+                case MemberTypes.NestedType:
+                    return IntelliType.Type;
             }
 
             return IntelliType.None;
@@ -1339,161 +1261,93 @@ namespace PaintDotNet.Effects
                 return $"{typeName} - {type.DeclaringType.Name}.{name}";
             }
 
-            // since we have periods in our last works, let's see what we can do...
-            char[] separator = { '.' };
-            string[] tokens = lastWords.Split(separator, StringSplitOptions.RemoveEmptyEntries);
-            int[] tokenPos = GetLastWordsPos(position);
-
-            if (tokens.Length != tokenPos.Length)
+            MemberInfo[] memberInfo = GetMember(position);
+            if (memberInfo == null)
             {
                 return string.Empty;
             }
 
-            // if the first token is a variable of a known type
-            bool isStatic = false;
-            if (Intelli.Variables.ContainsKey(tokens[0]))
-            {
-                type = Intelli.Variables[tokens[0]];
-            }
-            else if (Intelli.Parameters.ContainsKey(tokens[0]))
-            {
-                type = Intelli.Parameters[tokens[0]];
-            }
-            else if (Intelli.AllTypes.ContainsKey(tokens[0]))
-            {
-                type = Intelli.AllTypes[tokens[0]];
-                isStatic = true;
-            }
-            else if (Intelli.UserDefinedTypes.ContainsKey(tokens[0]))
-            {
-                type = Intelli.UserDefinedTypes[tokens[0]];
-                isStatic = true;
-            }
-            else if (Intelli.UserScript.Contains(tokens[0], false))
-            {
-                type = Intelli.UserScript;
-                tokens = tokens.Prepend(type.Name).ToArray();
-                tokenPos = tokenPos.Prepend(InvalidPosition).ToArray();
-            }
-            else
-            {
-                return string.Empty;
-            }
+            Type declaringType = memberInfo[0].DeclaringType;
+            string precedingType = declaringType.GetDisplayName();
+            string returnType;
 
-            for (int i = 1; i < tokens.Length; i++)
+            switch (memberInfo[0].MemberType)
             {
-                // get the member information for this token
-                MemberInfo[] mi = (i == 1 && type == Intelli.UserScript) ?
-                    type.GetMember(tokens[i], BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic) :
-                    type.GetMember(tokens[i], (isStatic ? BindingFlags.Static : BindingFlags.Instance) | BindingFlags.Public);
+                case MemberTypes.Property:
+                    PropertyInfo property = (PropertyInfo)memberInfo[0];
+                    returnType = property.PropertyType.GetDisplayName();
+                    string getSet = property.GetterSetter();
 
-                if (mi.Length == 0 || mi[0].MemberType == MemberTypes.Method)
-                {
-                    MemberInfo[] ext = type.GetExtensionMethod(tokens[i]);
-                    mi = mi.Concat(ext).ToArray();
-                }
-
-                if (mi.Length == 0)
-                {
-                    return string.Empty;
-                }
-
-                if (i == tokens.Length - 1)
-                {
-                    // We at the last iteration. Get information for the toolTip
-
-                    string precedingType = mi[0].DeclaringType.GetDisplayName();
-                    string returnType;
-
-                    switch (mi[0].MemberType)
+                    return $"{returnType} - {precedingType}.{property.Name}{getSet}\n{property.MemberType}";
+                case MemberTypes.Method:
+                    if (declaringType == Intelli.UserScript)
                     {
-                        case MemberTypes.Property:
-                            returnType = ((PropertyInfo)mi[0]).PropertyType.GetDisplayName();
-                            string getSet = ((PropertyInfo)mi[0]).GetterSetter();
-
-                            return $"{returnType} - {precedingType}.{mi[0].Name}{getSet}\n{mi[0].MemberType}";
-                        case MemberTypes.Method:
-                            if (type == Intelli.UserScript)
-                            {
-                                mi = type.GetMember(tokens[i], BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly);
-                                if (mi.Length == 0)
-                                {
-                                    return string.Empty;
-                                }
-                            }
-
-                            MethodInfo method = GetOverload(mi.Cast<MethodInfo>(), position);
-
-                            string ext = string.Empty;
-                            if (method.IsOrHasExtension())
-                            {
-                                precedingType = method.ExtendingType().GetDisplayName();
-                                ext = "Extension ";
-                            }
-
-                            string genericArgs = method.IsGenericMethod ?
-                                $"<{method.GetGenericArguments().Select(t => t.GetDisplayName()).Join(", ")}>" :
-                                string.Empty;
-
-                            returnType = method.ReturnType.GetDisplayName();
-                            string overloads = (mi.Length > 1) ? $" (+ {mi.Length - 1} overloads)" : string.Empty;
-
-                            return $"{returnType} - {precedingType}.{method.Name}{genericArgs}({method.Params()}){overloads}\n{ext}{method.MemberType}";
-                        case MemberTypes.Field:
-                            FieldInfo field = (FieldInfo)mi[0];
-                            returnType = field.FieldType.GetDisplayName();
-
-                            string fieldTypeName;
-                            string fieldValue;
-                            if (!field.IsStatic)
-                            {
-                                fieldTypeName = "Field";
-                                fieldValue = string.Empty;
-                            }
-                            else if (field.FieldType.IsEnum)
-                            {
-                                fieldTypeName = "Enum Value";
-                                fieldValue = $" ({field.GetEnumValue()})";
-                            }
-                            else if (field.IsLiteral && !field.IsInitOnly)
-                            {
-                                fieldTypeName = "Constant";
-                                fieldValue = $" ({field.GetValue(null)})";
-                            }
-                            else
-                            {
-                                fieldTypeName = "Field";
-                                string value = field.GetValue(null)?.ToString();
-                                fieldValue = (value?.Length > 0) ? $" ( {value} )" : string.Empty;
-                            }
-
-                            return $"{returnType} - {precedingType}.{mi[0].Name}{fieldValue}\n{fieldTypeName}";
-                        case MemberTypes.Event:
-                            returnType = ((EventInfo)mi[0]).EventHandlerType.GetDisplayName();
-
-                            return $"{returnType} - {precedingType}.{mi[0].Name}\n{mi[0].MemberType}";
-                        case MemberTypes.NestedType:
-                            type = (Type)mi[0];
-                            string typeName = type.GetObjectType();
-
-                            string name = (type.IsGenericType) ? type.GetGenericName() : type.Name;
-
-                            return $"{typeName} - {type.Namespace}.{precedingType}.{name}\nNested Type";
-                    }
-                }
-                else
-                {
-                    type = (mi[0].MemberType == MemberTypes.Method) ?
-                        GetOverload(mi.Cast<MethodInfo>(), tokenPos[i]).ReturnType :
-                        mi[0].GetReturnType();
-
-                    if (type == null)
-                    {
-                        return string.Empty;
+                        string member = this.GetWordFromPosition(position);
+                        memberInfo = declaringType.GetMember(member, BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly);
+                        if (memberInfo.Length == 0)
+                        {
+                            return string.Empty;
+                        }
                     }
 
-                    isStatic = (mi[0].MemberType == MemberTypes.NestedType);
-                }
+                    MethodInfo method = GetOverload(memberInfo.Cast<MethodInfo>(), position);
+
+                    string ext = string.Empty;
+                    if (method.IsOrHasExtension())
+                    {
+                        precedingType = method.ExtendingType().GetDisplayName();
+                        ext = "Extension ";
+                    }
+
+                    string genericArgs = method.IsGenericMethod ?
+                        $"<{method.GetGenericArguments().Select(t => t.GetDisplayName()).Join(", ")}>" :
+                        string.Empty;
+
+                    returnType = method.ReturnType.GetDisplayName();
+                    string overloads = (memberInfo.Length > 1) ? $" (+ {memberInfo.Length - 1} overloads)" : string.Empty;
+
+                    return $"{returnType} - {precedingType}.{method.Name}{genericArgs}({method.Params()}){overloads}\n{ext}{method.MemberType}";
+                case MemberTypes.Field:
+                    FieldInfo field = (FieldInfo)memberInfo[0];
+                    returnType = field.FieldType.GetDisplayName();
+
+                    string fieldTypeName;
+                    string fieldValue;
+                    if (!field.IsStatic)
+                    {
+                        fieldTypeName = "Field";
+                        fieldValue = string.Empty;
+                    }
+                    else if (field.FieldType.IsEnum)
+                    {
+                        fieldTypeName = "Enum Value";
+                        fieldValue = $" ({field.GetEnumValue()})";
+                    }
+                    else if (field.IsLiteral && !field.IsInitOnly)
+                    {
+                        fieldTypeName = "Constant";
+                        fieldValue = $" ({field.GetValue(null)})";
+                    }
+                    else
+                    {
+                        fieldTypeName = "Field";
+                        string value = field.GetValue(null)?.ToString();
+                        fieldValue = (value?.Length > 0) ? $" ( {value} )" : string.Empty;
+                    }
+
+                    return $"{returnType} - {precedingType}.{field.Name}{fieldValue}\n{fieldTypeName}";
+                case MemberTypes.Event:
+                    EventInfo eventInfo = (EventInfo)memberInfo[0];
+                    returnType = eventInfo.EventHandlerType.GetDisplayName();
+
+                    return $"{returnType} - {precedingType}.{eventInfo.Name}\n{eventInfo.MemberType}";
+                case MemberTypes.NestedType:
+                    type = (Type)memberInfo[0];
+                    string typeName = type.GetObjectType();
+
+                    string name = (type.IsGenericType) ? type.GetGenericName() : type.Name;
+
+                    return $"{typeName} - {type.Namespace}.{precedingType}.{name}\nNested Type";
             }
 
             return string.Empty;
@@ -1699,76 +1553,15 @@ namespace PaintDotNet.Effects
                 return Intelli.UserDefinedTypes[lastWords];
             }
 
-            string[] tokens = lastWords.Split('.');
-            int[] tokenPos = GetLastWordsPos(position);
-
-            if (tokens.Length != tokenPos.Length)
+            MemberInfo[] memberInfo = GetMember(position);
+            if (memberInfo == null)
             {
                 return null;
             }
 
-            Type type;
-            bool isStatic = false;
-            if (Intelli.Variables.ContainsKey(tokens[0]))
-            {
-                type = Intelli.Variables[tokens[0]];
-            }
-            else if (Intelli.Parameters.ContainsKey(tokens[0]))
-            {
-                type = Intelli.Parameters[tokens[0]];
-            }
-            else if (Intelli.AllTypes.ContainsKey(tokens[0]))
-            {
-                type = Intelli.AllTypes[tokens[0]];
-                isStatic = true;
-            }
-            else if (Intelli.UserDefinedTypes.ContainsKey(tokens[0]))
-            {
-                type = Intelli.UserDefinedTypes[tokens[0]];
-                isStatic = true;
-            }
-            else if (Intelli.UserScript.Contains(tokens[0], false))
-            {
-                type = Intelli.UserScript;
-                tokens = tokens.Prepend(type.Name).ToArray();
-                tokenPos = tokenPos.Prepend(InvalidPosition).ToArray();
-            }
-            else
-            {
-                return null;
-            }
-
-            for (int i = 1; i < tokens.Length; i++)
-            {
-                // get the member information for this token
-                MemberInfo[] mi = (i == 1 && type == Intelli.UserScript) ?
-                    type.GetMember(tokens[i], BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic) :
-                    type.GetMember(tokens[i], (isStatic ? BindingFlags.Static : BindingFlags.Instance) | BindingFlags.Public);
-
-                if (mi.Length == 0 || mi[0].MemberType == MemberTypes.Method)
-                {
-                    MemberInfo[] ext = type.GetExtensionMethod(tokens[i]);
-                    mi = mi.Concat(ext).ToArray();
-                }
-
-                if (mi.Length == 0)
-                {
-                    return null;
-                }
-
-                type = (mi[0].MemberType == MemberTypes.Method) ?
-                        GetOverload(mi.Cast<MethodInfo>(), tokenPos[i]).ReturnType :
-                        mi[0].GetReturnType();
-
-                if (type == null)
-                {
-                    return null;
-                }
-
-                isStatic = (mi[0].MemberType == MemberTypes.NestedType);
-            }
-
-            return type;
+            return (memberInfo[0].MemberType == MemberTypes.Method) ?
+                GetOverload(memberInfo.Cast<MethodInfo>(), position).ReturnType :
+                memberInfo[0].GetReturnType();
         }
 
         private Type GetDeclaringType(int position)
@@ -1794,9 +1587,21 @@ namespace PaintDotNet.Effects
                 return null;
             }
 
-            // since we have periods in our last works, let's see what we can do...
-            char[] separator = { '.' };
-            string[] tokens = lastWords.Split(separator, StringSplitOptions.RemoveEmptyEntries);
+            MemberInfo[] memberInfo = GetMember(position);
+            if (memberInfo == null)
+            {
+                return null;
+            }
+
+            return (memberInfo[0].MemberType == MemberTypes.Method) ?
+                GetOverload(memberInfo.Cast<MethodInfo>(), position).DeclaringType :
+                memberInfo[0].DeclaringType;
+        }
+
+        private MemberInfo[] GetMember(int position)
+        {
+            string lastWords = GetLastWords(this.WordEndPosition(position, true));
+            string[] tokens = lastWords.Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
             if (tokens.Length == 0)
             {
                 return null;
@@ -1809,7 +1614,6 @@ namespace PaintDotNet.Effects
                 return null;
             }
 
-            // if the first token is a variable of a known type
             Type type;
             bool isStatic = false;
             if (Intelli.Variables.ContainsKey(tokens[0]))
@@ -1861,25 +1665,20 @@ namespace PaintDotNet.Effects
 
                 if (i == tokens.Length - 1)
                 {
-                    // We at the last iteration. Get the DeclaringType
-                    return (mi[0].MemberType == MemberTypes.Method) ?
-                        GetOverload(mi.Cast<MethodInfo>(), tokenPos[i]).DeclaringType :
-                        mi[0].DeclaringType;
+                    // We at the last iteration. Return the MemberInfo.
+                    return mi;
                 }
-                else
+
+                type = (mi[0].MemberType == MemberTypes.Method) ?
+                    GetOverload(mi.Cast<MethodInfo>(), tokenPos[i]).ReturnType :
+                    mi[0].GetReturnType();
+
+                if (type == null)
                 {
-                    type = (mi[0].MemberType == MemberTypes.Method) ?
-                        GetOverload(mi.Cast<MethodInfo>(), tokenPos[i]).ReturnType :
-                        mi[0].GetReturnType();
-
-                    // stop to prevent null ref on next iteration
-                    if (type == null)
-                    {
-                        return null;
-                    }
-
-                    isStatic = (mi[0].MemberType == MemberTypes.NestedType);
+                    return null;
                 }
+
+                isStatic = (mi[0].MemberType == MemberTypes.NestedType);
             }
 
             return null;
@@ -1990,179 +1789,113 @@ namespace PaintDotNet.Effects
             if (Intelli.AllTypes.ContainsKey(lastWords))
             {
                 Type t = Intelli.AllTypes[lastWords];
-                string typeName = (t.IsGenericType) ? t.Name.Replace("`", "-") : t.Name;
-                string fullName = $"{t.Namespace}.{typeName}";
+                string typeName1 = (t.IsGenericType) ? t.Name.Replace("`", "-") : t.Name;
+                string fullName1 = $"{t.Namespace}.{typeName1}";
 
-                if (fullName.Length == 0 || fullName.StartsWith("PaintDotNet", StringComparison.Ordinal))
+                if (fullName1.Length == 0 || fullName1.StartsWith("PaintDotNet", StringComparison.Ordinal))
                 {
                     return false;
                 }
 
-                OpenMsDocs(fullName);
+                OpenMsDocs(fullName1);
                 return true;
             }
 
-            // since we have periods in our last works, let's see what we can do...
-            char[] separator = { '.' };
-            string[] tokens = lastWords.Split(separator, StringSplitOptions.RemoveEmptyEntries);
-            int[] tokenPos = GetLastWordsPos(position);
-
-            if (tokens.Length != tokenPos.Length)
+            MemberInfo[] memberInfo = GetMember(position);
+            if (memberInfo == null)
             {
                 return false;
             }
 
-            Type type;
-            bool isStatic = false;
-            // if the first token is a variable of a known type
-            if (Intelli.Variables.ContainsKey(tokens[0]))
-            {
-                type = Intelli.Variables[tokens[0]];
-            }
-            else if (Intelli.Parameters.ContainsKey(tokens[0]))
-            {
-                type = Intelli.Parameters[tokens[0]];
-            }
-            else if (Intelli.AllTypes.ContainsKey(tokens[0]))
-            {
-                type = Intelli.AllTypes[tokens[0]];
-                isStatic = true;
-            }
-            else if (Intelli.UserScript.Contains(tokens[0], false))
-            {
-                type = Intelli.UserScript;
-                tokens = tokens.Prepend(type.Name).ToArray();
-                tokenPos = tokenPos.Prepend(InvalidPosition).ToArray();
-            }
-            else
+            MemberInfo member = (memberInfo[0].MemberType == MemberTypes.Method) ?
+                GetOverload(memberInfo.Cast<MethodInfo>(), position) :
+                memberInfo[0];
+
+            Type declaringType = member.DeclaringType;
+            string typeName2 = (declaringType.IsGenericType) ? declaringType.Name.Replace("`", "-") : declaringType.Name;
+            string fullName2 = $"{declaringType.Namespace}.{typeName2}.{member.Name}";
+
+            if (fullName2.Length == 0)
             {
                 return false;
             }
 
-            for (int i = 1; i < tokens.Length; i++)
+            if (member.DeclaringType == Intelli.UserScript)
             {
-                // get the member information for this token
-                MemberInfo[] mi = (i == 1 && type == Intelli.UserScript) ?
-                    type.GetMember(tokens[i], BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic) :
-                    type.GetMember(tokens[i], (isStatic ? BindingFlags.Static : BindingFlags.Instance) | BindingFlags.Public);
+                string returnType = member.GetReturnType()?.GetDisplayName();
 
-                if (mi.Length == 0 || mi[0].MemberType == MemberTypes.Method)
-                {
-                    MemberInfo[] ext = type.GetExtensionMethod(tokens[i]);
-                    mi = mi.Concat(ext).ToArray();
-                }
-
-                if (mi.Length == 0)
+                if (returnType.Length == 0)
                 {
                     return false;
                 }
 
-                if (i == tokens.Length - 1)
+                bool found = false;
+                this.TargetWholeDocument();
+                this.SearchFlags = SearchFlags.MatchCase | SearchFlags.WholeWord;
+                while (this.SearchInTarget(lastWords) != InvalidPosition)
                 {
-                    MemberInfo member = (mi[0].MemberType == MemberTypes.Method) ?
-                        GetOverload(mi.Cast<MethodInfo>(), tokenPos[i]) :
-                        mi[0];
+                    int typePos = this.TargetStart - 1;
+                    int memberPos = this.TargetStart;
+                    this.SetTargetRange(this.TargetEnd, this.TextLength);
 
-                    string typeName = (type.IsGenericType) ? member.DeclaringType.Name.Replace("`", "-") : member.DeclaringType.Name;
-                    string fullName = $"{member.DeclaringType.Namespace}.{typeName}.{member.Name}";
-
-                    if (fullName.Length == 0)
+                    // Skip over white space
+                    while (char.IsWhiteSpace(this.GetCharAt(typePos)) && typePos > InvalidPosition)
                     {
-                        return false;
+                        typePos--;
                     }
 
-                    if (member.DeclaringType == Intelli.UserScript)
+                    string foundType = this.GetWordFromPosition(typePos);
+                    Type t;
+                    if (Intelli.AllTypes.ContainsKey(foundType))
                     {
-                        string returnType = member.GetReturnType()?.GetDisplayName();
-
-                        if (returnType.Length == 0)
-                        {
-                            return false;
-                        }
-
-                        bool found = false;
-                        this.TargetWholeDocument();
-                        this.SearchFlags = SearchFlags.MatchCase | SearchFlags.WholeWord;
-                        while (this.SearchInTarget(lastWords) != InvalidPosition)
-                        {
-                            int typePos = this.TargetStart - 1;
-                            int memberPos = this.TargetStart;
-                            this.SetTargetRange(this.TargetEnd, this.TextLength);
-
-                            // Skip over white space
-                            while (char.IsWhiteSpace(this.GetCharAt(typePos)) && typePos > InvalidPosition)
-                            {
-                                typePos--;
-                            }
-
-                            string foundType = this.GetWordFromPosition(typePos);
-                            Type t;
-                            if (Intelli.AllTypes.ContainsKey(foundType))
-                            {
-                                t = Intelli.AllTypes[foundType];
-                            }
-                            else if (Intelli.UserDefinedTypes.ContainsKey(foundType))
-                            {
-                                t = Intelli.UserDefinedTypes[foundType];
-                            }
-                            else if (foundType == typeof(void).GetDisplayName())
-                            {
-                                t = typeof(void);
-                            }
-                            else
-                            {
-                                continue;
-                            }
-
-                            if (t.GetDisplayName() != returnType)
-                            {
-                                continue;
-                            }
-
-                            // Don't parse variables in comments
-                            int style2 = this.GetStyleAt(typePos);
-                            if (style2 != Style.Cpp.Word && style2 != Style.Cpp.Word + Preprocessor &&
-                                style2 != Style.Cpp.Word2 && style2 != Style.Cpp.Word2 + Preprocessor &&
-                                style2 != Style.Cpp.Identifier && style2 != Style.Cpp.Identifier + Preprocessor)
-                            {
-                                continue;
-                            }
-
-                            found = true;
-                            this.SelectionStart = memberPos;
-                            this.SelectionEnd = this.WordEndPosition(memberPos, true);
-                            this.ScrollCaret();
-
-                            break;
-                        }
-
-                        return found;
+                        t = Intelli.AllTypes[foundType];
+                    }
+                    else if (Intelli.UserDefinedTypes.ContainsKey(foundType))
+                    {
+                        t = Intelli.UserDefinedTypes[foundType];
+                    }
+                    else if (foundType == typeof(void).GetDisplayName())
+                    {
+                        t = typeof(void);
+                    }
+                    else
+                    {
+                        continue;
                     }
 
-                    if (fullName.StartsWith("PaintDotNet", StringComparison.Ordinal))
+                    if (t.GetDisplayName() != returnType)
                     {
-                        return false;
+                        continue;
                     }
 
-                    OpenMsDocs(fullName);
-                    return true;
+                    // Don't parse variables in comments
+                    int style2 = this.GetStyleAt(typePos);
+                    if (style2 != Style.Cpp.Word && style2 != Style.Cpp.Word + Preprocessor &&
+                        style2 != Style.Cpp.Word2 && style2 != Style.Cpp.Word2 + Preprocessor &&
+                        style2 != Style.Cpp.Identifier && style2 != Style.Cpp.Identifier + Preprocessor)
+                    {
+                        continue;
+                    }
+
+                    found = true;
+                    this.SelectionStart = memberPos;
+                    this.SelectionEnd = this.WordEndPosition(memberPos, true);
+                    this.ScrollCaret();
+
+                    break;
                 }
-                else
-                {
-                    type = (mi[0].MemberType == MemberTypes.Method) ?
-                        GetOverload(mi.Cast<MethodInfo>(), tokenPos[i]).ReturnType :
-                        mi[0].GetReturnType();
 
-                    if (type == null)
-                    {
-                        return false;
-                    }
-
-                    isStatic = (mi[0].MemberType == MemberTypes.NestedType);
-                }
+                return found;
             }
 
-            return false;
+            if (fullName2.StartsWith("PaintDotNet", StringComparison.Ordinal))
+            {
+                return false;
+            }
+
+            OpenMsDocs(fullName2);
+            return true;
+
 
             void OpenMsDocs(string fullName)
             {
