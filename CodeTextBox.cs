@@ -1701,32 +1701,24 @@ namespace PaintDotNet.Effects
                 style == Style.Cpp.StringEol || style == Style.Cpp.StringEol + Preprocessor ||
                 style == Style.Cpp.Verbatim || style == Style.Cpp.Verbatim + Preprocessor)
             {
-                Type stringType = typeof(string);
-                string fullName = $"{stringType.Namespace}.{stringType.Name}";
-
-                OpenMsDocs(fullName);
+                OpenMsDocs(typeof(string).FullName);
                 return true;
             }
             if (style == Style.Cpp.Character || style == Style.Cpp.Character + Preprocessor)
             {
-                Type charType = typeof(char);
-                string fullName = $"{charType.Namespace}.{charType.Name}";
-
-                OpenMsDocs(fullName);
+                OpenMsDocs(typeof(char).FullName);
                 return true;
             }
             if (style == Style.Cpp.Number || style == Style.Cpp.Number + Preprocessor)
             {
                 Type numType = GetNumberType(position);
-                if (numType != null)
+                if (numType == null)
                 {
-                    string fullName = $"{numType.Namespace}.{numType.Name}";
-
-                    OpenMsDocs(fullName);
-                    return true;
+                    return false;
                 }
 
-                return false;
+                OpenMsDocs(numType.FullName);
+                return true;
             }
 
             string lastWords = GetLastWords(this.WordEndPosition(position, true));
@@ -1789,13 +1781,13 @@ namespace PaintDotNet.Effects
             if (Intelli.AllTypes.ContainsKey(lastWords))
             {
                 Type t = Intelli.AllTypes[lastWords];
-                string typeName1 = (t.IsGenericType) ? t.Name.Replace("`", "-") : t.Name;
-                string fullName1 = $"{t.Namespace}.{typeName1}";
-
-                if (fullName1.Length == 0 || fullName1.StartsWith("PaintDotNet", StringComparison.Ordinal))
+                if (t.Namespace.StartsWith("PaintDotNet", StringComparison.Ordinal))
                 {
                     return false;
                 }
+
+                string typeName1 = (t.IsGenericType) ? t.Name.Replace("`", "-") : t.Name;
+                string fullName1 = $"{t.Namespace}.{typeName1}";
 
                 OpenMsDocs(fullName1);
                 return true;
@@ -1810,15 +1802,6 @@ namespace PaintDotNet.Effects
             MemberInfo member = (memberInfo[0].MemberType == MemberTypes.Method) ?
                 GetOverload(memberInfo.Cast<MethodInfo>(), position) :
                 memberInfo[0];
-
-            Type declaringType = member.DeclaringType;
-            string typeName2 = (declaringType.IsGenericType) ? declaringType.Name.Replace("`", "-") : declaringType.Name;
-            string fullName2 = $"{declaringType.Namespace}.{typeName2}.{member.Name}";
-
-            if (fullName2.Length == 0)
-            {
-                return false;
-            }
 
             if (member.DeclaringType == Intelli.UserScript)
             {
@@ -1888,10 +1871,14 @@ namespace PaintDotNet.Effects
                 return found;
             }
 
-            if (fullName2.StartsWith("PaintDotNet", StringComparison.Ordinal))
+            Type declaringType = member.DeclaringType;
+            if (declaringType.Namespace.StartsWith("PaintDotNet", StringComparison.Ordinal))
             {
                 return false;
             }
+
+            string typeName2 = (declaringType.IsGenericType) ? declaringType.Name.Replace("`", "-") : declaringType.Name;
+            string fullName2 = $"{declaringType.Namespace}.{typeName2}.{member.Name}";
 
             OpenMsDocs(fullName2);
             return true;
