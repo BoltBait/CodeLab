@@ -2986,22 +2986,12 @@ namespace PaintDotNet.Effects
 
         internal void Indent()
         {
-            this.BeginUndoAction();
-            for (int line = this.LineFromPosition(this.SelectionStart); line < this.LineFromPosition(this.SelectionEnd) + 1; line++)
-            {
-                this.Lines[line].Indentation += this.TabWidth;
-            }
-            this.EndUndoAction();
+            this.ExecuteCmd(Command.Tab);
         }
 
         internal void UnIndent()
         {
-            this.BeginUndoAction();
-            for (int line = this.LineFromPosition(this.SelectionStart); line < this.LineFromPosition(this.SelectionEnd) + 1; line++)
-            {
-                this.Lines[line].Indentation -= this.TabWidth;
-            }
-            this.EndUndoAction();
+            this.ExecuteCmd(Command.BackTab);
         }
 
         internal void UpdateSyntaxHighlighting()
