@@ -1980,11 +1980,11 @@ namespace PaintDotNet.Effects
                     int bracePos1 = InvalidPosition;
                     int caretPos = this.CurrentPosition;
 
-                    if (caretPos > 0 && (IsBrace(this.GetCharAt(caretPos - 1), true) || IsBrace(this.GetCharAt(caretPos - 1), false)))
+                    if (caretPos > 0 && (this.GetCharAt(caretPos - 1).IsBrace(true) || this.GetCharAt(caretPos - 1).IsBrace(false)))
                     {
                         bracePos1 = caretPos - 1;
                     }
-                    else if (IsBrace(this.GetCharAt(caretPos), true) || IsBrace(this.GetCharAt(caretPos), false))
+                    else if (this.GetCharAt(caretPos).IsBrace(true) || this.GetCharAt(caretPos).IsBrace(false))
                     {
                         bracePos1 = caretPos;
                     }
@@ -1996,7 +1996,7 @@ namespace PaintDotNet.Effects
                         int bracePos2 = this.BraceMatch(bracePos1);
                         if (bracePos2 != InvalidPosition)
                         {
-                            if (IsBrace(this.GetCharAt(bracePos2), false))
+                            if (this.GetCharAt(bracePos2).IsBrace(false))
                             {
                                 bracePos2++;
                             }
@@ -2731,11 +2731,11 @@ namespace PaintDotNet.Effects
                     int bracePos1 = InvalidPosition;
 
                     // Is there a closed brace to the left or an open brace to the right?
-                    if (caretPos > 0 && IsBrace(this.GetCharAt(caretPos - 1), false))
+                    if (caretPos > 0 && this.GetCharAt(caretPos - 1).IsBrace(false))
                     {
                         bracePos1 = (caretPos - 1);
                     }
-                    else if (IsBrace(this.GetCharAt(caretPos), true))
+                    else if (this.GetCharAt(caretPos).IsBrace(true))
                     {
                         bracePos1 = caretPos;
                     }
@@ -3311,33 +3311,6 @@ namespace PaintDotNet.Effects
             {
                 this.Margins[LeftMargin.CodeFolding].Width = this.Lines[0].Height;
             }
-        }
-
-        private static bool IsBrace(int c, bool openBrace)
-        {
-            if (openBrace)
-            {
-                switch (c)
-                {
-                    case '(':
-                    case '[':
-                    case '{':
-                    case '<':
-                        return true;
-                }
-            }
-            else
-            {
-                switch (c)
-                {
-                    case ')':
-                    case ']':
-                    case '}':
-                    case '>':
-                        return true;
-                }
-            }
-            return false;
         }
         #endregion
 

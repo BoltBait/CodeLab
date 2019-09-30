@@ -230,6 +230,33 @@ namespace PaintDotNet.Effects
             return char.ToLowerInvariant(c);
         }
 
+        internal static bool IsBrace(this char c, bool openBrace)
+        {
+            if (openBrace)
+            {
+                switch (c)
+                {
+                    case '(':
+                    case '[':
+                    case '{':
+                    case '<':
+                        return true;
+                }
+            }
+            else
+            {
+                switch (c)
+                {
+                    case ')':
+                    case ']':
+                    case '}':
+                    case '>':
+                        return true;
+                }
+            }
+            return false;
+        }
+
         internal static MethodInfo MakeGenericMethod(this MethodInfo method, string args)
         {
             Type[] types = StringToTypeArray(args);
