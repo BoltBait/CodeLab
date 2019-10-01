@@ -669,10 +669,10 @@ namespace PaintDotNet.Effects
                 if (BlendingCode.Text == "Xor") code += "private BinaryPixelOp xorOp = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Xor);" + cr;
                 code += cr;
             }
-            else if (NoStyle.Checked)
+            else if (NoStyle.Checked && (BlendingCode.Text != "Pass Through"))
             {
                 code += "// Setup for using " + BlendingCode.Text + " blend op" + cr;
-                if ((BlendingCode.Text == "Normal") || (BlendingCode.Text == "Pass Through")) code += "private BinaryPixelOp normalOp = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Normal);" + cr;
+                if (BlendingCode.Text == "Normal") code += "private BinaryPixelOp normalOp = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Normal);" + cr;
                 if (BlendingCode.Text == "Multiply") code += "private BinaryPixelOp multiplyOp = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Multiply);" + cr;
                 if (BlendingCode.Text == "Darken") code += "private BinaryPixelOp darkenOp = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Darken);" + cr;
                 if (BlendingCode.Text == "Additive") code += "private BinaryPixelOp additiveOp = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Additive);" + cr;
@@ -1360,22 +1360,29 @@ namespace PaintDotNet.Effects
                 code += "        // add additional GDI+ commands here" + cr;
                 code += cr;
                 code += "    }" + cr;
-                string blendOp = "normalOp";
-                if (BlendingCode.Text == "Multiply") blendOp = "multiplyOp";
-                else if (BlendingCode.Text == "Darken") blendOp = "darkenOp";
-                else if (BlendingCode.Text == "Additive") blendOp = "additiveOp";
-                else if (BlendingCode.Text == "ColorBurn") blendOp = "colorburnOp";
-                else if (BlendingCode.Text == "ColorDodge") blendOp = "colordodgeOp";
-                else if (BlendingCode.Text == "Difference") blendOp = "differenceOp";
-                else if (BlendingCode.Text == "Glow") blendOp = "glowOp";
-                else if (BlendingCode.Text == "Lighten") blendOp = "lightenOp";
-                else if (BlendingCode.Text == "Negation") blendOp = "negationOp";
-                else if (BlendingCode.Text == "Overlay") blendOp = "overlayOp";
-                else if (BlendingCode.Text == "Reflect") blendOp = "reflectOp";
-                else if (BlendingCode.Text == "Screen") blendOp = "screenOp";
-                else if (BlendingCode.Text == "Xor") blendOp = "xorOp";
-                else if (BlendingCode.Text == "User selected blending mode") blendOp = "Amount" + controls;
-                code += "    " + blendOp + ".Apply(dst, src, " + wrksurface + ", rect);" + cr;
+                if (BlendingCode.Text == "Pass Through")
+                {
+                    code += "    " + "dst.CopySurface(" + wrksurface + ",rect.Location,rect);" + cr;
+                }
+                else
+                {
+                    string blendOp = "normalOp";
+                    if (BlendingCode.Text == "Multiply") blendOp = "multiplyOp";
+                    else if (BlendingCode.Text == "Darken") blendOp = "darkenOp";
+                    else if (BlendingCode.Text == "Additive") blendOp = "additiveOp";
+                    else if (BlendingCode.Text == "ColorBurn") blendOp = "colorburnOp";
+                    else if (BlendingCode.Text == "ColorDodge") blendOp = "colordodgeOp";
+                    else if (BlendingCode.Text == "Difference") blendOp = "differenceOp";
+                    else if (BlendingCode.Text == "Glow") blendOp = "glowOp";
+                    else if (BlendingCode.Text == "Lighten") blendOp = "lightenOp";
+                    else if (BlendingCode.Text == "Negation") blendOp = "negationOp";
+                    else if (BlendingCode.Text == "Overlay") blendOp = "overlayOp";
+                    else if (BlendingCode.Text == "Reflect") blendOp = "reflectOp";
+                    else if (BlendingCode.Text == "Screen") blendOp = "screenOp";
+                    else if (BlendingCode.Text == "Xor") blendOp = "xorOp";
+                    else if (BlendingCode.Text == "User selected blending mode") blendOp = "Amount" + controls;
+                    code += "    " + blendOp + ".Apply(dst, src, " + wrksurface + ", rect);" + cr;
+                }
             }
             else
             {
