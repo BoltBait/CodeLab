@@ -2291,6 +2291,15 @@ namespace PaintDotNet.Effects
 
         private void MemberIntelliBox(int position)
         {
+            int style = this.GetStyleAt(position - 1);
+            if (style != Style.Cpp.Word && style != Style.Cpp.Word + Preprocessor &&
+                style != Style.Cpp.Word2 && style != Style.Cpp.Word2 + Preprocessor &&
+                style != Style.Cpp.Identifier && style != Style.Cpp.Identifier + Preprocessor &&
+                style != Style.Cpp.Operator && style != Style.Cpp.Operator + Preprocessor)
+            {
+                return;
+            }
+
             Type type = GetReturnType(position);
 
             if (type == null || type == typeof(void))
