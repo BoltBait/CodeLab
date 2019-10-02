@@ -140,12 +140,9 @@ namespace PaintDotNet.Effects
                         }
 
                         string methodParameters = $"({methodInfo.Params()})";
-                        string genericArgs = string.Empty;
-                        if (methodInfo.IsGenericMethod)
-                        {
-                            Type[] args = methodInfo.GetGenericArguments();
-                            genericArgs = $"<{args.Select(t => t.Name).Join(", ")}>";
-                        }
+                        string genericArgs = methodInfo.IsGenericMethod ?
+                            $"<{methodInfo.GetGenericArguments().Select(t => t.GetDisplayName()).Join(", ")}>" :
+                            string.Empty;
 
                         returnType = methodInfo.ReturnType.GetDisplayName();
                         toolTip = $"{returnType} - {methodInfo.Name}{genericArgs}{methodParameters}\n{methodInfo.MemberType}";
@@ -165,9 +162,10 @@ namespace PaintDotNet.Effects
                         unFilteredItems.Add(new IntelliBoxItem(property.Name, property.Name, toolTip, IntelliType.Property));
                         break;
                     case MemberTypes.Event:
-                        returnType = ((EventInfo)memberInfo).EventHandlerType.GetDisplayName();
-                        toolTip = $"{returnType} - {memberInfo.Name}\n{memberInfo.MemberType}";
-                        unFilteredItems.Add(new IntelliBoxItem(memberInfo.Name, memberInfo.Name, toolTip, IntelliType.Event));
+                        EventInfo eventInfo = (EventInfo)memberInfo;
+                        returnType = eventInfo.EventHandlerType.GetDisplayName();
+                        toolTip = $"{returnType} - {eventInfo.Name}\n{eventInfo.MemberType}";
+                        unFilteredItems.Add(new IntelliBoxItem(eventInfo.Name, eventInfo.Name, toolTip, IntelliType.Event));
                         break;
                     case MemberTypes.Field:
                         FieldInfo field = (FieldInfo)memberInfo;
@@ -240,13 +238,11 @@ namespace PaintDotNet.Effects
             {
                 foreach (MethodInfo methodInfo in type.GetExtensionMethods())
                 {
-                    string genericArgs = string.Empty;
-                    if (methodInfo.IsGenericMethod)
-                    {
-                        Type[] args = methodInfo.GetGenericArguments();
-                        genericArgs = $"<{args.Select(t => t.Name).Join(", ")}>";
-                    }
                     string methodParameters = $"({methodInfo.Params()})";
+                    string genericArgs = methodInfo.IsGenericMethod ?
+                        $"<{methodInfo.GetGenericArguments().Select(t => t.GetDisplayName()).Join(", ")}>" :
+                        string.Empty;
+
                     string returnType = methodInfo.ReturnType.GetDisplayName();
                     string toolTip = $"{returnType} - {methodInfo.Name}{genericArgs}{methodParameters}\nExtension {methodInfo.MemberType}";
                     unFilteredItems.Add(new IntelliBoxItem(methodInfo.Name + genericArgs + methodParameters, methodInfo.Name, toolTip, IntelliType.Method));
@@ -401,10 +397,13 @@ namespace PaintDotNet.Effects
                         }
 
                         string methodParameters = $"({methodInfo.Params()})";
+                        string genericArgs = methodInfo.IsGenericMethod ?
+                            $"<{methodInfo.GetGenericArguments().Select(t => t.GetDisplayName()).Join(", ")}>" :
+                            string.Empty;
 
                         returnType = methodInfo.ReturnType.GetDisplayName();
-                        toolTip = $"{returnType} - {methodInfo.Name}{methodParameters}\n{methodInfo.MemberType}";
-                        unFilteredItems.Add(new IntelliBoxItem(methodInfo.Name + methodParameters, methodInfo.Name, toolTip, IntelliType.Method));
+                        toolTip = $"{returnType} - {methodInfo.Name}{genericArgs}{methodParameters}\n{methodInfo.MemberType}";
+                        unFilteredItems.Add(new IntelliBoxItem(methodInfo.Name + genericArgs + methodParameters, methodInfo.Name, toolTip, IntelliType.Method));
                         break;
                     case MemberTypes.Property:
                         if (memberInfo.Name.Equals("SetRenderInfoCalled", StringComparison.Ordinal) || memberInfo.Name.Equals("__DebugMsgs", StringComparison.Ordinal))
@@ -412,16 +411,23 @@ namespace PaintDotNet.Effects
                             continue;
                         }
 
-                        string getSet = ((PropertyInfo)memberInfo).GetterSetter();
+                        PropertyInfo property = (PropertyInfo)memberInfo;
+                        if (property.GetIndexParameters().Length > 0)
+                        {
+                            continue;
+                        }
 
-                        returnType = ((PropertyInfo)memberInfo).PropertyType.GetDisplayName();
-                        toolTip = $"{returnType} - {memberInfo.Name}{getSet}\n{memberInfo.MemberType}";
-                        unFilteredItems.Add(new IntelliBoxItem(memberInfo.Name, memberInfo.Name, toolTip, IntelliType.Property));
+                        string getSet = property.GetterSetter();
+
+                        returnType = property.PropertyType.GetDisplayName();
+                        toolTip = $"{returnType} - {property.Name}{getSet}\n{property.MemberType}";
+                        unFilteredItems.Add(new IntelliBoxItem(property.Name, property.Name, toolTip, IntelliType.Property));
                         break;
                     case MemberTypes.Event:
-                        returnType = ((EventInfo)memberInfo).EventHandlerType.GetDisplayName();
-                        toolTip = $"{returnType} - {memberInfo.Name}\n{memberInfo.MemberType}";
-                        unFilteredItems.Add(new IntelliBoxItem(memberInfo.Name, memberInfo.Name, toolTip, IntelliType.Event));
+                        EventInfo eventInfo = (EventInfo)memberInfo;
+                        returnType = eventInfo.EventHandlerType.GetDisplayName();
+                        toolTip = $"{returnType} - {eventInfo.Name}\n{eventInfo.MemberType}";
+                        unFilteredItems.Add(new IntelliBoxItem(eventInfo.Name, eventInfo.Name, toolTip, IntelliType.Event));
                         break;
                     case MemberTypes.Field:
                         if (memberInfo.Name.Equals("RandomNumber", StringComparison.Ordinal) || memberInfo.Name.Equals("instanceSeed", StringComparison.Ordinal) ||
@@ -446,7 +452,7 @@ namespace PaintDotNet.Effects
                         {
                             fieldTypeName = "Enum Value";
                             fieldType = IntelliType.EnumItem;
-                            fieldValue = $" ({(int)field.GetValue(null)})";
+                            fieldValue = $" ({field.GetEnumValue()})";
                         }
                         else if (field.IsLiteral && !field.IsInitOnly)
                         {
@@ -462,8 +468,8 @@ namespace PaintDotNet.Effects
                         }
 
                         returnType = field.FieldType.GetDisplayName();
-                        toolTip = $"{returnType} - {memberInfo.Name}{fieldValue}\n{fieldTypeName}";
-                        unFilteredItems.Add(new IntelliBoxItem(memberInfo.Name, memberInfo.Name, toolTip, fieldType));
+                        toolTip = $"{returnType} - {field.Name}{fieldValue}\n{fieldTypeName}";
+                        unFilteredItems.Add(new IntelliBoxItem(field.Name, field.Name, toolTip, fieldType));
                         break;
                 }
             }

@@ -568,6 +568,7 @@ namespace PaintDotNet.Effects
 
             // Current Line Highlight
             this.CaretLineVisible = true;
+            this.CaretLineVisibleAlways = true;
 
             // Word Wrap
             this.WrapMode = WrapMode.None;
@@ -600,12 +601,9 @@ namespace PaintDotNet.Effects
             this.ClearCmdKey(Keys.Control | Keys.R); // Insert u012
             this.ClearCmdKey(Keys.Control | Keys.S); // Insert u0013
             this.ClearCmdKey(Keys.Control | Keys.T); // Swap Lines
-            this.ClearCmdKey(Keys.Control | Keys.W); // Inset u0017
+            this.ClearCmdKey(Keys.Control | Keys.W); // Insert u0017
             this.ClearCmdKey(Keys.Control | Keys.OemOpenBrackets); // Go To Previous Code Block
             this.ClearCmdKey(Keys.Control | Keys.OemCloseBrackets); // Go To Next Code Block
-
-            // CaretLineVisibleAlways
-            this.CaretLineVisibleAlways = true;
 
             // Disable scintilla's own context menu
             this.UsePopup(false);
@@ -3275,7 +3273,7 @@ namespace PaintDotNet.Effects
 
         private int GetDpiX(int value) => (int)Math.Round(value * dpi.Width);
 
-        internal bool IsIndicatorOn(int indicator, int position)
+        private bool IsIndicatorOn(int indicator, int position)
         {
             uint bitmask = this.IndicatorAllOnFor(position);
             int flag = (1 << indicator);
