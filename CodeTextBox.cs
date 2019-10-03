@@ -990,13 +990,13 @@ namespace PaintDotNet.Effects
                 return IntelliType.Type;
             }
 
-            MemberInfo[] memberInfo = GetMember(position);
+            MemberInfo memberInfo = GetMember(position, out _);
             if (memberInfo == null)
             {
                 return IntelliType.None;
             }
 
-            switch (memberInfo[0].MemberType)
+            switch (memberInfo.MemberType)
             {
                 case MemberTypes.Property:
                     return IntelliType.Property;
@@ -1259,20 +1259,20 @@ namespace PaintDotNet.Effects
                 return $"{typeName} - {type.DeclaringType.Name}.{name}";
             }
 
-            MemberInfo[] memberInfo = GetMember(position);
+            MemberInfo memberInfo = GetMember(position, out int length);
             if (memberInfo == null)
             {
                 return string.Empty;
             }
 
-            Type declaringType = memberInfo[0].DeclaringType;
+            Type declaringType = memberInfo.DeclaringType;
             string precedingType = declaringType.GetDisplayName();
             string returnType;
 
-            switch (memberInfo[0].MemberType)
+            switch (memberInfo.MemberType)
             {
                 case MemberTypes.Property:
-                    PropertyInfo property = (PropertyInfo)memberInfo[0];
+                    PropertyInfo property = (PropertyInfo)memberInfo;
                     returnType = property.PropertyType.GetDisplayName();
                     string getSet = property.GetterSetter();
 
@@ -1281,14 +1281,17 @@ namespace PaintDotNet.Effects
                     if (declaringType == Intelli.UserScript)
                     {
                         string member = this.GetWordFromPosition(position);
-                        memberInfo = declaringType.GetMember(member, BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly);
-                        if (memberInfo.Length == 0)
+                        MemberInfo[] members = declaringType.GetMember(member, BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly);
+                        length = members.Length;
+                        if (length == 0)
                         {
                             return string.Empty;
                         }
+
+                        memberInfo = this.GetOverload(members.Cast<MethodInfo>(), position);
                     }
 
-                    MethodInfo method = GetOverload(memberInfo.Cast<MethodInfo>(), position);
+                    MethodInfo method = (MethodInfo)memberInfo;
 
                     string ext = string.Empty;
                     if (method.IsOrHasExtension())
@@ -1312,11 +1315,11 @@ namespace PaintDotNet.Effects
                     }
 
                     returnType = method.ReturnType.GetDisplayName();
-                    string overloads = (memberInfo.Length > 1) ? $" (+ {memberInfo.Length - 1} overloads)" : string.Empty;
+                    string overloads = (length > 1) ? $" (+ {length - 1} overloads)" : string.Empty;
 
                     return $"{returnType} - {precedingType}.{method.Name}{genericArgs}({method.Params()}){overloads}{genericContraints}\n{ext}{method.MemberType}";
                 case MemberTypes.Field:
-                    FieldInfo field = (FieldInfo)memberInfo[0];
+                    FieldInfo field = (FieldInfo)memberInfo;
                     returnType = field.FieldType.GetDisplayName();
 
                     string fieldTypeName;
@@ -1345,12 +1348,12 @@ namespace PaintDotNet.Effects
 
                     return $"{returnType} - {precedingType}.{field.Name}{fieldValue}\n{fieldTypeName}";
                 case MemberTypes.Event:
-                    EventInfo eventInfo = (EventInfo)memberInfo[0];
+                    EventInfo eventInfo = (EventInfo)memberInfo;
                     returnType = eventInfo.EventHandlerType.GetDisplayName();
 
                     return $"{returnType} - {precedingType}.{eventInfo.Name}\n{eventInfo.MemberType}";
                 case MemberTypes.NestedType:
-                    type = (Type)memberInfo[0];
+                    type = (Type)memberInfo;
                     string typeName = type.GetObjectType();
 
                     string name = (type.IsGenericType) ? type.GetGenericName() : type.Name;
@@ -1382,11 +1385,6 @@ namespace PaintDotNet.Effects
             where T : MethodBase
         {
             T defaultOverload = mi.First();
-
-            if (Regex.Replace(defaultOverload.Name, @"`\d", string.Empty) != this.GetWordFromPosition(position))
-            {
-                position = GetLastWordsPos(position).Last();
-            }
 
             bool isGeneric = false;
             string genericArgs = null;
@@ -1567,15 +1565,13 @@ namespace PaintDotNet.Effects
                 return Intelli.UserDefinedTypes[lastWords];
             }
 
-            MemberInfo[] memberInfo = GetMember(position);
+            MemberInfo memberInfo = GetMember(position, out _);
             if (memberInfo == null)
             {
                 return null;
             }
 
-            return (memberInfo[0].MemberType == MemberTypes.Method) ?
-                GetOverload(memberInfo.Cast<MethodInfo>(), position).ReturnType :
-                memberInfo[0].GetReturnType();
+            return memberInfo.GetReturnType();
         }
 
         private Type GetDeclaringType(int position)
@@ -1601,19 +1597,18 @@ namespace PaintDotNet.Effects
                 return null;
             }
 
-            MemberInfo[] memberInfo = GetMember(position);
+            MemberInfo memberInfo = GetMember(position, out _);
             if (memberInfo == null)
             {
                 return null;
             }
 
-            return (memberInfo[0].MemberType == MemberTypes.Method) ?
-                GetOverload(memberInfo.Cast<MethodInfo>(), position).DeclaringType :
-                memberInfo[0].DeclaringType;
+            return memberInfo.DeclaringType;
         }
 
-        private MemberInfo[] GetMember(int position)
+        private MemberInfo GetMember(int position, out int length)
         {
+            length = 0;
             string lastWords = GetLastWords(this.WordEndPosition(position, true));
             string[] tokens = lastWords.Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
             if (tokens.Length == 0)
@@ -1679,8 +1674,11 @@ namespace PaintDotNet.Effects
 
                 if (i == tokens.Length - 1)
                 {
-                    // We at the last iteration. Return the MemberInfo.
-                    return mi;
+                    // We're at the last iteration. Return the MemberInfo.
+                    length = mi.Length;
+                    return (mi[0].MemberType == MemberTypes.Method) ?
+                        GetOverload(mi.Cast<MethodInfo>(), tokenPos[i]) :
+                        mi[0];
                 }
 
                 type = (mi[0].MemberType == MemberTypes.Method) ?
@@ -1807,19 +1805,15 @@ namespace PaintDotNet.Effects
                 return true;
             }
 
-            MemberInfo[] memberInfo = GetMember(position);
+            MemberInfo memberInfo = GetMember(position, out _);
             if (memberInfo == null)
             {
                 return false;
             }
 
-            MemberInfo member = (memberInfo[0].MemberType == MemberTypes.Method) ?
-                GetOverload(memberInfo.Cast<MethodInfo>(), position) :
-                memberInfo[0];
-
-            if (member.DeclaringType == Intelli.UserScript)
+            if (memberInfo.DeclaringType == Intelli.UserScript)
             {
-                string returnType = member.GetReturnType()?.GetDisplayName();
+                string returnType = memberInfo.GetReturnType()?.GetDisplayName();
 
                 if (returnType.Length == 0)
                 {
@@ -1885,14 +1879,14 @@ namespace PaintDotNet.Effects
                 return found;
             }
 
-            Type declaringType = member.DeclaringType;
+            Type declaringType = memberInfo.DeclaringType;
             if (declaringType.Namespace.StartsWith("PaintDotNet", StringComparison.Ordinal))
             {
                 return false;
             }
 
             string typeName2 = (declaringType.IsGenericType) ? declaringType.Name.Replace("`", "-") : declaringType.Name;
-            string fullName2 = $"{declaringType.Namespace}.{typeName2}.{member.Name}";
+            string fullName2 = $"{declaringType.Namespace}.{typeName2}.{memberInfo.Name}";
 
             OpenMsDocs(fullName2);
             return true;
