@@ -139,24 +139,7 @@ namespace PaintDotNet.Effects
                             continue;
                         }
 
-                        string methodParameters = $"({methodInfo.Params()})";
-                        string genericArgs = string.Empty;
-                        string genericContraints = string.Empty;
-
-                        if (methodInfo.IsGenericMethod)
-                        {
-                            Type[] args = methodInfo.GetGenericArguments();
-                            genericArgs = $"<{args.Select(t => t.GetDisplayName()).Join(", ")}>";
-
-                            if (methodInfo.IsGenericMethodDefinition)
-                            {
-                                genericContraints = args.GetConstraints();
-                            }
-                        }
-
-                        returnType = methodInfo.ReturnType.GetDisplayName();
-                        toolTip = $"{returnType} - {methodInfo.Name}{genericArgs}{methodParameters}{genericContraints}\n{methodInfo.MemberType}";
-                        unFilteredItems.Add(new IntelliBoxItem(methodInfo.Name + genericArgs + methodParameters, methodInfo.Name, toolTip, IntelliType.Method));
+                        AddMethod(methodInfo, false);
                         break;
                     case MemberTypes.Property:
                         PropertyInfo property = (PropertyInfo)memberInfo;
@@ -165,52 +148,17 @@ namespace PaintDotNet.Effects
                             continue;
                         }
 
-                        string getSet = property.GetterSetter();
-
-                        returnType = property.PropertyType.GetDisplayName();
-                        toolTip = $"{returnType} - {property.Name}{getSet}\n{property.MemberType}";
-                        unFilteredItems.Add(new IntelliBoxItem(property.Name, property.Name, toolTip, IntelliType.Property));
+                        AddProperty(property);
                         break;
                     case MemberTypes.Event:
                         EventInfo eventInfo = (EventInfo)memberInfo;
-                        returnType = eventInfo.EventHandlerType.GetDisplayName();
-                        toolTip = $"{returnType} - {eventInfo.Name}\n{eventInfo.MemberType}";
-                        unFilteredItems.Add(new IntelliBoxItem(eventInfo.Name, eventInfo.Name, toolTip, IntelliType.Event));
+
+                        AddEvent(eventInfo);
                         break;
                     case MemberTypes.Field:
                         FieldInfo field = (FieldInfo)memberInfo;
-                        string fieldTypeName;
-                        IntelliType fieldType;
-                        string fieldValue;
 
-                        if (!field.IsStatic)
-                        {
-                            fieldTypeName = "Field";
-                            fieldType = IntelliType.Field;
-                            fieldValue = string.Empty;
-                        }
-                        else if (field.FieldType.IsEnum)
-                        {
-                            fieldTypeName = "Enum Value";
-                            fieldType = IntelliType.EnumItem;
-                            fieldValue = $" ({field.GetEnumValue()})";
-                        }
-                        else if (field.IsLiteral && !field.IsInitOnly)
-                        {
-                            fieldTypeName = "Constant";
-                            fieldType = IntelliType.Constant;
-                            fieldValue = $" ({field.GetValue(null)})";
-                        }
-                        else
-                        {
-                            fieldTypeName = "Field";
-                            fieldType = IntelliType.Field;
-                            fieldValue = $" ( {field.GetValue(null)} )";
-                        }
-
-                        returnType = field.FieldType.GetDisplayName();
-                        toolTip = $"{returnType} - {field.Name}{fieldValue}\n{fieldTypeName}";
-                        unFilteredItems.Add(new IntelliBoxItem(field.Name, field.Name, toolTip, fieldType));
+                        AddField(field);
                         break;
                     case MemberTypes.NestedType:
                         if (!isStatic)
@@ -219,27 +167,8 @@ namespace PaintDotNet.Effects
                         }
 
                         Type nestedType = (Type)memberInfo;
-                        IntelliType intelliType = IntelliType.Type;
-                        string subType = "Type";
 
-                        if (nestedType.IsEnum)
-                        {
-                            subType = "enum";
-                            intelliType = IntelliType.Enum;
-                        }
-                        else if (nestedType.IsValueType)
-                        {
-                            subType = "struct";
-                            intelliType = IntelliType.Struct;
-                        }
-                        else if (nestedType.IsClass)
-                        {
-                            subType = "class";
-                            intelliType = IntelliType.Class;
-                        }
-
-                        toolTip = $"{subType} - {nestedType.Name}\nNested Type";
-                        unFilteredItems.Add(new IntelliBoxItem(nestedType.Name, nestedType.Name, toolTip, intelliType));
+                        AddType(nestedType, true);
                         break;
                 }
             }
@@ -248,24 +177,7 @@ namespace PaintDotNet.Effects
             {
                 foreach (MethodInfo methodInfo in type.GetExtensionMethods())
                 {
-                    string methodParameters = $"({methodInfo.Params()})";
-                    string genericArgs = string.Empty;
-                    string genericContraints = string.Empty;
-
-                    if (methodInfo.IsGenericMethod)
-                    {
-                        Type[] args = methodInfo.GetGenericArguments();
-                        genericArgs = $"<{args.Select(t => t.GetDisplayName()).Join(", ")}>";
-
-                        if (methodInfo.IsGenericMethodDefinition)
-                        {
-                            genericContraints = args.GetConstraints();
-                        }
-                    }
-
-                    string returnType = methodInfo.ReturnType.GetDisplayName();
-                    string toolTip = $"{returnType} - {methodInfo.Name}{genericArgs}{methodParameters}{genericContraints}\nExtension {methodInfo.MemberType}";
-                    unFilteredItems.Add(new IntelliBoxItem(methodInfo.Name + genericArgs + methodParameters, methodInfo.Name, toolTip, IntelliType.Method));
+                    AddMethod(methodInfo, true);
                 }
             }
 
@@ -300,103 +212,13 @@ namespace PaintDotNet.Effects
             foreach (string type in Intelli.AutoCompleteTypes.Keys)
             {
                 Type t = Intelli.AutoCompleteTypes[type];
-
-                string realName = t.Name;
-                string name = type;
-                string code = type;
-
-                if (t.IsGenericType)
-                {
-                    realName = t.GetGenericName();
-                    if (type.Equals(t.Name, StringComparison.Ordinal))
-                    {
-                        name = t.GetGenericName();
-                        code = Regex.Replace(t.Name, @"`\d", string.Empty) + "<>";
-                    }
-
-                    if (t.IsGenericTypeDefinition)
-                    {
-                        realName += t.GetGenericArguments().GetConstraints();
-                    }
-                }
-
-                string baseType = "Type";
-                IntelliType icon = IntelliType.Type;
-
-                if (t.IsEnum)
-                {
-                    baseType = "enum";
-                    icon = IntelliType.Enum;
-                }
-                else if (t.IsValueType)
-                {
-                    baseType = "struct";
-                    icon = IntelliType.Struct;
-                }
-                else if (t.IsClass)
-                {
-                    baseType = "class";
-                    icon = IntelliType.Class;
-                }
-                else if (t.IsInterface)
-                {
-                    baseType = "interface";
-                    icon = IntelliType.Interface;
-                }
-
-                string toolTip = $"{baseType} - {t.Namespace}.{realName}\nType";
-                unFilteredItems.Add(new IntelliBoxItem(name, code, toolTip, icon));
+                AddType(t, false);
             }
 
             foreach (string type in Intelli.UserDefinedTypes.Keys)
             {
                 Type t = Intelli.UserDefinedTypes[type];
-
-                string realName = t.Name;
-                string name = type;
-                string code = type;
-
-                if (t.IsGenericType)
-                {
-                    realName = t.GetGenericName();
-                    if (type.Equals(t.Name, StringComparison.Ordinal))
-                    {
-                        name = t.GetGenericName();
-                        code = Regex.Replace(t.Name, @"`\d", string.Empty) + "<>";
-                    }
-
-                    if (t.IsGenericTypeDefinition)
-                    {
-                        realName += t.GetGenericArguments().GetConstraints();
-                    }
-                }
-
-                string baseType = "Type";
-                IntelliType icon = IntelliType.Type;
-
-                if (t.IsEnum)
-                {
-                    baseType = "enum";
-                    icon = IntelliType.Enum;
-                }
-                else if (t.IsValueType)
-                {
-                    baseType = "struct";
-                    icon = IntelliType.Struct;
-                }
-                else if (t.IsClass)
-                {
-                    baseType = "class";
-                    icon = IntelliType.Class;
-                }
-                else if (t.IsInterface)
-                {
-                    baseType = "interface";
-                    icon = IntelliType.Interface;
-                }
-
-                string toolTip = $"{baseType} - {t.DeclaringType.Name}.{realName}\nType";
-                unFilteredItems.Add(new IntelliBoxItem(name, code, toolTip, icon));
+                AddType(t, null);
             }
 
             foreach (string var in Intelli.Variables.Keys)
@@ -433,9 +255,6 @@ namespace PaintDotNet.Effects
                     continue;
                 }
 
-                string returnType = string.Empty;
-                string toolTip = string.Empty;
-
                 switch (memberInfo.MemberType)
                 {
                     case MemberTypes.Method:
@@ -446,48 +265,22 @@ namespace PaintDotNet.Effects
                             continue;
                         }
 
-                        string methodParameters = $"({methodInfo.Params()})";
-                        string genericArgs = string.Empty;
-                        string genericContraints = string.Empty;
-
-                        if (methodInfo.IsGenericMethod)
-                        {
-                            Type[] args = methodInfo.GetGenericArguments();
-                            genericArgs = $"<{args.Select(t => t.GetDisplayName()).Join(", ")}>";
-
-                            if (methodInfo.IsGenericMethodDefinition)
-                            {
-                                genericContraints = args.GetConstraints();
-                            }
-                        }
-
-                        returnType = methodInfo.ReturnType.GetDisplayName();
-                        toolTip = $"{returnType} - {methodInfo.Name}{genericArgs}{methodParameters}{genericContraints}\n{methodInfo.MemberType}";
-                        unFilteredItems.Add(new IntelliBoxItem(methodInfo.Name + genericArgs + methodParameters, methodInfo.Name, toolTip, IntelliType.Method));
+                        AddMethod(methodInfo, false);
                         break;
                     case MemberTypes.Property:
-                        if (memberInfo.Name.Equals("SetRenderInfoCalled", StringComparison.Ordinal) || memberInfo.Name.Equals("__DebugMsgs", StringComparison.Ordinal))
-                        {
-                            continue;
-                        }
-
                         PropertyInfo property = (PropertyInfo)memberInfo;
-                        if (property.GetIndexParameters().Length > 0)
+                        if (property.Name.Equals("SetRenderInfoCalled", StringComparison.Ordinal) || property.Name.Equals("__DebugMsgs", StringComparison.Ordinal) ||
+                            property.GetIndexParameters().Length > 0)
                         {
                             continue;
                         }
 
-                        string getSet = property.GetterSetter();
-
-                        returnType = property.PropertyType.GetDisplayName();
-                        toolTip = $"{returnType} - {property.Name}{getSet}\n{property.MemberType}";
-                        unFilteredItems.Add(new IntelliBoxItem(property.Name, property.Name, toolTip, IntelliType.Property));
+                        AddProperty(property);
                         break;
                     case MemberTypes.Event:
                         EventInfo eventInfo = (EventInfo)memberInfo;
-                        returnType = eventInfo.EventHandlerType.GetDisplayName();
-                        toolTip = $"{returnType} - {eventInfo.Name}\n{eventInfo.MemberType}";
-                        unFilteredItems.Add(new IntelliBoxItem(eventInfo.Name, eventInfo.Name, toolTip, IntelliType.Event));
+
+                        AddEvent(eventInfo);
                         break;
                     case MemberTypes.Field:
                         if (memberInfo.Name.Equals("RandomNumber", StringComparison.Ordinal) || memberInfo.Name.Equals("instanceSeed", StringComparison.Ordinal) ||
@@ -498,38 +291,8 @@ namespace PaintDotNet.Effects
                         }
 
                         FieldInfo field = (FieldInfo)memberInfo;
-                        string fieldTypeName;
-                        IntelliType fieldType;
-                        string fieldValue;
 
-                        if (!field.IsStatic)
-                        {
-                            fieldTypeName = "Field";
-                            fieldType = IntelliType.Field;
-                            fieldValue = string.Empty;
-                        }
-                        else if (field.FieldType.IsEnum)
-                        {
-                            fieldTypeName = "Enum Value";
-                            fieldType = IntelliType.EnumItem;
-                            fieldValue = $" ({field.GetEnumValue()})";
-                        }
-                        else if (field.IsLiteral && !field.IsInitOnly)
-                        {
-                            fieldTypeName = "Constant";
-                            fieldType = IntelliType.Constant;
-                            fieldValue = $" ({field.GetValue(null)})";
-                        }
-                        else
-                        {
-                            fieldTypeName = "Field";
-                            fieldType = IntelliType.Field;
-                            fieldValue = $" ( {field.GetValue(null)} )";
-                        }
-
-                        returnType = field.FieldType.GetDisplayName();
-                        toolTip = $"{returnType} - {field.Name}{fieldValue}\n{fieldTypeName}";
-                        unFilteredItems.Add(new IntelliBoxItem(field.Name, field.Name, toolTip, fieldType));
+                        AddField(field);
                         break;
                 }
             }
@@ -565,6 +328,139 @@ namespace PaintDotNet.Effects
             {
                 this.SelectedIndex = 0;
             }
+        }
+
+        private void AddMethod(MethodInfo methodInfo, bool isExtension)
+        {
+            string returnType = methodInfo.ReturnType.GetDisplayName();
+            string methodParameters = $"({methodInfo.Params()})";
+            string genericArgs = string.Empty;
+            string genericContraints = string.Empty;
+            string ext = isExtension ? "Extension " : string.Empty;
+
+            if (methodInfo.IsGenericMethod)
+            {
+                Type[] args = methodInfo.GetGenericArguments();
+                genericArgs = $"<{args.Select(t => t.GetDisplayName()).Join(", ")}>";
+
+                if (methodInfo.IsGenericMethodDefinition)
+                {
+                    genericContraints = args.GetConstraints();
+                }
+            }
+
+            string toolTip = $"{returnType} - {methodInfo.Name}{genericArgs}{methodParameters}{genericContraints}\n{ext}{methodInfo.MemberType}";
+            unFilteredItems.Add(new IntelliBoxItem(methodInfo.Name + genericArgs + methodParameters, methodInfo.Name, toolTip, IntelliType.Method));
+        }
+
+        private void AddProperty(PropertyInfo property)
+        {
+            string returnType = property.PropertyType.GetDisplayName();
+            string getSet = property.GetterSetter();
+            string toolTip = $"{returnType} - {property.Name}{getSet}\n{property.MemberType}";
+            unFilteredItems.Add(new IntelliBoxItem(property.Name, property.Name, toolTip, IntelliType.Property));
+        }
+
+        private void AddEvent(EventInfo eventInfo)
+        {
+            string returnType = eventInfo.EventHandlerType.GetDisplayName();
+            string toolTip = $"{returnType} - {eventInfo.Name}\n{eventInfo.MemberType}";
+            unFilteredItems.Add(new IntelliBoxItem(eventInfo.Name, eventInfo.Name, toolTip, IntelliType.Event));
+        }
+
+        private void AddField(FieldInfo field)
+        {
+            string returnType = field.FieldType.GetDisplayName();
+            string fieldTypeName;
+            IntelliType fieldType;
+            string fieldValue;
+
+            if (!field.IsStatic)
+            {
+                fieldTypeName = "Field";
+                fieldType = IntelliType.Field;
+                fieldValue = string.Empty;
+            }
+            else if (field.FieldType.IsEnum)
+            {
+                fieldTypeName = "Enum Value";
+                fieldType = IntelliType.EnumItem;
+                fieldValue = $" ({field.GetEnumValue()})";
+            }
+            else if (field.IsLiteral && !field.IsInitOnly)
+            {
+                fieldTypeName = "Constant";
+                fieldType = IntelliType.Constant;
+                fieldValue = $" ({field.GetValue(null)})";
+            }
+            else
+            {
+                fieldTypeName = "Field";
+                fieldType = IntelliType.Field;
+                fieldValue = $" ( {field.GetValue(null)} )";
+            }
+
+            string toolTip = $"{returnType} - {field.Name}{fieldValue}\n{fieldTypeName}";
+            unFilteredItems.Add(new IntelliBoxItem(field.Name, field.Name, toolTip, fieldType));
+        }
+
+        private void AddType(Type type, bool? isNested)
+        {
+            string realName = type.Name;
+            string name = type.Name;
+            string code = type.Name;
+
+            if (type.IsGenericType)
+            {
+                realName = type.GetGenericName();
+                name = type.GetGenericName();
+                code = Regex.Replace(type.Name, @"`\d", string.Empty) + "<>";
+
+                if (type.IsGenericTypeDefinition)
+                {
+                    realName += type.GetGenericArguments().GetConstraints();
+                }
+            }
+
+            string baseType = "Type";
+            IntelliType icon = IntelliType.Type;
+
+            if (type.IsEnum)
+            {
+                baseType = "enum";
+                icon = IntelliType.Enum;
+            }
+            else if (type.IsValueType)
+            {
+                baseType = "struct";
+                icon = IntelliType.Struct;
+            }
+            else if (type.IsClass)
+            {
+                baseType = "class";
+                icon = IntelliType.Class;
+            }
+            else if (type.IsInterface)
+            {
+                baseType = "interface";
+                icon = IntelliType.Interface;
+            }
+
+            string toolTip;
+            if (isNested == null)
+            {
+                toolTip = $"{baseType} - {type.DeclaringType.Name}.{realName}\nType"; // User Defined
+            }
+            else if (isNested == true)
+            {
+                toolTip = $"{baseType} - {realName}\nNested Type";
+            }
+            else
+            {
+                toolTip = $"{baseType} - {type.Namespace}.{realName}\nType";
+            }
+
+            unFilteredItems.Add(new IntelliBoxItem(name, code, toolTip, icon));
         }
 
         internal void Filter(string contains)
