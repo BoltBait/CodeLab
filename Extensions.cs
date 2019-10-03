@@ -410,6 +410,21 @@ namespace PaintDotNet.Effects
             }
         }
 
+        internal static string GetConstraints(this Type[] args)
+        {
+            List<string> constraints = new List<string>();
+            foreach (Type arg in args)
+            {
+                Type[] argConstraints = arg.GetGenericParameterConstraints();
+                if (argConstraints.Length > 0)
+                {
+                    constraints.Add($"\r\n    where {arg.GetDisplayName()} : {argConstraints.Select(t => t.GetDisplayName()).Join(", ")}");
+                }
+            }
+
+            return constraints.Join(string.Empty);
+        }
+
         private static Type[] StringToTypeArray(string types)
         {
             if (types.Length == 0)

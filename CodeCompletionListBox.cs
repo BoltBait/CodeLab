@@ -140,12 +140,22 @@ namespace PaintDotNet.Effects
                         }
 
                         string methodParameters = $"({methodInfo.Params()})";
-                        string genericArgs = methodInfo.IsGenericMethod ?
-                            $"<{methodInfo.GetGenericArguments().Select(t => t.GetDisplayName()).Join(", ")}>" :
-                            string.Empty;
+                        string genericArgs = string.Empty;
+                        string genericContraints = string.Empty;
+
+                        if (methodInfo.IsGenericMethod)
+                        {
+                            Type[] args = methodInfo.GetGenericArguments();
+                            genericArgs = $"<{args.Select(t => t.GetDisplayName()).Join(", ")}>";
+
+                            if (methodInfo.IsGenericMethodDefinition)
+                            {
+                                genericContraints = args.GetConstraints();
+                            }
+                        }
 
                         returnType = methodInfo.ReturnType.GetDisplayName();
-                        toolTip = $"{returnType} - {methodInfo.Name}{genericArgs}{methodParameters}\n{methodInfo.MemberType}";
+                        toolTip = $"{returnType} - {methodInfo.Name}{genericArgs}{methodParameters}{genericContraints}\n{methodInfo.MemberType}";
                         unFilteredItems.Add(new IntelliBoxItem(methodInfo.Name + genericArgs + methodParameters, methodInfo.Name, toolTip, IntelliType.Method));
                         break;
                     case MemberTypes.Property:
@@ -239,12 +249,22 @@ namespace PaintDotNet.Effects
                 foreach (MethodInfo methodInfo in type.GetExtensionMethods())
                 {
                     string methodParameters = $"({methodInfo.Params()})";
-                    string genericArgs = methodInfo.IsGenericMethod ?
-                        $"<{methodInfo.GetGenericArguments().Select(t => t.GetDisplayName()).Join(", ")}>" :
-                        string.Empty;
+                    string genericArgs = string.Empty;
+                    string genericContraints = string.Empty;
+
+                    if (methodInfo.IsGenericMethod)
+                    {
+                        Type[] args = methodInfo.GetGenericArguments();
+                        genericArgs = $"<{args.Select(t => t.GetDisplayName()).Join(", ")}>";
+
+                        if (methodInfo.IsGenericMethodDefinition)
+                        {
+                            genericContraints = args.GetConstraints();
+                        }
+                    }
 
                     string returnType = methodInfo.ReturnType.GetDisplayName();
-                    string toolTip = $"{returnType} - {methodInfo.Name}{genericArgs}{methodParameters}\nExtension {methodInfo.MemberType}";
+                    string toolTip = $"{returnType} - {methodInfo.Name}{genericArgs}{methodParameters}{genericContraints}\nExtension {methodInfo.MemberType}";
                     unFilteredItems.Add(new IntelliBoxItem(methodInfo.Name + genericArgs + methodParameters, methodInfo.Name, toolTip, IntelliType.Method));
                 }
             }
@@ -281,9 +301,24 @@ namespace PaintDotNet.Effects
             {
                 Type t = Intelli.AutoCompleteTypes[type];
 
-                string name = t.IsGenericType && type.Equals(t.Name, StringComparison.Ordinal) ? t.GetGenericName() : type;
-                string realName = t.IsGenericType ? t.GetGenericName() : t.Name;
-                string code = t.IsGenericType && type.Equals(t.Name, StringComparison.Ordinal) ? Regex.Replace(t.Name, @"`\d", string.Empty) + "<>" : type;
+                string realName = t.Name;
+                string name = type;
+                string code = type;
+
+                if (t.IsGenericType)
+                {
+                    realName = t.GetGenericName();
+                    if (type.Equals(t.Name, StringComparison.Ordinal))
+                    {
+                        name = t.GetGenericName();
+                        code = Regex.Replace(t.Name, @"`\d", string.Empty) + "<>";
+                    }
+
+                    if (t.IsGenericTypeDefinition)
+                    {
+                        realName += t.GetGenericArguments().GetConstraints();
+                    }
+                }
 
                 string baseType = "Type";
                 IntelliType icon = IntelliType.Type;
@@ -317,9 +352,24 @@ namespace PaintDotNet.Effects
             {
                 Type t = Intelli.UserDefinedTypes[type];
 
-                string name = t.IsGenericType && type.Equals(t.Name, StringComparison.Ordinal) ? t.GetGenericName() : type;
-                string realName = t.IsGenericType ? t.GetGenericName() : t.Name;
-                string code = t.IsGenericType && type.Equals(t.Name, StringComparison.Ordinal) ? Regex.Replace(t.Name, @"`\d", string.Empty) + "<>" : type;
+                string realName = t.Name;
+                string name = type;
+                string code = type;
+
+                if (t.IsGenericType)
+                {
+                    realName = t.GetGenericName();
+                    if (type.Equals(t.Name, StringComparison.Ordinal))
+                    {
+                        name = t.GetGenericName();
+                        code = Regex.Replace(t.Name, @"`\d", string.Empty) + "<>";
+                    }
+
+                    if (t.IsGenericTypeDefinition)
+                    {
+                        realName += t.GetGenericArguments().GetConstraints();
+                    }
+                }
 
                 string baseType = "Type";
                 IntelliType icon = IntelliType.Type;
@@ -397,12 +447,22 @@ namespace PaintDotNet.Effects
                         }
 
                         string methodParameters = $"({methodInfo.Params()})";
-                        string genericArgs = methodInfo.IsGenericMethod ?
-                            $"<{methodInfo.GetGenericArguments().Select(t => t.GetDisplayName()).Join(", ")}>" :
-                            string.Empty;
+                        string genericArgs = string.Empty;
+                        string genericContraints = string.Empty;
+
+                        if (methodInfo.IsGenericMethod)
+                        {
+                            Type[] args = methodInfo.GetGenericArguments();
+                            genericArgs = $"<{args.Select(t => t.GetDisplayName()).Join(", ")}>";
+
+                            if (methodInfo.IsGenericMethodDefinition)
+                            {
+                                genericContraints = args.GetConstraints();
+                            }
+                        }
 
                         returnType = methodInfo.ReturnType.GetDisplayName();
-                        toolTip = $"{returnType} - {methodInfo.Name}{genericArgs}{methodParameters}\n{methodInfo.MemberType}";
+                        toolTip = $"{returnType} - {methodInfo.Name}{genericArgs}{methodParameters}{genericContraints}\n{methodInfo.MemberType}";
                         unFilteredItems.Add(new IntelliBoxItem(methodInfo.Name + genericArgs + methodParameters, methodInfo.Name, toolTip, IntelliType.Method));
                         break;
                     case MemberTypes.Property:

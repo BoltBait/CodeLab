@@ -1297,14 +1297,24 @@ namespace PaintDotNet.Effects
                         ext = "Extension ";
                     }
 
-                    string genericArgs = method.IsGenericMethod ?
-                        $"<{method.GetGenericArguments().Select(t => t.GetDisplayName()).Join(", ")}>" :
-                        string.Empty;
+                    string genericArgs = string.Empty;
+                    string genericContraints = string.Empty;
+
+                    if (method.IsGenericMethod)
+                    {
+                        Type[] args = method.GetGenericArguments();
+                        genericArgs = $"<{args.Select(t => t.GetDisplayName()).Join(", ")}>";
+
+                        if (method.IsGenericMethodDefinition)
+                        {
+                            genericContraints = args.GetConstraints();
+                        }
+                    }
 
                     returnType = method.ReturnType.GetDisplayName();
                     string overloads = (memberInfo.Length > 1) ? $" (+ {memberInfo.Length - 1} overloads)" : string.Empty;
 
-                    return $"{returnType} - {precedingType}.{method.Name}{genericArgs}({method.Params()}){overloads}\n{ext}{method.MemberType}";
+                    return $"{returnType} - {precedingType}.{method.Name}{genericArgs}({method.Params()}){overloads}{genericContraints}\n{ext}{method.MemberType}";
                 case MemberTypes.Field:
                     FieldInfo field = (FieldInfo)memberInfo[0];
                     returnType = field.FieldType.GetDisplayName();
