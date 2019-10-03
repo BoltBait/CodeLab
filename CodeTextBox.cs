@@ -1381,6 +1381,13 @@ namespace PaintDotNet.Effects
         private T GetOverload<T>(IEnumerable<T> mi, int position)
             where T : MethodBase
         {
+            T defaultOverload = mi.First();
+
+            if (Regex.Replace(defaultOverload.Name, @"`\d", string.Empty) != this.GetWordFromPosition(position))
+            {
+                position = GetLastWordsPos(position).Last();
+            }
+
             bool isGeneric = false;
             string genericArgs = null;
             int paramStart = this.WordEndPosition(position, true);
@@ -1393,7 +1400,6 @@ namespace PaintDotNet.Effects
                 openBrace = this.GetCharAt(paramStart);
             }
 
-            T defaultOverload = mi.First();
             if (isGeneric && defaultOverload is MethodInfo defaultMethod && defaultMethod.IsGenericMethodDefinition)
             {
                 defaultOverload = defaultMethod.MakeGenericMethod(genericArgs) as T;
