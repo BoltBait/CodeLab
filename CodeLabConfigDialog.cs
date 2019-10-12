@@ -1627,7 +1627,7 @@ namespace PaintDotNet.Effects
 
         private void changesInThisVersionToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Services.GetService<IShellService>().LaunchUrl(null, "https://www.boltbait.com/pdn/codelab/history.asp#v" + ThisVersion);
+            Services.GetService<IShellService>().LaunchUrl(null, "https://www.boltbait.com/pdn/codelab/history/#v" + ThisVersion);
         }
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
