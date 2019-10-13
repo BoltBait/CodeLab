@@ -267,7 +267,7 @@ namespace PaintDotNet.Effects
                     Filter = "JSON Files (*.JSON)|*.json",
                     OverwritePrompt = true,
                     AddExtension = true,
-                    FileName = "CodeLabSnippets.cs",
+                    FileName = "CodeLabSnippets.json",
                 })
             {
                 if (sfd.ShowDialog() != DialogResult.OK)
