@@ -975,10 +975,10 @@ namespace PaintDotNet.Effects
                 HelpPart += "            return defaultText;\r\n";
                 HelpPart += "        }\r\n";
                 HelpPart += "\r\n";
-                HelpPart += "        [DllImport(\"kernel32.dll\", CharSet = CharSet.Auto)]\r\n";
+                HelpPart += "        [DllImport(\"kernel32.dll\", CharSet = CharSet.Unicode)]\r\n";
                 HelpPart += "        private static extern IntPtr GetModuleHandle(string lpModuleName);\r\n";
                 HelpPart += "\r\n";
-                HelpPart += "        [DllImport(\"user32.dll\", CharSet = CharSet.Auto)]\r\n";
+                HelpPart += "        [DllImport(\"user32.dll\", CharSet = CharSet.Unicode)]\r\n";
                 HelpPart += "        private static extern int LoadString(IntPtr hInstance, uint uID, System.Text.StringBuilder lpBuffer, int nBufferMax);\r\n";
                 HelpPart += "\r\n";
                 HelpPart += "        public static string DecompressString(string compressedText)\r\n";
