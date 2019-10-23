@@ -42,7 +42,6 @@ namespace PaintDotNet.Effects
         internal EffectRenderingSchedule RenderingSchedule = EffectRenderingSchedule.DefaultTilesForCpuRendering;
         internal HelpType HelpType = 0;
         internal string HelpStr = "";
-        private string HelpFileName = "";
         internal string RTZPath = "";
         private string FullScriptText = "";
         private string FileName = "";
@@ -76,7 +75,6 @@ namespace PaintDotNet.Effects
 
             // Set dialog box title
             this.Text = "Building " + ScriptName + ".dll";
-            this.HelpFileName = ScriptName + ".txt";
             this.RTZPath = Path.ChangeExtension(ScriptPath, ".rtz");
             DecimalSymbol.Text = System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator;
 
