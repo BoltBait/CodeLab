@@ -481,16 +481,7 @@ namespace PaintDotNet.Effects
         }
         #endregion
 
-        #region UBB and Help Preview
-        private RichTextBox rtb_HelpBox;
-        private Button btn_HelpBoxOKButton;
-
-        private void rtb_LinkClicked(object sender, LinkClickedEventArgs e)
-        {
-            Process.Start(e.LinkText);
-            btn_HelpBoxOKButton.Focus();
-        }
-
+        #region UBB to RTF
         private enum StyleTypes
         {
             Style,
@@ -612,7 +603,9 @@ namespace PaintDotNet.Effects
             }
             RichHelpContent.Select(0, 0);
         }
+        #endregion
 
+        #region Help Preview
         private static string LoadLocalizedString(string libraryName, uint ident, string defaultText)
         {
             IntPtr libraryHandle = GetModuleHandle(libraryName);
@@ -674,15 +667,16 @@ namespace PaintDotNet.Effects
                     {
                         form.ShowIcon = false;
                     }
-                    btn_HelpBoxOKButton = new Button();
+
+                    Button btn_HelpBoxOKButton = new Button();
                     btn_HelpBoxOKButton.AutoSize = true;
                     btn_HelpBoxOKButton.Text = LoadLocalizedString("user32.dll", 800, "OK");
                     btn_HelpBoxOKButton.DialogResult = DialogResult.Cancel;
                     btn_HelpBoxOKButton.Size = new Size(84, 24);
                     btn_HelpBoxOKButton.Location = new Point(472, 359);
                     btn_HelpBoxOKButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-                    form.Controls.Add(btn_HelpBoxOKButton);
-                    rtb_HelpBox = new RichTextBox();
+
+                    RichTextBox rtb_HelpBox = new RichTextBox();
                     rtb_HelpBox.Size = new Size(564, 350);
                     rtb_HelpBox.Location = new Point(0, 0);
                     rtb_HelpBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Bottom | AnchorStyles.Right;
@@ -691,13 +685,16 @@ namespace PaintDotNet.Effects
                     rtb_HelpBox.ScrollBars = RichTextBoxScrollBars.ForcedVertical;
                     rtb_HelpBox.BorderStyle = BorderStyle.None;
                     rtb_HelpBox.Font = new Font(rtb_HelpBox.SelectionFont.Name, 10f);
-                    rtb_HelpBox.LinkClicked += new LinkClickedEventHandler(rtb_LinkClicked);
                     rtb_HelpBox.ReadOnly = false;
                     rtb_HelpBox.Rtf = RichHelpContent.Rtf;
-                    //rtb_HelpBox.Text = RichHelpContent.Text.Replace("\\\\t", "[t]").Replace("\\\\n", "[n]");
-                    //rtb_ChangeUBBtoRTF();
                     rtb_HelpBox.ReadOnly = true;
-                    form.Controls.Add(rtb_HelpBox);
+                    rtb_HelpBox.LinkClicked += (obj, args) =>
+                    {
+                        Process.Start(args.LinkText);
+                        btn_HelpBoxOKButton.Focus();
+                    };
+
+                    form.Controls.AddRange(new Control[] { btn_HelpBoxOKButton, rtb_HelpBox });
                     form.ResumeLayout();
                     form.ShowDialog();
                 }
