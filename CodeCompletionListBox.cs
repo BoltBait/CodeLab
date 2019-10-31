@@ -37,7 +37,7 @@ namespace PaintDotNet.Effects
         private readonly List<IntelliBoxItem> unFilteredItems = new List<IntelliBoxItem>();
         private IntelliBoxItem LastUsedMember = IntelliBoxItem.Empty;
         private IntelliBoxItem LastUsedNonMember = IntelliBoxItem.Empty;
-        private bool membersInBox;
+        private IntelliBoxContents intelliBoxContents;
         private string stringFilter = string.Empty;
         private IntelliType intelliTypeFilter = IntelliType.None;
 
@@ -111,7 +111,7 @@ namespace PaintDotNet.Effects
         internal void PopulateMembers(Type type, bool isStatic)
         {
             Clear();
-            membersInBox = true;
+            this.intelliBoxContents = IntelliBoxContents.Members;
 
             MemberInfo[] members = isStatic ?
                 type.GetMembers(BindingFlags.Static | BindingFlags.Public) :
@@ -199,7 +199,7 @@ namespace PaintDotNet.Effects
         internal void PopulateNonMembers(char startChar)
         {
             Clear();
-            membersInBox = false;
+            this.intelliBoxContents = IntelliBoxContents.NonMembers;
 
             foreach (string typeName in Intelli.AutoCompleteTypes.Keys)
             {
@@ -299,7 +299,7 @@ namespace PaintDotNet.Effects
         internal void PopulateConstructors(Type type)
         {
             Clear();
-            membersInBox = false;
+            this.intelliBoxContents = IntelliBoxContents.Constructors;
 
             if (type.IsValueType)
             {
@@ -322,7 +322,7 @@ namespace PaintDotNet.Effects
         internal void PopulateSuggestions(Type type)
         {
             Clear();
-            membersInBox = false;
+            this.intelliBoxContents = IntelliBoxContents.Suggestions;
 
             string typeName = type.Name;
 
@@ -652,11 +652,12 @@ namespace PaintDotNet.Effects
         {
             if (this.SelectedItem is IntelliBoxItem item)
             {
-                if (membersInBox)
+                if (this.intelliBoxContents == IntelliBoxContents.Members)
                 {
                     this.LastUsedMember = item;
                 }
-                else if (item.ImageIndex != (int)IntelliType.Keyword && item.ImageIndex != (int)IntelliType.Snippet)
+                else if (this.intelliBoxContents == IntelliBoxContents.NonMembers &&
+                    item.ImageIndex != (int)IntelliType.Keyword && item.ImageIndex != (int)IntelliType.Snippet)
                 {
                     this.LastUsedNonMember = item;
                 }
@@ -731,6 +732,14 @@ namespace PaintDotNet.Effects
             {
                 return Code;
             }
+        }
+
+        private enum IntelliBoxContents
+        {
+            Members,
+            NonMembers,
+            Constructors,
+            Suggestions
         }
     }
 }
