@@ -2317,7 +2317,7 @@ namespace PaintDotNet.Effects
 
             bool isStatic = GetIntelliType(position - 1) == IntelliType.Type;
 
-            iBox.Populate(type, isStatic);
+            iBox.PopulateMembers(type, isStatic);
 
             ShowIntelliBox(position, true);
         }
@@ -2376,7 +2376,7 @@ namespace PaintDotNet.Effects
                 }
             }
 
-            iBox.Populate(this.GetCharAt(position));
+            iBox.PopulateNonMembers(this.GetCharAt(position));
             ShowIntelliBox(position, false);
         }
 
@@ -2406,7 +2406,7 @@ namespace PaintDotNet.Effects
                 return;
             }
 
-            iBox.Populate(type);
+            iBox.PopulateConstructors(type);
             ShowIntelliBox(position, false);
         }
 

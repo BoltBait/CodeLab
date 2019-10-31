@@ -108,12 +108,9 @@ namespace PaintDotNet.Effects
         /// <summary>
         /// Fills the iBox with members of the given Type.
         /// </summary>
-        internal void Populate(Type type, bool isStatic)
+        internal void PopulateMembers(Type type, bool isStatic)
         {
-            this.Items.Clear();
-            unFilteredItems.Clear();
-            stringFilter = string.Empty;
-            intelliTypeFilter = IntelliType.None;
+            Clear();
             membersInBox = true;
 
             MemberInfo[] members = isStatic ?
@@ -127,9 +124,6 @@ namespace PaintDotNet.Effects
                 {
                     continue;
                 }
-
-                string returnType = string.Empty;
-                string toolTip = string.Empty;
 
                 switch (memberInfo.MemberType)
                 {
@@ -202,12 +196,9 @@ namespace PaintDotNet.Effects
         /// <summary>
         /// Fills the iBox with all non-member objects, and then filters them with the given char.
         /// </summary>
-        internal void Populate(char startChar)
+        internal void PopulateNonMembers(char startChar)
         {
-            this.Items.Clear();
-            unFilteredItems.Clear();
-            stringFilter = string.Empty;
-            intelliTypeFilter = IntelliType.None;
+            Clear();
             membersInBox = false;
 
             foreach (string typeName in Intelli.AutoCompleteTypes.Keys)
@@ -305,12 +296,9 @@ namespace PaintDotNet.Effects
         /// <summary>
         /// Fills the iBox with all the Constructors of the given Type.
         /// </summary>
-        internal void Populate(Type type)
+        internal void PopulateConstructors(Type type)
         {
-            this.Items.Clear();
-            unFilteredItems.Clear();
-            stringFilter = string.Empty;
-            intelliTypeFilter = IntelliType.None;
+            Clear();
             membersInBox = false;
 
             if (type.IsValueType)
@@ -333,10 +321,7 @@ namespace PaintDotNet.Effects
 
         internal void PopulateSuggestions(Type type)
         {
-            this.Items.Clear();
-            unFilteredItems.Clear();
-            stringFilter = string.Empty;
-            intelliTypeFilter = IntelliType.None;
+            Clear();
             membersInBox = false;
 
             string typeName = type.Name;
@@ -369,6 +354,14 @@ namespace PaintDotNet.Effects
             {
                 this.SelectedIndex = 0;
             }
+        }
+
+        private void Clear()
+        {
+            this.Items.Clear();
+            this.unFilteredItems.Clear();
+            this.stringFilter = string.Empty;
+            this.intelliTypeFilter = IntelliType.None;
         }
 
         private void AddMethod(MethodInfo methodInfo, bool isExtension)
