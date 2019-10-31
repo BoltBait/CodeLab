@@ -155,6 +155,23 @@ namespace PaintDotNet.Effects
             return capped + str.Substring(1);
         }
 
+        internal static string FirstCharToLower(this string str)
+        {
+            if (string.IsNullOrEmpty(str) || !char.IsLetter(str[0]))
+            {
+                return str;
+            }
+
+            char unCapped = char.ToLowerInvariant(str[0]);
+
+            if (str.Length == 1)
+            {
+                return unCapped.ToString();
+            }
+
+            return unCapped + str.Substring(1);
+        }
+
         internal static bool Contains(this string source, string value, StringComparison comparisonType)
         {
             return source?.IndexOf(value, comparisonType) >= 0;

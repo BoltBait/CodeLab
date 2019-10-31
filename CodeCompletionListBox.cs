@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
@@ -321,6 +322,46 @@ namespace PaintDotNet.Effects
             {
                 string toolTip = $"{type.Name}({constructor.Params()})";
                 unFilteredItems.Add(new IntelliBoxItem(toolTip, string.Empty, toolTip + "\nConstructor", IntelliType.Constructor));
+            }
+
+            this.Items.AddRange(unFilteredItems.ToArray());
+            if (unFilteredItems.Count > 0)
+            {
+                this.SelectedIndex = 0;
+            }
+        }
+
+        internal void PopulateSuggestions(Type type)
+        {
+            this.Items.Clear();
+            unFilteredItems.Clear();
+            stringFilter = string.Empty;
+            intelliTypeFilter = IntelliType.None;
+            membersInBox = false;
+
+            string typeName = type.Name;
+
+            string fullNameSuggest = typeName.FirstCharToLower();
+            unFilteredItems.Add(new IntelliBoxItem(fullNameSuggest, fullNameSuggest, "(Suggested name)", IntelliType.Variable));
+
+            string[] splitCamelCase = Regex.Split(typeName, "(?<!^)(?=[A-Z])");
+            for (int i = splitCamelCase.Length - 1; i > 0; i--)
+            {
+                StringBuilder subtractEnd = new StringBuilder(i);
+                for (int j = 0; j < i; j++)
+                {
+                    subtractEnd.Append(splitCamelCase[j]);
+                }
+                string subtractedEndSuggest = subtractEnd.ToString().FirstCharToLower();
+                unFilteredItems.Add(new IntelliBoxItem(subtractedEndSuggest, subtractedEndSuggest, "(Suggested name)", IntelliType.Variable));
+
+                StringBuilder subtractStart = new StringBuilder(i);
+                for (int j = splitCamelCase.Length - i; j < splitCamelCase.Length; j++)
+                {
+                    subtractStart.Append(splitCamelCase[j]);
+                }
+                string subtractedStartSuggest = subtractStart.ToString().FirstCharToLower();
+                unFilteredItems.Add(new IntelliBoxItem(subtractedStartSuggest, subtractedStartSuggest, "(Suggested name)", IntelliType.Variable));
             }
 
             this.Items.AddRange(unFilteredItems.ToArray());

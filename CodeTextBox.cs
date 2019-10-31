@@ -2410,6 +2410,26 @@ namespace PaintDotNet.Effects
             ShowIntelliBox(position, false);
         }
 
+        private void SuggestionIntelliBox(int position)
+        {
+            int style = this.GetStyleAt(position - 1);
+            if (style != Style.Cpp.Word2 && style != Style.Cpp.Word2 + Preprocessor)
+            {
+                return;
+            }
+
+            Type type = GetReturnType(position);
+
+            if (type == null || type == typeof(void) || type.Namespace.Equals("System", StringComparison.Ordinal))
+            {
+                return;
+            }
+
+            iBox.PopulateSuggestions(type);
+
+            ShowIntelliBox(position, true);
+        }
+
         private void ShowIntelliBox(int position, bool members)
         {
             if (iBox.Items.Count <= 0)
@@ -2841,6 +2861,10 @@ namespace PaintDotNet.Effects
                     if (this.GetWordFromPosition(this.CurrentPosition - 1).Equals("new", StringComparison.Ordinal))
                     {
                         NonMemberIntelliBox(this.CurrentPosition);
+                    }
+                    else if (GetIntelliType(this.CurrentPosition - 1) == IntelliType.Type)
+                    {
+                        SuggestionIntelliBox(this.CurrentPosition - 1);
                     }
                 }
             }
