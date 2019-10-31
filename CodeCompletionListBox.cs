@@ -168,7 +168,7 @@ namespace PaintDotNet.Effects
 
                         Type nestedType = (Type)memberInfo;
 
-                        AddType(nestedType, true);
+                        AddType(nestedType, nestedType.Name, true);
                         break;
                 }
             }
@@ -209,16 +209,16 @@ namespace PaintDotNet.Effects
             intelliTypeFilter = IntelliType.None;
             membersInBox = false;
 
-            foreach (string type in Intelli.AutoCompleteTypes.Keys)
+            foreach (string typeName in Intelli.AutoCompleteTypes.Keys)
             {
-                Type t = Intelli.AutoCompleteTypes[type];
-                AddType(t, false);
+                Type type = Intelli.AutoCompleteTypes[typeName];
+                AddType(type, typeName, false);
             }
 
-            foreach (string type in Intelli.UserDefinedTypes.Keys)
+            foreach (string typeName in Intelli.UserDefinedTypes.Keys)
             {
-                Type t = Intelli.UserDefinedTypes[type];
-                AddType(t, null);
+                Type type = Intelli.UserDefinedTypes[typeName];
+                AddType(type, typeName, null);
             }
 
             foreach (string var in Intelli.Variables.Keys)
@@ -404,17 +404,20 @@ namespace PaintDotNet.Effects
             unFilteredItems.Add(new IntelliBoxItem(field.Name, field.Name, toolTip, fieldType));
         }
 
-        private void AddType(Type type, bool? isNested)
+        private void AddType(Type type, string typeName, bool? isNested)
         {
             string realName = type.Name;
-            string name = type.Name;
-            string code = type.Name;
+            string name = typeName;
+            string code = typeName;
 
             if (type.IsGenericType)
             {
                 realName = type.GetGenericName();
-                name = type.GetGenericName();
-                code = Regex.Replace(type.Name, @"`\d", string.Empty) + "<>";
+                if (typeName.Equals(type.Name, StringComparison.Ordinal))
+                {
+                    name = type.GetGenericName();
+                    code = Regex.Replace(type.Name, @"`\d", string.Empty) + "<>";
+                }
 
                 if (type.IsGenericTypeDefinition)
                 {
