@@ -747,111 +747,91 @@ namespace PaintDotNet.Effects
                     }
                 }
 
-                if (u.ElementType == ElementType.Checkbox)
+                switch (u.ElementType)
                 {
-                    PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.Description, \"" + u.Name + "\");\r\n";
-                }
-                else if (u.ElementType == ElementType.ColorWheel)
-                {
-                    PropertyPart += "            configUI.SetPropertyControlType(PropertyNames." + propertyName + ", PropertyControlType.ColorWheel);\r\n";
-                    if (u.ColorWheelOptions.HasFlag(ColorWheelOptions.NoReset))
-                    {
-                        PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.ShowResetButton, false);\r\n";
-                    }
-                }
-                else if (u.ElementType == ElementType.AngleChooser)
-                {
-                    PropertyPart += "            configUI.SetPropertyControlType(PropertyNames." + propertyName + ", PropertyControlType.AngleChooser);\r\n";
-                    PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.DecimalPlaces, 3);\r\n";
-                }
-                else if (u.ElementType == ElementType.PanSlider)
-                {
-                    PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.SliderSmallChangeX, 0.05);\r\n";
-                    PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.SliderLargeChangeX, 0.25);\r\n";
-                    PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.UpDownIncrementX, 0.01);\r\n";
-                    PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.SliderSmallChangeY, 0.05);\r\n";
-                    PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.SliderLargeChangeY, 0.25);\r\n";
-                    PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.UpDownIncrementY, 0.01);\r\n";
-                    PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.DecimalPlaces, 3);\r\n";
-                    PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.StaticImageUnderlay, imageResource);\r\n";
-                }
-                else if (u.ElementType == ElementType.DoubleSlider)
-                {
-                    PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.SliderLargeChange, 0.25);\r\n";
-                    PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.SliderSmallChange, 0.05);\r\n";
-                    PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.UpDownIncrement, 0.01);\r\n";
-                    if (u.Max < 1000)
-                    {
+                    case ElementType.Checkbox:
+                        PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.Description, \"" + u.Name + "\");\r\n";
+                        break;
+                    case ElementType.ColorWheel:
+                        PropertyPart += "            configUI.SetPropertyControlType(PropertyNames." + propertyName + ", PropertyControlType.ColorWheel);\r\n";
+                        if (u.ColorWheelOptions.HasFlag(ColorWheelOptions.NoReset))
+                        {
+                            PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.ShowResetButton, false);\r\n";
+                        }
+                        break;
+                    case ElementType.AngleChooser:
+                        PropertyPart += "            configUI.SetPropertyControlType(PropertyNames." + propertyName + ", PropertyControlType.AngleChooser);\r\n";
                         PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.DecimalPlaces, 3);\r\n";
-                    }
-                }
-                else if (u.ElementType == ElementType.DropDown)
-                {
-                    PropertyPart += "            PropertyControlInfo " + propertyName + "Control = configUI.FindControlForPropertyName(PropertyNames." + propertyName + ");\r\n";
-                    byte OptionCount = 0;
-                    foreach (string entry in u.ToOptionArray())
-                    {
-                        OptionCount++;
-                        PropertyPart += "            " + propertyName + "Control.SetValueDisplayName(" + propertyName + "Options." + propertyName + "Option" + OptionCount.ToString() + ", \"" + entry.Trim() + "\");\r\n";
-                    }
-                }
-                else if (u.ElementType == ElementType.BinaryPixelOp)
-                {
-                    PropertyPart += "            PropertyControlInfo " + propertyName + "blendOpControl = configUI.FindControlForPropertyName(PropertyNames." + propertyName + ");\r\n";
-                    PropertyPart += "            foreach (ILocalizedEnumValue blendOpValue in blendModes)\r\n";
-                    PropertyPart += "            {\r\n";
-                    PropertyPart += "                " + propertyName + "blendOpControl.SetValueDisplayName(blendOpValue.EnumValue, blendOpValue.LocalizedName);\r\n";
-                    PropertyPart += "            }\r\n";
-                }
-                else if (u.ElementType == ElementType.FontFamily)
-                {
-                    PropertyPart += "            PropertyControlInfo " + propertyName + "FontFamilyControl = configUI.FindControlForPropertyName(PropertyNames." + propertyName + ");\r\n";
-                    PropertyPart += "            FontFamily[] " + propertyName + "FontFamilies = new InstalledFontCollection().Families;\r\n";
-                    PropertyPart += "            foreach (FontFamily ff in " + propertyName + "FontFamilies)\r\n";
-                    PropertyPart += "            {\r\n";
-                    PropertyPart += "                " + propertyName + "FontFamilyControl.SetValueDisplayName(ff, ff.Name);\r\n";
-                    PropertyPart += "            }\r\n";
-                }
-                else if (u.ElementType == ElementType.RadioButtons)
-                {
-                    PropertyPart += "            configUI.SetPropertyControlType(PropertyNames." + propertyName + ", PropertyControlType.RadioButton);\r\n";
-                    PropertyPart += "            PropertyControlInfo " + propertyName + "Control = configUI.FindControlForPropertyName(PropertyNames." + propertyName + ");\r\n";
-                    byte OptionCount = 0;
-                    foreach (string entry in u.ToOptionArray())
-                    {
-                        OptionCount++;
-                        PropertyPart += "            " + propertyName + "Control.SetValueDisplayName(" + propertyName + "Options." + propertyName + "Option" + OptionCount.ToString() + ", \"" + entry.Trim() + "\");\r\n";
-                    }
-                }
-                else if (u.ElementType == ElementType.ReseedButton)
-                {
-                    PropertyPart += "            configUI.SetPropertyControlType(PropertyNames." + propertyName + ", PropertyControlType.IncrementButton);\r\n";
-                    PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.ButtonText, \"" + u.Name + "\");\r\n";
-                }
-                else if (u.ElementType == ElementType.MultiLineTextbox)
-                {
-                    PropertyPart += "            configUI.SetPropertyControlType(PropertyNames." + propertyName + ", PropertyControlType.TextBox);\r\n";
-                    PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.Multiline, true);\r\n";
-                }
-                else if (u.ElementType == ElementType.RollBall)
-                {
-                    PropertyPart += "            configUI.SetPropertyControlType(PropertyNames." + propertyName + ", PropertyControlType.RollBallAndSliders);\r\n";
-                    PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.UpDownIncrementX, 0.01);\r\n";
-                    PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.UpDownIncrementY, 0.01);\r\n";
-                    PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.UpDownIncrementZ, 0.01);\r\n";
-                    PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.DecimalPlaces, 3);\r\n";
-                }
-                else if (u.ElementType == ElementType.Filename)
-                {
-                    PropertyPart += "            configUI.SetPropertyControlType(PropertyNames." + propertyName + ", PropertyControlType.FileChooser);\r\n";
-                    PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.FileTypes, new string[] { ";
-                    PropertyPart += u.ToAllowableFileTypes();
-                    PropertyPart += " });\r\n";
-                    PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.AllowAllFiles, true);\r\n";
-                }
-                else if (u.ElementType == ElementType.Uri)
-                {
-                    PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.Description, \"" + u.Name + "\");\r\n";
+                        break;
+                    case ElementType.PanSlider:
+                        PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.SliderSmallChangeX, 0.05);\r\n";
+                        PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.SliderLargeChangeX, 0.25);\r\n";
+                        PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.UpDownIncrementX, 0.01);\r\n";
+                        PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.SliderSmallChangeY, 0.05);\r\n";
+                        PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.SliderLargeChangeY, 0.25);\r\n";
+                        PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.UpDownIncrementY, 0.01);\r\n";
+                        PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.DecimalPlaces, 3);\r\n";
+                        PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.StaticImageUnderlay, imageResource);\r\n";
+                        break;
+                    case ElementType.DoubleSlider:
+                        PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.SliderLargeChange, 0.25);\r\n";
+                        PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.SliderSmallChange, 0.05);\r\n";
+                        PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.UpDownIncrement, 0.01);\r\n";
+                        if (u.Max < 1000)
+                        {
+                            PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.DecimalPlaces, 3);\r\n";
+                        }
+                        break;
+                    case ElementType.RadioButtons:
+                        PropertyPart += "            configUI.SetPropertyControlType(PropertyNames." + propertyName + ", PropertyControlType.RadioButton);\r\n";
+                        goto case ElementType.DropDown; // Fall Through
+                    case ElementType.DropDown:
+                        PropertyPart += "            PropertyControlInfo " + propertyName + "Control = configUI.FindControlForPropertyName(PropertyNames." + propertyName + ");\r\n";
+                        byte OptionCount = 0;
+                        foreach (string entry in u.ToOptionArray())
+                        {
+                            OptionCount++;
+                            PropertyPart += "            " + propertyName + "Control.SetValueDisplayName(" + propertyName + "Options." + propertyName + "Option" + OptionCount.ToString() + ", \"" + entry.Trim() + "\");\r\n";
+                        }
+                        break;
+                    case ElementType.BinaryPixelOp:
+                        PropertyPart += "            PropertyControlInfo " + propertyName + "blendOpControl = configUI.FindControlForPropertyName(PropertyNames." + propertyName + ");\r\n";
+                        PropertyPart += "            foreach (ILocalizedEnumValue blendOpValue in blendModes)\r\n";
+                        PropertyPart += "            {\r\n";
+                        PropertyPart += "                " + propertyName + "blendOpControl.SetValueDisplayName(blendOpValue.EnumValue, blendOpValue.LocalizedName);\r\n";
+                        PropertyPart += "            }\r\n";
+                        break;
+                    case ElementType.FontFamily:
+                        PropertyPart += "            PropertyControlInfo " + propertyName + "FontFamilyControl = configUI.FindControlForPropertyName(PropertyNames." + propertyName + ");\r\n";
+                        PropertyPart += "            FontFamily[] " + propertyName + "FontFamilies = new InstalledFontCollection().Families;\r\n";
+                        PropertyPart += "            foreach (FontFamily ff in " + propertyName + "FontFamilies)\r\n";
+                        PropertyPart += "            {\r\n";
+                        PropertyPart += "                " + propertyName + "FontFamilyControl.SetValueDisplayName(ff, ff.Name);\r\n";
+                        PropertyPart += "            }\r\n";
+                        break;
+                    case ElementType.ReseedButton:
+                        PropertyPart += "            configUI.SetPropertyControlType(PropertyNames." + propertyName + ", PropertyControlType.IncrementButton);\r\n";
+                        PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.ButtonText, \"" + u.Name + "\");\r\n";
+                        break;
+                    case ElementType.MultiLineTextbox:
+                        PropertyPart += "            configUI.SetPropertyControlType(PropertyNames." + propertyName + ", PropertyControlType.TextBox);\r\n";
+                        PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.Multiline, true);\r\n";
+                        break;
+                    case ElementType.RollBall:
+                        PropertyPart += "            configUI.SetPropertyControlType(PropertyNames." + propertyName + ", PropertyControlType.RollBallAndSliders);\r\n";
+                        PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.UpDownIncrementX, 0.01);\r\n";
+                        PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.UpDownIncrementY, 0.01);\r\n";
+                        PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.UpDownIncrementZ, 0.01);\r\n";
+                        PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.DecimalPlaces, 3);\r\n";
+                        break;
+                    case ElementType.Filename:
+                        PropertyPart += "            configUI.SetPropertyControlType(PropertyNames." + propertyName + ", PropertyControlType.FileChooser);\r\n";
+                        PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.FileTypes, new string[] { " + u.ToAllowableFileTypes() + " });\r\n";
+                        PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.AllowAllFiles, true);\r\n";
+                        break;
+                    case ElementType.Uri:
+                        PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.Description, \"" + u.Name + "\");\r\n";
+                        break;
                 }
             }
             PropertyPart += "\r\n";
