@@ -692,7 +692,7 @@ namespace PaintDotNet.Effects
                     ControlMin.Text = CurrentElement.Min.ToString();
                     ControlMax.Text = CurrentElement.Max.ToString();
                     ControlDef.Text = CurrentElement.Default.ToString();
-                    DefaultColorComboBox.Text = (CurrentElement.ColorDefault.Length == 0 ? "None" : CurrentElement.ColorDefault);
+                    DefaultColorComboBox.Text = (CurrentElement.StrDefault.Length == 0 ? "None" : CurrentElement.StrDefault);
                     break;
                 case ElementType.AngleChooser:
                     ControlType.Text = "Angle Chooser";
@@ -704,9 +704,9 @@ namespace PaintDotNet.Effects
                 case ElementType.PanSlider:
                     ControlType.Text = "Pan Slider";
                     ControlStyle.SelectedIndex = 0;
-                    ControlMin.Text = CurrentElement.Min.ToString();
-                    ControlMax.Text = CurrentElement.Max.ToString();
-                    ControlDef.Text = CurrentElement.Default.ToString();
+                    ControlMin.Text = CurrentElement.dMin.ToString();
+                    ControlMax.Text = CurrentElement.dMax.ToString();
+                    ControlDef.Text = CurrentElement.dDefault.ToString();
                     break;
                 case ElementType.Textbox:
                     ControlType.Text = "String";
@@ -794,7 +794,7 @@ namespace PaintDotNet.Effects
                     ControlMin.Text = CurrentElement.Min.ToString();
                     ControlMax.Text = CurrentElement.Max.ToString();
                     ControlDef.Text = CurrentElement.Default.ToString();
-                    OptionsText.Text = CurrentElement.Link;
+                    OptionsText.Text = CurrentElement.StrDefault;
                     break;
                 default:
                     break;
@@ -1169,23 +1169,22 @@ namespace PaintDotNet.Effects
 
     internal class UIElement
     {
-        private readonly string Description = "";
-        internal readonly string Name = "";
-        internal readonly ElementType ElementType = ElementType.IntSlider;
-        internal readonly int Min = 0;
-        internal readonly int Max = 100;
-        internal readonly int Default = 0;
-        internal readonly string ColorDefault = "PrimaryColor";
-        internal readonly ColorWheelOptions ColorWheelOptions = ColorWheelOptions.None;
-        internal readonly double dMin = 0;
-        internal readonly double dMax = 100;
-        internal readonly double dDefault = 0;
-        internal readonly SliderStyle Style = SliderStyle.Default;
-        internal readonly bool EnabledWhen = false;
-        internal readonly bool EnableSwap = false;
-        internal readonly string EnableIdentifier = string.Empty;
-        internal readonly string Identifier = "Amount";
-        internal readonly string Link = "";
+        private readonly string Description;
+        internal readonly string Name;
+        internal readonly ElementType ElementType;
+        internal readonly int Min;
+        internal readonly int Max;
+        internal readonly int Default;
+        internal readonly string StrDefault;
+        internal readonly ColorWheelOptions ColorWheelOptions;
+        internal readonly double dMin;
+        internal readonly double dMax;
+        internal readonly double dDefault;
+        internal readonly SliderStyle Style;
+        internal readonly bool EnabledWhen;
+        internal readonly bool EnableSwap;
+        internal readonly string EnableIdentifier;
+        internal readonly string Identifier;
 
         private static readonly string[] NewSourceCodeType = {
             "IntSliderControl",         // 0
@@ -1269,22 +1268,19 @@ namespace PaintDotNet.Effects
         {
             Name = eName;
             ElementType = eType;
-            if (!double.TryParse(eMax, out dMax)) dMax = 100;
-            if (!double.TryParse(eMin, out dMin)) dMin = 0;
-            if (!double.TryParse(eDefault, out dDefault)) dDefault = 0;
-            Min = (int)dMin;
-            Max = (int)dMax;
-            Default = (int)dDefault;
-            int NameLength;
-            Style = Enum.IsDefined(typeof(SliderStyle), eStyle) ? (SliderStyle)eStyle : 0;
-            ColorWheelOptions = (eStyle == 3) ? ColorWheelOptions.Alpha | ColorWheelOptions.NoReset : (eStyle == 2) ? ColorWheelOptions.NoReset : (eStyle == 1) ? ColorWheelOptions.Alpha : ColorWheelOptions.None;
-            EnabledWhen = eEnabled;
-            EnableIdentifier = targetIdentifier;
-            EnableSwap = eSwap;
+            Identifier = identifier;
+
+            if (!double.TryParse(eMax, out double parsedMax)) parsedMax = 100;
+            if (!double.TryParse(eMin, out double parsedMin)) parsedMin = 0;
+            if (!double.TryParse(eDefault, out double parsedDefault)) parsedDefault = 0;
 
             string EnabledDescription = "";
-            if (EnabledWhen)
+            if (eEnabled)
             {
+                EnabledWhen = true;
+                EnableIdentifier = targetIdentifier;
+                EnableSwap = eSwap;
+
                 EnabledDescription += " {";
                 if (EnableSwap)
                 {
@@ -1296,125 +1292,98 @@ namespace PaintDotNet.Effects
             switch (eType)
             {
                 case ElementType.IntSlider:
+                    Min = (int)parsedMin;
+                    Max = (int)parsedMax;
+                    Default = (int)parsedDefault;
+                    Style = Enum.IsDefined(typeof(SliderStyle), eStyle) ? (SliderStyle)eStyle : 0;
                     Description = eName + " (" + Min.ToString() + ".." + Default.ToString() + ".." + Max.ToString() + ")" + EnabledDescription;
                     break;
                 case ElementType.Checkbox:
-                    Min = 0;
                     Max = 1;
+                    Default = (int)parsedDefault;
                     if (Default != 0)
                     {
                         Default = 1;
                     }
                     Description = eName + ((Default == 0) ? " (unchecked)" : " (checked)") + EnabledDescription;
-                    Min = 0;
-                    Max = 1;
                     break;
                 case ElementType.ColorWheel:
-                    ColorDefault = (eDefault == "None" ? "" : eDefault);
+                    StrDefault = (eDefault == "None") ? string.Empty : eDefault;
+                    ColorWheelOptions = (eStyle == 3) ? ColorWheelOptions.Alpha | ColorWheelOptions.NoReset : (eStyle == 2) ? ColorWheelOptions.NoReset : (eStyle == 1) ? ColorWheelOptions.Alpha : ColorWheelOptions.None;
                     Description = eName;
                     bool alpha = ColorWheelOptions.HasFlag(ColorWheelOptions.Alpha);
                     Min = alpha ? int.MinValue : 0;
                     Max = alpha ? int.MaxValue : 0xffffff;
-                    if (ColorDefault != "")
+                    if (StrDefault.Length > 0)
                     {
                         string alphastyle = alpha ? "?" : "";
                         string resetstyle = ColorWheelOptions.HasFlag(ColorWheelOptions.NoReset) ? "!" : "";
-                        Description += " (" + ColorDefault + alphastyle + resetstyle + ")";
+                        Description += " (" + StrDefault + alphastyle + resetstyle + ")";
                     }
                     Description += EnabledDescription;
                     break;
                 case ElementType.AngleChooser:
-                    dMin = dMin.Clamp(-180.0, 360.0);
+                    dMin = parsedMin.Clamp(-180.0, 360.0);
                     double upperBound = (dMin < 0.0) ? 180.0 : 360;
-                    dMax = dMax.Clamp(dMin, upperBound);
-                    dDefault = dDefault.Clamp(dMin, dMax);
-                    Min = (int)dMin;
-                    Max = (int)dMax;
-                    Default = (int)dDefault;
+                    dMax = parsedMax.Clamp(dMin, upperBound);
+                    dDefault = parsedDefault.Clamp(dMin, dMax);
                     Description = eName + " (" + dMin.ToString() + ".." + dDefault.ToString() + ".." + dMax.ToString() + ")" + EnabledDescription;
                     break;
                 case ElementType.PanSlider:
-                    Min = -1;
-                    Max = 1;
-                    Default = 0;
-                    dMin = 0;
-                    dMax = 0;
                     Description = eName + EnabledDescription;
                     break;
                 case ElementType.Textbox:
-                    Min = 0;
-                    Default = 0;
+                    Max = (int)parsedMax;
                     Description = eName + " (" + Max.ToString() + ")" + EnabledDescription;
                     break;
                 case ElementType.DoubleSlider:
+                    dMin = parsedMin;
+                    dMax = parsedMax;
+                    dDefault = parsedDefault;
+                    Style = Enum.IsDefined(typeof(SliderStyle), eStyle) ? (SliderStyle)eStyle : 0;
                     Description = eName + " (" + dMin.ToString() + ".." + dDefault.ToString() + ".." + dMax.ToString() + ")" + EnabledDescription;
                     break;
                 case ElementType.DropDown:
-                    Min = 0;
-                    Max = 0;
+                case ElementType.RadioButtons:
                     Name += "|" + eOptions;
-                    int maxDropDown = Name.Split('|').Length - 2;
-                    Default = Default.Clamp(0, maxDropDown);
-                    NameLength = Name.IndexOf("|", StringComparison.Ordinal);
-                    Description = Name.Substring(0, NameLength) + EnabledDescription;
+                    int maxValue = Name.Split('|').Length - 2;
+                    Default = (int)parsedDefault.Clamp(0, maxValue);
+                    int nameLength1 = Name.IndexOf("|", StringComparison.Ordinal);
+                    if (nameLength1 == -1) nameLength1 = Name.Length;
+                    Description = Name.Substring(0, nameLength1) + EnabledDescription;
                     break;
                 case ElementType.BinaryPixelOp:
-                    Min = 0;
-                    Max = 0;
-                    Default = 0;
                     Description = eName + " (Normal)" + EnabledDescription;
                     break;
                 case ElementType.FontFamily:
-                    Min = 0;
-                    Max = 0;
-                    Default = 0;
                     Description = eName + EnabledDescription;
                     break;
-                case ElementType.RadioButtons:
-                    Min = 0;
-                    Max = 0;
-                    Name += "|" + eOptions;
-                    int maxRadio = Name.Split('|').Length - 2;
-                    Default = Default.Clamp(0, maxRadio);
-                    NameLength = Name.IndexOf("|", StringComparison.Ordinal);
-                    Description = Name.Substring(0, NameLength) + EnabledDescription;
-                    break;
                 case ElementType.ReseedButton:
-                    Min = 0;
                     Max = 255;
-                    Default = 0;
                     Description = eName + " (Button)" + EnabledDescription;
                     break;
                 case ElementType.MultiLineTextbox:
                     Min = 1;
+                    Max = (int)parsedMax;
                     Default = 1;
                     Description = eName + " (" + Max.ToString() + ")" + EnabledDescription;
                     break;
                 case ElementType.RollBall:
-                    Min = 0;
                     Max = 1;
-                    Default = 0;
                     Description = eName + EnabledDescription;
                     break;
                 case ElementType.Filename:
-                    Min = 0;
-                    Max = 0;
-                    Default = 0;
                     Name += "|" + eOptions;
-                    NameLength = Name.IndexOf("|", StringComparison.Ordinal);
-                    if (NameLength == -1) NameLength = Name.Length;
-                    Description = Name.Substring(0, NameLength) + EnabledDescription;
+                    int nameLength2 = Name.IndexOf("|", StringComparison.Ordinal);
+                    if (nameLength2 == -1) nameLength2 = Name.Length;
+                    Description = Name.Substring(0, nameLength2) + EnabledDescription;
                     break;
                 case ElementType.Uri:
-                    Min = 0;
                     Max = 255;
-                    Default = 0;
-                    Link = eDefault;
+                    StrDefault = eDefault;
                     Description = eName + " (Web Link)" + EnabledDescription;
                     break;
             }
-
-            Identifier = identifier;
         }
 
         private static UIElement FromSourceLine(string RawSourceLine)
@@ -1730,17 +1699,17 @@ namespace PaintDotNet.Effects
                     break;
                 case ElementType.ColorWheel:
                     Color c;
-                    if (ColorDefault.Length == 0 || ColorDefault == "PrimaryColor")
+                    if (StrDefault.Length == 0 || StrDefault == "PrimaryColor")
                     {
                         c = Color.Black;
                     }
-                    else if (ColorDefault == "SecondaryColor")
+                    else if (StrDefault == "SecondaryColor")
                     {
                         c = Color.White;
                     }
                     else
                     {
-                        c = Color.FromName(ColorDefault);
+                        c = Color.FromName(StrDefault);
                     }
 
                     string rgb = c.B.ToString() + ", " + c.G.ToString() + ", " + c.R.ToString();
@@ -1759,7 +1728,7 @@ namespace PaintDotNet.Effects
 
                     SourceCode += "; // ";
 
-                    string config = ColorDefault.Trim() + alphastyle + resetstyle;
+                    string config = StrDefault.Trim() + alphastyle + resetstyle;
                     if (config.Length > 0)
                     {
                         SourceCode += "[" + config + "] ";
@@ -1798,7 +1767,7 @@ namespace PaintDotNet.Effects
                     SourceCode += " = @\"\"; // ";
                     break;
                 case ElementType.Uri:
-                    SourceCode += " = new Uri(\"" + Link + "\"); // ";
+                    SourceCode += " = new Uri(\"" + StrDefault + "\"); // ";
                     break;
             }
 

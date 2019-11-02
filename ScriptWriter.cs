@@ -491,28 +491,28 @@ namespace PaintDotNet.Effects
                     case ElementType.ColorWheel:
                         ColorControlCount++;
                         bool includeAlpha = u.ColorWheelOptions.HasFlag(ColorWheelOptions.Alpha);
-                        if (u.ColorDefault != "")
+                        if (u.StrDefault != "")
                         {
                             if (!includeAlpha) // no alpha slider
                             {
-                                if (u.ColorDefault == "PrimaryColor" || u.ColorDefault == "SecondaryColor")
+                                if (u.StrDefault == "PrimaryColor" || u.StrDefault == "SecondaryColor")
                                 {
-                                    PropertyPart += "            props.Add(new Int32Property(PropertyNames." + propertyName + ", ColorBgra.ToOpaqueInt32(" + u.ColorDefault + "), 0, 0xffffff));\r\n";
+                                    PropertyPart += "            props.Add(new Int32Property(PropertyNames." + propertyName + ", ColorBgra.ToOpaqueInt32(" + u.StrDefault + "), 0, 0xffffff));\r\n";
                                 }
                                 else
                                 {
-                                    PropertyPart += "            props.Add(new Int32Property(PropertyNames." + propertyName + ", ColorBgra.ToOpaqueInt32(Color." + u.ColorDefault + "), 0, 0xffffff));\r\n";
+                                    PropertyPart += "            props.Add(new Int32Property(PropertyNames." + propertyName + ", ColorBgra.ToOpaqueInt32(Color." + u.StrDefault + "), 0, 0xffffff));\r\n";
                                 }
                             }
                             else // include alpha slider
                             {
-                                if (u.ColorDefault == "PrimaryColor" || u.ColorDefault == "SecondaryColor")
+                                if (u.StrDefault == "PrimaryColor" || u.StrDefault == "SecondaryColor")
                                 {
-                                    PropertyPart += "            props.Add(new Int32Property(PropertyNames." + propertyName + ", unchecked((int)EnvironmentParameters." + u.ColorDefault + ".Bgra), Int32.MinValue, Int32.MaxValue));\r\n";
+                                    PropertyPart += "            props.Add(new Int32Property(PropertyNames." + propertyName + ", unchecked((int)EnvironmentParameters." + u.StrDefault + ".Bgra), Int32.MinValue, Int32.MaxValue));\r\n";
                                 }
                                 else
                                 {
-                                    PropertyPart += "            props.Add(new Int32Property(PropertyNames." + propertyName + ", unchecked((int)ColorBgra." + u.ColorDefault + ".Bgra), Int32.MinValue, Int32.MaxValue));\r\n";
+                                    PropertyPart += "            props.Add(new Int32Property(PropertyNames." + propertyName + ", unchecked((int)ColorBgra." + u.StrDefault + ".Bgra), Int32.MinValue, Int32.MaxValue));\r\n";
                                 }
                             }
                         }
@@ -586,7 +586,7 @@ namespace PaintDotNet.Effects
                         PropertyPart += "            props.Add(new StringProperty(PropertyNames." + propertyName + ", \"\"));\r\n";
                         break;
                     case ElementType.Uri:
-                        PropertyPart += "            props.Add(new UriProperty(PropertyNames." + propertyName + ", new Uri(\"" + u.Link + "\")));\r\n";
+                        PropertyPart += "            props.Add(new UriProperty(PropertyNames." + propertyName + ", new Uri(\"" + u.StrDefault + "\")));\r\n";
                         break;
                 }
             }
