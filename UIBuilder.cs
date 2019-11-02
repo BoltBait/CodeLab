@@ -1726,7 +1726,7 @@ namespace PaintDotNet.Effects
                     break;
                 case ElementType.Checkbox:
                     SourceCode += " = " + ((Default == 0) ? "false" : "true");
-                    SourceCode += "; // [" + Min.ToString() + "," + Max.ToString() + "] ";
+                    SourceCode += "; // ";
                     break;
                 case ElementType.ColorWheel:
                     Color c;
@@ -1768,14 +1768,14 @@ namespace PaintDotNet.Effects
                 case ElementType.PanSlider:
                     SourceCode += " = Pair.Create(";
                     SourceCode += dMin.ToString("F3", CultureInfo.InvariantCulture);
-                    SourceCode += ",";
+                    SourceCode += ", ";
                     SourceCode += dMax.ToString("F3", CultureInfo.InvariantCulture);
                     SourceCode += "); // ";
                     break;
                 case ElementType.Textbox:
                 case ElementType.MultiLineTextbox:
                     SourceCode += " = \"\"";
-                    SourceCode += "; // [" + Min.ToString() + "," + Max.ToString() + "] ";
+                    SourceCode += "; // [" + Max.ToString() + "] ";
                     break;
                 case ElementType.DropDown:
                 case ElementType.RadioButtons:
@@ -1788,10 +1788,10 @@ namespace PaintDotNet.Effects
                     SourceCode += " = new FontFamily(\"Arial\"); // ";
                     break;
                 case ElementType.ReseedButton:
-                    SourceCode += " = 0; // [255] ";
+                    SourceCode += " = 0; // ";
                     break;
                 case ElementType.RollBall:
-                    SourceCode += " = Tuple.Create<double, double, double>( 0.0 , 0.0 , 0.0 )";
+                    SourceCode += " = Tuple.Create<double, double, double>(0.0 , 0.0 , 0.0)";
                     SourceCode += "; // ";
                     break;
                 case ElementType.Filename:
