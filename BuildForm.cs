@@ -86,8 +86,7 @@ namespace PaintDotNet.Effects
             bool hasUI = UIElement.ProcessUIControls(ScriptText).Length > 0;
 
             // Preload submenu name
-            Regex RESubMenu = new Regex(@"//[\s-[\r\n]]*SubMenu[\s-[\r\n]]*:[\s-[\r\n]]*(?<sublabel>.*)(?=\r?\n|$)", RegexOptions.IgnoreCase);
-            Match msm = RESubMenu.Match(ScriptText);
+            Match msm = Regex.Match(ScriptText, @"//[\s-[\r\n]]*SubMenu[\s-[\r\n]]*:[\s-[\r\n]]*(?<sublabel>.*)(?=\r?\n|$)", RegexOptions.IgnoreCase);
             if (msm.Success)
             {
                 SubMenuName.Text = msm.Groups["sublabel"].Value.Trim();
@@ -100,8 +99,7 @@ namespace PaintDotNet.Effects
             }
 
             // Preload menu name
-            Regex REName = new Regex(@"//[\s-[\r\n]]*Name[\s-[\r\n]]*:[\s-[\r\n]]*(?<menulabel>.*)(?=\r?\n|$)", RegexOptions.IgnoreCase);
-            Match mmn = REName.Match(ScriptText);
+            Match mmn = Regex.Match(ScriptText, @"//[\s-[\r\n]]*Name[\s-[\r\n]]*:[\s-[\r\n]]*(?<menulabel>.*)(?=\r?\n|$)", RegexOptions.IgnoreCase);
             if (mmn.Success)
             {
                 string menuName = mmn.Groups["menulabel"].Value.Trim();
@@ -115,8 +113,7 @@ namespace PaintDotNet.Effects
             // Preload window title
             if (hasUI)
             {
-                Regex RETitle = new Regex(@"//[\s-[\r\n]]*Title[\s-[\r\n]]*:[\s-[\r\n]]*(?<titlelabel>.*)(?=\r?\n|$)", RegexOptions.IgnoreCase);
-                Match wtn = RETitle.Match(ScriptText);
+                Match wtn = Regex.Match(ScriptText, @"//[\s-[\r\n]]*Title[\s-[\r\n]]*:[\s-[\r\n]]*(?<titlelabel>.*)(?=\r?\n|$)", RegexOptions.IgnoreCase);
                 if (wtn.Success)
                 {
                     WindowTitleText.Text = wtn.Groups["titlelabel"].Value.Trim();
@@ -130,13 +127,11 @@ namespace PaintDotNet.Effects
 
 
             // Preload version checking for period
-            Regex REVersion = new Regex(@"//[\s-[\r\n]]*Version[\s-[\r\n]]*:[\s-[\r\n]]*(?<majorversionlabel>\d+)\.(?<minorversionlabel>\d+)(?=\r?\n|$)", RegexOptions.IgnoreCase);
-            Match vsn = REVersion.Match(ScriptText);
+            Match vsn = Regex.Match(ScriptText, @"//[\s-[\r\n]]*Version[\s-[\r\n]]*:[\s-[\r\n]]*(?<majorversionlabel>\d+)\.(?<minorversionlabel>\d+)(?=\r?\n|$)", RegexOptions.IgnoreCase);
             if (!vsn.Success)
             {
                 // Preload version checking for comma
-                REVersion = new Regex(@"//[\s-[\r\n]]*Version[\s-[\r\n]]*:[\s-[\r\n]]*(?<majorversionlabel>\d+)\,(?<minorversionlabel>\d+)(?=\r?\n|$)", RegexOptions.IgnoreCase);
-                vsn = REVersion.Match(ScriptText);
+                vsn = Regex.Match(ScriptText, @"//[\s-[\r\n]]*Version[\s-[\r\n]]*:[\s-[\r\n]]*(?<majorversionlabel>\d+)\,(?<minorversionlabel>\d+)(?=\r?\n|$)", RegexOptions.IgnoreCase);
             }
             if (vsn.Success)
             {
@@ -151,50 +146,42 @@ namespace PaintDotNet.Effects
             }
 
             // Preload author's name
-            Regex REAuthor = new Regex(@"//[\s-[\r\n]]*Author[\s-[\r\n]]*:[\s-[\r\n]]*(?<authorlabel>.*)(?=\r?\n|$)", RegexOptions.IgnoreCase);
-            Match mau = REAuthor.Match(ScriptText);
+            Match mau = Regex.Match(ScriptText, @"//[\s-[\r\n]]*Author[\s-[\r\n]]*:[\s-[\r\n]]*(?<authorlabel>.*)(?=\r?\n|$)", RegexOptions.IgnoreCase);
             if (mau.Success)
             {
                 AuthorName.Text = mau.Groups["authorlabel"].Value.Trim();
             }
 
             // Preload Description
-            Regex REDesc = new Regex(@"//[\s-[\r\n]]*Desc[\s-[\r\n]]*:[\s-[\r\n]]*(?<desclabel>.*)(?=\r?\n|$)", RegexOptions.IgnoreCase);
-            Match mds = REDesc.Match(ScriptText);
+            Match mds = Regex.Match(ScriptText, @"//[\s-[\r\n]]*Desc[\s-[\r\n]]*:[\s-[\r\n]]*(?<desclabel>.*)(?=\r?\n|$)", RegexOptions.IgnoreCase);
             DescriptionBox.Text = mds.Success ?
                 mds.Groups["desclabel"].Value.Trim() :
                 ScriptName + " selected pixels";
 
             // Preload Keywords
-            Regex REWords = new Regex(@"//[\s-[\r\n]]*KeyWords[\s-[\r\n]]*:[\s-[\r\n]]*(?<wordslabel>.*)(?=\r?\n|$)", RegexOptions.IgnoreCase);
-            Match mkw = REWords.Match(ScriptText);
+            Match mkw = Regex.Match(ScriptText, @"//[\s-[\r\n]]*KeyWords[\s-[\r\n]]*:[\s-[\r\n]]*(?<wordslabel>.*)(?=\r?\n|$)", RegexOptions.IgnoreCase);
             KeyWordsBox.Text = mkw.Success ?
                 mkw.Groups["wordslabel"].Value.Trim() :
                 ScriptName;
 
             // Preload Support URL
-            Regex RESupport = new Regex(@"//[\s-[\r\n]]*URL[\s-[\r\n]]*:[\s-[\r\n]]*(?<urllabel>.*)(?=\r?\n|$)", RegexOptions.IgnoreCase);
-            Match msu = RESupport.Match(ScriptText);
+            Match msu = Regex.Match(ScriptText, @"//[\s-[\r\n]]*URL[\s-[\r\n]]*:[\s-[\r\n]]*(?<urllabel>.*)(?=\r?\n|$)", RegexOptions.IgnoreCase);
             if (msu.Success)
             {
                 SupportURL.Text = msu.Groups["urllabel"].Value.Trim();
             }
 
             // Preload Force Aliased Selection
-            Regex REAlias = new Regex(@"//[\s-[\r\n]]*(Force\s*Aliased\s*Selection|FAS)[\s-[\r\n]]*(?=\r?\n|$)", RegexOptions.IgnoreCase);
-            ForceAliasSelectionBox.Checked = REAlias.IsMatch(ScriptText);
+            ForceAliasSelectionBox.Checked = Regex.IsMatch(ScriptText, @"//[\s-[\r\n]]*(Force\s*Aliased\s*Selection|FAS)[\s-[\r\n]]*(?=\r?\n|$)", RegexOptions.IgnoreCase);
 
             // Preload Force Single Threaded
-            Regex RESingle = new Regex(@"//[\s-[\r\n]]*(Force\s*Single\s*Threaded|FST)[\s-[\r\n]]*(?=\r?\n|$)", RegexOptions.IgnoreCase);
-            ForceSingleThreadedBox.Checked = RESingle.IsMatch(ScriptText);
+            ForceSingleThreadedBox.Checked = Regex.IsMatch(ScriptText, @"//[\s-[\r\n]]*(Force\s*Single\s*Threaded|FST)[\s-[\r\n]]*(?=\r?\n|$)", RegexOptions.IgnoreCase);
 
             // Preload Force Legacy ROI
-            Regex RELegacy = new Regex(@"//[\s-[\r\n]]*(Force\s*Legacy\s*ROI|FLR)[\s-[\r\n]]*(?=\r?\n|$)", RegexOptions.IgnoreCase);
-            forceLegacyRoiBox.Checked = RELegacy.IsMatch(ScriptText);
+            forceLegacyRoiBox.Checked = Regex.IsMatch(ScriptText, @"//[\s-[\r\n]]*(Force\s*Legacy\s*ROI|FLR)[\s-[\r\n]]*(?=\r?\n|$)", RegexOptions.IgnoreCase);
 
             // Preload Single Render Call
-            Regex RESingleRenderCall = new Regex(@"//[\s-[\r\n]]*(Force\s*Single\s*Render\s*Call|FSR)[\s-[\r\n]]*(?=\r?\n|$)", RegexOptions.IgnoreCase);
-            forceSingleRenderBox.Checked = RESingleRenderCall.IsMatch(ScriptText);
+            forceSingleRenderBox.Checked = Regex.IsMatch(ScriptText, @"//[\s-[\r\n]]*(Force\s*Single\s*Render\s*Call|FSR)[\s-[\r\n]]*(?=\r?\n|$)", RegexOptions.IgnoreCase);
             #endregion
 
             string resourcePath = Path.Combine(Path.GetDirectoryName(ScriptPath), ScriptName);
@@ -203,8 +190,7 @@ namespace PaintDotNet.Effects
             if (hasUI)
             {
                 // Preload help text
-                Regex REHelp = new Regex(@"//[\s-[\r\n]]*Help[\s-[\r\n]]*:[\s-[\r\n]]*(?<helptext>.*)(?=\r?\n|$)", RegexOptions.IgnoreCase);
-                Match hlp = REHelp.Match(ScriptText);
+                Match hlp = Regex.Match(ScriptText, @"//[\s-[\r\n]]*Help[\s-[\r\n]]*:[\s-[\r\n]]*(?<helptext>.*)(?=\r?\n|$)", RegexOptions.IgnoreCase);
                 if (hlp.Success)
                 {
                     HelpStr = hlp.Groups["helptext"].Value.Trim();

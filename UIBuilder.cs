@@ -1206,8 +1206,7 @@ namespace PaintDotNet.Effects
         internal static UIElement[] ProcessUIControls(string SourceCode)
         {
             string UIControlsText = "";
-            Regex REUIControlsContainer = new Regex(@"\#region UICode(?<sublabel>.*?)\#endregion", RegexOptions.Singleline | RegexOptions.IgnoreCase);
-            Match mcc = REUIControlsContainer.Match(SourceCode);
+            Match mcc = Regex.Match(SourceCode, @"\#region UICode(?<sublabel>.*?)\#endregion", RegexOptions.Singleline | RegexOptions.IgnoreCase);
             if (mcc.Success)
             {
                 // We found the standard #region UICode/#endregion block
@@ -1216,21 +1215,18 @@ namespace PaintDotNet.Effects
             else
             {
                 // Find standard UI controls from REALLY OLD scripts
-                Regex REAmt1 = new Regex(@"int\s+Amount1\s*=\s*(?<default>\-?\d+)(?<rawcomment>.*)\n", RegexOptions.IgnoreCase);
-                Match ma1 = REAmt1.Match(SourceCode);
+                Match ma1 = Regex.Match(SourceCode, @"int\s+Amount1\s*=\s*\-?\d+.*\n", RegexOptions.IgnoreCase);
                 if (ma1.Success)
                 {
-                    UIControlsText = "int Amount1 = " + ma1.Groups["default"].Value.Trim() + ma1.Groups["rawcomment"].Value.Trim();
-                    Regex REAmt2 = new Regex(@"int\s+Amount2\s*=\s*(?<default>\-?\d+)(?<rawcomment>.*)\n", RegexOptions.IgnoreCase);
-                    Match ma2 = REAmt2.Match(SourceCode);
+                    UIControlsText = ma1.Value;
+                    Match ma2 = Regex.Match(SourceCode, @"int\s+Amount2\s*=\s*\-?\d+.*\n", RegexOptions.IgnoreCase);
                     if (ma2.Success)
                     {
-                        UIControlsText += "\nint Amount2 = " + ma2.Groups["default"].Value.Trim() + ma2.Groups["rawcomment"].Value.Trim();
-                        Regex REAmt3 = new Regex(@"int\s+Amount3\s*=\s*(?<default>\-?\d+)(?<rawcomment>.*)\n", RegexOptions.IgnoreCase);
-                        Match ma3 = REAmt3.Match(SourceCode);
+                        UIControlsText += ma2.Value;
+                        Match ma3 = Regex.Match(SourceCode, @"int\s+Amount3\s*=\s*\-?\d+.*\n", RegexOptions.IgnoreCase);
                         if (ma3.Success)
                         {
-                            UIControlsText += "\nint Amount3 = " + ma3.Groups["default"].Value.Trim() + ma3.Groups["rawcomment"].Value.Trim();
+                            UIControlsText += ma3.Value;
                         }
                     }
                 }
@@ -1388,8 +1384,7 @@ namespace PaintDotNet.Effects
 
         private static UIElement FromSourceLine(string RawSourceLine)
         {
-            Regex REAmt = new Regex(@"\s*(?<type>.*)\s+(?<identifier>.+\b)\s*=\s*(?<default>.*);\s*\/{2}(?<rawcomment>.*)");
-            Match m = REAmt.Match(RawSourceLine);
+            Match m = Regex.Match(RawSourceLine, @"\s*(?<type>.*)\s+(?<identifier>.+\b)\s*=\s*(?<default>.*);\s*\/{2}(?<rawcomment>.*)");
             if (!m.Success)
             {
                 // don't understand raw source line
@@ -1402,8 +1397,8 @@ namespace PaintDotNet.Effects
             string LabelStr = "";
             string StyleStr = "0";
 
-            Regex REMinMaxStyle = new Regex(@"\s*\[\s*(?<minimum>\-?\d+.*\d*)\s*\,\s*(?<maximum>\-?\d+.*\d*)\s*\,\s*(?<style>\-?\d+.*\d*)\s*\](?<label>.*)");
-            Match m0 = REMinMaxStyle.Match(m.Groups["rawcomment"].Value);
+            string rawComment = m.Groups["rawcomment"].Value;
+            Match m0 = Regex.Match(rawComment, @"\s*\[\s*(?<minimum>\-?\d+.*\d*)\s*\,\s*(?<maximum>\-?\d+.*\d*)\s*\,\s*(?<style>\-?\d+.*\d*)\s*\](?<label>.*)");
             if (m0.Success)
             {
                 MinimumStr = m0.Groups["minimum"].Value;
@@ -1413,8 +1408,7 @@ namespace PaintDotNet.Effects
             }
             else
             {
-                Regex REMinMax = new Regex(@"\s*\[\s*(?<minimum>\-?\d+.*\d*)\s*\,\s*(?<maximum>\-?\d+.*\d*)\s*\](?<label>.*)");
-                Match m1 = REMinMax.Match(m.Groups["rawcomment"].Value);
+                Match m1 = Regex.Match(rawComment, @"\s*\[\s*(?<minimum>\-?\d+.*\d*)\s*\,\s*(?<maximum>\-?\d+.*\d*)\s*\](?<label>.*)");
                 if (m1.Success)
                 {
                     MinimumStr = m1.Groups["minimum"].Value;
@@ -1423,8 +1417,7 @@ namespace PaintDotNet.Effects
                 }
                 else
                 {
-                    Regex REMaxOnly = new Regex(@"\s*\[\s*(?<maximum>\-?\d+.*\d*)\s*\](?<label>.*)");
-                    Match m2 = REMaxOnly.Match(m.Groups["rawcomment"].Value);
+                    Match m2 = Regex.Match(rawComment, @"\s*\[\s*(?<maximum>\-?\d+.*\d*)\s*\](?<label>.*)");
                     if (m2.Success)
                     {
                         MinimumStr = "0";
@@ -1433,8 +1426,7 @@ namespace PaintDotNet.Effects
                     }
                     else
                     {
-                        Regex REColorOnly = new Regex(@"\s*\[\s*(?<defcolor>.*)\s*\](?<label>.*)");
-                        Match m3 = REColorOnly.Match(m.Groups["rawcomment"].Value);
+                        Match m3 = Regex.Match(rawComment, @"\s*\[\s*(?<defcolor>.*)\s*\](?<label>.*)");
                         if (m3.Success)
                         {
                             DefaultColor = m3.Groups["defcolor"].Value;
@@ -1442,8 +1434,7 @@ namespace PaintDotNet.Effects
                         }
                         else
                         {
-                            Regex RELabel = new Regex(@"\s*(?<label>.*)");
-                            Match m1L = RELabel.Match(m.Groups["rawcomment"].Value);
+                            Match m1L = Regex.Match(rawComment, @"\s*(?<label>.*)");
                             if (m1L.Success)
                             {
                                 LabelStr = m1L.Groups["label"].Value.Trim();
@@ -1457,8 +1448,7 @@ namespace PaintDotNet.Effects
             string targetID = string.Empty;
             bool swap = false;
 
-            Regex REEnabled = new Regex(@"\s*{(?<swap>\!?)(?<identifier>.+\b)\s*}\s*(?<label>.*)");
-            Match me = REEnabled.Match(LabelStr);
+            Match me = Regex.Match(LabelStr, @"\s*{(?<swap>\!?)(?<identifier>.+\b)\s*}\s*(?<label>.*)");
             if (me.Success)
             {
                 LabelStr = me.Groups["label"].Value.Trim();
@@ -1642,8 +1632,7 @@ namespace PaintDotNet.Effects
             }
             else if (elementType == ElementType.Uri)
             {
-                Regex REUri = new Regex(@"""(?<uri>.*?[^\\])""");
-                Match muri = REUri.Match(DefaultStr);
+                Match muri = Regex.Match(DefaultStr, @"""(?<uri>.*?[^\\])""");
                 if (muri.Success)
                 {
                     defaultValue = muri.Groups["uri"].Value;

@@ -460,8 +460,7 @@ namespace PaintDotNet.Effects
             string fileName = this.FileName;
             if (fileName.Equals("Untitled", StringComparison.Ordinal))
             {
-                Regex REName = new Regex(@"//[\s-[\r\n]]*Name[\s-[\r\n]]*:[\s-[\r\n]]*(?<scriptName>.*)(?=\r?\n|$)", RegexOptions.IgnoreCase);
-                Match wtn = REName.Match(txtCode.Text);
+                Match wtn = Regex.Match(txtCode.Text, @"//[\s-[\r\n]]*Name[\s-[\r\n]]*:[\s-[\r\n]]*(?<scriptName>.*)(?=\r?\n|$)", RegexOptions.IgnoreCase);
                 if (wtn.Success)
                 {
                     string scriptName = wtn.Groups["scriptName"].Value.Trim();
@@ -1898,8 +1897,7 @@ namespace PaintDotNet.Effects
                 string menuText = $"&{count} {Path.GetFileName(itemPath)}";
                 try
                 {
-                    Regex REName = new Regex(@"//[\s-[\r\n]]*Name[\s-[\r\n]]*:[\s-[\r\n]]*(?<menulabel>.*)(?=\r?\n|$)", RegexOptions.IgnoreCase);
-                    Match wtn = REName.Match(File.ReadAllText(itemPath));
+                    Match wtn = Regex.Match(File.ReadAllText(itemPath), @"//[\s-[\r\n]]*Name[\s-[\r\n]]*:[\s-[\r\n]]*(?<menulabel>.*)(?=\r?\n|$)", RegexOptions.IgnoreCase);
                     if (wtn.Success)
                     {
                         string scriptName = wtn.Groups["menulabel"].Value.Trim();

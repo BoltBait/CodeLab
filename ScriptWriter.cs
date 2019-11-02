@@ -1177,7 +1177,7 @@ namespace PaintDotNet.Effects
         internal static string FullSourceCode(string SourceCode, string FileName, bool isAdjustment, string submenuname, string menuname, string iconpath, string SupportURL, EffectFlags effectFlags, EffectRenderingSchedule renderingSchedule, string Author, int MajorVersion, int MinorVersion, string Description, string KeyWords, string WindowTitleStr, HelpType HelpType, string HelpText)
         {
             UIElement[] UserControls = UIElement.ProcessUIControls(SourceCode);
-            Regex preRenderRegex = new Regex(@"void PreRender\(Surface dst, Surface src\)(\s)*{(.|\s)*}", RegexOptions.Singleline);
+            bool hasPreRender = Regex.IsMatch(SourceCode, @"void PreRender\(Surface dst, Surface src\)(\s)*{(.|\s)*}", RegexOptions.Singleline);
 
             string sUsingPart = UsingPartCode;
             string sAssemblyInfoPart = AssemblyInfoPart(FileName, menuname, Author, MajorVersion, MinorVersion, Description, KeyWords);
@@ -1187,7 +1187,7 @@ namespace PaintDotNet.Effects
             string sEffectPart = EffectPart(UserControls, FileName, submenuname, menuname, iconpath, effectFlags, renderingSchedule);
             string sHelpPart = HelpPart(HelpType, HelpText);
             string sPropertyPart = PropertyPart(UserControls, FileName, WindowTitleStr, HelpType, HelpText);
-            string sSetRenderPart = SetRenderPart(UserControls, true, preRenderRegex.IsMatch(SourceCode));
+            string sSetRenderPart = SetRenderPart(UserControls, true, hasPreRender);
             string sRenderLoopPart = RenderLoopPart(UserControls);
             string sUserEnteredPart = UserEnteredPart(SourceCode);
             string sEndPart = EndPart();
