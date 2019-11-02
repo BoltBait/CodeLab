@@ -627,41 +627,42 @@ namespace PaintDotNet.Effects
                         continue;
                     }
 
-                    string propertyName = u.Identifier.FirstCharToUpper();
-                    string propertyName2 = u.EnableIdentifier.FirstCharToUpper();
+                    string sourceName = u.EnableIdentifier.FirstCharToUpper();
+                    string targetPropName = "PropertyNames." + u.Identifier.FirstCharToUpper();
+                    string sourcePropName = "PropertyNames." + sourceName;
+                    string inverse = (!u.EnableSwap).ToString().ToLower();
 
                     switch (UserControls[index].ElementType)
                     {
                         case ElementType.ReseedButton:
                         case ElementType.IntSlider:
-                            PropertyPart += "            propRules.Add(new ReadOnlyBoundToValueRule<int, Int32Property>(PropertyNames." + propertyName + ", PropertyNames." + propertyName2 + ", new[] { 0 }, " + (!u.EnableSwap).ToString().ToLower() + "));\r\n";
+                            PropertyPart += "            propRules.Add(new ReadOnlyBoundToValueRule<int, Int32Property>(" + targetPropName + ", " + sourcePropName + ", new[] { 0 }, " + inverse + "));\r\n";
                             break;
                         case ElementType.Checkbox:
-                            PropertyPart += "            propRules.Add(new ReadOnlyBoundToBooleanRule(PropertyNames." + propertyName + ", PropertyNames." + propertyName2 + ", " + (!u.EnableSwap).ToString().ToLower() + "));\r\n";
+                            PropertyPart += "            propRules.Add(new ReadOnlyBoundToBooleanRule(" + targetPropName + ", " + sourcePropName + ", " + inverse + "));\r\n";
                             break;
                         case ElementType.ColorWheel:
-                            PropertyPart += "            propRules.Add(new ReadOnlyBoundToValueRule<int, Int32Property>(PropertyNames." + propertyName + ", PropertyNames." + propertyName2 + ", ColorBgra.ToOpaqueInt32(Color.White), " + (!u.EnableSwap).ToString().ToLower() + "));\r\n";
+                            PropertyPart += "            propRules.Add(new ReadOnlyBoundToValueRule<int, Int32Property>" + targetPropName + ", " + sourcePropName + ", ColorBgra.ToOpaqueInt32(Color.White), " + inverse + "));\r\n";
                             break;
+                        case ElementType.DoubleSlider:
                         case ElementType.AngleChooser:
-                            PropertyPart += "            propRules.Add(new ReadOnlyBoundToValueRule<double, DoubleProperty>(PropertyNames." + propertyName + ", PropertyNames." + propertyName2 + ", new[] { 0d }, " + (!u.EnableSwap).ToString().ToLower() + "));\r\n";
+                            PropertyPart += "            propRules.Add(new ReadOnlyBoundToValueRule<double, DoubleProperty>(" + targetPropName + ", " + sourcePropName + ", new[] { 0d }, " + inverse + "));\r\n";
                             break;
                         case ElementType.PanSlider:
-                            PropertyPart += "            propRules.Add(new ReadOnlyBoundToValueRule<Pair<double, double>, DoubleVectorProperty>(PropertyNames." + propertyName + ", PropertyNames." + propertyName2 + ", Pair.Create(0d,0d), " + (!u.EnableSwap).ToString().ToLower() + "));\r\n";
+                            PropertyPart += "            propRules.Add(new ReadOnlyBoundToValueRule<Pair<double, double>, DoubleVectorProperty>(" + targetPropName + ", " + sourcePropName + ", Pair.Create(0d,0d), " + inverse + "));\r\n";
                             break;
                         case ElementType.Filename:
                         case ElementType.Textbox:
                         case ElementType.MultiLineTextbox:
-                            PropertyPart += "            propRules.Add(new ReadOnlyBoundToValueRule<string, StringProperty>(PropertyNames." + propertyName + ", PropertyNames." + propertyName2 + ", new[] { \"\" }, " + (!u.EnableSwap).ToString().ToLower() + "));\r\n";
-                            break;
-                        case ElementType.DoubleSlider:
-                            PropertyPart += "            propRules.Add(new ReadOnlyBoundToValueRule<double, DoubleProperty>(PropertyNames." + propertyName + ", PropertyNames." + propertyName2 + ", new[] { 0d }, " + (!u.EnableSwap).ToString().ToLower() + "));\r\n";
+                            PropertyPart += "            propRules.Add(new ReadOnlyBoundToValueRule<string, StringProperty>(" + targetPropName + ", " + sourcePropName + ", new[] { \"\" }, " + inverse + "));\r\n";
                             break;
                         case ElementType.DropDown:
                         case ElementType.RadioButtons:
-                            PropertyPart += "            propRules.Add(new ReadOnlyBoundToValueRule<object, StaticListChoiceProperty>(PropertyNames." + propertyName + ", PropertyNames." + propertyName2 + ", " + propertyName2 + "Options." + propertyName2 + "Option1, " + (!u.EnableSwap).ToString().ToLower() + "));\r\n";
+                            string sourceEnumName = sourceName + "Options." + sourceName + "Option1";
+                            PropertyPart += "            propRules.Add(new ReadOnlyBoundToValueRule<object, StaticListChoiceProperty>(" + targetPropName + ", " + sourcePropName + ", " + sourceEnumName + ", " + inverse + "));\r\n";
                             break;
                         case ElementType.RollBall:
-                            PropertyPart += "            propRules.Add(new ReadOnlyBoundToValueRule<Tuple<double, double, double>, DoubleVector3Property>(PropertyNames." + propertyName + ", PropertyNames." + propertyName2 + ", Tuple.Create(0d,0d,0d), " + (!u.EnableSwap).ToString().ToLower() + "));\r\n";
+                            PropertyPart += "            propRules.Add(new ReadOnlyBoundToValueRule<Tuple<double, double, double>, DoubleVector3Property>(" + targetPropName + ", " + sourcePropName + ", Tuple.Create(0d,0d,0d), " + inverse + "));\r\n";
                             break;
                         //BinaryPixelOp
                         //FontFamily
@@ -1118,8 +1119,6 @@ namespace PaintDotNet.Effects
                             break;
                         case ElementType.RollBall:
                             SetRenderPart += "            " + u.Identifier + " = newToken.GetProperty<DoubleVector3Property>(PropertyNames." + propertyName + ").Value;\r\n";
-                            break;
-                        default:
                             break;
                     }
                 }
