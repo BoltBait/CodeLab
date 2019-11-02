@@ -75,6 +75,24 @@ namespace PaintDotNet.Effects
             return extMethods.Where(method => method.Extends(extendedType)).ToArray();
         }
 
+        internal static bool IsUserDefinedEnum(string enumName)
+        {
+            return Intelli.UserDefinedTypes.TryGetValue(enumName, out Type type) &&
+                type.IsEnum && Enum.GetValues(type).Length > 0;
+        }
+
+        internal static bool TryGetEnumNames(string enumName, out string[] names)
+        {
+            if (!Intelli.UserDefinedTypes.TryGetValue(enumName, out Type type) || !type.IsEnum)
+            {
+                names = null;
+                return false;
+            }
+
+            names = Enum.GetNames(type).Select(name => type.Name + "." + name).ToArray();
+            return true;
+        }
+
         static Intelli()
         {
             Keywords = new string[]

@@ -14,7 +14,6 @@
 /////////////////////////////////////////////////////////////////////////////////
 
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -414,7 +413,8 @@ namespace PaintDotNet.Effects
 
             foreach (UIElement u in UserControls)
             {
-                if ((u.ElementType == ElementType.DropDown) || (u.ElementType == ElementType.RadioButtons))
+                if ((u.ElementType == ElementType.DropDown || u.ElementType == ElementType.RadioButtons) &&
+                    (u.TEnum == null || !Intelli.IsUserDefinedEnum(u.TEnum)))
                 {
                     string identifier = u.Identifier.FirstCharToUpper();
                     PropertyPart += "        public enum " + identifier + "Options\r\n";
@@ -559,7 +559,11 @@ namespace PaintDotNet.Effects
                         break;
                     case ElementType.DropDown:
                     case ElementType.RadioButtons:
-                        if (u.Default > 0)
+                        if (u.TEnum != null && Intelli.IsUserDefinedEnum(u.TEnum))
+                        {
+                            PropertyPart += "            props.Add(StaticListChoiceProperty.CreateForEnum<" + u.TEnum + ">(PropertyNames." + propertyName + ", " + u.StrDefault + ", false));\r\n";
+                        }
+                        else if (u.Default > 0)
                         {
                             PropertyPart += "            " + propertyName + "Options " + propertyName + "Default = (Enum.IsDefined(typeof(" + propertyName + "Options), " + u.Default.ToString() + ")) ? (" + propertyName + "Options)" + u.Default.ToString() + " : 0;\r\n";
                             PropertyPart += "            props.Add(StaticListChoiceProperty.CreateForEnum<" + propertyName + "Options>(PropertyNames." + propertyName + ", " + propertyName + "Default, false));\r\n";
@@ -611,12 +615,13 @@ namespace PaintDotNet.Effects
                         continue;
                     }
 
-                    string sourceName = u.EnableIdentifier.FirstCharToUpper();
+                    UIElement source = UserControls[index];
+                    string sourceName = source.Identifier.FirstCharToUpper();
                     string targetPropName = "PropertyNames." + u.Identifier.FirstCharToUpper();
                     string sourcePropName = "PropertyNames." + sourceName;
                     string inverse = (!u.EnableSwap).ToString().ToLower();
 
-                    switch (UserControls[index].ElementType)
+                    switch (source.ElementType)
                     {
                         case ElementType.ReseedButton:
                         case ElementType.IntSlider:
@@ -642,7 +647,10 @@ namespace PaintDotNet.Effects
                             break;
                         case ElementType.DropDown:
                         case ElementType.RadioButtons:
-                            string sourceEnumName = sourceName + "Options." + sourceName + "Option1";
+                            string sourceEnumName = (source.TEnum != null && Intelli.TryGetEnumNames(source.TEnum, out string[] enumNames)) ?
+                                enumNames[0] :
+                                sourceName + "Options." + sourceName + "Option1";
+
                             PropertyPart += "            propRules.Add(new ReadOnlyBoundToValueRule<object, StaticListChoiceProperty>(" + targetPropName + ", " + sourcePropName + ", " + sourceEnumName + ", " + inverse + "));\r\n";
                             break;
                         case ElementType.RollBall:
@@ -787,11 +795,24 @@ namespace PaintDotNet.Effects
                         goto case ElementType.DropDown; // Fall Through
                     case ElementType.DropDown:
                         PropertyPart += "            PropertyControlInfo " + propertyName + "Control = configUI.FindControlForPropertyName(PropertyNames." + propertyName + ");\r\n";
-                        byte OptionCount = 0;
-                        foreach (string entry in u.ToOptionArray())
+                        if (u.TEnum != null && Intelli.TryGetEnumNames(u.TEnum, out string[] enumNames))
                         {
-                            OptionCount++;
-                            PropertyPart += "            " + propertyName + "Control.SetValueDisplayName(" + propertyName + "Options." + propertyName + "Option" + OptionCount.ToString() + ", \"" + entry.Trim() + "\");\r\n";
+                            string[] displayNames = u.ToOptionArray();
+                            int length = Math.Min(enumNames.Length, displayNames.Length);
+
+                            for (int i = 0; i < length; i++)
+                            {
+                                PropertyPart += "            " + propertyName + "Control.SetValueDisplayName(" + enumNames[i] + ", \"" + displayNames[i].Trim() + "\");\r\n";
+                            }
+                        }
+                        else
+                        {
+                            byte OptionCount = 0;
+                            foreach (string entry in u.ToOptionArray())
+                            {
+                                OptionCount++;
+                                PropertyPart += "            " + propertyName + "Control.SetValueDisplayName(" + propertyName + "Options." + propertyName + "Option" + OptionCount.ToString() + ", \"" + entry.Trim() + "\");\r\n";
+                            }
                         }
                         break;
                     case ElementType.BinaryPixelOp:
@@ -1066,16 +1087,15 @@ namespace PaintDotNet.Effects
                             SetRenderPart += "            " + u.Identifier + " = newToken.GetProperty<StringProperty>(PropertyNames." + propertyName + ").Value;\r\n";
                             break;
                         case ElementType.DropDown:
-                            SetRenderPart += "            " + u.Identifier + " = (byte)((int)newToken.GetProperty<StaticListChoiceProperty>(PropertyNames." + propertyName + ").Value);\r\n";
+                        case ElementType.RadioButtons:
+                            string typeCast = (u.TEnum != null && Intelli.IsUserDefinedEnum(u.TEnum)) ? u.TEnum : "byte)(int";
+                            SetRenderPart += "            " + u.Identifier + " = (" + typeCast + ")newToken.GetProperty<StaticListChoiceProperty>(PropertyNames." + propertyName + ").Value;\r\n";
                             break;
                         case ElementType.BinaryPixelOp:
                             SetRenderPart += "            " + u.Identifier + " = LayerBlendModeUtil.CreateCompositionOp((LayerBlendMode)newToken.GetProperty<StaticListChoiceProperty>(PropertyNames." + propertyName + ").Value);\r\n";
                             break;
                         case ElementType.FontFamily:
                             SetRenderPart += "            " + u.Identifier + " = (FontFamily)newToken.GetProperty<StaticListChoiceProperty>(PropertyNames." + propertyName + ").Value;\r\n";
-                            break;
-                        case ElementType.RadioButtons:
-                            SetRenderPart += "            " + u.Identifier + " = (byte)((int)newToken.GetProperty<StaticListChoiceProperty>(PropertyNames." + propertyName + ").Value);\r\n";
                             break;
                         case ElementType.ReseedButton:
                             SetRenderPart += "            " + u.Identifier + " = (byte)newToken.GetProperty<Int32Property>(PropertyNames." + propertyName + ").Value;\r\n";
@@ -1146,6 +1166,9 @@ namespace PaintDotNet.Effects
 
         internal static string UserEnteredPart(string SourceCode)
         {
+            SourceCode = Regex.Replace(SourceCode, @"\bRadioButtonControl<(?<TEnum>\S+)>\s+", match => match.Groups["TEnum"].Value + " ");
+            SourceCode = Regex.Replace(SourceCode, @"\bListBoxControl<(?<TEnum>\S+)>\s+", match => match.Groups["TEnum"].Value + " ");
+
             string UserEnteredPart = "";
             UserEnteredPart += "        #region User Entered Code\r\n        ";
             UserEnteredPart += SourceCode.Replace("\n", "\n        ");

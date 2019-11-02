@@ -139,7 +139,7 @@ namespace PaintDotNet.Effects
             UIControlsText = "";
             foreach (UIElement uie in MasterList)
             {
-                UIControlsText += uie.ToSourceString();
+                UIControlsText += uie.ToSourceString(true);
             }
         }
 
@@ -170,7 +170,7 @@ namespace PaintDotNet.Effects
                 identifier = "Amount" + (MasterList.Count + 1);
             }
             string enableIndentifer = (this.rbEnabledWhen.Checked) ? MasterList[enabledWhenField.SelectedIndex].Identifier : string.Empty;
-            MasterList.Add(new UIElement(elementType, ControlName.Text, ControlMin.Text, ControlMax.Text, defaultStr, OptionsText.Text, ControlStyle.SelectedIndex, rbEnabledWhen.Checked, enableIndentifer, (enabledWhenCondition.SelectedIndex != 0), identifier));
+            MasterList.Add(new UIElement(elementType, ControlName.Text, ControlMin.Text, ControlMax.Text, defaultStr, OptionsText.Text, ControlStyle.SelectedIndex, rbEnabledWhen.Checked, enableIndentifer, (enabledWhenCondition.SelectedIndex != 0), identifier, null));
             IDList.Add(identifier);
             refreshListView(MasterList.Count - 1);
             dirty = false;
@@ -579,7 +579,8 @@ namespace PaintDotNet.Effects
             if (elementType == ElementType.Uri) defaultStr = OptionsText.Text.Trim();
             string identifier = !string.IsNullOrWhiteSpace(ControlID.Text) ? ControlID.Text.Trim() : "Amount" + (MasterList.Count + 1);
             string enableIndentifer = (this.rbEnabledWhen.Checked) ? MasterList[enabledWhenField.SelectedIndex].Identifier : string.Empty;
-            UIElement uiElement = new UIElement(elementType, ControlName.Text, ControlMin.Text, ControlMax.Text, defaultStr, OptionsText.Text, ControlStyle.SelectedIndex, rbEnabledWhen.Checked, enableIndentifer, (enabledWhenCondition.SelectedIndex != 0), identifier);
+            string typeEnum = (CurrentItem > -1) ? MasterList[CurrentItem].TEnum : null;
+            UIElement uiElement = new UIElement(elementType, ControlName.Text, ControlMin.Text, ControlMax.Text, defaultStr, OptionsText.Text, ControlStyle.SelectedIndex, rbEnabledWhen.Checked, enableIndentifer, (enabledWhenCondition.SelectedIndex != 0), identifier, typeEnum);
 
             if (CurrentItem > -1)
             {
@@ -752,7 +753,7 @@ namespace PaintDotNet.Effects
                     ControlStyle.SelectedIndex = 0;
                     ControlMin.Text = CurrentElement.Min.ToString();
                     ControlMax.Text = CurrentElement.Max.ToString();
-                    ControlDef.Text = CurrentElement.Default.ToString();
+                    ControlDef.Text = CurrentElement.StrDefault;
                     BarLoc = CurrentElement.Name.IndexOf("|", StringComparison.Ordinal);
                     OptionsText.Text = CurrentElement.Name.Substring(BarLoc + 1);
                     ControlName.Text = CurrentElement.ToShortName();
@@ -992,12 +993,8 @@ namespace PaintDotNet.Effects
 
         private void PreviewButton_Click(object sender, EventArgs e)
         {
-            UIControlsText = "";
-            foreach (UIElement uie in MasterList)
-            {
-                UIControlsText += uie.ToSourceString();
-            }
-            if (!ScriptBuilder.BuildUiPreview(UIControlsText))
+            string uiCode = MasterList.Select(uiE => uiE.ToSourceString(false)).Join("");
+            if (!ScriptBuilder.BuildUiPreview(uiCode))
             {
                 FlexibleMessageBox.Show("Something went wrong, and the Preview can't be displayed.", "Preview Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
@@ -1185,6 +1182,7 @@ namespace PaintDotNet.Effects
         internal readonly bool EnableSwap;
         internal readonly string EnableIdentifier;
         internal readonly string Identifier;
+        internal readonly string TEnum;
 
         private static readonly string[] NewSourceCodeType = {
             "IntSliderControl",         // 0
@@ -1264,7 +1262,7 @@ namespace PaintDotNet.Effects
             return UserControls.ToArray();
         }
 
-        internal UIElement(ElementType eType, string eName, string eMin, string eMax, string eDefault, string eOptions, int eStyle, bool eEnabled, string targetIdentifier, bool eSwap, string identifier)
+        internal UIElement(ElementType eType, string eName, string eMin, string eMax, string eDefault, string eOptions, int eStyle, bool eEnabled, string targetIdentifier, bool eSwap, string identifier, string typeEnum)
         {
             Name = eName;
             ElementType = eType;
@@ -1348,9 +1346,11 @@ namespace PaintDotNet.Effects
                     Name += "|" + eOptions;
                     int maxValue = Name.Split('|').Length - 2;
                     Default = (int)parsedDefault.Clamp(0, maxValue);
+                    StrDefault = eDefault;
                     int nameLength1 = Name.IndexOf("|", StringComparison.Ordinal);
                     if (nameLength1 == -1) nameLength1 = Name.Length;
                     Description = Name.Substring(0, nameLength1) + EnabledDescription;
+                    TEnum = typeEnum;
                     break;
                 case ElementType.BinaryPixelOp:
                     Description = eName + " (Normal)" + EnabledDescription;
@@ -1469,8 +1469,15 @@ namespace PaintDotNet.Effects
             }
 
             string DefaultStr = m.Groups["default"].Value.Trim();
-            string TypeStr = m.Groups["type"].Value.Trim();
             ElementType elementType = ElementType.IntSlider;
+
+            string TypeStr = m.Groups["type"].Value.Trim();
+            Match mTEnum = Regex.Match(TypeStr, @"(?<Type>\S+)<(?<TEnum>\S+)>");
+            if (mTEnum.Success)
+            {
+                TypeStr = mTEnum.Groups["Type"].Value;
+            }
+
             if (TypeStr == "IntSliderControl")
             {
                 elementType = ElementType.IntSlider;
@@ -1646,6 +1653,10 @@ namespace PaintDotNet.Effects
             {
                 defaultValue = DefaultStr.Contains("true", StringComparison.OrdinalIgnoreCase) ? "1" : "0";
             }
+            else if (mTEnum.Success && (elementType == ElementType.DropDown || elementType == ElementType.RadioButtons))
+            {
+                defaultValue = DefaultStr;
+            }
             else
             {
                 if (!double.TryParse(DefaultStr, NumberStyles.Float, CultureInfo.InvariantCulture, out double dDefault))
@@ -1660,8 +1671,9 @@ namespace PaintDotNet.Effects
             int pipeIndex = LabelStr.IndexOf('|');
             string name = (pipeIndex > -1) ? LabelStr.Substring(0, pipeIndex) : LabelStr;
             string options = (pipeIndex > -1) ? LabelStr.Substring(pipeIndex + 1) : string.Empty;
+            string typeEnum = mTEnum.Success ? mTEnum.Groups["TEnum"].Value : null;
 
-            return new UIElement(elementType, name, dMin.ToString(), dMax.ToString(), defaultValue, options, style, enabled, targetID, swap, id);
+            return new UIElement(elementType, name, dMin.ToString(), dMax.ToString(), defaultValue, options, style, enabled, targetID, swap, id, typeEnum);
         }
 
         public override string ToString()
@@ -1669,9 +1681,11 @@ namespace PaintDotNet.Effects
             return Identifier + " — " + Description;
         }
 
-        internal string ToSourceString()
+        internal string ToSourceString(bool useTEnum)
         {
-            string SourceCode = NewSourceCodeType[(int)ElementType] + " " + Identifier;
+            bool hasTEnum = useTEnum && !TEnum.IsNullOrEmpty();
+            string typeEnum = hasTEnum ? $"<{TEnum}>" : string.Empty;
+            string SourceCode = NewSourceCodeType[(int)ElementType] + typeEnum + " " + Identifier;
             switch (ElementType)
             {
                 case ElementType.IntSlider:
@@ -1748,7 +1762,8 @@ namespace PaintDotNet.Effects
                     break;
                 case ElementType.DropDown:
                 case ElementType.RadioButtons:
-                    SourceCode += " = " + Default.ToString() + "; // ";
+                    string listDefault = hasTEnum ? StrDefault : Default.ToString();
+                    SourceCode += " = " + listDefault + "; // ";
                     break;
                 case ElementType.BinaryPixelOp:
                     SourceCode += " = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Normal); // ";
