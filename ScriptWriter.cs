@@ -254,13 +254,7 @@ namespace PaintDotNet.Effects
 
         internal static string CategoryPart(bool isAdjustment)
         {
-            string CategoryPart = "";  // Default is to place our plugin in the Effects menu
-            if (isAdjustment)
-            {
-                // Place our plugin in the Adjustments menu
-                CategoryPart = "    [EffectCategory(EffectCategory.Adjustment)]\r\n";
-            }
-            return CategoryPart;
+            return isAdjustment ? "    [EffectCategory(EffectCategory.Adjustment)]\r\n" : string.Empty;
         }
 
         internal static string EffectPart(UIElement[] UserControls, string FileName, string submenuname, string menuname, string iconpath, EffectFlags effectFlags, EffectRenderingSchedule renderingSchedule)
