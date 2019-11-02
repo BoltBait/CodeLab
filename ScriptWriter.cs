@@ -483,7 +483,7 @@ namespace PaintDotNet.Effects
                 switch (u.ElementType)
                 {
                     case ElementType.IntSlider:
-                        PropertyPart += "            props.Add(new Int32Property(PropertyNames." + propertyName + ", " + u.Default.ToString() + "," + u.Min.ToString() + "," + u.Max.ToString() + "));\r\n";
+                        PropertyPart += "            props.Add(new Int32Property(PropertyNames." + propertyName + ", " + u.Default.ToString() + ", " + u.Min.ToString() + ", " + u.Max.ToString() + "));\r\n";
                         break;
                     case ElementType.Checkbox:
                         PropertyPart += "            props.Add(new BooleanProperty(PropertyNames." + propertyName + ", " + ((u.Default == 0) ? "false" : "true") + "));\r\n";
@@ -547,18 +547,18 @@ namespace PaintDotNet.Effects
                         }
                         break;
                     case ElementType.AngleChooser:
-                        PropertyPart += "            props.Add(new DoubleProperty(PropertyNames." + propertyName + "," + u.dDefault.ToString() + ", " + u.dMin.ToString() + ", " + u.dMax.ToString() + "));\r\n";
-                        break;
-                    case ElementType.PanSlider:
-                        PropertyPart += "            props.Add(new DoubleVectorProperty(PropertyNames." + propertyName + ",Pair.Create(" + u.dMin.ToString("F3", CultureInfo.InvariantCulture) + "," + u.dMax.ToString("F3", CultureInfo.InvariantCulture) + "), Pair.Create(-1.0, -1.0), Pair.Create(+1.0, +1.0)));\r\n";
-                        break;
-                    case ElementType.Textbox:
-                        PropertyPart += "            props.Add(new StringProperty(PropertyNames." + propertyName + ", \"\", " + u.Max.ToString() + "));\r\n";
-                        break;
                     case ElementType.DoubleSlider:
                         PropertyPart += "            props.Add(new DoubleProperty(PropertyNames." + propertyName + ", " + u.dDefault.ToString(CultureInfo.InvariantCulture) + ", " + u.dMin.ToString(CultureInfo.InvariantCulture) + ", " + u.dMax.ToString(CultureInfo.InvariantCulture) + "));\r\n";
                         break;
+                    case ElementType.PanSlider:
+                        PropertyPart += "            props.Add(new DoubleVectorProperty(PropertyNames." + propertyName + ", Pair.Create(" + u.dMin.ToString("F3", CultureInfo.InvariantCulture) + ", " + u.dMax.ToString("F3", CultureInfo.InvariantCulture) + "), Pair.Create(-1.0, -1.0), Pair.Create(+1.0, +1.0)));\r\n";
+                        break;
+                    case ElementType.Textbox:
+                    case ElementType.MultiLineTextbox:
+                        PropertyPart += "            props.Add(new StringProperty(PropertyNames." + propertyName + ", \"\", " + u.Max.ToString() + "));\r\n";
+                        break;
                     case ElementType.DropDown:
+                    case ElementType.RadioButtons:
                         if (u.Default > 0)
                         {
                             PropertyPart += "            " + propertyName + "Options " + propertyName + "Default = (Enum.IsDefined(typeof(" + propertyName + "Options), " + u.Default.ToString() + ")) ? (" + propertyName + "Options)" + u.Default.ToString() + " : 0;\r\n";
@@ -576,33 +576,17 @@ namespace PaintDotNet.Effects
                         PropertyPart += "            FontFamily[] " + propertyName + "FontFamilies = new InstalledFontCollection().Families;\r\n";
                         PropertyPart += "            props.Add(new StaticListChoiceProperty(PropertyNames." + propertyName + ", " + propertyName + "FontFamilies, 0, false));\r\n";
                         break;
-                    case ElementType.RadioButtons:
-                        if (u.Default > 0)
-                        {
-                            PropertyPart += "            " + propertyName + "Options " + propertyName + "Default = (Enum.IsDefined(typeof(" + propertyName + "Options), " + u.Default.ToString() + ")) ? (" + propertyName + "Options)" + u.Default.ToString() + " : 0;\r\n";
-                            PropertyPart += "            props.Add(StaticListChoiceProperty.CreateForEnum<" + propertyName + "Options>(PropertyNames." + propertyName + ", " + propertyName + "Default, false));\r\n";
-                        }
-                        else
-                        {
-                            PropertyPart += "            props.Add(StaticListChoiceProperty.CreateForEnum<" + propertyName + "Options>(PropertyNames." + propertyName + ", 0, false));\r\n";
-                        }
-                        break;
                     case ElementType.ReseedButton:
                         PropertyPart += "            props.Add(new Int32Property(PropertyNames." + propertyName + ", 0, 0, 255));\r\n";
                         break;
-                    case ElementType.MultiLineTextbox:
-                        PropertyPart += "            props.Add(new StringProperty(PropertyNames." + propertyName + ", \"\", " + u.Max.ToString() + "));\r\n";
-                        break;
                     case ElementType.RollBall:
-                        PropertyPart += "            props.Add(new DoubleVector3Property(PropertyNames." + propertyName + ",Tuple.Create<double, double, double>(0.0, 0.0, 0.0), Tuple.Create<double, double, double>(-180.0, -180.0, 0.0), Tuple.Create<double, double, double>(180.0, 180.0, 90.0)));\r\n";
+                        PropertyPart += "            props.Add(new DoubleVector3Property(PropertyNames." + propertyName + ", Tuple.Create<double, double, double>(0.0, 0.0, 0.0), Tuple.Create<double, double, double>(-180.0, -180.0, 0.0), Tuple.Create<double, double, double>(180.0, 180.0, 90.0)));\r\n";
                         break;
                     case ElementType.Filename:
                         PropertyPart += "            props.Add(new StringProperty(PropertyNames." + propertyName + ", \"\"));\r\n";
                         break;
                     case ElementType.Uri:
                         PropertyPart += "            props.Add(new UriProperty(PropertyNames." + propertyName + ", new Uri(\"" + u.Link + "\")));\r\n";
-                        break;
-                    default:
                         break;
                 }
             }
