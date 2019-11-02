@@ -49,7 +49,7 @@ namespace PaintDotNet.Effects
         private int largeChange = 50;
 
 
-        internal event ScrollEventHandler Scroll;
+        internal event EventHandler<ScrollEventArgs> Scroll;
         private void OnScroll(ScrollEventArgs args)
         {
             this.Scroll?.Invoke(this, args);

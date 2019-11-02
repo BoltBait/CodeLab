@@ -21,6 +21,8 @@ using System.ComponentModel;
 
 namespace PaintDotNet.Effects
 {
+    [DefaultEvent(nameof(ValueChanged))]
+    [DefaultProperty(nameof(Color))]
     public partial class PdnColor : UserControl
     {
         private bool mouseDown;
@@ -610,6 +612,7 @@ namespace PaintDotNet.Effects
     }
 
     [DefaultEvent(nameof(ValueChanged))]
+    [DefaultProperty(nameof(Value))]
     public class ColorSlider : PictureBox
     {
         #region Properties

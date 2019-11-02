@@ -609,52 +609,50 @@ namespace PaintDotNet.Effects
                     }
 
                     int index = Array.FindIndex(UserControls, element => element.Identifier == u.EnableIdentifier);
-
                     if (index < 0)
                     {
                         continue;
                     }
 
                     UIElement source = UserControls[index];
-                    string sourceName = source.Identifier.FirstCharToUpper();
-                    string targetPropName = "PropertyNames." + u.Identifier.FirstCharToUpper();
-                    string sourcePropName = "PropertyNames." + sourceName;
+                    string targetPropName = u.Identifier.FirstCharToUpper();
+                    string sourcePropName = source.Identifier.FirstCharToUpper();
                     string inverse = (!u.EnableSwap).ToString().ToLower();
 
                     switch (source.ElementType)
                     {
                         case ElementType.ReseedButton:
                         case ElementType.IntSlider:
-                            PropertyPart += "            propRules.Add(new ReadOnlyBoundToValueRule<int, Int32Property>(" + targetPropName + ", " + sourcePropName + ", new[] { 0 }, " + inverse + "));\r\n";
+                            PropertyPart += "            propRules.Add(new ReadOnlyBoundToValueRule<int, Int32Property>(PropertyNames." + targetPropName + ", PropertyNames." + sourcePropName + ", new[] { 0 }, " + inverse + "));\r\n";
                             break;
                         case ElementType.Checkbox:
-                            PropertyPart += "            propRules.Add(new ReadOnlyBoundToBooleanRule(" + targetPropName + ", " + sourcePropName + ", " + inverse + "));\r\n";
+                            PropertyPart += "            propRules.Add(new ReadOnlyBoundToBooleanRule(PropertyNames." + targetPropName + ", PropertyNames." + sourcePropName + ", " + inverse + "));\r\n";
                             break;
                         case ElementType.ColorWheel:
-                            PropertyPart += "            propRules.Add(new ReadOnlyBoundToValueRule<int, Int32Property>" + targetPropName + ", " + sourcePropName + ", ColorBgra.ToOpaqueInt32(Color.White), " + inverse + "));\r\n";
+                            PropertyPart += "            propRules.Add(new ReadOnlyBoundToValueRule<int, Int32Property>PropertyNames." + targetPropName + ", PropertyNames." + sourcePropName + ", ColorBgra.ToOpaqueInt32(Color.White), " + inverse + "));\r\n";
                             break;
                         case ElementType.DoubleSlider:
                         case ElementType.AngleChooser:
-                            PropertyPart += "            propRules.Add(new ReadOnlyBoundToValueRule<double, DoubleProperty>(" + targetPropName + ", " + sourcePropName + ", new[] { 0d }, " + inverse + "));\r\n";
+                            PropertyPart += "            propRules.Add(new ReadOnlyBoundToValueRule<double, DoubleProperty>(PropertyNames." + targetPropName + ", PropertyNames." + sourcePropName + ", new[] { 0d }, " + inverse + "));\r\n";
                             break;
                         case ElementType.PanSlider:
-                            PropertyPart += "            propRules.Add(new ReadOnlyBoundToValueRule<Pair<double, double>, DoubleVectorProperty>(" + targetPropName + ", " + sourcePropName + ", Pair.Create(0d,0d), " + inverse + "));\r\n";
+                            PropertyPart += "            propRules.Add(new ReadOnlyBoundToValueRule<Pair<double, double>, DoubleVectorProperty>(PropertyNames." + targetPropName + ", PropertyNames." + sourcePropName + ", Pair.Create(0d,0d), " + inverse + "));\r\n";
                             break;
                         case ElementType.Filename:
                         case ElementType.Textbox:
                         case ElementType.MultiLineTextbox:
-                            PropertyPart += "            propRules.Add(new ReadOnlyBoundToValueRule<string, StringProperty>(" + targetPropName + ", " + sourcePropName + ", new[] { \"\" }, " + inverse + "));\r\n";
+                            PropertyPart += "            propRules.Add(new ReadOnlyBoundToValueRule<string, StringProperty>(PropertyNames." + targetPropName + ", PropertyNames." + sourcePropName + ", new[] { \"\" }, " + inverse + "));\r\n";
                             break;
                         case ElementType.DropDown:
                         case ElementType.RadioButtons:
                             string sourceEnumName = (source.TEnum != null && Intelli.TryGetEnumNames(source.TEnum, out string[] enumNames)) ?
                                 enumNames[0] :
-                                sourceName + "Options." + sourceName + "Option1";
+                                sourcePropName + "Options." + sourcePropName + "Option1";
 
-                            PropertyPart += "            propRules.Add(new ReadOnlyBoundToValueRule<object, StaticListChoiceProperty>(" + targetPropName + ", " + sourcePropName + ", " + sourceEnumName + ", " + inverse + "));\r\n";
+                            PropertyPart += "            propRules.Add(new ReadOnlyBoundToValueRule<object, StaticListChoiceProperty>(PropertyNames." + targetPropName + ", PropertyNames." + sourcePropName + ", " + sourceEnumName + ", " + inverse + "));\r\n";
                             break;
                         case ElementType.RollBall:
-                            PropertyPart += "            propRules.Add(new ReadOnlyBoundToValueRule<Tuple<double, double, double>, DoubleVector3Property>(" + targetPropName + ", " + sourcePropName + ", Tuple.Create(0d,0d,0d), " + inverse + "));\r\n";
+                            PropertyPart += "            propRules.Add(new ReadOnlyBoundToValueRule<Tuple<double, double, double>, DoubleVector3Property>(PropertyNames." + targetPropName + ", PropertyNames." + sourcePropName + ", Tuple.Create(0d,0d,0d), " + inverse + "));\r\n";
                             break;
                         //BinaryPixelOp
                         //FontFamily
@@ -907,7 +905,7 @@ namespace PaintDotNet.Effects
 
         internal static string HelpPart(HelpType HelpType, string HelpText)
         {
-            if (HelpType == HelpType.PlainText || HelpType == HelpType.None || HelpType == HelpType.Custom ||  HelpText.Length == 0)
+            if (HelpType == HelpType.PlainText || HelpType == HelpType.None || HelpType == HelpType.Custom || HelpText.Length == 0)
             {
                 return string.Empty;
             }

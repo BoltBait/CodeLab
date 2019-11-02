@@ -104,7 +104,7 @@ namespace PaintDotNet.Effects
                     {
                         return "\r\n";
                     }
-                    if (match.Value.StartsWith("/*", StringComparison.Ordinal))
+                    else if (match.Value.StartsWith("/*", StringComparison.Ordinal))
                     {
                         string newLines = "";
                         for (int i = 0; i < match.Value.CountLines(); i++)
