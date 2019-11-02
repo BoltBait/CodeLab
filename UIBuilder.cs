@@ -1789,6 +1789,7 @@ namespace PaintDotNet.Effects
                     SourceCode += "; // [" + Min.ToString() + "," + Max.ToString() + "] ";
                     break;
                 case ElementType.DropDown:
+                case ElementType.RadioButtons:
                     SourceCode += " = " + Default.ToString() + "; // ";
                     break;
                 case ElementType.BinaryPixelOp:
@@ -1796,9 +1797,6 @@ namespace PaintDotNet.Effects
                     break;
                 case ElementType.FontFamily:
                     SourceCode += " = new FontFamily(\"Arial\"); // ";
-                    break;
-                case ElementType.RadioButtons:
-                    SourceCode += " = " + Default.ToString() + "; // [1] ";
                     break;
                 case ElementType.ReseedButton:
                     SourceCode += " = 0; // [255] ";
@@ -1812,8 +1810,6 @@ namespace PaintDotNet.Effects
                     break;
                 case ElementType.Uri:
                     SourceCode += " = new Uri(\"" + Link + "\"); // ";
-                    break;
-                default:
                     break;
             }
 
