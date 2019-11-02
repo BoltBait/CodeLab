@@ -405,7 +405,6 @@ namespace PaintDotNet.Effects
                 ScriptWriter.NamespacePart(FileName) +
                 ScriptWriter.EffectPart(UserControls, FileName, string.Empty, "UI PREVIEW - Does NOT Render to canvas", string.Empty, EffectFlags.None, EffectRenderingSchedule.DefaultTilesForCpuRendering) +
                 ScriptWriter.PropertyPart(UserControls, FileName, string.Empty, HelpType.None, string.Empty) +
-                ScriptWriter.SetRenderPart(UserControls, true, false) +
                 ScriptWriter.RenderLoopPart(UserControls) +
                 uiCode +
                 ScriptWriter.EmptyCode +
