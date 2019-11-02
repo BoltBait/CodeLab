@@ -671,7 +671,7 @@ namespace PaintDotNet.Effects
                 case ElementType.IntSlider:
                     ControlType.Text = "Integer Slider";
                     FillStyleDropDown(0);
-                    ControlStyle.SelectedIndex = CurrentElement.Style;
+                    ControlStyle.SelectedIndex = (int)CurrentElement.Style;
                     ControlMin.Text = CurrentElement.Min.ToString();
                     ControlMax.Text = CurrentElement.Max.ToString();
                     ControlDef.Text = CurrentElement.Default.ToString();
@@ -686,7 +686,9 @@ namespace PaintDotNet.Effects
                 case ElementType.ColorWheel:
                     ControlType.Text = "Color Wheel";
                     FillStyleDropDown(1);
-                    ControlStyle.SelectedIndex = CurrentElement.Style;
+                    bool alpha = CurrentElement.ColorWheelOptions.HasFlag(ColorWheelOptions.Alpha);
+                    bool noReset = CurrentElement.ColorWheelOptions.HasFlag(ColorWheelOptions.NoReset);
+                    ControlStyle.SelectedIndex = (noReset && alpha) ? 3 : noReset ? 2 : alpha ? 1 : 0;
                     ControlMin.Text = CurrentElement.Min.ToString();
                     ControlMax.Text = CurrentElement.Max.ToString();
                     ControlDef.Text = CurrentElement.Default.ToString();
@@ -716,7 +718,7 @@ namespace PaintDotNet.Effects
                 case ElementType.DoubleSlider:
                     ControlType.Text = "Double Slider";
                     FillStyleDropDown(0);
-                    ControlStyle.SelectedIndex = CurrentElement.Style;
+                    ControlStyle.SelectedIndex = (int)CurrentElement.Style;
                     ControlMin.Text = CurrentElement.dMin.ToString();
                     ControlMax.Text = CurrentElement.dMax.ToString();
                     ControlDef.Text = CurrentElement.dDefault.ToString();
@@ -1174,24 +1176,11 @@ namespace PaintDotNet.Effects
         internal readonly int Max = 100;
         internal readonly int Default = 0;
         internal readonly string ColorDefault = "PrimaryColor";
+        internal readonly ColorWheelOptions ColorWheelOptions = ColorWheelOptions.None;
         internal readonly double dMin = 0;
         internal readonly double dMax = 100;
         internal readonly double dDefault = 0;
-        internal readonly int Style = 0;
-        //   0  Default           Default
-        //   1  Hue               Alpha
-        //   2  Hue Centered      Default no Reset
-        //   3  Saturation        Alpha no Reset
-        //   4  White-Black
-        //   5  Black-White
-        //   6  Cyan-Red
-        //   7  Magenta-Green
-        //   8  Yellow-Blue
-        //   9  Cyan-Orange
-        //  10  White-Red
-        //  11  White-Green
-        //  12  White-Blue
-        private const int MaxStyles = 12;
+        internal readonly SliderStyle Style = SliderStyle.Default;
         internal readonly bool EnabledWhen = false;
         internal readonly bool EnableSwap = false;
         internal readonly string EnableIdentifier = string.Empty;
@@ -1287,7 +1276,8 @@ namespace PaintDotNet.Effects
             Max = (int)dMax;
             Default = (int)dDefault;
             int NameLength;
-            Style = Math.Max(0, Math.Min(MaxStyles, eStyle));
+            Style = Enum.IsDefined(typeof(SliderStyle), eStyle) ? (SliderStyle)eStyle : 0;
+            ColorWheelOptions = (eStyle == 3) ? ColorWheelOptions.Alpha | ColorWheelOptions.NoReset : (eStyle == 2) ? ColorWheelOptions.NoReset : (eStyle == 1) ? ColorWheelOptions.Alpha : ColorWheelOptions.None;
             EnabledWhen = eEnabled;
             EnableIdentifier = targetIdentifier;
             EnableSwap = eSwap;
@@ -1322,13 +1312,13 @@ namespace PaintDotNet.Effects
                 case ElementType.ColorWheel:
                     ColorDefault = (eDefault == "None" ? "" : eDefault);
                     Description = eName;
-                    bool alpha = (Style == 1 || Style == 3);
+                    bool alpha = ColorWheelOptions.HasFlag(ColorWheelOptions.Alpha);
                     Min = alpha ? int.MinValue : 0;
                     Max = alpha ? int.MaxValue : 0xffffff;
                     if (ColorDefault != "")
                     {
                         string alphastyle = alpha ? "?" : "";
-                        string resetstyle = (Style == 2 || Style == 3) ? "!" : "";
+                        string resetstyle = ColorWheelOptions.HasFlag(ColorWheelOptions.NoReset) ? "!" : "";
                         Description += " (" + ColorDefault + alphastyle + resetstyle + ")";
                     }
                     Description += EnabledDescription;
@@ -1720,7 +1710,7 @@ namespace PaintDotNet.Effects
                     SourceCode += "; // [" + Min.ToString() + "," + Max.ToString();
                     if (Style > 0)
                     {
-                        SourceCode += "," + Style.ToString();
+                        SourceCode += "," + (int)Style;
                     }
                     SourceCode += "] ";
                     break;
@@ -1730,7 +1720,7 @@ namespace PaintDotNet.Effects
                     SourceCode += "; // [" + dMin.ToString(CultureInfo.InvariantCulture) + "," + dMax.ToString(CultureInfo.InvariantCulture);
                     if (Style > 0)
                     {
-                        SourceCode += "," + Style.ToString();
+                        SourceCode += "," + (int)Style;
                     }
                     SourceCode += "] ";
                     break;
@@ -1752,28 +1742,27 @@ namespace PaintDotNet.Effects
                     {
                         c = Color.FromName(ColorDefault);
                     }
+
+                    string rgb = c.B.ToString() + ", " + c.G.ToString() + ", " + c.R.ToString();
+                    string resetstyle = ColorWheelOptions.HasFlag(ColorWheelOptions.NoReset) ? "!" : "";
                     string alphastyle = "";
-                    string resetstyle = "";
-                    if (Style == 1 || Style == 3)
+
+                    if (ColorWheelOptions.HasFlag(ColorWheelOptions.Alpha))
                     {
                         alphastyle = "?";
-                    }
-                    if (Style == 2 || Style == 3)
-                    {
-                        resetstyle = "!";
-                    }
-                    if (alphastyle == "?")
-                    {
-                        SourceCode += " = ColorBgra.FromBgra(" + c.B.ToString() + "," + c.G.ToString() + "," + c.R.ToString() + ",255)";
+                        SourceCode += " = ColorBgra.FromBgra(" + rgb + ", 255)";
                     }
                     else
                     {
-                        SourceCode += " = ColorBgra.FromBgr(" + c.B.ToString() + "," + c.G.ToString() + "," + c.R.ToString() + ")";
+                        SourceCode += " = ColorBgra.FromBgr(" + rgb + ")";
                     }
+
                     SourceCode += "; // ";
-                    if (ColorDefault.Trim() + alphastyle + resetstyle != "")
+
+                    string config = ColorDefault.Trim() + alphastyle + resetstyle;
+                    if (config.Length > 0)
                     {
-                        SourceCode += "[" + ColorDefault.Trim() + alphastyle + resetstyle + "] ";
+                        SourceCode += "[" + config + "] ";
                     }
                     break;
                 case ElementType.PanSlider:
@@ -1882,5 +1871,30 @@ namespace PaintDotNet.Effects
         RollBall,
         Filename,
         Uri
+    }
+
+    internal enum SliderStyle
+    {
+        Default,
+        Hue,
+        HueCentered,
+        Saturation,
+        WhiteBlack,
+        BlackWhite,
+        CyanRed,
+        MagentaGreen,
+        YellowBlue,
+        CyanOrange,
+        WhiteRed,
+        WhiteGreen,
+        WhiteBlue,
+    }
+
+    [Flags]
+    internal enum ColorWheelOptions
+    {
+        None,
+        Alpha,
+        NoReset
     }
 }

@@ -452,7 +452,7 @@ namespace PaintDotNet.Effects
             PropertyPart += "        {\r\n";
 
             // Check to see if we're including a color wheel without an alpha slider
-            if (UserControls.Any(u => (u.ElementType == ElementType.ColorWheel && !(u.Style == 1 || u.Style == 3))))
+            if (UserControls.Any(u => u.ElementType == ElementType.ColorWheel && !u.ColorWheelOptions.HasFlag(ColorWheelOptions.Alpha)))
             {
                 PropertyPart += "            ColorBgra PrimaryColor = EnvironmentParameters.PrimaryColor.NewAlpha(byte.MaxValue);\r\n";
                 PropertyPart += "            ColorBgra SecondaryColor = EnvironmentParameters.SecondaryColor.NewAlpha(byte.MaxValue);\r\n";
@@ -490,7 +490,7 @@ namespace PaintDotNet.Effects
                         break;
                     case ElementType.ColorWheel:
                         ColorControlCount++;
-                        bool includeAlpha = (u.Style == 1 || u.Style == 3);
+                        bool includeAlpha = u.ColorWheelOptions.HasFlag(ColorWheelOptions.Alpha);
                         if (u.ColorDefault != "")
                         {
                             if (!includeAlpha) // no alpha slider
@@ -721,54 +721,42 @@ namespace PaintDotNet.Effects
                 {
                     switch (u.Style)
                     {
-                        case 1:
-                            //   1  Hue
+                        case SliderStyle.Hue:
                             PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.ControlStyle, SliderControlStyle.Hue);\r\n";
                             PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.RangeWraps, true);\r\n";
                             break;
-                        case 2:
-                            //   2  Hue Centered
+                        case SliderStyle.HueCentered:
                             PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.ControlStyle, SliderControlStyle.HueCentered);\r\n";
                             PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.RangeWraps, true);\r\n";
                             break;
-                        case 3:
-                            //   3  Saturation
+                        case SliderStyle.Saturation:
                             PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.ControlStyle, SliderControlStyle.SaturationHue);\r\n";
                             break;
-                        case 4:
-                            //   4  White-Black
+                        case SliderStyle.WhiteBlack:
                             PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.ControlColors, new ColorBgra[] { ColorBgra.White, ColorBgra.Black });\r\n";
                             break;
-                        case 5:
-                            //   5  Black-White
+                        case SliderStyle.BlackWhite:
                             PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.ControlColors, new ColorBgra[] { ColorBgra.Black, ColorBgra.White });\r\n";
                             break;
-                        case 6:
-                            //   6  Cyan-Red
+                        case SliderStyle.CyanRed:
                             PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.ControlColors, new ColorBgra[] { ColorBgra.Cyan, ColorBgra.White, ColorBgra.Red });\r\n";
                             break;
-                        case 7:
-                            //   7  Magenta-Green
+                        case SliderStyle.MagentaGreen:
                             PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.ControlColors, new ColorBgra[] { ColorBgra.Magenta, ColorBgra.White, ColorBgra.Green });\r\n";
                             break;
-                        case 8:
-                            //   8  Yellow-Blue
+                        case SliderStyle.YellowBlue:
                             PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.ControlColors, new ColorBgra[] { ColorBgra.Yellow, ColorBgra.White, ColorBgra.Blue });\r\n";
                             break;
-                        case 9:
-                            //   9  Cyan-Orange
+                        case SliderStyle.CyanOrange:
                             PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.ControlColors, new ColorBgra[] { ColorBgra.Cyan, ColorBgra.White, ColorBgra.Orange });\r\n";
                             break;
-                        case 10:
-                            //  10  White-Red
+                        case SliderStyle.WhiteRed:
                             PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.ControlColors, new ColorBgra[] { ColorBgra.White, ColorBgra.Red });\r\n";
                             break;
-                        case 11:
-                            //  11  White-Green
+                        case SliderStyle.WhiteGreen:
                             PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.ControlColors, new ColorBgra[] { ColorBgra.White, ColorBgra.Green });\r\n";
                             break;
-                        case 12:
-                            //  12  White-Blue
+                        case SliderStyle.WhiteBlue:
                             PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.ControlColors, new ColorBgra[] { ColorBgra.White, ColorBgra.Blue });\r\n";
                             break;
                     }
@@ -781,7 +769,7 @@ namespace PaintDotNet.Effects
                 else if (u.ElementType == ElementType.ColorWheel)
                 {
                     PropertyPart += "            configUI.SetPropertyControlType(PropertyNames." + propertyName + ", PropertyControlType.ColorWheel);\r\n";
-                    if (u.Style == 2 || u.Style == 3)
+                    if (u.ColorWheelOptions.HasFlag(ColorWheelOptions.NoReset))
                     {
                         PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.ShowResetButton, false);\r\n";
                     }
@@ -1091,7 +1079,7 @@ namespace PaintDotNet.Effects
                             SetRenderPart += "            " + u.Identifier + " = newToken.GetProperty<BooleanProperty>(PropertyNames." + propertyName + ").Value;\r\n";
                             break;
                         case ElementType.ColorWheel:
-                            if (u.Style == 0 || u.Style == 2)
+                            if (!u.ColorWheelOptions.HasFlag(ColorWheelOptions.Alpha))
                             {
                                 SetRenderPart += "            " + u.Identifier + " = ColorBgra.FromOpaqueInt32(newToken.GetProperty<Int32Property>(PropertyNames." + propertyName + ").Value);\r\n";
                             }
