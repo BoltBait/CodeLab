@@ -407,8 +407,7 @@ namespace PaintDotNet.Effects
 
             foreach (UIElement u in UserControls)
             {
-                if ((u.ElementType == ElementType.DropDown || u.ElementType == ElementType.RadioButtons) &&
-                    (u.TEnum == null || !Intelli.IsEnum(u.TEnum)))
+                if ((u.ElementType == ElementType.DropDown || u.ElementType == ElementType.RadioButtons) && !Intelli.IsEnum(u.TEnum))
                 {
                     string identifier = u.Identifier.FirstCharToUpper();
                     PropertyPart += "        public enum " + identifier + "Options\r\n";
@@ -553,7 +552,7 @@ namespace PaintDotNet.Effects
                         break;
                     case ElementType.DropDown:
                     case ElementType.RadioButtons:
-                        if (u.TEnum != null && Intelli.IsEnum(u.TEnum))
+                        if (Intelli.IsEnum(u.TEnum))
                         {
                             PropertyPart += "            props.Add(StaticListChoiceProperty.CreateForEnum<" + u.TEnum + ">(PropertyNames." + propertyName + ", " + u.StrDefault + ", false));\r\n";
                         }
@@ -639,7 +638,7 @@ namespace PaintDotNet.Effects
                             break;
                         case ElementType.DropDown:
                         case ElementType.RadioButtons:
-                            string sourceEnumName = (source.TEnum != null && Intelli.TryGetEnumNames(source.TEnum, out string[] enumNames)) ?
+                            string sourceEnumName = Intelli.TryGetEnumNames(source.TEnum, out string[] enumNames) ?
                                 enumNames[0] :
                                 sourcePropName + "Options." + sourcePropName + "Option1";
 
@@ -787,7 +786,7 @@ namespace PaintDotNet.Effects
                         goto case ElementType.DropDown; // Fall Through
                     case ElementType.DropDown:
                         PropertyPart += "            PropertyControlInfo " + propertyName + "Control = configUI.FindControlForPropertyName(PropertyNames." + propertyName + ");\r\n";
-                        if (u.TEnum != null && Intelli.TryGetEnumNames(u.TEnum, out string[] enumNames))
+                        if (Intelli.TryGetEnumNames(u.TEnum, out string[] enumNames))
                         {
                             string[] displayNames = u.ToOptionArray();
                             int length = Math.Min(enumNames.Length, displayNames.Length);
@@ -1080,7 +1079,7 @@ namespace PaintDotNet.Effects
                             break;
                         case ElementType.DropDown:
                         case ElementType.RadioButtons:
-                            string typeCast = (u.TEnum != null && Intelli.IsEnum(u.TEnum)) ? u.TEnum : "byte)(int";
+                            string typeCast = Intelli.IsEnum(u.TEnum) ? u.TEnum : "byte)(int";
                             SetRenderPart += "            " + u.Identifier + " = (" + typeCast + ")newToken.GetProperty<StaticListChoiceProperty>(PropertyNames." + propertyName + ").Value;\r\n";
                             break;
                         case ElementType.BinaryPixelOp:

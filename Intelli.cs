@@ -77,13 +77,13 @@ namespace PaintDotNet.Effects
 
         internal static bool IsEnum(string enumName)
         {
-            return (UserDefinedTypes.TryGetValue(enumName, out Type type) || AllTypes.TryGetValue(enumName, out type)) &&
+            return enumName != null &&  (UserDefinedTypes.TryGetValue(enumName, out Type type) || AllTypes.TryGetValue(enumName, out type)) &&
                 type.IsEnum && Enum.GetValues(type).Length > 0;
         }
 
         internal static bool TryGetEnumNames(string enumName, out string[] names)
         {
-            if (!(UserDefinedTypes.TryGetValue(enumName, out Type type) || AllTypes.TryGetValue(enumName, out type)) || !type.IsEnum)
+            if (enumName == null || !(UserDefinedTypes.TryGetValue(enumName, out Type type) || AllTypes.TryGetValue(enumName, out type)) || !type.IsEnum)
             {
                 names = null;
                 return false;
