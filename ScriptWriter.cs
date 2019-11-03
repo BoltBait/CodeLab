@@ -408,7 +408,7 @@ namespace PaintDotNet.Effects
             foreach (UIElement u in UserControls)
             {
                 if ((u.ElementType == ElementType.DropDown || u.ElementType == ElementType.RadioButtons) &&
-                    (u.TEnum == null || !Intelli.IsUserDefinedEnum(u.TEnum)))
+                    (u.TEnum == null || !Intelli.IsEnum(u.TEnum)))
                 {
                     string identifier = u.Identifier.FirstCharToUpper();
                     PropertyPart += "        public enum " + identifier + "Options\r\n";
@@ -553,7 +553,7 @@ namespace PaintDotNet.Effects
                         break;
                     case ElementType.DropDown:
                     case ElementType.RadioButtons:
-                        if (u.TEnum != null && Intelli.IsUserDefinedEnum(u.TEnum))
+                        if (u.TEnum != null && Intelli.IsEnum(u.TEnum))
                         {
                             PropertyPart += "            props.Add(StaticListChoiceProperty.CreateForEnum<" + u.TEnum + ">(PropertyNames." + propertyName + ", " + u.StrDefault + ", false));\r\n";
                         }
@@ -1080,7 +1080,7 @@ namespace PaintDotNet.Effects
                             break;
                         case ElementType.DropDown:
                         case ElementType.RadioButtons:
-                            string typeCast = (u.TEnum != null && Intelli.IsUserDefinedEnum(u.TEnum)) ? u.TEnum : "byte)(int";
+                            string typeCast = (u.TEnum != null && Intelli.IsEnum(u.TEnum)) ? u.TEnum : "byte)(int";
                             SetRenderPart += "            " + u.Identifier + " = (" + typeCast + ")newToken.GetProperty<StaticListChoiceProperty>(PropertyNames." + propertyName + ").Value;\r\n";
                             break;
                         case ElementType.BinaryPixelOp:
