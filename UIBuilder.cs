@@ -707,7 +707,7 @@ namespace PaintDotNet.Effects
                     ControlStyle.SelectedIndex = 0;
                     ControlMin.Text = CurrentElement.dMin.ToString();
                     ControlMax.Text = CurrentElement.dMax.ToString();
-                    ControlDef.Text = CurrentElement.dDefault.ToString();
+                    ControlDef.Text = CurrentElement.StrDefault;
                     break;
                 case ElementType.Textbox:
                     ControlType.Text = "String";
@@ -1324,6 +1324,9 @@ namespace PaintDotNet.Effects
                     Description = eName + " (" + dMin.ToString() + ".." + dDefault.ToString() + ".." + dMax.ToString() + ")" + EnabledDescription;
                     break;
                 case ElementType.PanSlider:
+                    dMin = -1;
+                    dMax = 1;
+                    StrDefault = eDefault;
                     Description = eName + EnabledDescription;
                     break;
                 case ElementType.Textbox:
@@ -1642,6 +1645,25 @@ namespace PaintDotNet.Effects
             {
                 defaultValue = DefaultStr.Contains("true", StringComparison.OrdinalIgnoreCase) ? "1" : "0";
             }
+            else if (elementType == ElementType.PanSlider)
+            {
+                double x = 0;
+                double y = 0;
+                Match xyPair = Regex.Match(DefaultStr, @"\bPair.Create\(\s*(?<x>-?\s*\d*.?\d*)\s*,\s*(?<y>-?\s*\d*.?\d*)\s*\)");
+                if (xyPair.Success)
+                {
+                    if (double.TryParse(xyPair.Groups["x"].Value, NumberStyles.Float, CultureInfo.InvariantCulture, out x))
+                    {
+                        x = x.Clamp(-1, 1);
+                    }
+                    if (double.TryParse(xyPair.Groups["y"].Value, NumberStyles.Float, CultureInfo.InvariantCulture, out y))
+                    {
+                        y = y.Clamp(-1, 1);
+                    }
+                }
+
+                defaultValue = x.ToString("F3", CultureInfo.InvariantCulture) + ", " + y.ToString("F3", CultureInfo.InvariantCulture);
+            }
             else if (mTEnum.Success && (elementType == ElementType.DropDown || elementType == ElementType.RadioButtons))
             {
                 defaultValue = DefaultStr;
@@ -1738,11 +1760,7 @@ namespace PaintDotNet.Effects
                     }
                     break;
                 case ElementType.PanSlider:
-                    SourceCode += " = Pair.Create(";
-                    SourceCode += dMin.ToString("F3", CultureInfo.InvariantCulture);
-                    SourceCode += ", ";
-                    SourceCode += dMax.ToString("F3", CultureInfo.InvariantCulture);
-                    SourceCode += "); // ";
+                    SourceCode += " = Pair.Create(" + StrDefault + "); // ";
                     break;
                 case ElementType.Textbox:
                 case ElementType.MultiLineTextbox:

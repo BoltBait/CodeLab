@@ -544,7 +544,7 @@ namespace PaintDotNet.Effects
                         PropertyPart += "            props.Add(new DoubleProperty(PropertyNames." + propertyName + ", " + u.dDefault.ToString(CultureInfo.InvariantCulture) + ", " + u.dMin.ToString(CultureInfo.InvariantCulture) + ", " + u.dMax.ToString(CultureInfo.InvariantCulture) + "));\r\n";
                         break;
                     case ElementType.PanSlider:
-                        PropertyPart += "            props.Add(new DoubleVectorProperty(PropertyNames." + propertyName + ", Pair.Create(" + u.dMin.ToString("F3", CultureInfo.InvariantCulture) + ", " + u.dMax.ToString("F3", CultureInfo.InvariantCulture) + "), Pair.Create(-1.0, -1.0), Pair.Create(+1.0, +1.0)));\r\n";
+                        PropertyPart += "            props.Add(new DoubleVectorProperty(PropertyNames." + propertyName + ", Pair.Create(" + u.StrDefault + "), Pair.Create(-1.0, -1.0), Pair.Create(+1.0, +1.0)));\r\n";
                         break;
                     case ElementType.Textbox:
                     case ElementType.MultiLineTextbox:
