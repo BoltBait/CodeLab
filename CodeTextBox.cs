@@ -1386,24 +1386,24 @@ namespace PaintDotNet.Effects
         {
             T defaultOverload = mi.First();
 
-            bool isGeneric = false;
+            bool isExplicitGeneric = false;
             string genericArgs = null;
             int paramStart = this.WordEndPosition(position, true);
             char openBrace = this.GetCharAt(paramStart);
             if (openBrace == '<')
             {
-                isGeneric = true;
+                isExplicitGeneric = true;
                 genericArgs = GetGenericArgs(position);
                 paramStart = this.BraceMatch(paramStart) + 1;
                 openBrace = this.GetCharAt(paramStart);
             }
 
-            if (isGeneric && defaultOverload is MethodInfo defaultMethod && defaultMethod.IsGenericMethodDefinition)
+            if (isExplicitGeneric && defaultOverload is MethodInfo defaultMethod && defaultMethod.IsGenericMethodDefinition)
             {
                 defaultOverload = defaultMethod.MakeGenericMethod(genericArgs) as T;
             }
 
-            if (mi.Count() == 1)
+            if (mi.Count() == 1 && !(defaultOverload is MethodInfo onlyMethod && onlyMethod.IsGenericMethodDefinition))
             {
                 return defaultOverload;
             }
@@ -1461,12 +1461,49 @@ namespace PaintDotNet.Effects
                 T method = mi.ElementAt(i);
                 if (method.IsGenericMethod)
                 {
-                    if (!isGeneric)
+                    if (!isExplicitGeneric)
                     {
-                        continue;
-                    }
+                        // Inferred Generic ?
+                        ParameterInfo[] paramDefinitions = method.GetParameters();
+                        if (paramDefinitions.Length != paramTypes.Count)
+                        {
+                            continue;
+                        }
 
-                    if (method.IsGenericMethodDefinition && method is MethodInfo methodInfo)
+                        Type[] argDefinitions = method.GetGenericArguments();
+                        List<Type> argTypes = new List<Type>();
+                        bool nameMatch = false;
+                        foreach (Type type in argDefinitions)
+                        {
+                            nameMatch = false;
+                            string typeName = type.Name;
+                            for (int i2 = 0; i2 < paramDefinitions.Length; i2++)
+                            {
+                                if (paramDefinitions[i2].ParameterType.Name.Equals(typeName, StringComparison.Ordinal))
+                                {
+                                    argTypes.Add(paramTypes[i2]);
+                                    nameMatch = true;
+                                    break;
+                                }
+                            }
+
+                            if (!nameMatch)
+                            {
+                                break;
+                            }
+                        }
+
+                        if (!nameMatch)
+                        {
+                            continue;
+                        }
+
+                        if (method.IsGenericMethodDefinition && method is MethodInfo methodInfo2)
+                        {
+                            method = methodInfo2.MakeGenericMethod(argTypes.ToArray()) as T;
+                        }
+                    }
+                    else if (method.IsGenericMethodDefinition && method is MethodInfo methodInfo)
                     {
                         method = methodInfo.MakeGenericMethod(genericArgs) as T;
 
