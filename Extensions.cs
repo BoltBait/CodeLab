@@ -272,6 +272,10 @@ namespace PaintDotNet.Effects
         internal static MethodInfo MakeGenericMethod(this MethodInfo method, string args)
         {
             Type[] types = StringToTypeArray(args);
+            if (types.Length == 0 || types.Length != method.GetGenericArguments().Length)
+            {
+                return method;
+            }
 
             try
             {
@@ -416,6 +420,10 @@ namespace PaintDotNet.Effects
         internal static Type MakeGenericType(this Type type, string args)
         {
             Type[] types = StringToTypeArray(args);
+            if (types.Length == 0 || types.Length != type.GetGenericArguments().Length)
+            {
+                return type;
+            }
 
             try
             {
@@ -461,6 +469,10 @@ namespace PaintDotNet.Effects
                 if (Intelli.AllTypes.TryGetValue(arg.Trim(), out Type t))
                 {
                     argTypes.Add(t);
+                }
+                else
+                {
+                    return Array.Empty<Type>();
                 }
             }
 
