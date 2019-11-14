@@ -2705,9 +2705,8 @@ namespace PaintDotNet.Effects
                 {
                     previousLine = this.CurrentLine;
 
-                    int lineLength = this.Lines[this.CurrentLine].Text.TrimEnd(new char[] { '\r', '\n' }).Length;
-                    bool noSelection = this.SelectionStart == this.SelectionEnd;
-                    if (noSelection && lineLength == 0)
+                    if (this.SelectionStart == this.SelectionEnd &&
+                        this.Lines[this.CurrentLine].Text.TrimEnd('\r', '\n').Length == 0)
                     {
                         int indent = 0;
                         int lineIndex = this.CurrentLine - 1;
@@ -2728,7 +2727,10 @@ namespace PaintDotNet.Effects
 
                         this.Selections[0].CaretVirtualSpace = indent;
                         this.Selections[0].AnchorVirtualSpace = indent;
-                        this.ChooseCaretX();
+                        if (e.Change.HasFlag(UpdateChange.Content))
+                        {
+                            this.ChooseCaretX();
+                        }
                     }
                     else
                     {
@@ -2741,7 +2743,7 @@ namespace PaintDotNet.Effects
                     this.Selections[0].CaretVirtualSpace = this.Selections[0].AnchorVirtualSpace;
                     this.ChooseCaretX();
                 }
-                else if (this.Selections[0].AnchorVirtualSpace == this.Selections[0].CaretVirtualSpace)
+                else if (this.Selections[0].AnchorVirtualSpace > 0 || this.Selections[0].CaretVirtualSpace > 0)
                 {
                     this.Selections[0].CaretVirtualSpace = 0;
                     this.Selections[0].AnchorVirtualSpace = 0;
