@@ -71,7 +71,7 @@ namespace PaintDotNet.Effects
 
                 try
                 {
-                    userEffect.SetRenderInfo(sect.Preview ? sect.PreviewToken : null, dstArgs, srcArgs);
+                    userEffect.SetRenderInfo(sect.PreviewToken, dstArgs, srcArgs);
                     fetchDebugMsg = true;
                 }
                 catch (Exception exc)
@@ -94,7 +94,7 @@ namespace PaintDotNet.Effects
                 CodeLabConfigToken sect = (CodeLabConfigToken)parameters;
                 try
                 {
-                    userEffect.Render(sect.Preview ? sect.PreviewToken : null, dstArgs, srcArgs, rois, startIndex, length);
+                    userEffect.Render(sect.PreviewToken, dstArgs, srcArgs, rois, startIndex, length);
                 }
                 catch (Exception exc)
                 {

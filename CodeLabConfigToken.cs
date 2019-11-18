@@ -27,7 +27,6 @@ namespace PaintDotNet.Effects
         internal string ScriptName;
         internal string ScriptPath;
         internal bool Dirty;
-        internal bool Preview;
         internal EffectConfigToken PreviewToken;
         internal int[] Bookmarks;
 
@@ -40,7 +39,6 @@ namespace PaintDotNet.Effects
             ScriptName = "Untitled";
             ScriptPath = "";
             Dirty = false;
-            Preview = false;
             PreviewToken = null;
             Bookmarks = Array.Empty<int>();
         }
@@ -56,7 +54,6 @@ namespace PaintDotNet.Effects
                 ScriptName = this.ScriptName,
                 ScriptPath = this.ScriptPath,
                 Dirty = this.Dirty,
-                Preview = this.Preview,
                 PreviewToken = this.PreviewToken,
                 Bookmarks = this.Bookmarks
             };

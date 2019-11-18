@@ -42,7 +42,6 @@ namespace PaintDotNet.Effects
         private bool CheckForUpdates;
         private string UpdateURL = "";
         private string UpdateVER = "";
-        private bool preview = false;
         private EffectConfigToken previewToken = null;
         private readonly Color OriginalForeColor;
         private readonly Color OriginalBackColor;
@@ -230,7 +229,6 @@ namespace PaintDotNet.Effects
             sect.ScriptName = FileName;
             sect.ScriptPath = FullScriptPath;
             sect.Dirty = tabStrip1.SelectedTabIsDirty;
-            sect.Preview = preview;
             sect.PreviewToken = previewToken;
             sect.Bookmarks = txtCode.Bookmarks;
         }
@@ -264,7 +262,6 @@ namespace PaintDotNet.Effects
                 ScriptName = "Untitled",
                 ScriptPath = "",
                 Dirty = false,
-                Preview = false,
                 PreviewToken = null,
                 Bookmarks = Array.Empty<int>()
             };
@@ -324,14 +321,12 @@ namespace PaintDotNet.Effects
                 ScriptBuilder.UserScriptObject.EnvironmentParameters = this.Effect.EnvironmentParameters;
                 using (EffectConfigDialog previewDialog = ScriptBuilder.UserScriptObject.CreateConfigDialog())
                 {
-                    preview = true;
                     previewToken = previewDialog.EffectToken;
                     previewDialog.EffectTokenChanged += (sender, e) => FinishTokenUpdate();
 
                     previewDialog.ShowDialog();
                 }
 
-                preview = false;
                 previewToken = null;
                 Build();
             }
