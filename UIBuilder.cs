@@ -221,14 +221,7 @@ namespace PaintDotNet.Effects
                 ControlMin.Enabled = false;
                 ControlMax.Text = "1";
                 ControlMax.Enabled = false;
-                if (int.TryParse(ControlDef.Text, out int result) && result > 0)
-                {
-                    ControlDef.Text = "1";
-                }
-                else
-                {
-                    ControlDef.Text = "0";
-                }
+                ControlDef.Text = (int.TryParse(ControlDef.Text, out int result) && result > 0) ? "1" : "0";
                 ControlDef.Enabled = true;
                 StyleLabel.Enabled = false;
                 ControlStyle.Enabled = false;
