@@ -46,6 +46,11 @@ namespace PaintDotNet.Effects
                         segmentLength--;
                     }
                     segmentLength++;
+
+                    if (segmentLength == 0)
+                    {
+                        segmentLength = maxCharWidth;
+                    }
                 }
 
                 splitOriginal.Add(original.Substring(i, segmentLength));
