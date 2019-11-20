@@ -1735,7 +1735,7 @@ namespace PaintDotNet.Effects
 
         private bool GoToDefinition()
         {
-            int position = this.CurrentPosition;
+            int position = this.WordStartPosition(this.CurrentPosition, true);
 
             int style = this.GetStyleAt(position);
             if (style == Style.Cpp.Comment || style == Style.Cpp.Comment + Preprocessor ||
