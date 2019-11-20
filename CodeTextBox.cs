@@ -2457,7 +2457,7 @@ namespace PaintDotNet.Effects
 
             Type type = GetReturnType(position);
 
-            if (type == null || type == typeof(void) || type.Namespace.Equals("System", StringComparison.Ordinal))
+            if (type == null || type == typeof(void) || Intelli.TypeAliases.ContainsKey(type.Name))
             {
                 return;
             }

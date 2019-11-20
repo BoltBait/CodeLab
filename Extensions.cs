@@ -419,7 +419,7 @@ namespace PaintDotNet.Effects
                 typeName = typeName.TrimEnd('&');
             }
 
-            return typeAliases.ContainsKey(typeName) ? typeAliases[typeName] : typeName;
+            return Intelli.TypeAliases.TryGetValue(typeName, out string alias) ? alias : typeName;
         }
 
         internal static Type MakeGenericType(this Type type, string args)
@@ -483,40 +483,5 @@ namespace PaintDotNet.Effects
 
             return argTypes.ToArray();
         }
-
-        private static readonly Dictionary<string, string> typeAliases = new Dictionary<string, string>
-        {
-            { "Byte", "byte" },
-            { "SByte", "sbyte" },
-            { "Int16", "short" },
-            { "UInt16", "ushort" },
-            { "Int32", "int" },
-            { "UInt32", "uint" },
-            { "Int64", "long" },
-            { "UInt64", "ulong" },
-            { "Single", "float" },
-            { "Double", "double" },
-            { "Decimal", "decimal" },
-            { "Boolean", "bool" },
-            { "Char", "char" },
-            { "String", "string" },
-            { "Object", "object" },
-            { "Byte[]", "byte[]" },
-            { "SByte[]", "sbyte[]" },
-            { "Int16[]", "short[]" },
-            { "UInt16[]", "ushort[]" },
-            { "Int32[]", "int[]" },
-            { "UInt32[]", "uint[]" },
-            { "Int64[]", "long[]" },
-            { "UInt64[]", "ulong[]" },
-            { "Single[]", "float[]" },
-            { "Double[]", "double[]" },
-            { "Decimal[]", "decimal[]" },
-            { "Boolean[]", "bool[]" },
-            { "Char[]", "char[]" },
-            { "String[]", "string[]" },
-            { "Object[]", "object[]" },
-            { "Void", "void" }
-        };
     }
 }

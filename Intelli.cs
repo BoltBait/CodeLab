@@ -31,6 +31,7 @@ namespace PaintDotNet.Effects
         internal static Dictionary<string, Type> AutoCompleteTypes { get; }
         internal static Dictionary<string, Type> AllTypes { get; }
         internal static Dictionary<string, string> Snippets { get; }
+        internal static Dictionary<string, string> TypeAliases { get; }
         internal static string[] Keywords { get; }
         internal static Type UserScript
         {
@@ -95,6 +96,41 @@ namespace PaintDotNet.Effects
 
         static Intelli()
         {
+            TypeAliases = new Dictionary<string, string>
+            {
+                { "Byte", "byte" },
+                { "SByte", "sbyte" },
+                { "Int16", "short" },
+                { "UInt16", "ushort" },
+                { "Int32", "int" },
+                { "UInt32", "uint" },
+                { "Int64", "long" },
+                { "UInt64", "ulong" },
+                { "Single", "float" },
+                { "Double", "double" },
+                { "Decimal", "decimal" },
+                { "Boolean", "bool" },
+                { "Char", "char" },
+                { "String", "string" },
+                { "Object", "object" },
+                { "Byte[]", "byte[]" },
+                { "SByte[]", "sbyte[]" },
+                { "Int16[]", "short[]" },
+                { "UInt16[]", "ushort[]" },
+                { "Int32[]", "int[]" },
+                { "UInt32[]", "uint[]" },
+                { "Int64[]", "long[]" },
+                { "UInt64[]", "ulong[]" },
+                { "Single[]", "float[]" },
+                { "Double[]", "double[]" },
+                { "Decimal[]", "decimal[]" },
+                { "Boolean[]", "bool[]" },
+                { "Char[]", "char[]" },
+                { "String[]", "string[]" },
+                { "Object[]", "object[]" },
+                { "Void", "void" }
+            };
+
             Keywords = new string[]
             {
                 "abstract", "as", "base", "break", "case", "catch", "checked", "class", "const", "continue",
