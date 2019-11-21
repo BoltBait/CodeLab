@@ -2389,28 +2389,16 @@ namespace PaintDotNet.Effects
                 return;
             }
 
-            // Ensure previous word is not Type or Variable
-            if (char.IsLetterOrDigit(this.GetCharAt(prevCharPos)))
+            if (this.GetCharAt(prevCharPos) == '>' || this.GetCharAt(prevCharPos) == ']')
             {
-                string preWord = this.GetWordFromPosition(prevCharPos);
-                if (Intelli.AllTypes.ContainsKey(preWord) || Intelli.UserDefinedTypes.ContainsKey(preWord) || Intelli.Variables.ContainsKey(preWord) || preWord == "void" || preWord == "var")
-                {
-                    return;
-                }
+                prevCharPos = this.BraceMatch(prevCharPos) - 1;
             }
-            else if (this.GetCharAt(prevCharPos) == '>' || this.GetCharAt(prevCharPos) == ']')
+
+            IntelliType prevType = this.GetIntelliType(prevCharPos);
+            string preWord = this.GetWordFromPosition(prevCharPos);
+            if (prevType != IntelliType.None || preWord == "void" || preWord == "var")
             {
-                if (this.GetCharAt(prevCharPos - 1) == '<' || this.GetCharAt(prevCharPos - 1) == '[')
-                {
-                    prevCharPos--;
-                }
-
-                string prevWord = GetLastWords(prevCharPos);
-
-                if (Intelli.AllTypes.ContainsKey(prevWord) || Intelli.UserDefinedTypes.ContainsKey(prevWord) || Intelli.Variables.ContainsKey(prevWord))
-                {
-                    return;
-                }
+                return;
             }
 
             iBox.PopulateNonMembers(this.GetCharAt(position));
