@@ -3311,6 +3311,22 @@ namespace PaintDotNet.Effects
             DoRename();
             OnBuildNeeded();
         }
+
+        private static class RenameInfo
+        {
+            internal static int Position = InvalidPosition;
+            internal static string Identifier = string.Empty;
+            internal static IntelliType IntelliType = IntelliType.None;
+
+            internal static bool IsValid => Position > InvalidPosition && Identifier.Length > 0 && IntelliType != IntelliType.None;
+
+            internal static void Clear()
+            {
+                Position = InvalidPosition;
+                Identifier = string.Empty;
+                IntelliType = IntelliType.None;
+            }
+        }
         #endregion
 
         #region Helper functions
@@ -3645,21 +3661,5 @@ namespace PaintDotNet.Effects
             internal const uint Mask = (1 << 3);
         }
         #endregion
-
-        private static class RenameInfo
-        {
-            internal static int Position = InvalidPosition;
-            internal static string Identifier = string.Empty;
-            internal static IntelliType IntelliType = IntelliType.None;
-
-            internal static bool IsValid => Position > InvalidPosition && Identifier.Length > 0 && IntelliType != IntelliType.None;
-
-            internal static void Clear()
-            {
-                Position = InvalidPosition;
-                Identifier = string.Empty;
-                IntelliType = IntelliType.None;
-            }
-        }
     }
 }
