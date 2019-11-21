@@ -3258,6 +3258,11 @@ namespace PaintDotNet.Effects
 
         private void DoRename()
         {
+            if (!RenameInfo.IsValid)
+            {
+                return;
+            }
+
             this.SetEmptySelection(RenameInfo.Position);
             string newName = this.GetWordFromPosition(RenameInfo.Position);
 
@@ -3302,6 +3307,7 @@ namespace PaintDotNet.Effects
 
         private void RenameButton_Click(object sender, EventArgs e)
         {
+            lightBulbMenu.Hide();
             DoRename();
             OnBuildNeeded();
         }
@@ -3645,6 +3651,8 @@ namespace PaintDotNet.Effects
             internal static int Position = InvalidPosition;
             internal static string Identifier = string.Empty;
             internal static IntelliType IntelliType = IntelliType.None;
+
+            internal static bool IsValid => Position > InvalidPosition && Identifier.Length > 0 && IntelliType != IntelliType.None;
 
             internal static void Clear()
             {
