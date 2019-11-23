@@ -558,7 +558,7 @@ namespace PaintDotNet.Effects
         {
             if (errorList.SelectedIndex > -1 && errorList.SelectedItem is ScriptError error)
             {
-                Services.GetService<IShellService>().LaunchUrl(null, $"https://docs.microsoft.com/dotnet/csharp/language-reference/compiler-messages/{error.ErrorNumber}");
+                LaunchUrl($"https://docs.microsoft.com/dotnet/csharp/language-reference/compiler-messages/{error.ErrorNumber}");
             }
         }
 
@@ -746,6 +746,11 @@ namespace PaintDotNet.Effects
             OutputTextBox.BackColor = PdnTheme.BackColor;
             ShowErrors.ForeColor = (ShowErrors.Text == "Show Errors List") ? this.ForeColor : Color.Red;
         }
+
+        private void LaunchUrl(string url)
+        {
+            this.Services.GetService<IShellService>().LaunchUrl(null, url);
+        }
         #endregion
 
         #region Freshness Check functions
@@ -757,7 +762,7 @@ namespace PaintDotNet.Effects
                 {
                     if (FlexibleMessageBox.Show("An update to CodeLab is available.\n\nWould you like to download CodeLab v" + UpdateVER + "?\n\n(This will not close your current CodeLab session.)", "CodeLab Updater", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
                     {
-                        Services.GetService<IShellService>().LaunchUrl(null, UpdateURL);
+                        LaunchUrl(UpdateURL);
                     }
                     else
                     {
@@ -1592,7 +1597,7 @@ namespace PaintDotNet.Effects
         #region Help menu Event functions
         private void helpTopicsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Services.GetService<IShellService>().LaunchUrl(null, "https://www.BoltBait.com/pdn/codelab/help");
+            LaunchUrl("https://www.BoltBait.com/pdn/codelab/help");
         }
 
         private void checkForUpdatesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1615,7 +1620,7 @@ namespace PaintDotNet.Effects
 
         private void changesInThisVersionToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Services.GetService<IShellService>().LaunchUrl(null, "https://www.boltbait.com/pdn/codelab/history/#v" + ThisVersion);
+            LaunchUrl("https://www.boltbait.com/pdn/codelab/history/#v" + ThisVersion);
         }
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
