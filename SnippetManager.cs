@@ -465,5 +465,14 @@ namespace PaintDotNet.Effects
             }
             return sb.ToString();
         }
+
+        private void CloseButton_Click(object sender, EventArgs e)
+        {
+            if (this.dirty && (int)FlexibleMessageBox.Show($"There are unsaved Changes to {this.currentSnippet}. Discard?", "Unsaved Changes", new string[] { "Discard", "Return to Editor" }, MessageBoxIcon.Question) == 2)
+            {
+                return;
+            }
+            this.Close();
+        }
     }
 }

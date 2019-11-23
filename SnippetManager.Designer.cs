@@ -41,6 +41,7 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.ExportToFileButton = new PaintDotNet.Effects.ScaledToolStripMenuItem();
             this.ExportToClipButton = new PaintDotNet.Effects.ScaledToolStripMenuItem();
+            this.CloseButton = new System.Windows.Forms.Button();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -176,10 +177,22 @@
             this.ExportToClipButton.Text = "Export JSON to Clipboard";
             this.ExportToClipButton.Click += new System.EventHandler(this.ExportToClipButton_Click);
             // 
+            // CloseButton
+            // 
+            this.CloseButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.CloseButton.Location = new System.Drawing.Point(496, 352);
+            this.CloseButton.Name = "CloseButton";
+            this.CloseButton.Size = new System.Drawing.Size(75, 23);
+            this.CloseButton.TabIndex = 8;
+            this.CloseButton.Text = "Close";
+            this.CloseButton.UseVisualStyleBackColor = true;
+            this.CloseButton.Click += new System.EventHandler(this.CloseButton_Click);
+            // 
             // SnippetManager
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.ClientSize = new System.Drawing.Size(584, 362);
+            this.ClientSize = new System.Drawing.Size(584, 383);
+            this.Controls.Add(this.CloseButton);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.DeleteButton);
             this.Controls.Add(this.SnippetBody);
@@ -211,5 +224,6 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private ScaledToolStripMenuItem ExportToFileButton;
         private ScaledToolStripMenuItem ExportToClipButton;
+        private System.Windows.Forms.Button CloseButton;
     }
 }
