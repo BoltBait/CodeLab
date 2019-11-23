@@ -613,13 +613,7 @@ namespace PaintDotNet.Effects
                 string exc = sect.LastExceptions[0].ToString();
                 sect.LastExceptions.Clear();
 
-                string numString = exc.Substring(exc.IndexOf(".0.cs:line ", StringComparison.Ordinal) + 11, 4).Trim();
-                if (int.TryParse(numString, out int lineNum))
-                {
-                    lineNum -= ScriptBuilder.LineOffset;
-                }
-
-                errorList.Items.Add($"Unhandled Exception at line {lineNum}: \r\n{exc}");
+                errorList.Items.Add(exc);
                 ShowErrors.Text = $"Show Errors List ({errorList.Items.Count})";
                 ShowErrors.ForeColor = Color.Red;
             }
