@@ -49,8 +49,16 @@ namespace PaintDotNet.Effects
 
         protected override void OnClosing(CancelEventArgs e)
         {
-            JavaScriptSerializer ser = new JavaScriptSerializer();
-            Settings.Snippets = ser.Serialize(Intelli.Snippets);
+            if (this.dirty && (int)FlexibleMessageBox.Show($"There are unsaved Changes to {this.currentSnippet}. Discard?", "Unsaved Changes", new string[] { "Discard", "Return to Editor" }, MessageBoxIcon.Question) == 2)
+            {
+                e.Cancel = true;
+            }
+
+            if (!e.Cancel)
+            {
+                JavaScriptSerializer ser = new JavaScriptSerializer();
+                Settings.Snippets = ser.Serialize(Intelli.Snippets);
+            }
 
             base.OnClosing(e);
         }
@@ -468,10 +476,6 @@ namespace PaintDotNet.Effects
 
         private void CloseButton_Click(object sender, EventArgs e)
         {
-            if (this.dirty && (int)FlexibleMessageBox.Show($"There are unsaved Changes to {this.currentSnippet}. Discard?", "Unsaved Changes", new string[] { "Discard", "Return to Editor" }, MessageBoxIcon.Question) == 2)
-            {
-                return;
-            }
             this.Close();
         }
     }
