@@ -75,6 +75,11 @@ namespace PaintDotNet.Effects
             Task.Run(() => Intelli.Keywords); // Forces the Intelli class to start initializing in the background
             InitializeComponent();
 
+#if FASTDEBUG
+            this.Icon = ResUtil.CreateIcon("CodeLab");
+            this.ShowInTaskbar = true;
+#endif
+
             #region Load Settings from registry
             if (Settings.WordWrap)
             {
@@ -302,6 +307,9 @@ namespace PaintDotNet.Effects
 
         private void RunWithDialog()
         {
+#if FASTDEBUG
+            return;
+#endif
             tmrCompile.Enabled = false;
             Build();
             if (errorList.Items.Count != 0)
@@ -749,7 +757,11 @@ namespace PaintDotNet.Effects
 
         private void LaunchUrl(string url)
         {
+#if FASTDEBUG
+            System.Diagnostics.Process.Start(url);
+#else
             this.Services.GetService<IShellService>().LaunchUrl(null, url);
+#endif
         }
         #endregion
 
@@ -926,8 +938,11 @@ namespace PaintDotNet.Effects
                 FlexibleMessageBox.Show("Before you can build a DLL, you must first save your source file using the File > Save as... menu.", "Build Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-
+#if FASTDEBUG
+            const bool isClassic = false;
+#else
             bool isClassic = this.Services.GetService<IAppInfoService>().InstallType == AppInstallType.Classic;
+#endif
             BuildForm buildForm = new BuildForm(fileName, txtCode.Text, FullScriptPath, isClassic);
             if (buildForm.ShowDialog() != DialogResult.OK)
             {

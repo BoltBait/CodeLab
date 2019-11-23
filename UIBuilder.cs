@@ -986,6 +986,9 @@ namespace PaintDotNet.Effects
 
         private void PreviewButton_Click(object sender, EventArgs e)
         {
+#if FASTDEBUG
+            return;
+#endif
             string uiCode = MasterList.Select(uiE => uiE.ToSourceString(false)).Join("");
             if (!ScriptBuilder.BuildUiPreview(uiCode))
             {

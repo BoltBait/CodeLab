@@ -36,6 +36,22 @@
     <Prefer32Bit>false</Prefer32Bit>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'FastDebug|AnyCPU' ">
+    <OutputType>WinExe</OutputType>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\FastDebug\</OutputPath>
+    <DefineConstants>FASTDEBUG;DEBUG;TRACE</DefineConstants>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <Reference Include="PaintDotNet.Base">
@@ -84,6 +100,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="MessageBox.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -386,7 +403,7 @@
     <PostBuildEvent>if $(ConfigurationName) == Release (
     "C:\Program Files (x86)\Microsoft\ILMerge\ILMerge.exe" /ndebug /targetplatform:4.0,"C:\Windows\Microsoft.NET\Framework\v4.0.30319" /out:"$(TargetDir)Desktop\CodeLab.dll" "$(TargetDir)CodeLab.dll" "$(TargetDir)ScintillaNET.dll"
     cmd /c explorer "$(TargetDir)Desktop"
-) else (
+) else if $(ConfigurationName) == Debug (
     "C:\Program Files (x86)\Microsoft\ILMerge\ILMerge.exe" /targetplatform:4.0,"C:\Windows\Microsoft.NET\Framework\v4.0.30319" /out:"$(TargetDir)Desktop\CodeLab.dll" "$(TargetDir)CodeLab.dll" "$(TargetDir)ScintillaNET.dll"
     copy "$(TargetDir)Desktop\$(TargetFileName)" "C:\Program Files\Paint.NET\Effects\"
 )
