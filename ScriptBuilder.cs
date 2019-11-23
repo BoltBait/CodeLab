@@ -28,7 +28,14 @@ namespace PaintDotNet.Effects
     internal static class ScriptBuilder
     {
         private static readonly CSharpCodeProvider cscp = new CSharpCodeProvider();
-        private static readonly CompilerParameters param = new CompilerParameters();
+        private static readonly CompilerParameters param = new CompilerParameters(AssemblyUtil.ReferenceAssemblies.Select(a => a.Location).ToArray())
+        {
+            GenerateInMemory = true,
+            IncludeDebugInformation = false,
+            GenerateExecutable = false,
+            WarningLevel = 0,     // Turn off all warnings
+            CompilerOptions = defaultOptions
+        };
         private static CompilerResults result;
         private static Effect userScriptObject;
         private static int lineOffset;
@@ -61,18 +68,6 @@ namespace PaintDotNet.Effects
             }
         }
         #endregion
-
-        static ScriptBuilder()
-        {
-            param.GenerateInMemory = true;
-            param.IncludeDebugInformation = false;
-            param.GenerateExecutable = false;
-            param.WarningLevel = 0;     // Turn off all warnings
-            param.CompilerOptions = defaultOptions;
-            param.ReferencedAssemblies.AddRange(AssemblyUtil.ReferenceAssemblies.Select(assem => assem.Location).ToArray());
-
-            lineOffset = (ScriptWriter.UsingPartCode + ScriptWriter.prepend_code).CountLines();
-        }
 
         internal static bool Build(string scriptText, bool debug)
         {
