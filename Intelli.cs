@@ -202,24 +202,12 @@ namespace PaintDotNet.Effects
 
             AutoCompleteTypes = new Dictionary<string, Type>(AllTypes);
 
-            // Add the referenced assembly types
-            List<AssemblyName> assemblies = new List<AssemblyName>();
-            assemblies.Add(typeof(Effect).Assembly.GetName());
-            assemblies.AddRange(typeof(Effect).Assembly.GetReferencedAssemblies());
-
             List<MethodInfo> extMethodsList = new List<MethodInfo>();
 
-            foreach (AssemblyName a in assemblies)
+            // Add the referenced assembly types
+            foreach (Assembly a in AssemblyUtil.ReferenceAssemblies)
             {
-                if (a.Name.Equals("PaintDotNet.Framework") || a.Name.Equals("PaintDotNet.Resources") || a.Name.Equals("PaintDotNet.SystemLayer"))
-                {
-                    continue;
-                }
-
-                Assembly subjectAssembly = Assembly.Load(a);
-                Type[] assemblyTypes = subjectAssembly.GetExportedTypes();
-
-                foreach (Type type in assemblyTypes)
+                foreach (Type type in a.GetExportedTypes())
                 {
                     string name = (type.IsGenericType) ? Regex.Replace(type.Name, @"`\d", string.Empty) : type.Name;
                     if (!AllTypes.ContainsKey(name))

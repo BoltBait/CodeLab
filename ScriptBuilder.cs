@@ -19,9 +19,9 @@ using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
 using System.Text.RegularExpressions;
 using System.IO.Compression;
+using System.Linq;
 
 namespace PaintDotNet.Effects
 {
@@ -69,31 +69,7 @@ namespace PaintDotNet.Effects
             param.GenerateExecutable = false;
             param.WarningLevel = 0;     // Turn off all warnings
             param.CompilerOptions = defaultOptions;
-
-            // Get all loaded assemblies
-            Assembly[] allLoadedAssemblies = AppDomain.CurrentDomain.GetAssemblies();
-
-            // Locate the dir where codelab.dll is
-            string effectsPluginsPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            string fileTypePluignsPath = Path.Combine(Directory.GetParent(effectsPluginsPath).FullName, "FileTypes");
-
-            foreach (Assembly assembly in allLoadedAssemblies)
-            {
-                try
-                {
-                    // Ignore assemblies in the Effects and FileTypes directories
-                    if (!assembly.Location.StartsWith(effectsPluginsPath, StringComparison.Ordinal) &&
-                        !assembly.Location.StartsWith(fileTypePluignsPath, StringComparison.Ordinal))
-                    {
-                        // Make assembly accessible to the plugin being written in the editor
-                        param.ReferencedAssemblies.Add(assembly.Location);
-                    }
-                }
-                catch
-                {
-                    // Just don't crash. It wasn't that important anyway.
-                }
-            }
+            param.ReferencedAssemblies.AddRange(AssemblyUtil.ReferenceAssemblies.Select(assem => assem.Location).ToArray());
 
             lineOffset = (ScriptWriter.UsingPartCode + ScriptWriter.prepend_code).CountLines();
         }
