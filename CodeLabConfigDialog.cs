@@ -725,12 +725,18 @@ namespace PaintDotNet.Effects
             tmrCompile.Enabled = false;
             Build();
             tmrExceptionCheck.Enabled = false;
+#if FASTDEBUG
+            this.Close();
+#endif
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
             tmrExceptionCheck.Enabled = false;
             tmrCompile.Enabled = false;
+#if FASTDEBUG
+            this.Close();
+#endif
         }
 
         private static bool IsFontInstalled(string fontName)
