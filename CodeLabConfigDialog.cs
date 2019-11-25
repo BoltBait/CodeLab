@@ -20,6 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -1864,28 +1865,10 @@ namespace PaintDotNet.Effects
             {
                 recents = filePath + "|" + recents;
 
-                var paths = recents.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
-                List<string> recentsList = new List<string>();
-                foreach (string itemPath in paths)
-                {
-                    bool contains = false;
-                    foreach (string listItem in recentsList)
-                    {
-                        if (listItem.Equals(itemPath, StringComparison.OrdinalIgnoreCase))
-                        {
-                            contains = true;
-                            break;
-                        }
-                    }
+                string[] paths = recents.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries).Distinct().ToArray();
 
-                    if (!contains)
-                    {
-                        recentsList.Add(itemPath);
-                    }
-                }
-
-                int length = Math.Min(8, recentsList.Count);
-                recents = string.Join("|", recentsList.ToArray(), 0, length);
+                int length = Math.Min(8, paths.Length);
+                recents = string.Join("|", paths, 0, length);
             }
 
             Settings.RecentDocs = recents;
