@@ -389,6 +389,11 @@ namespace PaintDotNet.Effects
             return null;
         }
 
+        internal static bool IsObsolete(this MemberInfo member)
+        {
+            return member.IsDefined(typeof(ObsoleteAttribute), false);
+        }
+
         internal static string GetObjectType(this Type type)
         {
             if (type.IsEnum)

@@ -222,7 +222,7 @@ namespace PaintDotNet.Effects
                         AllTypes.Add(name, type);
                     }
 
-                    if (type.IsNested || type.IsDefined(typeof(ObsoleteAttribute), false))
+                    if (type.IsNested || type.IsObsolete())
                     {
                         continue;
                     }
@@ -232,7 +232,7 @@ namespace PaintDotNet.Effects
                     {
                         extMethodsList.AddRange(
                             type.GetMethods(BindingFlags.Static | BindingFlags.Public)
-                            .Where(method => method.IsOrHasExtension() && !method.IsDefined(typeof(ObsoleteAttribute), false)));
+                            .Where(method => method.IsOrHasExtension() && !method.IsObsolete()));
                     }
                     else if (namespaceWhiteList.Contains(type.Namespace) &&
                         !type.Name.StartsWith("Property", StringComparison.OrdinalIgnoreCase) &&
