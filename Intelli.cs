@@ -204,6 +204,13 @@ namespace PaintDotNet.Effects
 
             List<MethodInfo> extMethodsList = new List<MethodInfo>();
 
+            string[] namespaceWhiteList =
+            {
+                "Microsoft.Win32", "PaintDotNet", "PaintDotNet.AppModel", "PaintDotNet.Effects", "System",
+                "System.Collections.Generic", "System.Diagnostics", "System.Drawing", "System.Drawing.Drawing2D",
+                "System.Drawing.Text", "System.IO", "System.IO.Compression", "System.Text.RegularExpressions"
+            };
+
             // Add the referenced assembly types
             foreach (Assembly a in AssemblyUtil.ReferenceAssemblies)
             {
@@ -215,18 +222,20 @@ namespace PaintDotNet.Effects
                         AllTypes.Add(name, type);
                     }
 
+                    if (type.IsNested || type.IsDefined(typeof(ObsoleteAttribute), false))
+                    {
+                        continue;
+                    }
+
                     // Gather extensions methods contained in each type
-                    if (type.IsSealed && !type.IsGenericType && !type.IsNested && type.IsOrHasExtension())
+                    if (type.IsSealed && !type.IsGenericType && type.IsOrHasExtension())
                     {
                         extMethodsList.AddRange(
                             type.GetMethods(BindingFlags.Static | BindingFlags.Public)
-                            .Where(method => method.IsOrHasExtension()));
+                            .Where(method => method.IsOrHasExtension() && !method.IsDefined(typeof(ObsoleteAttribute), false)));
                     }
-                    else if ((type.Namespace == "Microsoft.Win32" || type.Namespace == "PaintDotNet" || type.Namespace == "PaintDotNet.Effects" || type.Namespace == "PaintDotNet.AppModel" || type.Namespace == "System" ||
-                        type.Namespace == "System.Collections.Generic" || type.Namespace == "System.Diagnostics" || type.Namespace == "System.IO.Compression" ||
-                        type.Namespace == "System.Drawing" || type.Namespace == "System.Drawing.Drawing2D" || type.Namespace == "System.Drawing.Text" ||
-                        type.Namespace == "System.IO" || type.Namespace == "System.Linq" || type.Namespace == "System.Text.RegularExpressions") &&
-                        !type.Name.StartsWith("Property", StringComparison.OrdinalIgnoreCase) && !type.IsObsolete(false) &&
+                    else if (namespaceWhiteList.Contains(type.Namespace) &&
+                        !type.Name.StartsWith("Property", StringComparison.OrdinalIgnoreCase) &&
                         !AutoCompleteTypes.ContainsKey(type.Name)
                     )
                     {
