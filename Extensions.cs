@@ -357,7 +357,7 @@ namespace PaintDotNet.Effects
                 Type[] args = extType.GenericTypeArguments;
                 if (args.Length == 1 && args[0].IsGenericParameter && extType.Name.Equals("IEnumerable`1", StringComparison.OrdinalIgnoreCase))
                 {
-                    Type innerType = type.IsArray ? type.GetElementType() : type.IsGenericType ? type.GenericTypeArguments[0] : type;
+                    Type innerType = type.IsArray ? type.GetElementType() : (type.IsGenericType && !type.IsGenericTypeDefinition) ? type.GenericTypeArguments[0] : type;
                     Type[] constraints = args[0].GetGenericParameterConstraints();
                     if (constraints.All(t => t.IsAssignableFrom(innerType)))
                     {
