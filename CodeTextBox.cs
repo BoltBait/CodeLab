@@ -3476,7 +3476,7 @@ namespace PaintDotNet.Effects
         #endregion
 
         #region Document Tabs functions
-        internal void CreateNewDocument(Guid guid)
+        internal void CreateNewDocument(Guid guid, Language language)
         {
             this.findPanel.Hide();
 
@@ -3489,13 +3489,21 @@ namespace PaintDotNet.Effects
 
             this.Document = newDocument;
 
-            this.Lexer = Lexer.Cpp;
-            indexForPurpleWords = this.AllocateSubstyles(Style.Cpp.Identifier, 1);
-            this.UpdateSyntaxHighlighting();
+            switch (language)
+            {
+                case Language.None:
 
-            this.SetProperty("fold", "1");
-            this.SetProperty("fold.compact", "0");
-            this.AutomaticFold = (AutomaticFold.Show | AutomaticFold.Click | AutomaticFold.Change);
+                    break;
+                case Language.CSharp:
+                    this.Lexer = Lexer.Cpp;
+                    indexForPurpleWords = this.AllocateSubstyles(Style.Cpp.Identifier, 1);
+                    this.UpdateSyntaxHighlighting();
+
+                    this.SetProperty("fold", "1");
+                    this.SetProperty("fold.compact", "0");
+                    this.AutomaticFold = (AutomaticFold.Show | AutomaticFold.Click | AutomaticFold.Change);
+                    break;
+            }
         }
 
         internal void SwitchToDocument(Guid guid)

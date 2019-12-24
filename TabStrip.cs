@@ -65,6 +65,11 @@ namespace PaintDotNet.Effects
             get => activeTab.Guid;
         }
 
+        internal Language SelectedTabLang
+        {
+            get => activeTab.Language;
+        }
+
         internal string SelectedTabTitle
         {
             get => activeTab.Title;
@@ -219,14 +224,14 @@ namespace PaintDotNet.Effects
                 SwitchToTab(tabIndexToSwitchTo);
             }
 
-            OnTabClosed(new TabEventArgs(guidOfClosedTab));
+            OnTabClosed(new TabEventArgs(guidOfClosedTab, Language.None));
         }
 
-        internal void NewTab(string title, string path)
+        internal void NewTab(string title, string path, Language language)
         {
             int tabIndex = this.toolStrip1.Items.Count;
 
-            Tab newTab = new Tab(title, path);
+            Tab newTab = new Tab(title, path, language);
             newTab.Index = tabIndex;
             newTab.Click += Tab_Click;
             newTab.MouseDown += Tab_MouseDown;
@@ -241,7 +246,7 @@ namespace PaintDotNet.Effects
             activeTab.Checked = true;
             activeTab.Overflow = ToolStripItemOverflow.Never;
 
-            OnNewTabCreated(new TabEventArgs(newTab.Guid));
+            OnNewTabCreated(new TabEventArgs(newTab.Guid, language));
         }
 
         private void UpdateIndexes()
@@ -294,10 +299,12 @@ namespace PaintDotNet.Effects
     public class TabEventArgs : EventArgs
     {
         public Guid TabGuid { get; }
+        public Language Language { get; }
 
-        public TabEventArgs(Guid tabGuid)
+        public TabEventArgs(Guid tabGuid, Language language)
         {
             this.TabGuid = tabGuid;
+            this.Language = language;
         }
     }
 
@@ -305,6 +312,7 @@ namespace PaintDotNet.Effects
     {
         internal int Index { get; set; }
         internal Guid Guid { get; }
+        internal Language Language { get; }
         internal bool IsDirty { get; set; }
         internal string Title { get; set; }
         internal string Path { get; set; }
@@ -317,29 +325,40 @@ namespace PaintDotNet.Effects
         /// Do NOT USE. For Initial Tab only.
         /// </summary>
         public Tab()
-            : this("Untitled", string.Empty)
+            : this("Untitled", string.Empty, Language.CSharp)
         {
             this.Guid = Guid.Empty;
         }
 
-        internal Tab(string title, string path)
+        internal Tab(string title, string path, Language language)
         {
             this.ImageAlign = ContentAlignment.MiddleLeft;
             this.Margin = new Padding(0, 5, 3, 0);
             this.AutoToolTip = false;
 
-            string imagePath = System.IO.Path.ChangeExtension(path, ".png");
-            if (File.Exists(imagePath))
+            switch (language)
             {
-                this.Image = ResUtil.GetBitmapFromFile(imagePath);
+                case Language.CSharp:
+                    string imagePath = System.IO.Path.ChangeExtension(path, ".png");
+                    if (File.Exists(imagePath))
+                    {
+                        this.Image = ResUtil.GetBitmapFromFile(imagePath);
+                    }
+                    else
+                    {
+                        this.ImageName = "Untitled";
+                    }
+                    break;
+                case Language.None:
+                default:
+                    this.ImageName = "PlainText";
+                    break;
             }
-            else
-            {
-                this.ImageName = "Untitled";
-            }
+
             this.Text = title;
             this.ToolTipText = path.IsNullOrEmpty() ? title : path;
             this.Guid = Guid.NewGuid();
+            this.Language = language;
             this.IsDirty = false;
             this.Title = title;
             this.Path = path;

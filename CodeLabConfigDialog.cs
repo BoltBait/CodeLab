@@ -277,6 +277,11 @@ namespace PaintDotNet.Effects
         #region Build Script actions
         private void Build()
         {
+            if (tabStrip1.SelectedTabLang != Language.CSharp)
+            {
+                return;
+            }
+
             ScriptBuilder.Build(txtCode.Text, OutputTextBox.Visible);
 
             DisplayErrors();
@@ -288,6 +293,11 @@ namespace PaintDotNet.Effects
 
         private async Task BuildAsync()
         {
+            if (tabStrip1.SelectedTabLang != Language.CSharp)
+            {
+                return;
+            }
+
             tmrCompile.Enabled = false;
             string code = txtCode.Text;
             bool debug = OutputTextBox.Visible;
@@ -344,13 +354,8 @@ namespace PaintDotNet.Effects
 
         private void DisplayErrors()
         {
-            errorList.Items.Clear();
-            toolTips.SetToolTip(errorList, "");
-
+            ClearErrorList();
             txtCode.ClearErrors();
-
-            ShowErrors.Text = "Show Errors List";
-            ShowErrors.ForeColor = this.ForeColor;
 
             if (ScriptBuilder.Errors.Length == 0)
             {
@@ -373,6 +378,16 @@ namespace PaintDotNet.Effects
             ShowErrors.Text = $"Show Errors List ({errorList.Items.Count})";
             ShowErrors.ForeColor = Color.Red;
         }
+
+        private void ClearErrorList()
+        {
+            errorList.Items.Clear();
+            toolTips.SetToolTip(errorList, "");
+
+            ShowErrors.Text = "Show Errors List";
+            ShowErrors.ForeColor = this.ForeColor;
+        }
+
 
         private void ResetScript()
         {
@@ -403,13 +418,25 @@ namespace PaintDotNet.Effects
             FullScriptPath = filePath;
             FileName = Path.GetFileNameWithoutExtension(filePath);
 
-            if (tabStrip1.SelectedTabGuid == Guid.Empty && txtCode.IsVirgin)
+            Language lang;
+            switch (Path.GetExtension(filePath))
+            {
+                case "txt":
+                    lang = Language.None;
+                    break;
+                case "cs":
+                default:
+                    lang = Language.CSharp;
+                    break;
+            }
+
+            if (tabStrip1.SelectedTabGuid == Guid.Empty && tabStrip1.SelectedTabLang == lang && txtCode.IsVirgin)
             {
                 UpdateTabProperties();
             }
             else
             {
-                tabStrip1.NewTab(FileName, FullScriptPath);
+                tabStrip1.NewTab(FileName, FullScriptPath, lang);
             }
 
             txtCode.Text = fileContents;
@@ -423,7 +450,7 @@ namespace PaintDotNet.Effects
             switch (buttonPressed)
             {
                 case 1: // Save
-                    if (!SaveScript())
+                    if (!SaveFile())
                     {
                         txtCode.Focus();
                         return DialogResult.Cancel;
@@ -439,11 +466,11 @@ namespace PaintDotNet.Effects
             return DialogResult.None;
         }
 
-        private bool SaveScript()
+        private bool SaveFile()
         {
             if (FullScriptPath.IsNullOrEmpty() || !File.Exists(FullScriptPath))
             {
-                return SaveAsScript();
+                return SaveAsFile();
             }
 
             bool saved = false;
@@ -459,10 +486,11 @@ namespace PaintDotNet.Effects
             return saved;
         }
 
-        private bool SaveAsScript()
+        private bool SaveAsFile()
         {
             string fileName = this.FileName;
-            if (fileName.Equals("Untitled", StringComparison.Ordinal))
+            Language lang = tabStrip1.SelectedTabLang;
+            if (lang == Language.CSharp && fileName.Equals("Untitled", StringComparison.Ordinal))
             {
                 Match wtn = Regex.Match(txtCode.Text, @"//[\s-[\r\n]]*Name[\s-[\r\n]]*:[\s-[\r\n]]*(?<scriptName>.*)(?=\r?\n|$)", RegexOptions.IgnoreCase);
                 if (wtn.Success)
@@ -480,20 +508,35 @@ namespace PaintDotNet.Effects
                 }
             }
 
+            string fileExt;
+            string description;
+            switch (lang)
+            {
+                case Language.None:
+                    fileExt = ".txt";
+                    description = "Plain Text";
+                    break;
+                case Language.CSharp:
+                default:
+                    fileExt = ".cs";
+                    description = "C# Code";
+                    break;
+            }
+
             SaveFileDialog sfd = new SaveFileDialog
             {
                 Title = "Save User Script",
-                DefaultExt = ".cs",
-                Filter = "C# Code Files (*.CS)|*.cs",
+                DefaultExt = fileExt,
+                Filter = description + " Files (*" + fileExt.ToUpperInvariant() + ")|*" + fileExt,
                 OverwritePrompt = true,
                 AddExtension = true,
-                FileName = fileName + ".cs",
+                FileName = fileName + fileExt,
                 InitialDirectory = Settings.LastSourceDirectory
             };
 
             sfd.FileOk += (sender, e) =>
             {
-                if (!char.IsLetter(Path.GetFileName(sfd.FileName), 0))
+                if (lang == Language.CSharp && !char.IsLetter(Path.GetFileName(sfd.FileName), 0))
                 {
                     e.Cancel = true;
                     FlexibleMessageBox.Show("The filename must begin with a letter.", "Save User Script", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -862,7 +905,7 @@ namespace PaintDotNet.Effects
         #endregion
 
         #region Common functions for button/menu events
-        private void CreateNewFile()
+        private void CreateNewEffect()
         {
             FileNew fn = new FileNew(this.EffectFlag);
             if (fn.ShowDialog() == DialogResult.OK)
@@ -870,13 +913,13 @@ namespace PaintDotNet.Effects
                 FileName = "Untitled";
                 FullScriptPath = "";
 
-                if (tabStrip1.SelectedTabGuid == Guid.Empty && txtCode.IsVirgin)
+                if (tabStrip1.SelectedTabGuid == Guid.Empty && tabStrip1.SelectedTabLang == Language.CSharp && txtCode.IsVirgin)
                 {
                     UpdateTabProperties();
                 }
                 else
                 {
-                    tabStrip1.NewTab(FileName, FullScriptPath);
+                    tabStrip1.NewTab(FileName, FullScriptPath, Language.CSharp);
                 }
 
                 txtCode.Text = fn.CodeTemplate;
@@ -888,13 +931,24 @@ namespace PaintDotNet.Effects
             txtCode.Focus();
         }
 
+        private void CreateNewPlainText()
+        {
+            FileName = "Untitled";
+            FullScriptPath = string.Empty;
+
+            tabStrip1.NewTab(FileName, FullScriptPath, Language.None);
+
+            txtCode.Text = "This is a test\r\nof plain text."; //string.Empty;
+            txtCode.EmptyUndoBuffer();
+        }
+
         private void Open()
         {
             OpenFileDialog ofd = new OpenFileDialog
             {
                 Title = "Load User Script",
                 DefaultExt = ".cs",
-                Filter = "C# Code Files (*.CS)|*.cs",
+                Filter = "All Support Files (*.CS; *.TXT)|*.cs;*.txt|C# Code Files (*.CS)|*.cs|Plain Text Files (*.TXT)|*.txt",
                 Multiselect = false,
                 InitialDirectory = Settings.LastSourceDirectory
             };
@@ -914,7 +968,7 @@ namespace PaintDotNet.Effects
 
         private void Save()
         {
-            if (SaveScript())
+            if (SaveFile())
             {
                 txtCode.SetSavePoint();
             }
@@ -923,7 +977,7 @@ namespace PaintDotNet.Effects
 
         private void SaveAs()
         {
-            if (SaveAsScript())
+            if (SaveAsFile())
             {
                 txtCode.SetSavePoint();
             }
@@ -1105,9 +1159,24 @@ namespace PaintDotNet.Effects
         #endregion
 
         #region File Menu Event functions
-        private void newToolStripMenuItem_Click(object sender, EventArgs e)
+        private void NewEffectMenuItem_Click(object sender, EventArgs e)
         {
-            CreateNewFile();
+            CreateNewEffect();
+        }
+
+        private void NewFileTypeMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void NewShapeMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void NewTextMenuItem_Click(object sender, EventArgs e)
+        {
+            CreateNewPlainText();
         }
 
         private void loadToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1734,7 +1803,7 @@ namespace PaintDotNet.Effects
         #region Toolbar Event functions
         private void NewButton_Click(object sender, EventArgs e)
         {
-            CreateNewFile();
+            CreateNewEffect();
         }
 
         private void OpenButton_Click(object sender, EventArgs e)
@@ -1993,14 +2062,53 @@ namespace PaintDotNet.Effects
             UpdateWindowTitle();
             txtCode.SwitchToDocument(tabStrip1.SelectedTabGuid);
             UpdateToolBarButtons();
-            BuildAsync();
+
+            if (tabStrip1.SelectedTabLang == Language.CSharp)
+            {
+                BuildAsync();
+                SaveDLLButton.Enabled = true;
+                saveAsDLLToolStripMenuItem.Enabled = true;
+                UIDesignerButton.Enabled = true;
+                userInterfaceDesignerToolStripMenuItem.Enabled = true;
+                RunButton.Enabled = true;
+                previewEffectMenuItem.Enabled = true;
+            }
+            else
+            {
+                ClearErrorList();
+                SaveDLLButton.Enabled = false;
+                saveAsDLLToolStripMenuItem.Enabled = false;
+                UIDesignerButton.Enabled = false;
+                userInterfaceDesignerToolStripMenuItem.Enabled = false;
+                RunButton.Enabled = false;
+                previewEffectMenuItem.Enabled = false;
+            }
         }
 
         private void tabStrip1_NewTabCreated(object sender, TabEventArgs e)
         {
-            txtCode.CreateNewDocument(e.TabGuid);
+            txtCode.CreateNewDocument(e.TabGuid, e.Language);
             UpdateWindowTitle();
             UpdateToolBarButtons();
+
+            if (tabStrip1.SelectedTabLang == Language.CSharp)
+            {
+                SaveDLLButton.Enabled = true;
+                saveAsDLLToolStripMenuItem.Enabled = true;
+                UIDesignerButton.Enabled = true;
+                userInterfaceDesignerToolStripMenuItem.Enabled = true;
+                RunButton.Enabled = true;
+                previewEffectMenuItem.Enabled = true;
+            }
+            else
+            {
+                SaveDLLButton.Enabled = false;
+                saveAsDLLToolStripMenuItem.Enabled = false;
+                UIDesignerButton.Enabled = false;
+                userInterfaceDesignerToolStripMenuItem.Enabled = false;
+                RunButton.Enabled = false;
+                previewEffectMenuItem.Enabled = false;
+            }
         }
 
         private void tabStrip1_TabClosingAndDirty(object sender, System.ComponentModel.CancelEventArgs e)
@@ -2050,8 +2158,9 @@ namespace PaintDotNet.Effects
             {
                 foreach (string filePath in droppedFiles)
                 {
-                    if (Path.GetExtension(filePath).Equals(".cs", StringComparison.OrdinalIgnoreCase) &&
-                        File.Exists(filePath))
+                    string fileExt = Path.GetExtension(filePath);
+                    if (File.Exists(filePath) &&
+                        (fileExt.Equals(".cs", StringComparison.OrdinalIgnoreCase) || fileExt.Equals(".txt", StringComparison.OrdinalIgnoreCase)))
                     {
                         LoadFile(filePath);
                     }
@@ -2062,5 +2171,12 @@ namespace PaintDotNet.Effects
             }
         }
         #endregion
+    }
+
+    public enum Language
+    {
+        None,
+        CSharp,
+        XAML
     }
 }

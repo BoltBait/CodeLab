@@ -62,6 +62,10 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newToolStripMenuItem = new PaintDotNet.Effects.ScaledToolStripMenuItem();
+            this.NewEffectMenuItem = new PaintDotNet.Effects.ScaledToolStripMenuItem();
+            this.NewFileTypeMenuItem = new PaintDotNet.Effects.ScaledToolStripMenuItem();
+            this.NewShapeMenuItem = new PaintDotNet.Effects.ScaledToolStripMenuItem();
+            this.NewTextMenuItem = new PaintDotNet.Effects.ScaledToolStripMenuItem();
             this.loadToolStripMenuItem = new PaintDotNet.Effects.ScaledToolStripMenuItem();
             this.openRecentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.NoRecentsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -464,12 +468,52 @@
             // 
             // newToolStripMenuItem
             // 
+            this.newToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.NewEffectMenuItem,
+            this.NewFileTypeMenuItem,
+            this.NewShapeMenuItem,
+            this.NewTextMenuItem});
             this.newToolStripMenuItem.ImageName = "New";
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-            this.newToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
             this.newToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
             this.newToolStripMenuItem.Text = "&New";
-            this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
+            // 
+            // NewEffectMenuItem
+            // 
+            this.NewEffectMenuItem.ImageName = "Untitled";
+            this.NewEffectMenuItem.Name = "NewEffectMenuItem";
+            this.NewEffectMenuItem.Padding = new System.Windows.Forms.Padding(2);
+            this.NewEffectMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
+            this.NewEffectMenuItem.Size = new System.Drawing.Size(184, 24);
+            this.NewEffectMenuItem.Text = "Effect";
+            this.NewEffectMenuItem.Click += new System.EventHandler(this.NewEffectMenuItem_Click);
+            // 
+            // NewFileTypeMenuItem
+            // 
+            this.NewFileTypeMenuItem.ImageName = "Untitled";
+            this.NewFileTypeMenuItem.Name = "NewFileTypeMenuItem";
+            this.NewFileTypeMenuItem.Padding = new System.Windows.Forms.Padding(2);
+            this.NewFileTypeMenuItem.Size = new System.Drawing.Size(184, 24);
+            this.NewFileTypeMenuItem.Text = "FileType";
+            this.NewFileTypeMenuItem.Click += new System.EventHandler(this.NewFileTypeMenuItem_Click);
+            // 
+            // NewShapeMenuItem
+            // 
+            this.NewShapeMenuItem.ImageName = "Shape";
+            this.NewShapeMenuItem.Name = "NewShapeMenuItem";
+            this.NewShapeMenuItem.Padding = new System.Windows.Forms.Padding(2);
+            this.NewShapeMenuItem.Size = new System.Drawing.Size(184, 24);
+            this.NewShapeMenuItem.Text = "Shape";
+            this.NewShapeMenuItem.Click += new System.EventHandler(this.NewShapeMenuItem_Click);
+            // 
+            // NewTextMenuItem
+            // 
+            this.NewTextMenuItem.ImageName = "PlainText";
+            this.NewTextMenuItem.Name = "NewTextMenuItem";
+            this.NewTextMenuItem.Padding = new System.Windows.Forms.Padding(2);
+            this.NewTextMenuItem.Size = new System.Drawing.Size(184, 24);
+            this.NewTextMenuItem.Text = "Plain Text";
+            this.NewTextMenuItem.Click += new System.EventHandler(this.NewTextMenuItem_Click);
             // 
             // loadToolStripMenuItem
             // 
@@ -1561,5 +1605,9 @@
         private ScaledToolStripButton ReplaceButton;
         private ScaledToolStripButton SnippetManButton;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator22;
+        private ScaledToolStripMenuItem NewEffectMenuItem;
+        private ScaledToolStripMenuItem NewFileTypeMenuItem;
+        private ScaledToolStripMenuItem NewShapeMenuItem;
+        private ScaledToolStripMenuItem NewTextMenuItem;
     }
 }
