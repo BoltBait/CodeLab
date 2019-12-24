@@ -421,10 +421,10 @@ namespace PaintDotNet.Effects
             Language lang;
             switch (Path.GetExtension(filePath))
             {
-                case "txt":
+                case ".txt":
                     lang = Language.None;
                     break;
-                case "cs":
+                case ".cs":
                 default:
                     lang = Language.CSharp;
                     break;

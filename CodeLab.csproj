@@ -347,6 +347,8 @@
     <EmbeddedResource Include="Icons\Underline.png" />
     <EmbeddedResource Include="Icons\Add.png" />
     <EmbeddedResource Include="Icons\Json.png" />
+    <EmbeddedResource Include="Icons\Shape.png" />
+    <EmbeddedResource Include="Icons\PlainText.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Icons\CodeLab.32.png" />
