@@ -119,10 +119,10 @@ namespace PaintDotNet.Effects
             this.SelectedTabChanged?.Invoke(this, EventArgs.Empty);
         }
 
-        public event EventHandler<TabEventArgs> NewTabCreated;
-        protected void OnNewTabCreated(TabEventArgs args)
+        public event EventHandler NewTabCreated;
+        protected void OnNewTabCreated()
         {
-            this.NewTabCreated?.Invoke(this, args);
+            this.NewTabCreated?.Invoke(this, EventArgs.Empty);
         }
 
         public event EventHandler<CancelEventArgs> TabClosingAndDirty;
@@ -131,8 +131,8 @@ namespace PaintDotNet.Effects
             this.TabClosingAndDirty?.Invoke(this, args);
         }
 
-        public event EventHandler<TabEventArgs> TabClosed;
-        protected void OnTabClosed(TabEventArgs args)
+        public event EventHandler<TabClosedEventArgs> TabClosed;
+        protected void OnTabClosed(TabClosedEventArgs args)
         {
             this.TabClosed?.Invoke(this, args);
         }
@@ -224,7 +224,7 @@ namespace PaintDotNet.Effects
                 SwitchToTab(tabIndexToSwitchTo);
             }
 
-            OnTabClosed(new TabEventArgs(guidOfClosedTab, Language.None));
+            OnTabClosed(new TabClosedEventArgs(guidOfClosedTab));
         }
 
         internal void NewTab(string title, string path, Language language)
@@ -246,7 +246,7 @@ namespace PaintDotNet.Effects
             activeTab.Checked = true;
             activeTab.Overflow = ToolStripItemOverflow.Never;
 
-            OnNewTabCreated(new TabEventArgs(newTab.Guid, language));
+            OnNewTabCreated();
         }
 
         private void UpdateIndexes()
@@ -296,15 +296,13 @@ namespace PaintDotNet.Effects
         }
     }
 
-    public class TabEventArgs : EventArgs
+    public class TabClosedEventArgs : EventArgs
     {
         public Guid TabGuid { get; }
-        public Language Language { get; }
 
-        public TabEventArgs(Guid tabGuid, Language language)
+        public TabClosedEventArgs(Guid tabGuid)
         {
             this.TabGuid = tabGuid;
-            this.Language = language;
         }
     }
 

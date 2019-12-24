@@ -1424,9 +1424,9 @@
             this.tabStrip1.Size = new System.Drawing.Size(772, 25);
             this.tabStrip1.TabIndex = 20;
             this.tabStrip1.SelectedTabChanged += new System.EventHandler(this.tabStrip1_SelectedIndexChanged);
-            this.tabStrip1.NewTabCreated += new System.EventHandler<PaintDotNet.Effects.TabEventArgs>(this.tabStrip1_NewTabCreated);
+            this.tabStrip1.NewTabCreated += new System.EventHandler(this.tabStrip1_NewTabCreated);
             this.tabStrip1.TabClosingAndDirty += new System.EventHandler<System.ComponentModel.CancelEventArgs>(this.tabStrip1_TabClosingAndDirty);
-            this.tabStrip1.TabClosed += new System.EventHandler<PaintDotNet.Effects.TabEventArgs>(this.tabStrip1_TabClosed);
+            this.tabStrip1.TabClosed += new System.EventHandler<PaintDotNet.Effects.TabClosedEventArgs>(this.tabStrip1_TabClosed);
             // 
             // toolStripSeparator22
             // 

@@ -2085,13 +2085,16 @@ namespace PaintDotNet.Effects
             }
         }
 
-        private void tabStrip1_NewTabCreated(object sender, TabEventArgs e)
+        private void tabStrip1_NewTabCreated(object sender, EventArgs e)
         {
-            txtCode.CreateNewDocument(e.TabGuid, e.Language);
+            Guid guid = tabStrip1.SelectedTabGuid;
+            Language lang = tabStrip1.SelectedTabLang;
+
+            txtCode.CreateNewDocument(guid, lang);
             UpdateWindowTitle();
             UpdateToolBarButtons();
 
-            if (tabStrip1.SelectedTabLang == Language.CSharp)
+            if (lang == Language.CSharp)
             {
                 SaveDLLButton.Enabled = true;
                 saveAsDLLToolStripMenuItem.Enabled = true;
@@ -2119,7 +2122,7 @@ namespace PaintDotNet.Effects
             }
         }
 
-        private void tabStrip1_TabClosed(object sender, TabEventArgs e)
+        private void tabStrip1_TabClosed(object sender, TabClosedEventArgs e)
         {
             this.txtCode.CloseDocument(e.TabGuid);
         }
