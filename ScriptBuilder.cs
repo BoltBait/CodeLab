@@ -38,6 +38,7 @@ namespace PaintDotNet.Effects
         };
         private static CompilerResults result;
         private static Effect userScriptObject;
+        private static FileType builtFileType;
         private static int lineOffset;
         private static string exceptionMsg;
         private const string defaultOptions = " /unsafe /optimize";
@@ -45,6 +46,7 @@ namespace PaintDotNet.Effects
 
         #region Properties
         internal static Effect UserScriptObject => userScriptObject;
+        internal static FileType BuiltFileType => builtFileType;
         internal static int LineOffset => lineOffset;
         internal static int ColumnOffset => 9;
         internal static string Exception => exceptionMsg;
@@ -329,7 +331,7 @@ namespace PaintDotNet.Effects
                 ScriptWriter.UsingPartCode +
                 ScriptWriter.NamespacePart(FileName) +
                 ScriptWriter.EffectPart(UserControls, FileName, string.Empty, FileName, string.Empty, EffectFlags.None, EffectRenderingSchedule.DefaultTilesForCpuRendering) +
-                ScriptWriter.PropertyPart(UserControls, FileName, "FULL UI PREVIEW - Temporarily renders to canvas", HelpType.None, string.Empty) +
+                ScriptWriter.PropertyPart(UserControls, FileName, "FULL UI PREVIEW - Temporarily renders to canvas", HelpType.None, string.Empty, ProjectType.Effect) +
                 ScriptWriter.SetRenderPart(UserControls, true, preRenderRegex.IsMatch(scriptText)) +
                 ScriptWriter.RenderLoopPart(UserControls) +
                 ScriptWriter.UserEnteredPart(scriptText) +
@@ -375,7 +377,7 @@ namespace PaintDotNet.Effects
                 ScriptWriter.UsingPartCode +
                 ScriptWriter.NamespacePart(FileName) +
                 ScriptWriter.EffectPart(UserControls, FileName, string.Empty, "UI PREVIEW - Does NOT Render to canvas", string.Empty, EffectFlags.None, EffectRenderingSchedule.DefaultTilesForCpuRendering) +
-                ScriptWriter.PropertyPart(UserControls, FileName, string.Empty, HelpType.None, string.Empty) +
+                ScriptWriter.PropertyPart(UserControls, FileName, string.Empty, HelpType.None, string.Empty, ProjectType.Effect) +
                 ScriptWriter.RenderLoopPart(UserControls) +
                 uiCode +
                 ScriptWriter.EmptyCode +
@@ -404,6 +406,53 @@ namespace PaintDotNet.Effects
             catch
             {
             }
+            return false;
+        }
+
+        internal static bool BuildFileType(string fileTypeCode)
+        {
+            const string projectName = "MyFileType";
+
+            // Generate code
+            UIElement[] userControls = UIElement.ProcessUIControls(fileTypeCode);
+
+            string sourceCode =
+                ScriptWriter.UsingPartCode +
+                ScriptWriter.NamespacePart(projectName) +
+                ScriptWriter.FileTypePart(projectName) +
+                ScriptWriter.PropertyPart(userControls, projectName, string.Empty, HelpType.None, string.Empty, ProjectType.FileType) +
+                ScriptWriter.FileTypePart2(userControls) +
+                ScriptWriter.UserEnteredPart(fileTypeCode) +
+                ScriptWriter.EndPart();
+
+            exceptionMsg = null;
+            userScriptObject = null;
+            builtFileType = null;
+
+            // Compile code
+            try
+            {
+                result = cscp.CompileAssemblyFromSource(param, sourceCode);
+
+                if (result.Errors.HasErrors)
+                {
+                    return false;
+                }
+
+                foreach (Type type in result.CompiledAssembly.GetTypes())
+                {
+                    if (type.IsSubclassOf(typeof(PropertyBasedFileType)) && !type.IsAbstract)
+                    {
+                        builtFileType = (FileType)type.GetConstructors(System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)[0].Invoke(null);
+                        return true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                exceptionMsg = ex.Message;
+            }
+
             return false;
         }
     }

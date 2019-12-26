@@ -65,9 +65,9 @@ namespace PaintDotNet.Effects
             get => activeTab.Guid;
         }
 
-        internal Language SelectedTabLang
+        internal ProjectType SelectedTabProjType
         {
-            get => activeTab.Language;
+            get => activeTab.ProjectType;
         }
 
         internal string SelectedTabTitle
@@ -227,11 +227,11 @@ namespace PaintDotNet.Effects
             OnTabClosed(new TabClosedEventArgs(guidOfClosedTab));
         }
 
-        internal void NewTab(string title, string path, Language language)
+        internal void NewTab(string title, string path, ProjectType projectType)
         {
             int tabIndex = this.toolStrip1.Items.Count;
 
-            Tab newTab = new Tab(title, path, language);
+            Tab newTab = new Tab(title, path, projectType);
             newTab.Index = tabIndex;
             newTab.Click += Tab_Click;
             newTab.MouseDown += Tab_MouseDown;
@@ -310,7 +310,7 @@ namespace PaintDotNet.Effects
     {
         internal int Index { get; set; }
         internal Guid Guid { get; }
-        internal Language Language { get; }
+        internal ProjectType ProjectType { get; }
         internal bool IsDirty { get; set; }
         internal string Title { get; set; }
         internal string Path { get; set; }
@@ -323,20 +323,20 @@ namespace PaintDotNet.Effects
         /// Do NOT USE. For Initial Tab only.
         /// </summary>
         public Tab()
-            : this("Untitled", string.Empty, Language.CSharp)
+            : this("Untitled", string.Empty, ProjectType.Effect)
         {
             this.Guid = Guid.Empty;
         }
 
-        internal Tab(string title, string path, Language language)
+        internal Tab(string title, string path, ProjectType projectType)
         {
             this.ImageAlign = ContentAlignment.MiddleLeft;
             this.Margin = new Padding(0, 5, 3, 0);
             this.AutoToolTip = false;
 
-            switch (language)
+            switch (projectType)
             {
-                case Language.CSharp:
+                case ProjectType.Effect:
                     string imagePath = System.IO.Path.ChangeExtension(path, ".png");
                     if (File.Exists(imagePath))
                     {
@@ -347,7 +347,13 @@ namespace PaintDotNet.Effects
                         this.ImageName = "Untitled";
                     }
                     break;
-                case Language.None:
+                case ProjectType.FileType:
+                    this.ImageName = "Save";
+                    break;
+                case ProjectType.Shape:
+                    this.ImageName = "Shape";
+                    break;
+                case ProjectType.None:
                 default:
                     this.ImageName = "PlainText";
                     break;
@@ -356,7 +362,7 @@ namespace PaintDotNet.Effects
             this.Text = title;
             this.ToolTipText = path.IsNullOrEmpty() ? title : path;
             this.Guid = Guid.NewGuid();
-            this.Language = language;
+            this.ProjectType = projectType;
             this.IsDirty = false;
             this.Title = title;
             this.Path = path;

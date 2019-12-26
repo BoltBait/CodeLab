@@ -277,12 +277,21 @@ namespace PaintDotNet.Effects
         #region Build Script actions
         private void Build()
         {
-            if (tabStrip1.SelectedTabLang != Language.CSharp)
+            ProjectType projType = tabStrip1.SelectedTabProjType;
+            if (projType != ProjectType.Effect && projType != ProjectType.FileType)
             {
                 return;
             }
 
-            ScriptBuilder.Build(txtCode.Text, OutputTextBox.Visible);
+            switch (projType)
+            {
+                case ProjectType.Effect:
+                    ScriptBuilder.Build(txtCode.Text, OutputTextBox.Visible);
+                    break;
+                case ProjectType.FileType:
+                    ScriptBuilder.BuildFileType(txtCode.Text);
+                    break;
+            }
 
             DisplayErrors();
 
@@ -293,7 +302,8 @@ namespace PaintDotNet.Effects
 
         private async Task BuildAsync()
         {
-            if (tabStrip1.SelectedTabLang != Language.CSharp)
+            ProjectType projType = tabStrip1.SelectedTabProjType;
+            if (projType != ProjectType.Effect && projType != ProjectType.FileType)
             {
                 return;
             }
@@ -301,7 +311,18 @@ namespace PaintDotNet.Effects
             tmrCompile.Enabled = false;
             string code = txtCode.Text;
             bool debug = OutputTextBox.Visible;
-            await Task.Run(() => ScriptBuilder.Build(code, debug));
+            await Task.Run(() =>
+            {
+                switch (projType)
+                {
+                    case ProjectType.Effect:
+                        ScriptBuilder.Build(code, debug);
+                        break;
+                    case ProjectType.FileType:
+                        ScriptBuilder.BuildFileType(txtCode.Text);
+                        break;
+                }
+            });
 
             if (this.IsDisposed)
             {
@@ -316,11 +337,8 @@ namespace PaintDotNet.Effects
             tmrCompile.Enabled = true;
         }
 
-        private void RunWithDialog()
+        private void RunEffectWithDialog()
         {
-#if FASTDEBUG
-            return;
-#endif
             tmrCompile.Enabled = false;
             Build();
             if (errorList.Items.Count != 0)
@@ -350,6 +368,26 @@ namespace PaintDotNet.Effects
                 Build();
             }
             tmrCompile.Enabled = true;
+        }
+
+        private void RunFileTypeWithDialog()
+        {
+            if (!ScriptBuilder.BuildFileType(txtCode.Text))
+            {
+                MessageBox.Show("Compilation Failed!");
+                return;
+            }
+
+            if (!ScriptBuilder.BuiltFileType.SupportsConfiguration)
+            {
+                MessageBox.Show("No Config!");
+                return;
+            }
+
+            using (SaveConfigDialog saveDialog = new SaveConfigDialog(ScriptBuilder.BuiltFileType, EffectSourceSurface))
+            {
+                saveDialog.ShowDialog();
+            }
         }
 
         private void DisplayErrors()
@@ -418,25 +456,36 @@ namespace PaintDotNet.Effects
             FullScriptPath = filePath;
             FileName = Path.GetFileNameWithoutExtension(filePath);
 
-            Language lang;
+            ProjectType projType;
             switch (Path.GetExtension(filePath))
             {
-                case ".txt":
-                    lang = Language.None;
-                    break;
                 case ".cs":
+                    if (Regex.IsMatch(fileContents, @"void Render\(Surface dst, Surface src, Rectangle rect\)(\s)*{(.|\s)*}", RegexOptions.Singleline))
+                    {
+                        projType = ProjectType.Effect;
+                    }
+                    else if (Regex.IsMatch(fileContents, @"void SaveImage\(Document input, Stream output, PropertyBasedSaveConfigToken token, Surface scratchSurface, ProgressEventHandler progressCallback\)(\s)*{(.|\s)*}", RegexOptions.Singleline))
+                    {
+                        projType = ProjectType.FileType;
+                    }
+                    else
+                    {
+                        projType = ProjectType.None;
+                    }
+                    break;
+                case ".txt":
                 default:
-                    lang = Language.CSharp;
+                    projType = ProjectType.None;
                     break;
             }
 
-            if (tabStrip1.SelectedTabGuid == Guid.Empty && tabStrip1.SelectedTabLang == lang && txtCode.IsVirgin)
+            if (tabStrip1.SelectedTabGuid == Guid.Empty && tabStrip1.SelectedTabProjType == projType && txtCode.IsVirgin)
             {
                 UpdateTabProperties();
             }
             else
             {
-                tabStrip1.NewTab(FileName, FullScriptPath, lang);
+                tabStrip1.NewTab(FileName, FullScriptPath, projType);
             }
 
             txtCode.Text = fileContents;
@@ -489,8 +538,26 @@ namespace PaintDotNet.Effects
         private bool SaveAsFile()
         {
             string fileName = this.FileName;
-            Language lang = tabStrip1.SelectedTabLang;
-            if (lang == Language.CSharp && fileName.Equals("Untitled", StringComparison.Ordinal))
+            string fileExt;
+            string description;
+            bool isCSharp;
+            switch (tabStrip1.SelectedTabProjType)
+            {
+                case ProjectType.None:
+                    fileExt = ".txt";
+                    description = "Plain Text";
+                    isCSharp = false;
+                    break;
+                case ProjectType.Effect:
+                case ProjectType.FileType:
+                default:
+                    fileExt = ".cs";
+                    description = "C# Code";
+                    isCSharp = true;
+                    break;
+            }
+
+            if (isCSharp && fileName.Equals("Untitled", StringComparison.Ordinal))
             {
                 Match wtn = Regex.Match(txtCode.Text, @"//[\s-[\r\n]]*Name[\s-[\r\n]]*:[\s-[\r\n]]*(?<scriptName>.*)(?=\r?\n|$)", RegexOptions.IgnoreCase);
                 if (wtn.Success)
@@ -508,21 +575,6 @@ namespace PaintDotNet.Effects
                 }
             }
 
-            string fileExt;
-            string description;
-            switch (lang)
-            {
-                case Language.None:
-                    fileExt = ".txt";
-                    description = "Plain Text";
-                    break;
-                case Language.CSharp:
-                default:
-                    fileExt = ".cs";
-                    description = "C# Code";
-                    break;
-            }
-
             SaveFileDialog sfd = new SaveFileDialog
             {
                 Title = "Save User Script",
@@ -536,7 +588,7 @@ namespace PaintDotNet.Effects
 
             sfd.FileOk += (sender, e) =>
             {
-                if (lang == Language.CSharp && !char.IsLetter(Path.GetFileName(sfd.FileName), 0))
+                if (isCSharp && !char.IsLetter(Path.GetFileName(sfd.FileName), 0))
                 {
                     e.Cancel = true;
                     FlexibleMessageBox.Show("The filename must begin with a letter.", "Save User Script", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -913,13 +965,13 @@ namespace PaintDotNet.Effects
                 FileName = "Untitled";
                 FullScriptPath = "";
 
-                if (tabStrip1.SelectedTabGuid == Guid.Empty && tabStrip1.SelectedTabLang == Language.CSharp && txtCode.IsVirgin)
+                if (tabStrip1.SelectedTabGuid == Guid.Empty && tabStrip1.SelectedTabProjType == ProjectType.Effect && txtCode.IsVirgin)
                 {
                     UpdateTabProperties();
                 }
                 else
                 {
-                    tabStrip1.NewTab(FileName, FullScriptPath, Language.CSharp);
+                    tabStrip1.NewTab(FileName, FullScriptPath, ProjectType.Effect);
                 }
 
                 txtCode.Text = fn.CodeTemplate;
@@ -936,9 +988,20 @@ namespace PaintDotNet.Effects
             FileName = "Untitled";
             FullScriptPath = string.Empty;
 
-            tabStrip1.NewTab(FileName, FullScriptPath, Language.None);
+            tabStrip1.NewTab(FileName, FullScriptPath, ProjectType.None);
 
             txtCode.Text = "This is a test\r\nof plain text."; //string.Empty;
+            txtCode.EmptyUndoBuffer();
+        }
+
+        private void CreateNewFileType()
+        {
+            FileName = "Untitled";
+            FullScriptPath = string.Empty;
+
+            tabStrip1.NewTab(FileName, FullScriptPath, ProjectType.FileType);
+
+            txtCode.Text = string.Empty;
             txtCode.EmptyUndoBuffer();
         }
 
@@ -1151,9 +1214,22 @@ namespace PaintDotNet.Effects
 
         private void RunCommand()
         {
+#if FASTDEBUG
+            return;
+#endif
             double SaveOpacitySetting = Opacity;
             Opacity = 0;
-            RunWithDialog();
+
+            switch (this.tabStrip1.SelectedTabProjType)
+            {
+                case ProjectType.Effect:
+                    RunEffectWithDialog();
+                    break;
+                case ProjectType.FileType:
+                    RunFileTypeWithDialog();
+                    break;
+            }
+
             Opacity = SaveOpacitySetting;
         }
         #endregion
@@ -1166,7 +1242,7 @@ namespace PaintDotNet.Effects
 
         private void NewFileTypeMenuItem_Click(object sender, EventArgs e)
         {
-
+            CreateNewFileType();
         }
 
         private void NewShapeMenuItem_Click(object sender, EventArgs e)
@@ -2063,7 +2139,8 @@ namespace PaintDotNet.Effects
             txtCode.SwitchToDocument(tabStrip1.SelectedTabGuid);
             UpdateToolBarButtons();
 
-            if (tabStrip1.SelectedTabLang == Language.CSharp)
+            if (tabStrip1.SelectedTabProjType == ProjectType.Effect ||
+                tabStrip1.SelectedTabProjType == ProjectType.FileType)
             {
                 BuildAsync();
                 SaveDLLButton.Enabled = true;
@@ -2088,13 +2165,14 @@ namespace PaintDotNet.Effects
         private void tabStrip1_NewTabCreated(object sender, EventArgs e)
         {
             Guid guid = tabStrip1.SelectedTabGuid;
-            Language lang = tabStrip1.SelectedTabLang;
+            ProjectType projType = tabStrip1.SelectedTabProjType;
 
-            txtCode.CreateNewDocument(guid, lang);
+            txtCode.CreateNewDocument(guid, projType);
             UpdateWindowTitle();
             UpdateToolBarButtons();
 
-            if (lang == Language.CSharp)
+            if (projType == ProjectType.Effect ||
+                projType == ProjectType.FileType)
             {
                 SaveDLLButton.Enabled = true;
                 saveAsDLLToolStripMenuItem.Enabled = true;
@@ -2176,10 +2254,11 @@ namespace PaintDotNet.Effects
         #endregion
     }
 
-    public enum Language
+    public enum ProjectType
     {
         None,
-        CSharp,
-        XAML
+        Effect,
+        FileType,
+        Shape
     }
 }

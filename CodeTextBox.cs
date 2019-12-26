@@ -3476,7 +3476,7 @@ namespace PaintDotNet.Effects
         #endregion
 
         #region Document Tabs functions
-        internal void CreateNewDocument(Guid guid, Language language)
+        internal void CreateNewDocument(Guid guid, ProjectType projectType)
         {
             this.findPanel.Hide();
 
@@ -3489,12 +3489,13 @@ namespace PaintDotNet.Effects
 
             this.Document = newDocument;
 
-            switch (language)
+            switch (projectType)
             {
-                case Language.None:
+                case ProjectType.None:
 
                     break;
-                case Language.CSharp:
+                case ProjectType.Effect:
+                case ProjectType.FileType:
                     this.Lexer = Lexer.Cpp;
                     indexForPurpleWords = this.AllocateSubstyles(Style.Cpp.Identifier, 1);
                     this.UpdateSyntaxHighlighting();

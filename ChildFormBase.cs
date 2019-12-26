@@ -27,6 +27,7 @@ namespace PaintDotNet.Effects
         }
 
         [Browsable(false)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         new public Icon Icon
         {

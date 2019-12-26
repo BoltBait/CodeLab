@@ -484,16 +484,16 @@
             this.NewEffectMenuItem.Name = "NewEffectMenuItem";
             this.NewEffectMenuItem.Padding = new System.Windows.Forms.Padding(2);
             this.NewEffectMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
-            this.NewEffectMenuItem.Size = new System.Drawing.Size(184, 24);
+            this.NewEffectMenuItem.Size = new System.Drawing.Size(151, 24);
             this.NewEffectMenuItem.Text = "Effect";
             this.NewEffectMenuItem.Click += new System.EventHandler(this.NewEffectMenuItem_Click);
             // 
             // NewFileTypeMenuItem
             // 
-            this.NewFileTypeMenuItem.ImageName = "Untitled";
+            this.NewFileTypeMenuItem.ImageName = "Save";
             this.NewFileTypeMenuItem.Name = "NewFileTypeMenuItem";
             this.NewFileTypeMenuItem.Padding = new System.Windows.Forms.Padding(2);
-            this.NewFileTypeMenuItem.Size = new System.Drawing.Size(184, 24);
+            this.NewFileTypeMenuItem.Size = new System.Drawing.Size(151, 24);
             this.NewFileTypeMenuItem.Text = "FileType";
             this.NewFileTypeMenuItem.Click += new System.EventHandler(this.NewFileTypeMenuItem_Click);
             // 
@@ -502,7 +502,7 @@
             this.NewShapeMenuItem.ImageName = "Shape";
             this.NewShapeMenuItem.Name = "NewShapeMenuItem";
             this.NewShapeMenuItem.Padding = new System.Windows.Forms.Padding(2);
-            this.NewShapeMenuItem.Size = new System.Drawing.Size(184, 24);
+            this.NewShapeMenuItem.Size = new System.Drawing.Size(151, 24);
             this.NewShapeMenuItem.Text = "Shape";
             this.NewShapeMenuItem.Click += new System.EventHandler(this.NewShapeMenuItem_Click);
             // 
@@ -511,7 +511,7 @@
             this.NewTextMenuItem.ImageName = "PlainText";
             this.NewTextMenuItem.Name = "NewTextMenuItem";
             this.NewTextMenuItem.Padding = new System.Windows.Forms.Padding(2);
-            this.NewTextMenuItem.Size = new System.Drawing.Size(184, 24);
+            this.NewTextMenuItem.Size = new System.Drawing.Size(151, 24);
             this.NewTextMenuItem.Text = "Plain Text";
             this.NewTextMenuItem.Click += new System.EventHandler(this.NewTextMenuItem_Click);
             // 
