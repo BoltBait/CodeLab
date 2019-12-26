@@ -27,6 +27,11 @@ namespace PaintDotNet.Effects
             this.SuspendLayout();
 
             this.canvas = new PictureBox();
+            using (Surface backImage = new Surface(16, 16))
+            {
+                backImage.ClearWithCheckerboardPattern();
+                canvas.BackgroundImage = new Bitmap(backImage.CreateAliasedBitmap());
+            }
             this.canvas.Image = src.CreateAliasedBitmap();
             this.canvas.Size = this.imageSize;
 
@@ -46,7 +51,7 @@ namespace PaintDotNet.Effects
 
             this.widget = fileType.CreateSaveConfigWidget();
             this.widget.Location = new Point(7, 7);
-            this.widget.Size = new Size(200, widget.Size.Height);
+            this.widget.Width = 180;
             this.widget.TokenChanged += (object sender, EventArgs e) => UpdatePreview();
 
             this.saveButton = new Button();
@@ -99,14 +104,22 @@ namespace PaintDotNet.Effects
                 {
                 };
 
-                fileType.Save(document, stream, this.widget.Token, scratchSurface, progress, false);
-
-                stream.Seek(0, SeekOrigin.Begin);
-
-                using (Document savedDoc = fileType.Load(stream))
+                try
                 {
-                    savedDoc.Flatten(scratchSurface);
+                    fileType.Save(document, stream, this.widget.Token, scratchSurface, progress, false);
+
+                    stream.Seek(0, SeekOrigin.Begin);
+
+                    using (Document savedDoc = fileType.Load(stream))
+                    {
+                        savedDoc.Flatten(scratchSurface);
+                    }
                 }
+                catch
+                {
+                    scratchSurface.ClearWithCheckerboardPattern();
+                }
+
                 this.canvas.Image = new Bitmap(scratchSurface.CreateAliasedBitmap());
 
                 document.Layers.DisposeAll();
@@ -164,6 +177,37 @@ namespace PaintDotNet.Effects
         private void ResetToken()
         {
             widget.Token = fileType.CreateDefaultSaveConfigToken();
+        }
+    }
+
+    internal sealed class SaveWidgetDialog : ChildFormBase
+    {
+        internal SaveWidgetDialog(SaveConfigWidget widget, SaveConfigToken defaultToken)
+        {
+            this.SuspendLayout();
+
+            SaveConfigWidget configWidget = widget;
+            configWidget.Location = new Point(7, 7);
+            configWidget.Width = 180;
+
+            Button defaultsButton = new Button();
+            defaultsButton.AutoSize = true;
+            defaultsButton.FlatStyle = FlatStyle.System;
+            defaultsButton.Text = "Defaults";
+            defaultsButton.Click += (object sender, EventArgs e) => configWidget.Token = defaultToken;
+
+            this.IconName = "Save";
+            this.Text = "Save Configuration";
+            this.Controls.AddRange(new Control[]
+            {
+                configWidget,
+                defaultsButton
+            });
+
+            this.ResumeLayout(false);
+
+            defaultsButton.Location = new Point((configWidget.Right - configWidget.Left) / 2 + configWidget.Left - defaultsButton.Width / 2, configWidget.Bottom + 16);
+            this.ClientSize = new Size(configWidget.Right + 7, defaultsButton.Bottom + 7);
         }
     }
 }

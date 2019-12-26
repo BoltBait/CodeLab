@@ -289,7 +289,7 @@ namespace PaintDotNet.Effects
                     ScriptBuilder.Build(txtCode.Text, OutputTextBox.Visible);
                     break;
                 case ProjectType.FileType:
-                    ScriptBuilder.BuildFileType(txtCode.Text);
+                    ScriptBuilder.BuildFileType(txtCode.Text, OutputTextBox.Visible);
                     break;
             }
 
@@ -297,7 +297,15 @@ namespace PaintDotNet.Effects
 
             txtCode.UpdateSyntaxHighlighting();
 
-            FinishTokenUpdate();
+            switch (projType)
+            {
+                case ProjectType.Effect:
+                    FinishTokenUpdate();
+                    break;
+                case ProjectType.FileType:
+                    RunFileType();
+                    break;
+            }
         }
 
         private async Task BuildAsync()
@@ -319,7 +327,7 @@ namespace PaintDotNet.Effects
                         ScriptBuilder.Build(code, debug);
                         break;
                     case ProjectType.FileType:
-                        ScriptBuilder.BuildFileType(txtCode.Text);
+                        ScriptBuilder.BuildFileType(code, debug);
                         break;
                 }
             });
@@ -333,7 +341,16 @@ namespace PaintDotNet.Effects
 
             txtCode.UpdateSyntaxHighlighting();
 
-            FinishTokenUpdate();
+            switch (projType)
+            {
+                case ProjectType.Effect:
+                    FinishTokenUpdate();
+                    break;
+                case ProjectType.FileType:
+                    RunFileType();
+                    break;
+            }
+
             tmrCompile.Enabled = true;
         }
 
@@ -372,7 +389,7 @@ namespace PaintDotNet.Effects
 
         private void RunFileTypeWithDialog()
         {
-            if (!ScriptBuilder.BuildFileType(txtCode.Text))
+            if (!ScriptBuilder.BuildFileType(txtCode.Text, false))
             {
                 MessageBox.Show("Compilation Failed!");
                 return;
@@ -387,6 +404,47 @@ namespace PaintDotNet.Effects
             using (SaveConfigDialog saveDialog = new SaveConfigDialog(ScriptBuilder.BuiltFileType, EffectSourceSurface))
             {
                 saveDialog.ShowDialog();
+            }
+        }
+
+        private void RunFileType()
+        {
+            if (ScriptBuilder.BuiltFileType == null)
+            {
+                return;
+            }
+
+            Size size = new Size(400, 300);
+            using (Document document = new Document(size))
+            using (MemoryStream stream = new MemoryStream())
+            using (Surface scratchSurface = new Surface(size))
+            {
+                document.Layers.Add(new BitmapLayer(size, ColorBgra.DodgerBlue.NewAlpha(85)));
+
+                SaveConfigToken token = ScriptBuilder.BuiltFileType.CreateDefaultSaveConfigToken();
+                ProgressEventHandler progress = (object s1, ProgressEventArgs e1) =>
+                {
+                };
+
+                try
+                {
+                    ScriptBuilder.BuiltFileType.Save(document, stream, token, scratchSurface, progress, false);
+
+                    stream.Seek(0, SeekOrigin.Begin);
+
+                    using (Document savedDoc = ScriptBuilder.BuiltFileType.Load(stream))
+                    {
+                        savedDoc.Flatten(scratchSurface);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    errorList.Items.Add(ex.ToString());
+                    ShowErrors.Text = $"Show Errors List ({errorList.Items.Count})";
+                    ShowErrors.ForeColor = Color.Red;
+                }
+
+                document.Layers.DisposeAll();
             }
         }
 
@@ -425,7 +483,6 @@ namespace PaintDotNet.Effects
             ShowErrors.Text = "Show Errors List";
             ShowErrors.ForeColor = this.ForeColor;
         }
-
 
         private void ResetScript()
         {
@@ -1101,7 +1158,7 @@ namespace PaintDotNet.Effects
         private void UIDesigner()
         {
             // User Interface Designer
-            UIBuilder myUIBuilderForm = new UIBuilder(txtCode.Text, ColorBgra.Black);  // This should be the current Primary color
+            UIBuilder myUIBuilderForm = new UIBuilder(txtCode.Text, tabStrip1.SelectedTabProjType, ColorBgra.Black);  // This should be the current Primary color
             if (myUIBuilderForm.ShowDialog() == DialogResult.OK)
             {
                 // update generated code

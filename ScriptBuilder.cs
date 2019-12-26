@@ -409,7 +409,7 @@ namespace PaintDotNet.Effects
             return false;
         }
 
-        internal static bool BuildFileType(string fileTypeCode)
+        internal static bool BuildFileType(string fileTypeCode, bool debug)
         {
             const string projectName = "MyFileType";
 
@@ -432,12 +432,17 @@ namespace PaintDotNet.Effects
             // Compile code
             try
             {
+                param.IncludeDebugInformation = debug;
                 result = cscp.CompileAssemblyFromSource(param, sourceCode);
+                param.IncludeDebugInformation = false;
+                lineOffset = 0; // TODO
 
                 if (result.Errors.HasErrors)
                 {
                     return false;
                 }
+
+                Intelli.UserDefinedTypes.Clear();
 
                 foreach (Type type in result.CompiledAssembly.GetTypes())
                 {

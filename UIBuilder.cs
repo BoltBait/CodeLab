@@ -28,12 +28,13 @@ namespace PaintDotNet.Effects
     {
         internal string UIControlsText;
         private ColorBgra PC;
+        private readonly ProjectType projectType;
         private bool dirty = false;
         private readonly List<UIElement> MasterList = new List<UIElement>();
         private readonly HashSet<string> IDList = new HashSet<string>();
         private string currentID;
 
-        internal UIBuilder(string UserScriptText, ColorBgra PrimaryColor)
+        internal UIBuilder(string UserScriptText, ProjectType projectType, ColorBgra PrimaryColor)
         {
             InitializeComponent();
 
@@ -106,6 +107,7 @@ namespace PaintDotNet.Effects
             refreshListView(0);
             dirty = false;
             PC = PrimaryColor;
+            this.projectType = projectType;
         }
 
         private void refreshListView(int SelectItemIndex)
@@ -989,6 +991,19 @@ namespace PaintDotNet.Effects
 #if FASTDEBUG
             return;
 #endif
+            switch (this.projectType)
+            {
+                case ProjectType.Effect:
+                    PreviewEffect();
+                    break;
+                case ProjectType.FileType:
+                    PreviewFileType();
+                    break;
+            }
+        }
+
+        private void PreviewEffect()
+        {
             string uiCode = MasterList.Select(uiE => uiE.ToSourceString(false)).Join("");
             if (!ScriptBuilder.BuildUiPreview(uiCode))
             {
@@ -1008,6 +1023,37 @@ namespace PaintDotNet.Effects
                     ScriptBuilder.UserScriptObject.EnvironmentParameters = enviroParams;
                     ScriptBuilder.UserScriptObject.CreateConfigDialog().ShowDialog();
                 }
+            }
+        }
+
+        private void PreviewFileType()
+        {
+            string code = "#region UICode\r\n";
+            code += MasterList.Select(uiE => uiE.ToSourceString(false)).Join("");
+            code += "\r\n";
+            code += "#endregion\r\n";
+            code += "void SaveImage(Document input, Stream output, PropertyBasedSaveConfigToken token, Surface scratchSurface, ProgressEventHandler progressCallback)\r\n";
+            code += "{}\r\n";
+            code += "Document LoadImage(Stream input)\r\n";
+            code += "{ return new Document(400, 300); }\r\n";
+
+            if (!ScriptBuilder.BuildFileType(code, false))
+            {
+                MessageBox.Show("Compilation Failed!");
+                return;
+            }
+
+            if (!ScriptBuilder.BuiltFileType.SupportsConfiguration)
+            {
+                MessageBox.Show("No Config!");
+                return;
+            }
+
+            using (SaveWidgetDialog widgetDialog = new SaveWidgetDialog(
+                ScriptBuilder.BuiltFileType.CreateSaveConfigWidget(),
+                ScriptBuilder.BuiltFileType.CreateDefaultSaveConfigToken()))
+            {
+                widgetDialog.ShowDialog();
             }
         }
 
