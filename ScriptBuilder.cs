@@ -75,7 +75,7 @@ namespace PaintDotNet.Effects
         {
             // Generate code
             string SourceCode =
-                ScriptWriter.UsingPartCode +
+                ScriptWriter.UsingPartCode(ProjectType.Effect) +
                 ScriptWriter.prepend_code +
                 ScriptWriter.SetRenderPart(Array.Empty<UIElement>(), false, preRenderRegex.IsMatch(scriptText)) +
                 ScriptWriter.UserEnteredPart(scriptText) +
@@ -89,7 +89,7 @@ namespace PaintDotNet.Effects
                 param.IncludeDebugInformation = debug;
                 result = cscp.CompileAssemblyFromSource(param, SourceCode);
                 param.IncludeDebugInformation = false;
-                lineOffset = (SourceCode.Substring(0, SourceCode.IndexOf("#region User Entered Code", StringComparison.Ordinal)) + "\r\n").CountLines();
+                lineOffset = CalculateLineOffset(SourceCode);
 
                 if (result.Errors.HasErrors)
                 {
@@ -169,7 +169,7 @@ namespace PaintDotNet.Effects
                 result = cscp.CompileAssemblyFromSource(param, SourceCode);
                 param.CompilerOptions = defaultOptions;
 
-                lineOffset = (SourceCode.Substring(0, SourceCode.IndexOf("#region User Entered Code", StringComparison.Ordinal)) + "\r\n").CountLines();
+                lineOffset = CalculateLineOffset(SourceCode);
 
                 if (result.Errors.HasErrors)
                 {
@@ -325,10 +325,10 @@ namespace PaintDotNet.Effects
             const string FileName = "PreviewEffect";
 
             // Generate code
-            UIElement[] UserControls = UIElement.ProcessUIControls(scriptText);
+            UIElement[] UserControls = UIElement.ProcessUIControls(scriptText, ProjectType.Effect);
 
             string SourceCode =
-                ScriptWriter.UsingPartCode +
+                ScriptWriter.UsingPartCode(ProjectType.Effect) +
                 ScriptWriter.NamespacePart(FileName) +
                 ScriptWriter.EffectPart(UserControls, FileName, string.Empty, FileName, string.Empty, EffectFlags.None, EffectRenderingSchedule.DefaultTilesForCpuRendering) +
                 ScriptWriter.PropertyPart(UserControls, FileName, "FULL UI PREVIEW - Temporarily renders to canvas", HelpType.None, string.Empty, ProjectType.Effect) +
@@ -371,10 +371,10 @@ namespace PaintDotNet.Effects
             uiCode = "#region UICode\r\n" + uiCode + "\r\n#endregion\r\n";
 
             // Generate code
-            UIElement[] UserControls = UIElement.ProcessUIControls(uiCode);
+            UIElement[] UserControls = UIElement.ProcessUIControls(uiCode, ProjectType.Effect);
 
             string SourceCode =
-                ScriptWriter.UsingPartCode +
+                ScriptWriter.UsingPartCode(ProjectType.Effect) +
                 ScriptWriter.NamespacePart(FileName) +
                 ScriptWriter.EffectPart(UserControls, FileName, string.Empty, "UI PREVIEW - Does NOT Render to canvas", string.Empty, EffectFlags.None, EffectRenderingSchedule.DefaultTilesForCpuRendering) +
                 ScriptWriter.PropertyPart(UserControls, FileName, string.Empty, HelpType.None, string.Empty, ProjectType.Effect) +
@@ -414,10 +414,10 @@ namespace PaintDotNet.Effects
             const string projectName = "MyFileType";
 
             // Generate code
-            UIElement[] userControls = UIElement.ProcessUIControls(fileTypeCode);
+            UIElement[] userControls = UIElement.ProcessUIControls(fileTypeCode, ProjectType.FileType);
 
             string sourceCode =
-                ScriptWriter.UsingPartCode +
+                ScriptWriter.UsingPartCode(ProjectType.FileType) +
                 ScriptWriter.NamespacePart(projectName) +
                 ScriptWriter.FileTypePart(projectName) +
                 ScriptWriter.PropertyPart(userControls, projectName, string.Empty, HelpType.None, string.Empty, ProjectType.FileType) +
@@ -435,7 +435,7 @@ namespace PaintDotNet.Effects
                 param.IncludeDebugInformation = debug;
                 result = cscp.CompileAssemblyFromSource(param, sourceCode);
                 param.IncludeDebugInformation = false;
-                lineOffset = 0; // TODO
+                lineOffset = CalculateLineOffset(sourceCode);
 
                 if (result.Errors.HasErrors)
                 {
@@ -459,6 +459,11 @@ namespace PaintDotNet.Effects
             }
 
             return false;
+        }
+
+        private static int CalculateLineOffset(string sourceCode)
+        {
+            return sourceCode.Substring(0, sourceCode.IndexOf("#region User Entered Code", StringComparison.Ordinal)).CountLines() + 1;
         }
     }
 }

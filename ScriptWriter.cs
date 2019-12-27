@@ -66,9 +66,13 @@ namespace PaintDotNet.Effects
             + "        }\r\n"
             + "    }\r\n"
             + "}\r\n";
+
         internal const string EmptyCode = "\r\n"
             + "void Render(Surface dst, Surface src, Rectangle rect) { }\r\n";
-        internal const string UsingPartCode = ""
+
+        internal static string UsingPartCode(ProjectType projectType)
+        {
+            string namespaces = ""
             + "using System;\r\n"
             + "using System.IO;\r\n"
             + "using System.Linq;\r\n"
@@ -87,26 +91,37 @@ namespace PaintDotNet.Effects
             + "using Registry = Microsoft.Win32.Registry;\r\n"
             + "using RegistryKey = Microsoft.Win32.RegistryKey;\r\n"
             + "using PaintDotNet;\r\n"
-            + "using PaintDotNet.Effects;\r\n"
             + "using PaintDotNet.AppModel;\r\n"
             + "using PaintDotNet.Clipboard;\r\n"
             + "using PaintDotNet.IndirectUI;\r\n"
             + "using PaintDotNet.Collections;\r\n"
-            + "using PaintDotNet.PropertySystem;\r\n"
+            + "using PaintDotNet.PropertySystem;\r\n";
+
+            if (projectType == ProjectType.Effect)
+            {
+                namespaces += ""
+                + "using PaintDotNet.Effects;\r\n"
+                + "using ColorWheelControl = PaintDotNet.ColorBgra;\r\n"
+                + "using AngleControl = System.Double;\r\n"
+                + "using PanSliderControl = PaintDotNet.Pair<double,double>;\r\n"
+                + "using FilenameControl = System.String;\r\n"
+                + "using ReseedButtonControl = System.Byte;\r\n"
+                + "using RollControl = System.Tuple<double, double, double>;\r\n";
+            }
+
+            namespaces += ""
             + "using IntSliderControl = System.Int32;\r\n"
             + "using CheckboxControl = System.Boolean;\r\n"
-            + "using ColorWheelControl = PaintDotNet.ColorBgra;\r\n"
-            + "using AngleControl = System.Double;\r\n"
-            + "using PanSliderControl = PaintDotNet.Pair<double,double>;\r\n"
             + "using TextboxControl = System.String;\r\n"
-            + "using FilenameControl = System.String;\r\n"
             + "using DoubleSliderControl = System.Double;\r\n"
             + "using ListBoxControl = System.Byte;\r\n"
             + "using RadioButtonControl = System.Byte;\r\n"
-            + "using ReseedButtonControl = System.Byte;\r\n"
             + "using MultiLineTextboxControl = System.String;\r\n"
-            + "using RollControl = System.Tuple<double, double, double>;\r\n"
             + "\r\n";
+
+            return namespaces;
+        }
+
         internal const string prepend_code = "\r\n"
             + "namespace PaintDotNet.Effects\r\n"
             + "{\r\n"
@@ -1209,10 +1224,10 @@ namespace PaintDotNet.Effects
 
         internal static string FullSourceCode(string SourceCode, string FileName, bool isAdjustment, string submenuname, string menuname, string iconpath, string SupportURL, EffectFlags effectFlags, EffectRenderingSchedule renderingSchedule, string Author, int MajorVersion, int MinorVersion, string Description, string KeyWords, string WindowTitleStr, HelpType HelpType, string HelpText)
         {
-            UIElement[] UserControls = UIElement.ProcessUIControls(SourceCode);
+            UIElement[] UserControls = UIElement.ProcessUIControls(SourceCode, ProjectType.Effect);
             bool hasPreRender = Regex.IsMatch(SourceCode, @"void PreRender\(Surface dst, Surface src\)(\s)*{(.|\s)*}", RegexOptions.Singleline);
 
-            string sUsingPart = UsingPartCode;
+            string sUsingPart = UsingPartCode(ProjectType.Effect);
             string sAssemblyInfoPart = AssemblyInfoPart(FileName, menuname, Author, MajorVersion, MinorVersion, Description, KeyWords);
             string sNamespacePart = NamespacePart(FileName);
             string sSupportInfoPart = SupportInfoPart(menuname, SupportURL);

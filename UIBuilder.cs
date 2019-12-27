@@ -99,7 +99,8 @@ namespace PaintDotNet.Effects
             DefaultColorComboBox.Items.Add("SecondaryColor");
             DefaultColorComboBox.Items.AddRange(GetColorNames());
 
-            MasterList.AddRange(UIElement.ProcessUIControls(UserScriptText));
+            MasterList.AddRange(UIElement.ProcessUIControls(UserScriptText, projectType));
+
             foreach (UIElement element in MasterList)
             {
                 IDList.Add(element.Identifier);
@@ -1245,7 +1246,7 @@ namespace PaintDotNet.Effects
             "Uri"                       // 15
         };
 
-        internal static UIElement[] ProcessUIControls(string SourceCode)
+        internal static UIElement[] ProcessUIControls(string SourceCode, ProjectType projectType)
         {
             string UIControlsText = "";
             Match mcc = Regex.Match(SourceCode, @"\#region UICode(?<sublabel>.*?)\#endregion", RegexOptions.Singleline | RegexOptions.IgnoreCase);
@@ -1291,13 +1292,36 @@ namespace PaintDotNet.Effects
                 }
 
                 UIElement element = UIElement.FromSourceLine(Line);
-                if (element != null)
+                if (element != null && IsControlAllowed(element.ElementType, projectType))
                 {
                     UserControls.Add(element);
                 }
             }
 
             return UserControls.ToArray();
+        }
+
+        private static bool IsControlAllowed(ElementType elementType, ProjectType projectType)
+        {
+            if (projectType != ProjectType.FileType)
+            {
+                return true;
+            }
+
+            switch (elementType)
+            {
+                case ElementType.IntSlider:
+                case ElementType.Checkbox:
+                case ElementType.Uri:
+                case ElementType.Textbox:
+                case ElementType.MultiLineTextbox:
+                case ElementType.DoubleSlider:
+                case ElementType.DropDown:
+                case ElementType.RadioButtons:
+                    return true;
+            }
+
+            return false;
         }
 
         internal UIElement(ElementType eType, string eName, string eMin, string eMax, string eDefault, string eOptions, int eStyle, bool eEnabled, string targetIdentifier, bool eSwap, string identifier, string typeEnum)

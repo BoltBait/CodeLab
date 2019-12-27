@@ -83,7 +83,7 @@ namespace PaintDotNet.Effects
             FileName = ScriptName;
 
             // Will the plugin have a User Interface
-            bool hasUI = UIElement.ProcessUIControls(ScriptText).Length > 0;
+            bool hasUI = UIElement.ProcessUIControls(ScriptText, ProjectType.Effect).Length > 0;
 
             // Preload submenu name
             Match msm = Regex.Match(ScriptText, @"//[\s-[\r\n]]*SubMenu[\s-[\r\n]]*:[\s-[\r\n]]*(?<sublabel>.*)(?=\r?\n|$)", RegexOptions.IgnoreCase);
