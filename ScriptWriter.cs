@@ -1088,65 +1088,12 @@ namespace PaintDotNet.Effects
             }
 
             string tokenType = (toDll) ? "PropertyBasedEffectConfigToken" : "EffectConfigToken";
-            SetRenderPart += "        protected override void OnSetRenderInfo(" + tokenType + " newToken, RenderArgs dstArgs, RenderArgs srcArgs)\r\n";
+            SetRenderPart += "        protected override void OnSetRenderInfo(" + tokenType + " token, RenderArgs dstArgs, RenderArgs srcArgs)\r\n";
             SetRenderPart += "        {\r\n";
 
             if (toDll && UserControls.Length > 0)
             {
-                foreach (UIElement u in UserControls)
-                {
-                    string propertyName = u.Identifier.FirstCharToUpper();
-                    switch (u.ElementType)
-                    {
-                        case ElementType.IntSlider:
-                            SetRenderPart += "            " + u.Identifier + " = newToken.GetProperty<Int32Property>(PropertyNames." + propertyName + ").Value;\r\n";
-                            break;
-                        case ElementType.Checkbox:
-                            SetRenderPart += "            " + u.Identifier + " = newToken.GetProperty<BooleanProperty>(PropertyNames." + propertyName + ").Value;\r\n";
-                            break;
-                        case ElementType.ColorWheel:
-                            if (!u.ColorWheelOptions.HasFlag(ColorWheelOptions.Alpha))
-                            {
-                                SetRenderPart += "            " + u.Identifier + " = ColorBgra.FromOpaqueInt32(newToken.GetProperty<Int32Property>(PropertyNames." + propertyName + ").Value);\r\n";
-                            }
-                            else
-                            {
-                                SetRenderPart += "            " + u.Identifier + " = ColorBgra.FromUInt32(unchecked((uint)newToken.GetProperty<Int32Property>(PropertyNames." + propertyName + ").Value));\r\n";
-                            }
-                            break;
-                        case ElementType.AngleChooser:
-                        case ElementType.DoubleSlider:
-                            SetRenderPart += "            " + u.Identifier + " = newToken.GetProperty<DoubleProperty>(PropertyNames." + propertyName + ").Value;\r\n";
-                            break;
-                        case ElementType.PanSlider:
-                            SetRenderPart += "            " + u.Identifier + " = newToken.GetProperty<DoubleVectorProperty>(PropertyNames." + propertyName + ").Value;\r\n";
-                            break;
-                        case ElementType.Filename:
-                        case ElementType.Textbox:
-                        case ElementType.MultiLineTextbox:
-                            SetRenderPart += "            " + u.Identifier + " = newToken.GetProperty<StringProperty>(PropertyNames." + propertyName + ").Value;\r\n";
-                            break;
-                        case ElementType.DropDown:
-                        case ElementType.RadioButtons:
-                            string typeCast = Intelli.IsEnum(u.TEnum) ? u.TEnum : "byte)(int";
-                            SetRenderPart += "            " + u.Identifier + " = (" + typeCast + ")newToken.GetProperty<StaticListChoiceProperty>(PropertyNames." + propertyName + ").Value;\r\n";
-                            break;
-                        case ElementType.BinaryPixelOp:
-                            SetRenderPart += "            " + u.Identifier + " = LayerBlendModeUtil.CreateCompositionOp((LayerBlendMode)newToken.GetProperty<StaticListChoiceProperty>(PropertyNames." + propertyName + ").Value);\r\n";
-                            break;
-                        case ElementType.FontFamily:
-                            SetRenderPart += "            " + u.Identifier + " = (FontFamily)newToken.GetProperty<StaticListChoiceProperty>(PropertyNames." + propertyName + ").Value;\r\n";
-                            break;
-                        case ElementType.ReseedButton:
-                            SetRenderPart += "            " + u.Identifier + " = (byte)newToken.GetProperty<Int32Property>(PropertyNames." + propertyName + ").Value;\r\n";
-                            SetRenderPart += "            randomSeed = " + u.Identifier + ";\r\n";
-                            break;
-                        case ElementType.RollBall:
-                            SetRenderPart += "            " + u.Identifier + " = newToken.GetProperty<DoubleVector3Property>(PropertyNames." + propertyName + ").Value;\r\n";
-                            break;
-                    }
-                }
-                SetRenderPart += "\r\n";
+                SetRenderPart += TokenValuesPart(UserControls);
             }
 
             if (PreRenderExists)
@@ -1155,7 +1102,7 @@ namespace PaintDotNet.Effects
                 SetRenderPart += "\r\n";
             }
 
-            SetRenderPart += "            base.OnSetRenderInfo(newToken, dstArgs, srcArgs);\r\n";
+            SetRenderPart += "            base.OnSetRenderInfo(token, dstArgs, srcArgs);\r\n";
             SetRenderPart += "        }\r\n";
             SetRenderPart += "\r\n";
             return SetRenderPart;
@@ -1288,60 +1235,7 @@ namespace PaintDotNet.Effects
 
             if (userControls.Length > 0)
             {
-                foreach (UIElement u in userControls)
-                {
-                    string propertyName = u.Identifier.FirstCharToUpper();
-                    switch (u.ElementType)
-                    {
-                        case ElementType.IntSlider:
-                            fileTypePart2 += "            " + u.Identifier + " = token.GetProperty<Int32Property>(PropertyNames." + propertyName + ").Value;\r\n";
-                            break;
-                        case ElementType.Checkbox:
-                            fileTypePart2 += "            " + u.Identifier + " = token.GetProperty<BooleanProperty>(PropertyNames." + propertyName + ").Value;\r\n";
-                            break;
-                        case ElementType.ColorWheel:
-                            if (!u.ColorWheelOptions.HasFlag(ColorWheelOptions.Alpha))
-                            {
-                                fileTypePart2 += "            " + u.Identifier + " = ColorBgra.FromOpaqueInt32(token.GetProperty<Int32Property>(PropertyNames." + propertyName + ").Value);\r\n";
-                            }
-                            else
-                            {
-                                fileTypePart2 += "            " + u.Identifier + " = ColorBgra.FromUInt32(unchecked((uint)token.GetProperty<Int32Property>(PropertyNames." + propertyName + ").Value));\r\n";
-                            }
-                            break;
-                        case ElementType.AngleChooser:
-                        case ElementType.DoubleSlider:
-                            fileTypePart2 += "            " + u.Identifier + " = token.GetProperty<DoubleProperty>(PropertyNames." + propertyName + ").Value;\r\n";
-                            break;
-                        case ElementType.PanSlider:
-                            fileTypePart2 += "            " + u.Identifier + " = token.GetProperty<DoubleVectorProperty>(PropertyNames." + propertyName + ").Value;\r\n";
-                            break;
-                        case ElementType.Filename:
-                        case ElementType.Textbox:
-                        case ElementType.MultiLineTextbox:
-                            fileTypePart2 += "            " + u.Identifier + " = token.GetProperty<StringProperty>(PropertyNames." + propertyName + ").Value;\r\n";
-                            break;
-                        case ElementType.DropDown:
-                        case ElementType.RadioButtons:
-                            string typeCast = Intelli.IsEnum(u.TEnum) ? u.TEnum : "byte)(int";
-                            fileTypePart2 += "            " + u.Identifier + " = (" + typeCast + ")token.GetProperty<StaticListChoiceProperty>(PropertyNames." + propertyName + ").Value;\r\n";
-                            break;
-                        case ElementType.BinaryPixelOp:
-                            fileTypePart2 += "            " + u.Identifier + " = LayerBlendModeUtil.CreateCompositionOp((LayerBlendMode)token.GetProperty<StaticListChoiceProperty>(PropertyNames." + propertyName + ").Value);\r\n";
-                            break;
-                        case ElementType.FontFamily:
-                            fileTypePart2 += "            " + u.Identifier + " = (FontFamily)token.GetProperty<StaticListChoiceProperty>(PropertyNames." + propertyName + ").Value;\r\n";
-                            break;
-                        case ElementType.ReseedButton:
-                            fileTypePart2 += "            " + u.Identifier + " = (byte)token.GetProperty<Int32Property>(PropertyNames." + propertyName + ").Value;\r\n";
-                            fileTypePart2 += "            randomSeed = " + u.Identifier + ";\r\n";
-                            break;
-                        case ElementType.RollBall:
-                            fileTypePart2 += "            " + u.Identifier + " = token.GetProperty<DoubleVector3Property>(PropertyNames." + propertyName + ").Value;\r\n";
-                            break;
-                    }
-                }
-                fileTypePart2 += "\r\n";
+                fileTypePart2 += TokenValuesPart(userControls);
             }
 
             fileTypePart2 += "            SaveImage(input, output, token, scratchSurface, progressCallback);\r\n";
@@ -1353,6 +1247,67 @@ namespace PaintDotNet.Effects
             fileTypePart2 += "        }\r\n";
 
             return fileTypePart2;
+        }
+
+        private static string TokenValuesPart(UIElement[] userControls)
+        {
+            string tokenValues = "";
+            foreach (UIElement u in userControls)
+            {
+                string propertyName = u.Identifier.FirstCharToUpper();
+                switch (u.ElementType)
+                {
+                    case ElementType.IntSlider:
+                        tokenValues += "            " + u.Identifier + " = token.GetProperty<Int32Property>(PropertyNames." + propertyName + ").Value;\r\n";
+                        break;
+                    case ElementType.Checkbox:
+                        tokenValues += "            " + u.Identifier + " = token.GetProperty<BooleanProperty>(PropertyNames." + propertyName + ").Value;\r\n";
+                        break;
+                    case ElementType.ColorWheel:
+                        if (!u.ColorWheelOptions.HasFlag(ColorWheelOptions.Alpha))
+                        {
+                            tokenValues += "            " + u.Identifier + " = ColorBgra.FromOpaqueInt32(token.GetProperty<Int32Property>(PropertyNames." + propertyName + ").Value);\r\n";
+                        }
+                        else
+                        {
+                            tokenValues += "            " + u.Identifier + " = ColorBgra.FromUInt32(unchecked((uint)token.GetProperty<Int32Property>(PropertyNames." + propertyName + ").Value));\r\n";
+                        }
+                        break;
+                    case ElementType.AngleChooser:
+                    case ElementType.DoubleSlider:
+                        tokenValues += "            " + u.Identifier + " = token.GetProperty<DoubleProperty>(PropertyNames." + propertyName + ").Value;\r\n";
+                        break;
+                    case ElementType.PanSlider:
+                        tokenValues += "            " + u.Identifier + " = token.GetProperty<DoubleVectorProperty>(PropertyNames." + propertyName + ").Value;\r\n";
+                        break;
+                    case ElementType.Filename:
+                    case ElementType.Textbox:
+                    case ElementType.MultiLineTextbox:
+                        tokenValues += "            " + u.Identifier + " = token.GetProperty<StringProperty>(PropertyNames." + propertyName + ").Value;\r\n";
+                        break;
+                    case ElementType.DropDown:
+                    case ElementType.RadioButtons:
+                        string typeCast = Intelli.IsEnum(u.TEnum) ? u.TEnum : "byte)(int";
+                        tokenValues += "            " + u.Identifier + " = (" + typeCast + ")token.GetProperty<StaticListChoiceProperty>(PropertyNames." + propertyName + ").Value;\r\n";
+                        break;
+                    case ElementType.BinaryPixelOp:
+                        tokenValues += "            " + u.Identifier + " = LayerBlendModeUtil.CreateCompositionOp((LayerBlendMode)token.GetProperty<StaticListChoiceProperty>(PropertyNames." + propertyName + ").Value);\r\n";
+                        break;
+                    case ElementType.FontFamily:
+                        tokenValues += "            " + u.Identifier + " = (FontFamily)token.GetProperty<StaticListChoiceProperty>(PropertyNames." + propertyName + ").Value;\r\n";
+                        break;
+                    case ElementType.ReseedButton:
+                        tokenValues += "            " + u.Identifier + " = (byte)token.GetProperty<Int32Property>(PropertyNames." + propertyName + ").Value;\r\n";
+                        tokenValues += "            randomSeed = " + u.Identifier + ";\r\n";
+                        break;
+                    case ElementType.RollBall:
+                        tokenValues += "            " + u.Identifier + " = token.GetProperty<DoubleVector3Property>(PropertyNames." + propertyName + ").Value;\r\n";
+                        break;
+                }
+            }
+            tokenValues += "\r\n";
+
+            return tokenValues;
         }
     }
 }
