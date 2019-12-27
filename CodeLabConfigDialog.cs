@@ -231,7 +231,7 @@ namespace PaintDotNet.Effects
         {
             CodeLabConfigToken sect = (CodeLabConfigToken)theEffectToken;
             sect.UserCode = txtCode.Text;
-            sect.UserScriptObject = ScriptBuilder.UserScriptObject;
+            sect.UserScriptObject = ScriptBuilder.BuiltEffect;
             sect.ScriptName = FileName;
             sect.ScriptPath = FullScriptPath;
             sect.Dirty = tabStrip1.SelectedTabIsDirty;
@@ -356,50 +356,51 @@ namespace PaintDotNet.Effects
 
         private void RunEffectWithDialog()
         {
-            tmrCompile.Enabled = false;
-            Build();
             if (errorList.Items.Count != 0)
             {
-                FlexibleMessageBox.Show("Before you can preview your effect, you must resolve all code errors.", "Build Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                FlexibleMessageBox.Show("Before you can preview your Effect, you must resolve all code errors.", "Build Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
             }
-            else if (!ScriptBuilder.BuildFullPreview(txtCode.Text))
+
+            if (!ScriptBuilder.BuildFullPreview(txtCode.Text))
             {
                 FlexibleMessageBox.Show("Something went wrong, and the Preview can't be run.", "Preview Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                DisplayErrors();
+                return;
             }
-            else if (!ScriptBuilder.UserScriptObject.Options.Flags.HasFlag(EffectFlags.Configurable))
+
+            if (!ScriptBuilder.BuiltEffect.Options.Flags.HasFlag(EffectFlags.Configurable))
             {
                 FlexibleMessageBox.Show("There are no UI controls, so the Preview can't be displayed.", "Preview Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
             }
-            else
+
+            ScriptBuilder.BuiltEffect.EnvironmentParameters = this.Effect.EnvironmentParameters;
+            using (EffectConfigDialog previewDialog = ScriptBuilder.BuiltEffect.CreateConfigDialog())
             {
-                ScriptBuilder.UserScriptObject.EnvironmentParameters = this.Effect.EnvironmentParameters;
-                using (EffectConfigDialog previewDialog = ScriptBuilder.UserScriptObject.CreateConfigDialog())
-                {
-                    previewToken = previewDialog.EffectToken;
-                    previewDialog.EffectTokenChanged += (sender, e) => FinishTokenUpdate();
+                previewToken = previewDialog.EffectToken;
+                previewDialog.EffectTokenChanged += (sender, e) => FinishTokenUpdate();
 
-                    previewDialog.ShowDialog();
-                }
-
-                previewToken = null;
-                Build();
+                previewDialog.ShowDialog();
             }
-            tmrCompile.Enabled = true;
+
+            previewToken = null;
+            Build();
         }
 
         private void RunFileTypeWithDialog()
         {
-            if (!ScriptBuilder.BuildFileType(txtCode.Text, false))
+            if (errorList.Items.Count != 0)
             {
-                MessageBox.Show("Compilation Failed!");
+                FlexibleMessageBox.Show("Before you can preview your FileType, you must resolve all code errors.", "Build Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            if (!ScriptBuilder.BuiltFileType.SupportsConfiguration)
-            {
-                MessageBox.Show("No Config!");
-                return;
-            }
+            //if (!ScriptBuilder.BuiltFileType.SupportsConfiguration)
+            //{
+            //    FlexibleMessageBox.Show("There are no UI controls, so the Preview can't be displayed.", "Preview Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //    return;
+            //}
 
             using (SaveConfigDialog saveDialog = new SaveConfigDialog(ScriptBuilder.BuiltFileType, EffectSourceSurface))
             {
@@ -1276,6 +1277,8 @@ namespace PaintDotNet.Effects
 #endif
             double SaveOpacitySetting = Opacity;
             Opacity = 0;
+            tmrCompile.Enabled = false;
+            Build();
 
             switch (this.tabStrip1.SelectedTabProjType)
             {
@@ -1287,6 +1290,7 @@ namespace PaintDotNet.Effects
                     break;
             }
 
+            tmrCompile.Enabled = true;
             Opacity = SaveOpacitySetting;
         }
         #endregion

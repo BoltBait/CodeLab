@@ -1010,7 +1010,7 @@ namespace PaintDotNet.Effects
             {
                 FlexibleMessageBox.Show("Something went wrong, and the Preview can't be displayed.", "Preview Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            else if (!ScriptBuilder.UserScriptObject.Options.Flags.HasFlag(EffectFlags.Configurable))
+            else if (!ScriptBuilder.BuiltEffect.Options.Flags.HasFlag(EffectFlags.Configurable))
             {
                 FlexibleMessageBox.Show("There are no UI controls, so the Preview can't be displayed.", "Preview Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
@@ -1021,8 +1021,8 @@ namespace PaintDotNet.Effects
                 using (EffectEnvironmentParameters enviroParams = new EffectEnvironmentParameters(ColorBgra.Black, Color.White, 0, selection, emptySurface))
                 {
                     emptySurface.Clear(ColorBgra.White);
-                    ScriptBuilder.UserScriptObject.EnvironmentParameters = enviroParams;
-                    ScriptBuilder.UserScriptObject.CreateConfigDialog().ShowDialog();
+                    ScriptBuilder.BuiltEffect.EnvironmentParameters = enviroParams;
+                    ScriptBuilder.BuiltEffect.CreateConfigDialog().ShowDialog();
                 }
             }
         }

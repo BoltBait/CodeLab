@@ -37,7 +37,7 @@ namespace PaintDotNet.Effects
             CompilerOptions = defaultOptions
         };
         private static CompilerResults result;
-        private static Effect userScriptObject;
+        private static Effect builtEffect;
         private static FileType builtFileType;
         private static int lineOffset;
         private static string exceptionMsg;
@@ -45,7 +45,7 @@ namespace PaintDotNet.Effects
         private static readonly Regex preRenderRegex = new Regex(@"void PreRender\(Surface dst, Surface src\)(\s)*{(.|\s)*}", RegexOptions.Singleline);
 
         #region Properties
-        internal static Effect UserScriptObject => userScriptObject;
+        internal static Effect BuiltEffect => builtEffect;
         internal static FileType BuiltFileType => builtFileType;
         internal static int LineOffset => lineOffset;
         internal static int ColumnOffset => 9;
@@ -82,7 +82,7 @@ namespace PaintDotNet.Effects
                 ScriptWriter.append_code;
 
             exceptionMsg = null;
-            userScriptObject = null;
+            builtEffect = null;
             // Compile code
             try
             {
@@ -102,7 +102,7 @@ namespace PaintDotNet.Effects
                 {
                     if (type.IsSubclassOf(typeof(Effect)) && !type.IsAbstract)
                     {
-                        userScriptObject = (Effect)type.GetConstructor(Type.EmptyTypes).Invoke(null);
+                        builtEffect = (Effect)type.GetConstructor(Type.EmptyTypes).Invoke(null);
                         Intelli.UserScript = type;
                     }
                     else if (type.DeclaringType != null && type.DeclaringType.FullName.StartsWith(Intelli.UserScriptFullName, StringComparison.Ordinal) && !Intelli.UserDefinedTypes.ContainsKey(type.Name))
@@ -111,7 +111,7 @@ namespace PaintDotNet.Effects
                     }
                 }
 
-                return (userScriptObject != null);
+                return (builtEffect != null);
             }
             catch (Exception ex)
             {
@@ -338,7 +338,7 @@ namespace PaintDotNet.Effects
                 ScriptWriter.EndPart();
 
             exceptionMsg = null;
-            userScriptObject = null;
+            builtEffect = null;
             // Compile code
             try
             {
@@ -353,7 +353,7 @@ namespace PaintDotNet.Effects
                 {
                     if (type.IsSubclassOf(typeof(PropertyBasedEffect)) && !type.IsAbstract)
                     {
-                        userScriptObject = (Effect)type.GetConstructor(Type.EmptyTypes).Invoke(null);
+                        builtEffect = (Effect)type.GetConstructor(Type.EmptyTypes).Invoke(null);
                         return true;
                     }
                 }
@@ -383,7 +383,7 @@ namespace PaintDotNet.Effects
                 ScriptWriter.EmptyCode +
                 ScriptWriter.EndPart();
 
-            userScriptObject = null;
+            builtEffect = null;
             // Compile code
             try
             {
@@ -398,7 +398,7 @@ namespace PaintDotNet.Effects
                 {
                     if (type.IsSubclassOf(typeof(PropertyBasedEffect)) && !type.IsAbstract)
                     {
-                        userScriptObject = (Effect)type.GetConstructor(Type.EmptyTypes).Invoke(null);
+                        builtEffect = (Effect)type.GetConstructor(Type.EmptyTypes).Invoke(null);
                         return true;
                     }
                 }
@@ -426,7 +426,7 @@ namespace PaintDotNet.Effects
                 ScriptWriter.EndPart();
 
             exceptionMsg = null;
-            userScriptObject = null;
+            builtEffect = null;
             builtFileType = null;
 
             // Compile code
