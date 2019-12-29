@@ -54,18 +54,35 @@ namespace PaintDotNet.Effects
 
         public override EffectConfigDialog CreateConfigDialog()
         {
+            Rectangle srcBounds = EnvironmentParameters.SourceSurface.Bounds;
+            Point selectionOffset = EnvironmentParameters.GetSelection(srcBounds).GetBoundsInt().Location;
+            ColorBgra strokeColor = EnvironmentParameters.PrimaryColor;
+            ColorBgra fillColor = EnvironmentParameters.SecondaryColor;
+            double strokeThickness = EnvironmentParameters.BrushWidth;
+            ShapeBuilder.SetEnviromentParams(srcBounds.Width, srcBounds.Height, selectionOffset.X, selectionOffset.Y, strokeColor, fillColor, strokeThickness);
+
             return new CodeLabConfigDialog();
         }
 
         private Effect userEffect;
         private bool fetchDebugMsg;
+        private ProjectType projectType;
+        private Surface shapeSurface;
+
+        private readonly BinaryPixelOp normalOp = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Normal);
 
         protected override void OnSetRenderInfo(EffectConfigToken parameters, RenderArgs dstArgs, RenderArgs srcArgs)
         {
             CodeLabConfigToken sect = (CodeLabConfigToken)parameters;
             userEffect = sect.UserScriptObject;
+            projectType = sect.ProjectType;
 
-            if (userEffect != null)
+            if (projectType == ProjectType.Shape && ShapeBuilder.Shape != null)
+            {
+                shapeSurface?.Dispose();
+                shapeSurface = Surface.CopyFromBitmap(ShapeBuilder.Shape);
+            }
+            else if (projectType == ProjectType.Effect && userEffect != null)
             {
                 userEffect.EnvironmentParameters = this.EnvironmentParameters;
 
@@ -89,7 +106,12 @@ namespace PaintDotNet.Effects
 
         public override void Render(EffectConfigToken parameters, RenderArgs dstArgs, RenderArgs srcArgs, Rectangle[] rois, int startIndex, int length)
         {
-            if (userEffect != null)
+            if (projectType == ProjectType.Shape && shapeSurface != null)
+            {
+                dstArgs.Surface.CopySurface(srcArgs.Surface, rois, startIndex, length);
+                normalOp.Apply(dstArgs.Surface, shapeSurface, rois, startIndex, length);
+            }
+            else if (projectType == ProjectType.Effect && userEffect != null)
             {
                 CodeLabConfigToken sect = (CodeLabConfigToken)parameters;
                 try
@@ -130,6 +152,9 @@ namespace PaintDotNet.Effects
             {
                 userEffect?.Dispose();
                 userEffect = null;
+
+                shapeSurface?.Dispose();
+                shapeSurface = null;
             }
 
             base.OnDispose(disposing);

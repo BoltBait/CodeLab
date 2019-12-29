@@ -29,6 +29,7 @@ namespace PaintDotNet.Effects
         internal bool Dirty;
         internal EffectConfigToken PreviewToken;
         internal int[] Bookmarks;
+        internal ProjectType ProjectType;
 
         internal CodeLabConfigToken()
         {
@@ -41,6 +42,7 @@ namespace PaintDotNet.Effects
             Dirty = false;
             PreviewToken = null;
             Bookmarks = Array.Empty<int>();
+            ProjectType = ProjectType.Effect;
         }
 
         public override object Clone()
@@ -55,7 +57,8 @@ namespace PaintDotNet.Effects
                 ScriptPath = this.ScriptPath,
                 Dirty = this.Dirty,
                 PreviewToken = this.PreviewToken,
-                Bookmarks = this.Bookmarks
+                Bookmarks = this.Bookmarks,
+                ProjectType = this.ProjectType
             };
         }
     }
