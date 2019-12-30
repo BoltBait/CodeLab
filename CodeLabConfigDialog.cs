@@ -1159,22 +1159,34 @@ namespace PaintDotNet.Effects
                 FlexibleMessageBox.Show("Before you can build a DLL, you must first save your source file using the File > Save as... menu.", "Build Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-#if FASTDEBUG
-            const bool isClassic = false;
-#else
-            bool isClassic = this.Services.GetService<IAppInfoService>().InstallType == AppInstallType.Classic;
-#endif
-            BuildForm buildForm = new BuildForm(fileName, txtCode.Text, FullScriptPath, isClassic);
-            if (buildForm.ShowDialog() != DialogResult.OK)
+
+            bool buildSucceeded = false;
+
+            switch (tabStrip1.SelectedTabProjType)
             {
-                return;
+                case ProjectType.Effect:
+#if FASTDEBUG
+                    const bool isClassic = false;
+#else
+                    bool isClassic = this.Services.GetService<IAppInfoService>().InstallType == AppInstallType.Classic;
+#endif
+                    BuildForm buildForm = new BuildForm(fileName, txtCode.Text, FullScriptPath, isClassic);
+                    if (buildForm.ShowDialog() != DialogResult.OK)
+                    {
+                        return;
+                    }
+
+                    buildSucceeded = ScriptBuilder.BuildEffectDll(
+                        txtCode.Text, FullScriptPath, buildForm.SubMenu, buildForm.MenuItemName, buildForm.IconPath, buildForm.Author, buildForm.MajorVer, buildForm.MinorVer, buildForm.URL,
+                        buildForm.WindowTitle, buildForm.isAdjustment, buildForm.Description, buildForm.KeyWords, buildForm.EffectFlags, buildForm.RenderingSchedule, buildForm.HelpType, buildForm.HelpStr);
+
+                    buildForm.Dispose();
+                    break;
+                case ProjectType.FileType:
+                    // TODO: Needs a proper UI
+                    buildSucceeded = ScriptBuilder.BuildFileTypeDll(txtCode.Text, FullScriptPath, "DevPerson", 1, 0, "https://example.com/", "My Cool FileType", "key|word");
+                    break;
             }
-
-            bool buildSucceeded = ScriptBuilder.BuildDll(
-                txtCode.Text, FullScriptPath, buildForm.SubMenu, buildForm.MenuItemName, buildForm.IconPath, buildForm.Author, buildForm.MajorVer, buildForm.MinorVer, buildForm.URL,
-                buildForm.WindowTitle, buildForm.isAdjustment, buildForm.Description, buildForm.KeyWords, buildForm.EffectFlags, buildForm.RenderingSchedule, buildForm.HelpType, buildForm.HelpStr);
-
-            buildForm.Dispose();
 
             if (buildSucceeded)
             {
