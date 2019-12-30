@@ -61,18 +61,48 @@ namespace PaintDotNet.Effects
             }
             else if (docElement.Name == "ps:SimpleGeometryShape")
             {
-                string geometryCode = xDoc.DocumentElement.Attributes?.GetNamedItem("Geometry")?.InnerText;
-                if (geometryCode == null)
+                if (docElement.HasChildNodes)
                 {
-                    exceptionMsg = "Can not find the Geometry attribute.";
-                    return false;
-                }
+                    string outerXml = docElement.FirstChild.OuterXml;
+                    int xmlnsStartIndex = outerXml.IndexOf(" xmlns=");
+                    int xmlnsEndIndex = outerXml.IndexOf(">");
 
-                StreamGeometry geometry = TryParseStreamGeometry(geometryCode);
-                if (geometryCode != null)
+                    if (xmlnsStartIndex == -1 || xmlnsEndIndex == -1)
+                    {
+                        exceptionMsg = InvalidShapeFormat;
+                        return false;
+                    }
+
+                    string pageCode = "<Page xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\" xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\">"
+                        + outerXml.Substring(0, xmlnsStartIndex) + outerXml.Substring(xmlnsEndIndex)
+                        + "</Page>";
+
+                    Page page = TryParsePage(pageCode);
+                    if (page?.Content is Geometry geometry)
+                    {
+                        RenderGeometry(geometry);
+                        return true;
+                    }
+                }
+                else if (docElement.HasAttributes && docElement.HasAttribute("Geometry"))
                 {
-                    RenderStreamGeometry(geometry);
-                    return true;
+                    string geometryCode = docElement.Attributes.GetNamedItem("Geometry").InnerText;
+                    if (string.IsNullOrWhiteSpace(geometryCode))
+                    {
+                        exceptionMsg = "Can not find the Geometry attribute.";
+                        return false;
+                    }
+
+                    StreamGeometry geometry = TryParseStreamGeometry(geometryCode);
+                    if (geometryCode != null)
+                    {
+                        RenderGeometry(geometry);
+                        return true;
+                    }
+                }
+                else
+                {
+                    exceptionMsg = InvalidShapeFormat;
                 }
             }
 
@@ -127,15 +157,15 @@ namespace PaintDotNet.Effects
             return geometry;
         }
 
-        private static void RenderStreamGeometry(Geometry geometry)
+        private static void RenderGeometry(Geometry geometry)
         {
             Path path = new Path
             {
                 Data = geometry,
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
-                Width = geometry.Bounds.Right + 3,
-                Height = geometry.Bounds.Bottom + 3,
+                Width = geometry.Bounds.Right + strokeThickness,
+                Height = geometry.Bounds.Bottom + strokeThickness,
                 Stroke = strokeBrush,
                 Fill = fillBrush,
                 StrokeThickness = strokeThickness
@@ -180,7 +210,7 @@ namespace PaintDotNet.Effects
             {
                 image.Save(ms);
                 ms.Seek(0, System.IO.SeekOrigin.Begin);
-                Shape = (System.Drawing.Bitmap)System.Drawing.Image.FromStream(ms);
+                Shape = new System.Drawing.Bitmap(ms);
             }
         }
     }
