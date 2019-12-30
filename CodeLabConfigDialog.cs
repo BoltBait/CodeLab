@@ -1195,8 +1195,11 @@ namespace PaintDotNet.Effects
                 string zipPath = Path.ChangeExtension(fullPath, ".zip");
 
                 string succeeded = "Build succeeded!\r\n\r\n" +
-                    "File \"" + zipPath + "\" created.\r\n\r\n" +
-                    "You will need to right-click 'Extract All...' the file on your desktop to run the install.bat file and restart Paint.NET to see it in the Effects menu.";
+                    "\"" + fileName + ".zip\" has been created on your Desktop.\r\n" +
+                    zipPath + "\r\n\r\n" +
+                    "You will need to right-click 'Extract All...' the Zip to run the install.bat file\r\n" +
+                    "Restart Paint.NET to make the plugin available.";
+
                 FlexibleMessageBox.Show(succeeded, "Build Finished", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             else
