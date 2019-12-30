@@ -2081,6 +2081,12 @@ namespace PaintDotNet.Effects
 
         protected override void OnKeyDown(KeyEventArgs e)
         {
+            if (this.Lexer != Lexer.Cpp)
+            {
+                base.OnKeyDown(e);
+                return;
+            }
+
             if (!iBox.Visible)
             {
                 if (e.KeyCode == Keys.Escape)
@@ -2965,6 +2971,12 @@ namespace PaintDotNet.Effects
 
         protected override void OnCharAdded(CharAddedEventArgs e)
         {
+            if (this.Lexer != Lexer.Cpp)
+            {
+                base.OnCharAdded(e);
+                return;
+            }
+
             if (iBox.Visible)
             {
                 string word = this.GetWordFromPosition(this.CurrentPosition);
@@ -3067,7 +3079,7 @@ namespace PaintDotNet.Effects
 
         protected override void OnBeforeDelete(BeforeModificationEventArgs e)
         {
-            if (e.Source == ModificationSource.User && e.Text.Trim().Length > 0 && !Replacing)
+            if (this.Lexer == Lexer.Cpp && e.Source == ModificationSource.User && e.Text.Trim().Length > 0 && !Replacing)
             {
                 SetUpRenaming(e.Position);
             }
@@ -3077,7 +3089,7 @@ namespace PaintDotNet.Effects
 
         protected override void OnBeforeInsert(BeforeModificationEventArgs e)
         {
-            if (e.Source == ModificationSource.User && e.Text.Trim().Length > 0 && !Replacing)
+            if (this.Lexer == Lexer.Cpp && e.Source == ModificationSource.User && e.Text.Trim().Length > 0 && !Replacing)
             {
                 SetUpRenaming(e.Position);
             }
@@ -3541,7 +3553,7 @@ namespace PaintDotNet.Effects
         {
             base.OnDwellStart(e);
 
-            if (intelliTip.Visible)
+            if (this.Lexer != Lexer.Cpp || intelliTip.Visible)
             {
                 return;
             }

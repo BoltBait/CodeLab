@@ -2258,22 +2258,12 @@ namespace PaintDotNet.Effects
                 tabStrip1.SelectedTabProjType == ProjectType.FileType)
             {
                 BuildAsync();
-                SaveDLLButton.Enabled = true;
-                saveAsDLLToolStripMenuItem.Enabled = true;
-                UIDesignerButton.Enabled = true;
-                userInterfaceDesignerToolStripMenuItem.Enabled = true;
-                RunButton.Enabled = true;
-                previewEffectMenuItem.Enabled = true;
+                EnableCSharpButtons(true);
             }
             else
             {
                 ClearErrorList();
-                SaveDLLButton.Enabled = false;
-                saveAsDLLToolStripMenuItem.Enabled = false;
-                UIDesignerButton.Enabled = false;
-                userInterfaceDesignerToolStripMenuItem.Enabled = false;
-                RunButton.Enabled = false;
-                previewEffectMenuItem.Enabled = false;
+                EnableCSharpButtons(false);
             }
         }
 
@@ -2289,22 +2279,24 @@ namespace PaintDotNet.Effects
             if (projType == ProjectType.Effect ||
                 projType == ProjectType.FileType)
             {
-                SaveDLLButton.Enabled = true;
-                saveAsDLLToolStripMenuItem.Enabled = true;
-                UIDesignerButton.Enabled = true;
-                userInterfaceDesignerToolStripMenuItem.Enabled = true;
-                RunButton.Enabled = true;
-                previewEffectMenuItem.Enabled = true;
+                EnableCSharpButtons(true);
             }
             else
             {
-                SaveDLLButton.Enabled = false;
-                saveAsDLLToolStripMenuItem.Enabled = false;
-                UIDesignerButton.Enabled = false;
-                userInterfaceDesignerToolStripMenuItem.Enabled = false;
-                RunButton.Enabled = false;
-                previewEffectMenuItem.Enabled = false;
+                EnableCSharpButtons(false);
             }
+        }
+
+        private void EnableCSharpButtons(bool enable)
+        {
+            SaveDLLButton.Enabled = enable;
+            saveAsDLLToolStripMenuItem.Enabled = enable;
+            UIDesignerButton.Enabled = enable;
+            userInterfaceDesignerToolStripMenuItem.Enabled = enable;
+            RunButton.Enabled = enable;
+            previewEffectMenuItem.Enabled = enable;
+            FormatDocButton.Enabled = enable;
+            formatDocMenuItem.Enabled = enable;
         }
 
         private void tabStrip1_TabClosingAndDirty(object sender, System.ComponentModel.CancelEventArgs e)
