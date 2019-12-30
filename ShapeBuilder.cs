@@ -11,8 +11,8 @@ namespace PaintDotNet.Effects
 {
     internal static class ShapeBuilder
     {
-        private static Size shapeSize;
-        private static Point shapeOffset;
+        private static Size canvasSize;
+        private static Rect selection;
         private static SolidColorBrush strokeBrush;
         private static SolidColorBrush fillBrush;
         private static double strokeThickness;
@@ -23,10 +23,11 @@ namespace PaintDotNet.Effects
         internal static string Exception => exceptionMsg;
         internal static System.Drawing.Bitmap Shape;
 
-        internal static void SetEnviromentParams(int width, int height, int xOffset, int yOffset, ColorBgra strokeColor, ColorBgra fillColor, double strokeWidth)
+        internal static void SetEnviromentParams(int canvasWidth, int canvasHeight, int selectionX, int selectionY,
+            int selectionWidth, int selctionHeight, ColorBgra strokeColor, ColorBgra fillColor, double strokeWidth)
         {
-            shapeSize = new Size(width, height);
-            shapeOffset = new Point(xOffset, yOffset);
+            canvasSize = new Size(canvasWidth, canvasHeight);
+            selection = new Rect(selectionX, selectionY, selectionWidth, selctionHeight);
             strokeBrush = new SolidColorBrush(Color.FromArgb(strokeColor.A, strokeColor.R, strokeColor.G, strokeColor.B));
             fillBrush = new SolidColorBrush(Color.FromArgb(fillColor.A, fillColor.R, fillColor.G, fillColor.B));
             strokeThickness = strokeWidth;
@@ -52,11 +53,15 @@ namespace PaintDotNet.Effects
 
             if (docElement.Name == "Page")
             {
-                Page page = TryParsePage(shapeCode);
-                if (page != null)
+                XmlNodeList paths = docElement.GetElementsByTagName("Path");
+                if (paths.Count > 0)
                 {
-                    RenderPage(page);
-                    return true;
+                    Path path = TryParsePath(paths[0].OuterXml);
+                    if (path != null)
+                    {
+                        RenderPath(path);
+                        return true;
+                    }
                 }
             }
             else if (docElement.Name == "ps:SimpleGeometryShape")
@@ -105,6 +110,10 @@ namespace PaintDotNet.Effects
                     exceptionMsg = InvalidShapeFormat;
                 }
             }
+            else
+            {
+                exceptionMsg = InvalidShapeFormat;
+            }
 
             return false;
         }
@@ -141,6 +150,22 @@ namespace PaintDotNet.Effects
             return page;
         }
 
+        private static Path TryParsePath(string shape)
+        {
+            Path path = null;
+
+            try
+            {
+                path = (Path)XamlReader.Parse(shape);
+            }
+            catch (Exception ex)
+            {
+                exceptionMsg = ex.Message;
+            }
+
+            return path;
+        }
+
         private static StreamGeometry TryParseStreamGeometry(string streamGeometry)
         {
             StreamGeometry geometry = null;
@@ -164,18 +189,27 @@ namespace PaintDotNet.Effects
                 Data = geometry,
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
-                Width = geometry.Bounds.Right + strokeThickness,
-                Height = geometry.Bounds.Bottom + strokeThickness,
                 Stroke = strokeBrush,
                 Fill = fillBrush,
                 StrokeThickness = strokeThickness
             };
 
+            RenderPath(path);
+        }
+
+        private static void RenderPath(Path path)
+        {
+            const int padding = 5;
+            path.Stretch = Stretch.Uniform;
+            path.Width = selection.Width - padding * 2;
+            path.Height = selection.Height - padding * 2;
+            path.Margin = new Thickness(padding);
+
             Canvas canvas = new Canvas
             {
-                Width = shapeSize.Width,
-                Height = shapeSize.Height,
-                Margin = new Thickness(shapeOffset.X, shapeOffset.Y, 0, 0),
+                Width = canvasSize.Width,
+                Height = canvasSize.Height,
+                Margin = new Thickness(selection.X, selection.Y, 0, 0),
                 Background = Brushes.Transparent
             };
 
@@ -185,18 +219,6 @@ namespace PaintDotNet.Effects
             canvas.Arrange(new Rect(new Size(canvas.Width, canvas.Height)));
 
             CreateBitmap(canvas, (int)canvas.Width, (int)canvas.Height);
-        }
-
-        private static void RenderPage(Page page)
-        {
-            page.Width = shapeSize.Width;
-            page.Height = shapeSize.Height;
-            page.Margin = new Thickness(shapeOffset.X, shapeOffset.Y, 0, 0);
-
-            page.Measure(new Size(page.Width, page.Height));
-            page.Arrange(new Rect(new Size(page.Width, page.Height)));
-
-            CreateBitmap(page, (int)page.Width, (int)page.Height);
         }
 
         private static void CreateBitmap(Visual visual, int width, int height)

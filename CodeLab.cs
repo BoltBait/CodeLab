@@ -55,11 +55,11 @@ namespace PaintDotNet.Effects
         public override EffectConfigDialog CreateConfigDialog()
         {
             Rectangle srcBounds = EnvironmentParameters.SourceSurface.Bounds;
-            Point selectionOffset = EnvironmentParameters.GetSelection(srcBounds).GetBoundsInt().Location;
+            Rectangle selection = EnvironmentParameters.GetSelection(srcBounds).GetBoundsInt();
             ColorBgra strokeColor = EnvironmentParameters.PrimaryColor;
             ColorBgra fillColor = EnvironmentParameters.SecondaryColor;
             double strokeThickness = EnvironmentParameters.BrushWidth;
-            ShapeBuilder.SetEnviromentParams(srcBounds.Width, srcBounds.Height, selectionOffset.X, selectionOffset.Y, strokeColor, fillColor, strokeThickness);
+            ShapeBuilder.SetEnviromentParams(srcBounds.Width, srcBounds.Height, selection.X, selection.Y, selection.Width, selection.Height, strokeColor, fillColor, strokeThickness);
 
             return new CodeLabConfigDialog();
         }
