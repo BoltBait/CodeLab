@@ -2343,7 +2343,7 @@ namespace PaintDotNet.Effects
                     if (File.Exists(filePath) &&
                         (fileExt.Equals(".cs", StringComparison.OrdinalIgnoreCase) ||
                         fileExt.Equals(".txt", StringComparison.OrdinalIgnoreCase) ||
-                        fileExt.Equals(".xmal", StringComparison.OrdinalIgnoreCase)))
+                        fileExt.Equals(".xaml", StringComparison.OrdinalIgnoreCase)))
                     {
                         LoadFile(filePath);
                     }
