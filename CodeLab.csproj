@@ -87,6 +87,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemUtil.cs" />
+    <Compile Include="BuildFileTypeDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BuildFileTypeDialog.Designer.cs">
+      <DependentUpon>BuildFileTypeDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="BuildForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -197,6 +203,9 @@
     <Compile Include="IndicatorBar.cs">
       <SubType>Component</SubType>
     </Compile>
+    <EmbeddedResource Include="BuildFileTypeDialog.resx">
+      <DependentUpon>BuildFileTypeDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="CodeLabConfigDialog.resx">
       <DependentUpon>CodeLabConfigDialog.cs</DependentUpon>
       <SubType>Designer</SubType>

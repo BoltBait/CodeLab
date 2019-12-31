@@ -184,10 +184,11 @@ namespace PaintDotNet.Effects
             return AssemblyInfoPart;
         }
 
-        internal static string NamespacePart(string FileName)
+        internal static string NamespacePart(string FileName, ProjectType projectType)
         {
             // Remove non-alpha characters from namespace
-            string NameSpace = Regex.Replace(FileName, @"[^\w]", "") + "Effect";
+            string pluginType = (projectType == ProjectType.Effect) ? "Effect" : "FileType";
+            string NameSpace = Regex.Replace(FileName, @"[^\w]", "") + pluginType;
 
             string NamespacePart = "";
             NamespacePart += "namespace " + NameSpace + "\r\n";
@@ -1160,7 +1161,7 @@ namespace PaintDotNet.Effects
 
             string sUsingPart = UsingPartCode(ProjectType.Effect);
             string sAssemblyInfoPart = AssemblyInfoPart(FileName, menuname, Author, MajorVersion, MinorVersion, Description, KeyWords);
-            string sNamespacePart = NamespacePart(FileName);
+            string sNamespacePart = NamespacePart(FileName, ProjectType.Effect);
             string sSupportInfoPart = SupportInfoPart(menuname, SupportURL);
             string sCategoryPart = CategoryPart(isAdjustment);
             string sEffectPart = EffectPart(UserControls, FileName, submenuname, menuname, iconpath, effectFlags, renderingSchedule);
@@ -1174,7 +1175,24 @@ namespace PaintDotNet.Effects
             return sUsingPart + sAssemblyInfoPart + sNamespacePart + sSupportInfoPart + sCategoryPart + sEffectPart + sHelpPart + sPropertyPart + sSetRenderPart + sRenderLoopPart + sUserEnteredPart + sEndPart;
         }
 
-        internal static string FileTypePart(string projectName)
+        internal static string FullFileTypeSourceCode(string scriptText, string projectName, string author, int majorVersion, int minorVersion, string supportURL, string description, string keyWords, string loadExt, string saveExt, bool supoortLayers)
+        {
+            UIElement[] userControls = UIElement.ProcessUIControls(scriptText, ProjectType.FileType);
+
+            return
+                UsingPartCode(ProjectType.FileType) +
+                AssemblyInfoPart(projectName, projectName, author, majorVersion, minorVersion, description, keyWords) +
+                NamespacePart(projectName, ProjectType.FileType) +
+                SupportInfoPart(projectName, supportURL) +
+                FileTypePart(projectName, loadExt, saveExt, supoortLayers) +
+                ConstructorPart(false) +
+                PropertyPart(userControls, projectName, string.Empty, HelpType.None, string.Empty, ProjectType.FileType) +
+                FileTypePart2(userControls) +
+                UserEnteredPart(scriptText) +
+                EndPart();
+        }
+
+        internal static string FileTypePart(string projectName, string loadExt, string saveExt, bool supoortLayers)
         {
             string fileTypePart = "";
             fileTypePart += "    public sealed class " + projectName + "Factory : IFileTypeFactory\r\n";
@@ -1193,10 +1211,10 @@ namespace PaintDotNet.Effects
             fileTypePart += "                \"MyFileType\",\r\n";
             fileTypePart += "                new FileTypeOptions\r\n";
             fileTypePart += "                {\r\n";
-            fileTypePart += "                    LoadExtensions = new string[] { \".foo\", \".bar\" },\r\n";
-            fileTypePart += "                    SaveExtensions = new string[] { \".foo\", \".bar\" },\r\n";
+            fileTypePart += "                    LoadExtensions = new string[] { " + loadExt + " },\r\n";
+            fileTypePart += "                    SaveExtensions = new string[] { " + saveExt + " },\r\n";
             fileTypePart += "                    SupportsCancellation = true,\r\n";
-            fileTypePart += "                    SupportsLayers = false\r\n";
+            fileTypePart += "                    SupportsLayers = " + supoortLayers.ToString().ToLowerInvariant() + "\r\n";
             fileTypePart += "                })\r\n";
 
             return fileTypePart;

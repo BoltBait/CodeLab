@@ -1174,15 +1174,15 @@ namespace PaintDotNet.Effects
             }
 
             bool buildSucceeded = false;
+#if FASTDEBUG
+                    const bool isClassic = false;
+#else
+            bool isClassic = this.Services.GetService<IAppInfoService>().InstallType == AppInstallType.Classic;
+#endif
 
             switch (tabStrip1.SelectedTabProjType)
             {
                 case ProjectType.Effect:
-#if FASTDEBUG
-                    const bool isClassic = false;
-#else
-                    bool isClassic = this.Services.GetService<IAppInfoService>().InstallType == AppInstallType.Classic;
-#endif
                     BuildForm buildForm = new BuildForm(fileName, txtCode.Text, FullScriptPath, isClassic);
                     if (buildForm.ShowDialog() != DialogResult.OK)
                     {
@@ -1196,8 +1196,16 @@ namespace PaintDotNet.Effects
                     buildForm.Dispose();
                     break;
                 case ProjectType.FileType:
-                    // TODO: Needs a proper UI
-                    buildSucceeded = ScriptBuilder.BuildFileTypeDll(txtCode.Text, FullScriptPath, "DevPerson", 1, 0, "https://example.com/", "My Cool FileType", "key|word");
+                    BuildFileTypeDialog buildFileTypeDialog = new BuildFileTypeDialog(fileName, txtCode.Text, isClassic);
+                    if (buildFileTypeDialog.ShowDialog() != DialogResult.OK)
+                    {
+                        return;
+                    }
+
+                    buildSucceeded = ScriptBuilder.BuildFileTypeDll(txtCode.Text, FullScriptPath, buildFileTypeDialog.Author, buildFileTypeDialog.Major, buildFileTypeDialog.Minor,
+                        buildFileTypeDialog.URL, buildFileTypeDialog.Description, buildFileTypeDialog.Keywords, buildFileTypeDialog.LoadExt, buildFileTypeDialog.SaveExt, buildFileTypeDialog.Layers);
+
+                    buildFileTypeDialog.Dispose();
                     break;
             }
 

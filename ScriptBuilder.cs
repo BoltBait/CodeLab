@@ -165,7 +165,7 @@ namespace PaintDotNet.Effects
 
             string SourceCode =
                 ScriptWriter.UsingPartCode(ProjectType.Effect) +
-                ScriptWriter.NamespacePart(FileName) +
+                ScriptWriter.NamespacePart(FileName, ProjectType.Effect) +
                 ScriptWriter.EffectPart(UserControls, FileName, string.Empty, FileName, string.Empty, EffectFlags.None, EffectRenderingSchedule.DefaultTilesForCpuRendering) +
                 ScriptWriter.PropertyPart(UserControls, FileName, "FULL UI PREVIEW - Temporarily renders to canvas", HelpType.None, string.Empty, ProjectType.Effect) +
                 ScriptWriter.SetRenderPart(UserControls, true, preRenderRegex.IsMatch(scriptText)) +
@@ -211,7 +211,7 @@ namespace PaintDotNet.Effects
 
             string SourceCode =
                 ScriptWriter.UsingPartCode(ProjectType.Effect) +
-                ScriptWriter.NamespacePart(FileName) +
+                ScriptWriter.NamespacePart(FileName, ProjectType.Effect) +
                 ScriptWriter.EffectPart(UserControls, FileName, string.Empty, "UI PREVIEW - Does NOT Render to canvas", string.Empty, EffectFlags.None, EffectRenderingSchedule.DefaultTilesForCpuRendering) +
                 ScriptWriter.PropertyPart(UserControls, FileName, string.Empty, HelpType.None, string.Empty, ProjectType.Effect) +
                 ScriptWriter.RenderLoopPart(UserControls) +
@@ -254,8 +254,8 @@ namespace PaintDotNet.Effects
 
             string sourceCode =
                 ScriptWriter.UsingPartCode(ProjectType.FileType) +
-                ScriptWriter.NamespacePart(projectName) +
-                ScriptWriter.FileTypePart(projectName) +
+                ScriptWriter.NamespacePart(projectName, ProjectType.FileType) +
+                ScriptWriter.FileTypePart(projectName, "\".foo\"", "\".foo\"", false) +
                 ScriptWriter.ConstructorPart(debug) +
                 ScriptWriter.PropertyPart(userControls, projectName, string.Empty, HelpType.None, string.Empty, ProjectType.FileType) +
                 ScriptWriter.FileTypePart2(userControls) +
@@ -298,25 +298,10 @@ namespace PaintDotNet.Effects
             return false;
         }
 
-        internal static bool BuildFileTypeDll(string scriptText, string scriptPath, string author, int majorVersion, int minorVersion, string supportURL, string description, string keyWords)
+        internal static bool BuildFileTypeDll(string scriptText, string scriptPath, string author, int majorVersion, int minorVersion, string supportURL, string description, string keyWords, string loadExt, string saveExt, bool supoortLayers)
         {
             string projectName = Path.GetFileNameWithoutExtension(scriptPath);
-
-            // Generate code
-            // Generate code
-            UIElement[] userControls = UIElement.ProcessUIControls(scriptText, ProjectType.FileType);
-
-            string sourceCode =
-                ScriptWriter.UsingPartCode(ProjectType.FileType) +
-                ScriptWriter.AssemblyInfoPart(projectName, projectName, author, majorVersion, minorVersion, description, keyWords) +
-                ScriptWriter.NamespacePart(projectName) +
-                ScriptWriter.SupportInfoPart(projectName, supportURL) +
-                ScriptWriter.FileTypePart(projectName) +
-                ScriptWriter.ConstructorPart(false) +
-                ScriptWriter.PropertyPart(userControls, projectName, string.Empty, HelpType.None, string.Empty, ProjectType.FileType) +
-                ScriptWriter.FileTypePart2(userControls) +
-                ScriptWriter.UserEnteredPart(scriptText) +
-                ScriptWriter.EndPart();
+            string sourceCode = ScriptWriter.FullFileTypeSourceCode(scriptText, projectName, author, majorVersion, minorVersion, supportURL, description, keyWords, loadExt, saveExt, supoortLayers);
 
             return BuildDll(projectName, defaultOptions, sourceCode, ProjectType.FileType);
         }
