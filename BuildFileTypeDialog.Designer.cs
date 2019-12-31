@@ -106,14 +106,14 @@
             // 
             // minorBox
             // 
-            this.minorBox.Location = new System.Drawing.Point(122, 120);
+            this.minorBox.Location = new System.Drawing.Point(222, 120);
             this.minorBox.Name = "minorBox";
             this.minorBox.Size = new System.Drawing.Size(50, 23);
             this.minorBox.TabIndex = 9;
             // 
             // majorBox
             // 
-            this.majorBox.Location = new System.Drawing.Point(222, 120);
+            this.majorBox.Location = new System.Drawing.Point(122, 120);
             this.majorBox.Name = "majorBox";
             this.majorBox.Size = new System.Drawing.Size(50, 23);
             this.majorBox.TabIndex = 10;

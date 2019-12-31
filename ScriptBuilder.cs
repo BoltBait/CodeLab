@@ -255,7 +255,7 @@ namespace PaintDotNet.Effects
             string sourceCode =
                 ScriptWriter.UsingPartCode(ProjectType.FileType) +
                 ScriptWriter.NamespacePart(projectName, ProjectType.FileType) +
-                ScriptWriter.FileTypePart(projectName, "\".foo\"", "\".foo\"", false) +
+                ScriptWriter.FileTypePart(projectName, "\".foo\"", "\".foo\"", false, projectName) +
                 ScriptWriter.ConstructorPart(debug) +
                 ScriptWriter.PropertyPart(userControls, projectName, string.Empty, HelpType.None, string.Empty, ProjectType.FileType) +
                 ScriptWriter.FileTypePart2(userControls) +
@@ -298,10 +298,10 @@ namespace PaintDotNet.Effects
             return false;
         }
 
-        internal static bool BuildFileTypeDll(string scriptText, string scriptPath, string author, int majorVersion, int minorVersion, string supportURL, string description, string loadExt, string saveExt, bool supoortLayers)
+        internal static bool BuildFileTypeDll(string scriptText, string scriptPath, string author, int majorVersion, int minorVersion, string supportURL, string description, string loadExt, string saveExt, bool supoortLayers, string title)
         {
             string projectName = Path.GetFileNameWithoutExtension(scriptPath);
-            string sourceCode = ScriptWriter.FullFileTypeSourceCode(scriptText, projectName, author, majorVersion, minorVersion, supportURL, description, loadExt, saveExt, supoortLayers);
+            string sourceCode = ScriptWriter.FullFileTypeSourceCode(scriptText, projectName, author, majorVersion, minorVersion, supportURL, description, loadExt, saveExt, supoortLayers, title);
 
             return BuildDll(projectName, defaultOptions, sourceCode, ProjectType.FileType);
         }

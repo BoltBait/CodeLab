@@ -1175,7 +1175,7 @@ namespace PaintDotNet.Effects
             return sUsingPart + sAssemblyInfoPart + sNamespacePart + sSupportInfoPart + sCategoryPart + sEffectPart + sHelpPart + sPropertyPart + sSetRenderPart + sRenderLoopPart + sUserEnteredPart + sEndPart;
         }
 
-        internal static string FullFileTypeSourceCode(string scriptText, string projectName, string author, int majorVersion, int minorVersion, string supportURL, string description, string loadExt, string saveExt, bool supoortLayers)
+        internal static string FullFileTypeSourceCode(string scriptText, string projectName, string author, int majorVersion, int minorVersion, string supportURL, string description, string loadExt, string saveExt, bool supoortLayers, string title)
         {
             UIElement[] userControls = UIElement.ProcessUIControls(scriptText, ProjectType.FileType);
 
@@ -1183,8 +1183,8 @@ namespace PaintDotNet.Effects
                 UsingPartCode(ProjectType.FileType) +
                 AssemblyInfoPart(projectName, projectName, author, majorVersion, minorVersion, description, string.Empty) +
                 NamespacePart(projectName, ProjectType.FileType) +
-                SupportInfoPart(projectName, supportURL) +
-                FileTypePart(projectName, loadExt, saveExt, supoortLayers) +
+                SupportInfoPart(title, supportURL) +
+                FileTypePart(projectName, loadExt, saveExt, supoortLayers, title) +
                 ConstructorPart(false) +
                 PropertyPart(userControls, projectName, string.Empty, HelpType.None, string.Empty, ProjectType.FileType) +
                 FileTypePart2(userControls) +
@@ -1192,7 +1192,7 @@ namespace PaintDotNet.Effects
                 EndPart();
         }
 
-        internal static string FileTypePart(string projectName, string loadExt, string saveExt, bool supoortLayers)
+        internal static string FileTypePart(string projectName, string loadExt, string saveExt, bool supoortLayers, string title)
         {
             string fileTypePart = "";
             fileTypePart += "    public sealed class " + projectName + "Factory : IFileTypeFactory\r\n";
@@ -1208,7 +1208,7 @@ namespace PaintDotNet.Effects
             fileTypePart += "    {\r\n";
             fileTypePart += "        internal " + projectName + "Plugin()\r\n";
             fileTypePart += "            : base(\r\n";
-            fileTypePart += "                \"MyFileType\",\r\n";
+            fileTypePart += "                \"" + title + "\",\r\n";
             fileTypePart += "                new FileTypeOptions\r\n";
             fileTypePart += "                {\r\n";
             fileTypePart += "                    LoadExtensions = new string[] { " + loadExt + " },\r\n";
