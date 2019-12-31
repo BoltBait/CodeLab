@@ -2924,7 +2924,7 @@ namespace PaintDotNet.Effects
 
                 // Has the caret changed position?
                 int caretPos = this.CurrentPosition;
-                if (lastCaretPos != caretPos)
+                if (this.Lexer == Lexer.Cpp && lastCaretPos != caretPos)
                 {
                     lastCaretPos = caretPos;
 

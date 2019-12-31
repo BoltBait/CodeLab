@@ -2300,6 +2300,7 @@ namespace PaintDotNet.Effects
             previewEffectMenuItem.Enabled = enable;
             FormatDocButton.Enabled = enable;
             formatDocMenuItem.Enabled = enable;
+            SnippetManButton.Enabled = enable;
         }
 
         private void tabStrip1_TabClosingAndDirty(object sender, System.ComponentModel.CancelEventArgs e)
