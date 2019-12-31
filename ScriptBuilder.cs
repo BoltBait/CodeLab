@@ -298,10 +298,10 @@ namespace PaintDotNet.Effects
             return false;
         }
 
-        internal static bool BuildFileTypeDll(string scriptText, string scriptPath, string author, int majorVersion, int minorVersion, string supportURL, string description, string keyWords, string loadExt, string saveExt, bool supoortLayers)
+        internal static bool BuildFileTypeDll(string scriptText, string scriptPath, string author, int majorVersion, int minorVersion, string supportURL, string description, string loadExt, string saveExt, bool supoortLayers)
         {
             string projectName = Path.GetFileNameWithoutExtension(scriptPath);
-            string sourceCode = ScriptWriter.FullFileTypeSourceCode(scriptText, projectName, author, majorVersion, minorVersion, supportURL, description, keyWords, loadExt, saveExt, supoortLayers);
+            string sourceCode = ScriptWriter.FullFileTypeSourceCode(scriptText, projectName, author, majorVersion, minorVersion, supportURL, description, loadExt, saveExt, supoortLayers);
 
             return BuildDll(projectName, defaultOptions, sourceCode, ProjectType.FileType);
         }

@@ -41,8 +41,6 @@
             this.urlBox = new System.Windows.Forms.TextBox();
             this.nameBox = new System.Windows.Forms.TextBox();
             this.nameLabel = new System.Windows.Forms.Label();
-            this.keywordsLabel = new System.Windows.Forms.Label();
-            this.keywordsBox = new System.Windows.Forms.TextBox();
             this.descriptionBox = new System.Windows.Forms.TextBox();
             this.descriptionLabel = new System.Windows.Forms.Label();
             this.layersCheckBox = new System.Windows.Forms.CheckBox();
@@ -170,22 +168,6 @@
             this.nameLabel.TabIndex = 16;
             this.nameLabel.Text = "Plugin Name";
             // 
-            // keywordsLabel
-            // 
-            this.keywordsLabel.AutoSize = true;
-            this.keywordsLabel.Location = new System.Drawing.Point(12, 217);
-            this.keywordsLabel.Name = "keywordsLabel";
-            this.keywordsLabel.Size = new System.Drawing.Size(58, 15);
-            this.keywordsLabel.TabIndex = 17;
-            this.keywordsLabel.Text = "Keywords";
-            // 
-            // keywordsBox
-            // 
-            this.keywordsBox.Location = new System.Drawing.Point(122, 214);
-            this.keywordsBox.Name = "keywordsBox";
-            this.keywordsBox.Size = new System.Drawing.Size(150, 23);
-            this.keywordsBox.TabIndex = 18;
-            // 
             // descriptionBox
             // 
             this.descriptionBox.Location = new System.Drawing.Point(122, 261);
@@ -255,8 +237,6 @@
             this.Controls.Add(this.layersCheckBox);
             this.Controls.Add(this.descriptionLabel);
             this.Controls.Add(this.descriptionBox);
-            this.Controls.Add(this.keywordsBox);
-            this.Controls.Add(this.keywordsLabel);
             this.Controls.Add(this.nameLabel);
             this.Controls.Add(this.nameBox);
             this.Controls.Add(this.urlBox);
@@ -294,8 +274,6 @@
         private System.Windows.Forms.TextBox urlBox;
         private System.Windows.Forms.TextBox nameBox;
         private System.Windows.Forms.Label nameLabel;
-        private System.Windows.Forms.Label keywordsLabel;
-        private System.Windows.Forms.TextBox keywordsBox;
         private System.Windows.Forms.TextBox descriptionBox;
         private System.Windows.Forms.Label descriptionLabel;
         private System.Windows.Forms.CheckBox layersCheckBox;

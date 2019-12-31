@@ -17,7 +17,6 @@ namespace PaintDotNet.Effects
         internal string URL;
         internal string PluginName;
         internal string Description;
-        internal string Keywords;
         internal int Major;
         internal int Minor;
         internal string LoadExt;
@@ -53,7 +52,7 @@ namespace PaintDotNet.Effects
         {
             UpdateAllValues();
 
-            string sourceCode = ScriptWriter.FullFileTypeSourceCode(this.userCode, this.fileName, this.Author, this.Major, this.Minor, this.URL, this.Description, this.Keywords, this.LoadExt, this.SaveExt, this.Layers);
+            string sourceCode = ScriptWriter.FullFileTypeSourceCode(this.userCode, this.fileName, this.Author, this.Major, this.Minor, this.URL, this.Description, this.LoadExt, this.SaveExt, this.Layers);
             using (ViewSrc VSW = new ViewSrc("Full Source Code", sourceCode, true))
             {
                 VSW.ShowDialog();
@@ -78,7 +77,7 @@ namespace PaintDotNet.Effects
 
                 if (fbd.ShowDialog() == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
                 {
-                    string sourceCode = ScriptWriter.FullFileTypeSourceCode(this.userCode, this.fileName, this.Author, this.Major, this.Minor, this.URL, this.Description, this.Keywords, this.LoadExt, this.SaveExt, this.Layers);
+                    string sourceCode = ScriptWriter.FullFileTypeSourceCode(this.userCode, this.fileName, this.Author, this.Major, this.Minor, this.URL, this.Description, this.LoadExt, this.SaveExt, this.Layers);
                     Solution.Generate(fbd.SelectedPath, this.fileName, sourceCode, string.Empty);
 
                     Settings.LastSlnDirectory = fbd.SelectedPath;
@@ -105,7 +104,6 @@ namespace PaintDotNet.Effects
             this.URL = this.urlBox.Text;
             this.PluginName = this.nameBox.Text;
             this.Description = this.descriptionBox.Text;
-            this.Keywords = this.keywordsBox.Text;
             this.Major = (int)this.majorBox.Value;
             this.Minor = (int)this.minorBox.Value;
             this.LoadExt = "\"" + this.loadExtBox.Text.Split('|', ',', ';').Join("\", \"") + "\"";

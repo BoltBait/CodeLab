@@ -1175,13 +1175,13 @@ namespace PaintDotNet.Effects
             return sUsingPart + sAssemblyInfoPart + sNamespacePart + sSupportInfoPart + sCategoryPart + sEffectPart + sHelpPart + sPropertyPart + sSetRenderPart + sRenderLoopPart + sUserEnteredPart + sEndPart;
         }
 
-        internal static string FullFileTypeSourceCode(string scriptText, string projectName, string author, int majorVersion, int minorVersion, string supportURL, string description, string keyWords, string loadExt, string saveExt, bool supoortLayers)
+        internal static string FullFileTypeSourceCode(string scriptText, string projectName, string author, int majorVersion, int minorVersion, string supportURL, string description, string loadExt, string saveExt, bool supoortLayers)
         {
             UIElement[] userControls = UIElement.ProcessUIControls(scriptText, ProjectType.FileType);
 
             return
                 UsingPartCode(ProjectType.FileType) +
-                AssemblyInfoPart(projectName, projectName, author, majorVersion, minorVersion, description, keyWords) +
+                AssemblyInfoPart(projectName, projectName, author, majorVersion, minorVersion, description, string.Empty) +
                 NamespacePart(projectName, ProjectType.FileType) +
                 SupportInfoPart(projectName, supportURL) +
                 FileTypePart(projectName, loadExt, saveExt, supoortLayers) +
