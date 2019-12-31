@@ -127,17 +127,6 @@ namespace PaintDotNet.Effects
             + "{\r\n"
             + "public class UserScript : Effect\r\n"
             + "{\r\n"
-            + "    public StringWriter __debugWriter = new StringWriter();\r\n"
-            + "    TextWriterTraceListener __listener;\r\n"
-            + "\r\n"
-            + "    public string __DebugMsgs\r\n"
-            + "    {\r\n"
-            + "        get\r\n"
-            + "        {\r\n"
-            + "            return __debugWriter.ToString();\r\n"
-            + "        }\r\n"
-            + "    }\r\n"
-            + "\r\n"
             + "    [ThreadStatic]\r\n"
             + "    private static Random RandomNumber;\r\n"
             + "    private int instanceSeed = unchecked((int)DateTime.Now.Ticks);\r\n"
@@ -153,12 +142,7 @@ namespace PaintDotNet.Effects
             + "    }\r\n"
             + "\r\n"
             + "    public UserScript()\r\n"
-            + "        : base(\"UserScript\", null, string.Empty, new EffectOptions())\r\n"
-            + "    {\r\n"
-            + "        __listener = new TextWriterTraceListener(__debugWriter);\r\n"
-            + "        Debug.Listeners.Add(__listener);\r\n"
-            + "    }\r\n"
-            + "\r\n";
+            + "        : base(\"UserScript\", null, string.Empty, new EffectOptions())\r\n";
         internal const string append_code = ""
             + "    }\r\n"
             + "}\r\n";
@@ -1214,9 +1198,6 @@ namespace PaintDotNet.Effects
             fileTypePart += "                    SupportsCancellation = true,\r\n";
             fileTypePart += "                    SupportsLayers = false\r\n";
             fileTypePart += "                })\r\n";
-            fileTypePart += "        {\r\n";
-            fileTypePart += "        }\r\n";
-            fileTypePart += "\r\n";
 
             return fileTypePart;
         }
@@ -1308,6 +1289,35 @@ namespace PaintDotNet.Effects
             tokenValues += "\r\n";
 
             return tokenValues;
+        }
+
+        internal static string ConstructorPart(bool debug)
+        {
+            if (!debug)
+            {
+                return ""
+                    + "        {\r\n"
+                    + "        }\r\n"
+                    + "\r\n";
+            }
+
+            return  ""
+                + "        {\r\n"
+                + "            __listener = new TextWriterTraceListener(__debugWriter);\r\n"
+                + "            Debug.Listeners.Add(__listener);\r\n"
+                + "        }\r\n"
+                + "\r\n"
+                + "        public StringWriter __debugWriter = new StringWriter();\r\n"
+                + "        TextWriterTraceListener __listener;\r\n"
+                + "\r\n"
+                + "        public string __DebugMsgs\r\n"
+                + "        {\r\n"
+                + "            get\r\n"
+                + "            {\r\n"
+                + "                return __debugWriter.ToString();\r\n"
+                + "            }\r\n"
+                + "        }\r\n"
+                + "\r\n";
         }
     }
 }

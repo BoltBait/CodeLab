@@ -77,6 +77,7 @@ namespace PaintDotNet.Effects
             string SourceCode =
                 ScriptWriter.UsingPartCode(ProjectType.Effect) +
                 ScriptWriter.prepend_code +
+                ScriptWriter.ConstructorPart(debug) +
                 ScriptWriter.SetRenderPart(Array.Empty<UIElement>(), false, preRenderRegex.IsMatch(scriptText)) +
                 ScriptWriter.UserEnteredPart(scriptText) +
                 ScriptWriter.append_code;
@@ -255,6 +256,7 @@ namespace PaintDotNet.Effects
                 ScriptWriter.UsingPartCode(ProjectType.FileType) +
                 ScriptWriter.NamespacePart(projectName) +
                 ScriptWriter.FileTypePart(projectName) +
+                ScriptWriter.ConstructorPart(debug) +
                 ScriptWriter.PropertyPart(userControls, projectName, string.Empty, HelpType.None, string.Empty, ProjectType.FileType) +
                 ScriptWriter.FileTypePart2(userControls) +
                 ScriptWriter.UserEnteredPart(fileTypeCode) +
@@ -310,6 +312,7 @@ namespace PaintDotNet.Effects
                 ScriptWriter.NamespacePart(projectName) +
                 ScriptWriter.SupportInfoPart(projectName, supportURL) +
                 ScriptWriter.FileTypePart(projectName) +
+                ScriptWriter.ConstructorPart(false) +
                 ScriptWriter.PropertyPart(userControls, projectName, string.Empty, HelpType.None, string.Empty, ProjectType.FileType) +
                 ScriptWriter.FileTypePart2(userControls) +
                 ScriptWriter.UserEnteredPart(scriptText) +

@@ -444,6 +444,16 @@ namespace PaintDotNet.Effects
                     {
                         savedDoc.Flatten(scratchSurface);
                     }
+
+                    // Debug Output capture
+                    if (OutputTextBox.Visible)
+                    {
+                        string output = ScriptBuilder.BuiltFileType.GetType().GetProperty("__DebugMsgs", typeof(string))?.GetValue(ScriptBuilder.BuiltFileType)?.ToString();
+                        if (!output.IsNullOrEmpty() && output.Trim().Length > 0)
+                        {
+                            OutputTextBox.AppendText(output);
+                        }
+                    }
                 }
                 catch (Exception ex)
                 {
