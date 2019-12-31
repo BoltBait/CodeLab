@@ -43,7 +43,7 @@ namespace PaintDotNet.Effects
         {
             get
             {
-                foreach (var item in this.toolStrip1.Items)
+                foreach (ToolStripItem item in this.toolStrip1.Items)
                 {
                     if (item is Tab tab && tab.IsDirty)
                     {
@@ -89,14 +89,17 @@ namespace PaintDotNet.Effects
 
                 activeTab.ToolTipText = (value.IsNullOrEmpty()) ? activeTab.Title : value;
 
-                string imagePath = Path.ChangeExtension(value, ".png");
-                if (File.Exists(imagePath))
+                if (activeTab.ProjectType == ProjectType.Effect)
                 {
-                    activeTab.Image = ResUtil.GetBitmapFromFile(imagePath);
-                }
-                else
-                {
-                    activeTab.ImageName = "Untitled";
+                    string imagePath = Path.ChangeExtension(value, ".png");
+                    if (File.Exists(imagePath))
+                    {
+                        activeTab.Image = ResUtil.GetBitmapFromFile(imagePath);
+                    }
+                    else
+                    {
+                        activeTab.ImageName = "Untitled";
+                    }
                 }
             }
         }
@@ -185,6 +188,14 @@ namespace PaintDotNet.Effects
             }
         }
 
+        internal void CloseFirstTab()
+        {
+            if (this.toolStrip1.Items.Count > 1 && this.toolStrip1.Items[0] is Tab tab)
+            {
+                CloseTab(tab);
+            }
+        }
+
         internal void CloseTab()
         {
             CloseTab(activeTab);
@@ -252,7 +263,7 @@ namespace PaintDotNet.Effects
         private void UpdateIndexes()
         {
             int index = 0;
-            foreach (var item in this.toolStrip1.Items)
+            foreach (ToolStripItem item in this.toolStrip1.Items)
             {
                 if (item is Tab tab)
                 {

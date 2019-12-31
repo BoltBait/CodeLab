@@ -242,19 +242,22 @@ namespace PaintDotNet.Effects
 
         protected override void InitDialogFromToken(EffectConfigToken effectTokenCopy)
         {
-            CodeLabConfigToken sect = (CodeLabConfigToken)effectTokenCopy;
-
-            if (sect != null)
+            if (effectTokenCopy is CodeLabConfigToken token)
             {
-                FileName = sect.ScriptName;
-                FullScriptPath = sect.ScriptPath;
-                txtCode.Text = sect.UserCode;
+                FileName = token.ScriptName;
+                FullScriptPath = token.ScriptPath;
+                if (token.ProjectType != ProjectType.Effect)
+                {
+                    tabStrip1.NewTab(FileName, FullScriptPath, token.ProjectType);
+                    tabStrip1.CloseFirstTab();
+                }
+                txtCode.Text = token.UserCode;
                 txtCode.EmptyUndoBuffer();
-                if (!sect.Dirty)
+                if (!token.Dirty)
                 {
                     txtCode.SetSavePoint();
                 }
-                txtCode.Bookmarks = sect.Bookmarks;
+                txtCode.Bookmarks = token.Bookmarks;
 
                 UpdateTabProperties();
             }

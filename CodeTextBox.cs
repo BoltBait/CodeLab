@@ -3208,6 +3208,11 @@ namespace PaintDotNet.Effects
 
         internal void UpdateSyntaxHighlighting()
         {
+            if (this.Lexer != Lexer.Cpp)
+            {
+                return;
+            }
+
             this.SetKeywords(1, string.Join(" ", Intelli.AllTypes.Keys) + " " + string.Join(" ", Intelli.UserDefinedTypes.Keys));
             this.SetKeywords(0, "abstract as base bool byte char checked class const decimal delegate double enum event explicit extern "
                 + "false fixed float implicit in int interface internal is lock long namespace new null object operator out override "
