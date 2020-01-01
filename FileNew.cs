@@ -15,6 +15,10 @@
 /////////////////////////////////////////////////////////////////////////////////
 
 using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
+using System.Reflection;
 using System.Windows.Forms;
 
 namespace PaintDotNet.Effects
@@ -22,6 +26,9 @@ namespace PaintDotNet.Effects
     internal partial class FileNew : Form
     {
         internal string CodeTemplate;
+
+        // The following effects are handled differently as they only have DST surface and not a SRC surface:
+        private List<string> renderedEffects = new List<string>() { "Clipboard", "Clouds", "Julia", "Mandelbrot" };
 
         internal FileNew(string EffectFlag)
         {
@@ -32,18 +39,32 @@ namespace PaintDotNet.Effects
             this.BackColor = PdnTheme.BackColor;
             foreach (Control control in this.Controls)
             {
-                if (control is ComboBox)
+                if ((control is ComboBox) || (control is ListBox))
                 {
                     control.ForeColor = PdnTheme.ForeColor;
                     control.BackColor = PdnTheme.BackColor;
                 }
             }
 
-            BlendingCode.Text = "Pass Through";
-            PixelOpCode.Text = "Pass Through";
-            FinalPixelOpCode.Text = "Pass Through";
-            EffectCode.Text = "---------Copy--------->";
-            dstLabel.Text = "DST\r\nIMAGE";
+            float UIfactor;
+            using (Graphics g = flowList.CreateGraphics())
+            {
+                UIfactor = g.DpiY / 96;
+            }
+            flowList.ItemHeight = (int)(64 * UIfactor);
+            DefaultColorComboBox.Items.Add("Primary");
+            DefaultColorComboBox.Items.Add("Secondary");
+            //DefaultColorComboBox.Items.Add("UserSelected");
+            DefaultColorComboBox.Items.AddRange(GetColorNames());
+            DefaultColorComboBox.SelectedIndex = 0;
+            catagoryBox.SelectedIndex = 0;
+            pixelOpBox.SelectedIndex = 0;
+            effectBox.SelectedIndex = effectBox.FindString("Gaussian");
+            sourceBox.SelectedIndex = 0;
+            blendBox.SelectedIndex = 1;
+            destinationBox.SelectedIndex = 1;
+            bottomBox.SelectedIndex = 2;
+            updateScreen();
 
             if (EffectFlag.Contains("Aliased Selection"))
             {
@@ -59,10 +80,600 @@ namespace PaintDotNet.Effects
             }
         }
 
+        private static string[] GetColorNames()
+        {
+            List<string> names = typeof(Color).GetProperties(BindingFlags.Public | BindingFlags.Static)
+                     .Where(prop => prop.PropertyType == typeof(Color))
+                     .Select(prop => prop.Name).ToList();
+
+            names.Sort();
+
+            return names.ToArray();
+        }
+
+        private string getEffectPropCode(string effect, string src, string dst, int eCount, bool isLastItem, bool effectPreviouslySent, ref string renderCode)
+        {
+            string cr = "\r\n";
+            string propCode = "";
+            string lowerName = effect.ToLower().Replace(" ", "").Replace("brightness/", "");
+
+            if (effect == "Clipboard")
+            {
+                renderCode = "";
+                propCode += "    // Copy from the Clipboard to the " + dst + " surface" + cr;
+                propCode += "    for (int y = 0; y < " + dst + ".Size.Height; y++)" + cr;
+                propCode += "    {" + cr;
+                propCode += "        if (IsCancelRequested) return;" + cr;
+                propCode += "        for (int x = 0; x < " + dst + ".Size.Width; x++)" + cr;
+                propCode += "        {" + cr;
+                propCode += "            if (clipboardSurface != null)" + cr;
+                propCode += "            {" + cr;
+                propCode += "                //" + dst + "[x,y] = clipboardSurface.GetBilinearSample(x, y);" + cr;
+                propCode += "                //" + dst + "[x,y] = clipboardSurface.GetBilinearSampleClamped(x, y);" + cr;
+                propCode += "                " + dst + "[x,y] = clipboardSurface.GetBilinearSampleWrapped(x, y);" + cr;
+                propCode += "            }" + cr;
+                propCode += "            else" + cr;
+                propCode += "            {" + cr;
+                propCode += "                " + dst + "[x,y] = Color.Transparent;" + cr;
+                propCode += "            }" + cr;
+                propCode += "        }" + cr;
+                propCode += "    }" + cr;
+            }
+            else
+            {
+                propCode += "    // " + effect + cr;
+                propCode += "    " + lowerName + "Props = " + lowerName + "Effect.CreatePropertyCollection();" + cr;
+                propCode += "    ";
+                if (!effectPreviouslySent)
+                {
+                    propCode += "PropertyBasedEffectConfigToken ";
+                }
+                propCode += lowerName + "Parameters = new PropertyBasedEffectConfigToken(" + lowerName + "Props);" + cr;
+                if (effect.Contains("Gaussian"))
+                {
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(GaussianBlurEffect.PropertyNames.Radius, Amount" + eCount.ToString() + ");" + cr;
+                }
+                else if (effect.Contains("Contrast"))
+                {
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(BrightnessAndContrastAdjustment.PropertyNames.Brightness, Amount" + eCount.ToString() + ");" + cr;
+                    eCount++;
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(BrightnessAndContrastAdjustment.PropertyNames.Contrast, Amount" + eCount.ToString() + ");" + cr;
+                }
+                else if (effect.Contains("Motion"))
+                {
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(MotionBlurEffect.PropertyNames.Angle, Amount" + eCount.ToString() + ");" + cr;
+                    eCount++;
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(MotionBlurEffect.PropertyNames.Centered, Amount" + eCount.ToString() + ");" + cr;
+                    eCount++;
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(MotionBlurEffect.PropertyNames.Distance, Amount" + eCount.ToString() + ");" + cr;
+                }
+                else if (effect.Contains("Frosted"))
+                {
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(FrostedGlassEffect.PropertyNames.MaxScatterRadius, Amount" + eCount.ToString() + ");" + cr;
+                    eCount++;
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(FrostedGlassEffect.PropertyNames.MinScatterRadius, Amount" + eCount.ToString() + ");" + cr;
+                    eCount++;
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(FrostedGlassEffect.PropertyNames.NumSamples, Amount" + eCount.ToString() + ");" + cr;
+                }
+                else if (effect.Contains("Add Noise"))
+                {
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(AddNoiseEffect.PropertyNames.Intensity, Amount" + eCount.ToString() + ");" + cr;
+                    eCount++;
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(AddNoiseEffect.PropertyNames.Saturation, Amount" + eCount.ToString() + ");" + cr;
+                    eCount++;
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(AddNoiseEffect.PropertyNames.Coverage, Amount" + eCount.ToString() + ");" + cr;
+                }
+                else if (effect.Contains("Clouds"))
+                {
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(CloudsEffect.PropertyNames.Scale, Amount" + eCount.ToString() + ");" + cr;
+                    eCount++;
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(CloudsEffect.PropertyNames.Power, Amount" + eCount.ToString() + ");" + cr;
+                    eCount++;
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(CloudsEffect.PropertyNames.BlendMode, Amount" + eCount.ToString() + ");" + cr;
+                    eCount++;
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(CloudsEffect.PropertyNames.Seed, (int)Amount" + eCount.ToString() + ");" + cr;
+                }
+                else if (effect.Contains("Oil Painting"))
+                {
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(OilPaintingEffect.PropertyNames.BrushSize, Amount" + eCount.ToString() + ");" + cr;
+                    eCount++;
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(OilPaintingEffect.PropertyNames.Coarseness, Amount" + eCount.ToString() + ");" + cr;
+                }
+                else if (effect.Contains("Reduce Noise"))
+                {
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(ReduceNoiseEffect.PropertyNames.Radius, Amount" + eCount.ToString() + ");" + cr;
+                    eCount++;
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(ReduceNoiseEffect.PropertyNames.Strength, Amount" + eCount.ToString() + ");" + cr;
+                }
+                else if (effect.Contains("Median"))
+                {
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(MedianEffect.PropertyNames.Radius, Amount" + eCount.ToString() + ");" + cr;
+                    eCount++;
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(MedianEffect.PropertyNames.Percentile, Amount" + eCount.ToString() + ");" + cr;
+                }
+                else if (effect.Contains("Sharpen"))
+                {
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(SharpenEffect.PropertyNames.Amount, Amount" + eCount.ToString() + ");" + cr;
+                }
+                else if (effect.Contains("Edge Detect"))
+                {
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(EdgeDetectEffect.PropertyNames.Angle, Amount" + eCount.ToString() + ");" + cr;
+                }
+                else if (effect.Contains("Emboss"))
+                {
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(EmbossEffect.PropertyNames.Angle, Amount" + eCount.ToString() + ");" + cr;
+                }
+                else if (effect.Contains("Relief"))
+                {
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(ReliefEffect.PropertyNames.Angle, Amount" + eCount.ToString() + ");" + cr;
+                }
+                else if (effect.Contains("Outline"))
+                {
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(OutlineEffect.PropertyNames.Thickness, Amount" + eCount.ToString() + ");" + cr;
+                    eCount++;
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(OutlineEffect.PropertyNames.Intensity, Amount" + eCount.ToString() + ");" + cr;
+                }
+                else if (effect.Contains("Pencil Sketch"))
+                {
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(PencilSketchEffect.PropertyNames.PencilTipSize, Amount" + eCount.ToString() + ");" + cr;
+                    eCount++;
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(PencilSketchEffect.PropertyNames.ColorRange, Amount" + eCount.ToString() + ");" + cr;
+                }
+                else if (effect.Contains("Posterize"))
+                {
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(PosterizeAdjustment.PropertyNames.RedLevels, Amount" + eCount.ToString() + ");" + cr;
+                    eCount++;
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(PosterizeAdjustment.PropertyNames.GreenLevels, Amount" + eCount.ToString() + ");" + cr;
+                    eCount++;
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(PosterizeAdjustment.PropertyNames.BlueLevels, Amount" + eCount.ToString() + ");" + cr;
+                    eCount++;
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(PosterizeAdjustment.PropertyNames.LinkLevels, Amount" + eCount.ToString() + ");" + cr;
+                }
+                else if (effect.Contains("Ink Sketch"))
+                {
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(InkSketchEffect.PropertyNames.InkOutline, Amount" + eCount.ToString() + ");" + cr;
+                    eCount++;
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(InkSketchEffect.PropertyNames.Coloring, Amount" + eCount.ToString() + ");" + cr;
+                }
+                else if (effect.Contains("Radial Blur"))
+                {
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(RadialBlurEffect.PropertyNames.Angle, Amount" + eCount.ToString() + ");" + cr;
+                    eCount++;
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(RadialBlurEffect.PropertyNames.Offset, Amount" + eCount.ToString() + ");" + cr;
+                    eCount++;
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(RadialBlurEffect.PropertyNames.Quality, Amount" + eCount.ToString() + ");" + cr;
+                }
+                else if (effect.Contains("Surface Blur"))
+                {
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(SurfaceBlurEffect.PropertyName.Radius, Amount" + eCount.ToString() + ");" + cr;
+                    eCount++;
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(SurfaceBlurEffect.PropertyName.Threshold, Amount" + eCount.ToString() + ");" + cr;
+                }
+                else if (effect.Contains("Unfocus"))
+                {
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(UnfocusEffect.PropertyNames.Radius, Amount" + eCount.ToString() + ");" + cr;
+                }
+                else if (effect.Contains("Zoom Blur"))
+                {
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(ZoomBlurEffect.PropertyNames.Amount, Amount" + eCount.ToString() + ");" + cr;
+                    eCount++;
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(ZoomBlurEffect.PropertyNames.Offset, Amount" + eCount.ToString() + ");" + cr;
+                }
+                else if (effect.Contains("Bulge"))
+                {
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(BulgeEffect.PropertyNames.Amount, Amount" + eCount.ToString() + ");" + cr;
+                    eCount++;
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(BulgeEffect.PropertyNames.Offset, Amount" + eCount.ToString() + ");" + cr;
+                }
+                else if (effect.Contains("Crystalize"))
+                {
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(CrystalizeEffect.PropertyNames.Size, Amount" + eCount.ToString() + ");" + cr;
+                    eCount++;
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(CrystalizeEffect.PropertyNames.Quality, Amount" + eCount.ToString() + ");" + cr;
+                    eCount++;
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(CrystalizeEffect.PropertyNames.Seed, (int)Amount" + eCount.ToString() + ");" + cr;
+                }
+                else if (effect.Contains("Dents"))
+                {
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(DentsEffect.PropertyNames.Scale, Amount" + eCount.ToString() + ");" + cr;
+                    eCount++;
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(DentsEffect.PropertyNames.Refraction, Amount" + eCount.ToString() + ");" + cr;
+                    eCount++;
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(DentsEffect.PropertyNames.Roughness, Amount" + eCount.ToString() + ");" + cr;
+                    eCount++;
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(DentsEffect.PropertyNames.Tension, Amount" + eCount.ToString() + ");" + cr;
+                    eCount++;
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(DentsEffect.PropertyNames.Quality, Amount" + eCount.ToString() + ");" + cr;
+                    eCount++;
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(DentsEffect.PropertyNames.Seed, (int)Amount" + eCount.ToString() + ");" + cr;
+                }
+                else if (effect.Contains("Pixelate"))
+                {
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(PixelateEffect.PropertyNames.CellSize, Amount" + eCount.ToString() + ");" + cr;
+                }
+                else if (effect.Contains("Polar Inversion"))
+                {
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(PolarInversionEffect.PropertyNames.Amount, Amount" + eCount.ToString() + ");" + cr;
+                    eCount++;
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(PolarInversionEffect.PropertyNames.Offset, Amount" + eCount.ToString() + ");" + cr;
+                    eCount++;
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(PolarInversionEffect.PropertyNames.EdgeBehavior, Amount" + eCount.ToString() + ");" + cr;
+                    eCount++;
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(PolarInversionEffect.PropertyNames.Quality, Amount" + eCount.ToString() + ");" + cr;
+                }
+                else if (effect.Contains("Tile"))
+                {
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(TileEffect.PropertyNames.Rotation, Amount" + eCount.ToString() + ");" + cr;
+                    eCount++;
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(TileEffect.PropertyNames.SquareSize, Amount" + eCount.ToString() + ");" + cr;
+                    eCount++;
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(TileEffect.PropertyNames.Curvature, Amount" + eCount.ToString() + ");" + cr;
+                    eCount++;
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(TileEffect.PropertyNames.Quality, Amount" + eCount.ToString() + ");" + cr;
+                }
+                else if (effect.Contains("Twist"))
+                {
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(TwistEffect.PropertyNames.Amount, Amount" + eCount.ToString() + ");" + cr;
+                    eCount++;
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(TwistEffect.PropertyNames.Size, Amount" + eCount.ToString() + ");" + cr;
+                    eCount++;
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(TwistEffect.PropertyNames.Offset, Amount" + eCount.ToString() + ");" + cr;
+                    eCount++;
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(TwistEffect.PropertyNames.Quality, Amount" + eCount.ToString() + ");" + cr;
+                }
+                else if (effect.Contains("Glow"))
+                {
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(GlowEffect.PropertyNames.Radius, Amount" + eCount.ToString() + ");" + cr;
+                    eCount++;
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(GlowEffect.PropertyNames.Brightness, Amount" + eCount.ToString() + ");" + cr;
+                    eCount++;
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(GlowEffect.PropertyNames.Contrast, Amount" + eCount.ToString() + ");" + cr;
+                }
+                else if (effect.Contains("Soften Portrait"))
+                {
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(SoftenPortraitEffect.PropertyNames.Softness, Amount" + eCount.ToString() + ");" + cr;
+                    eCount++;
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(SoftenPortraitEffect.PropertyNames.Lighting, Amount" + eCount.ToString() + ");" + cr;
+                    eCount++;
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(SoftenPortraitEffect.PropertyNames.Warmth, Amount" + eCount.ToString() + ");" + cr;
+                }
+                else if (effect.Contains("Vignette"))
+                {
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(VignetteEffect.PropertyNames.Offset, Amount" + eCount.ToString() + ");" + cr;
+                    eCount++;
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(VignetteEffect.PropertyNames.Radius, Amount" + eCount.ToString() + ");" + cr;
+                    eCount++;
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(VignetteEffect.PropertyNames.Amount, Amount" + eCount.ToString() + ");" + cr;
+                }
+                else if (effect.Contains("Julia"))
+                {
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(JuliaFractalEffect.PropertyNames.Factor, Amount" + eCount.ToString() + ");" + cr;
+                    eCount++;
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(JuliaFractalEffect.PropertyNames.Zoom, Amount" + eCount.ToString() + ");" + cr;
+                    eCount++;
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(JuliaFractalEffect.PropertyNames.Angle, Amount" + eCount.ToString() + ");" + cr;
+                    eCount++;
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(JuliaFractalEffect.PropertyNames.Quality, Amount" + eCount.ToString() + ");" + cr;
+                }
+                else if (effect.Contains("Mandelbrot"))
+                {
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(MandelbrotFractalEffect.PropertyNames.Factor, Amount" + eCount.ToString() + ");" + cr;
+                    eCount++;
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(MandelbrotFractalEffect.PropertyNames.Zoom, Amount" + eCount.ToString() + ");" + cr;
+                    eCount++;
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(MandelbrotFractalEffect.PropertyNames.Angle, Amount" + eCount.ToString() + ");" + cr;
+                    eCount++;
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(MandelbrotFractalEffect.PropertyNames.Quality, Amount" + eCount.ToString() + ");" + cr;
+                    eCount++;
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(MandelbrotFractalEffect.PropertyNames.InvertColors, Amount" + eCount.ToString() + ");" + cr;
+                }
+                propCode += "    " + lowerName + "Effect.SetRenderInfo(" + lowerName + "Parameters, new RenderArgs(" + dst + "), new RenderArgs(" + src + "));" + cr;
+                if (isLastItem)
+                {
+                    renderCode = "    // Now call the " + effect + " function from " + src + " surface to " + dst + " surface" + cr;
+                    renderCode += "    " + lowerName + "Effect.Render(new Rectangle[1] {rect},0,1);" + cr;
+                }
+                else
+                {
+                    propCode += "    if (IsCancelRequested) return;" + cr;
+                    propCode += "    " + lowerName + "Effect.Render(new Rectangle[1] {" + dst + ".Bounds},0,1);" + cr;
+                }
+            }
+            return propCode;
+        }
+
+
+        private string getUIControls(string effect, ref int controlCount)
+        {
+            string code = "";
+            string cr = "\r\n";
+            // Add controls for selected options
+            if (effect.Contains("Gaussian"))
+            {
+                code += "IntSliderControl Amount" + controlCount.ToString() + "=10; // [0,100] " + effect + " Radius" + cr;
+                controlCount++;
+            }
+            else if (effect.Contains("Contrast"))
+            {
+                code += "IntSliderControl Amount" + controlCount.ToString() + "=10; // [-100,100] " + effect + " Brightness" + cr;
+                controlCount++;
+                code += "IntSliderControl Amount" + controlCount.ToString() + "=10; // [-100,100] " + effect + " Contrast" + cr;
+                controlCount++;
+            }
+            else if (effect.Contains("Motion"))
+            {
+                code += "AngleControl Amount" + controlCount.ToString() + " = 45; // [-180,180] " + effect + " Angle" + cr;
+                controlCount++;
+                code += "CheckboxControl Amount" + controlCount.ToString() + " = true; // [0,1] " + effect + " Centered" + cr;
+                controlCount++;
+                code += "IntSliderControl Amount" + controlCount.ToString() + " = 10; // [1,200] " + effect + " Distance" + cr;
+                controlCount++;
+            }
+            else if (effect.Contains("Frosted"))
+            {
+                code += "DoubleSliderControl Amount" + controlCount.ToString() + " = 3; // [0,200] " + effect + " Maximum Scatter Radius" + cr;
+                controlCount++;
+                code += "DoubleSliderControl Amount" + controlCount.ToString() + " = 0; // [0,200] " + effect + " Minimum Scatter Radius" + cr;
+                controlCount++;
+                code += "IntSliderControl Amount" + controlCount.ToString() + " = 2; // [1,8] " + effect + " Smoothness" + cr;
+                controlCount++;
+            }
+            else if (effect.Contains("Add Noise"))
+            {
+                code += "IntSliderControl Amount" + controlCount.ToString() + " = 64; // [0,100] " + effect + " Intensity" + cr;
+                controlCount++;
+                code += "IntSliderControl Amount" + controlCount.ToString() + " = 100; // [0,400] " + effect + " Color Saturation" + cr;
+                controlCount++;
+                code += "DoubleSliderControl Amount" + controlCount.ToString() + " = 100; // [0,100] " + effect + " Coverage" + cr;
+                controlCount++;
+            }
+            else if (effect.Contains("Clouds"))
+            {
+                code += "IntSliderControl Amount" + controlCount.ToString() + " = 250; // [2,1000] " + effect + " Scale" + cr;
+                controlCount++;
+                code += "DoubleSliderControl Amount" + controlCount.ToString() + " = 0.5; // [0,1] " + effect + " Roughness" + cr;
+                controlCount++;
+                code += "BinaryPixelOp Amount" + controlCount.ToString() + " = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Normal); // " + effect + " Blend Mode" + cr;
+                controlCount++;
+                code += "ReseedButtonControl Amount" + controlCount.ToString() + " = 0; // [255] " + effect + " Reseed" + cr;
+                controlCount++;
+            }
+            else if (effect.Contains("Oil Painting"))
+            {
+                code += "IntSliderControl Amount" + controlCount.ToString() + "=3; // [1,8] " + effect + " Brush Size" + cr;
+                controlCount++;
+                code += "IntSliderControl Amount" + controlCount.ToString() + "=50; // [3,255] " + effect + " Coarseness" + cr;
+                controlCount++;
+            }
+            else if (effect.Contains("Reduce Noise"))
+            {
+                code += "IntSliderControl Amount" + controlCount.ToString() + "=10; // [0,200] " + effect + " Radius" + cr;
+                controlCount++;
+                code += "DoubleSliderControl Amount" + controlCount.ToString() + "=0.4; // [0,1] " + effect + " Strength" + cr;
+                controlCount++;
+            }
+            else if (effect.Contains("Median"))
+            {
+                code += "IntSliderControl Amount" + controlCount.ToString() + "=10; // [1,200] " + effect + " Radius" + cr;
+                controlCount++;
+                code += "IntSliderControl Amount" + controlCount.ToString() + "=50; // [0,100] " + effect + " Percentile" + cr;
+                controlCount++;
+            }
+            else if (effect.Contains("Sharpen"))
+            {
+                code += "IntSliderControl Amount" + controlCount.ToString() + "=2; // [1,20] " + effect + " Amount" + cr;
+                controlCount++;
+            }
+            else if (effect.Contains("Edge Detect"))
+            {
+                code += "AngleControl Amount" + controlCount.ToString() + " = 45; // [-180,180] " + effect + " Angle" + cr;
+                controlCount++;
+            }
+            else if (effect.Contains("Emboss"))
+            {
+                code += "AngleControl Amount" + controlCount.ToString() + " = 0; // [-180,180] " + effect + " Angle" + cr;
+                controlCount++;
+            }
+            else if (effect.Contains("Relief"))
+            {
+                code += "AngleControl Amount" + controlCount.ToString() + " = 45; // [-180,180] " + effect + " Angle" + cr;
+                controlCount++;
+            }
+            else if (effect.Contains("Outline"))
+            {
+                code += "IntSliderControl Amount" + controlCount.ToString() + "=3; // [1,200] " + effect + " Thickness" + cr;
+                code += "IntSliderControl Amount" + controlCount.ToString() + "=50; // [0,100] " + effect + " Intensity" + cr;
+                controlCount++;
+            }
+            else if (effect.Contains("Pencil Sketch"))
+            {
+                code += "IntSliderControl Amount" + controlCount.ToString() + "=2; // [1,20] " + effect + " Pencil Tip Size" + cr;
+                controlCount++;
+                code += "IntSliderControl Amount" + controlCount.ToString() + "=0; // [-20,20] " + effect + " Range" + cr;
+                controlCount++;
+            }
+            else if (effect.Contains("Posterize"))
+            {
+                code += "IntSliderControl Amount" + controlCount.ToString() + "=16; // [2,64] " + effect + " Red" + cr;
+                controlCount++;
+                code += "IntSliderControl Amount" + controlCount.ToString() + "=16; // [2,64] " + effect + " Green" + cr;
+                controlCount++;
+                code += "IntSliderControl Amount" + controlCount.ToString() + "=16; // [2,64] " + effect + " Blue" + cr;
+                controlCount++;
+                code += "CheckboxControl Amount" + controlCount.ToString() + " = true; // [0,1] " + effect + " Linked" + cr;
+                controlCount++;
+            }
+            else if (effect.Contains("Ink Sketch"))
+            {
+                code += "IntSliderControl Amount" + controlCount.ToString() + " = 50; // [0,99] " + effect + " Ink Outline" + cr;
+                controlCount++;
+                code += "IntSliderControl Amount" + controlCount.ToString() + " = 50; // [0,100] " + effect + " Coloring" + cr;
+                controlCount++;
+            }
+            else if (effect.Contains("Radial Blur"))
+            {
+                code += "AngleControl Amount" + controlCount.ToString() + " = 2; // [-180,180] " + effect + " Angle" + cr;
+                controlCount++;
+                code += "PanSliderControl Amount" + controlCount.ToString() + " = Pair.Create(0.000,0.000); // " + effect + " Center" + cr;
+                controlCount++;
+                code += "IntSliderControl Amount" + controlCount.ToString() + " = 2; // [1,5] " + effect + " Quality" + cr;
+                controlCount++;
+            }
+            else if (effect.Contains("Surface Blur"))
+            {
+                code += "IntSliderControl Amount" + controlCount.ToString() + " = 6; // [1,100] " + effect + " Radius" + cr;
+                controlCount++;
+                code += "IntSliderControl Amount" + controlCount.ToString() + " = 15; // [1,100] " + effect + " Threshold" + cr;
+                controlCount++;
+            }
+            else if (effect.Contains("Unfocus"))
+            {
+                code += "IntSliderControl Amount" + controlCount.ToString() + " = 4; // [1,200] " + effect + " Radius" + cr;
+                controlCount++;
+            }
+            else if (effect.Contains("Zoom Blur"))
+            {
+                code += "IntSliderControl Amount" + controlCount.ToString() + " = 10; // [0,100] " + effect + " Zoom Amount" + cr;
+                controlCount++;
+                code += "PanSliderControl Amount" + controlCount.ToString() + " = Pair.Create(0.000,0.000); // " + effect + " Center" + cr;
+                controlCount++;
+            }
+            else if (effect.Contains("Bulge"))
+            {
+                code += "IntSliderControl Amount" + controlCount.ToString() + " = 45; // [-200,100] " + effect + " Bulge" + cr;
+                controlCount++;
+                code += "PanSliderControl Amount" + controlCount.ToString() + " = Pair.Create(0.000,0.000); // " + effect + " Center" + cr;
+                controlCount++;
+            }
+            else if (effect.Contains("Crystalize"))
+            {
+                code += "IntSliderControl Amount" + controlCount.ToString() + " = 8; // [2,250] " + effect + " Cell Size" + cr;
+                controlCount++;
+                code += "IntSliderControl Amount" + controlCount.ToString() + " = 2; // [1,5] " + effect + " Quality" + cr;
+                controlCount++;
+                code += "ReseedButtonControl Amount" + controlCount.ToString() + " = 0; // [255] " + effect + " Reseed" + cr;
+                controlCount++;
+            }
+            else if (effect.Contains("Dents"))
+            {
+                code += "DoubleSliderControl Amount" + controlCount.ToString() + " = 25; // [1,200] " + effect + " Scale" + cr;
+                controlCount++;
+                code += "DoubleSliderControl Amount" + controlCount.ToString() + " = 50; // [0,200] " + effect + " Refraction" + cr;
+                controlCount++;
+                code += "DoubleSliderControl Amount" + controlCount.ToString() + " = 10; // [0,100] " + effect + " Roughness" + cr;
+                controlCount++;
+                code += "DoubleSliderControl Amount" + controlCount.ToString() + " = 10; // [0,100] " + effect + " Tension" + cr;
+                controlCount++;
+                code += "IntSliderControl Amount" + controlCount.ToString() + " = 2; // [1,5] " + effect + " Quality" + cr;
+                controlCount++;
+                code += "ReseedButtonControl Amount" + controlCount.ToString() + " = 0; // [255] " + effect + " Reseed" + cr;
+                controlCount++;
+            }
+            else if (effect.Contains("Pixelate"))
+            {
+                code += "IntSliderControl Amount" + controlCount.ToString() + " = 2; // [1,100] " + effect + " Cell size" + cr;
+                controlCount++;
+            }
+            else if (effect.Contains("Polar Inversion"))
+            {
+                code += "DoubleSliderControl Amount" + controlCount.ToString() + " = 3; // [0,200] " + effect + " Amount" + cr;
+                controlCount++;
+                code += "PanSliderControl Amount" + controlCount.ToString() + " = Pair.Create(0.000,0.000); // " + effect + " Offset" + cr;
+                controlCount++;
+                code += "ListBoxControl Amount" + controlCount.ToString() + " = 2; // Edge Behavior|Clamp|Reflect|Wrap" + cr;
+                controlCount++;
+                code += "IntSliderControl Amount" + controlCount.ToString() + " = 2; // [1,5] " + effect + " Quality" + cr;
+                controlCount++;
+            }
+            else if (effect.Contains("Tile Reflection"))
+            {
+                code += "AngleControl Amount" + controlCount.ToString() + " = 30; // [-180,180] " + effect + " Angle" + cr;
+                controlCount++;
+                code += "DoubleSliderControl Amount" + controlCount.ToString() + " = 40; // [1,800] " + effect + " Tile Size" + cr;
+                controlCount++;
+                code += "DoubleSliderControl Amount" + controlCount.ToString() + " = 8; // [-100,100] " + effect + " Curvature" + cr;
+                controlCount++;
+                code += "IntSliderControl Amount" + controlCount.ToString() + " = 2; // [1,5] " + effect + " Quality" + cr;
+                controlCount++;
+            }
+            else if (effect.Contains("Twist"))
+            {
+                code += "DoubleSliderControl Amount" + controlCount.ToString() + " = 30; // [-200,200] " + effect + " Amount / Direction" + cr;
+                controlCount++;
+                code += "DoubleSliderControl Amount" + controlCount.ToString() + " = 1; // [0.01,2] " + effect + " Size" + cr;
+                controlCount++;
+                code += "PanSliderControl Amount" + controlCount.ToString() + " = Pair.Create(0.000,0.000); // " + effect + " Center" + cr;
+                controlCount++;
+                code += "IntSliderControl Amount" + controlCount.ToString() + " = 2; // [1,5] " + effect + " Quality" + cr;
+                controlCount++;
+            }
+            else if (effect.Contains("Glow"))
+            {
+                code += "IntSliderControl Amount" + controlCount.ToString() + " = 6; // [1,20] " + effect + " Radius" + cr;
+                controlCount++;
+                code += "IntSliderControl Amount" + controlCount.ToString() + " = 10; // [-100,100] " + effect + " Brightness" + cr;
+                controlCount++;
+                code += "IntSliderControl Amount" + controlCount.ToString() + " = 10; // [-100,100] " + effect + " Contrast" + cr;
+                controlCount++;
+            }
+            else if (effect.Contains("Soften Portrait"))
+            {
+                code += "IntSliderControl Amount" + controlCount.ToString() + " = 5; // [0,10] " + effect + " Softness" + cr;
+                controlCount++;
+                code += "IntSliderControl Amount" + controlCount.ToString() + " = 0; // [-20,20] " + effect + " Lighting" + cr;
+                controlCount++;
+                code += "IntSliderControl Amount" + controlCount.ToString() + " = 10; // [0,20] " + effect + " Warmth" + cr;
+                controlCount++;
+            }
+            else if (effect.Contains("Vignette"))
+            {
+                code += "PanSliderControl Amount" + controlCount.ToString() + " = Pair.Create(0.000,0.000); // " + effect + " Center" + cr;
+                controlCount++;
+                code += "DoubleSliderControl Amount" + controlCount.ToString() + " = 0.5; // [0.1,4] " + effect + " Radius" + cr;
+                controlCount++;
+                code += "DoubleSliderControl Amount" + controlCount.ToString() + " = 1; // [0,1] " + effect + " Density" + cr;
+                controlCount++;
+            }
+            else if (effect.Contains("Julia"))
+            {
+                code += "DoubleSliderControl Amount" + controlCount.ToString() + " = 4; // [1,10] " + effect + " Factor" + cr;
+                controlCount++;
+                code += "DoubleSliderControl Amount" + controlCount.ToString() + " = 1; // [0.1,50] " + effect + " Zoom" + cr;
+                controlCount++;
+                code += "AngleControl Amount" + controlCount.ToString() + " = 0; // [-180,180] " + effect + " Angle" + cr;
+                controlCount++;
+                code += "IntSliderControl Amount" + controlCount.ToString() + " = 2; // [1,5] " + effect + " Quality" + cr;
+                controlCount++;
+            }
+            else if (effect.Contains("Mandelbrot"))
+            {
+                code += "IntSliderControl Amount" + controlCount.ToString() + " = 1; // [1,10] " + effect + " Factor" + cr;
+                controlCount++;
+                code += "DoubleSliderControl Amount" + controlCount.ToString() + " = 10; // [0,100] " + effect + " Zoom" + cr;
+                controlCount++;
+                code += "AngleControl Amount" + controlCount.ToString() + " = 0; // [-180,180] " + effect + " Angle" + cr;
+                controlCount++;
+                code += "IntSliderControl Amount" + controlCount.ToString() + " = 2; // [1,5] " + effect + " Quality" + cr;
+                controlCount++;
+                code += "CheckboxControl Amount" + controlCount.ToString() + " = false; // [0,1] " + effect + " Invert Colors" + cr;
+                controlCount++;
+            }
+            //if (BlendingCode.Text == "User selected blending mode")
+            //{
+            //    code += "BinaryPixelOp Amount" + controlCount.ToString() + " = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Normal); // " + effect + " Blending Mode" + cr;
+            //    controlCount++;
+            //}
+            return code;
+        }
+
         private void DoIt_Click(object sender, EventArgs e)
         {
             const string cr = "\r\n";
             string wrksurface = "dst";
+            string dstsurface = "dst";
+            string srcsurface = "src";
+            string disposecode = "";
+            string rendercode = "";
             string code = "// Name:\r\n// Submenu:\r\n// Author:\r\n// Title:\r\n// Version:\r\n// Desc:\r\n// Keywords:\r\n// URL:\r\n// Help:\r\n";
             if (FAS.Checked)
             {
@@ -80,644 +691,463 @@ namespace PaintDotNet.Effects
             {
                 code += "// Force Single Render Call\r\n";
             }
-            string controls = "1";
             string destcode = "dst[x,y]";
             string srccode = "src[x,y]";
-            string wrkcode = "wrk[x,y]";
-            string blendtop = "";
-            string EffectName = "";
-            /*
-            ---------Copy--------->
-                        Empty------->
-                    Clipboard------>
-                    Clouds------->
-            ---Edge Detect--->
-            -------Emboss------>
-            ---Gaussian Blur-->
-            ----Motion Blur---->
-            ----Oil Painting---->
-            --------Relief-------->
-            --------Sepia-------->
-            -------Contrast------->
-            ------Outline------->
-            ------Sharpen------->
-            ---Pencil Sketch--->
-            ---Frosted Glass--->
-            ----Add Noise----->
-            ---Reduce Noise--->
-            ------Median------>
-            -----Posterize------>
-            */
+            int currentUIcount = 1;
+            bool workSurfaceNeeded = false;
+            bool clipboardNeeded = false;
+            string[] flowListArray = flowList.Items.OfType<string>().ToArray();
 
             if (AdvancedStyle.Checked)
             {
                 destcode = "*dstPtr";
                 srccode = "*srcPtr";
-                wrkcode = "*wrkPtr";
             }
 
             // Let's write some code!
+
+            // Generate a list of required UI controls
             code += "#region UICode" + cr;
-
-            // Add controls for selected options
-            if (EffectCode.Text.Contains("Gaussian Blur"))
+            for(int i=0;i<flowListArray.Length;i++)
             {
-                code += "IntSliderControl Amount1=10; // [0,100] Radius" + cr;
-                controls = "2";
-            }
-            else if (EffectCode.Text.Contains("Contrast"))
-            {
-                code += "IntSliderControl Amount1=10; // [-100,100] Brightness" + cr;
-                code += "IntSliderControl Amount2=10; // [-100,100] Contrast" + cr;
-                controls = "3";
-            }
-            else if (EffectCode.Text.Contains("Motion Blur"))
-            {
-                code += "AngleControl Amount1 = 45; // [-180,180] Angle" + cr;
-                code += "CheckboxControl Amount2 = true; // [0,1] Centered" + cr;
-                code += "IntSliderControl Amount3 = 10; // [1,200] Distance" + cr;
-                controls = "4";
-            }
-            else if (EffectCode.Text.Contains("Frosted"))
-            {
-                code += "DoubleSliderControl Amount1 = 3; // [0,200] Maximum Scatter Radius" + cr;
-                code += "DoubleSliderControl Amount2 = 0; // [0,200] Minimum Scatter Radius" + cr;
-                code += "IntSliderControl Amount3 = 2; // [1,8] Smoothness" + cr;
-                controls = "4";
-            }
-            else if (EffectCode.Text.Contains("Add Noise"))
-            {
-                code += "IntSliderControl Amount1 = 64; // [0,100] Intensity" + cr;
-                code += "IntSliderControl Amount2 = 100; // [0,400] Color Saturation" + cr;
-                code += "DoubleSliderControl Amount3 = 100; // [0,100] Coverage" + cr;
-                controls = "4";
-            }
-            else if (EffectCode.Text.Contains("Clouds"))
-            {
-                code += "IntSliderControl Amount1 = 250; // [2,1000] Scale" + cr;
-                code += "DoubleSliderControl Amount2 = 0.5; // [0,1] Roughness" + cr;
-                code += "BinaryPixelOp Amount3 = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Normal); // Blend Mode" + cr;
-                code += "ReseedButtonControl Amount4 = 0; // [255] Reseed" + cr;
-                controls = "5";
-            }
-            else if (EffectCode.Text.Contains("Oil Painting"))
-            {
-                code += "IntSliderControl Amount1=3; // [1,8] Brush Size" + cr;
-                code += "IntSliderControl Amount2=50; // [3,255] Coarseness" + cr;
-                controls = "3";
-            }
-            else if (EffectCode.Text.Contains("Reduce Noise"))
-            {
-                code += "IntSliderControl Amount1=10; // [0,200] Radius" + cr;
-                code += "DoubleSliderControl Amount2=0.4; // [0,1] Strength" + cr;
-                controls = "3";
-            }
-            else if (EffectCode.Text.Contains("Median"))
-            {
-                code += "IntSliderControl Amount1=10; // [1,200] Radius" + cr;
-                code += "IntSliderControl Amount2=50; // [0,100] Percentile" + cr;
-                controls = "3";
-            }
-            else if (EffectCode.Text.Contains("Sharpen"))
-            {
-                code += "IntSliderControl Amount1=2; // [1,20] Amount" + cr;
-                controls = "2";
-            }
-            else if (EffectCode.Text.Contains("Edge Detect"))
-            {
-                code += "AngleControl Amount1 = 45; // [-180,180] Angle" + cr;
-                controls = "2";
-            }
-            else if (EffectCode.Text.Contains("Emboss"))
-            {
-                code += "AngleControl Amount1 = 0; // [-180,180] Angle" + cr;
-                controls = "2";
-            }
-            else if (EffectCode.Text.Contains("Relief"))
-            {
-                code += "AngleControl Amount1 = 45; // [-180,180] Angle" + cr;
-                controls = "2";
-            }
-            else if (EffectCode.Text.Contains("Outline"))
-            {
-                code += "IntSliderControl Amount1=3; // [1,200] Thickness" + cr;
-                code += "IntSliderControl Amount2=50; // [0,100] Intensity" + cr;
-                controls = "3";
-            }
-            else if (EffectCode.Text.Contains("Pencil Sketch"))
-            {
-                code += "IntSliderControl Amount1=2; // [1,20] Pencil Tip Size" + cr;
-                code += "IntSliderControl Amount2=0; // [-20,20] Range" + cr;
-                controls = "3";
-            }
-            else if (EffectCode.Text.Contains("Posterize"))
-            {
-                code += "IntSliderControl Amount1=16; // [2,64] Red" + cr;
-                code += "IntSliderControl Amount2=16; // [2,64] Green" + cr;
-                code += "IntSliderControl Amount3=16; // [2,64] Blue" + cr;
-                code += "CheckboxControl Amount4 = true; // [0,1] Linked" + cr;
-                controls = "5";
-            }
-            else if (EffectCode.Text.Contains("Ink Sketch"))
-            {
-                code += "IntSliderControl Amount1 = 50; // [0,99] Ink Outline" + cr;
-                code += "IntSliderControl Amount2 = 50; // [0,100] Coloring" + cr;
-                controls = "3";
-            }
-            else if (EffectCode.Text.Contains("Radial Blur"))
-            {
-                code += "AngleControl Amount1 = 2; // [-180,180] Angle" + cr;
-                code += "PanSliderControl Amount2 = Pair.Create(0.000,0.000); // Center" + cr;
-                code += "IntSliderControl Amount3 = 2; // [1,5] Quality" + cr;
-                controls = "4";
-            }
-            else if (EffectCode.Text.Contains("Surface Blur"))
-            {
-                code += "IntSliderControl Amount1 = 6; // [1,100] Radius" + cr;
-                code += "IntSliderControl Amount2 = 15; // [1,100] Threshold" + cr;
-                controls = "3";
-            }
-            else if (EffectCode.Text.Contains("Unfocus"))
-            {
-                code += "IntSliderControl Amount1 = 4; // [1,200] Radius" + cr;
-                controls = "2";
-            }
-            else if (EffectCode.Text.Contains("Zoom Blur"))
-            {
-                code += "IntSliderControl Amount1 = 10; // [0,100] Zoom Amount" + cr;
-                code += "PanSliderControl Amount2 = Pair.Create(0.000,0.000); // Center" + cr;
-                controls = "3";
-            }
-            else if (EffectCode.Text.Contains("Bulge"))
-            {
-                code += "IntSliderControl Amount1 = 45; // [-200,100] Bulge" + cr;
-                code += "PanSliderControl Amount2 = Pair.Create(0.000,0.000); // Center" + cr;
-                controls = "3";
-            }
-            else if (EffectCode.Text.Contains("Crystalize"))
-            {
-                code += "IntSliderControl Amount1 = 8; // [2,250] Cell Size" + cr;
-                code += "IntSliderControl Amount2 = 2; // [1,5] Quality" + cr;
-                code += "ReseedButtonControl Amount3 = 0; // [255] Reseed" + cr;
-                controls = "4";
-            }
-            else if (EffectCode.Text.Contains("Dents"))
-            {
-                code += "DoubleSliderControl Amount1 = 25; // [1,200] Scale" + cr;
-                code += "DoubleSliderControl Amount2 = 50; // [0,200] Refraction" + cr;
-                code += "DoubleSliderControl Amount3 = 10; // [0,100] Roughness" + cr;
-                code += "DoubleSliderControl Amount4 = 10; // [0,100] Tension" + cr;
-                code += "IntSliderControl Amount5 = 2; // [1,5] Quality" + cr;
-                code += "ReseedButtonControl Amount6 = 0; // [255] Reseed" + cr;
-                controls = "7";
-            }
-            else if (EffectCode.Text.Contains("Pixelate"))
-            {
-                code += "IntSliderControl Amount1 = 2; // [1,100] Cell size" + cr;
-                controls = "2";
-            }
-            else if (EffectCode.Text.Contains("Polar Inversion"))
-            {
-                code += "DoubleSliderControl Amount1 = 3; // [0,200] Amount" + cr;
-                code += "PanSliderControl Amount2 = Pair.Create(0.000,0.000); // Offset" + cr;
-                code += "ListBoxControl Amount3 = 2; // Edge Behavior|Clamp|Reflect|Wrap" + cr;
-                code += "IntSliderControl Amount4 = 2; // [1,5] Quality" + cr;
-                controls = "5";
-            }
-            else if (EffectCode.Text.Contains("Tile Reflection"))
-            {
-                code += "AngleControl Amount1 = 30; // [-180,180] Angle" + cr;
-                code += "DoubleSliderControl Amount2 = 40; // [1,800] Tile Size" + cr;
-                code += "DoubleSliderControl Amount3 = 8; // [-100,100] Curvature" + cr;
-                code += "IntSliderControl Amount4 = 2; // [1,5] Quality" + cr;
-                controls = "5";
-            }
-            else if (EffectCode.Text.Contains("Twist"))
-            {
-                code += "DoubleSliderControl Amount1 = 30; // [-200,200] Amount / Direction" + cr;
-                code += "DoubleSliderControl Amount2 = 1; // [0.01,2] Size" + cr;
-                code += "PanSliderControl Amount3 = Pair.Create(0.000,0.000); // Center" + cr;
-                code += "IntSliderControl Amount4 = 2; // [1,5] Quality" + cr;
-                controls = "5";
-            }
-            else if (EffectCode.Text.Contains("Glow"))
-            {
-                code += "IntSliderControl Amount1 = 6; // [1,20] Radius" + cr;
-                code += "IntSliderControl Amount2 = 10; // [-100,100] Brightness" + cr;
-                code += "IntSliderControl Amount3 = 10; // [-100,100] Contrast" + cr;
-                controls = "4";
-            }
-            else if (EffectCode.Text.Contains("Soften Portrait"))
-            {
-                code += "IntSliderControl Amount1 = 5; // [0,10] Softness" + cr;
-                code += "IntSliderControl Amount2 = 0; // [-20,20] Lighting" + cr;
-                code += "IntSliderControl Amount3 = 10; // [0,20] Warmth" + cr;
-                controls = "4";
-            }
-            else if (EffectCode.Text.Contains("Vignette"))
-            {
-                code += "PanSliderControl Amount1 = Pair.Create(0.000,0.000); // Center" + cr;
-                code += "DoubleSliderControl Amount2 = 0.5; // [0.1,4] Radius" + cr;
-                code += "DoubleSliderControl Amount3 = 1; // [0,1] Density" + cr;
-                controls = "4";
-            }
-            else if (EffectCode.Text.Contains("Julia"))
-            {
-                code += "DoubleSliderControl Amount1 = 4; // [1,10] Factor" + cr;
-                code += "DoubleSliderControl Amount2 = 1; // [0.1,50] Zoom" + cr;
-                code += "AngleControl Amount3 = 0; // [-180,180] Angle" + cr;
-                code += "IntSliderControl Amount4 = 2; // [1,5] Quality" + cr;
-                controls = "5";
-            }
-            else if (EffectCode.Text.Contains("Mandelbrot"))
-            {
-                code += "IntSliderControl Amount1 = 1; // [1,10] Factor" + cr;
-                code += "DoubleSliderControl Amount2 = 10; // [0,100] Zoom" + cr;
-                code += "AngleControl Amount3 = 0; // [-180,180] Angle" + cr;
-                code += "IntSliderControl Amount4 = 2; // [1,5] Quality" + cr;
-                code += "CheckboxControl Amount5 = false; // [0,1] Invert Colors" + cr;
-                controls = "6";
-            }
-            else if (EffectCode.Text.Contains("Sepia"))
-            {
-                controls = "1";
-            }
-            else if (EffectCode.Text.Contains("Copy"))
-            {
-                controls = "1";
-            }
-            else if (EffectCode.Text.Contains("Empty"))
-            {
-                controls = "1";
-            }
-
-            if (BlendingCode.Text == "User selected blending mode")
-            {
-                code += "BinaryPixelOp Amount" + controls + " = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Normal); // Blending Mode" + cr;
+                flowListArray[i] += "|" + currentUIcount.ToString();
+                var elementDetails = flowListArray[i].Split('|');
+                if (elementDetails[1] == "Effect")
+                {
+                    code += getUIControls(elementDetails[2], ref currentUIcount);
+                }
+                if (elementDetails[0].Contains("W"))
+                {
+                    workSurfaceNeeded = true;
+                }
+                if (elementDetails[2] == "Clipboard")
+                {
+                    clipboardNeeded = true;
+                }
             }
             code += "#endregion" + cr;
             code += cr;
-            if (SurfaceCode.Checked)
+
+            // setup for a work surface if one is needed
+            if (workSurfaceNeeded)
             {
                 code += "// Working surface" + cr;
                 code += "Surface wrk = null;" + cr;
                 code += cr;
-                // we will be using the wrk surface for the destination of the complex effects
-                wrksurface = "wrk";
             }
 
             // setup for calling complex effects
-            if (EffectCode.Text.Contains("Gaussian Blur"))
+            if (Array.Exists(flowListArray, element => element.Contains("Gaussian")))
             {
                 code += "// Setup for calling the Gaussian Blur effect" + cr;
-                code += "GaussianBlurEffect blurEffect = new GaussianBlurEffect();" + cr;
-                code += "PropertyCollection blurProps;" + cr;
+                code += "GaussianBlurEffect gaussianblurEffect = new GaussianBlurEffect();" + cr;
+                code += "PropertyCollection gaussianblurProps;" + cr;
                 code += cr;
-                EffectName = "blurEffect";
+                disposecode += "        if (gaussianblurEffect != null) gaussianblurEffect.Dispose();" + cr;
+                disposecode += "        gaussianblurEffect = null;" + cr;
             }
-            else if (EffectCode.Text.Contains("Contrast"))
+            if (Array.Exists(flowListArray, element => element.Contains("Contrast")))
             {
                 code += "// Setup for calling the Brightness and Contrast Adjustment function" + cr;
-                code += "BrightnessAndContrastAdjustment bacAdjustment = new BrightnessAndContrastAdjustment();" + cr;
-                code += "PropertyCollection bacProps;" + cr;
+                code += "BrightnessAndContrastAdjustment contrastEffect = new BrightnessAndContrastAdjustment();" + cr;
+                code += "PropertyCollection contrastProps;" + cr;
                 code += cr;
-                EffectName = "bacAdjustment";
+                disposecode += "        if (contrastEffect != null) contrastEffect.Dispose();" + cr;
+                disposecode += "        contrastEffect = null;" + cr;
             }
-            else if (EffectCode.Text.Contains("Frosted"))
+            if (Array.Exists(flowListArray, element => element.Contains("Frosted")))
             {
                 code += "// Setup for calling the Frosted Glass effect" + cr;
-                code += "FrostedGlassEffect frostedEffect = new FrostedGlassEffect();" + cr;
-                code += "PropertyCollection frostedProps;" + cr;
+                code += "FrostedGlassEffect frostedglassEffect = new FrostedGlassEffect();" + cr;
+                code += "PropertyCollection frostedglassProps;" + cr;
                 code += cr;
-                EffectName = "frostedEffect";
+                disposecode += "        if (frostedglassEffect != null) frostedglassEffect.Dispose();" + cr;
+                disposecode += "        frostedglassEffect = null;" + cr;
             }
-            else if (EffectCode.Text.Contains("Add Noise"))
+            if (Array.Exists(flowListArray, element => element.Contains("Add Noise")))
             {
                 code += "// Setup for calling the Add Noise effect" + cr;
-                code += "AddNoiseEffect noiseEffect = new AddNoiseEffect();" + cr;
-                code += "PropertyCollection noiseProps;" + cr;
+                code += "AddNoiseEffect addnoiseEffect = new AddNoiseEffect();" + cr;
+                code += "PropertyCollection addnoiseProps;" + cr;
                 code += cr;
-                EffectName = "noiseEffect";
+                disposecode += "        if (addnoiseEffect != null) addnoiseEffect.Dispose();" + cr;
+                disposecode += "        addnoiseEffect = null;" + cr;
             }
-            else if (EffectCode.Text.Contains("Motion Blur"))
+            if (Array.Exists(flowListArray, element => element.Contains("Motion Blur")))
             {
                 code += "// Setup for calling the Motion Blur effect" + cr;
-                code += "MotionBlurEffect blurEffect = new MotionBlurEffect();" + cr;
-                code += "PropertyCollection blurProps;" + cr;
+                code += "MotionBlurEffect motionblurEffect = new MotionBlurEffect();" + cr;
+                code += "PropertyCollection motionblurProps;" + cr;
                 code += cr;
-                EffectName = "blurEffect";
+                disposecode += "        if (motionblurEffect != null) motionblurEffect.Dispose();" + cr;
+                disposecode += "        motionblurEffect = null;" + cr;
             }
-            else if (EffectCode.Text.Contains("Clouds"))
+            if (Array.Exists(flowListArray, element => element.Contains("Clouds")))
             {
                 code += "// Setup for calling the Render Clouds function" + cr;
                 code += "CloudsEffect cloudsEffect = new CloudsEffect();" + cr;
                 code += "PropertyCollection cloudsProps;" + cr;
                 code += cr;
-                EffectName = "cloudsEffect";
+                disposecode += "        if (cloudsEffect != null) cloudsEffect.Dispose();" + cr;
+                disposecode += "        cloudsEffect = null;" + cr;
             }
-            else if (EffectCode.Text.Contains("Oil Painting"))
+            if (Array.Exists(flowListArray, element => element.Contains("Oil Painting")))
             {
                 code += "// Setup for calling the Oil Painting effect" + cr;
-                code += "OilPaintingEffect oilpaintEffect = new OilPaintingEffect();" + cr;
-                code += "PropertyCollection oilpaintProps;" + cr;
+                code += "OilPaintingEffect oilpaintingEffect = new OilPaintingEffect();" + cr;
+                code += "PropertyCollection oilpaintingProps;" + cr;
                 code += cr;
-                EffectName = "oilpaintEffect";
+                disposecode += "        if (oilpaintingEffect != null) oilpaintingEffect.Dispose();" + cr;
+                disposecode += "        oilpaintingEffect = null;" + cr;
             }
-            else if (EffectCode.Text.Contains("Reduce Noise"))
+            if (Array.Exists(flowListArray, element => element.Contains("Reduce Noise")))
             {
                 code += "// Setup for calling the Reduce Noise effect" + cr;
                 code += "ReduceNoiseEffect reducenoiseEffect = new ReduceNoiseEffect();" + cr;
                 code += "PropertyCollection reducenoiseProps;" + cr;
                 code += cr;
-                EffectName = "reducenoiseEffect";
+                disposecode += "        if (reducenoiseEffect != null) reducenoiseEffect.Dispose();" + cr;
+                disposecode += "        reducenoiseEffect = null;" + cr;
             }
-            else if (EffectCode.Text.Contains("Median"))
+            if (Array.Exists(flowListArray, element => element.Contains("Median")))
             {
                 code += "// Setup for calling the Median effect" + cr;
                 code += "MedianEffect medianEffect = new MedianEffect();" + cr;
                 code += "PropertyCollection medianProps;" + cr;
                 code += cr;
-                EffectName = "medianEffect";
+                disposecode += "        if (medianEffect != null) medianEffect.Dispose();" + cr;
+                disposecode += "        medianEffect = null;" + cr;
             }
-            else if (EffectCode.Text.Contains("Edge Detect"))
+            if (Array.Exists(flowListArray, element => element.Contains("Edge Detect")))
             {
                 code += "// Setup for calling the Edge Detect effect" + cr;
                 code += "EdgeDetectEffect edgedetectEffect = new EdgeDetectEffect();" + cr;
                 code += "PropertyCollection edgeProps;" + cr;
                 code += cr;
-                EffectName = "edgedetectEffect";
+                disposecode += "        if (edgedetectEffect != null) edgedetectEffect.Dispose();" + cr;
+                disposecode += "        edgedetectEffect = null;" + cr;
             }
-            else if (EffectCode.Text.Contains("Emboss"))
+            if (Array.Exists(flowListArray, element => element.Contains("Emboss")))
             {
                 code += "// Setup for calling the Emboss effect" + cr;
                 code += "EmbossEffect embossEffect = new EmbossEffect();" + cr;
                 code += "PropertyCollection embossProps;" + cr;
                 code += cr;
-                EffectName = "embossEffect";
+                disposecode += "        if (embossEffect != null) embossEffect.Dispose();" + cr;
+                disposecode += "        embossEffect = null;" + cr;
             }
-            else if (EffectCode.Text.Contains("Relief"))
+            if (Array.Exists(flowListArray, element => element.Contains("Relief")))
             {
                 code += "// Setup for calling the Relief effect" + cr;
                 code += "ReliefEffect reliefEffect = new ReliefEffect();" + cr;
                 code += "PropertyCollection reliefProps;" + cr;
                 code += cr;
-                EffectName = "reliefEffect";
+                disposecode += "        if (reliefEffect != null) reliefEffect.Dispose();" + cr;
+                disposecode += "        reliefEffect = null;" + cr;
             }
-            else if (EffectCode.Text.Contains("Outline"))
+            if (Array.Exists(flowListArray, element => element.Contains("Outline")))
             {
                 code += "// Setup for calling the Outline effect" + cr;
                 code += "OutlineEffect outlineEffect = new OutlineEffect();" + cr;
                 code += "PropertyCollection outlineProps;" + cr;
                 code += cr;
-                EffectName = "outlineEffect";
+                disposecode += "        if (outlineEffect != null) outlineEffect.Dispose();" + cr;
+                disposecode += "        outlineEffect = null;" + cr;
             }
-            else if (EffectCode.Text.Contains("Sharpen"))
+            if (Array.Exists(flowListArray, element => element.Contains("Sharpen")))
             {
                 code += "// Setup for calling the Sharpen effect" + cr;
                 code += "SharpenEffect sharpenEffect = new SharpenEffect();" + cr;
                 code += "PropertyCollection sharpenProps;" + cr;
                 code += cr;
-                EffectName = "sharpenEffect";
+                disposecode += "        if (sharpenEffect != null) sharpenEffect.Dispose();" + cr;
+                disposecode += "        sharpenEffect = null;" + cr;
             }
-            else if (EffectCode.Text.Contains("Pencil Sketch"))
+            if (Array.Exists(flowListArray, element => element.Contains("Pencil Sketch")))
             {
                 code += "// Setup for calling the Pencil Sketch effect" + cr;
-                code += "PencilSketchEffect pencilSketchEffect = new PencilSketchEffect();" + cr;
-                code += "PropertyCollection pencilSketchProps;" + cr;
+                code += "PencilSketchEffect pencilsketchEffect = new PencilSketchEffect();" + cr;
+                code += "PropertyCollection pencilsketchProps;" + cr;
                 code += cr;
-                EffectName = "pencilSketchEffect";
+                disposecode += "        if (pencilsketchEffect != null) pencilsketchEffect.Dispose();" + cr;
+                disposecode += "        pencilsketchEffect = null;" + cr;
             }
-            else if (EffectCode.Text.Contains("Posterize"))
+            if (Array.Exists(flowListArray, element => element.Contains("Posterize")))
             {
                 code += "// Setup for calling the Posterize adjustment" + cr;
                 code += "PosterizeAdjustment posterizeEffect = new PosterizeAdjustment();" + cr;
                 code += "PropertyCollection posterizeProps;" + cr;
                 code += cr;
-                EffectName = "posterizeEffect";
+                disposecode += "        if (posterizeEffect != null) posterizeEffect.Dispose();" + cr;
+                disposecode += "        posterizeEffect = null;" + cr;
             }
-            else if (EffectCode.Text.Contains("Sepia"))
+            if (Array.Exists(flowListArray, element => element.Contains("Sepia")))
             {
                 code += "// Setup for calling the Sepia effect" + cr;
                 code += "SepiaEffect sepiaEffect = new SepiaEffect();" + cr;
                 code += "PropertyCollection sepiaProps;" + cr;
                 code += cr;
-                EffectName = "sepiaEffect";
+                disposecode += "        if (sepiaEffect != null) sepiaEffect.Dispose();" + cr;
+                disposecode += "        sepiaEffect = null;" + cr;
             }
-            else if (EffectCode.Text.Contains("Ink Sketch"))
+            if (Array.Exists(flowListArray, element => element.Contains("Ink Sketch")))
             {
                 code += "// Setup for calling the Ink Sketch effect" + cr;
-                code += "InkSketchEffect inkEffect = new InkSketchEffect();" + cr;
-                code += "PropertyCollection inkProps;" + cr;
+                code += "InkSketchEffect inksketchEffect = new InkSketchEffect();" + cr;
+                code += "PropertyCollection inksketchProps;" + cr;
                 code += cr;
-                EffectName = "inkEffect";
+                disposecode += "        if (inksketchEffect != null) inksketchEffect.Dispose();" + cr;
+                disposecode += "        inksketchEffect = null;" + cr;
             }
-            else if (EffectCode.Text.Contains("Radial Blur"))
+            if (Array.Exists(flowListArray, element => element.Contains("Radial Blur")))
             {
                 code += "// Setup for calling the Radial Blur effect" + cr;
-                code += "RadialBlurEffect radialEffect = new RadialBlurEffect();" + cr;
-                code += "PropertyCollection radialProps;" + cr;
+                code += "RadialBlurEffect radialblurEffect = new RadialBlurEffect();" + cr;
+                code += "PropertyCollection radialblurProps;" + cr;
                 code += cr;
-                EffectName = "radialEffect";
+                disposecode += "        if (radialblurEffect != null) radialblurEffect.Dispose();" + cr;
+                disposecode += "        radialblurEffect = null;" + cr;
             }
-            else if (EffectCode.Text.Contains("Surface Blur"))
+            if (Array.Exists(flowListArray, element => element.Contains("Surface Blur")))
             {
                 code += "// Setup for calling the Surface Blur effect" + cr;
-                code += "SurfaceBlurEffect surfaceEffect = new SurfaceBlurEffect();" + cr;
-                code += "PropertyCollection surfaceProps;" + cr;
+                code += "SurfaceBlurEffect surfaceblurEffect = new SurfaceBlurEffect();" + cr;
+                code += "PropertyCollection surfaceblurProps;" + cr;
                 code += cr;
-                EffectName = "surfaceEffect";
+                disposecode += "        if (surfaceblurEffect != null) surfaceblurEffect.Dispose();" + cr;
+                disposecode += "        surfaceblurEffect = null;" + cr;
             }
-            else if (EffectCode.Text.Contains("Unfocus"))
+            if (Array.Exists(flowListArray, element => element.Contains("Unfocus")))
             {
                 code += "// Setup for calling the Unfocus effect" + cr;
                 code += "UnfocusEffect unfocusEffect = new UnfocusEffect();" + cr;
                 code += "PropertyCollection unfocusProps;" + cr;
                 code += cr;
-                EffectName = "unfocusEffect";
+                disposecode += "        if (unfocusEffect != null) unfocusEffect.Dispose();" + cr;
+                disposecode += "        unfocusEffect = null;" + cr;
             }
-            else if (EffectCode.Text.Contains("Zoom Blur"))
+            if (Array.Exists(flowListArray, element => element.Contains("Zoom Blur")))
             {
                 code += "// Setup for calling the Zoom Blur effect" + cr;
-                code += "ZoomBlurEffect zoomEffect = new ZoomBlurEffect();" + cr;
-                code += "PropertyCollection zoomProps;" + cr;
+                code += "ZoomBlurEffect zoomblurEffect = new ZoomBlurEffect();" + cr;
+                code += "PropertyCollection zoomblurProps;" + cr;
                 code += cr;
-                EffectName = "zoomEffect";
+                disposecode += "        if (zoomblurEffect != null) zoomblurEffect.Dispose();" + cr;
+                disposecode += "        zoomblurEffect = null;" + cr;
             }
-            else if (EffectCode.Text.Contains("Bulge"))
+            if (Array.Exists(flowListArray, element => element.Contains("Bulge")))
             {
                 code += "// Setup for calling the Bulge effect" + cr;
                 code += "BulgeEffect bulgeEffect = new BulgeEffect();" + cr;
                 code += "PropertyCollection bulgeProps;" + cr;
                 code += cr;
-                EffectName = "bulgeEffect";
+                disposecode += "        if (bulgeEffect != null) bulgeEffect.Dispose();" + cr;
+                disposecode += "        bulgeEffect = null;" + cr;
             }
-            else if (EffectCode.Text.Contains("Crystalize"))
+            if (Array.Exists(flowListArray, element => element.Contains("Crystalize")))
             {
                 code += "// Setup for calling the Crystalize effect" + cr;
                 code += "CrystalizeEffect crystalizeEffect = new CrystalizeEffect();" + cr;
                 code += "PropertyCollection crystalizeProps;" + cr;
                 code += cr;
-                EffectName = "crystalizeEffect";
+                disposecode += "        if (crystalizeEffect != null) crystalizeEffect.Dispose();" + cr;
+                disposecode += "        crystalizeEffect = null;" + cr;
             }
-            else if (EffectCode.Text.Contains("Dents"))
+            if (Array.Exists(flowListArray, element => element.Contains("Dents")))
             {
                 code += "// Setup for calling the Dents effect" + cr;
                 code += "DentsEffect dentsEffect = new DentsEffect();" + cr;
                 code += "PropertyCollection dentsProps;" + cr;
                 code += cr;
-                EffectName = "dentsEffect";
+                disposecode += "        if (dentsEffect != null) dentsEffect.Dispose();" + cr;
+                disposecode += "        dentsEffect = null;" + cr;
             }
-            else if (EffectCode.Text.Contains("Pixelate"))
+            if (Array.Exists(flowListArray, element => element.Contains("Pixelate")))
             {
                 code += "// Setup for calling the Pixelate effect" + cr;
                 code += "PixelateEffect pixelateEffect = new PixelateEffect();" + cr;
                 code += "PropertyCollection pixelateProps;" + cr;
                 code += cr;
-                EffectName = "pixelateEffect";
+                disposecode += "        if (pixelateEffect != null) pixelateEffect.Dispose();" + cr;
+                disposecode += "        pixelateEffect = null;" + cr;
             }
-            else if (EffectCode.Text.Contains("Polar Inversion"))
+            if (Array.Exists(flowListArray, element => element.Contains("Polar Inversion")))
             {
                 code += "// Setup for calling the Polar Inversion effect" + cr;
-                code += "PolarInversionEffect polarEffect = new PolarInversionEffect();" + cr;
-                code += "PropertyCollection polarProps;" + cr;
+                code += "PolarInversionEffect polarinversionEffect = new PolarInversionEffect();" + cr;
+                code += "PropertyCollection polarinversionProps;" + cr;
                 code += cr;
-                EffectName = "polarEffect";
+                disposecode += "        if (polarinversionEffect != null) polarinversionEffect.Dispose();" + cr;
+                disposecode += "        polarinversionEffect = null;" + cr;
             }
-            else if (EffectCode.Text.Contains("Tile Reflection"))
+            if (Array.Exists(flowListArray, element => element.Contains("Tile")))
             {
                 code += "// Setup for calling the Tile Reflection effect" + cr;
                 code += "TileEffect tileEffect = new TileEffect();" + cr;
                 code += "PropertyCollection tileProps;" + cr;
                 code += cr;
-                EffectName = "tileEffect";
+                disposecode += "        if (tileEffect != null) tileEffect.Dispose();" + cr;
+                disposecode += "        tileEffect = null;" + cr;
             }
-            else if (EffectCode.Text.Contains("Twist"))
+            if (Array.Exists(flowListArray, element => element.Contains("Twist")))
             {
                 code += "// Setup for calling the Twist effect" + cr;
                 code += "TwistEffect twistEffect = new TwistEffect();" + cr;
                 code += "PropertyCollection twistProps;" + cr;
                 code += cr;
-                EffectName = "twistEffect";
+                disposecode += "        if (twistEffect != null) twistEffect.Dispose();" + cr;
+                disposecode += "        twistEffect = null;" + cr;
             }
-            else if (EffectCode.Text.Contains("Glow"))
+            if (Array.Exists(flowListArray, element => element.Contains("Glow")))
             {
                 code += "// Setup for calling the Glow effect" + cr;
                 code += "GlowEffect glowEffect = new GlowEffect();" + cr;
                 code += "PropertyCollection glowProps;" + cr;
                 code += cr;
-                EffectName = "glowEffect";
+                disposecode += "        if (glowEffect != null) glowEffect.Dispose();" + cr;
+                disposecode += "        glowEffect = null;" + cr;
             }
-            else if (EffectCode.Text.Contains("Soften Portrait"))
+            if (Array.Exists(flowListArray, element => element.Contains("Soften Portrait")))
             {
                 code += "// Setup for calling the Soften Portrait effect" + cr;
-                code += "SoftenPortraitEffect portraitEffect = new SoftenPortraitEffect();" + cr;
-                code += "PropertyCollection portraitProps;" + cr;
+                code += "SoftenPortraitEffect softenportraitEffect = new SoftenPortraitEffect();" + cr;
+                code += "PropertyCollection softenportraitProps;" + cr;
                 code += cr;
-                EffectName = "portraitEffect";
+                disposecode += "        if (softenportraitEffect != null) softenportraitEffect.Dispose();" + cr;
+                disposecode += "        softenportraitEffect = null;" + cr;
             }
-            else if (EffectCode.Text.Contains("Vignette"))
+            if (Array.Exists(flowListArray, element => element.Contains("Vignette")))
             {
                 code += "// Setup for calling the Vignette effect" + cr;
                 code += "VignetteEffect vignetteEffect = new VignetteEffect();" + cr;
                 code += "PropertyCollection vignetteProps;" + cr;
                 code += cr;
-                EffectName = "vignetteEffect";
+                disposecode += "        if (vignetteEffect != null) vignetteEffect.Dispose();" + cr;
+                disposecode += "        vignetteEffect = null;" + cr;
             }
-            else if (EffectCode.Text.Contains("Julia"))
+            if (Array.Exists(flowListArray, element => element.Contains("Julia")))
             {
                 code += "// Setup for calling the Julia effect" + cr;
                 code += "JuliaFractalEffect juliaEffect = new JuliaFractalEffect();" + cr;
                 code += "PropertyCollection juliaProps;" + cr;
                 code += cr;
-                EffectName = "juliaEffect";
+                disposecode += "        if (juliaEffect != null) juliaEffect.Dispose();" + cr;
+                disposecode += "        juliaEffect = null;" + cr;
             }
-            else if (EffectCode.Text.Contains("Mandelbrot"))
+            if (Array.Exists(flowListArray, element => element.Contains("Mandelbrot")))
             {
                 code += "// Setup for calling the Mandelbrot effect" + cr;
                 code += "MandelbrotFractalEffect mandelbrotEffect = new MandelbrotFractalEffect();" + cr;
                 code += "PropertyCollection mandelbrotProps;" + cr;
                 code += cr;
-                EffectName = "mandelbrotEffect";
+                disposecode += "        if (mandelbrotEffect != null) mandelbrotEffect.Dispose();" + cr;
+                disposecode += "        mandelbrotEffect = null;" + cr;
             }
-
-            // setup for selected pixel op
-            if (!PixelOpCode.Text.Contains("Pass Through") || !FinalPixelOpCode.Text.Contains("Pass Through"))
+            // Pixel Ops
+            if (Array.Exists(flowListArray, element => element.Contains("Pixel Op")))
             {
                 code += "// Setup for using pixel op" + cr;
-                if (PixelOpCode.Text == "Desaturate" || FinalPixelOpCode.Text == "Desaturate") code += "private UnaryPixelOps.Desaturate desaturateOp = new UnaryPixelOps.Desaturate();" + cr;
-                if (PixelOpCode.Text == "Invert" || FinalPixelOpCode.Text == "Invert")         code += "private UnaryPixelOps.Invert invertOp = new UnaryPixelOps.Invert();" + cr;
+                if (Array.Exists(flowListArray, element => element.Contains("Desaturate")))
+                {
+                    code += "private UnaryPixelOps.Desaturate desaturateOp = new UnaryPixelOps.Desaturate();" + cr;
+                }
+                if (Array.Exists(flowListArray, element => element.Contains("Invert")))
+                {
+                    code += "private UnaryPixelOps.Invert invertOp = new UnaryPixelOps.Invert();" + cr;
+                }
                 code += cr;
             }
-
-            // setup for selected blending op
-            if (!BlendingCode.Text.Contains("Pass Through"))
+            // Blends
+            if (Array.Exists(flowListArray, element => element.Contains("Blend")))
             {
-                if (BlendingCode.Text != "User selected blending mode") code += "// Setup for using " + BlendingCode.Text + " blend op" + cr;
-                if (BlendingCode.Text == "Normal") code += "private BinaryPixelOp normalOp = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Normal);" + cr;
-                if (BlendingCode.Text == "Multiply") code += "private BinaryPixelOp multiplyOp = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Multiply);" + cr;
-                if (BlendingCode.Text == "Darken") code += "private BinaryPixelOp darkenOp = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Darken);" + cr;
-                if (BlendingCode.Text == "Additive") code += "private BinaryPixelOp additiveOp = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Additive);" + cr;
-                if (BlendingCode.Text == "ColorBurn") code += "private BinaryPixelOp colorburnOp = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.ColorBurn);" + cr;
-                if (BlendingCode.Text == "ColorDodge") code += "private BinaryPixelOp colordodgeOp = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.ColorDodge);" + cr;
-                if (BlendingCode.Text == "Difference") code += "private BinaryPixelOp differenceOp = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Difference);" + cr;
-                if (BlendingCode.Text == "Glow") code += "private BinaryPixelOp glowOp = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Glow);" + cr;
-                if (BlendingCode.Text == "Lighten") code += "private BinaryPixelOp lightenOp = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Lighten);" + cr;
-                if (BlendingCode.Text == "Negation") code += "private BinaryPixelOp negationOp = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Negation);" + cr;
-                if (BlendingCode.Text == "Overlay") code += "private BinaryPixelOp overlayOp = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Overlay);" + cr;
-                if (BlendingCode.Text == "Reflect") code += "private BinaryPixelOp reflectOp = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Reflect);" + cr;
-                if (BlendingCode.Text == "Screen") code += "private BinaryPixelOp screenOp = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Screen);" + cr;
-                if (BlendingCode.Text == "Xor") code += "private BinaryPixelOp xorOp = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Xor);" + cr;
+                code += "// Setup for selected blending op" + cr;
+                if (Array.Exists(flowListArray, element => element.Contains("Blend|Normal")))
+                {
+                    code += "private BinaryPixelOp normalOp = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Normal);" + cr;
+                }
+                if (Array.Exists(flowListArray, element => element.Contains("Blend|Multiply")))
+                {
+                    code += "private BinaryPixelOp multiplyOp = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Multiply);" + cr;
+                }
+                if (Array.Exists(flowListArray, element => element.Contains("Blend|Darken")))
+                {
+                    code += "private BinaryPixelOp darkenOp = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Darken);" + cr;
+                }
+                if (Array.Exists(flowListArray, element => element.Contains("Blend|Additive")))
+                {
+                    code += "private BinaryPixelOp additiveOp = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Additive);" + cr;
+                }
+                if (Array.Exists(flowListArray, element => element.Contains("Blend|ColorBurn")))
+                {
+                    code += "private BinaryPixelOp colorburnOp = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.ColorBurn);" + cr;
+                }
+                if (Array.Exists(flowListArray, element => element.Contains("Blend|ColorDodge")))
+                {
+                    code += "private BinaryPixelOp colordodgeOp = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.ColorDodge);" + cr;
+                }
+                if (Array.Exists(flowListArray, element => element.Contains("Blend|Difference")))
+                {
+                    code += "private BinaryPixelOp differenceOp = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Difference);" + cr;
+                }
+                if (Array.Exists(flowListArray, element => element.Contains("Blend|Glow")))
+                {
+                    code += "private BinaryPixelOp glowOp = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Glow);" + cr;
+                }
+                if (Array.Exists(flowListArray, element => element.Contains("Blend|Lighten")))
+                {
+                    code += "private BinaryPixelOp lightenOp = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Lighten);" + cr;
+                }
+                if (Array.Exists(flowListArray, element => element.Contains("Blend|Negation")))
+                {
+                    code += "private BinaryPixelOp negationOp = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Negation);" + cr;
+                }
+                if (Array.Exists(flowListArray, element => element.Contains("Blend|Overlay")))
+                {
+                    code += "private BinaryPixelOp overlayOp = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Overlay);" + cr;
+                }
+                if (Array.Exists(flowListArray, element => element.Contains("Blend|Reflect")))
+                {
+                    code += "private BinaryPixelOp reflectOp = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Reflect);" + cr;
+                }
+                if (Array.Exists(flowListArray, element => element.Contains("Blend|Screen")))
+                {
+                    code += "private BinaryPixelOp screenOp = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Screen);" + cr;
+                }
+                if (Array.Exists(flowListArray, element => element.Contains("Blend|Xor")))
+                {
+                    code += "private BinaryPixelOp xorOp = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Xor);" + cr;
+                }
                 code += cr;
             }
-            else if (NoStyle.Checked && (BlendingCode.Text != "Pass Through"))
-            {
-                code += "// Setup for using " + BlendingCode.Text + " blend op" + cr;
-                if (BlendingCode.Text == "Normal") code += "private BinaryPixelOp normalOp = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Normal);" + cr;
-                if (BlendingCode.Text == "Multiply") code += "private BinaryPixelOp multiplyOp = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Multiply);" + cr;
-                if (BlendingCode.Text == "Darken") code += "private BinaryPixelOp darkenOp = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Darken);" + cr;
-                if (BlendingCode.Text == "Additive") code += "private BinaryPixelOp additiveOp = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Additive);" + cr;
-                if (BlendingCode.Text == "ColorBurn") code += "private BinaryPixelOp colorburnOp = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.ColorBurn);" + cr;
-                if (BlendingCode.Text == "ColorDodge") code += "private BinaryPixelOp colordodgeOp = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.ColorDodge);" + cr;
-                if (BlendingCode.Text == "Difference") code += "private BinaryPixelOp differenceOp = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Difference);" + cr;
-                if (BlendingCode.Text == "Glow") code += "private BinaryPixelOp glowOp = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Glow);" + cr;
-                if (BlendingCode.Text == "Lighten") code += "private BinaryPixelOp lightenOp = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Lighten);" + cr;
-                if (BlendingCode.Text == "Negation") code += "private BinaryPixelOp negationOp = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Negation);" + cr;
-                if (BlendingCode.Text == "Overlay") code += "private BinaryPixelOp overlayOp = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Overlay);" + cr;
-                if (BlendingCode.Text == "Reflect") code += "private BinaryPixelOp reflectOp = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Reflect);" + cr;
-                if (BlendingCode.Text == "Screen") code += "private BinaryPixelOp screenOp = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Screen);" + cr;
-                if (BlendingCode.Text == "Xor") code += "private BinaryPixelOp xorOp = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Xor);" + cr;
-                code += cr;
-            }
-
             // setup for using the clipboard
-            if (EffectCode.Text.Contains("Clipboard"))
+            if (clipboardNeeded)
             {
                 code += "private Surface clipboardSurface = null;" + cr;
                 code += "private bool readClipboard = false;" + cr;
                 code += cr;
             }
 
-            if (SurfaceCode.Checked || EffectName.Length > 0 || EffectCode.Text.Contains("Clipboard"))
+            // OnDispose
+            if (workSurfaceNeeded || disposecode.Length > 0 || clipboardNeeded)
             {
                 code += "protected override void OnDispose(bool disposing)" + cr;
                 code += "{" + cr;
                 code += "    if (disposing)" + cr;
                 code += "    {" + cr;
-                code += "        // Release any surfaces or effects you've created." + cr;
-                if (SurfaceCode.Checked)
+                code += "        // Release any surfaces or effects you've created" + cr;
+                if (workSurfaceNeeded)
                 {
                     code += "        if (wrk != null) wrk.Dispose();" + cr;
                     code += "        wrk = null;" + cr;
                 }
-                if (EffectName.Length > 0)
-                {
-                    code += "        if (" + EffectName + " != null) " + EffectName + ".Dispose();" + cr;
-                    code += "        " + EffectName + " = null;" + cr;
-                }
-                if (EffectCode.Text.Contains("Clipboard"))
+                if (clipboardNeeded)
                 {
                     code += "        if (clipboardSurface != null) clipboardSurface.Dispose();" + cr;
                     code += "        clipboardSurface = null;" + cr;
+                }
+                if (disposecode.Length > 0)
+                {
+                    code += disposecode;
                 }
                 code += "    }" + cr;
                 code += cr;
@@ -727,9 +1157,13 @@ namespace PaintDotNet.Effects
             }
 
             // build the PreRender code
+            code += "// This single-threaded function is called after the UI changes and before the Render function is called" + cr;
+            code += "// The purpose is to prepare anything you'll need in the Render function" + cr;
             code += "void PreRender(Surface dst, Surface src)" + cr;
             code += "{" + cr;
-            if (SurfaceCode.Checked)
+
+            // WRK surface
+            if (workSurfaceNeeded)
             {
                 code += "    if (wrk == null)" + cr;
                 code += "    {" + cr;
@@ -738,7 +1172,8 @@ namespace PaintDotNet.Effects
                 code += cr;
             }
 
-            if (EffectCode.Text.Contains("Clipboard"))
+            // Clipboard
+            if (clipboardNeeded)
             {
                 code += "    if (!readClipboard)" + cr;
                 code += "    {" + cr;
@@ -746,309 +1181,124 @@ namespace PaintDotNet.Effects
                 code += "        clipboardSurface = Services.GetService<IClipboardService>().TryGetSurface();" + cr;
                 code += "    }" + cr;
             }
-            else if (EffectCode.Text.Contains("Gaussian Blur"))
-            {
-                code += "    blurProps = blurEffect.CreatePropertyCollection();" + cr;
-                code += "    PropertyBasedEffectConfigToken BlurParameters = new PropertyBasedEffectConfigToken(blurProps);" + cr;
-                code += "    BlurParameters.SetPropertyValue(GaussianBlurEffect.PropertyNames.Radius, Amount1);" + cr;
-                code += "    blurEffect.SetRenderInfo(BlurParameters, new RenderArgs(" + wrksurface + "), new RenderArgs(src));" + cr;
-            }
-            else if (EffectCode.Text.Contains("Contrast"))
-            {
-                code += "    bacProps = bacAdjustment.CreatePropertyCollection();" + cr;
-                code += "    PropertyBasedEffectConfigToken bacParameters = new PropertyBasedEffectConfigToken(bacProps);" + cr;
-                code += "    bacParameters.SetPropertyValue(BrightnessAndContrastAdjustment.PropertyNames.Brightness, Amount1);" + cr;
-                code += "    bacParameters.SetPropertyValue(BrightnessAndContrastAdjustment.PropertyNames.Contrast, Amount2);" + cr;
-                code += "    bacAdjustment.SetRenderInfo(bacParameters, new RenderArgs(" + wrksurface + "), new RenderArgs(src));" + cr;
-            }
-            else if (EffectCode.Text.Contains("Frosted"))
-            {
-                code += "    frostedProps = frostedEffect.CreatePropertyCollection();" + cr;
-                code += "    PropertyBasedEffectConfigToken FrostedParameters = new PropertyBasedEffectConfigToken(frostedProps);" + cr;
-                code += "    FrostedParameters.SetPropertyValue(FrostedGlassEffect.PropertyNames.MaxScatterRadius, Amount1);" + cr;
-                code += "    FrostedParameters.SetPropertyValue(FrostedGlassEffect.PropertyNames.MinScatterRadius, Amount2);" + cr;
-                code += "    FrostedParameters.SetPropertyValue(FrostedGlassEffect.PropertyNames.NumSamples, Amount3);" + cr;
-                code += "    frostedEffect.SetRenderInfo(FrostedParameters, new RenderArgs(" + wrksurface + "), new RenderArgs(src));" + cr;
-            }
-            else if (EffectCode.Text.Contains("Add Noise"))
-            {
-                code += "    noiseProps = noiseEffect.CreatePropertyCollection();" + cr;
-                code += "    PropertyBasedEffectConfigToken NoiseParameters = new PropertyBasedEffectConfigToken(noiseProps);" + cr;
-                code += "    NoiseParameters.SetPropertyValue(AddNoiseEffect.PropertyNames.Intensity, Amount1);" + cr;
-                code += "    NoiseParameters.SetPropertyValue(AddNoiseEffect.PropertyNames.Saturation, Amount2);" + cr;
-                code += "    NoiseParameters.SetPropertyValue(AddNoiseEffect.PropertyNames.Coverage, Amount3);" + cr;
-                code += "    noiseEffect.SetRenderInfo(NoiseParameters, new RenderArgs(" + wrksurface + "), new RenderArgs(src));" + cr;
-            }
-            else if (EffectCode.Text.Contains("Motion Blur"))
-            {
-                code += "    blurProps = blurEffect.CreatePropertyCollection();" + cr;
-                code += "    PropertyBasedEffectConfigToken BlurParameters = new PropertyBasedEffectConfigToken(blurProps);" + cr;
-                code += "    BlurParameters.SetPropertyValue(MotionBlurEffect.PropertyNames.Angle, Amount1);" + cr;
-                code += "    BlurParameters.SetPropertyValue(MotionBlurEffect.PropertyNames.Centered, Amount2);" + cr;
-                code += "    BlurParameters.SetPropertyValue(MotionBlurEffect.PropertyNames.Distance, Amount3);" + cr;
-                code += "    blurEffect.SetRenderInfo(BlurParameters, new RenderArgs(" + wrksurface + "), new RenderArgs(src));" + cr;
-            }
-            else if (EffectCode.Text.Contains("Clouds"))
-            {
-                code += "    cloudsProps = cloudsEffect.CreatePropertyCollection();" + cr;
-                code += "    PropertyBasedEffectConfigToken CloudsParameters = new PropertyBasedEffectConfigToken(cloudsProps);" + cr;
-                code += "    CloudsParameters.SetPropertyValue(CloudsEffect.PropertyNames.Scale, Amount1);" + cr;
-                code += "    CloudsParameters.SetPropertyValue(CloudsEffect.PropertyNames.Power, Amount2);" + cr;
-                code += "    CloudsParameters.SetPropertyValue(CloudsEffect.PropertyNames.BlendMode, Amount3);" + cr;
-                code += "    CloudsParameters.SetPropertyValue(CloudsEffect.PropertyNames.Seed, (int)Amount4);" + cr;
-                code += "    cloudsEffect.SetRenderInfo(CloudsParameters, new RenderArgs(" + wrksurface + "), new RenderArgs(src));" + cr;
-            }
-            else if (EffectCode.Text.Contains("Oil Painting"))
-            {
-                code += "    oilpaintProps = oilpaintEffect.CreatePropertyCollection();" + cr;
-                code += "    PropertyBasedEffectConfigToken oilpaintParameters = new PropertyBasedEffectConfigToken(oilpaintProps);" + cr;
-                code += "    oilpaintParameters.SetPropertyValue(OilPaintingEffect.PropertyNames.BrushSize, Amount1);" + cr;
-                code += "    oilpaintParameters.SetPropertyValue(OilPaintingEffect.PropertyNames.Coarseness, Amount2);" + cr;
-                code += "    oilpaintEffect.SetRenderInfo(oilpaintParameters, new RenderArgs(" + wrksurface + "), new RenderArgs(src));" + cr;
-            }
-            else if (EffectCode.Text.Contains("Reduce Noise"))
-            {
-                code += "    reducenoiseProps = reducenoiseEffect.CreatePropertyCollection();" + cr;
-                code += "    PropertyBasedEffectConfigToken reducenoiseParameters = new PropertyBasedEffectConfigToken(reducenoiseProps);" + cr;
-                code += "    reducenoiseParameters.SetPropertyValue(ReduceNoiseEffect.PropertyNames.Radius, Amount1);" + cr;
-                code += "    reducenoiseParameters.SetPropertyValue(ReduceNoiseEffect.PropertyNames.Strength, Amount2);" + cr;
-                code += "    reducenoiseEffect.SetRenderInfo(reducenoiseParameters, new RenderArgs(" + wrksurface + "), new RenderArgs(src));" + cr;
-            }
-            else if (EffectCode.Text.Contains("Median"))
-            {
-                code += "    medianProps = medianEffect.CreatePropertyCollection();" + cr;
-                code += "    PropertyBasedEffectConfigToken medianParameters = new PropertyBasedEffectConfigToken(medianProps);" + cr;
-                code += "    medianParameters.SetPropertyValue(MedianEffect.PropertyNames.Radius, Amount1);" + cr;
-                code += "    medianParameters.SetPropertyValue(MedianEffect.PropertyNames.Percentile, Amount2);" + cr;
-                code += "    medianEffect.SetRenderInfo(medianParameters, new RenderArgs(" + wrksurface + "), new RenderArgs(src));" + cr;
-            }
-            else if (EffectCode.Text.Contains("Edge Detect"))
-            {
-                code += "    edgeProps = edgedetectEffect.CreatePropertyCollection();" + cr;
-                code += "    PropertyBasedEffectConfigToken EdgeParameters = new PropertyBasedEffectConfigToken(edgeProps);" + cr;
-                code += "    EdgeParameters.SetPropertyValue(EdgeDetectEffect.PropertyNames.Angle, Amount1);" + cr;
-                code += "    edgedetectEffect.SetRenderInfo(EdgeParameters, new RenderArgs(" + wrksurface + "), new RenderArgs(src));" + cr;
-            }
-            else if (EffectCode.Text.Contains("Emboss"))
-            {
-                code += "    embossProps = embossEffect.CreatePropertyCollection();" + cr;
-                code += "    PropertyBasedEffectConfigToken EmbossParameters = new PropertyBasedEffectConfigToken(embossProps);" + cr;
-                code += "    EmbossParameters.SetPropertyValue(EmbossEffect.PropertyNames.Angle, Amount1);" + cr;
-                code += "    embossEffect.SetRenderInfo(EmbossParameters, new RenderArgs(" + wrksurface + "), new RenderArgs(src));" + cr;
-            }
-            else if (EffectCode.Text.Contains("Relief"))
-            {
-                code += "    reliefProps = reliefEffect.CreatePropertyCollection();" + cr;
-                code += "    PropertyBasedEffectConfigToken ReliefParameters = new PropertyBasedEffectConfigToken(reliefProps);" + cr;
-                code += "    ReliefParameters.SetPropertyValue(ReliefEffect.PropertyNames.Angle, Amount1);" + cr;
-                code += "    reliefEffect.SetRenderInfo(ReliefParameters, new RenderArgs(" + wrksurface + "), new RenderArgs(src));" + cr;
-            }
-            else if (EffectCode.Text.Contains("Posterize"))
-            {
-                code += "    posterizeProps = posterizeEffect.CreatePropertyCollection();" + cr;
-                code += "    PropertyBasedEffectConfigToken PosterizeParameters = new PropertyBasedEffectConfigToken(posterizeProps);" + cr;
-                code += "    PosterizeParameters.SetPropertyValue(PosterizeAdjustment.PropertyNames.RedLevels, Amount1);" + cr;
-                code += "    PosterizeParameters.SetPropertyValue(PosterizeAdjustment.PropertyNames.GreenLevels, Amount2);" + cr;
-                code += "    PosterizeParameters.SetPropertyValue(PosterizeAdjustment.PropertyNames.BlueLevels, Amount3);" + cr;
-                code += "    PosterizeParameters.SetPropertyValue(PosterizeAdjustment.PropertyNames.LinkLevels, Amount4);" + cr;
-                code += "    posterizeEffect.SetRenderInfo(PosterizeParameters, new RenderArgs(" + wrksurface + "), new RenderArgs(src));" + cr;
-            }
-            else if (EffectCode.Text.Contains("Outline"))
-            {
-                code += "    outlineProps = outlineEffect.CreatePropertyCollection();" + cr;
-                code += "    PropertyBasedEffectConfigToken outlineParameters = new PropertyBasedEffectConfigToken(outlineProps);" + cr;
-                code += "    outlineParameters.SetPropertyValue(OutlineEffect.PropertyNames.Thickness, Amount1);" + cr;
-                code += "    outlineParameters.SetPropertyValue(OutlineEffect.PropertyNames.Intensity, Amount2);" + cr;
-                code += "    outlineEffect.SetRenderInfo(outlineParameters, new RenderArgs(" + wrksurface + "), new RenderArgs(src));" + cr;
-            }
-            else if (EffectCode.Text.Contains("Sharpen"))
-            {
-                code += "    sharpenProps = sharpenEffect.CreatePropertyCollection();" + cr;
-                code += "    PropertyBasedEffectConfigToken SharpenParameters = new PropertyBasedEffectConfigToken(sharpenProps);" + cr;
-                code += "    SharpenParameters.SetPropertyValue(SharpenEffect.PropertyNames.Amount, Amount1);" + cr;
-                code += "    sharpenEffect.SetRenderInfo(SharpenParameters, new RenderArgs(" + wrksurface + "), new RenderArgs(src));" + cr;
-            }
-            else if (EffectCode.Text.Contains("Pencil Sketch"))
-            {
-                code += "    pencilSketchProps = pencilSketchEffect.CreatePropertyCollection();" + cr;
-                code += "    PropertyBasedEffectConfigToken pencilSketchParameters = new PropertyBasedEffectConfigToken(pencilSketchProps);" + cr;
-                code += "    pencilSketchParameters.SetPropertyValue(PencilSketchEffect.PropertyNames.PencilTipSize, Amount1);" + cr;
-                code += "    pencilSketchParameters.SetPropertyValue(PencilSketchEffect.PropertyNames.ColorRange, Amount2);" + cr;
-                code += "    pencilSketchEffect.SetRenderInfo(pencilSketchParameters, new RenderArgs(" + wrksurface + "), new RenderArgs(src));" + cr;
-            }
-            else if (EffectCode.Text.Contains("Sepia"))
-            {
-                code += "    sepiaProps = sepiaEffect.CreatePropertyCollection();" + cr;
-                code += "    PropertyBasedEffectConfigToken SepiaParameters = new PropertyBasedEffectConfigToken(sepiaProps);" + cr;
-                code += "    sepiaEffect.SetRenderInfo(SepiaParameters, new RenderArgs(" + wrksurface + "), new RenderArgs(src));" + cr;
-            }
-            else if (EffectCode.Text.Contains("Ink Sketch"))
-            {
-                code += "    inkProps = inkEffect.CreatePropertyCollection();" + cr;
-                code += "    PropertyBasedEffectConfigToken InkParameters = new PropertyBasedEffectConfigToken(inkProps);" + cr;
-                code += "    InkParameters.SetPropertyValue(InkSketchEffect.PropertyNames.InkOutline, Amount1);" + cr;
-                code += "    InkParameters.SetPropertyValue(InkSketchEffect.PropertyNames.Coloring, Amount2);" + cr;
-                code += "    inkEffect.SetRenderInfo(InkParameters, new RenderArgs(" + wrksurface + "), new RenderArgs(src));" + cr;
-            }
-            else if (EffectCode.Text.Contains("Radial Blur"))
-            {
-                code += "    radialProps = radialEffect.CreatePropertyCollection();" + cr;
-                code += "    PropertyBasedEffectConfigToken RadialParameters = new PropertyBasedEffectConfigToken(radialProps);" + cr;
-                code += "    RadialParameters.SetPropertyValue(RadialBlurEffect.PropertyNames.Angle, Amount1);" + cr;
-                code += "    RadialParameters.SetPropertyValue(RadialBlurEffect.PropertyNames.Offset, Amount2);" + cr;
-                code += "    RadialParameters.SetPropertyValue(RadialBlurEffect.PropertyNames.Quality, Amount3);" + cr;
-                code += "    radialEffect.SetRenderInfo(RadialParameters, new RenderArgs(" + wrksurface + "), new RenderArgs(src));" + cr;
-            }
-            else if (EffectCode.Text.Contains("Surface Blur"))
-            {
-                code += "    surfaceProps = surfaceEffect.CreatePropertyCollection();" + cr;
-                code += "    PropertyBasedEffectConfigToken SurfaceParameters = new PropertyBasedEffectConfigToken(surfaceProps);" + cr;
-                code += "    SurfaceParameters.SetPropertyValue(SurfaceBlurEffect.PropertyName.Radius, Amount1);" + cr;
-                code += "    SurfaceParameters.SetPropertyValue(SurfaceBlurEffect.PropertyName.Threshold, Amount2);" + cr;
-                code += "    surfaceEffect.SetRenderInfo(SurfaceParameters, new RenderArgs(" + wrksurface + "), new RenderArgs(src));" + cr;
-            }
-            else if (EffectCode.Text.Contains("Unfocus"))
-            {
-                code += "    unfocusProps = unfocusEffect.CreatePropertyCollection();" + cr;
-                code += "    PropertyBasedEffectConfigToken UnfocusParameters = new PropertyBasedEffectConfigToken(unfocusProps);" + cr;
-                code += "    UnfocusParameters.SetPropertyValue(UnfocusEffect.PropertyNames.Radius, Amount1);" + cr;
-                code += "    unfocusEffect.SetRenderInfo(UnfocusParameters, new RenderArgs(" + wrksurface + "), new RenderArgs(src));" + cr;
-            }
-            else if (EffectCode.Text.Contains("Zoom Blur"))
-            {
-                code += "    zoomProps = zoomEffect.CreatePropertyCollection();" + cr;
-                code += "    PropertyBasedEffectConfigToken ZoomParameters = new PropertyBasedEffectConfigToken(zoomProps);" + cr;
-                code += "    ZoomParameters.SetPropertyValue(ZoomBlurEffect.PropertyNames.Amount, Amount1);" + cr;
-                code += "    ZoomParameters.SetPropertyValue(ZoomBlurEffect.PropertyNames.Offset, Amount2);" + cr;
-                code += "    zoomEffect.SetRenderInfo(ZoomParameters, new RenderArgs(" + wrksurface + "), new RenderArgs(src));" + cr;
-            }
-            else if (EffectCode.Text.Contains("Bulge"))
-            {
-                code += "    bulgeProps = bulgeEffect.CreatePropertyCollection();" + cr;
-                code += "    PropertyBasedEffectConfigToken BulgeParameters = new PropertyBasedEffectConfigToken(bulgeProps);" + cr;
-                code += "    BulgeParameters.SetPropertyValue(BulgeEffect.PropertyNames.Amount, Amount1);" + cr;
-                code += "    BulgeParameters.SetPropertyValue(BulgeEffect.PropertyNames.Offset, Amount2);" + cr;
-                code += "    bulgeEffect.SetRenderInfo(BulgeParameters, new RenderArgs(" + wrksurface + "), new RenderArgs(src));" + cr;
-            }
-            else if (EffectCode.Text.Contains("Crystalize"))
-            {
-                code += "    crystalizeProps = crystalizeEffect.CreatePropertyCollection();" + cr;
-                code += "    PropertyBasedEffectConfigToken CrystalizeParameters = new PropertyBasedEffectConfigToken(crystalizeProps);" + cr;
-                code += "    CrystalizeParameters.SetPropertyValue(CrystalizeEffect.PropertyNames.Size, Amount1);" + cr;
-                code += "    CrystalizeParameters.SetPropertyValue(CrystalizeEffect.PropertyNames.Quality, Amount2);" + cr;
-                code += "    CrystalizeParameters.SetPropertyValue(CrystalizeEffect.PropertyNames.Seed, (int)Amount3);" + cr;
-                code += "    crystalizeEffect.SetRenderInfo(CrystalizeParameters, new RenderArgs(" + wrksurface + "), new RenderArgs(src));" + cr;
-            }
-            else if (EffectCode.Text.Contains("Dents"))
-            {
-                code += "    dentsProps = dentsEffect.CreatePropertyCollection();" + cr;
-                code += "    PropertyBasedEffectConfigToken DentsParameters = new PropertyBasedEffectConfigToken(dentsProps);" + cr;
-                code += "    DentsParameters.SetPropertyValue(DentsEffect.PropertyNames.Scale, Amount1);" + cr;
-                code += "    DentsParameters.SetPropertyValue(DentsEffect.PropertyNames.Refraction, Amount2);" + cr;
-                code += "    DentsParameters.SetPropertyValue(DentsEffect.PropertyNames.Roughness, Amount3);" + cr;
-                code += "    DentsParameters.SetPropertyValue(DentsEffect.PropertyNames.Tension, Amount4);" + cr;
-                code += "    DentsParameters.SetPropertyValue(DentsEffect.PropertyNames.Quality, Amount5);" + cr;
-                code += "    DentsParameters.SetPropertyValue(DentsEffect.PropertyNames.Seed, (int)Amount6);" + cr;
-                code += "    dentsEffect.SetRenderInfo(DentsParameters, new RenderArgs(" + wrksurface + "), new RenderArgs(src));" + cr;
-            }
-            else if (EffectCode.Text.Contains("Pixelate"))
-            {
-                code += "    pixelateProps = pixelateEffect.CreatePropertyCollection();" + cr;
-                code += "    PropertyBasedEffectConfigToken PixelateParameters = new PropertyBasedEffectConfigToken(pixelateProps);" + cr;
-                code += "    PixelateParameters.SetPropertyValue(PixelateEffect.PropertyNames.CellSize, Amount1);" + cr;
-                code += "    pixelateEffect.SetRenderInfo(PixelateParameters, new RenderArgs(" + wrksurface + "), new RenderArgs(src));" + cr;
-            }
-            else if (EffectCode.Text.Contains("Polar Inversion"))
-            {
-                code += "    polarProps = polarEffect.CreatePropertyCollection();" + cr;
-                code += "    PropertyBasedEffectConfigToken PolarParameters = new PropertyBasedEffectConfigToken(polarProps);" + cr;
-                code += "    PolarParameters.SetPropertyValue(PolarInversionEffect.PropertyNames.Amount, Amount1);" + cr;
-                code += "    PolarParameters.SetPropertyValue(PolarInversionEffect.PropertyNames.Offset, Amount2);" + cr;
-                code += "    PolarParameters.SetPropertyValue(PolarInversionEffect.PropertyNames.EdgeBehavior, Amount3);" + cr;
-                code += "    PolarParameters.SetPropertyValue(PolarInversionEffect.PropertyNames.Quality, Amount4);" + cr;
-                code += "    polarEffect.SetRenderInfo(PolarParameters, new RenderArgs(" + wrksurface + "), new RenderArgs(src));" + cr;
-            }
-            else if (EffectCode.Text.Contains("Tile Reflection"))
-            {
-                code += "    tileProps = tileEffect.CreatePropertyCollection();" + cr;
-                code += "    PropertyBasedEffectConfigToken TileParameters = new PropertyBasedEffectConfigToken(tileProps);" + cr;
-                code += "    TileParameters.SetPropertyValue(TileEffect.PropertyNames.Rotation, Amount1);" + cr;
-                code += "    TileParameters.SetPropertyValue(TileEffect.PropertyNames.SquareSize, Amount2);" + cr;
-                code += "    TileParameters.SetPropertyValue(TileEffect.PropertyNames.Curvature, Amount3);" + cr;
-                code += "    TileParameters.SetPropertyValue(TileEffect.PropertyNames.Quality, Amount4);" + cr;
-                code += "    tileEffect.SetRenderInfo(TileParameters, new RenderArgs(" + wrksurface + "), new RenderArgs(src));" + cr;
-            }
-            else if (EffectCode.Text.Contains("Twist"))
-            {
-                code += "    twistProps = twistEffect.CreatePropertyCollection();" + cr;
-                code += "    PropertyBasedEffectConfigToken TwistParameters = new PropertyBasedEffectConfigToken(twistProps);" + cr;
-                code += "    TwistParameters.SetPropertyValue(TwistEffect.PropertyNames.Amount, Amount1);" + cr;
-                code += "    TwistParameters.SetPropertyValue(TwistEffect.PropertyNames.Size, Amount2);" + cr;
-                code += "    TwistParameters.SetPropertyValue(TwistEffect.PropertyNames.Offset, Amount3);" + cr;
-                code += "    TwistParameters.SetPropertyValue(TwistEffect.PropertyNames.Quality, Amount4);" + cr;
-                code += "    twistEffect.SetRenderInfo(TwistParameters, new RenderArgs(" + wrksurface + "), new RenderArgs(src));" + cr;
-            }
-            else if (EffectCode.Text.Contains("Glow"))
-            {
-                code += "    glowProps = glowEffect.CreatePropertyCollection();" + cr;
-                code += "    PropertyBasedEffectConfigToken GlowParameters = new PropertyBasedEffectConfigToken(glowProps);" + cr;
-                code += "    GlowParameters.SetPropertyValue(GlowEffect.PropertyNames.Radius, Amount1);" + cr;
-                code += "    GlowParameters.SetPropertyValue(GlowEffect.PropertyNames.Brightness, Amount2);" + cr;
-                code += "    GlowParameters.SetPropertyValue(GlowEffect.PropertyNames.Contrast, Amount3);" + cr;
-                code += "    glowEffect.SetRenderInfo(GlowParameters, new RenderArgs(" + wrksurface + "), new RenderArgs(src));" + cr;
-            }
-            else if (EffectCode.Text.Contains("Soften Portrait"))
-            {
-                code += "    portraitProps = portraitEffect.CreatePropertyCollection();" + cr;
-                code += "    PropertyBasedEffectConfigToken PortraitParameters = new PropertyBasedEffectConfigToken(portraitProps);" + cr;
-                code += "    PortraitParameters.SetPropertyValue(SoftenPortraitEffect.PropertyNames.Softness, Amount1);" + cr;
-                code += "    PortraitParameters.SetPropertyValue(SoftenPortraitEffect.PropertyNames.Lighting, Amount2);" + cr;
-                code += "    PortraitParameters.SetPropertyValue(SoftenPortraitEffect.PropertyNames.Warmth, Amount3);" + cr;
-                code += "    softenEffect.SetRenderInfo(PortraitParameters, new RenderArgs(" + wrksurface + "), new RenderArgs(src));" + cr;
-            }
-            else if (EffectCode.Text.Contains("Vignette"))
-            {
-                code += "    vignetteProps = vignetteEffect.CreatePropertyCollection();" + cr;
-                code += "    PropertyBasedEffectConfigToken VignetteParameters = new PropertyBasedEffectConfigToken(vignetteProps);" + cr;
-                code += "    VignetteParameters.SetPropertyValue(VignetteEffect.PropertyNames.Offset, Amount1);" + cr;
-                code += "    VignetteParameters.SetPropertyValue(VignetteEffect.PropertyNames.Radius, Amount2);" + cr;
-                code += "    VignetteParameters.SetPropertyValue(VignetteEffect.PropertyNames.Amount, Amount3);" + cr;
-                code += "    vignetteEffect.SetRenderInfo(VignetteParameters, new RenderArgs(" + wrksurface + "), new RenderArgs(src));" + cr;
-            }
-            else if (EffectCode.Text.Contains("Julia"))
-            {
-                code += "    juliaProps = juliaEffect.CreatePropertyCollection();" + cr;
-                code += "    PropertyBasedEffectConfigToken JuliaParameters = new PropertyBasedEffectConfigToken(juliaProps);" + cr;
-                code += "    JuliaParameters.SetPropertyValue(JuliaFractalEffect.PropertyNames.Factor, Amount1);" + cr;
-                code += "    JuliaParameters.SetPropertyValue(JuliaFractalEffect.PropertyNames.Zoom, Amount2);" + cr;
-                code += "    JuliaParameters.SetPropertyValue(JuliaFractalEffect.PropertyNames.Angle, Amount3);" + cr;
-                code += "    JuliaParameters.SetPropertyValue(JuliaFractalEffect.PropertyNames.Quality, Amount4);" + cr;
-                code += "    juliaEffect.SetRenderInfo(JuliaParameters, new RenderArgs(" + wrksurface + "), new RenderArgs(src));" + cr;
-            }
-            else if (EffectCode.Text.Contains("Mandelbrot"))
-            {
-                code += "    mandelbrotProps = mandelbrotEffect.CreatePropertyCollection();" + cr;
-                code += "    PropertyBasedEffectConfigToken MandelbrotParameters = new PropertyBasedEffectConfigToken(mandelbrotProps);" + cr;
-                code += "    MandelbrotParameters.SetPropertyValue(MandelbrotFractalEffect.PropertyNames.Factor, Amount1);" + cr;
-                code += "    MandelbrotParameters.SetPropertyValue(MandelbrotFractalEffect.PropertyNames.Zoom, Amount2);" + cr;
-                code += "    MandelbrotParameters.SetPropertyValue(MandelbrotFractalEffect.PropertyNames.Angle, Amount3);" + cr;
-                code += "    MandelbrotParameters.SetPropertyValue(MandelbrotFractalEffect.PropertyNames.Quality, Amount4);" + cr;
-                code += "    MandelbrotParameters.SetPropertyValue(MandelbrotFractalEffect.PropertyNames.InvertColors, Amount5);" + cr;
-                code += "    mandelbrotEffect.SetRenderInfo(MandelbrotParameters, new RenderArgs(" + wrksurface + "), new RenderArgs(src));" + cr;
-            }
 
-            if (EffectCode.Text.Contains("Empty") || NoStyle.Checked)
+            if (flowListArray.Length > 0)
             {
-                code += "    " + wrksurface + ".Clear(ColorBgra.Transparent);" + cr;
-            }
-            if (EffectCode.Text.Contains("Copy") && wrksurface != "dst")
-            {
-                code += "    " + wrksurface + ".CopySurface(src);" + cr;
-            }
+                for(int i=0;i<flowListArray.Length;i++)
+                {
+                    bool lastItem = i == flowListArray.Length - 1;
+                    var elementDetails = flowListArray[i].Split('|');
+                    //[0] = Dest, Src Dest, Top Bottom Dest
+                    //[1] = Effect, Blend, Pixel, Fill, or Copy
+                    //[2] = Effect / Blend / Pixel Op Name
+                    //[3] = Fill color or comment
+                    //[4] = Starting control name is AmountX
+                    string targets = elementDetails[0];
+                    string etype = elementDetails[1];
+                    string ename = elementDetails[2];
+                    string ecolor = elementDetails[3];
+                    int elnum = int.Parse(elementDetails[4]);
 
+                    dstsurface = "dst";
+                    wrksurface = "wrk";
+                    srcsurface = "src";
+                    switch (targets.Length)
+                    {
+                        case 1:
+                            if (targets[0] == 'W') dstsurface = "wrk";
+                            break;
+                        case 2:
+                            if (targets[0] == 'W') srcsurface = "wrk";
+                            if (targets[0] == 'D') srcsurface = "dst";
+                            if (targets[1] == 'W') dstsurface = "wrk";
+                            break;
+                        case 3:
+                            if (targets[0] == 'W') srcsurface = "wrk";
+                            if (targets[0] == 'D') srcsurface = "dst";
+                            if (targets[1] == 'S') wrksurface = "src";
+                            if (targets[1] == 'D') wrksurface = "dst";
+                            if (targets[2] == 'W') dstsurface = "wrk";
+                            break;
+                    }
+                    // prepare for the Render loop
+                    if (lastItem)
+                    {
+                        // it will be going from the destination of the last item in the pixel flow list to the DST canvas.
+                        if (AdvancedStyle.Checked)
+                        {
+                            srccode = "*" + dstsurface + "Ptr";
+                        }
+                        else
+                        {
+                            srccode = dstsurface + "[x,y]";
+                        }
+                    }
+                    // add code for this item in the pixel flow list
+                    switch (etype)
+                    {
+                        case "Effect":
+                            code += getEffectPropCode(ename, srcsurface, dstsurface, elnum, lastItem, code.Contains("PropertyBasedEffectConfigToken " + ename.ToLower().Replace(" ", "").Replace("brightness/", "") + "Parameters ="), ref rendercode);
+                            break;
+                        case "Blend":
+                            if (lastItem)
+                            {
+                                rendercode = "    // " + ename + " Blend the " + srcsurface + " surface and the " + wrksurface + " surface to the " + dstsurface + " surface" + cr;
+                                rendercode += "    " + ename.ToLower() + "Op.Apply(" + dstsurface + ", " + srcsurface + ", " + wrksurface + ", rect);" + cr;
+                            }
+                            else
+                            {
+                                code += "    if (IsCancelRequested) return;" + cr;
+                                code += "    // " + ename + " Blend the " + srcsurface + " surface and the " + wrksurface + " surface to the " + dstsurface + " surface" + cr;
+                                code += "    " + ename.ToLower() + "Op.Apply(" + dstsurface + ", " + srcsurface + ", " + wrksurface + ");" + cr;
+                            }
+                            break;
+                        case "Pixel Op":
+                            if (lastItem)
+                            {
+                                rendercode = "    // " + ename + " the " + srcsurface + " surface to the " + dstsurface + " surface" + cr;
+                                rendercode += "    " + ename.ToLower() + "Op.Apply(" + dstsurface + ", " + srcsurface + ", rect);" + cr;
+                            }
+                            else
+                            {
+                                code += "    if (IsCancelRequested) return;" + cr;
+                                code += "    // " + ename + " the " + srcsurface + " surface to the " + dstsurface + " surface" + cr;
+                                code += "    " + ename.ToLower() + "Op.Apply(" + dstsurface + ", " + srcsurface + ",  new Rectangle[1] {" + dstsurface + ".Bounds},0,1);" + cr;
+                            }
+                            break;
+                        case "Fill":
+                            if (lastItem)
+                            {
+                                rendercode = "    // Fill the " + dstsurface + " surface with " + ecolor + cr;
+                                rendercode += "    " + dstsurface + ".Clear(rect,Color." + ecolor + ");" + cr;
+                            }
+                            else
+                            {
+                                code += "    if (IsCancelRequested) return;" + cr;
+                                code += "    // Fill the " + dstsurface + " surface with " + ecolor + cr;
+                                code += "    " + dstsurface + ".Clear(ColorBgra." + ecolor + ");" + cr;
+                            }
+                            break;
+                        case "Copy":
+                            if (lastItem)
+                            {
+                                rendercode = "    // Copy the " + srcsurface + " surface to the " + dstsurface + " surface" + cr;
+                                rendercode += "    " + dstsurface + ".CopySurface(" + srcsurface + ",rect.Location,rect);" + cr;
+                            }
+                            else
+                            {
+                                code += "    if (IsCancelRequested) return;" + cr;
+                                code += "    // Copy the " + srcsurface + " surface to the " + dstsurface + " surface" + cr;
+                                code += "    " + dstsurface + ".CopySurface(" + srcsurface + ");" + cr;
+                            }
+                            break;
+                    }
+                }
+            }
             // finish PreRender
             code += "}" + cr + cr;
-            code += "// Here is the main render loop function" + cr;
+            code += "// Here is the main multi-threaded render function" + cr;
+            code += "// The dst canvas is broken up into rectangles and" + cr;
+            code += "// your job is to write to each pixel of that rectangle" + cr;
             // if we're using pointers, the render function must be marked 'unsafe'
             if (AdvancedStyle.Checked)
             {
@@ -1095,257 +1345,33 @@ namespace PaintDotNet.Effects
                 code += cr;
             }
 
-            // Now, call the actual function if this is a complex effect
-            if (EffectCode.Text.Contains("Copy") && !BlendingCode.Text.Contains("Pass Through"))
+            if (rendercode != "")
             {
-                code += "    // Call the copy function" + cr;
-                code += "    " + wrksurface + ".CopySurface(src,rect.Location,rect);" + cr;
+                code += rendercode;
                 code += cr;
-                code += "    // Now in the main render loop, the " + wrksurface + " canvas has a copy of the src canvas" + cr;
             }
 
-            if (EffectCode.Text.Contains("Gaussian Blur"))
-            {
-                code += "    // Call the Gaussian Blur function" + cr;
-                code += "    blurEffect.Render(new Rectangle[1] {rect},0,1);" + cr;
-                code += cr;
-                code += "    // Now in the main render loop, the " + wrksurface + " canvas has a blurred version of the src canvas" + cr;
-            }
-            else if (EffectCode.Text.Contains("Contrast"))
-            {
-                code += "    // Call the Brightness and Contrast Adjustment function" + cr;
-                code += "    bacAdjustment.Render(new Rectangle[1] {rect},0,1);" + cr;
-                code += cr;
-                code += "    // Now in the main render loop, the " + wrksurface + " canvas has an adjusted version of the src canvas" + cr;
-            }
-            else if (EffectCode.Text.Contains("Frosted"))
-            {
-                code += "    // Call the Frosted Glass function" + cr;
-                code += "    frostedEffect.Render(new Rectangle[1] { rect }, 0, 1);" + cr;
-                code += cr;
-                code += "    // Now in the main render loop, the " + wrksurface + " canvas has a frosted version of the src canvas" + cr;
-            }
-            else if (EffectCode.Text.Contains("Add Noise"))
-            {
-                code += "    // Call the Add Noise function" + cr;
-                code += "    noiseEffect.Render(new Rectangle[1] { rect }, 0, 1);" + cr;
-                code += cr;
-                code += "    // Now in the main render loop, the " + wrksurface + " canvas has a noisy version of the src canvas" + cr;
-            }
-            else if (EffectCode.Text.Contains("Motion Blur"))
-            {
-                code += "    // Call the Motion Blur function" + cr;
-                code += "    blurEffect.Render(new Rectangle[1] {rect},0,1);" + cr;
-                code += cr;
-                code += "    // Now in the main render loop, the " + wrksurface + " canvas has a blurred version of the src canvas" + cr;
-            }
-            else if (EffectCode.Text.Contains("Clouds"))
-            {
-                code += "    // Call the Clouds function using Black and White" + cr;
-                code += "    cloudsEffect.Render(new Rectangle[1] {rect},0,1);" + cr;
-                code += cr;
-                code += "    // Now in the main render loop, the " + wrksurface + " canvas has a render of clouds" + cr;
-            }
-            else if (EffectCode.Text.Contains("Oil Painting"))
-            {
-                code += "    // Call the Oil Painting function" + cr;
-                code += "    oilpaintEffect.Render(new Rectangle[1] {rect},0,1);" + cr;
-                code += cr;
-                code += "    // Now in the main render loop, the " + wrksurface + " canvas has an oil painted version of the src canvas" + cr;
-            }
-            else if (EffectCode.Text.Contains("Reduce Noise"))
-            {
-                code += "    // Call the Reduce Noise function" + cr;
-                code += "    reducenoiseEffect.Render(new Rectangle[1] {rect},0,1);" + cr;
-                code += cr;
-                code += "    // Now in the main render loop, the " + wrksurface + " canvas has a less noisy version of the src canvas" + cr;
-            }
-            else if (EffectCode.Text.Contains("Median"))
-            {
-                code += "    // Call the Median function" + cr;
-                code += "    medianEffect.Render(new Rectangle[1] {rect},0,1);" + cr;
-                code += cr;
-                code += "    // Now in the main render loop, the " + wrksurface + " canvas has a median version of the src canvas" + cr;
-            }
-            else if (EffectCode.Text.Contains("Edge Detect"))
-            {
-                code += "    // Call the Edge Detect function" + cr;
-                code += "    edgedetectEffect.Render(new Rectangle[1] {rect},0,1);" + cr;
-                code += cr;
-                code += "    // Now in the main render loop, the " + wrksurface + " canvas has an edge detect version of the src canvas" + cr;
-            }
-            else if (EffectCode.Text.Contains("Emboss"))
-            {
-                code += "    // Call the Emboss function" + cr;
-                code += "    embossEffect.Render(new Rectangle[1] {rect},0,1);" + cr;
-                code += cr;
-                code += "    // Now in the main render loop, the " + wrksurface + " canvas has an embossed version of the src canvas" + cr;
-            }
-            else if (EffectCode.Text.Contains("Relief"))
-            {
-                code += "    // Call the Relief function" + cr;
-                code += "    reliefEffect.Render(new Rectangle[1] {rect},0,1);" + cr;
-                code += cr;
-                code += "    // Now in the main render loop, the " + wrksurface + " canvas has a relief version of the src canvas" + cr;
-            }
-            else if (EffectCode.Text.Contains("Posterize"))
-            {
-                code += "    // Call the Posterize function" + cr;
-                code += "    posterizeEffect.Render(new Rectangle[1] {rect},0,1);" + cr;
-                code += cr;
-                code += "    // Now in the main render loop, the " + wrksurface + " canvas has a posterized version of the src canvas" + cr;
-            }
-            else if (EffectCode.Text.Contains("Outline"))
-            {
-                code += "    // Call the Outline function" + cr;
-                code += "    outlineEffect.Render(new Rectangle[1] { rect }, 0, 1);" + cr;
-                code += cr;
-                code += "    // Now in the main render loop, the " + wrksurface + " canvas has an outlined version of the src canvas" + cr;
-            }
-            else if (EffectCode.Text.Contains("Sharpen"))
-            {
-                code += "    // Call the Sharpen function" + cr;
-                code += "    sharpenEffect.Render(new Rectangle[1] { rect }, 0, 1);" + cr;
-                code += cr;
-                code += "    // Now in the main render loop, the " + wrksurface + " canvas has a sharpened version of the src canvas" + cr;
-            }
-            else if (EffectCode.Text.Contains("Pencil Sketch"))
-            {
-                code += "    // Call the Pencil Sketch function" + cr;
-                code += "    pencilSketchEffect.Render(new Rectangle[1] { rect }, 0, 1);" + cr;
-                code += cr;
-                code += "    // Now in the main render loop, the " + wrksurface + " canvas has an sketched version of the src canvas" + cr;
-            }
-            else if (EffectCode.Text.Contains("Sepia"))
-            {
-                code += "    // Call the Sepia function" + cr;
-                code += "    sepiaEffect.Render(new Rectangle[1] {rect},0,1);" + cr;
-                code += cr;
-                code += "    // Now in the main render loop, the " + wrksurface + " canvas has a sepia version of the src canvas" + cr;
-            }
-            else if (EffectCode.Text.Contains("Bulge"))
-            {
-                code += "    // Call the Bulge function" + cr;
-                code += "    bulgeEffect.Render(new Rectangle[1] {rect},0,1);" + cr;
-                code += cr;
-                code += "    // Now in the main render loop, the " + wrksurface + " canvas is Bulged" + cr;
-            }
-            else if (EffectCode.Text.Contains("Crystalize"))
-            {
-                code += "    // Call the Crystalize function" + cr;
-                code += "    crystalizeEffect.Render(new Rectangle[1] {rect},0,1);" + cr;
-                code += cr;
-                code += "    // Now in the main render loop, the " + wrksurface + " canvas is Crystalized" + cr;
-            }
-            else if (EffectCode.Text.Contains("Dents"))
-            {
-                code += "    // Call the Dents function" + cr;
-                code += "    dentsEffect.Render(new Rectangle[1] {rect},0,1);" + cr;
-                code += cr;
-                code += "    // Now in the main render loop, the " + wrksurface + " canvas has Dents" + cr;
-            }
-            else if (EffectCode.Text.Contains("Glow"))
-            {
-                code += "    // Call the Glow function" + cr;
-                code += "    glowEffect.Render(new Rectangle[1] {rect},0,1);" + cr;
-                code += cr;
-                code += "    // Now in the main render loop, the " + wrksurface + " canvas has a Glow" + cr;
-            }
-            else if (EffectCode.Text.Contains("Ink Sketch"))
-            {
-                code += "    // Call the Ink Sketch function" + cr;
-                code += "    inkEffect.Render(new Rectangle[1] {rect},0,1);" + cr;
-                code += cr;
-                code += "    // Now in the main render loop, the " + wrksurface + " canvas has an Ink Sketch" + cr;
-            }
-            else if (EffectCode.Text.Contains("Julia"))
-            {
-                code += "    // Call the Julia function" + cr;
-                code += "    juliaEffect.Render(new Rectangle[1] {rect},0,1);" + cr;
-                code += cr;
-                code += "    // Now in the main render loop, the " + wrksurface + " canvas has a render of the Julia fractal" + cr;
-            }
-            else if (EffectCode.Text.Contains("Mandelbrot"))
-            {
-                code += "    // Call the Mandelbrot function" + cr;
-                code += "    mandelbrotEffect.Render(new Rectangle[1] {rect},0,1);" + cr;
-                code += cr;
-                code += "    // Now in the main render loop, the " + wrksurface + " canvas has a render of the Mandelbrot fractal" + cr;
-            }
-            else if (EffectCode.Text.Contains("Pixelate"))
-            {
-                code += "    // Call the Pixelate function" + cr;
-                code += "    pixelateEffect.Render(new Rectangle[1] {rect},0,1);" + cr;
-                code += cr;
-                code += "    // Now in the main render loop, the " + wrksurface + " canvas is Pixelated" + cr;
-            }
-            else if (EffectCode.Text.Contains("Polar Inversion"))
-            {
-                code += "    // Call the Polar Inversion function" + cr;
-                code += "    polarEffect.Render(new Rectangle[1] {rect},0,1);" + cr;
-                code += cr;
-                code += "    // Now in the main render loop, the " + wrksurface + " canvas has a Polar Inversion" + cr;
-            }
-            else if (EffectCode.Text.Contains("Radial Blur"))
-            {
-                code += "    // Call the Radial Blur function" + cr;
-                code += "    radialEffect.Render(new Rectangle[1] {rect},0,1);" + cr;
-                code += cr;
-                code += "    // Now in the main render loop, the " + wrksurface + " canvas has a Radial Blur" + cr;
-            }
-            else if (EffectCode.Text.Contains("Soften Portrait"))
-            {
-                code += "    // Call the Soften Portrait function" + cr;
-                code += "    portraitEffect.Render(new Rectangle[1] {rect},0,1);" + cr;
-                code += cr;
-                code += "    // Now in the main render loop, the " + wrksurface + " canvas has a Softend Portrait" + cr;
-            }
-            else if (EffectCode.Text.Contains("Surface Blur"))
-            {
-                code += "    // Call the Surface Blur function" + cr;
-                code += "    surfaceEffect.Render(new Rectangle[1] {rect},0,1);" + cr;
-                code += cr;
-                code += "    // Now in the main render loop, the " + wrksurface + " canvas is blurred" + cr;
-            }
-            else if (EffectCode.Text.Contains("Tile Reflection"))
-            {
-                code += "    // Call the Tile Reflection function" + cr;
-                code += "    tileEffect.Render(new Rectangle[1] {rect},0,1);" + cr;
-                code += cr;
-                code += "    // Now in the main render loop, the " + wrksurface + " canvas has a Tile Reflection" + cr;
-            }
-            else if (EffectCode.Text.Contains("Twist"))
-            {
-                code += "    // Call the Twist function" + cr;
-                code += "    twistEffect.Render(new Rectangle[1] {rect},0,1);" + cr;
-                code += cr;
-                code += "    // Now in the main render loop, the " + wrksurface + " canvas is Twisted" + cr;
-            }
-            else if (EffectCode.Text.Contains("Unfocus"))
-            {
-                code += "    // Call the Unfocus function" + cr;
-                code += "    unfocusEffect.Render(new Rectangle[1] {rect},0,1);" + cr;
-                code += cr;
-                code += "    // Now in the main render loop, the " + wrksurface + " canvas is Unfocused" + cr;
-            }
-            else if (EffectCode.Text.Contains("Vignette"))
-            {
-                code += "    // Call the Vignette function" + cr;
-                code += "    vignetteEffect.Render(new Rectangle[1] {rect},0,1);" + cr;
-                code += cr;
-                code += "    // Now in the main render loop, the " + wrksurface + " canvas has a Vignette" + cr;
-            }
-            else if (EffectCode.Text.Contains("Zoom Blur"))
-            {
-                code += "    // Call the Zoom Blur function" + cr;
-                code += "    zoomEffect.Render(new Rectangle[1] {rect},0,1);" + cr;
-                code += cr;
-                code += "    // Now in the main render loop, the " + wrksurface + " canvas is Zoom Blurred" + cr;
-            }
-
+            // Are we doing GDI+ commands style?
             if (NoStyle.Checked)
             {
-                code += "    using (Graphics g = new RenderArgs(" + wrksurface + ").Graphics)" + cr;
+                if (flowListArray.Length > 0)
+                {
+                    if (dstsurface != "dst")
+                    {
+                        code += "    // Copy the " + dstsurface + " surface to the dst surface" + cr;
+                        code += "    dst.CopySurface(" + dstsurface + ", rect.Location, rect);" + cr;
+                        code += cr;
+                    }
+                    // else we've already rendered to the DST surface.
+                }
+                else
+                {
+                    code += "    // Copy the src surface to the dst surface" + cr;
+                    code += "    dst.CopySurface(src, rect.Location, rect);" + cr;
+                    code += cr;
+                }
+                code += "    // Setup for drawing using GDI+ commands" + cr;
+                code += "    using (Graphics g = new RenderArgs(dst).Graphics)" + cr;
                 code += "    using (Region gClipRegion = new Region(rect))" + cr;
                 code += "    using (Pen pen = new Pen(ColorBgra.Black, 1))" + cr;
                 code += "    using (GraphicsPath path = new GraphicsPath())" + cr;
@@ -1357,36 +1383,17 @@ namespace PaintDotNet.Effects
                 code += "        g.TextRenderingHint = TextRenderingHint.AntiAlias;" + cr;
                 code += "        pen.LineJoin = LineJoin.Round;" + cr;
                 code += cr;
-                code += "        // add additional GDI+ commands here" + cr;
+                code += "        // TODO: add additional GDI+ commands here, such as:" + cr;
+                code += "        //g.DrawString(\"CodeLab Rocks!\", font, brush, 0, 0);" + cr;
+                code += "        //g.DrawLine(pen, 5, 15, 122, 15);" + cr;
                 code += cr;
                 code += "    }" + cr;
-                if (BlendingCode.Text == "Pass Through")
-                {
-                    code += "    " + "dst.CopySurface(" + wrksurface + ",rect.Location,rect);" + cr;
-                }
-                else
-                {
-                    string blendOp = "normalOp";
-                    if (BlendingCode.Text == "Multiply") blendOp = "multiplyOp";
-                    else if (BlendingCode.Text == "Darken") blendOp = "darkenOp";
-                    else if (BlendingCode.Text == "Additive") blendOp = "additiveOp";
-                    else if (BlendingCode.Text == "ColorBurn") blendOp = "colorburnOp";
-                    else if (BlendingCode.Text == "ColorDodge") blendOp = "colordodgeOp";
-                    else if (BlendingCode.Text == "Difference") blendOp = "differenceOp";
-                    else if (BlendingCode.Text == "Glow") blendOp = "glowOp";
-                    else if (BlendingCode.Text == "Lighten") blendOp = "lightenOp";
-                    else if (BlendingCode.Text == "Negation") blendOp = "negationOp";
-                    else if (BlendingCode.Text == "Overlay") blendOp = "overlayOp";
-                    else if (BlendingCode.Text == "Reflect") blendOp = "reflectOp";
-                    else if (BlendingCode.Text == "Screen") blendOp = "screenOp";
-                    else if (BlendingCode.Text == "Xor") blendOp = "xorOp";
-                    else if (BlendingCode.Text == "User selected blending mode") blendOp = "Amount" + controls;
-                    code += "    " + blendOp + ".Apply(dst, src, " + wrksurface + ", rect);" + cr;
-                }
             }
             else
             {
                 // On to the main render loop!
+                code += cr;
+                code += "    // Step through each row of the current rectangle" + cr;
                 code += "    for (int y = rect.Top; y < rect.Bottom; y++)" + cr;
                 code += "    {" + cr;
                 code += "        if (IsCancelRequested) return;" + cr;
@@ -1394,56 +1401,15 @@ namespace PaintDotNet.Effects
                 {
                     code += "        ColorBgra* srcPtr = src.GetPointAddressUnchecked(rect.Left, y);" + cr;
                     code += "        ColorBgra* dstPtr = dst.GetPointAddressUnchecked(rect.Left, y);" + cr;
-                    if (SurfaceCode.Checked)
+                    if (workSurfaceNeeded)
                     {
                         code += "        ColorBgra* wrkPtr = wrk.GetPointAddressUnchecked(rect.Left, y);" + cr;
                     }
                 }
+                code += "        // Step through each pixel on the current row of the rectangle" + cr;
                 code += "        for (int x = rect.Left; x < rect.Right; x++)" + cr;
                 code += "        {" + cr;
-                if (AdvancedStyle.Checked)
-                {
-                    if ((EffectCode.Text.Contains("Copy") || (EffectCode.Text.Contains("Clipboard"))) && (BlendingCode.Text.Contains("Pass Through")))
-                    {
-                        code += "            ColorBgra CurrentPixel = *srcPtr;" + cr;
-                        blendtop = destcode;
-                        if (SurfaceCode.Checked)
-                        {
-                            blendtop = wrkcode;
-                        }
-                    }
-                    else
-                    {
-                        code += "            ColorBgra CurrentPixel = *" + wrksurface + "Ptr;" + cr;
-                        blendtop = srccode;
-                    }
-                }
-                else
-                {
-                    if ((EffectCode.Text.Contains("Copy") || (EffectCode.Text.Contains("Clipboard"))) && (BlendingCode.Text.Contains("Pass Through")))
-                    {
-                        code += "            ColorBgra CurrentPixel = src[x,y];" + cr;
-                        blendtop = destcode;
-                        if (SurfaceCode.Checked)
-                        {
-                            blendtop = wrkcode;
-                        }
-                    }
-                    else
-                    {
-                        code += "            ColorBgra CurrentPixel = " + wrksurface + "[x,y];" + cr;
-                        blendtop = srccode;
-                    }
-                }
-                if (EffectCode.Text.Contains("Clipboard"))
-                {
-                    code += "            if (IsCancelRequested) return;" + cr;
-                    code += "            // If clipboard has an image, get it" + cr;
-                    code += "            if (clipboardSurface != null)" + cr;
-                    code += "            {" + cr;
-                    code += "                CurrentPixel = clipboardSurface.GetBilinearSampleWrapped(x, y);" + cr;
-                    code += "            }" + cr;
-                }
+                code += "            ColorBgra CurrentPixel = " + srccode + ";" + cr;
                 code += cr;
 
                 string additionalindent = "";
@@ -1459,44 +1425,17 @@ namespace PaintDotNet.Effects
 
                 code += additionalindent + "            // TODO: Add additional pixel processing code here" + cr;
 
-                // Add selected Pixel Op here
-                if (PixelOpCode.Text == "Desaturate") code += additionalindent + "            CurrentPixel = desaturateOp.Apply(CurrentPixel);" + cr;
-                else if (PixelOpCode.Text == "Invert") code += additionalindent + "            CurrentPixel = invertOp.Apply(CurrentPixel);" + cr;
-
                 code += cr;
-
-                // Add selected Blend Op here
-                if (BlendingCode.Text == "Normal") code += additionalindent + "            CurrentPixel = normalOp.Apply(" + blendtop + ", CurrentPixel);" + cr;
-                else if (BlendingCode.Text == "Multiply") code += additionalindent + "            CurrentPixel = multiplyOp.Apply(" + blendtop + ", CurrentPixel);" + cr;
-                else if (BlendingCode.Text == "Darken") code += additionalindent + "            CurrentPixel = darkenOp.Apply(" + blendtop + ", CurrentPixel);" + cr;
-                else if (BlendingCode.Text == "Additive") code += additionalindent + "            CurrentPixel = additiveOp.Apply(" + blendtop + ", CurrentPixel);" + cr;
-                else if (BlendingCode.Text == "ColorBurn") code += additionalindent + "            CurrentPixel = colorburnOp.Apply(" + blendtop + ", CurrentPixel);" + cr;
-                else if (BlendingCode.Text == "ColorDodge") code += additionalindent + "            CurrentPixel = colordodgeOp.Apply(" + blendtop + ", CurrentPixel);" + cr;
-                else if (BlendingCode.Text == "Difference") code += additionalindent + "            CurrentPixel = differenceOp.Apply(" + blendtop + ", CurrentPixel);" + cr;
-                else if (BlendingCode.Text == "Glow") code += additionalindent + "            CurrentPixel = glowOp.Apply(" + blendtop + ", CurrentPixel);" + cr;
-                else if (BlendingCode.Text == "Lighten") code += additionalindent + "            CurrentPixel = lightenOp.Apply(" + blendtop + ", CurrentPixel);" + cr;
-                else if (BlendingCode.Text == "Negation") code += additionalindent + "            CurrentPixel = negationOp.Apply(" + blendtop + ", CurrentPixel);" + cr;
-                else if (BlendingCode.Text == "Overlay") code += additionalindent + "            CurrentPixel = overlayOp.Apply(" + blendtop + ", CurrentPixel);" + cr;
-                else if (BlendingCode.Text == "Reflect") code += additionalindent + "            CurrentPixel = reflectOp.Apply(" + blendtop + ", CurrentPixel);" + cr;
-                else if (BlendingCode.Text == "Screen") code += additionalindent + "            CurrentPixel = screenOp.Apply(" + blendtop + ", CurrentPixel);" + cr;
-                else if (BlendingCode.Text == "Xor") code += additionalindent + "            CurrentPixel = xorOp.Apply(" + blendtop + ", CurrentPixel);" + cr;
-                else if (BlendingCode.Text == "User selected blending mode") code += additionalindent + "            CurrentPixel = Amount" + controls + ".Apply(" + blendtop + ", CurrentPixel);" + cr;
-
-                code += cr;
-
-                // Add selected Pixel Op here
-                if (FinalPixelOpCode.Text == "Desaturate") code += additionalindent + "            CurrentPixel = desaturateOp.Apply(CurrentPixel);" + cr;
-                else if (FinalPixelOpCode.Text == "Invert") code += additionalindent + "            CurrentPixel = invertOp.Apply(CurrentPixel);" + cr;
 
                 // HSV Color mode
                 if (HsvColorMode.Checked)
                 {
                     code += cr;
                     code += additionalindent + "            HsvColor hsv = HsvColor.FromColor(CurrentPixel.ToColor());" + cr;
-                    code += additionalindent + "            int H = hsv.Hue;" + cr;
-                    code += additionalindent + "            int S = hsv.Saturation;" + cr;
-                    code += additionalindent + "            int V = hsv.Value;" + cr;
-                    code += additionalindent + "            byte A = CurrentPixel.A;" + cr;
+                    code += additionalindent + "            int H = hsv.Hue;         // 0-360" + cr;
+                    code += additionalindent + "            int S = hsv.Saturation;  // 0-100" + cr;
+                    code += additionalindent + "            int V = hsv.Value;       // 0-100" + cr;
+                    code += additionalindent + "            byte A = CurrentPixel.A; // 0-255" + cr;
                     code += additionalindent + cr;
                     code += additionalindent + "            // TODO:  Modify H, S, V, and A according to some formula here" + cr;
                     code += additionalindent + cr;
@@ -1512,24 +1451,20 @@ namespace PaintDotNet.Effects
                     code += "            {" + cr;
                     code += "                // This pixel is NOT next to the marching ants" + cr;
                     code += "                // TODO: Add additional pixel processing code here" + cr;
+                    code += cr;
                     code += "            }" + cr;
                 }
 
+                code += "            " + destcode + " = CurrentPixel;" + cr;
                 if (AdvancedStyle.Checked)
                 {
-                    code += "            *dstPtr = CurrentPixel;" + cr;
                     code += "            srcPtr++;" + cr;
                     code += "            dstPtr++;" + cr;
-                    if (SurfaceCode.Checked)
+                    if (workSurfaceNeeded)
                     {
                         code += "            wrkPtr++;" + cr;
                     }
                 }
-                else
-                {
-                    code += "            dst[x,y] = CurrentPixel;" + cr;
-                }
-
                 code += "        }" + cr;
                 code += "    }" + cr;
             }
@@ -1553,15 +1488,6 @@ namespace PaintDotNet.Effects
             CodeTemplate = code;
         }
 
-        private void BlendingCode_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            BlendArrow.Visible = (BlendingCode.Text != "Pass Through");
-        }
-
-        private void SurfaceCode_CheckedChanged(object sender, EventArgs e)
-        {
-            dstLabel.Text = SurfaceCode.Checked ? "WRK\r\nIMAGE" : "DST\r\nIMAGE";
-        }
 
         private void NoStyle_CheckedChanged(object sender, EventArgs e)
         {
@@ -1569,23 +1495,11 @@ namespace PaintDotNet.Effects
             {
                 SelectionCode.Enabled = false;
                 HsvColorMode.Enabled = false;
-                PixelOpCode.Text = "Pass Through";
-                PixelOpCode.Enabled = false;
-                FinalPixelOpCode.Text = "Pass Through";
-                FinalPixelOpCode.Enabled = false;
-                BlendingCode.Text = "Normal";
-                SurfaceCode.Checked = true;
-                SurfaceCode.Enabled = false;
-                EffectCode.Text = "         Empty------->";
             }
             else
             {
                 SelectionCode.Enabled = true;
                 HsvColorMode.Enabled = true;
-                PixelOpCode.Enabled = true;
-                FinalPixelOpCode.Enabled = true;
-                BlendingCode.Text = "Pass Through";
-                SurfaceCode.Enabled = true;
             }
         }
 
@@ -1604,6 +1518,448 @@ namespace PaintDotNet.Effects
                 {
                     LROI.Checked = false;
                 }
+            }
+        }
+
+        private void flowList_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            if (e.Index == -1)
+            {
+                return;
+            }
+            float UIfactor = e.Graphics.DpiY / 96;
+            e.DrawBackground();
+            string listItemText = flowList.Items[e.Index].ToString();
+            /*
+                SW|Effect|Gaussian Blur|SRC to WRK
+                SWD|Blend|Darken|SRC and WRK to DST
+                DD|Pixel|Invert|DST to DST
+                W|Fill|Fill with Color|Red
+                SW|Copy|Copy Surface|SRC to WRK
+            */
+            string graphicName = listItemText.Substring(0, listItemText.IndexOf("|"));
+            // This is to minimize the number of graphic files I had to include...
+            if (graphicName.Length == 3)
+            {
+                string source = graphicName.Substring(0, 2);
+                string destination = graphicName.Substring(2);
+                if (source == "WS") source = "SW";
+                if (source == "DW") source = "WD";
+                if (source == "DS") source = "SD";
+                if (source == "SS") source = "S";
+                if (source == "WW") source = "W";
+                if (source == "DD") source = "D";
+                graphicName = source + destination;
+                listItemText = listItemText.Substring(4);
+            }
+            else
+            {
+                listItemText = listItemText.Substring(graphicName.Length + 1);
+            }
+            string groupName = listItemText.Substring(0, listItemText.IndexOf("|"));
+            listItemText = listItemText.Substring(groupName.Length + 1);
+            string bigText = listItemText.Substring(0, listItemText.IndexOf("|"));
+            string smallText = listItemText.Substring(listItemText.IndexOf("|") + 1);
+            using (SolidBrush solidBrush = new SolidBrush(e.ForeColor))
+            using (SolidBrush foreBrush = new SolidBrush(e.ForeColor))
+            using (SolidBrush backBrush = new SolidBrush(Color.Gray))
+            using (Font bigfont = new Font(e.Font.FontFamily, e.Font.Size * 2, FontStyle.Bold))
+            using (Font smallfont = new Font(e.Font, FontStyle.Regular))
+            {
+                solidBrush.Color = Color.FromName(smallText);
+                Image iconImage = ResUtil.GetImage(graphicName);
+                e.Graphics.DrawImage(iconImage, new Rectangle(e.Bounds.X + 1, e.Bounds.Y + 1, e.Bounds.Height - 2, e.Bounds.Height - 2));
+
+                if (groupName == "Fill")
+                {
+                    if ((smallText == "Transparent") || (smallText == "Primary") || (smallText == "Secondary") || (smallText == "UserSelected"))
+                    {
+                        Image imageFill = ResUtil.GetImage(smallText);
+                        e.Graphics.DrawImage(imageFill, e.Bounds.X + (int)(17 * UIfactor), e.Bounds.Y + (int)(16 * UIfactor), e.Bounds.Height - (int)(33 * UIfactor), e.Bounds.Height - (int)(34 * UIfactor));
+                        if (smallText == "Transparent") smallText = "Clear " + ((graphicName[0] == 'W') ? "WRK" : "DST") + " surface";
+                        if (smallText == "Primary") smallText = "Fill " + ((graphicName[0] == 'W') ? "WRK" : "DST") + " surface with Primary color";
+                        if (smallText == "Secondary") smallText = "Fill " + ((graphicName[0] == 'W') ? "WRK" : "DST") + " surface with Secondary color";
+                        if (smallText == "UserSelected") smallText = "Fill " + ((graphicName[0] == 'W') ? "WRK" : "DST") + " surface with User Selected color";
+                    }
+                    else
+                    {
+                        e.Graphics.FillRectangle(solidBrush, new Rectangle(e.Bounds.X + (int)(16 * UIfactor), e.Bounds.Y + (int)(16 * UIfactor), e.Bounds.Height - (int)(32 * UIfactor), e.Bounds.Height - (int)(34 * UIfactor)));
+                        if (graphicName[0] == 'W')
+                        {
+                            smallText = "WRK with " + smallText;
+                        }
+                        else
+                        {
+                            smallText = "DST with " + smallText;
+                        }
+                    }
+                }
+                else if (groupName == "Copy")
+                {
+                    string fillName = "SRC";
+                    if (graphicName[0] == 'W')
+                    {
+                        fillName = "WRK";
+                    }
+                    else if (graphicName[0] == 'D')
+                    {
+                        fillName = "DST";
+                    }
+                    if (graphicName[1] == 'W')
+                    {
+                        fillName += "WRK";
+                    }
+                    else
+                    {
+                        fillName += "DST";
+                    }
+                    Image imageFill = ResUtil.GetImage(fillName);
+                    e.Graphics.DrawImage(imageFill, e.Bounds.X + (int)(16 * UIfactor), e.Bounds.Y + (int)(16 * UIfactor), e.Bounds.Height - (int)(32 * UIfactor), e.Bounds.Height - (int)(32 * UIfactor));
+                }
+                else if (groupName == "Blend")
+                {
+                    Image imageFill = ResUtil.GetImage("Blend");
+                    e.Graphics.DrawImage(imageFill, e.Bounds.X + (int)(16 * UIfactor), e.Bounds.Y + (int)(16 * UIfactor), e.Bounds.Height - (int)(32 * UIfactor), e.Bounds.Height - (int)(32 * UIfactor));
+                    bigText += " Blend";
+                }
+                else if (groupName == "Pixel Op")
+                {
+                    Image imageFill = ResUtil.GetImage(bigText);
+                    e.Graphics.DrawImage(imageFill, e.Bounds.X + (int)(17 * UIfactor), e.Bounds.Y + (int)(16 * UIfactor), e.Bounds.Height - (int)(33 * UIfactor), e.Bounds.Height - (int)(34 * UIfactor));
+                    bigText += " Pixels";
+                }
+                else // Effect
+                {
+                    Image imageFill = ResUtil.GetImage(bigText.Replace(" ","").Replace("Brightness/", ""));
+                    e.Graphics.DrawImage(imageFill, e.Bounds.X + (int)(17 * UIfactor), e.Bounds.Y + (int)(15 * UIfactor), e.Bounds.Height - (int)(32 * UIfactor), e.Bounds.Height - (int)(32 * UIfactor));
+                    bigText += " Effect";
+                }
+
+                e.Graphics.DrawString(bigText, bigfont, foreBrush, new Rectangle(e.Bounds.X + e.Bounds.Height, e.Bounds.Y + (int)(7 * UIfactor), e.Bounds.Width - e.Bounds.Height, e.Bounds.Height));
+                e.Graphics.DrawString(smallText, smallfont, foreBrush, new Rectangle(e.Bounds.X + e.Bounds.Height + 2, e.Bounds.Y + (int)(bigfont.SizeInPoints / 72 * e.Graphics.DpiY) + (int)(14 * UIfactor), e.Bounds.Width - e.Bounds.Height, e.Bounds.Height));
+            }
+            e.DrawFocusRectangle();
+        }
+
+        private void MoveUp_Click(object sender, EventArgs e)
+        {
+            if (flowList.SelectedItems.Count == 0)
+            {
+                return;
+            }
+            int CurrentItem = flowList.SelectedIndex;
+            if (CurrentItem > 0)
+            {
+                string TargetElement = flowList.Items[CurrentItem].ToString();
+                flowList.Items.RemoveAt(CurrentItem);
+                flowList.Items.Insert(CurrentItem - 1, TargetElement);
+                flowList.SelectedIndex = CurrentItem - 1;
+            }
+        }
+
+        private void MoveDown_Click(object sender, EventArgs e)
+        {
+            if (flowList.SelectedItems.Count == 0)
+            {
+                return;
+            }
+            int CurrentItem = flowList.SelectedIndex;
+            if (CurrentItem >= 0 && CurrentItem < flowList.Items.Count - 1)
+            {
+                string TargetElement = flowList.Items[CurrentItem].ToString();
+                flowList.Items.RemoveAt(CurrentItem);
+                flowList.Items.Insert(CurrentItem + 1, TargetElement);
+                flowList.SelectedIndex = CurrentItem + 1;
+            }
+        }
+
+        private void Delete_Click(object sender, EventArgs e)
+        {
+            int CurrentItem = (flowList.SelectedItems.Count > 0) ? flowList.SelectedIndex : -1;
+            if (CurrentItem > -1)
+            {
+                flowList.Items.RemoveAt(flowList.SelectedIndex);
+            }
+            if (CurrentItem >= flowList.Items.Count)
+            {
+                CurrentItem--;
+            }
+            flowList.SelectedIndex = CurrentItem;
+        }
+
+        private void flowList_Click(object sender, EventArgs e)
+        {
+            // on Ctrl+Click deselect selected item in the list
+            if (ModifierKeys.HasFlag(Keys.Control))
+            {
+                flowList.SelectedIndex = -1;
+                //catagoryBox.Text = "";
+            }
+        }
+
+        private string assembleElement()
+        {
+            // icon description
+            string ret = "";
+            if (sourceBox.Visible) ret += sourceBox.Text.Substring(0, 1);
+            if (bottomBox.Visible) ret += bottomBox.Text.Substring(0, 1);
+            ret += destinationBox.Text.Substring(0, 1); // always visible
+            int iconLength = ret.Length;
+            ret += "|";
+            // catagory
+            ret += catagoryBox.Text;
+            ret += "|";
+            // big text
+            switch (catagoryBox.Text)
+            {
+                case "Effect":
+                    ret += effectBox.Text;
+                    break;
+                case "Blend":
+                    ret += blendBox.Text;
+                    break;
+                case "Pixel Op":
+                    ret += pixelOpBox.Text;
+                    break;
+                case "Fill":
+                    ret += "Fill with Color";
+                    break;
+                case "Copy":
+                    ret += "Copy Surface";
+                    break;
+            }
+            ret += "|";
+            // small text
+            if (catagoryBox.Text == "Fill")
+            {
+                ret += DefaultColorComboBox.Text;
+            }
+            else
+            {
+                switch (iconLength)
+                {
+                    case 1:
+                        ret += "Render to " + destinationBox.Text;
+                        break;
+                    case 2:
+                        ret += sourceBox.Text + " to " + destinationBox.Text;
+                        break;
+                    case 3:
+                        ret += sourceBox.Text + " and " + bottomBox.Text + " to " + destinationBox.Text;
+                        break;
+                }
+            }
+            return ret;
+        }
+
+        private void flowList_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (flowList.SelectedItems.Count == 0)
+            {
+                //catagoryBox.Text = "";
+                return;
+            }
+            string[] item = flowList.SelectedItem.ToString().Split('|');
+            if (item.Length > 2)
+            {
+                catagoryBox.Text = item[1];
+            }
+            if (item.Length > 3)
+            {
+                switch (item[1])
+                {
+                    /*
+                        SW|Effect|Gaussian Blur|SRC to WRK
+                        SWD|Blend|Darken|SRC and WRK to DST
+                        DD|Pixel|Invert|DST to DST
+                        W|Fill|Fill with Color|Red
+                        SW|Copy|Copy Surface|SRC to WRK
+
+                        // Code for each type:
+                        Copy Surface: wrk.CopySurface(src);
+                        Fill with color: wrk.Clear(ColorBgra.Gray);
+                        PixelOp: desaturateOp.Apply(dst,src,rect);  invertOp.Apply(dst, src, rect);
+                        BlendOp: multiplyOp.Apply(dst, lhs, rhs, rect);
+                        Effect: blurEffect.SetRenderInfo(BlurParameters, new RenderArgs(dst), new RenderArgs(src));
+                                blurEffect.Render(new Rectangle[1] {dst.Bounds},0,1); // this is how to do "rect" in PreRender()
+
+                    */
+                    case "Effect":
+                        string effectName = item[2];
+                        if (effectName.Contains(" ")) effectName = effectName.Substring(0, effectName.IndexOf(" "));
+                        effectBox.SelectedIndex = effectBox.FindString(effectName);
+                        break;
+                    case "Blend":
+                        string blendName = item[2];
+                        if (blendName.Contains(" ")) blendName = blendName.Substring(0, blendName.IndexOf(" "));
+                        blendBox.Text = blendName;
+                        break;
+                    case "Pixel Op":
+                        string opName = item[2];
+                        if (opName.Contains(" ")) opName = opName.Substring(0, opName.IndexOf(" "));
+                        pixelOpBox.Text = opName;
+                        break;
+                    case "Fill":
+                        string colorName = item[3];
+                        if (colorName.Contains(" ")) colorName = colorName.Substring(0, colorName.IndexOf(" "));
+                        DefaultColorComboBox.Text = colorName;
+                        break;
+                    case "Copy":
+                        break;
+                }
+            }
+            switch (item[0].Length)
+            {
+                case 1:
+                    destinationBox.SelectedIndex = destinationBox.FindString(item[0][0].ToString());
+                    break;
+                case 2:
+                    sourceBox.SelectedIndex = sourceBox.FindString(item[0][0].ToString());
+                    destinationBox.SelectedIndex = destinationBox.FindString(item[0][1].ToString());
+                    break;
+                case 3:
+                    sourceBox.SelectedIndex = sourceBox.FindString(item[0][0].ToString());
+                    bottomBox.SelectedIndex = bottomBox.FindString(item[0][1].ToString());
+                    destinationBox.SelectedIndex = destinationBox.FindString(item[0][2].ToString());
+                    break;
+            }
+            updateScreen();
+        }
+
+        private void catagoryBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            updateScreen();
+        }
+
+        private void updateScreen()
+        {
+            sourceLabel.Text = "Source layer:";
+            switch (catagoryBox.Text)
+            {
+                case "Effect":
+                    effectLabel.Visible = true;
+                    effectBox.Visible = true;
+                    bottomLabel.Visible = false;
+                    bottomBox.Visible = false;
+                    if (renderedEffects.Contains(effectBox.Text))
+                    //if (effectBox.SelectedIndex < 4)
+                    {
+                        sourceLabel.Visible = false;
+                        sourceBox.Visible = false;
+                    }
+                    else
+                    {
+                        sourceLabel.Visible = true;
+                        sourceBox.Visible = true;
+                    }
+                    DefaultColorComboBox.Visible = false;
+                    blendLabel.Visible = false;
+                    blendBox.Visible = false;
+                    pixelOpBox.Visible = false;
+                    break;
+                case "Blend":
+                    effectLabel.Visible = false;
+                    effectBox.Visible = false;
+                    bottomLabel.Visible = true;
+                    bottomBox.Visible = true;
+                    sourceLabel.Visible = true;
+                    sourceBox.Visible = true;
+                    DefaultColorComboBox.Visible = false;
+                    blendLabel.Visible = true;
+                    blendBox.Visible = true;
+                    pixelOpBox.Visible = false;
+                    sourceLabel.Text = "Top layer:";
+                    break;
+                case "Pixel Op":
+                    effectLabel.Visible = false;
+                    effectBox.Visible = false;
+                    bottomLabel.Visible = false;
+                    bottomBox.Visible = false;
+                    sourceLabel.Visible = true;
+                    sourceBox.Visible = true;
+                    DefaultColorComboBox.Visible = false;
+                    blendLabel.Visible = false;
+                    blendBox.Visible = false;
+                    pixelOpBox.Visible = true;
+                    break;
+                case "Fill":
+                    effectLabel.Visible = false;
+                    effectBox.Visible = false;
+                    bottomLabel.Visible = false;
+                    bottomBox.Visible = false;
+                    sourceLabel.Visible = false;
+                    sourceBox.Visible = false;
+                    DefaultColorComboBox.Visible = true;
+                    blendLabel.Visible = false;
+                    blendBox.Visible = false;
+                    pixelOpBox.Visible = false;
+                    break;
+                case "Copy":
+                    effectLabel.Visible = false;
+                    effectBox.Visible = false;
+                    bottomLabel.Visible = false;
+                    bottomBox.Visible = false;
+                    sourceLabel.Visible = true;
+                    sourceBox.Visible = true;
+                    DefaultColorComboBox.Visible = false;
+                    blendLabel.Visible = false;
+                    blendBox.Visible = false;
+                    pixelOpBox.Visible = false;
+                    break;
+            }
+        }
+
+        private void effectBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            updateScreen();
+        }
+
+        private void DefaultColorComboBox_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            if (e.Index == -1)
+            {
+                return;
+            }
+
+            e.DrawBackground();
+            string colorName = DefaultColorComboBox.Items[e.Index].ToString();
+
+            using (SolidBrush solidBrush = new SolidBrush(e.ForeColor))
+            using (Font font = new Font(e.Font, FontStyle.Regular))
+            {
+                if (colorName == "Transparent" || colorName == "Primary" || colorName == "Secondary")
+                {
+                    e.Graphics.DrawString(colorName, font, solidBrush, e.Bounds);
+                }
+                else
+                {
+                    solidBrush.Color = Color.FromName(colorName);
+                    e.Graphics.FillRectangle(solidBrush, new Rectangle(e.Bounds.X + 1, e.Bounds.Y + 1, e.Bounds.Height - 2, e.Bounds.Height - 2));
+                    e.Graphics.DrawString(colorName, font, solidBrush, new Rectangle(e.Bounds.X + e.Bounds.Height, e.Bounds.Y + 1, e.Bounds.Width - e.Bounds.Height, e.Bounds.Height));
+                }
+            }
+            e.DrawFocusRectangle();
+        }
+
+        private void addButton_Click(object sender, EventArgs e)
+        {
+            flowList.Items.Add(assembleElement());
+            flowList.SelectedIndex = flowList.Items.Count - 1;
+        }
+
+        private void updateButton_Click(object sender, EventArgs e)
+        {
+            string element = assembleElement();
+            if (flowList.SelectedItems.Count == 0)
+            {
+                flowList.Items.Add(element);
+            }
+            int CurrentItem = flowList.SelectedIndex;
+            if (CurrentItem >= 0)
+            {
+                flowList.Items.RemoveAt(CurrentItem);
+                flowList.Items.Insert(CurrentItem, element);
+                flowList.SelectedIndex = CurrentItem;
             }
         }
     }

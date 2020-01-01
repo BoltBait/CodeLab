@@ -1,4 +1,4 @@
-namespace PaintDotNet.Effects
+﻿namespace PaintDotNet.Effects
 {
     partial class FileNew
     {
@@ -28,6 +28,7 @@ namespace PaintDotNet.Effects
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.button1 = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.BasicStyle = new System.Windows.Forms.RadioButton();
@@ -37,46 +38,45 @@ namespace PaintDotNet.Effects
             this.PrimaryColorCode = new System.Windows.Forms.CheckBox();
             this.PenWidthCode = new System.Windows.Forms.CheckBox();
             this.SelectionCode = new System.Windows.Forms.CheckBox();
-            this.BlendingCode = new System.Windows.Forms.ComboBox();
-            this.EffectCode = new System.Windows.Forms.ComboBox();
             this.DoIt = new System.Windows.Forms.Button();
-            this.PixelOpCode = new System.Windows.Forms.ComboBox();
             this.textBox1 = new System.Windows.Forms.Label();
             this.HsvColorMode = new System.Windows.Forms.CheckBox();
-            this.FinalPixelOpCode = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
-            this.srcLabel = new System.Windows.Forms.Label();
-            this.dstLabel = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.BlendArrow = new System.Windows.Forms.PictureBox();
-            this.pictureBox3 = new System.Windows.Forms.PictureBox();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.pictureBox4 = new System.Windows.Forms.PictureBox();
-            this.pictureBox5 = new System.Windows.Forms.PictureBox();
-            this.pictureBox6 = new System.Windows.Forms.PictureBox();
-            this.pictureBox7 = new System.Windows.Forms.PictureBox();
-            this.label7 = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
             this.CustomHelp = new System.Windows.Forms.CheckBox();
             this.PaletteCode = new System.Windows.Forms.CheckBox();
             this.label10 = new System.Windows.Forms.Label();
             this.FAS = new System.Windows.Forms.CheckBox();
             this.ST = new System.Windows.Forms.CheckBox();
-            this.SurfaceCode = new System.Windows.Forms.CheckBox();
             this.NoStyle = new System.Windows.Forms.RadioButton();
             this.SRC = new System.Windows.Forms.CheckBox();
             this.LROI = new System.Windows.Forms.CheckBox();
             this.label3 = new System.Windows.Forms.Label();
-            ((System.ComponentModel.ISupportInitialize)(this.BlendArrow)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox7)).BeginInit();
+            this.flowList = new System.Windows.Forms.ListBox();
+            this.Delete = new System.Windows.Forms.Button();
+            this.MoveDown = new System.Windows.Forms.Button();
+            this.MoveUp = new System.Windows.Forms.Button();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.catagoryBox = new System.Windows.Forms.ComboBox();
+            this.label11 = new System.Windows.Forms.Label();
+            this.effectLabel = new System.Windows.Forms.Label();
+            this.effectBox = new System.Windows.Forms.ComboBox();
+            this.sourceLabel = new System.Windows.Forms.Label();
+            this.sourceBox = new System.Windows.Forms.ComboBox();
+            this.destinationLabel = new System.Windows.Forms.Label();
+            this.destinationBox = new System.Windows.Forms.ComboBox();
+            this.bottomLabel = new System.Windows.Forms.Label();
+            this.bottomBox = new System.Windows.Forms.ComboBox();
+            this.updateButton = new System.Windows.Forms.Button();
+            this.addButton = new System.Windows.Forms.Button();
+            this.DefaultColorComboBox = new System.Windows.Forms.ComboBox();
+            this.blendLabel = new System.Windows.Forms.Label();
+            this.blendBox = new System.Windows.Forms.ComboBox();
+            this.pixelOpBox = new System.Windows.Forms.ComboBox();
+            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.ElementTab = new System.Windows.Forms.TabPage();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.tabControl1.SuspendLayout();
+            this.ElementTab.SuspendLayout();
             this.SuspendLayout();
             // 
             // button1
@@ -84,7 +84,7 @@ namespace PaintDotNet.Effects
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button1.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.button1.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.button1.Location = new System.Drawing.Point(542, 459);
+            this.button1.Location = new System.Drawing.Point(684, 471);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 1;
@@ -95,7 +95,7 @@ namespace PaintDotNet.Effects
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(16, 13);
+            this.label1.Location = new System.Drawing.Point(21, 13);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(64, 13);
             this.label1.TabIndex = 2;
@@ -105,7 +105,7 @@ namespace PaintDotNet.Effects
             // 
             this.BasicStyle.AutoSize = true;
             this.BasicStyle.Checked = true;
-            this.BasicStyle.Location = new System.Drawing.Point(35, 35);
+            this.BasicStyle.Location = new System.Drawing.Point(40, 35);
             this.BasicStyle.Name = "BasicStyle";
             this.BasicStyle.Size = new System.Drawing.Size(51, 17);
             this.BasicStyle.TabIndex = 3;
@@ -116,7 +116,7 @@ namespace PaintDotNet.Effects
             // AdvancedStyle
             // 
             this.AdvancedStyle.AutoSize = true;
-            this.AdvancedStyle.Location = new System.Drawing.Point(132, 35);
+            this.AdvancedStyle.Location = new System.Drawing.Point(40, 58);
             this.AdvancedStyle.Name = "AdvancedStyle";
             this.AdvancedStyle.Size = new System.Drawing.Size(155, 17);
             this.AdvancedStyle.TabIndex = 4;
@@ -127,7 +127,7 @@ namespace PaintDotNet.Effects
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(16, 73);
+            this.label2.Location = new System.Drawing.Point(21, 115);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(204, 13);
             this.label2.TabIndex = 6;
@@ -136,7 +136,7 @@ namespace PaintDotNet.Effects
             // CenterCode
             // 
             this.CenterCode.AutoSize = true;
-            this.CenterCode.Location = new System.Drawing.Point(35, 92);
+            this.CenterCode.Location = new System.Drawing.Point(40, 134);
             this.CenterCode.Name = "CenterCode";
             this.CenterCode.Size = new System.Drawing.Size(223, 17);
             this.CenterCode.TabIndex = 7;
@@ -146,7 +146,7 @@ namespace PaintDotNet.Effects
             // PrimaryColorCode
             // 
             this.PrimaryColorCode.AutoSize = true;
-            this.PrimaryColorCode.Location = new System.Drawing.Point(35, 116);
+            this.PrimaryColorCode.Location = new System.Drawing.Point(40, 158);
             this.PrimaryColorCode.Name = "PrimaryColorCode";
             this.PrimaryColorCode.Size = new System.Drawing.Size(189, 17);
             this.PrimaryColorCode.TabIndex = 8;
@@ -156,7 +156,7 @@ namespace PaintDotNet.Effects
             // PenWidthCode
             // 
             this.PenWidthCode.AutoSize = true;
-            this.PenWidthCode.Location = new System.Drawing.Point(35, 162);
+            this.PenWidthCode.Location = new System.Drawing.Point(40, 204);
             this.PenWidthCode.Name = "PenWidthCode";
             this.PenWidthCode.Size = new System.Drawing.Size(84, 17);
             this.PenWidthCode.TabIndex = 10;
@@ -166,20 +166,406 @@ namespace PaintDotNet.Effects
             // SelectionCode
             // 
             this.SelectionCode.AutoSize = true;
-            this.SelectionCode.Location = new System.Drawing.Point(35, 223);
+            this.SelectionCode.Location = new System.Drawing.Point(40, 265);
             this.SelectionCode.Name = "SelectionCode";
             this.SelectionCode.Size = new System.Drawing.Size(192, 17);
             this.SelectionCode.TabIndex = 12;
             this.SelectionCode.Text = "Selection boundary (marching ants)";
             this.SelectionCode.UseVisualStyleBackColor = true;
             // 
-            // BlendingCode
+            // DoIt
             // 
-            this.BlendingCode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.BlendingCode.FormattingEnabled = true;
-            this.BlendingCode.Items.AddRange(new object[] {
-            "Pass Through",
-            "User selected blending mode",
+            this.DoIt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.DoIt.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.DoIt.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.DoIt.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.DoIt.Location = new System.Drawing.Point(563, 471);
+            this.DoIt.Name = "DoIt";
+            this.DoIt.Size = new System.Drawing.Size(115, 23);
+            this.DoIt.TabIndex = 0;
+            this.DoIt.Text = "Generate Code";
+            this.DoIt.UseVisualStyleBackColor = true;
+            this.DoIt.Click += new System.EventHandler(this.DoIt_Click);
+            // 
+            // textBox1
+            // 
+            this.textBox1.AutoSize = true;
+            this.textBox1.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBox1.Location = new System.Drawing.Point(21, 244);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(82, 13);
+            this.textBox1.TabIndex = 11;
+            this.textBox1.Text = "Code samples:";
+            // 
+            // HsvColorMode
+            // 
+            this.HsvColorMode.AutoSize = true;
+            this.HsvColorMode.Location = new System.Drawing.Point(40, 289);
+            this.HsvColorMode.Name = "HsvColorMode";
+            this.HsvColorMode.Size = new System.Drawing.Size(110, 17);
+            this.HsvColorMode.TabIndex = 13;
+            this.HsvColorMode.Text = "HSV Color Editing";
+            this.HsvColorMode.UseVisualStyleBackColor = true;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.Location = new System.Drawing.Point(298, 13);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(163, 13);
+            this.label4.TabIndex = 20;
+            this.label4.Text = "Pixel flow for complex effects:";
+            // 
+            // CustomHelp
+            // 
+            this.CustomHelp.AutoSize = true;
+            this.CustomHelp.Location = new System.Drawing.Point(40, 312);
+            this.CustomHelp.Name = "CustomHelp";
+            this.CustomHelp.Size = new System.Drawing.Size(86, 17);
+            this.CustomHelp.TabIndex = 14;
+            this.CustomHelp.Text = "Custom Help";
+            this.CustomHelp.UseVisualStyleBackColor = true;
+            // 
+            // PaletteCode
+            // 
+            this.PaletteCode.AutoSize = true;
+            this.PaletteCode.Location = new System.Drawing.Point(40, 181);
+            this.PaletteCode.Name = "PaletteCode";
+            this.PaletteCode.Size = new System.Drawing.Size(154, 17);
+            this.PaletteCode.TabIndex = 9;
+            this.PaletteCode.Text = "Current and Default Palette";
+            this.PaletteCode.UseVisualStyleBackColor = true;
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(367, 541);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(10, 13);
+            this.label10.TabIndex = 31;
+            this.label10.Text = " ";
+            // 
+            // FAS
+            // 
+            this.FAS.AutoSize = true;
+            this.FAS.Location = new System.Drawing.Point(40, 370);
+            this.FAS.Name = "FAS";
+            this.FAS.Size = new System.Drawing.Size(137, 17);
+            this.FAS.TabIndex = 16;
+            this.FAS.Text = "Force Aliased Selection";
+            this.FAS.UseVisualStyleBackColor = true;
+            // 
+            // ST
+            // 
+            this.ST.AutoSize = true;
+            this.ST.Location = new System.Drawing.Point(40, 417);
+            this.ST.Name = "ST";
+            this.ST.Size = new System.Drawing.Size(104, 17);
+            this.ST.TabIndex = 18;
+            this.ST.Text = "Single Threaded";
+            this.ST.UseVisualStyleBackColor = true;
+            // 
+            // NoStyle
+            // 
+            this.NoStyle.AutoSize = true;
+            this.NoStyle.Location = new System.Drawing.Point(41, 81);
+            this.NoStyle.Name = "NoStyle";
+            this.NoStyle.Size = new System.Drawing.Size(85, 17);
+            this.NoStyle.TabIndex = 5;
+            this.NoStyle.TabStop = true;
+            this.NoStyle.Text = "None (GDI+)";
+            this.NoStyle.UseVisualStyleBackColor = true;
+            this.NoStyle.CheckedChanged += new System.EventHandler(this.NoStyle_CheckedChanged);
+            // 
+            // SRC
+            // 
+            this.SRC.AutoSize = true;
+            this.SRC.Location = new System.Drawing.Point(40, 394);
+            this.SRC.Name = "SRC";
+            this.SRC.Size = new System.Drawing.Size(113, 17);
+            this.SRC.TabIndex = 17;
+            this.SRC.Text = "Single Render Call";
+            this.SRC.UseVisualStyleBackColor = true;
+            this.SRC.CheckedChanged += new System.EventHandler(this.ForceROI_CheckedChanged);
+            // 
+            // LROI
+            // 
+            this.LROI.AutoSize = true;
+            this.LROI.Location = new System.Drawing.Point(40, 441);
+            this.LROI.Name = "LROI";
+            this.LROI.Size = new System.Drawing.Size(83, 17);
+            this.LROI.TabIndex = 19;
+            this.LROI.Text = "Legacy ROI";
+            this.LROI.UseVisualStyleBackColor = true;
+            this.LROI.CheckedChanged += new System.EventHandler(this.ForceROI_CheckedChanged);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(21, 352);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(90, 13);
+            this.label3.TabIndex = 15;
+            this.label3.Text = "Render options:";
+            // 
+            // flowList
+            // 
+            this.flowList.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.flowList.FormattingEnabled = true;
+            this.flowList.IntegralHeight = false;
+            this.flowList.ItemHeight = 64;
+            this.flowList.Location = new System.Drawing.Point(301, 35);
+            this.flowList.Name = "flowList";
+            this.flowList.Size = new System.Drawing.Size(427, 302);
+            this.flowList.TabIndex = 21;
+            this.flowList.Click += new System.EventHandler(this.flowList_Click);
+            this.flowList.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.flowList_DrawItem);
+            this.flowList.SelectedIndexChanged += new System.EventHandler(this.flowList_SelectedIndexChanged);
+            // 
+            // Delete
+            // 
+            this.Delete.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Delete.ForeColor = System.Drawing.Color.Red;
+            this.Delete.Location = new System.Drawing.Point(736, 106);
+            this.Delete.Name = "Delete";
+            this.Delete.Size = new System.Drawing.Size(23, 23);
+            this.Delete.TabIndex = 24;
+            this.Delete.Text = "✗";
+            this.toolTip1.SetToolTip(this.Delete, "Delete");
+            this.Delete.UseVisualStyleBackColor = true;
+            this.Delete.Click += new System.EventHandler(this.Delete_Click);
+            // 
+            // MoveDown
+            // 
+            this.MoveDown.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.MoveDown.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.MoveDown.Location = new System.Drawing.Point(736, 62);
+            this.MoveDown.Name = "MoveDown";
+            this.MoveDown.Size = new System.Drawing.Size(23, 23);
+            this.MoveDown.TabIndex = 23;
+            this.MoveDown.Text = "▼";
+            this.toolTip1.SetToolTip(this.MoveDown, "Move Down");
+            this.MoveDown.UseVisualStyleBackColor = true;
+            this.MoveDown.Click += new System.EventHandler(this.MoveDown_Click);
+            // 
+            // MoveUp
+            // 
+            this.MoveUp.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.MoveUp.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.MoveUp.Location = new System.Drawing.Point(736, 34);
+            this.MoveUp.Name = "MoveUp";
+            this.MoveUp.Size = new System.Drawing.Size(23, 23);
+            this.MoveUp.TabIndex = 22;
+            this.MoveUp.Text = "▲";
+            this.toolTip1.SetToolTip(this.MoveUp, "Move Up");
+            this.MoveUp.UseVisualStyleBackColor = true;
+            this.MoveUp.Click += new System.EventHandler(this.MoveUp_Click);
+            // 
+            // catagoryBox
+            // 
+            this.catagoryBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.catagoryBox.FormattingEnabled = true;
+            this.catagoryBox.Items.AddRange(new object[] {
+            "Effect",
+            "Blend",
+            "Pixel Op",
+            "Fill",
+            "Copy"});
+            this.catagoryBox.Location = new System.Drawing.Point(64, 12);
+            this.catagoryBox.Name = "catagoryBox";
+            this.catagoryBox.Size = new System.Drawing.Size(92, 21);
+            this.catagoryBox.TabIndex = 26;
+            this.catagoryBox.SelectedIndexChanged += new System.EventHandler(this.catagoryBox_SelectedIndexChanged);
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.ForeColor = System.Drawing.SystemColors.WindowText;
+            this.label11.Location = new System.Drawing.Point(6, 16);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(52, 13);
+            this.label11.TabIndex = 25;
+            this.label11.Text = "Catagory:";
+            // 
+            // effectLabel
+            // 
+            this.effectLabel.AutoSize = true;
+            this.effectLabel.ForeColor = System.Drawing.SystemColors.WindowText;
+            this.effectLabel.Location = new System.Drawing.Point(174, 15);
+            this.effectLabel.Name = "effectLabel";
+            this.effectLabel.Size = new System.Drawing.Size(38, 13);
+            this.effectLabel.TabIndex = 40;
+            this.effectLabel.Text = "Effect:";
+            // 
+            // effectBox
+            // 
+            this.effectBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.effectBox.FormattingEnabled = true;
+            this.effectBox.Items.AddRange(new object[] {
+            "Add Noise",
+            "Brightness/Contrast",
+            "Bulge",
+            "Clipboard",
+            "Clouds",
+            "Crystalize",
+            "Dents",
+            "Edge Detect",
+            "Emboss",
+            "Frosted Glass",
+            "Gaussian Blur",
+            "Glow",
+            "Ink Sketch",
+            "Julia",
+            "Mandelbrot",
+            "Median",
+            "Motion Blur",
+            "Oil Painting",
+            "Outline",
+            "Pencil Sketch",
+            "Pixelate",
+            "Polar Inversion",
+            "Posterize",
+            "Radial Blur",
+            "Reduce Noise",
+            "Relief",
+            "Sepia",
+            "Sharpen",
+            "Soften Portrait",
+            "Surface Blur",
+            "Tile Reflection",
+            "Twist",
+            "Unfocus",
+            "Vignette",
+            "Zoom Blur"});
+            this.effectBox.Location = new System.Drawing.Point(218, 12);
+            this.effectBox.Name = "effectBox";
+            this.effectBox.Size = new System.Drawing.Size(179, 21);
+            this.effectBox.TabIndex = 30;
+            this.effectBox.SelectedIndexChanged += new System.EventHandler(this.effectBox_SelectedIndexChanged);
+            // 
+            // sourceLabel
+            // 
+            this.sourceLabel.AutoSize = true;
+            this.sourceLabel.ForeColor = System.Drawing.SystemColors.WindowText;
+            this.sourceLabel.Location = new System.Drawing.Point(173, 52);
+            this.sourceLabel.Name = "sourceLabel";
+            this.sourceLabel.Size = new System.Drawing.Size(69, 13);
+            this.sourceLabel.TabIndex = 33;
+            this.sourceLabel.Text = "Source layer:";
+            // 
+            // sourceBox
+            // 
+            this.sourceBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.sourceBox.FormattingEnabled = true;
+            this.sourceBox.Items.AddRange(new object[] {
+            "SRC",
+            "WRK",
+            "DST"});
+            this.sourceBox.Location = new System.Drawing.Point(250, 49);
+            this.sourceBox.Name = "sourceBox";
+            this.sourceBox.Size = new System.Drawing.Size(51, 21);
+            this.sourceBox.TabIndex = 34;
+            // 
+            // destinationLabel
+            // 
+            this.destinationLabel.AutoSize = true;
+            this.destinationLabel.ForeColor = System.Drawing.SystemColors.WindowText;
+            this.destinationLabel.Location = new System.Drawing.Point(6, 52);
+            this.destinationLabel.Name = "destinationLabel";
+            this.destinationLabel.Size = new System.Drawing.Size(88, 13);
+            this.destinationLabel.TabIndex = 31;
+            this.destinationLabel.Text = "Destination layer:";
+            // 
+            // destinationBox
+            // 
+            this.destinationBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.destinationBox.FormattingEnabled = true;
+            this.destinationBox.Items.AddRange(new object[] {
+            "WRK",
+            "DST"});
+            this.destinationBox.Location = new System.Drawing.Point(105, 49);
+            this.destinationBox.Name = "destinationBox";
+            this.destinationBox.Size = new System.Drawing.Size(51, 21);
+            this.destinationBox.TabIndex = 32;
+            // 
+            // bottomLabel
+            // 
+            this.bottomLabel.AutoSize = true;
+            this.bottomLabel.ForeColor = System.Drawing.SystemColors.WindowText;
+            this.bottomLabel.Location = new System.Drawing.Point(316, 52);
+            this.bottomLabel.Name = "bottomLabel";
+            this.bottomLabel.Size = new System.Drawing.Size(68, 13);
+            this.bottomLabel.TabIndex = 35;
+            this.bottomLabel.Text = "Bottom layer:";
+            // 
+            // bottomBox
+            // 
+            this.bottomBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.bottomBox.FormattingEnabled = true;
+            this.bottomBox.Items.AddRange(new object[] {
+            "SRC",
+            "WRK",
+            "DST"});
+            this.bottomBox.Location = new System.Drawing.Point(393, 49);
+            this.bottomBox.Name = "bottomBox";
+            this.bottomBox.Size = new System.Drawing.Size(51, 21);
+            this.bottomBox.TabIndex = 36;
+            // 
+            // updateButton
+            // 
+            this.updateButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.updateButton.Location = new System.Drawing.Point(651, 343);
+            this.updateButton.Name = "updateButton";
+            this.updateButton.Size = new System.Drawing.Size(51, 23);
+            this.updateButton.TabIndex = 37;
+            this.updateButton.Text = "Update";
+            this.updateButton.UseVisualStyleBackColor = true;
+            this.updateButton.Click += new System.EventHandler(this.updateButton_Click);
+            // 
+            // addButton
+            // 
+            this.addButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.addButton.Location = new System.Drawing.Point(708, 343);
+            this.addButton.Name = "addButton";
+            this.addButton.Size = new System.Drawing.Size(51, 23);
+            this.addButton.TabIndex = 38;
+            this.addButton.Text = "Add";
+            this.addButton.UseVisualStyleBackColor = true;
+            this.addButton.Click += new System.EventHandler(this.addButton_Click);
+            // 
+            // DefaultColorComboBox
+            // 
+            this.DefaultColorComboBox.BackColor = System.Drawing.SystemColors.Window;
+            this.DefaultColorComboBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.DefaultColorComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.DefaultColorComboBox.DropDownWidth = 150;
+            this.DefaultColorComboBox.Location = new System.Drawing.Point(177, 12);
+            this.DefaultColorComboBox.MaxDropDownItems = 10;
+            this.DefaultColorComboBox.Name = "DefaultColorComboBox";
+            this.DefaultColorComboBox.Size = new System.Drawing.Size(149, 21);
+            this.DefaultColorComboBox.TabIndex = 50;
+            this.DefaultColorComboBox.Visible = false;
+            this.DefaultColorComboBox.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.DefaultColorComboBox_DrawItem);
+            // 
+            // blendLabel
+            // 
+            this.blendLabel.AutoSize = true;
+            this.blendLabel.ForeColor = System.Drawing.SystemColors.WindowText;
+            this.blendLabel.Location = new System.Drawing.Point(174, 16);
+            this.blendLabel.Name = "blendLabel";
+            this.blendLabel.Size = new System.Drawing.Size(37, 13);
+            this.blendLabel.TabIndex = 28;
+            this.blendLabel.Text = "Mode:";
+            this.blendLabel.Visible = false;
+            // 
+            // blendBox
+            // 
+            this.blendBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.blendBox.FormattingEnabled = true;
+            this.blendBox.Items.AddRange(new object[] {
+            "User selected",
             "Normal",
             "Multiply",
             "Darken",
@@ -194,376 +580,65 @@ namespace PaintDotNet.Effects
             "Reflect",
             "Screen",
             "Xor"});
-            this.BlendingCode.Location = new System.Drawing.Point(455, 256);
-            this.BlendingCode.Name = "BlendingCode";
-            this.BlendingCode.Size = new System.Drawing.Size(163, 21);
-            this.BlendingCode.TabIndex = 28;
-            this.BlendingCode.SelectedIndexChanged += new System.EventHandler(this.BlendingCode_SelectedIndexChanged);
+            this.blendBox.Location = new System.Drawing.Point(220, 12);
+            this.blendBox.Name = "blendBox";
+            this.blendBox.Size = new System.Drawing.Size(106, 21);
+            this.blendBox.TabIndex = 29;
+            this.blendBox.Visible = false;
             // 
-            // EffectCode
+            // pixelOpBox
             // 
-            this.EffectCode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.EffectCode.FormattingEnabled = true;
-            this.EffectCode.Items.AddRange(new object[] {
-            "---------Copy--------->",
-            "         Empty------->",
-            "     Clipboard------>",
-            "        Clouds------->",
-            "            Julia------->",
-            "     Mandelbrot--->",
-            "----Add Noise----->",
-            "-------Bulge-------->",
-            "-------Contrast------->",
-            "------Crystalize------>",
-            "--------Dents-------->",
-            "----Edge Detect---->",
-            "-------Emboss------>",
-            "---Frosted Glass--->",
-            "---Gaussian Blur-->",
-            "--------Glow-------->",
-            "-----Ink Sketch------>",
-            "------Median------>",
-            "----Motion Blur---->",
-            "----Oil Painting---->",
-            "------Outline------->",
-            "---Pencil Sketch--->",
-            "------Pixelate------>",
-            "--Polar Inversion-->",
-            "-----Posterize------>",
-            "-----Radial Blur----->",
-            "---Reduce Noise--->",
-            "--------Relief-------->",
-            "--------Sepia-------->",
-            "------Sharpen------->",
-            "---Soften Portrait--->",
-            "----Surface Blur---->",
-            "---Tile Reflection--->",
-            "-------Twist------->",
-            "------Unfocus------>",
-            "------Vignette------>",
-            "-----Zoom Blur----->"});
-            this.EffectCode.Location = new System.Drawing.Point(382, 116);
-            this.EffectCode.Name = "EffectCode";
-            this.EffectCode.Size = new System.Drawing.Size(141, 21);
-            this.EffectCode.TabIndex = 22;
-            // 
-            // DoIt
-            // 
-            this.DoIt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.DoIt.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.DoIt.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.DoIt.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.DoIt.Location = new System.Drawing.Point(421, 459);
-            this.DoIt.Name = "DoIt";
-            this.DoIt.Size = new System.Drawing.Size(115, 23);
-            this.DoIt.TabIndex = 0;
-            this.DoIt.Text = "Generate Code";
-            this.DoIt.UseVisualStyleBackColor = true;
-            this.DoIt.Click += new System.EventHandler(this.DoIt_Click);
-            // 
-            // PixelOpCode
-            // 
-            this.PixelOpCode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.PixelOpCode.FormattingEnabled = true;
-            this.PixelOpCode.Items.AddRange(new object[] {
-            "Pass Through",
+            this.pixelOpBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.pixelOpBox.FormattingEnabled = true;
+            this.pixelOpBox.Items.AddRange(new object[] {
             "Desaturate",
             "Invert"});
-            this.PixelOpCode.Location = new System.Drawing.Point(501, 201);
-            this.PixelOpCode.Name = "PixelOpCode";
-            this.PixelOpCode.Size = new System.Drawing.Size(117, 21);
-            this.PixelOpCode.TabIndex = 26;
+            this.pixelOpBox.Location = new System.Drawing.Point(177, 12);
+            this.pixelOpBox.Name = "pixelOpBox";
+            this.pixelOpBox.Size = new System.Drawing.Size(149, 21);
+            this.pixelOpBox.TabIndex = 27;
+            this.pixelOpBox.Visible = false;
             // 
-            // textBox1
+            // tabControl1
             // 
-            this.textBox1.AutoSize = true;
-            this.textBox1.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox1.Location = new System.Drawing.Point(16, 202);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(82, 13);
-            this.textBox1.TabIndex = 11;
-            this.textBox1.Text = "Code samples:";
+            this.tabControl1.Controls.Add(this.ElementTab);
+            this.tabControl1.Location = new System.Drawing.Point(301, 350);
+            this.tabControl1.Name = "tabControl1";
+            this.tabControl1.SelectedIndex = 0;
+            this.tabControl1.Size = new System.Drawing.Size(459, 107);
+            this.tabControl1.TabIndex = 51;
+            this.tabControl1.TabStop = false;
             // 
-            // HsvColorMode
+            // ElementTab
             // 
-            this.HsvColorMode.AutoSize = true;
-            this.HsvColorMode.Location = new System.Drawing.Point(35, 247);
-            this.HsvColorMode.Name = "HsvColorMode";
-            this.HsvColorMode.Size = new System.Drawing.Size(110, 17);
-            this.HsvColorMode.TabIndex = 13;
-            this.HsvColorMode.Text = "HSV Color Editing";
-            this.HsvColorMode.UseVisualStyleBackColor = true;
+            this.ElementTab.Controls.Add(this.label11);
+            this.ElementTab.Controls.Add(this.pixelOpBox);
+            this.ElementTab.Controls.Add(this.blendBox);
+            this.ElementTab.Controls.Add(this.bottomBox);
+            this.ElementTab.Controls.Add(this.catagoryBox);
+            this.ElementTab.Controls.Add(this.bottomLabel);
+            this.ElementTab.Controls.Add(this.blendLabel);
+            this.ElementTab.Controls.Add(this.sourceBox);
+            this.ElementTab.Controls.Add(this.destinationBox);
+            this.ElementTab.Controls.Add(this.sourceLabel);
+            this.ElementTab.Controls.Add(this.effectLabel);
+            this.ElementTab.Controls.Add(this.destinationLabel);
+            this.ElementTab.Controls.Add(this.DefaultColorComboBox);
+            this.ElementTab.Controls.Add(this.effectBox);
+            this.ElementTab.Location = new System.Drawing.Point(4, 22);
+            this.ElementTab.Name = "ElementTab";
+            this.ElementTab.Padding = new System.Windows.Forms.Padding(3);
+            this.ElementTab.Size = new System.Drawing.Size(451, 81);
+            this.ElementTab.TabIndex = 0;
+            this.ElementTab.Text = "Element";
+            this.ElementTab.UseVisualStyleBackColor = true;
             // 
-            // FinalPixelOpCode
+            // panel1
             // 
-            this.FinalPixelOpCode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.FinalPixelOpCode.FormattingEnabled = true;
-            this.FinalPixelOpCode.Items.AddRange(new object[] {
-            "Pass Through",
-            "Desaturate",
-            "Invert"});
-            this.FinalPixelOpCode.Location = new System.Drawing.Point(501, 311);
-            this.FinalPixelOpCode.Name = "FinalPixelOpCode";
-            this.FinalPixelOpCode.Size = new System.Drawing.Size(117, 21);
-            this.FinalPixelOpCode.TabIndex = 30;
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(287, 73);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(163, 13);
-            this.label4.TabIndex = 20;
-            this.label4.Text = "Pixel flow for complex effects:";
-            // 
-            // srcLabel
-            // 
-            this.srcLabel.AutoSize = true;
-            this.srcLabel.BackColor = System.Drawing.Color.Black;
-            this.srcLabel.ForeColor = System.Drawing.Color.White;
-            this.srcLabel.Location = new System.Drawing.Point(313, 116);
-            this.srcLabel.Name = "srcLabel";
-            this.srcLabel.Size = new System.Drawing.Size(41, 26);
-            this.srcLabel.TabIndex = 21;
-            this.srcLabel.Text = "SRC\r\nIMAGE";
-            this.srcLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // dstLabel
-            // 
-            this.dstLabel.AutoSize = true;
-            this.dstLabel.BackColor = System.Drawing.Color.Black;
-            this.dstLabel.ForeColor = System.Drawing.Color.White;
-            this.dstLabel.Location = new System.Drawing.Point(556, 116);
-            this.dstLabel.Name = "dstLabel";
-            this.dstLabel.Size = new System.Drawing.Size(41, 26);
-            this.dstLabel.TabIndex = 23;
-            this.dstLabel.Text = "DST\r\nIMAGE";
-            this.dstLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.BackColor = System.Drawing.Color.Black;
-            this.label6.ForeColor = System.Drawing.Color.White;
-            this.label6.Location = new System.Drawing.Point(556, 396);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(41, 26);
-            this.label6.TabIndex = 31;
-            this.label6.Text = "FINAL\r\nIMAGE";
-            this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // BlendArrow
-            // 
-            this.BlendArrow.Image = global::PaintDotNet.Effects.Properties.Resources.BlendArrow;
-            this.BlendArrow.Location = new System.Drawing.Point(291, 174);
-            this.BlendArrow.Name = "BlendArrow";
-            this.BlendArrow.Size = new System.Drawing.Size(153, 104);
-            this.BlendArrow.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.BlendArrow.TabIndex = 26;
-            this.BlendArrow.TabStop = false;
-            this.BlendArrow.Visible = false;
-            // 
-            // pictureBox3
-            // 
-            this.pictureBox3.Image = global::PaintDotNet.Effects.Properties.Resources.Photo;
-            this.pictureBox3.Location = new System.Drawing.Point(532, 375);
-            this.pictureBox3.Name = "pictureBox3";
-            this.pictureBox3.Size = new System.Drawing.Size(85, 64);
-            this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox3.TabIndex = 22;
-            this.pictureBox3.TabStop = false;
-            // 
-            // pictureBox2
-            // 
-            this.pictureBox2.Image = global::PaintDotNet.Effects.Properties.Resources.Photo;
-            this.pictureBox2.Location = new System.Drawing.Point(532, 99);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(85, 64);
-            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox2.TabIndex = 21;
-            this.pictureBox2.TabStop = false;
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Image = global::PaintDotNet.Effects.Properties.Resources.Photo;
-            this.pictureBox1.Location = new System.Drawing.Point(291, 99);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(85, 64);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox1.TabIndex = 20;
-            this.pictureBox1.TabStop = false;
-            // 
-            // pictureBox4
-            // 
-            this.pictureBox4.Image = global::PaintDotNet.Effects.Properties.Resources.DownArrow;
-            this.pictureBox4.Location = new System.Drawing.Point(564, 172);
-            this.pictureBox4.Name = "pictureBox4";
-            this.pictureBox4.Size = new System.Drawing.Size(24, 24);
-            this.pictureBox4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox4.TabIndex = 27;
-            this.pictureBox4.TabStop = false;
-            // 
-            // pictureBox5
-            // 
-            this.pictureBox5.Image = global::PaintDotNet.Effects.Properties.Resources.DownArrow;
-            this.pictureBox5.Location = new System.Drawing.Point(564, 227);
-            this.pictureBox5.Name = "pictureBox5";
-            this.pictureBox5.Size = new System.Drawing.Size(24, 24);
-            this.pictureBox5.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox5.TabIndex = 28;
-            this.pictureBox5.TabStop = false;
-            // 
-            // pictureBox6
-            // 
-            this.pictureBox6.Image = global::PaintDotNet.Effects.Properties.Resources.DownArrow;
-            this.pictureBox6.Location = new System.Drawing.Point(564, 282);
-            this.pictureBox6.Name = "pictureBox6";
-            this.pictureBox6.Size = new System.Drawing.Size(24, 24);
-            this.pictureBox6.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox6.TabIndex = 29;
-            this.pictureBox6.TabStop = false;
-            // 
-            // pictureBox7
-            // 
-            this.pictureBox7.Image = global::PaintDotNet.Effects.Properties.Resources.DownArrow;
-            this.pictureBox7.Location = new System.Drawing.Point(564, 337);
-            this.pictureBox7.Name = "pictureBox7";
-            this.pictureBox7.Size = new System.Drawing.Size(24, 24);
-            this.pictureBox7.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox7.TabIndex = 30;
-            this.pictureBox7.TabStop = false;
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(408, 258);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(34, 13);
-            this.label7.TabIndex = 27;
-            this.label7.Text = "Blend";
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(455, 203);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(43, 13);
-            this.label8.TabIndex = 25;
-            this.label8.Text = "PixelOp";
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(455, 313);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(43, 13);
-            this.label9.TabIndex = 29;
-            this.label9.Text = "PixelOp";
-            // 
-            // CustomHelp
-            // 
-            this.CustomHelp.AutoSize = true;
-            this.CustomHelp.Location = new System.Drawing.Point(35, 270);
-            this.CustomHelp.Name = "CustomHelp";
-            this.CustomHelp.Size = new System.Drawing.Size(86, 17);
-            this.CustomHelp.TabIndex = 14;
-            this.CustomHelp.Text = "Custom Help";
-            this.CustomHelp.UseVisualStyleBackColor = true;
-            // 
-            // PaletteCode
-            // 
-            this.PaletteCode.AutoSize = true;
-            this.PaletteCode.Location = new System.Drawing.Point(35, 139);
-            this.PaletteCode.Name = "PaletteCode";
-            this.PaletteCode.Size = new System.Drawing.Size(154, 17);
-            this.PaletteCode.TabIndex = 9;
-            this.PaletteCode.Text = "Current and Default Palette";
-            this.PaletteCode.UseVisualStyleBackColor = true;
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(367, 541);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(10, 13);
-            this.label10.TabIndex = 31;
-            this.label10.Text = "�";
-            // 
-            // FAS
-            // 
-            this.FAS.AutoSize = true;
-            this.FAS.Location = new System.Drawing.Point(35, 328);
-            this.FAS.Name = "FAS";
-            this.FAS.Size = new System.Drawing.Size(137, 17);
-            this.FAS.TabIndex = 16;
-            this.FAS.Text = "Force Aliased Selection";
-            this.FAS.UseVisualStyleBackColor = true;
-            // 
-            // ST
-            // 
-            this.ST.AutoSize = true;
-            this.ST.Location = new System.Drawing.Point(35, 375);
-            this.ST.Name = "ST";
-            this.ST.Size = new System.Drawing.Size(104, 17);
-            this.ST.TabIndex = 18;
-            this.ST.Text = "Single Threaded";
-            this.ST.UseVisualStyleBackColor = true;
-            // 
-            // SurfaceCode
-            // 
-            this.SurfaceCode.AutoSize = true;
-            this.SurfaceCode.Location = new System.Drawing.Point(390, 146);
-            this.SurfaceCode.Name = "SurfaceCode";
-            this.SurfaceCode.Size = new System.Drawing.Size(133, 17);
-            this.SurfaceCode.TabIndex = 24;
-            this.SurfaceCode.Text = "Create a WRK surface";
-            this.SurfaceCode.UseVisualStyleBackColor = true;
-            this.SurfaceCode.CheckedChanged += new System.EventHandler(this.SurfaceCode_CheckedChanged);
-            // 
-            // NoStyle
-            // 
-            this.NoStyle.AutoSize = true;
-            this.NoStyle.Location = new System.Drawing.Point(316, 35);
-            this.NoStyle.Name = "NoStyle";
-            this.NoStyle.Size = new System.Drawing.Size(85, 17);
-            this.NoStyle.TabIndex = 5;
-            this.NoStyle.TabStop = true;
-            this.NoStyle.Text = "None (GDI+)";
-            this.NoStyle.UseVisualStyleBackColor = true;
-            this.NoStyle.CheckedChanged += new System.EventHandler(this.NoStyle_CheckedChanged);
-            // 
-            // SRC
-            // 
-            this.SRC.AutoSize = true;
-            this.SRC.Location = new System.Drawing.Point(35, 352);
-            this.SRC.Name = "SRC";
-            this.SRC.Size = new System.Drawing.Size(113, 17);
-            this.SRC.TabIndex = 17;
-            this.SRC.Text = "Single Render Call";
-            this.SRC.UseVisualStyleBackColor = true;
-            this.SRC.CheckedChanged += new System.EventHandler(this.ForceROI_CheckedChanged);
-            // 
-            // LROI
-            // 
-            this.LROI.AutoSize = true;
-            this.LROI.Location = new System.Drawing.Point(35, 399);
-            this.LROI.Name = "LROI";
-            this.LROI.Size = new System.Drawing.Size(83, 17);
-            this.LROI.TabIndex = 19;
-            this.LROI.Text = "Legacy ROI";
-            this.LROI.UseVisualStyleBackColor = true;
-            this.LROI.CheckedChanged += new System.EventHandler(this.ForceROI_CheckedChanged);
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(16, 310);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(90, 13);
-            this.label3.TabIndex = 15;
-            this.label3.Text = "Render options:";
+            this.panel1.Location = new System.Drawing.Point(758, 370);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(20, 90);
+            this.panel1.TabIndex = 52;
             // 
             // FileNew
             // 
@@ -571,33 +646,27 @@ namespace PaintDotNet.Effects
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.CancelButton = this.button1;
-            this.ClientSize = new System.Drawing.Size(631, 494);
+            this.ClientSize = new System.Drawing.Size(774, 506);
+            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.addButton);
+            this.Controls.Add(this.updateButton);
+            this.Controls.Add(this.Delete);
+            this.Controls.Add(this.MoveDown);
+            this.Controls.Add(this.MoveUp);
+            this.Controls.Add(this.flowList);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.LROI);
             this.Controls.Add(this.SRC);
             this.Controls.Add(this.NoStyle);
-            this.Controls.Add(this.SurfaceCode);
             this.Controls.Add(this.ST);
             this.Controls.Add(this.FAS);
             this.Controls.Add(this.label10);
             this.Controls.Add(this.PaletteCode);
             this.Controls.Add(this.CustomHelp);
-            this.Controls.Add(this.label9);
-            this.Controls.Add(this.label8);
-            this.Controls.Add(this.label6);
-            this.Controls.Add(this.dstLabel);
-            this.Controls.Add(this.srcLabel);
-            this.Controls.Add(this.pictureBox3);
-            this.Controls.Add(this.pictureBox2);
-            this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.label4);
-            this.Controls.Add(this.FinalPixelOpCode);
             this.Controls.Add(this.HsvColorMode);
             this.Controls.Add(this.textBox1);
-            this.Controls.Add(this.PixelOpCode);
             this.Controls.Add(this.DoIt);
-            this.Controls.Add(this.EffectCode);
-            this.Controls.Add(this.BlendingCode);
             this.Controls.Add(this.SelectionCode);
             this.Controls.Add(this.PenWidthCode);
             this.Controls.Add(this.PrimaryColorCode);
@@ -607,12 +676,7 @@ namespace PaintDotNet.Effects
             this.Controls.Add(this.BasicStyle);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.button1);
-            this.Controls.Add(this.pictureBox4);
-            this.Controls.Add(this.pictureBox5);
-            this.Controls.Add(this.pictureBox6);
-            this.Controls.Add(this.pictureBox7);
-            this.Controls.Add(this.BlendArrow);
-            this.Controls.Add(this.label7);
+            this.Controls.Add(this.tabControl1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -621,14 +685,9 @@ namespace PaintDotNet.Effects
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "New Source (Template)";
-            ((System.ComponentModel.ISupportInitialize)(this.BlendArrow)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox7)).EndInit();
+            this.tabControl1.ResumeLayout(false);
+            this.ElementTab.ResumeLayout(false);
+            this.ElementTab.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -645,37 +704,42 @@ namespace PaintDotNet.Effects
         private System.Windows.Forms.CheckBox PrimaryColorCode;
         private System.Windows.Forms.CheckBox PenWidthCode;
         private System.Windows.Forms.CheckBox SelectionCode;
-        private System.Windows.Forms.ComboBox BlendingCode;
-        private System.Windows.Forms.ComboBox EffectCode;
         private System.Windows.Forms.Button DoIt;
-        private System.Windows.Forms.ComboBox PixelOpCode;
         private System.Windows.Forms.Label textBox1;
         private System.Windows.Forms.CheckBox HsvColorMode;
-        private System.Windows.Forms.ComboBox FinalPixelOpCode;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.PictureBox pictureBox2;
-        private System.Windows.Forms.PictureBox pictureBox3;
-        private System.Windows.Forms.Label srcLabel;
-        private System.Windows.Forms.Label dstLabel;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.PictureBox BlendArrow;
-        private System.Windows.Forms.PictureBox pictureBox4;
-        private System.Windows.Forms.PictureBox pictureBox5;
-        private System.Windows.Forms.PictureBox pictureBox6;
-        private System.Windows.Forms.PictureBox pictureBox7;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.Label label9;
         private System.Windows.Forms.CheckBox CustomHelp;
         private System.Windows.Forms.CheckBox PaletteCode;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.CheckBox FAS;
         private System.Windows.Forms.CheckBox ST;
-        private System.Windows.Forms.CheckBox SurfaceCode;
         private System.Windows.Forms.RadioButton NoStyle;
         private System.Windows.Forms.CheckBox SRC;
         private System.Windows.Forms.CheckBox LROI;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.ListBox flowList;
+        private System.Windows.Forms.Button Delete;
+        private System.Windows.Forms.Button MoveDown;
+        private System.Windows.Forms.Button MoveUp;
+        private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.ComboBox catagoryBox;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label effectLabel;
+        private System.Windows.Forms.ComboBox effectBox;
+        private System.Windows.Forms.Label sourceLabel;
+        private System.Windows.Forms.ComboBox sourceBox;
+        private System.Windows.Forms.Label destinationLabel;
+        private System.Windows.Forms.ComboBox destinationBox;
+        private System.Windows.Forms.Label bottomLabel;
+        private System.Windows.Forms.ComboBox bottomBox;
+        private System.Windows.Forms.Button updateButton;
+        private System.Windows.Forms.Button addButton;
+        private System.Windows.Forms.ComboBox DefaultColorComboBox;
+        private System.Windows.Forms.Label blendLabel;
+        private System.Windows.Forms.ComboBox blendBox;
+        private System.Windows.Forms.ComboBox pixelOpBox;
+        private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.TabPage ElementTab;
+        private System.Windows.Forms.Panel panel1;
     }
 }

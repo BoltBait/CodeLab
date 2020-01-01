@@ -399,7 +399,67 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Icons\ZoomBlur.png" />
+    <EmbeddedResource Include="Icons\ReduceNoise.png" />
+    <EmbeddedResource Include="Icons\Relief.png" />
+    <EmbeddedResource Include="Icons\Sepia.png" />
+    <EmbeddedResource Include="Icons\Sharpen.png" />
+    <EmbeddedResource Include="Icons\SoftenPortrait.png" />
+    <EmbeddedResource Include="Icons\SurfaceBlur.png" />
+    <EmbeddedResource Include="Icons\Tile.png" />
+    <EmbeddedResource Include="Icons\Twist.png" />
+    <EmbeddedResource Include="Icons\Unfocus.png" />
+    <EmbeddedResource Include="Icons\Vignette.png" />
+    <EmbeddedResource Include="Icons\MotionBlur.png" />
+    <EmbeddedResource Include="Icons\OilPainting.png" />
+    <EmbeddedResource Include="Icons\Outline.png" />
+    <EmbeddedResource Include="Icons\PencilSketch.png" />
+    <EmbeddedResource Include="Icons\Pixelate.png" />
+    <EmbeddedResource Include="Icons\PolarInversion.png" />
+    <EmbeddedResource Include="Icons\Posterize.png" />
+    <EmbeddedResource Include="Icons\RadialBlur.png" />
+    <EmbeddedResource Include="Icons\EdgeDetect.png" />
+    <EmbeddedResource Include="Icons\Emboss.png" />
+    <EmbeddedResource Include="Icons\FrostedGlass.png" />
+    <EmbeddedResource Include="Icons\Glow.png" />
+    <EmbeddedResource Include="Icons\InkSketch.png" />
+    <EmbeddedResource Include="Icons\Median.png" />
+    <EmbeddedResource Include="Icons\Dents.png" />
+    <EmbeddedResource Include="Icons\Crystalize.png" />
+    <EmbeddedResource Include="Icons\Clipboard.png" />
+    <EmbeddedResource Include="Icons\Clouds.png" />
+    <EmbeddedResource Include="Icons\JuliaFractal.png" />
+    <EmbeddedResource Include="Icons\MandelbrotFractal.png" />
+    <EmbeddedResource Include="Icons\Primary.png" />
+    <EmbeddedResource Include="Icons\Secondary.png" />
+    <EmbeddedResource Include="Icons\UserSelected.png" />
+    <EmbeddedResource Include="Icons\GaussianBlur.png" />
+    <EmbeddedResource Include="Icons\Desaturate.png" />
+    <EmbeddedResource Include="Icons\Invert.png" />
+    <EmbeddedResource Include="Icons\Blend.png" />
+    <EmbeddedResource Include="Icons\AddNoise.png" />
+    <EmbeddedResource Include="Icons\Contrast.png" />
+    <EmbeddedResource Include="Icons\Bulge.png" />
     <Content Include="Icons\CodeLab.64.png" />
+    <EmbeddedResource Include="Icons\D.png" />
+    <EmbeddedResource Include="Icons\DD.png" />
+    <EmbeddedResource Include="Icons\DSTWRK.png" />
+    <EmbeddedResource Include="Icons\DW.png" />
+    <EmbeddedResource Include="Icons\SD.png" />
+    <EmbeddedResource Include="Icons\SDD.png" />
+    <EmbeddedResource Include="Icons\SDW.png" />
+    <EmbeddedResource Include="Icons\SRCDST.png" />
+    <EmbeddedResource Include="Icons\SRCWRK.png" />
+    <EmbeddedResource Include="Icons\SW.png" />
+    <EmbeddedResource Include="Icons\SWD.png" />
+    <EmbeddedResource Include="Icons\SWW.png" />
+    <EmbeddedResource Include="Icons\Transparent.png" />
+    <EmbeddedResource Include="Icons\W.png" />
+    <EmbeddedResource Include="Icons\WD.png" />
+    <EmbeddedResource Include="Icons\WDD.png" />
+    <EmbeddedResource Include="Icons\WDW.png" />
+    <EmbeddedResource Include="Icons\WRKDST.png" />
+    <EmbeddedResource Include="Icons\WW.png" />
   </ItemGroup>
   <PropertyGroup>
     <PostBuildEvent>if $(ConfigurationName) == Release (
