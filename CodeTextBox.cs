@@ -476,7 +476,7 @@ namespace PaintDotNet.Effects
             // Configure the XML lexer styles
             for (int i = 0; i <= Preprocessor; i += Preprocessor)
             {
-                this.Styles[Style.Xml.Default + i].ForeColor = Color.White;
+                this.Styles[Style.Xml.Default + i].ForeColor = Color.Black;
                 this.Styles[Style.Xml.Default + i].BackColor = Color.White;
                 this.Styles[Style.Xml.Tag + i].ForeColor = Color.FromArgb(163, 21, 21);
                 this.Styles[Style.Xml.Tag + i].BackColor = Color.White;
