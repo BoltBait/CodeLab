@@ -23,7 +23,7 @@ using System.Windows.Forms;
 
 namespace PaintDotNet.Effects
 {
-    internal partial class FileNew : Form
+    internal partial class FileNew : ChildFormBase
     {
         internal string CodeTemplate;
 
@@ -34,15 +34,12 @@ namespace PaintDotNet.Effects
         {
             InitializeComponent();
 
-            // PDN Theme
-            this.ForeColor = PdnTheme.ForeColor;
-            this.BackColor = PdnTheme.BackColor;
             foreach (Control control in this.Controls)
             {
                 if ((control is ComboBox) || (control is ListBox))
                 {
-                    control.ForeColor = PdnTheme.ForeColor;
-                    control.BackColor = PdnTheme.BackColor;
+                    control.ForeColor = this.ForeColor;
+                    control.BackColor = this.BackColor;
                 }
             }
 

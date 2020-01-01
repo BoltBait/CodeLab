@@ -86,7 +86,7 @@
             this.button1.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.button1.Location = new System.Drawing.Point(684, 471);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.Size = new System.Drawing.Size(75, 24);
             this.button1.TabIndex = 1;
             this.button1.Text = "Cancel";
             this.button1.UseVisualStyleBackColor = true;
@@ -94,10 +94,10 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(21, 13);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(64, 13);
+            this.label1.Size = new System.Drawing.Size(66, 15);
             this.label1.TabIndex = 2;
             this.label1.Text = "Loop style:";
             // 
@@ -107,7 +107,7 @@
             this.BasicStyle.Checked = true;
             this.BasicStyle.Location = new System.Drawing.Point(40, 35);
             this.BasicStyle.Name = "BasicStyle";
-            this.BasicStyle.Size = new System.Drawing.Size(51, 17);
+            this.BasicStyle.Size = new System.Drawing.Size(52, 19);
             this.BasicStyle.TabIndex = 3;
             this.BasicStyle.TabStop = true;
             this.BasicStyle.Text = "Basic";
@@ -118,7 +118,7 @@
             this.AdvancedStyle.AutoSize = true;
             this.AdvancedStyle.Location = new System.Drawing.Point(40, 58);
             this.AdvancedStyle.Name = "AdvancedStyle";
-            this.AdvancedStyle.Size = new System.Drawing.Size(155, 17);
+            this.AdvancedStyle.Size = new System.Drawing.Size(170, 19);
             this.AdvancedStyle.TabIndex = 4;
             this.AdvancedStyle.Text = "Advanced (unsafe pointers)";
             this.AdvancedStyle.UseVisualStyleBackColor = true;
@@ -126,10 +126,10 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.Location = new System.Drawing.Point(21, 115);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(204, 13);
+            this.label2.Size = new System.Drawing.Size(214, 15);
             this.label2.TabIndex = 6;
             this.label2.Text = "Choose the variables you might need:";
             // 
@@ -138,7 +138,7 @@
             this.CenterCode.AutoSize = true;
             this.CenterCode.Location = new System.Drawing.Point(40, 134);
             this.CenterCode.Name = "CenterCode";
-            this.CenterCode.Size = new System.Drawing.Size(223, 17);
+            this.CenterCode.Size = new System.Drawing.Size(246, 19);
             this.CenterCode.TabIndex = 7;
             this.CenterCode.Text = "Center of the selection (CenterX, CenterY)";
             this.CenterCode.UseVisualStyleBackColor = true;
@@ -148,7 +148,7 @@
             this.PrimaryColorCode.AutoSize = true;
             this.PrimaryColorCode.Location = new System.Drawing.Point(40, 158);
             this.PrimaryColorCode.Name = "PrimaryColorCode";
-            this.PrimaryColorCode.Size = new System.Drawing.Size(189, 17);
+            this.PrimaryColorCode.Size = new System.Drawing.Size(212, 19);
             this.PrimaryColorCode.TabIndex = 8;
             this.PrimaryColorCode.Text = "Primary Color and Secondary Color";
             this.PrimaryColorCode.UseVisualStyleBackColor = true;
@@ -158,7 +158,7 @@
             this.PenWidthCode.AutoSize = true;
             this.PenWidthCode.Location = new System.Drawing.Point(40, 204);
             this.PenWidthCode.Name = "PenWidthCode";
-            this.PenWidthCode.Size = new System.Drawing.Size(84, 17);
+            this.PenWidthCode.Size = new System.Drawing.Size(91, 19);
             this.PenWidthCode.TabIndex = 10;
             this.PenWidthCode.Text = "Brush Width";
             this.PenWidthCode.UseVisualStyleBackColor = true;
@@ -168,7 +168,7 @@
             this.SelectionCode.AutoSize = true;
             this.SelectionCode.Location = new System.Drawing.Point(40, 265);
             this.SelectionCode.Name = "SelectionCode";
-            this.SelectionCode.Size = new System.Drawing.Size(192, 17);
+            this.SelectionCode.Size = new System.Drawing.Size(215, 19);
             this.SelectionCode.TabIndex = 12;
             this.SelectionCode.Text = "Selection boundary (marching ants)";
             this.SelectionCode.UseVisualStyleBackColor = true;
@@ -178,10 +178,10 @@
             this.DoIt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.DoIt.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.DoIt.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.DoIt.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.DoIt.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DoIt.Location = new System.Drawing.Point(563, 471);
             this.DoIt.Name = "DoIt";
-            this.DoIt.Size = new System.Drawing.Size(115, 23);
+            this.DoIt.Size = new System.Drawing.Size(115, 24);
             this.DoIt.TabIndex = 0;
             this.DoIt.Text = "Generate Code";
             this.DoIt.UseVisualStyleBackColor = true;
@@ -190,10 +190,10 @@
             // textBox1
             // 
             this.textBox1.AutoSize = true;
-            this.textBox1.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBox1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBox1.Location = new System.Drawing.Point(21, 244);
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(82, 13);
+            this.textBox1.Size = new System.Drawing.Size(85, 15);
             this.textBox1.TabIndex = 11;
             this.textBox1.Text = "Code samples:";
             // 
@@ -202,7 +202,7 @@
             this.HsvColorMode.AutoSize = true;
             this.HsvColorMode.Location = new System.Drawing.Point(40, 289);
             this.HsvColorMode.Name = "HsvColorMode";
-            this.HsvColorMode.Size = new System.Drawing.Size(110, 17);
+            this.HsvColorMode.Size = new System.Drawing.Size(120, 19);
             this.HsvColorMode.TabIndex = 13;
             this.HsvColorMode.Text = "HSV Color Editing";
             this.HsvColorMode.UseVisualStyleBackColor = true;
@@ -210,10 +210,10 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label4.Location = new System.Drawing.Point(298, 13);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(163, 13);
+            this.label4.Size = new System.Drawing.Size(179, 15);
             this.label4.TabIndex = 20;
             this.label4.Text = "Pixel flow for complex effects:";
             // 
@@ -222,7 +222,7 @@
             this.CustomHelp.AutoSize = true;
             this.CustomHelp.Location = new System.Drawing.Point(40, 312);
             this.CustomHelp.Name = "CustomHelp";
-            this.CustomHelp.Size = new System.Drawing.Size(86, 17);
+            this.CustomHelp.Size = new System.Drawing.Size(96, 19);
             this.CustomHelp.TabIndex = 14;
             this.CustomHelp.Text = "Custom Help";
             this.CustomHelp.UseVisualStyleBackColor = true;
@@ -232,7 +232,7 @@
             this.PaletteCode.AutoSize = true;
             this.PaletteCode.Location = new System.Drawing.Point(40, 181);
             this.PaletteCode.Name = "PaletteCode";
-            this.PaletteCode.Size = new System.Drawing.Size(154, 17);
+            this.PaletteCode.Size = new System.Drawing.Size(169, 19);
             this.PaletteCode.TabIndex = 9;
             this.PaletteCode.Text = "Current and Default Palette";
             this.PaletteCode.UseVisualStyleBackColor = true;
@@ -242,7 +242,7 @@
             this.label10.AutoSize = true;
             this.label10.Location = new System.Drawing.Point(367, 541);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(10, 13);
+            this.label10.Size = new System.Drawing.Size(10, 15);
             this.label10.TabIndex = 31;
             this.label10.Text = " ";
             // 
@@ -251,7 +251,7 @@
             this.FAS.AutoSize = true;
             this.FAS.Location = new System.Drawing.Point(40, 370);
             this.FAS.Name = "FAS";
-            this.FAS.Size = new System.Drawing.Size(137, 17);
+            this.FAS.Size = new System.Drawing.Size(147, 19);
             this.FAS.TabIndex = 16;
             this.FAS.Text = "Force Aliased Selection";
             this.FAS.UseVisualStyleBackColor = true;
@@ -261,7 +261,7 @@
             this.ST.AutoSize = true;
             this.ST.Location = new System.Drawing.Point(40, 417);
             this.ST.Name = "ST";
-            this.ST.Size = new System.Drawing.Size(104, 17);
+            this.ST.Size = new System.Drawing.Size(111, 19);
             this.ST.TabIndex = 18;
             this.ST.Text = "Single Threaded";
             this.ST.UseVisualStyleBackColor = true;
@@ -271,7 +271,7 @@
             this.NoStyle.AutoSize = true;
             this.NoStyle.Location = new System.Drawing.Point(41, 81);
             this.NoStyle.Name = "NoStyle";
-            this.NoStyle.Size = new System.Drawing.Size(85, 17);
+            this.NoStyle.Size = new System.Drawing.Size(92, 19);
             this.NoStyle.TabIndex = 5;
             this.NoStyle.TabStop = true;
             this.NoStyle.Text = "None (GDI+)";
@@ -283,7 +283,7 @@
             this.SRC.AutoSize = true;
             this.SRC.Location = new System.Drawing.Point(40, 394);
             this.SRC.Name = "SRC";
-            this.SRC.Size = new System.Drawing.Size(113, 17);
+            this.SRC.Size = new System.Drawing.Size(121, 19);
             this.SRC.TabIndex = 17;
             this.SRC.Text = "Single Render Call";
             this.SRC.UseVisualStyleBackColor = true;
@@ -294,7 +294,7 @@
             this.LROI.AutoSize = true;
             this.LROI.Location = new System.Drawing.Point(40, 441);
             this.LROI.Name = "LROI";
-            this.LROI.Size = new System.Drawing.Size(83, 17);
+            this.LROI.Size = new System.Drawing.Size(85, 19);
             this.LROI.TabIndex = 19;
             this.LROI.Text = "Legacy ROI";
             this.LROI.UseVisualStyleBackColor = true;
@@ -303,10 +303,10 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.Location = new System.Drawing.Point(21, 352);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(90, 13);
+            this.label3.Size = new System.Drawing.Size(95, 15);
             this.label3.TabIndex = 15;
             this.label3.Text = "Render options:";
             // 
@@ -326,7 +326,7 @@
             // 
             // Delete
             // 
-            this.Delete.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Delete.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Delete.ForeColor = System.Drawing.Color.Red;
             this.Delete.Location = new System.Drawing.Point(736, 106);
             this.Delete.Name = "Delete";
@@ -340,7 +340,6 @@
             // MoveDown
             // 
             this.MoveDown.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.MoveDown.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.MoveDown.Location = new System.Drawing.Point(736, 62);
             this.MoveDown.Name = "MoveDown";
             this.MoveDown.Size = new System.Drawing.Size(23, 23);
@@ -353,7 +352,6 @@
             // MoveUp
             // 
             this.MoveUp.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.MoveUp.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.MoveUp.Location = new System.Drawing.Point(736, 34);
             this.MoveUp.Name = "MoveUp";
             this.MoveUp.Size = new System.Drawing.Size(23, 23);
@@ -375,7 +373,7 @@
             "Copy"});
             this.catagoryBox.Location = new System.Drawing.Point(64, 12);
             this.catagoryBox.Name = "catagoryBox";
-            this.catagoryBox.Size = new System.Drawing.Size(92, 21);
+            this.catagoryBox.Size = new System.Drawing.Size(92, 23);
             this.catagoryBox.TabIndex = 26;
             this.catagoryBox.SelectedIndexChanged += new System.EventHandler(this.catagoryBox_SelectedIndexChanged);
             // 
@@ -385,7 +383,7 @@
             this.label11.ForeColor = System.Drawing.SystemColors.WindowText;
             this.label11.Location = new System.Drawing.Point(6, 16);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(52, 13);
+            this.label11.Size = new System.Drawing.Size(58, 15);
             this.label11.TabIndex = 25;
             this.label11.Text = "Catagory:";
             // 
@@ -395,7 +393,7 @@
             this.effectLabel.ForeColor = System.Drawing.SystemColors.WindowText;
             this.effectLabel.Location = new System.Drawing.Point(174, 15);
             this.effectLabel.Name = "effectLabel";
-            this.effectLabel.Size = new System.Drawing.Size(38, 13);
+            this.effectLabel.Size = new System.Drawing.Size(40, 15);
             this.effectLabel.TabIndex = 40;
             this.effectLabel.Text = "Effect:";
             // 
@@ -441,7 +439,7 @@
             "Zoom Blur"});
             this.effectBox.Location = new System.Drawing.Point(218, 12);
             this.effectBox.Name = "effectBox";
-            this.effectBox.Size = new System.Drawing.Size(179, 21);
+            this.effectBox.Size = new System.Drawing.Size(179, 23);
             this.effectBox.TabIndex = 30;
             this.effectBox.SelectedIndexChanged += new System.EventHandler(this.effectBox_SelectedIndexChanged);
             // 
@@ -451,7 +449,7 @@
             this.sourceLabel.ForeColor = System.Drawing.SystemColors.WindowText;
             this.sourceLabel.Location = new System.Drawing.Point(173, 52);
             this.sourceLabel.Name = "sourceLabel";
-            this.sourceLabel.Size = new System.Drawing.Size(69, 13);
+            this.sourceLabel.Size = new System.Drawing.Size(74, 15);
             this.sourceLabel.TabIndex = 33;
             this.sourceLabel.Text = "Source layer:";
             // 
@@ -465,7 +463,7 @@
             "DST"});
             this.sourceBox.Location = new System.Drawing.Point(250, 49);
             this.sourceBox.Name = "sourceBox";
-            this.sourceBox.Size = new System.Drawing.Size(51, 21);
+            this.sourceBox.Size = new System.Drawing.Size(51, 23);
             this.sourceBox.TabIndex = 34;
             // 
             // destinationLabel
@@ -474,7 +472,7 @@
             this.destinationLabel.ForeColor = System.Drawing.SystemColors.WindowText;
             this.destinationLabel.Location = new System.Drawing.Point(6, 52);
             this.destinationLabel.Name = "destinationLabel";
-            this.destinationLabel.Size = new System.Drawing.Size(88, 13);
+            this.destinationLabel.Size = new System.Drawing.Size(98, 15);
             this.destinationLabel.TabIndex = 31;
             this.destinationLabel.Text = "Destination layer:";
             // 
@@ -487,7 +485,7 @@
             "DST"});
             this.destinationBox.Location = new System.Drawing.Point(105, 49);
             this.destinationBox.Name = "destinationBox";
-            this.destinationBox.Size = new System.Drawing.Size(51, 21);
+            this.destinationBox.Size = new System.Drawing.Size(51, 23);
             this.destinationBox.TabIndex = 32;
             // 
             // bottomLabel
@@ -496,7 +494,7 @@
             this.bottomLabel.ForeColor = System.Drawing.SystemColors.WindowText;
             this.bottomLabel.Location = new System.Drawing.Point(316, 52);
             this.bottomLabel.Name = "bottomLabel";
-            this.bottomLabel.Size = new System.Drawing.Size(68, 13);
+            this.bottomLabel.Size = new System.Drawing.Size(78, 15);
             this.bottomLabel.TabIndex = 35;
             this.bottomLabel.Text = "Bottom layer:";
             // 
@@ -510,7 +508,7 @@
             "DST"});
             this.bottomBox.Location = new System.Drawing.Point(393, 49);
             this.bottomBox.Name = "bottomBox";
-            this.bottomBox.Size = new System.Drawing.Size(51, 21);
+            this.bottomBox.Size = new System.Drawing.Size(51, 23);
             this.bottomBox.TabIndex = 36;
             // 
             // updateButton
@@ -544,7 +542,7 @@
             this.DefaultColorComboBox.Location = new System.Drawing.Point(177, 12);
             this.DefaultColorComboBox.MaxDropDownItems = 10;
             this.DefaultColorComboBox.Name = "DefaultColorComboBox";
-            this.DefaultColorComboBox.Size = new System.Drawing.Size(149, 21);
+            this.DefaultColorComboBox.Size = new System.Drawing.Size(149, 24);
             this.DefaultColorComboBox.TabIndex = 50;
             this.DefaultColorComboBox.Visible = false;
             this.DefaultColorComboBox.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.DefaultColorComboBox_DrawItem);
@@ -555,7 +553,7 @@
             this.blendLabel.ForeColor = System.Drawing.SystemColors.WindowText;
             this.blendLabel.Location = new System.Drawing.Point(174, 16);
             this.blendLabel.Name = "blendLabel";
-            this.blendLabel.Size = new System.Drawing.Size(37, 13);
+            this.blendLabel.Size = new System.Drawing.Size(41, 15);
             this.blendLabel.TabIndex = 28;
             this.blendLabel.Text = "Mode:";
             this.blendLabel.Visible = false;
@@ -582,7 +580,7 @@
             "Xor"});
             this.blendBox.Location = new System.Drawing.Point(220, 12);
             this.blendBox.Name = "blendBox";
-            this.blendBox.Size = new System.Drawing.Size(106, 21);
+            this.blendBox.Size = new System.Drawing.Size(106, 23);
             this.blendBox.TabIndex = 29;
             this.blendBox.Visible = false;
             // 
@@ -595,7 +593,7 @@
             "Invert"});
             this.pixelOpBox.Location = new System.Drawing.Point(177, 12);
             this.pixelOpBox.Name = "pixelOpBox";
-            this.pixelOpBox.Size = new System.Drawing.Size(149, 21);
+            this.pixelOpBox.Size = new System.Drawing.Size(149, 23);
             this.pixelOpBox.TabIndex = 27;
             this.pixelOpBox.Visible = false;
             // 
@@ -625,10 +623,10 @@
             this.ElementTab.Controls.Add(this.destinationLabel);
             this.ElementTab.Controls.Add(this.DefaultColorComboBox);
             this.ElementTab.Controls.Add(this.effectBox);
-            this.ElementTab.Location = new System.Drawing.Point(4, 22);
+            this.ElementTab.Location = new System.Drawing.Point(4, 24);
             this.ElementTab.Name = "ElementTab";
             this.ElementTab.Padding = new System.Windows.Forms.Padding(3);
-            this.ElementTab.Size = new System.Drawing.Size(451, 81);
+            this.ElementTab.Size = new System.Drawing.Size(451, 79);
             this.ElementTab.TabIndex = 0;
             this.ElementTab.Text = "Element";
             this.ElementTab.UseVisualStyleBackColor = true;
@@ -644,7 +642,6 @@
             // 
             this.AcceptButton = this.DoIt;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.CancelButton = this.button1;
             this.ClientSize = new System.Drawing.Size(774, 506);
             this.Controls.Add(this.panel1);
@@ -677,13 +674,8 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.tabControl1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
+            this.IconName = "New";
             this.Name = "FileNew";
-            this.ShowIcon = false;
-            this.ShowInTaskbar = false;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "New Source (Template)";
             this.tabControl1.ResumeLayout(false);
             this.ElementTab.ResumeLayout(false);
