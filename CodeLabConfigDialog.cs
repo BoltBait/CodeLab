@@ -1537,14 +1537,18 @@ namespace PaintDotNet.Effects
         #region Edit menu Event functions
         private void editToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
         {
-            this.cutToolStripMenuItem1.Enabled = txtCode.SelectedText.Length > 0;
-            this.copyToolStripMenuItem1.Enabled = txtCode.SelectedText.Length > 0;
-            this.selectAllToolStripMenuItem1.Enabled = txtCode.TextLength > 0;
+            bool hasText = txtCode.TextLength > 0;
+            bool isTextSelected = hasText && txtCode.SelectedText.Length > 0;
+            bool cSharp = tabStrip1.SelectedTabProjType == ProjectType.Effect || tabStrip1.SelectedTabProjType == ProjectType.FileType;
+
+            this.cutToolStripMenuItem1.Enabled = isTextSelected;
+            this.copyToolStripMenuItem1.Enabled = isTextSelected;
+            this.selectAllToolStripMenuItem1.Enabled = hasText;
             this.indentToolStripMenuItem.Enabled = true;
             this.unindentToolStripMenuItem.Enabled = true;
             this.pasteToolStripMenuItem1.Enabled = txtCode.CanPaste;
-            this.commentSelectionToolStripMenuItem.Enabled = true;
-            this.uncommentSelectionToolStripMenuItem.Enabled = true;
+            this.commentSelectionToolStripMenuItem.Enabled = cSharp && hasText;
+            this.uncommentSelectionToolStripMenuItem.Enabled = cSharp && hasText;
             this.undoToolStripMenuItem1.Enabled = txtCode.CanUndo;
             this.redoToolStripMenuItem1.Enabled = txtCode.CanRedo;
         }
@@ -2042,15 +2046,19 @@ namespace PaintDotNet.Effects
         #region Context menu Event functions
         private void contextMenuStrip1_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            this.cutToolStripMenuItem.Enabled = txtCode.SelectedText.Length > 0;
-            this.copyToolStripMenuItem.Enabled = txtCode.SelectedText.Length > 0;
+            bool hasText = txtCode.TextLength > 0;
+            bool isTextSelected = hasText && txtCode.SelectedText.Length > 0;
+            bool cSharp = tabStrip1.SelectedTabProjType == ProjectType.Effect || tabStrip1.SelectedTabProjType == ProjectType.FileType;
+
+            this.cutToolStripMenuItem.Enabled = isTextSelected;
+            this.copyToolStripMenuItem.Enabled = isTextSelected;
             this.selectAllToolStripMenuItem.Enabled = txtCode.TextLength > 0;
             this.searchToolStripMenuItem.Enabled = true;
             this.indentToolStripMenuItem1.Enabled = true;
             this.unindentToolStripMenuItem1.Enabled = true;
             this.pasteToolStripMenuItem.Enabled = txtCode.CanPaste;
-            this.commentSelectionToolStripMenuItem1.Enabled = txtCode.TextLength > 0;
-            this.uncommentSelectionToolStripMenuItem1.Enabled = txtCode.TextLength > 0;
+            this.commentSelectionToolStripMenuItem1.Enabled = cSharp && hasText;
+            this.uncommentSelectionToolStripMenuItem1.Enabled = cSharp && hasText;
             this.undoToolStripMenuItem.Enabled = txtCode.CanUndo;
             this.redoToolStripMenuItem.Enabled = txtCode.CanRedo;
         }
@@ -2425,6 +2433,12 @@ namespace PaintDotNet.Effects
             FormatDocButton.Enabled = enable;
             formatDocMenuItem.Enabled = enable;
             SnippetManButton.Enabled = enable;
+            CommentButton.Enabled = enable;
+            commentSelectionToolStripMenuItem.Enabled = enable;
+            commentSelectionToolStripMenuItem1.Enabled = enable;
+            UnCommentButton.Enabled = enable;
+            uncommentSelectionToolStripMenuItem.Enabled = enable;
+            uncommentSelectionToolStripMenuItem1.Enabled = enable;
         }
 
         private void tabStrip1_TabClosingAndDirty(object sender, System.ComponentModel.CancelEventArgs e)
