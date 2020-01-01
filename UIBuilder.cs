@@ -15,6 +15,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
@@ -99,6 +100,18 @@ namespace PaintDotNet.Effects
             DefaultColorComboBox.Items.Add("SecondaryColor");
             DefaultColorComboBox.Items.AddRange(GetColorNames());
 
+            // Populate the ControlType dropdown based on allowed ElementTypes
+            List<ControlTypeItem> controlTypes = new List<ControlTypeItem>();
+            foreach (ElementType elementType in Enum.GetValues(typeof(ElementType)))
+            {
+                if (UIElement.IsControlAllowed(elementType, projectType))
+                {
+                    controlTypes.Add(new ControlTypeItem(elementType));
+                }
+            }
+            this.ControlType.Items.Clear();
+            this.ControlType.Items.AddRange(controlTypes.ToArray());
+
             MasterList.AddRange(UIElement.ProcessUIControls(UserScriptText, projectType));
 
             foreach (UIElement element in MasterList)
@@ -164,7 +177,7 @@ namespace PaintDotNet.Effects
 
         private void Add_Click(object sender, EventArgs e)
         {
-            ElementType elementType = Enum.IsDefined(typeof(ElementType), ControlType.SelectedIndex) ? (ElementType)ControlType.SelectedIndex : ElementType.IntSlider;
+            ElementType elementType = (ControlType.SelectedItem is ControlTypeItem item) ? item.ElementType : ElementType.IntSlider;
             string defaultStr = (elementType == ElementType.ColorWheel) ? DefaultColorComboBox.SelectedItem.ToString() : ControlDef.Text;
             if (elementType == ElementType.Uri) defaultStr = OptionsText.Text.Trim();
             string identifier = ControlID.Text.Trim();
@@ -188,346 +201,338 @@ namespace PaintDotNet.Effects
             toolTip1.SetToolTip(this.OptionsText, "Separate options with the vertical bar character (|)");
 
             // setup UI based on selected control type
-            if (ControlType.Text == "Integer Slider")
+            if (!(ControlType.SelectedItem is ControlTypeItem item))
             {
-                OptionsLabel.Visible = false;
-                OptionsText.Visible = false;
-                DefaultColorComboBox.Visible = false;
-                ControlMin.Visible = true;
-                ControlMax.Visible = true;
-                ControlDef.Visible = true;
-                MinimumLabel.Visible = true;
-                MaximumLabel.Visible = true;
-                DefaultLabel.Visible = true;
-                ControlDef.Enabled = true;
-                ControlMax.Enabled = true;
-                ControlMin.Enabled = true;
-                ControlMax.Text = "100";
-                ControlMin.Text = "0";
-                ControlDef.Text = "0";
-                StyleLabel.Enabled = true;
-                ControlStyle.Enabled = true;
-                FillStyleDropDown(0);
+                return;
             }
-            else if (ControlType.Text == "Check Box")
+
+            switch (item.ElementType)
             {
-                OptionsLabel.Visible = false;
-                OptionsText.Visible = false;
-                DefaultColorComboBox.Visible = false;
-                ControlMin.Visible = true;
-                ControlMax.Visible = true;
-                ControlDef.Visible = true;
-                MinimumLabel.Visible = true;
-                MaximumLabel.Visible = true;
-                DefaultLabel.Visible = true;
-                ControlMin.Text = "0";
-                ControlMin.Enabled = false;
-                ControlMax.Text = "1";
-                ControlMax.Enabled = false;
-                ControlDef.Text = (int.TryParse(ControlDef.Text, out int result) && result > 0) ? "1" : "0";
-                ControlDef.Enabled = true;
-                StyleLabel.Enabled = false;
-                ControlStyle.Enabled = false;
-                ControlStyle.SelectedIndex = 0;
-            }
-            else if (ControlType.Text == "Color Wheel")
-            {
-                OptionsLabel.Visible = false;
-                OptionsText.Visible = false;
-                ControlMin.Visible = true;
-                ControlMax.Visible = true;
-                DefaultColorComboBox.Text = "None";
-                DefaultColorComboBox.Visible = true;
-                ControlDef.Visible = false;
-                MinimumLabel.Visible = true;
-                MaximumLabel.Visible = true;
-                DefaultLabel.Visible = true;
-                ControlDef.Enabled = false;
-                ControlMax.Enabled = false;
-                ControlMin.Enabled = false;
-                ControlMax.Text = "16777215";
-                ControlMin.Text = "0";
-                ControlDef.Text = "0";
-                StyleLabel.Enabled = true;
-                ControlStyle.Enabled = true;
-                FillStyleDropDown(1);
-            }
-            else if (ControlType.Text == "Angle Chooser")
-            {
-                OptionsLabel.Visible = false;
-                OptionsText.Visible = false;
-                DefaultColorComboBox.Visible = false;
-                ControlMin.Visible = true;
-                ControlMax.Visible = true;
-                ControlDef.Visible = true;
-                MinimumLabel.Visible = true;
-                MaximumLabel.Visible = true;
-                DefaultLabel.Visible = true;
-                ControlDef.Enabled = true;
-                ControlMax.Enabled = true;
-                ControlMin.Enabled = true;
-                ControlMax.Text = "180";
-                ControlMin.Text = "-180";
-                ControlDef.Text = "45";
-                StyleLabel.Enabled = false;
-                ControlStyle.Enabled = false;
-                ControlStyle.SelectedIndex = 0;
-            }
-            else if (ControlType.Text == "Pan Slider")
-            {
-                OptionsLabel.Visible = false;
-                OptionsText.Visible = false;
-                DefaultColorComboBox.Visible = false;
-                ControlMin.Visible = true;
-                ControlMax.Visible = true;
-                ControlDef.Visible = true;
-                MinimumLabel.Visible = true;
-                MaximumLabel.Visible = true;
-                DefaultLabel.Visible = true;
-                ControlDef.Enabled = false;
-                ControlMax.Enabled = false;
-                ControlMin.Enabled = false;
-                ControlMax.Text = "1";
-                ControlMin.Text = "-1";
-                ControlDef.Text = "0";
-                StyleLabel.Enabled = false;
-                ControlStyle.Enabled = false;
-                ControlStyle.SelectedIndex = 0;
-            }
-            else if (ControlType.Text == "3D Roll Control")
-            {
-                OptionsLabel.Visible = false;
-                OptionsText.Visible = false;
-                DefaultColorComboBox.Visible = false;
-                ControlMin.Visible = true;
-                ControlMax.Visible = true;
-                ControlDef.Visible = true;
-                MinimumLabel.Visible = true;
-                MaximumLabel.Visible = true;
-                DefaultLabel.Visible = true;
-                ControlDef.Enabled = false;
-                ControlMax.Enabled = false;
-                ControlMin.Enabled = false;
-                ControlMax.Text = "1";
-                ControlMin.Text = "0";
-                ControlDef.Text = "0";
-                StyleLabel.Enabled = false;
-                ControlStyle.Enabled = false;
-                ControlStyle.SelectedIndex = 0;
-            }
-            else if (ControlType.Text == "String")
-            {
-                OptionsLabel.Visible = false;
-                OptionsText.Visible = false;
-                DefaultColorComboBox.Visible = false;
-                ControlMin.Visible = true;
-                ControlMax.Visible = true;
-                ControlDef.Visible = true;
-                MinimumLabel.Visible = true;
-                MaximumLabel.Visible = true;
-                DefaultLabel.Visible = true;
-                ControlDef.Enabled = false;
-                ControlMax.Enabled = true;
-                ControlMin.Enabled = false;
-                ControlMax.Text = "255";
-                ControlMin.Text = "0";
-                ControlDef.Text = "0";
-                StyleLabel.Enabled = false;
-                ControlStyle.Enabled = false;
-                ControlStyle.SelectedIndex = 0;
-            }
-            else if (ControlType.Text == "Multi-Line String")
-            {
-                OptionsLabel.Visible = false;
-                OptionsText.Visible = false;
-                DefaultColorComboBox.Visible = false;
-                ControlMin.Visible = true;
-                ControlMax.Visible = true;
-                ControlDef.Visible = true;
-                MinimumLabel.Visible = true;
-                MaximumLabel.Visible = true;
-                DefaultLabel.Visible = true;
-                ControlDef.Enabled = false;
-                ControlMax.Enabled = true;
-                ControlMin.Enabled = false;
-                ControlMax.Text = "32767";
-                ControlMin.Text = "1";
-                ControlDef.Text = "1";
-                StyleLabel.Enabled = false;
-                ControlStyle.Enabled = false;
-                ControlStyle.SelectedIndex = 0;
-            }
-            else if (ControlType.Text == "Double Slider")
-            {
-                OptionsLabel.Visible = false;
-                OptionsText.Visible = false;
-                DefaultColorComboBox.Visible = false;
-                ControlMin.Visible = true;
-                ControlMax.Visible = true;
-                ControlDef.Visible = true;
-                MinimumLabel.Visible = true;
-                MaximumLabel.Visible = true;
-                DefaultLabel.Visible = true;
-                ControlDef.Enabled = true;
-                ControlMax.Enabled = true;
-                ControlMin.Enabled = true;
-                ControlMax.Text = "10";
-                ControlMin.Text = "0";
-                ControlDef.Text = "0";
-                StyleLabel.Enabled = true;
-                ControlStyle.Enabled = true;
-                FillStyleDropDown(0);
-            }
-            else if (ControlType.Text == "Drop-Down List Box")
-            {
-                OptionsLabel.Visible = true;
-                OptionsText.Visible = true;
-                DefaultColorComboBox.Visible = false;
-                ControlMin.Visible = false;
-                ControlMax.Visible = false;
-                ControlDef.Visible = false;
-                MinimumLabel.Visible = false;
-                MaximumLabel.Visible = false;
-                DefaultLabel.Visible = false;
-                ControlDef.Enabled = false;
-                ControlMax.Enabled = false;
-                ControlMin.Enabled = false;
-                ControlMax.Text = "0";
-                ControlMin.Text = "0";
-                ControlDef.Text = "0";
-                StyleLabel.Enabled = false;
-                ControlStyle.Enabled = false;
-                ControlStyle.SelectedIndex = 0;
-            }
-            else if (ControlType.Text == "Radio Button List")
-            {
-                OptionsLabel.Visible = true;
-                OptionsText.Visible = true;
-                DefaultColorComboBox.Visible = false;
-                ControlMin.Visible = false;
-                ControlMax.Visible = false;
-                ControlDef.Visible = false;
-                MinimumLabel.Visible = false;
-                MaximumLabel.Visible = false;
-                DefaultLabel.Visible = false;
-                ControlDef.Enabled = false;
-                ControlMax.Enabled = false;
-                ControlMin.Enabled = false;
-                ControlMax.Text = "0";
-                ControlMin.Text = "0";
-                ControlDef.Text = "0";
-                StyleLabel.Enabled = false;
-                ControlStyle.Enabled = false;
-                ControlStyle.SelectedIndex = 0;
-            }
-            else if (ControlType.Text == "BlendOp Types")
-            {
-                OptionsLabel.Visible = false;
-                OptionsText.Visible = false;
-                DefaultColorComboBox.Visible = false;
-                ControlMin.Visible = true;
-                ControlMax.Visible = true;
-                ControlDef.Visible = true;
-                MinimumLabel.Visible = true;
-                MaximumLabel.Visible = true;
-                DefaultLabel.Visible = true;
-                ControlDef.Enabled = false;
-                ControlMax.Enabled = false;
-                ControlMin.Enabled = false;
-                ControlMax.Text = "0";
-                ControlMin.Text = "0";
-                ControlDef.Text = "0";
-                StyleLabel.Enabled = false;
-                ControlStyle.Enabled = false;
-                ControlStyle.SelectedIndex = 0;
-            }
-            else if (ControlType.Text == "Font Names")
-            {
-                OptionsLabel.Visible = false;
-                OptionsText.Visible = false;
-                DefaultColorComboBox.Visible = false;
-                ControlMin.Visible = true;
-                ControlMax.Visible = true;
-                ControlDef.Visible = true;
-                MinimumLabel.Visible = true;
-                MaximumLabel.Visible = true;
-                DefaultLabel.Visible = true;
-                ControlDef.Enabled = false;
-                ControlMax.Enabled = false;
-                ControlMin.Enabled = false;
-                ControlMax.Text = "0";
-                ControlMin.Text = "0";
-                ControlDef.Text = "0";
-                StyleLabel.Enabled = false;
-                ControlStyle.Enabled = false;
-                ControlStyle.SelectedIndex = 0;
-            }
-            else if (ControlType.Text == "Reseed Button")
-            {
-                OptionsLabel.Visible = false;
-                OptionsText.Visible = false;
-                DefaultColorComboBox.Visible = false;
-                ControlMin.Visible = true;
-                ControlMax.Visible = true;
-                ControlDef.Visible = true;
-                MinimumLabel.Visible = true;
-                MaximumLabel.Visible = true;
-                DefaultLabel.Visible = true;
-                ControlDef.Enabled = false;
-                ControlMax.Enabled = false;
-                ControlMin.Enabled = false;
-                ControlMax.Text = "255";
-                ControlMin.Text = "0";
-                ControlDef.Text = "0";
-                StyleLabel.Enabled = false;
-                ControlStyle.Enabled = false;
-                ControlStyle.SelectedIndex = 0;
-            }
-            else if (ControlType.Text == "Filename Control")
-            {
-                OptionsLabel.Visible = true;
-                OptionsText.Visible = true;
-                DefaultColorComboBox.Visible = false;
-                ControlMin.Visible = false;
-                ControlMax.Visible = false;
-                ControlDef.Visible = false;
-                MinimumLabel.Visible = false;
-                MaximumLabel.Visible = false;
-                DefaultLabel.Visible = false;
-                ControlDef.Enabled = false;
-                ControlMax.Enabled = false;
-                ControlMin.Enabled = false;
-                ControlMax.Text = "255";
-                ControlMin.Text = "0";
-                ControlDef.Text = "0";
-                StyleLabel.Enabled = false;
-                ControlStyle.Enabled = false;
-                ControlStyle.SelectedIndex = 0;
-                OptionsText.Text = "png|jpg|gif|bmp";
-            }
-            else if (ControlType.Text == "Web Link")
-            {
-                OptionsLabel.Visible = true;
-                OptionsText.Visible = true;
-                DefaultColorComboBox.Visible = false;
-                ControlMin.Visible = false;
-                ControlMax.Visible = false;
-                ControlDef.Visible = false;
-                MinimumLabel.Visible = false;
-                MaximumLabel.Visible = false;
-                DefaultLabel.Visible = false;
-                ControlDef.Enabled = false;
-                ControlMax.Enabled = false;
-                ControlMin.Enabled = false;
-                ControlMax.Text = "255";
-                ControlMin.Text = "0";
-                ControlDef.Text = "0";
-                StyleLabel.Enabled = false;
-                ControlStyle.Enabled = false;
-                ControlStyle.SelectedIndex = 0;
-                OptionsText.Text = "https://www.GetPaint.net";
-                OptionsLabel.Text = "URL:";
-                toolTip1.SetToolTip(this.OptionsText, "URL must begin with 'http://' or 'https://' to be valid.");
+                case ElementType.IntSlider:
+                    OptionsLabel.Visible = false;
+                    OptionsText.Visible = false;
+                    DefaultColorComboBox.Visible = false;
+                    ControlMin.Visible = true;
+                    ControlMax.Visible = true;
+                    ControlDef.Visible = true;
+                    MinimumLabel.Visible = true;
+                    MaximumLabel.Visible = true;
+                    DefaultLabel.Visible = true;
+                    ControlDef.Enabled = true;
+                    ControlMax.Enabled = true;
+                    ControlMin.Enabled = true;
+                    ControlMax.Text = "100";
+                    ControlMin.Text = "0";
+                    ControlDef.Text = "0";
+                    StyleLabel.Enabled = true;
+                    ControlStyle.Enabled = true;
+                    FillStyleDropDown(0);
+                    break;
+                case ElementType.Checkbox:
+                    OptionsLabel.Visible = false;
+                    OptionsText.Visible = false;
+                    DefaultColorComboBox.Visible = false;
+                    ControlMin.Visible = true;
+                    ControlMax.Visible = true;
+                    ControlDef.Visible = true;
+                    MinimumLabel.Visible = true;
+                    MaximumLabel.Visible = true;
+                    DefaultLabel.Visible = true;
+                    ControlMin.Text = "0";
+                    ControlMin.Enabled = false;
+                    ControlMax.Text = "1";
+                    ControlMax.Enabled = false;
+                    ControlDef.Text = (int.TryParse(ControlDef.Text, out int result) && result > 0) ? "1" : "0";
+                    ControlDef.Enabled = true;
+                    StyleLabel.Enabled = false;
+                    ControlStyle.Enabled = false;
+                    ControlStyle.SelectedIndex = 0;
+                    break;
+                case ElementType.ColorWheel:
+                    OptionsLabel.Visible = false;
+                    OptionsText.Visible = false;
+                    ControlMin.Visible = true;
+                    ControlMax.Visible = true;
+                    DefaultColorComboBox.Text = "None";
+                    DefaultColorComboBox.Visible = true;
+                    ControlDef.Visible = false;
+                    MinimumLabel.Visible = true;
+                    MaximumLabel.Visible = true;
+                    DefaultLabel.Visible = true;
+                    ControlDef.Enabled = false;
+                    ControlMax.Enabled = false;
+                    ControlMin.Enabled = false;
+                    ControlMax.Text = "16777215";
+                    ControlMin.Text = "0";
+                    ControlDef.Text = "0";
+                    StyleLabel.Enabled = true;
+                    ControlStyle.Enabled = true;
+                    FillStyleDropDown(1);
+                    break;
+                case ElementType.AngleChooser:
+                    OptionsLabel.Visible = false;
+                    OptionsText.Visible = false;
+                    DefaultColorComboBox.Visible = false;
+                    ControlMin.Visible = true;
+                    ControlMax.Visible = true;
+                    ControlDef.Visible = true;
+                    MinimumLabel.Visible = true;
+                    MaximumLabel.Visible = true;
+                    DefaultLabel.Visible = true;
+                    ControlDef.Enabled = true;
+                    ControlMax.Enabled = true;
+                    ControlMin.Enabled = true;
+                    ControlMax.Text = "180";
+                    ControlMin.Text = "-180";
+                    ControlDef.Text = "45";
+                    StyleLabel.Enabled = false;
+                    ControlStyle.Enabled = false;
+                    ControlStyle.SelectedIndex = 0;
+                    break;
+                case ElementType.PanSlider:
+                    OptionsLabel.Visible = false;
+                    OptionsText.Visible = false;
+                    DefaultColorComboBox.Visible = false;
+                    ControlMin.Visible = true;
+                    ControlMax.Visible = true;
+                    ControlDef.Visible = true;
+                    MinimumLabel.Visible = true;
+                    MaximumLabel.Visible = true;
+                    DefaultLabel.Visible = true;
+                    ControlDef.Enabled = false;
+                    ControlMax.Enabled = false;
+                    ControlMin.Enabled = false;
+                    ControlMax.Text = "1";
+                    ControlMin.Text = "-1";
+                    ControlDef.Text = "0";
+                    StyleLabel.Enabled = false;
+                    ControlStyle.Enabled = false;
+                    ControlStyle.SelectedIndex = 0;
+                    break;
+                case ElementType.Textbox:
+                    OptionsLabel.Visible = false;
+                    OptionsText.Visible = false;
+                    DefaultColorComboBox.Visible = false;
+                    ControlMin.Visible = true;
+                    ControlMax.Visible = true;
+                    ControlDef.Visible = true;
+                    MinimumLabel.Visible = true;
+                    MaximumLabel.Visible = true;
+                    DefaultLabel.Visible = true;
+                    ControlDef.Enabled = false;
+                    ControlMax.Enabled = true;
+                    ControlMin.Enabled = false;
+                    ControlMax.Text = "255";
+                    ControlMin.Text = "0";
+                    ControlDef.Text = "0";
+                    StyleLabel.Enabled = false;
+                    ControlStyle.Enabled = false;
+                    ControlStyle.SelectedIndex = 0;
+                    break;
+                case ElementType.DoubleSlider:
+                    OptionsLabel.Visible = false;
+                    OptionsText.Visible = false;
+                    DefaultColorComboBox.Visible = false;
+                    ControlMin.Visible = true;
+                    ControlMax.Visible = true;
+                    ControlDef.Visible = true;
+                    MinimumLabel.Visible = true;
+                    MaximumLabel.Visible = true;
+                    DefaultLabel.Visible = true;
+                    ControlDef.Enabled = true;
+                    ControlMax.Enabled = true;
+                    ControlMin.Enabled = true;
+                    ControlMax.Text = "10";
+                    ControlMin.Text = "0";
+                    ControlDef.Text = "0";
+                    StyleLabel.Enabled = true;
+                    ControlStyle.Enabled = true;
+                    FillStyleDropDown(0);
+                    break;
+                case ElementType.DropDown:
+                    OptionsLabel.Visible = true;
+                    OptionsText.Visible = true;
+                    DefaultColorComboBox.Visible = false;
+                    ControlMin.Visible = false;
+                    ControlMax.Visible = false;
+                    ControlDef.Visible = false;
+                    MinimumLabel.Visible = false;
+                    MaximumLabel.Visible = false;
+                    DefaultLabel.Visible = false;
+                    ControlDef.Enabled = false;
+                    ControlMax.Enabled = false;
+                    ControlMin.Enabled = false;
+                    ControlMax.Text = "0";
+                    ControlMin.Text = "0";
+                    ControlDef.Text = "0";
+                    StyleLabel.Enabled = false;
+                    ControlStyle.Enabled = false;
+                    ControlStyle.SelectedIndex = 0;
+                    break;
+                case ElementType.BinaryPixelOp:
+                    OptionsLabel.Visible = false;
+                    OptionsText.Visible = false;
+                    DefaultColorComboBox.Visible = false;
+                    ControlMin.Visible = true;
+                    ControlMax.Visible = true;
+                    ControlDef.Visible = true;
+                    MinimumLabel.Visible = true;
+                    MaximumLabel.Visible = true;
+                    DefaultLabel.Visible = true;
+                    ControlDef.Enabled = false;
+                    ControlMax.Enabled = false;
+                    ControlMin.Enabled = false;
+                    ControlMax.Text = "0";
+                    ControlMin.Text = "0";
+                    ControlDef.Text = "0";
+                    StyleLabel.Enabled = false;
+                    ControlStyle.Enabled = false;
+                    ControlStyle.SelectedIndex = 0;
+                    break;
+                case ElementType.FontFamily:
+                    OptionsLabel.Visible = false;
+                    OptionsText.Visible = false;
+                    DefaultColorComboBox.Visible = false;
+                    ControlMin.Visible = true;
+                    ControlMax.Visible = true;
+                    ControlDef.Visible = true;
+                    MinimumLabel.Visible = true;
+                    MaximumLabel.Visible = true;
+                    DefaultLabel.Visible = true;
+                    ControlDef.Enabled = false;
+                    ControlMax.Enabled = false;
+                    ControlMin.Enabled = false;
+                    ControlMax.Text = "0";
+                    ControlMin.Text = "0";
+                    ControlDef.Text = "0";
+                    StyleLabel.Enabled = false;
+                    ControlStyle.Enabled = false;
+                    ControlStyle.SelectedIndex = 0;
+                    break;
+                case ElementType.RadioButtons:
+                    OptionsLabel.Visible = true;
+                    OptionsText.Visible = true;
+                    DefaultColorComboBox.Visible = false;
+                    ControlMin.Visible = false;
+                    ControlMax.Visible = false;
+                    ControlDef.Visible = false;
+                    MinimumLabel.Visible = false;
+                    MaximumLabel.Visible = false;
+                    DefaultLabel.Visible = false;
+                    ControlDef.Enabled = false;
+                    ControlMax.Enabled = false;
+                    ControlMin.Enabled = false;
+                    ControlMax.Text = "0";
+                    ControlMin.Text = "0";
+                    ControlDef.Text = "0";
+                    StyleLabel.Enabled = false;
+                    ControlStyle.Enabled = false;
+                    ControlStyle.SelectedIndex = 0;
+                    break;
+                case ElementType.ReseedButton:
+                    OptionsLabel.Visible = false;
+                    OptionsText.Visible = false;
+                    DefaultColorComboBox.Visible = false;
+                    ControlMin.Visible = true;
+                    ControlMax.Visible = true;
+                    ControlDef.Visible = true;
+                    MinimumLabel.Visible = true;
+                    MaximumLabel.Visible = true;
+                    DefaultLabel.Visible = true;
+                    ControlDef.Enabled = false;
+                    ControlMax.Enabled = false;
+                    ControlMin.Enabled = false;
+                    ControlMax.Text = "255";
+                    ControlMin.Text = "0";
+                    ControlDef.Text = "0";
+                    StyleLabel.Enabled = false;
+                    ControlStyle.Enabled = false;
+                    ControlStyle.SelectedIndex = 0;
+                    break;
+                case ElementType.MultiLineTextbox:
+                    OptionsLabel.Visible = false;
+                    OptionsText.Visible = false;
+                    DefaultColorComboBox.Visible = false;
+                    ControlMin.Visible = true;
+                    ControlMax.Visible = true;
+                    ControlDef.Visible = true;
+                    MinimumLabel.Visible = true;
+                    MaximumLabel.Visible = true;
+                    DefaultLabel.Visible = true;
+                    ControlDef.Enabled = false;
+                    ControlMax.Enabled = true;
+                    ControlMin.Enabled = false;
+                    ControlMax.Text = "32767";
+                    ControlMin.Text = "1";
+                    ControlDef.Text = "1";
+                    StyleLabel.Enabled = false;
+                    ControlStyle.Enabled = false;
+                    ControlStyle.SelectedIndex = 0;
+                    break;
+                case ElementType.RollBall:
+                    OptionsLabel.Visible = false;
+                    OptionsText.Visible = false;
+                    DefaultColorComboBox.Visible = false;
+                    ControlMin.Visible = true;
+                    ControlMax.Visible = true;
+                    ControlDef.Visible = true;
+                    MinimumLabel.Visible = true;
+                    MaximumLabel.Visible = true;
+                    DefaultLabel.Visible = true;
+                    ControlDef.Enabled = false;
+                    ControlMax.Enabled = false;
+                    ControlMin.Enabled = false;
+                    ControlMax.Text = "1";
+                    ControlMin.Text = "0";
+                    ControlDef.Text = "0";
+                    StyleLabel.Enabled = false;
+                    ControlStyle.Enabled = false;
+                    ControlStyle.SelectedIndex = 0;
+                    break;
+                case ElementType.Filename:
+                    OptionsLabel.Visible = true;
+                    OptionsText.Visible = true;
+                    DefaultColorComboBox.Visible = false;
+                    ControlMin.Visible = false;
+                    ControlMax.Visible = false;
+                    ControlDef.Visible = false;
+                    MinimumLabel.Visible = false;
+                    MaximumLabel.Visible = false;
+                    DefaultLabel.Visible = false;
+                    ControlDef.Enabled = false;
+                    ControlMax.Enabled = false;
+                    ControlMin.Enabled = false;
+                    ControlMax.Text = "255";
+                    ControlMin.Text = "0";
+                    ControlDef.Text = "0";
+                    StyleLabel.Enabled = false;
+                    ControlStyle.Enabled = false;
+                    ControlStyle.SelectedIndex = 0;
+                    OptionsText.Text = "png|jpg|gif|bmp";
+                    break;
+                case ElementType.Uri:
+                    OptionsLabel.Visible = true;
+                    OptionsText.Visible = true;
+                    DefaultColorComboBox.Visible = false;
+                    ControlMin.Visible = false;
+                    ControlMax.Visible = false;
+                    ControlDef.Visible = false;
+                    MinimumLabel.Visible = false;
+                    MaximumLabel.Visible = false;
+                    DefaultLabel.Visible = false;
+                    ControlDef.Enabled = false;
+                    ControlMax.Enabled = false;
+                    ControlMin.Enabled = false;
+                    ControlMax.Text = "255";
+                    ControlMin.Text = "0";
+                    ControlDef.Text = "0";
+                    StyleLabel.Enabled = false;
+                    ControlStyle.Enabled = false;
+                    ControlStyle.SelectedIndex = 0;
+                    OptionsText.Text = "https://www.GetPaint.net";
+                    OptionsLabel.Text = "URL:";
+                    toolTip1.SetToolTip(this.OptionsText, "URL must begin with 'http://' or 'https://' to be valid.");
+                    break;
             }
         }
 
@@ -570,7 +575,7 @@ namespace PaintDotNet.Effects
         {
             int CurrentItem = (ControlListView.SelectedItems.Count > 0) ? ControlListView.SelectedItems[0].Index : -1;
 
-            ElementType elementType = Enum.IsDefined(typeof(ElementType), ControlType.SelectedIndex) ? (ElementType)ControlType.SelectedIndex : ElementType.IntSlider;
+            ElementType elementType = (ControlType.SelectedItem is ControlTypeItem item) ? item.ElementType : ElementType.IntSlider;
             string defaultStr = (elementType == ElementType.ColorWheel) ? DefaultColorComboBox.SelectedItem.ToString() : ControlDef.Text;
             if (elementType == ElementType.Uri) defaultStr = OptionsText.Text.Trim();
             string identifier = !string.IsNullOrWhiteSpace(ControlID.Text) ? ControlID.Text.Trim() : "Amount" + (MasterList.Count + 1);
@@ -663,10 +668,12 @@ namespace PaintDotNet.Effects
             }
 
             int BarLoc;
+
+            ControlType.SelectedIndex = FindControlTypeIndex(CurrentElement.ElementType);
+
             switch (CurrentElement.ElementType)
             {
                 case ElementType.IntSlider:
-                    ControlType.Text = "Integer Slider";
                     FillStyleDropDown(0);
                     ControlStyle.SelectedIndex = (int)CurrentElement.Style;
                     ControlMin.Text = CurrentElement.Min.ToString();
@@ -674,14 +681,12 @@ namespace PaintDotNet.Effects
                     ControlDef.Text = CurrentElement.Default.ToString();
                     break;
                 case ElementType.Checkbox:
-                    ControlType.Text = "Check Box";
                     ControlStyle.SelectedIndex = 0;
                     ControlMin.Text = CurrentElement.Min.ToString();
                     ControlMax.Text = CurrentElement.Max.ToString();
                     ControlDef.Text = CurrentElement.Default.ToString();
                     break;
                 case ElementType.ColorWheel:
-                    ControlType.Text = "Color Wheel";
                     FillStyleDropDown(1);
                     bool alpha = CurrentElement.ColorWheelOptions.HasFlag(ColorWheelOptions.Alpha);
                     bool noReset = CurrentElement.ColorWheelOptions.HasFlag(ColorWheelOptions.NoReset);
@@ -692,28 +697,24 @@ namespace PaintDotNet.Effects
                     DefaultColorComboBox.Text = (CurrentElement.StrDefault.Length == 0 ? "None" : CurrentElement.StrDefault);
                     break;
                 case ElementType.AngleChooser:
-                    ControlType.Text = "Angle Chooser";
                     ControlStyle.SelectedIndex = 0;
                     ControlMin.Text = CurrentElement.dMin.ToString();
                     ControlMax.Text = CurrentElement.dMax.ToString();
                     ControlDef.Text = CurrentElement.dDefault.ToString();
                     break;
                 case ElementType.PanSlider:
-                    ControlType.Text = "Pan Slider";
                     ControlStyle.SelectedIndex = 0;
                     ControlMin.Text = CurrentElement.dMin.ToString();
                     ControlMax.Text = CurrentElement.dMax.ToString();
                     ControlDef.Text = CurrentElement.StrDefault;
                     break;
                 case ElementType.Textbox:
-                    ControlType.Text = "String";
                     ControlStyle.SelectedIndex = 0;
                     ControlMin.Text = CurrentElement.Min.ToString();
                     ControlMax.Text = CurrentElement.Max.ToString();
                     ControlDef.Text = CurrentElement.Default.ToString();
                     break;
                 case ElementType.DoubleSlider:
-                    ControlType.Text = "Double Slider";
                     FillStyleDropDown(0);
                     ControlStyle.SelectedIndex = (int)CurrentElement.Style;
                     ControlMin.Text = CurrentElement.dMin.ToString();
@@ -721,7 +722,6 @@ namespace PaintDotNet.Effects
                     ControlDef.Text = CurrentElement.dDefault.ToString();
                     break;
                 case ElementType.DropDown:
-                    ControlType.Text = "Drop-Down List Box";
                     ControlStyle.SelectedIndex = 0;
                     ControlMin.Text = CurrentElement.Min.ToString();
                     ControlMax.Text = CurrentElement.Max.ToString();
@@ -731,21 +731,18 @@ namespace PaintDotNet.Effects
                     ControlName.Text = CurrentElement.ToShortName();
                     break;
                 case ElementType.BinaryPixelOp:
-                    ControlType.Text = "BlendOp Types";
                     ControlStyle.SelectedIndex = 0;
                     ControlMin.Text = CurrentElement.Min.ToString();
                     ControlMax.Text = CurrentElement.Max.ToString();
                     ControlDef.Text = CurrentElement.Default.ToString();
                     break;
                 case ElementType.FontFamily:
-                    ControlType.Text = "Font Names";
                     ControlStyle.SelectedIndex = 0;
                     ControlMin.Text = CurrentElement.Min.ToString();
                     ControlMax.Text = CurrentElement.Max.ToString();
                     ControlDef.Text = CurrentElement.Default.ToString();
                     break;
                 case ElementType.RadioButtons:
-                    ControlType.Text = "Radio Button List";
                     ControlStyle.SelectedIndex = 0;
                     ControlMin.Text = CurrentElement.Min.ToString();
                     ControlMax.Text = CurrentElement.Max.ToString();
@@ -755,28 +752,24 @@ namespace PaintDotNet.Effects
                     ControlName.Text = CurrentElement.ToShortName();
                     break;
                 case ElementType.ReseedButton:
-                    ControlType.Text = "Reseed Button";
                     ControlStyle.SelectedIndex = 0;
                     ControlMin.Text = CurrentElement.Min.ToString();
                     ControlMax.Text = CurrentElement.Max.ToString();
                     ControlDef.Text = CurrentElement.Default.ToString();
                     break;
                 case ElementType.MultiLineTextbox:
-                    ControlType.Text = "Multi-Line String";
                     ControlStyle.SelectedIndex = 0;
                     ControlMin.Text = CurrentElement.Min.ToString();
                     ControlMax.Text = CurrentElement.Max.ToString();
                     ControlDef.Text = CurrentElement.Default.ToString();
                     break;
                 case ElementType.RollBall:
-                    ControlType.Text = "3D Roll Control";
                     ControlStyle.SelectedIndex = 0;
                     ControlMin.Text = CurrentElement.Min.ToString();
                     ControlMax.Text = CurrentElement.Max.ToString();
                     ControlDef.Text = CurrentElement.Default.ToString();
                     break;
                 case ElementType.Filename:
-                    ControlType.Text = "Filename Control";
                     ControlStyle.SelectedIndex = 0;
                     ControlMin.Text = CurrentElement.Min.ToString();
                     ControlMax.Text = CurrentElement.Max.ToString();
@@ -786,7 +779,6 @@ namespace PaintDotNet.Effects
                     ControlName.Text = CurrentElement.ToShortName();
                     break;
                 case ElementType.Uri:
-                    ControlType.Text = "Web Link";
                     ControlStyle.SelectedIndex = 0;
                     ControlMin.Text = CurrentElement.Min.ToString();
                     ControlMax.Text = CurrentElement.Max.ToString();
@@ -847,11 +839,15 @@ namespace PaintDotNet.Effects
             }
 
             e.DrawBackground();
-            e.Graphics.DrawImage(ControlListView.SmallImageList.Images[e.Index], e.Bounds.X + ControlType.Margin.Left, e.Bounds.Y + 1, e.Bounds.Height, e.Bounds.Height - 2);
-            using (SolidBrush textBrush = new SolidBrush(e.ForeColor))
-            using (StringFormat textFormat = new StringFormat { LineAlignment = StringAlignment.Center })
+            if (this.ControlType.Items[e.Index] is ControlTypeItem item)
             {
-                e.Graphics.DrawString(ControlType.Items[e.Index].ToString(), e.Font, textBrush, new Rectangle(e.Bounds.X + e.Bounds.Height + ControlType.Margin.Left * 2, e.Bounds.Y, e.Bounds.Width - e.Bounds.Height - ControlType.Margin.Left * 2, e.Bounds.Height), textFormat);
+                e.Graphics.DrawImage(ControlListView.SmallImageList.Images[(int)item.ElementType], e.Bounds.X + 2, e.Bounds.Y + 1, e.Bounds.Height, e.Bounds.Height - 2);
+                Rectangle textBounds = Rectangle.FromLTRB(e.Bounds.Left + ControlListView.SmallImageList.ImageSize.Width + 4, e.Bounds.Top + 1, e.Bounds.Right, e.Bounds.Bottom - 1);
+                TextRenderer.DrawText(e.Graphics, item.ToString(), e.Font, textBounds, e.ForeColor, TextFormatFlags.VerticalCenter);
+            }
+            else
+            {
+                TextRenderer.DrawText(e.Graphics, this.ControlType.Items[e.Index].ToString(), e.Font, new Point(e.Bounds.Left, e.Bounds.Top), e.ForeColor);
             }
             e.DrawFocusRectangle();
         }
@@ -933,7 +929,7 @@ namespace PaintDotNet.Effects
         private void ControlStyle_SelectedIndexChanged(object sender, EventArgs e)
         {
             dirty = true;
-            if (ControlType.Text == "Color Wheel")
+            if (ControlType.SelectedItem is ControlTypeItem item && item.ElementType == ElementType.ColorWheel)
             {
                 if (ControlStyle.SelectedIndex == 0 || ControlStyle.SelectedIndex == 2)
                 {
@@ -1068,7 +1064,9 @@ namespace PaintDotNet.Effects
             if (!double.TryParse(ControlMin.Text, out dMin)) dMin = 0;
             if (!double.TryParse(ControlDef.Text, out dDef)) dDef = 0;
 
-            if ((ControlType.Text != "Angle Chooser") && (ControlType.Text != "Double Slider"))
+            if (ControlType.SelectedItem is ControlTypeItem item &&
+                item.ElementType != ElementType.AngleChooser &&
+                item.ElementType != ElementType.DoubleSlider)
             {
                 dMax = Math.Truncate(dMax);
                 ControlMax.Text = dMax.ToString();
@@ -1102,7 +1100,9 @@ namespace PaintDotNet.Effects
             if (!double.TryParse(ControlMin.Text, out dMin)) dMin = 0;
             if (!double.TryParse(ControlDef.Text, out dDef)) dDef = 0;
 
-            if ((ControlType.Text != "Angle Chooser") && (ControlType.Text != "Double Slider"))
+            if (ControlType.SelectedItem is ControlTypeItem item &&
+                item.ElementType != ElementType.AngleChooser &&
+                item.ElementType != ElementType.DoubleSlider)
             {
                 dMax = Math.Truncate(dMax);
                 ControlMax.Text = dMax.ToString();
@@ -1136,7 +1136,9 @@ namespace PaintDotNet.Effects
             if (!double.TryParse(ControlMin.Text, out dMin)) dMin = 0;
             if (!double.TryParse(ControlDef.Text, out dDef)) dDef = 0;
 
-            if ((ControlType.Text != "Angle Chooser") && (ControlType.Text != "Double Slider"))
+            if (ControlType.SelectedItem is ControlTypeItem item &&
+                item.ElementType != ElementType.AngleChooser &&
+                item.ElementType != ElementType.DoubleSlider)
             {
                 dMax = Math.Truncate(dMax);
                 ControlMax.Text = dMax.ToString();
@@ -1174,7 +1176,7 @@ namespace PaintDotNet.Effects
             dirty = true;
             string newOptions = OptionsText.Text.Trim().ToLowerInvariant();
             bool error = false;
-            if (ControlType.Text == "Web Link")
+            if (ControlType.SelectedItem is ControlTypeItem item && item.ElementType == ElementType.Uri)
             {
                 // Make sure the URL is valid.
                 if (!newOptions.IsWebAddress())
@@ -1204,6 +1206,41 @@ namespace PaintDotNet.Effects
             }
             OptionsText.ForeColor = error ? Color.Black : Color.Black;
             OptionsText.BackColor = error ? Color.FromArgb(246, 97, 81) : Color.White;
+        }
+
+        private int FindControlTypeIndex(ElementType elementType)
+        {
+            for (int i = 0; i < ControlType.Items.Count; i++)
+            {
+                if (this.ControlType.Items[i] is ControlTypeItem controlTypeItem && controlTypeItem.ElementType == elementType)
+                {
+                    return i;
+                }
+            }
+
+            return -1;
+        }
+
+        private class ControlTypeItem : IComparable<ControlTypeItem>
+        {
+            private readonly string text;
+            internal ElementType ElementType { get; }
+
+            internal ControlTypeItem(ElementType elementType)
+            {
+                this.text = elementType.GetDescription() ?? elementType.ToString();
+                this.ElementType = elementType;
+            }
+
+            public override string ToString()
+            {
+                return this.text;
+            }
+
+            public int CompareTo(ControlTypeItem other)
+            {
+                return string.Compare(this.text, other.text, StringComparison.OrdinalIgnoreCase);
+            }
         }
     }
 
@@ -1301,7 +1338,7 @@ namespace PaintDotNet.Effects
             return UserControls.ToArray();
         }
 
-        private static bool IsControlAllowed(ElementType elementType, ProjectType projectType)
+        internal static bool IsControlAllowed(ElementType elementType, ProjectType projectType)
         {
             if (projectType != ProjectType.FileType)
             {
@@ -1912,21 +1949,37 @@ namespace PaintDotNet.Effects
 
     internal enum ElementType
     {
+        [Description("Integer Slider")]
         IntSlider,
+        [Description("Check Box")]
         Checkbox,
+        [Description("Color Wheel")]
         ColorWheel,
+        [Description("Angle Chooser")]
         AngleChooser,
+        [Description("Pan Slider")]
         PanSlider,
+        [Description("String")]
         Textbox,
+        [Description("Double Slider")]
         DoubleSlider,
+        [Description("Drop-Down List Box")]
         DropDown,
+        [Description("BlendOp Types")]
         BinaryPixelOp,
+        [Description("Font Names")]
         FontFamily,
+        [Description("Radio Button List")]
         RadioButtons,
+        [Description("Reseed Button")]
         ReseedButton,
+        [Description("Multi-Line String")]
         MultiLineTextbox,
+        [Description("3D Roll Control")]
         RollBall,
+        [Description("Filename Control")]
         Filename,
+        [Description("Web Link")]
         Uri
     }
 
