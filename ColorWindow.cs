@@ -18,15 +18,11 @@ using System.Windows.Forms;
 
 namespace PaintDotNet.Effects
 {
-    internal partial class ColorWindow : Form
+    internal partial class ColorWindow : ChildFormBase
     {
         internal ColorWindow()
         {
             InitializeComponent();
-
-            // PDN Theme
-            this.ForeColor = PdnTheme.ForeColor;
-            this.BackColor = PdnTheme.BackColor;
         }
 
         internal Color Color
