@@ -251,11 +251,6 @@
     <None Include=".editorconfig" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Photo.png" />
-    <None Include="Resources\BlendArrow.png" />
-    <None Include="Resources\DownArrow.png" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Icons\00int.png" />
     <EmbeddedResource Include="Icons\01CheckBox.png" />
     <EmbeddedResource Include="Icons\02ColorWheel.png" />
