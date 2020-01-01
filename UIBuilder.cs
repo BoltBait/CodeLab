@@ -25,7 +25,7 @@ using System.Windows.Forms;
 
 namespace PaintDotNet.Effects
 {
-    internal partial class UIBuilder : Form
+    internal partial class UIBuilder : ChildFormBase
     {
         internal string UIControlsText;
         private ColorBgra PC;
@@ -40,16 +40,14 @@ namespace PaintDotNet.Effects
             InitializeComponent();
 
             // PDN Theme
-            this.ForeColor = PdnTheme.ForeColor;
-            this.BackColor = PdnTheme.BackColor;
-            ControlListView.ForeColor = PdnTheme.ForeColor;
-            ControlListView.BackColor = PdnTheme.BackColor;
+            ControlListView.ForeColor = this.ForeColor;
+            ControlListView.BackColor = this.BackColor;
             foreach (Control control in this.Controls)
             {
                 if (control is TextBox || control is ComboBox)
                 {
-                    control.ForeColor = PdnTheme.ForeColor;
-                    control.BackColor = PdnTheme.BackColor;
+                    control.ForeColor = this.ForeColor;
+                    control.BackColor = this.BackColor;
                 }
             }
 
