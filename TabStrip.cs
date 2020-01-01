@@ -415,12 +415,12 @@ namespace PaintDotNet.Effects
         {
             base.OnPaint(e);
 
-            if (this.Parent.Items.Count <= 1 || closeRect == Rectangle.Empty)
+            if (this.Parent.Items.Count <= 1)
             {
                 return;
             }
 
-            if (!e.ClipRectangle.Contains(closeRect))
+            if (!e.ClipRectangle.Contains(closeRect) || closeRect.IsEmpty)
             {
                 UpdateCloseRect();
             }
