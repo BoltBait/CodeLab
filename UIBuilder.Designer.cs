@@ -329,22 +329,7 @@ namespace PaintDotNet.Effects
             this.ControlType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ControlType.FormattingEnabled = true;
             this.ControlType.Items.AddRange(new object[] {
-            "Integer Slider",
-            "Check Box",
-            "Color Wheel",
-            "Angle Chooser",
-            "Pan Slider",
-            "String",
-            "Double Slider",
-            "Drop-Down List Box",
-            "BlendOp Types",
-            "Font Names",
-            "Radio Button List",
-            "Reseed Button",
-            "Multi-Line String",
-            "3D Roll Control",
-            "Filename Control",
-            "Web Link"});
+            "Don\'t add items here"});
             this.ControlType.Location = new System.Drawing.Point(85, 30);
             this.ControlType.MaxDropDownItems = 12;
             this.ControlType.Name = "ControlType";

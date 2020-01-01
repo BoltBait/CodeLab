@@ -51,6 +51,18 @@ namespace PaintDotNet.Effects
                 }
             }
 
+            // Populate the ControlType dropdown based on allowed ElementTypes
+            List<ControlTypeItem> controlTypes = new List<ControlTypeItem>();
+            foreach (ElementType elementType in Enum.GetValues(typeof(ElementType)))
+            {
+                if (UIElement.IsControlAllowed(elementType, projectType))
+                {
+                    controlTypes.Add(new ControlTypeItem(elementType));
+                }
+            }
+            this.ControlType.Items.Clear();
+            this.ControlType.Items.AddRange(controlTypes.ToArray());
+
             if (ControlType.ItemHeight < 18)
             {
                 ControlType.ItemHeight = 18;
@@ -97,18 +109,6 @@ namespace PaintDotNet.Effects
             DefaultColorComboBox.Items.Add("PrimaryColor");
             DefaultColorComboBox.Items.Add("SecondaryColor");
             DefaultColorComboBox.Items.AddRange(GetColorNames());
-
-            // Populate the ControlType dropdown based on allowed ElementTypes
-            List<ControlTypeItem> controlTypes = new List<ControlTypeItem>();
-            foreach (ElementType elementType in Enum.GetValues(typeof(ElementType)))
-            {
-                if (UIElement.IsControlAllowed(elementType, projectType))
-                {
-                    controlTypes.Add(new ControlTypeItem(elementType));
-                }
-            }
-            this.ControlType.Items.Clear();
-            this.ControlType.Items.AddRange(controlTypes.ToArray());
 
             MasterList.AddRange(UIElement.ProcessUIControls(UserScriptText, projectType));
 
