@@ -57,9 +57,9 @@ namespace PaintDotNet.Effects
             this.ButtonClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.ButtonClose.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.ButtonClose.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.ButtonClose.Location = new System.Drawing.Point(497, 327);
+            this.ButtonClose.Location = new System.Drawing.Point(497, 326);
             this.ButtonClose.Name = "ButtonClose";
-            this.ButtonClose.Size = new System.Drawing.Size(75, 23);
+            this.ButtonClose.Size = new System.Drawing.Size(75, 24);
             this.ButtonClose.TabIndex = 0;
             this.ButtonClose.Text = "Close";
             this.ButtonClose.UseVisualStyleBackColor = true;
@@ -98,19 +98,17 @@ namespace PaintDotNet.Effects
             // ViewSrc
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.CancelButton = this.ButtonClose;
             this.ClientSize = new System.Drawing.Size(584, 362);
             this.Controls.Add(this.CopyButton);
             this.Controls.Add(this.SaveButton);
             this.Controls.Add(this.ButtonClose);
             this.Controls.Add(this.TextSrcBox);
-            this.MinimizeBox = false;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
+            this.MaximizeBox = true;
             this.MinimumSize = new System.Drawing.Size(300, 200);
             this.Name = "ViewSrc";
             this.ShowIcon = false;
-            this.ShowInTaskbar = false;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.ResumeLayout(false);
             this.PerformLayout();
 

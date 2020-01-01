@@ -19,17 +19,14 @@ using System.Drawing;
 
 namespace PaintDotNet.Effects
 {
-    internal partial class ViewSrc : Form
+    internal partial class ViewSrc : ChildFormBase
     {
         internal ViewSrc(string title, string SourceString, bool ShowSaveButton)
         {
             InitializeComponent();
 
-            // PDN Theme
-            this.ForeColor = PdnTheme.ForeColor;
-            this.BackColor = PdnTheme.BackColor;
-            TextSrcBox.ForeColor = PdnTheme.ForeColor;
-            TextSrcBox.BackColor = PdnTheme.BackColor;
+            TextSrcBox.ForeColor = this.ForeColor;
+            TextSrcBox.BackColor = this.BackColor;
 
             TextSrcBox.Font = new Font(Settings.FontFamily, TextSrcBox.Font.Size);
             TextSrcBox.Text = SourceString;
