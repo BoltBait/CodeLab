@@ -24,7 +24,7 @@ using System.Diagnostics;
 
 namespace PaintDotNet.Effects
 {
-    internal partial class BuildForm : Form
+    internal partial class BuildForm : ChildFormBase
     {
         #region Constructor
         internal string IconPath = "";
@@ -53,19 +53,17 @@ namespace PaintDotNet.Effects
             InitializeComponent();
 
             // PDN Theme
-            this.ForeColor = PdnTheme.ForeColor;
-            this.BackColor = PdnTheme.BackColor;
             toolStrip1.Renderer = PdnTheme.Renderer;
-            SubMenuName.ForeColor = PdnTheme.ForeColor;
-            SubMenuName.BackColor = PdnTheme.BackColor;
-            ButtonIcon.LinkColor = PdnTheme.ForeColor;
-            ButtonIcon.ActiveLinkColor = PdnTheme.ForeColor;
+            SubMenuName.ForeColor = this.ForeColor;
+            SubMenuName.BackColor = this.BackColor;
+            ButtonIcon.LinkColor = this.ForeColor;
+            ButtonIcon.ActiveLinkColor = this.ForeColor;
             foreach (Control control in this.Controls)
             {
                 if (control is TextBox || control is NumericUpDown)
                 {
-                    control.ForeColor = PdnTheme.ForeColor;
-                    control.BackColor = PdnTheme.BackColor;
+                    control.ForeColor = this.ForeColor;
+                    control.BackColor = this.BackColor;
                 }
             }
 
@@ -83,7 +81,7 @@ namespace PaintDotNet.Effects
             FileName = ScriptName;
 
             // Will the plugin have a User Interface
-            bool hasUI = UIElement.ProcessUIControls(ScriptText).Length > 0;
+            bool hasUI = UIElement.ProcessUIControls(ScriptText, ProjectType.Effect).Length > 0;
 
             // Preload submenu name
             Match msm = Regex.Match(ScriptText, @"//[\s-[\r\n]]*SubMenu[\s-[\r\n]]*:[\s-[\r\n]]*(?<sublabel>.*)(?=\r?\n|$)", RegexOptions.IgnoreCase);

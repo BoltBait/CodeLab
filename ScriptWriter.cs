@@ -66,9 +66,13 @@ namespace PaintDotNet.Effects
             + "        }\r\n"
             + "    }\r\n"
             + "}\r\n";
+
         internal const string EmptyCode = "\r\n"
             + "void Render(Surface dst, Surface src, Rectangle rect) { }\r\n";
-        internal const string UsingPartCode = ""
+
+        internal static string UsingPartCode(ProjectType projectType)
+        {
+            string namespaces = ""
             + "using System;\r\n"
             + "using System.IO;\r\n"
             + "using System.Linq;\r\n"
@@ -81,47 +85,48 @@ namespace PaintDotNet.Effects
             + "using System.IO.Compression;\r\n"
             + "using System.Drawing.Drawing2D;\r\n"
             + "using System.Collections.Generic;\r\n"
+            + "using System.Text;\r\n"
             + "using System.Text.RegularExpressions;\r\n"
             + "using System.Runtime.InteropServices;\r\n"
             + "using Registry = Microsoft.Win32.Registry;\r\n"
             + "using RegistryKey = Microsoft.Win32.RegistryKey;\r\n"
             + "using PaintDotNet;\r\n"
-            + "using PaintDotNet.Effects;\r\n"
             + "using PaintDotNet.AppModel;\r\n"
             + "using PaintDotNet.Clipboard;\r\n"
             + "using PaintDotNet.IndirectUI;\r\n"
             + "using PaintDotNet.Collections;\r\n"
-            + "using PaintDotNet.PropertySystem;\r\n"
+            + "using PaintDotNet.PropertySystem;\r\n";
+
+            if (projectType == ProjectType.Effect)
+            {
+                namespaces += ""
+                + "using PaintDotNet.Effects;\r\n"
+                + "using ColorWheelControl = PaintDotNet.ColorBgra;\r\n"
+                + "using AngleControl = System.Double;\r\n"
+                + "using PanSliderControl = PaintDotNet.Pair<double,double>;\r\n"
+                + "using FilenameControl = System.String;\r\n"
+                + "using ReseedButtonControl = System.Byte;\r\n"
+                + "using RollControl = System.Tuple<double, double, double>;\r\n";
+            }
+
+            namespaces += ""
             + "using IntSliderControl = System.Int32;\r\n"
             + "using CheckboxControl = System.Boolean;\r\n"
-            + "using ColorWheelControl = PaintDotNet.ColorBgra;\r\n"
-            + "using AngleControl = System.Double;\r\n"
-            + "using PanSliderControl = PaintDotNet.Pair<double,double>;\r\n"
             + "using TextboxControl = System.String;\r\n"
-            + "using FilenameControl = System.String;\r\n"
             + "using DoubleSliderControl = System.Double;\r\n"
             + "using ListBoxControl = System.Byte;\r\n"
             + "using RadioButtonControl = System.Byte;\r\n"
-            + "using ReseedButtonControl = System.Byte;\r\n"
             + "using MultiLineTextboxControl = System.String;\r\n"
-            + "using RollControl = System.Tuple<double, double, double>;\r\n"
             + "\r\n";
+
+            return namespaces;
+        }
+
         internal const string prepend_code = "\r\n"
             + "namespace PaintDotNet.Effects\r\n"
             + "{\r\n"
             + "public class UserScript : Effect\r\n"
             + "{\r\n"
-            + "    public StringWriter __debugWriter = new StringWriter();\r\n"
-            + "    TextWriterTraceListener __listener;\r\n"
-            + "\r\n"
-            + "    public string __DebugMsgs\r\n"
-            + "    {\r\n"
-            + "        get\r\n"
-            + "        {\r\n"
-            + "            return __debugWriter.ToString();\r\n"
-            + "        }\r\n"
-            + "    }\r\n"
-            + "\r\n"
             + "    [ThreadStatic]\r\n"
             + "    private static Random RandomNumber;\r\n"
             + "    private int instanceSeed = unchecked((int)DateTime.Now.Ticks);\r\n"
@@ -137,12 +142,7 @@ namespace PaintDotNet.Effects
             + "    }\r\n"
             + "\r\n"
             + "    public UserScript()\r\n"
-            + "        : base(\"UserScript\", null, string.Empty, new EffectOptions())\r\n"
-            + "    {\r\n"
-            + "        __listener = new TextWriterTraceListener(__debugWriter);\r\n"
-            + "        Debug.Listeners.Add(__listener);\r\n"
-            + "    }\r\n"
-            + "\r\n";
+            + "        : base(\"UserScript\", null, string.Empty, new EffectOptions())\r\n";
         internal const string append_code = ""
             + "    }\r\n"
             + "}\r\n";
@@ -184,10 +184,11 @@ namespace PaintDotNet.Effects
             return AssemblyInfoPart;
         }
 
-        internal static string NamespacePart(string FileName)
+        internal static string NamespacePart(string FileName, ProjectType projectType)
         {
             // Remove non-alpha characters from namespace
-            string NameSpace = Regex.Replace(FileName, @"[^\w]", "") + "Effect";
+            string pluginType = (projectType == ProjectType.Effect) ? "Effect" : "FileType";
+            string NameSpace = Regex.Replace(FileName, @"[^\w]", "") + pluginType;
 
             string NamespacePart = "";
             NamespacePart += "namespace " + NameSpace + "\r\n";
@@ -372,13 +373,20 @@ namespace PaintDotNet.Effects
             return EffectPart;
         }
 
-        internal static string PropertyPart(UIElement[] UserControls, string FileName, string WindowTitleStr, HelpType HelpType, string HelpText)
+        internal static string PropertyPart(UIElement[] UserControls, string FileName, string WindowTitleStr, HelpType HelpType, string HelpText, ProjectType projectType)
         {
             string PropertyPart = "";
             if (UserControls.Length == 0)
             {
                 // No controls, so no User Interface. Generate an empty OnCreatePropertyCollection()
-                PropertyPart += "        protected override PropertyCollection OnCreatePropertyCollection()\r\n";
+                if (projectType == ProjectType.FileType)
+                {
+                    PropertyPart += "        public override PropertyCollection OnCreateSavePropertyCollection()\r\n";
+                }
+                else
+                {
+                    PropertyPart += "        protected override PropertyCollection OnCreatePropertyCollection()\r\n";
+                }
                 PropertyPart += "        {\r\n";
                 PropertyPart += "            return PropertyCollection.CreateEmpty();\r\n";
                 PropertyPart += "        }\r\n";
@@ -441,7 +449,16 @@ namespace PaintDotNet.Effects
 
             // generate OnCreatePropertyCollection()
             PropertyPart += "\r\n";
-            PropertyPart += "        protected override PropertyCollection OnCreatePropertyCollection()\r\n";
+
+            if (projectType == ProjectType.FileType)
+            {
+                PropertyPart += "        public override PropertyCollection OnCreateSavePropertyCollection()\r\n";
+            }
+            else
+            {
+                PropertyPart += "        protected override PropertyCollection OnCreatePropertyCollection()\r\n";
+            }
+
             PropertyPart += "        {\r\n";
 
             // Check to see if we're including a color wheel without an alpha slider
@@ -664,7 +681,16 @@ namespace PaintDotNet.Effects
 
             // generate OnCreateConfigUI()
             PropertyPart += "\r\n";
-            PropertyPart += "        protected override ControlInfo OnCreateConfigUI(PropertyCollection props)\r\n";
+
+            if (projectType == ProjectType.FileType)
+            {
+                PropertyPart += "        public override ControlInfo OnCreateSaveConfigUI(PropertyCollection props)\r\n";
+            }
+            else
+            {
+                PropertyPart += "        protected override ControlInfo OnCreateConfigUI(PropertyCollection props)\r\n";
+            }
+
             PropertyPart += "        {\r\n";
 
             if (UserControls.Any(u => u.ElementType == ElementType.BinaryPixelOp))
@@ -683,7 +709,15 @@ namespace PaintDotNet.Effects
                 PropertyPart += "\r\n";
             }
 
-            PropertyPart += "            ControlInfo configUI = CreateDefaultConfigUI(props);\r\n";
+            if (projectType == ProjectType.FileType)
+            {
+                PropertyPart += "            ControlInfo configUI = CreateDefaultSaveConfigUI(props);\r\n";
+            }
+            else
+            {
+                PropertyPart += "            ControlInfo configUI = CreateDefaultConfigUI(props);\r\n";
+            }
+
             PropertyPart += "\r\n";
 
             foreach (UIElement u in UserControls)
@@ -1039,65 +1073,12 @@ namespace PaintDotNet.Effects
             }
 
             string tokenType = (toDll) ? "PropertyBasedEffectConfigToken" : "EffectConfigToken";
-            SetRenderPart += "        protected override void OnSetRenderInfo(" + tokenType + " newToken, RenderArgs dstArgs, RenderArgs srcArgs)\r\n";
+            SetRenderPart += "        protected override void OnSetRenderInfo(" + tokenType + " token, RenderArgs dstArgs, RenderArgs srcArgs)\r\n";
             SetRenderPart += "        {\r\n";
 
             if (toDll && UserControls.Length > 0)
             {
-                foreach (UIElement u in UserControls)
-                {
-                    string propertyName = u.Identifier.FirstCharToUpper();
-                    switch (u.ElementType)
-                    {
-                        case ElementType.IntSlider:
-                            SetRenderPart += "            " + u.Identifier + " = newToken.GetProperty<Int32Property>(PropertyNames." + propertyName + ").Value;\r\n";
-                            break;
-                        case ElementType.Checkbox:
-                            SetRenderPart += "            " + u.Identifier + " = newToken.GetProperty<BooleanProperty>(PropertyNames." + propertyName + ").Value;\r\n";
-                            break;
-                        case ElementType.ColorWheel:
-                            if (!u.ColorWheelOptions.HasFlag(ColorWheelOptions.Alpha))
-                            {
-                                SetRenderPart += "            " + u.Identifier + " = ColorBgra.FromOpaqueInt32(newToken.GetProperty<Int32Property>(PropertyNames." + propertyName + ").Value);\r\n";
-                            }
-                            else
-                            {
-                                SetRenderPart += "            " + u.Identifier + " = ColorBgra.FromUInt32(unchecked((uint)newToken.GetProperty<Int32Property>(PropertyNames." + propertyName + ").Value));\r\n";
-                            }
-                            break;
-                        case ElementType.AngleChooser:
-                        case ElementType.DoubleSlider:
-                            SetRenderPart += "            " + u.Identifier + " = newToken.GetProperty<DoubleProperty>(PropertyNames." + propertyName + ").Value;\r\n";
-                            break;
-                        case ElementType.PanSlider:
-                            SetRenderPart += "            " + u.Identifier + " = newToken.GetProperty<DoubleVectorProperty>(PropertyNames." + propertyName + ").Value;\r\n";
-                            break;
-                        case ElementType.Filename:
-                        case ElementType.Textbox:
-                        case ElementType.MultiLineTextbox:
-                            SetRenderPart += "            " + u.Identifier + " = newToken.GetProperty<StringProperty>(PropertyNames." + propertyName + ").Value;\r\n";
-                            break;
-                        case ElementType.DropDown:
-                        case ElementType.RadioButtons:
-                            string typeCast = Intelli.IsEnum(u.TEnum) ? u.TEnum : "byte)(int";
-                            SetRenderPart += "            " + u.Identifier + " = (" + typeCast + ")newToken.GetProperty<StaticListChoiceProperty>(PropertyNames." + propertyName + ").Value;\r\n";
-                            break;
-                        case ElementType.BinaryPixelOp:
-                            SetRenderPart += "            " + u.Identifier + " = LayerBlendModeUtil.CreateCompositionOp((LayerBlendMode)newToken.GetProperty<StaticListChoiceProperty>(PropertyNames." + propertyName + ").Value);\r\n";
-                            break;
-                        case ElementType.FontFamily:
-                            SetRenderPart += "            " + u.Identifier + " = (FontFamily)newToken.GetProperty<StaticListChoiceProperty>(PropertyNames." + propertyName + ").Value;\r\n";
-                            break;
-                        case ElementType.ReseedButton:
-                            SetRenderPart += "            " + u.Identifier + " = (byte)newToken.GetProperty<Int32Property>(PropertyNames." + propertyName + ").Value;\r\n";
-                            SetRenderPart += "            randomSeed = " + u.Identifier + ";\r\n";
-                            break;
-                        case ElementType.RollBall:
-                            SetRenderPart += "            " + u.Identifier + " = newToken.GetProperty<DoubleVector3Property>(PropertyNames." + propertyName + ").Value;\r\n";
-                            break;
-                    }
-                }
-                SetRenderPart += "\r\n";
+                SetRenderPart += TokenValuesPart(UserControls);
             }
 
             if (PreRenderExists)
@@ -1106,7 +1087,7 @@ namespace PaintDotNet.Effects
                 SetRenderPart += "\r\n";
             }
 
-            SetRenderPart += "            base.OnSetRenderInfo(newToken, dstArgs, srcArgs);\r\n";
+            SetRenderPart += "            base.OnSetRenderInfo(token, dstArgs, srcArgs);\r\n";
             SetRenderPart += "        }\r\n";
             SetRenderPart += "\r\n";
             return SetRenderPart;
@@ -1175,23 +1156,186 @@ namespace PaintDotNet.Effects
 
         internal static string FullSourceCode(string SourceCode, string FileName, bool isAdjustment, string submenuname, string menuname, string iconpath, string SupportURL, EffectFlags effectFlags, EffectRenderingSchedule renderingSchedule, string Author, int MajorVersion, int MinorVersion, string Description, string KeyWords, string WindowTitleStr, HelpType HelpType, string HelpText)
         {
-            UIElement[] UserControls = UIElement.ProcessUIControls(SourceCode);
+            UIElement[] UserControls = UIElement.ProcessUIControls(SourceCode, ProjectType.Effect);
             bool hasPreRender = Regex.IsMatch(SourceCode, @"void PreRender\(Surface dst, Surface src\)(\s)*{(.|\s)*}", RegexOptions.Singleline);
 
-            string sUsingPart = UsingPartCode;
+            string sUsingPart = UsingPartCode(ProjectType.Effect);
             string sAssemblyInfoPart = AssemblyInfoPart(FileName, menuname, Author, MajorVersion, MinorVersion, Description, KeyWords);
-            string sNamespacePart = NamespacePart(FileName);
+            string sNamespacePart = NamespacePart(FileName, ProjectType.Effect);
             string sSupportInfoPart = SupportInfoPart(menuname, SupportURL);
             string sCategoryPart = CategoryPart(isAdjustment);
             string sEffectPart = EffectPart(UserControls, FileName, submenuname, menuname, iconpath, effectFlags, renderingSchedule);
             string sHelpPart = HelpPart(HelpType, HelpText);
-            string sPropertyPart = PropertyPart(UserControls, FileName, WindowTitleStr, HelpType, HelpText);
+            string sPropertyPart = PropertyPart(UserControls, FileName, WindowTitleStr, HelpType, HelpText, ProjectType.Effect);
             string sSetRenderPart = SetRenderPart(UserControls, true, hasPreRender);
             string sRenderLoopPart = RenderLoopPart(UserControls);
             string sUserEnteredPart = UserEnteredPart(SourceCode);
             string sEndPart = EndPart();
 
             return sUsingPart + sAssemblyInfoPart + sNamespacePart + sSupportInfoPart + sCategoryPart + sEffectPart + sHelpPart + sPropertyPart + sSetRenderPart + sRenderLoopPart + sUserEnteredPart + sEndPart;
+        }
+
+        internal static string FullFileTypeSourceCode(string scriptText, string projectName, string author, int majorVersion, int minorVersion, string supportURL, string description, string loadExt, string saveExt, bool supoortLayers, string title)
+        {
+            UIElement[] userControls = UIElement.ProcessUIControls(scriptText, ProjectType.FileType);
+
+            return
+                UsingPartCode(ProjectType.FileType) +
+                AssemblyInfoPart(projectName, projectName, author, majorVersion, minorVersion, description, string.Empty) +
+                NamespacePart(projectName, ProjectType.FileType) +
+                SupportInfoPart(title, supportURL) +
+                FileTypePart(projectName, loadExt, saveExt, supoortLayers, title) +
+                ConstructorPart(false) +
+                PropertyPart(userControls, projectName, string.Empty, HelpType.None, string.Empty, ProjectType.FileType) +
+                FileTypePart2(userControls) +
+                UserEnteredPart(scriptText) +
+                EndPart();
+        }
+
+        internal static string FileTypePart(string projectName, string loadExt, string saveExt, bool supoortLayers, string title)
+        {
+            string fileTypePart = "";
+            fileTypePart += "    public sealed class " + projectName + "Factory : IFileTypeFactory\r\n";
+            fileTypePart += "    {\r\n";
+            fileTypePart += "        public FileType[] GetFileTypeInstances()\r\n";
+            fileTypePart += "        {\r\n";
+            fileTypePart += "            return new[] { new " + projectName + "Plugin() };\r\n";
+            fileTypePart += "        }\r\n";
+            fileTypePart += "    }\r\n";
+            fileTypePart += "\r\n";
+            fileTypePart += "    [PluginSupportInfo(typeof(PluginSupportInfo))]\r\n";
+            fileTypePart += "    internal class " + projectName + "Plugin : PropertyBasedFileType\r\n";
+            fileTypePart += "    {\r\n";
+            fileTypePart += "        internal " + projectName + "Plugin()\r\n";
+            fileTypePart += "            : base(\r\n";
+            fileTypePart += "                \"" + title + "\",\r\n";
+            fileTypePart += "                new FileTypeOptions\r\n";
+            fileTypePart += "                {\r\n";
+            fileTypePart += "                    LoadExtensions = new string[] { " + loadExt + " },\r\n";
+            fileTypePart += "                    SaveExtensions = new string[] { " + saveExt + " },\r\n";
+            fileTypePart += "                    SupportsCancellation = true,\r\n";
+            fileTypePart += "                    SupportsLayers = " + supoortLayers.ToString().ToLowerInvariant() + "\r\n";
+            fileTypePart += "                })\r\n";
+
+            return fileTypePart;
+        }
+
+        internal static string FileTypePart2(UIElement[] userControls)
+        {
+            string fileTypePart2 = "";
+            fileTypePart2 += "        protected override bool IsReflexive(PropertyBasedSaveConfigToken token)\r\n";
+            fileTypePart2 += "        {\r\n";
+            fileTypePart2 += "            return false;\r\n";
+            fileTypePart2 += "        }\r\n";
+            fileTypePart2 += "\r\n";
+            fileTypePart2 += "\r\n";
+            fileTypePart2 += "        protected override void OnSaveT(Document input, Stream output, PropertyBasedSaveConfigToken token, Surface scratchSurface, ProgressEventHandler progressCallback)\r\n";
+            fileTypePart2 += "        {\r\n";
+
+            if (userControls.Length > 0)
+            {
+                fileTypePart2 += TokenValuesPart(userControls);
+            }
+
+            fileTypePart2 += "            SaveImage(input, output, token, scratchSurface, progressCallback);\r\n";
+            fileTypePart2 += "        }\r\n";
+            fileTypePart2 += "\r\n";
+            fileTypePart2 += "        protected override Document OnLoad(Stream input)\r\n";
+            fileTypePart2 += "        {\r\n";
+            fileTypePart2 += "            return LoadImage(input);\r\n";
+            fileTypePart2 += "        }\r\n";
+
+            return fileTypePart2;
+        }
+
+        private static string TokenValuesPart(UIElement[] userControls)
+        {
+            string tokenValues = "";
+            foreach (UIElement u in userControls)
+            {
+                string propertyName = u.Identifier.FirstCharToUpper();
+                switch (u.ElementType)
+                {
+                    case ElementType.IntSlider:
+                        tokenValues += "            " + u.Identifier + " = token.GetProperty<Int32Property>(PropertyNames." + propertyName + ").Value;\r\n";
+                        break;
+                    case ElementType.Checkbox:
+                        tokenValues += "            " + u.Identifier + " = token.GetProperty<BooleanProperty>(PropertyNames." + propertyName + ").Value;\r\n";
+                        break;
+                    case ElementType.ColorWheel:
+                        if (!u.ColorWheelOptions.HasFlag(ColorWheelOptions.Alpha))
+                        {
+                            tokenValues += "            " + u.Identifier + " = ColorBgra.FromOpaqueInt32(token.GetProperty<Int32Property>(PropertyNames." + propertyName + ").Value);\r\n";
+                        }
+                        else
+                        {
+                            tokenValues += "            " + u.Identifier + " = ColorBgra.FromUInt32(unchecked((uint)token.GetProperty<Int32Property>(PropertyNames." + propertyName + ").Value));\r\n";
+                        }
+                        break;
+                    case ElementType.AngleChooser:
+                    case ElementType.DoubleSlider:
+                        tokenValues += "            " + u.Identifier + " = token.GetProperty<DoubleProperty>(PropertyNames." + propertyName + ").Value;\r\n";
+                        break;
+                    case ElementType.PanSlider:
+                        tokenValues += "            " + u.Identifier + " = token.GetProperty<DoubleVectorProperty>(PropertyNames." + propertyName + ").Value;\r\n";
+                        break;
+                    case ElementType.Filename:
+                    case ElementType.Textbox:
+                    case ElementType.MultiLineTextbox:
+                        tokenValues += "            " + u.Identifier + " = token.GetProperty<StringProperty>(PropertyNames." + propertyName + ").Value;\r\n";
+                        break;
+                    case ElementType.DropDown:
+                    case ElementType.RadioButtons:
+                        string typeCast = Intelli.IsEnum(u.TEnum) ? u.TEnum : "byte)(int";
+                        tokenValues += "            " + u.Identifier + " = (" + typeCast + ")token.GetProperty<StaticListChoiceProperty>(PropertyNames." + propertyName + ").Value;\r\n";
+                        break;
+                    case ElementType.BinaryPixelOp:
+                        tokenValues += "            " + u.Identifier + " = LayerBlendModeUtil.CreateCompositionOp((LayerBlendMode)token.GetProperty<StaticListChoiceProperty>(PropertyNames." + propertyName + ").Value);\r\n";
+                        break;
+                    case ElementType.FontFamily:
+                        tokenValues += "            " + u.Identifier + " = (FontFamily)token.GetProperty<StaticListChoiceProperty>(PropertyNames." + propertyName + ").Value;\r\n";
+                        break;
+                    case ElementType.ReseedButton:
+                        tokenValues += "            " + u.Identifier + " = (byte)token.GetProperty<Int32Property>(PropertyNames." + propertyName + ").Value;\r\n";
+                        tokenValues += "            randomSeed = " + u.Identifier + ";\r\n";
+                        break;
+                    case ElementType.RollBall:
+                        tokenValues += "            " + u.Identifier + " = token.GetProperty<DoubleVector3Property>(PropertyNames." + propertyName + ").Value;\r\n";
+                        break;
+                }
+            }
+            tokenValues += "\r\n";
+
+            return tokenValues;
+        }
+
+        internal static string ConstructorPart(bool debug)
+        {
+            if (!debug)
+            {
+                return ""
+                    + "        {\r\n"
+                    + "        }\r\n"
+                    + "\r\n";
+            }
+
+            return  ""
+                + "        {\r\n"
+                + "            __listener = new TextWriterTraceListener(__debugWriter);\r\n"
+                + "            Debug.Listeners.Add(__listener);\r\n"
+                + "        }\r\n"
+                + "\r\n"
+                + "        public StringWriter __debugWriter = new StringWriter();\r\n"
+                + "        TextWriterTraceListener __listener;\r\n"
+                + "\r\n"
+                + "        public string __DebugMsgs\r\n"
+                + "        {\r\n"
+                + "            get\r\n"
+                + "            {\r\n"
+                + "                return __debugWriter.ToString();\r\n"
+                + "            }\r\n"
+                + "        }\r\n"
+                + "\r\n";
         }
     }
 }

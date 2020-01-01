@@ -66,6 +66,8 @@
     <Reference Include="PaintDotNet.Effects">
       <HintPath>..\..\..\..\..\..\Program Files\Paint.NET\PaintDotNet.Effects.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="System">
       <Name>System</Name>
     </Reference>
@@ -79,10 +81,18 @@
     <Reference Include="System.Windows.Forms">
       <Name>System.Windows.Forms</Name>
     </Reference>
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemUtil.cs" />
+    <Compile Include="BuildFileTypeDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BuildFileTypeDialog.Designer.cs">
+      <DependentUpon>BuildFileTypeDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="BuildForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -106,12 +116,16 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="SaveConfigDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="ScaledToolStripControls.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="ScriptBuilder.cs" />
     <Compile Include="ScriptWriter.cs" />
     <Compile Include="Settings.cs" />
+    <Compile Include="ShapeBuilder.cs" />
     <Compile Include="SnippetManager.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -189,6 +203,9 @@
     <Compile Include="IndicatorBar.cs">
       <SubType>Component</SubType>
     </Compile>
+    <EmbeddedResource Include="BuildFileTypeDialog.resx">
+      <DependentUpon>BuildFileTypeDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="CodeLabConfigDialog.resx">
       <DependentUpon>CodeLabConfigDialog.cs</DependentUpon>
       <SubType>Designer</SubType>

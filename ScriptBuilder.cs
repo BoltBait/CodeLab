@@ -37,14 +37,16 @@ namespace PaintDotNet.Effects
             CompilerOptions = defaultOptions
         };
         private static CompilerResults result;
-        private static Effect userScriptObject;
+        private static Effect builtEffect;
+        private static FileType builtFileType;
         private static int lineOffset;
         private static string exceptionMsg;
         private const string defaultOptions = " /unsafe /optimize";
         private static readonly Regex preRenderRegex = new Regex(@"void PreRender\(Surface dst, Surface src\)(\s)*{(.|\s)*}", RegexOptions.Singleline);
 
         #region Properties
-        internal static Effect UserScriptObject => userScriptObject;
+        internal static Effect BuiltEffect => builtEffect;
+        internal static FileType BuiltFileType => builtFileType;
         internal static int LineOffset => lineOffset;
         internal static int ColumnOffset => 9;
         internal static string Exception => exceptionMsg;
@@ -73,21 +75,22 @@ namespace PaintDotNet.Effects
         {
             // Generate code
             string SourceCode =
-                ScriptWriter.UsingPartCode +
+                ScriptWriter.UsingPartCode(ProjectType.Effect) +
                 ScriptWriter.prepend_code +
+                ScriptWriter.ConstructorPart(debug) +
                 ScriptWriter.SetRenderPart(Array.Empty<UIElement>(), false, preRenderRegex.IsMatch(scriptText)) +
                 ScriptWriter.UserEnteredPart(scriptText) +
                 ScriptWriter.append_code;
 
             exceptionMsg = null;
-            userScriptObject = null;
+            builtEffect = null;
             // Compile code
             try
             {
                 param.IncludeDebugInformation = debug;
                 result = cscp.CompileAssemblyFromSource(param, SourceCode);
                 param.IncludeDebugInformation = false;
-                lineOffset = (SourceCode.Substring(0, SourceCode.IndexOf("#region User Entered Code", StringComparison.Ordinal)) + "\r\n").CountLines();
+                lineOffset = CalculateLineOffset(SourceCode);
 
                 if (result.Errors.HasErrors)
                 {
@@ -100,7 +103,7 @@ namespace PaintDotNet.Effects
                 {
                     if (type.IsSubclassOf(typeof(Effect)) && !type.IsAbstract)
                     {
-                        userScriptObject = (Effect)type.GetConstructor(Type.EmptyTypes).Invoke(null);
+                        builtEffect = (Effect)type.GetConstructor(Type.EmptyTypes).Invoke(null);
                         Intelli.UserScript = type;
                     }
                     else if (type.DeclaringType != null && type.DeclaringType.FullName.StartsWith(Intelli.UserScriptFullName, StringComparison.Ordinal) && !Intelli.UserDefinedTypes.ContainsKey(type.Name))
@@ -109,7 +112,7 @@ namespace PaintDotNet.Effects
                     }
                 }
 
-                return (userScriptObject != null);
+                return (builtEffect != null);
             }
             catch (Exception ex)
             {
@@ -118,61 +121,218 @@ namespace PaintDotNet.Effects
             return false;
         }
 
-        internal static bool BuildDll(string scriptText, string scriptPath, string subMenuname, string menuName, string iconPath, string author, int majorVersion, int minorVersion, string supportURL, string windowTitle, bool isAdjustment, string description, string keyWords, EffectFlags effectFlags, EffectRenderingSchedule renderingSchedule, HelpType helpType, string helpText)
+        internal static bool BuildEffectDll(string scriptText, string scriptPath, string subMenuname, string menuName, string iconPath, string author, int majorVersion, int minorVersion, string supportURL, string windowTitle, bool isAdjustment, string description, string keyWords, EffectFlags effectFlags, EffectRenderingSchedule renderingSchedule, HelpType helpType, string helpText)
         {
-            string FileName = Path.GetFileNameWithoutExtension(scriptPath);
-
-            // Calculate output path
-            string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
-            string dllPath = Path.Combine(desktopPath, FileName);
-            dllPath = Path.ChangeExtension(dllPath, ".dll");
-            string zipPath = Path.ChangeExtension(dllPath, ".zip");
-            string batPath = Path.Combine(desktopPath, "Install_" + Regex.Replace(FileName, @"[^\w]", ""));
-            batPath = Path.ChangeExtension(batPath, ".bat");
-
-            // Remove non-alpha characters from namespace
-            string NameSpace = Regex.Replace(FileName, @"[^\w]", "") + "Effect";
+            string projectName = Path.GetFileNameWithoutExtension(scriptPath);
 
             // Generate code
-            string SourceCode = ScriptWriter.FullSourceCode(scriptText, FileName, isAdjustment, subMenuname, menuName, iconPath, supportURL, effectFlags, renderingSchedule, author, majorVersion, minorVersion, description, keyWords, windowTitle, helpType, helpText);
+            string sourceCode = ScriptWriter.FullSourceCode(scriptText, projectName, isAdjustment, subMenuname, menuName, iconPath, supportURL, effectFlags, renderingSchedule, author, majorVersion, minorVersion, description, keyWords, windowTitle, helpType, helpText);
+
+            string compilerOptions = defaultOptions;
+
+            // Remove non-alpha characters from namespace
+            string nameSpace = Regex.Replace(projectName, @"[^\w]", "") + "Effect";
+
+            if (File.Exists(iconPath))
+            {
+                // If an icon is specified and exists, add it to the build as an imbedded resource to the same namespace as the effect.
+                compilerOptions += " /res:\"" + iconPath + "\",\"" + nameSpace + "." + Path.GetFileName(iconPath) + "\" ";
+
+                // If an icon exists, see if a sample image exists
+                string samplepath = Path.ChangeExtension(iconPath, ".sample.png");
+                if (File.Exists(samplepath))
+                {
+                    // If an image exists in the icon directory with a ".sample.png" extension, add it to the build as an imbedded resource.
+                    compilerOptions += " /res:\"" + samplepath + "\",\"" + nameSpace + "." + Path.GetFileName(samplepath) + "\" ";
+                }
+            }
+            string helpPath = Path.ChangeExtension(scriptPath, ".rtz");
+            if (helpType == HelpType.RichText && File.Exists(helpPath))
+            {
+                // If an help file exists in the source directory with a ".rtz" extension, add it to the build as an imbedded resource.
+                compilerOptions += " /res:\"" + helpPath + "\",\"" + nameSpace + "." + Path.GetFileName(helpPath) + "\" ";
+            }
+
+            return BuildDll(projectName, compilerOptions, sourceCode, ProjectType.Effect);
+        }
+
+        internal static bool BuildFullPreview(string scriptText)
+        {
+            const string FileName = "PreviewEffect";
+
+            // Generate code
+            UIElement[] UserControls = UIElement.ProcessUIControls(scriptText, ProjectType.Effect);
+
+            string SourceCode =
+                ScriptWriter.UsingPartCode(ProjectType.Effect) +
+                ScriptWriter.NamespacePart(FileName, ProjectType.Effect) +
+                ScriptWriter.EffectPart(UserControls, FileName, string.Empty, FileName, string.Empty, EffectFlags.None, EffectRenderingSchedule.DefaultTilesForCpuRendering) +
+                ScriptWriter.PropertyPart(UserControls, FileName, "FULL UI PREVIEW - Temporarily renders to canvas", HelpType.None, string.Empty, ProjectType.Effect) +
+                ScriptWriter.SetRenderPart(UserControls, true, preRenderRegex.IsMatch(scriptText)) +
+                ScriptWriter.RenderLoopPart(UserControls) +
+                ScriptWriter.UserEnteredPart(scriptText) +
+                ScriptWriter.EndPart();
 
             exceptionMsg = null;
+            builtEffect = null;
             // Compile code
             try
             {
-                string newCompilerOptions = defaultOptions;
-                if (File.Exists(iconPath))
-                {
-                    // If an icon is specified and exists, add it to the build as an imbedded resource to the same namespace as the effect.
-                    newCompilerOptions += " /res:\"" + iconPath + "\",\"" + NameSpace + "." + Path.GetFileName(iconPath) + "\" ";
-
-                    // If an icon exists, see if a sample image exists
-                    string samplepath = Path.ChangeExtension(iconPath, ".sample.png");
-                    if (File.Exists(samplepath))
-                    {
-                        // If an image exists in the icon directory with a ".sample.png" extension, add it to the build as an imbedded resource.
-                        newCompilerOptions += " /res:\"" + samplepath + "\",\"" + NameSpace + "." + Path.GetFileName(samplepath) + "\" ";
-                    }
-                }
-                string HelpPath = Path.ChangeExtension(scriptPath, ".rtz");
-                if (helpType == HelpType.RichText && File.Exists(HelpPath))
-                {
-                    // If an help file exists in the source directory with a ".rtz" extension, add it to the build as an imbedded resource.
-                    newCompilerOptions += " /res:\"" + HelpPath + "\",\"" + NameSpace + "." + Path.GetFileName(HelpPath) + "\" ";
-                }
-
-                newCompilerOptions += " /debug- /target:library /out:\"" + dllPath + "\"";
-
-                param.CompilerOptions = newCompilerOptions;
                 result = cscp.CompileAssemblyFromSource(param, SourceCode);
-                param.CompilerOptions = defaultOptions;
-
-                lineOffset = (SourceCode.Substring(0, SourceCode.IndexOf("#region User Entered Code", StringComparison.Ordinal)) + "\r\n").CountLines();
 
                 if (result.Errors.HasErrors)
                 {
                     return false;
                 }
+
+                foreach (Type type in result.CompiledAssembly.GetTypes())
+                {
+                    if (type.IsSubclassOf(typeof(PropertyBasedEffect)) && !type.IsAbstract)
+                    {
+                        builtEffect = (Effect)type.GetConstructor(Type.EmptyTypes).Invoke(null);
+                        return true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                exceptionMsg = ex.Message;
+            }
+            return false;
+        }
+
+        internal static bool BuildUiPreview(string uiCode)
+        {
+            const string FileName = "UiPreviewEffect";
+            uiCode = "#region UICode\r\n" + uiCode + "\r\n#endregion\r\n";
+
+            // Generate code
+            UIElement[] UserControls = UIElement.ProcessUIControls(uiCode, ProjectType.Effect);
+
+            string SourceCode =
+                ScriptWriter.UsingPartCode(ProjectType.Effect) +
+                ScriptWriter.NamespacePart(FileName, ProjectType.Effect) +
+                ScriptWriter.EffectPart(UserControls, FileName, string.Empty, "UI PREVIEW - Does NOT Render to canvas", string.Empty, EffectFlags.None, EffectRenderingSchedule.DefaultTilesForCpuRendering) +
+                ScriptWriter.PropertyPart(UserControls, FileName, string.Empty, HelpType.None, string.Empty, ProjectType.Effect) +
+                ScriptWriter.RenderLoopPart(UserControls) +
+                uiCode +
+                ScriptWriter.EmptyCode +
+                ScriptWriter.EndPart();
+
+            builtEffect = null;
+            // Compile code
+            try
+            {
+                result = cscp.CompileAssemblyFromSource(param, SourceCode);
+
+                if (result.Errors.HasErrors)
+                {
+                    return false;
+                }
+
+                foreach (Type type in result.CompiledAssembly.GetTypes())
+                {
+                    if (type.IsSubclassOf(typeof(PropertyBasedEffect)) && !type.IsAbstract)
+                    {
+                        builtEffect = (Effect)type.GetConstructor(Type.EmptyTypes).Invoke(null);
+                        return true;
+                    }
+                }
+            }
+            catch
+            {
+            }
+            return false;
+        }
+
+        internal static bool BuildFileType(string fileTypeCode, bool debug)
+        {
+            const string projectName = "MyFileType";
+
+            // Generate code
+            UIElement[] userControls = UIElement.ProcessUIControls(fileTypeCode, ProjectType.FileType);
+
+            string sourceCode =
+                ScriptWriter.UsingPartCode(ProjectType.FileType) +
+                ScriptWriter.NamespacePart(projectName, ProjectType.FileType) +
+                ScriptWriter.FileTypePart(projectName, "\".foo\"", "\".foo\"", false, projectName) +
+                ScriptWriter.ConstructorPart(debug) +
+                ScriptWriter.PropertyPart(userControls, projectName, string.Empty, HelpType.None, string.Empty, ProjectType.FileType) +
+                ScriptWriter.FileTypePart2(userControls) +
+                ScriptWriter.UserEnteredPart(fileTypeCode) +
+                ScriptWriter.EndPart();
+
+            exceptionMsg = null;
+            builtEffect = null;
+            builtFileType = null;
+
+            // Compile code
+            try
+            {
+                param.IncludeDebugInformation = debug;
+                result = cscp.CompileAssemblyFromSource(param, sourceCode);
+                param.IncludeDebugInformation = false;
+                lineOffset = CalculateLineOffset(sourceCode);
+
+                if (result.Errors.HasErrors)
+                {
+                    return false;
+                }
+
+                Intelli.UserDefinedTypes.Clear();
+
+                foreach (Type type in result.CompiledAssembly.GetTypes())
+                {
+                    if (type.IsSubclassOf(typeof(PropertyBasedFileType)) && !type.IsAbstract)
+                    {
+                        builtFileType = (FileType)type.GetConstructors(System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)[0].Invoke(null);
+                        return true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                exceptionMsg = ex.Message;
+            }
+
+            return false;
+        }
+
+        internal static bool BuildFileTypeDll(string scriptText, string scriptPath, string author, int majorVersion, int minorVersion, string supportURL, string description, string loadExt, string saveExt, bool supoortLayers, string title)
+        {
+            string projectName = Path.GetFileNameWithoutExtension(scriptPath);
+            string sourceCode = ScriptWriter.FullFileTypeSourceCode(scriptText, projectName, author, majorVersion, minorVersion, supportURL, description, loadExt, saveExt, supoortLayers, title);
+
+            return BuildDll(projectName, defaultOptions, sourceCode, ProjectType.FileType);
+        }
+
+        private static bool BuildDll(string projectName, string compilerOptions, string sourceCode, ProjectType projectType)
+        {
+            exceptionMsg = null;
+
+            try
+            {
+                // Calculate output path
+                string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
+                string dllPath = Path.Combine(desktopPath, projectName);
+                dllPath = Path.ChangeExtension(dllPath, ".dll");
+
+                compilerOptions += " /debug- /target:library /out:\"" + dllPath + "\"";
+
+                param.CompilerOptions = compilerOptions;
+                result = cscp.CompileAssemblyFromSource(param, sourceCode);
+                param.CompilerOptions = defaultOptions;
+
+                lineOffset = CalculateLineOffset(sourceCode);
+
+                if (result.Errors.HasErrors)
+                {
+                    return false;
+                }
+
+                string zipPath = Path.ChangeExtension(dllPath, ".zip");
+                string batPath = Path.Combine(desktopPath, "Install_" + Regex.Replace(projectName, @"[^\w]", ""));
+                batPath = Path.ChangeExtension(batPath, ".bat");
 
                 // Create install bat file
                 if (File.Exists(batPath))
@@ -183,6 +343,8 @@ namespace PaintDotNet.Effects
                 {
                     File.Delete(zipPath);
                 }
+
+                string pluginDirName = (projectType == ProjectType.Effect) ? "Effects" : "FileTypes";
 
                 // Try this in Russian for outputting Russian characters to the install batch file:
 
@@ -223,9 +385,9 @@ namespace PaintDotNet.Effects
                 sw.WriteLine("@echo off");
                 sw.WriteLine("cls");
                 sw.WriteLine("echo.");
-                sw.WriteLine("echo Installing " + Path.GetFileName(dllPath) + " to %PDN_DIR%\\Effects\\");
+                sw.WriteLine("echo Installing " + Path.GetFileName(dllPath) + " to %PDN_DIR%\\" + pluginDirName + "\\");
                 sw.WriteLine("echo.");
-                sw.WriteLine("copy /y \"" + Path.GetFileName(dllPath) + "\" \"%PDN_DIR%\\Effects\\\"");
+                sw.WriteLine("copy /y \"" + Path.GetFileName(dllPath) + "\" \"%PDN_DIR%\\" + pluginDirName + "\\\"");
                 sw.WriteLine("if '%errorlevel%' == '0' (");
                 sw.WriteLine("goto success");
                 sw.WriteLine(") else (");
@@ -248,10 +410,10 @@ namespace PaintDotNet.Effects
                 sw.WriteLine("echo I will install this effect in your Documents folder instead");
                 sw.WriteLine("echo in case you are using the store version.");
                 sw.WriteLine("echo.");
-                sw.WriteLine("echo Installing " + Path.GetFileName(dllPath) + " to %PDN_DIR%\\paint.net App Files\\Effects\\");
+                sw.WriteLine("echo Installing " + Path.GetFileName(dllPath) + " to %PDN_DIR%\\paint.net App Files\\" + pluginDirName + "\\");
                 sw.WriteLine("echo.");
-                sw.WriteLine("mkdir \"%PDN_DIR%\\paint.net App Files\\Effects\\\" 2>nul");
-                sw.WriteLine("copy /y \"" + Path.GetFileName(dllPath) + "\" \"%PDN_DIR%\\paint.net App Files\\Effects\\\"");
+                sw.WriteLine("mkdir \"%PDN_DIR%\\paint.net App Files\\" + pluginDirName + "\\\" 2>nul");
+                sw.WriteLine("copy /y \"" + Path.GetFileName(dllPath) + "\" \"%PDN_DIR%\\paint.net App Files\\" + pluginDirName + "\\\"");
                 sw.WriteLine("if '%errorlevel%' == '0' (");
                 sw.WriteLine("goto success");
                 sw.WriteLine(") else (");
@@ -315,96 +477,13 @@ namespace PaintDotNet.Effects
             {
                 exceptionMsg = ex.Message;
             }
+
             return false;
         }
 
-        internal static bool BuildFullPreview(string scriptText)
+        private static int CalculateLineOffset(string sourceCode)
         {
-            const string FileName = "PreviewEffect";
-
-            // Generate code
-            UIElement[] UserControls = UIElement.ProcessUIControls(scriptText);
-
-            string SourceCode =
-                ScriptWriter.UsingPartCode +
-                ScriptWriter.NamespacePart(FileName) +
-                ScriptWriter.EffectPart(UserControls, FileName, string.Empty, FileName, string.Empty, EffectFlags.None, EffectRenderingSchedule.DefaultTilesForCpuRendering) +
-                ScriptWriter.PropertyPart(UserControls, FileName, "FULL UI PREVIEW - Temporarily renders to canvas", HelpType.None, string.Empty) +
-                ScriptWriter.SetRenderPart(UserControls, true, preRenderRegex.IsMatch(scriptText)) +
-                ScriptWriter.RenderLoopPart(UserControls) +
-                ScriptWriter.UserEnteredPart(scriptText) +
-                ScriptWriter.EndPart();
-
-            exceptionMsg = null;
-            userScriptObject = null;
-            // Compile code
-            try
-            {
-                result = cscp.CompileAssemblyFromSource(param, SourceCode);
-
-                if (result.Errors.HasErrors)
-                {
-                    return false;
-                }
-
-                foreach (Type type in result.CompiledAssembly.GetTypes())
-                {
-                    if (type.IsSubclassOf(typeof(PropertyBasedEffect)) && !type.IsAbstract)
-                    {
-                        userScriptObject = (Effect)type.GetConstructor(Type.EmptyTypes).Invoke(null);
-                        return true;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                exceptionMsg = ex.Message;
-            }
-            return false;
-        }
-
-        internal static bool BuildUiPreview(string uiCode)
-        {
-            const string FileName = "UiPreviewEffect";
-            uiCode = "#region UICode\r\n" + uiCode + "\r\n#endregion\r\n";
-
-            // Generate code
-            UIElement[] UserControls = UIElement.ProcessUIControls(uiCode);
-
-            string SourceCode =
-                ScriptWriter.UsingPartCode +
-                ScriptWriter.NamespacePart(FileName) +
-                ScriptWriter.EffectPart(UserControls, FileName, string.Empty, "UI PREVIEW - Does NOT Render to canvas", string.Empty, EffectFlags.None, EffectRenderingSchedule.DefaultTilesForCpuRendering) +
-                ScriptWriter.PropertyPart(UserControls, FileName, string.Empty, HelpType.None, string.Empty) +
-                ScriptWriter.RenderLoopPart(UserControls) +
-                uiCode +
-                ScriptWriter.EmptyCode +
-                ScriptWriter.EndPart();
-
-            userScriptObject = null;
-            // Compile code
-            try
-            {
-                result = cscp.CompileAssemblyFromSource(param, SourceCode);
-
-                if (result.Errors.HasErrors)
-                {
-                    return false;
-                }
-
-                foreach (Type type in result.CompiledAssembly.GetTypes())
-                {
-                    if (type.IsSubclassOf(typeof(PropertyBasedEffect)) && !type.IsAbstract)
-                    {
-                        userScriptObject = (Effect)type.GetConstructor(Type.EmptyTypes).Invoke(null);
-                        return true;
-                    }
-                }
-            }
-            catch
-            {
-            }
-            return false;
+            return sourceCode.Substring(0, sourceCode.IndexOf("#region User Entered Code", StringComparison.Ordinal)).CountLines() + 1;
         }
     }
 }

@@ -192,46 +192,15 @@ namespace PaintDotNet.Effects
                 switch (value)
                 {
                     case Theme.Dark:
-                        this.Styles[Style.Default].BackColor = Color.FromArgb(30, 30, 30);
-
-                        // Configure the CPP (C#) lexer styles
-                        for (int i = 0; i <= Preprocessor; i += Preprocessor)
+                        switch (this.Lexer)
                         {
-                            this.Styles[Style.Cpp.Default + i].ForeColor = Color.White;
-                            this.Styles[Style.Cpp.Default + i].BackColor = Color.FromArgb(30, 30, 30);
-                            this.Styles[Style.Cpp.Identifier + i].ForeColor = Color.Gainsboro;
-                            this.Styles[Style.Cpp.Identifier + i].BackColor = Color.FromArgb(30, 30, 30);
-                            this.Styles[Style.Cpp.Comment + i].ForeColor = Color.FromArgb(87, 166, 74); // Green
-                            this.Styles[Style.Cpp.Comment + i].BackColor = Color.FromArgb(30, 30, 30);
-                            this.Styles[Style.Cpp.CommentLine + i].ForeColor = Color.FromArgb(87, 166, 74); // Green
-                            this.Styles[Style.Cpp.CommentLine + i].BackColor = Color.FromArgb(30, 30, 30);
-                            this.Styles[Style.Cpp.CommentLineDoc + i].ForeColor = Color.Gray;
-                            this.Styles[Style.Cpp.CommentLineDoc + i].BackColor = Color.FromArgb(30, 30, 30);
-                            this.Styles[Style.Cpp.Number + i].ForeColor = Color.FromArgb(181, 206, 168);
-                            this.Styles[Style.Cpp.Number + i].BackColor = Color.FromArgb(30, 30, 30);
-                            this.Styles[Style.Cpp.Word2 + i].ForeColor = Color.FromArgb(78, 201, 176);
-                            this.Styles[Style.Cpp.Word2 + i].BackColor = Color.FromArgb(30, 30, 30);
-                            this.Styles[Style.Cpp.Word + i].ForeColor = Color.FromArgb(86, 156, 214);
-                            this.Styles[Style.Cpp.Word + i].BackColor = Color.FromArgb(30, 30, 30);
-                            this.Styles[Style.Cpp.String + i].ForeColor = Color.FromArgb(214, 157, 133); // Red
-                            this.Styles[Style.Cpp.String + i].BackColor = Color.FromArgb(30, 30, 30);
-                            this.Styles[Style.Cpp.Character + i].ForeColor = Color.FromArgb(214, 157, 133); // Red
-                            this.Styles[Style.Cpp.Character + i].BackColor = Color.FromArgb(30, 30, 30);
-                            this.Styles[Style.Cpp.Verbatim + i].ForeColor = Color.FromArgb(214, 157, 133); // Red
-                            this.Styles[Style.Cpp.Verbatim + i].BackColor = Color.FromArgb(30, 30, 30);
-                            this.Styles[Style.Cpp.StringEol + i].ForeColor = Color.FromArgb(214, 157, 133); // Red
-                            this.Styles[Style.Cpp.StringEol + i].BackColor = Color.FromArgb(30, 30, 30);
-                            this.Styles[Style.Cpp.Operator + i].ForeColor = Color.FromArgb(180, 180, 180);
-                            this.Styles[Style.Cpp.Operator + i].BackColor = Color.FromArgb(30, 30, 30);
-                            this.Styles[Style.Cpp.Preprocessor + i].ForeColor = Color.FromArgb(155, 155, 155);
-                            this.Styles[Style.Cpp.Preprocessor + i].BackColor = Color.FromArgb(30, 30, 30);
-                            this.Styles[Style.Cpp.Regex + i].ForeColor = Color.Gainsboro;
-                            this.Styles[Style.Cpp.Regex + i].BackColor = Color.FromArgb(30, 30, 30);
-                            if (indexForPurpleWords > 0)
-                            {
-                                this.Styles[indexForPurpleWords + i].ForeColor = Color.FromArgb(216, 160, 223);
-                                this.Styles[indexForPurpleWords + i].BackColor = Color.FromArgb(30, 30, 30);
-                            }
+                            case Lexer.Xml:
+                                SetXMLDarkStyles();
+                                break;
+                            case Lexer.Cpp:
+                            default:
+                                SetCSharpDarkStyles();
+                                break;
                         }
 
                         // Line Numbers
@@ -288,46 +257,15 @@ namespace PaintDotNet.Effects
 
                     case Theme.Light:
                     default:
-                        this.Styles[Style.Default].BackColor = Color.White;
-
-                        // Configure the CPP (C#) lexer styles
-                        for (int i = 0; i <= Preprocessor; i += Preprocessor)
+                        switch (this.Lexer)
                         {
-                            this.Styles[Style.Cpp.Default + i].ForeColor = Color.Black;
-                            this.Styles[Style.Cpp.Default + i].BackColor = Color.White;
-                            this.Styles[Style.Cpp.Identifier + i].ForeColor = Color.Black;
-                            this.Styles[Style.Cpp.Identifier + i].BackColor = Color.White;
-                            this.Styles[Style.Cpp.Comment + i].ForeColor = Color.Green;
-                            this.Styles[Style.Cpp.Comment + i].BackColor = Color.White;
-                            this.Styles[Style.Cpp.CommentLine + i].ForeColor = Color.Green;
-                            this.Styles[Style.Cpp.CommentLine + i].BackColor = Color.White;
-                            this.Styles[Style.Cpp.CommentLineDoc + i].ForeColor = Color.Gray;
-                            this.Styles[Style.Cpp.CommentLineDoc + i].BackColor = Color.White;
-                            this.Styles[Style.Cpp.Number + i].ForeColor = Color.Black;
-                            this.Styles[Style.Cpp.Number + i].BackColor = Color.White;
-                            this.Styles[Style.Cpp.Word2 + i].ForeColor = Color.FromArgb(43, 145, 175);
-                            this.Styles[Style.Cpp.Word2 + i].BackColor = Color.White;
-                            this.Styles[Style.Cpp.Word + i].ForeColor = Color.Blue;
-                            this.Styles[Style.Cpp.Word + i].BackColor = Color.White;
-                            this.Styles[Style.Cpp.String + i].ForeColor = Color.FromArgb(163, 21, 21); // Red
-                            this.Styles[Style.Cpp.String + i].BackColor = Color.White;
-                            this.Styles[Style.Cpp.Character + i].ForeColor = Color.FromArgb(163, 21, 21); // Red
-                            this.Styles[Style.Cpp.Character + i].BackColor = Color.White;
-                            this.Styles[Style.Cpp.Verbatim + i].ForeColor = Color.FromArgb(128, 0, 0); // Red
-                            this.Styles[Style.Cpp.Verbatim + i].BackColor = Color.White;
-                            this.Styles[Style.Cpp.StringEol + i].ForeColor = Color.FromArgb(163, 21, 21); // Red
-                            this.Styles[Style.Cpp.StringEol + i].BackColor = Color.White;
-                            this.Styles[Style.Cpp.Operator + i].ForeColor = Color.Black;
-                            this.Styles[Style.Cpp.Operator + i].BackColor = Color.White;
-                            this.Styles[Style.Cpp.Preprocessor + i].ForeColor = Color.Gray;
-                            this.Styles[Style.Cpp.Preprocessor + i].BackColor = Color.White;
-                            this.Styles[Style.Cpp.Regex + i].ForeColor = Color.Black;
-                            this.Styles[Style.Cpp.Regex + i].BackColor = Color.White;
-                            if (indexForPurpleWords > 0)
-                            {
-                                this.Styles[indexForPurpleWords + i].ForeColor = Color.FromArgb(143, 8, 196);
-                                this.Styles[indexForPurpleWords + i].BackColor = Color.White;
-                            }
+                            case Lexer.Xml:
+                                SetXMLLightStyles();
+                                break;
+                            case Lexer.Cpp:
+                            default:
+                                SetCSharpLightStyles();
+                                break;
                         }
 
                         // Line Numbers
@@ -386,6 +324,200 @@ namespace PaintDotNet.Effects
                 findPanel.UpdateTheme();
                 lightBulbMenu.Renderer = PdnTheme.Renderer;
                 indicatorBar.Theme = value;
+            }
+        }
+
+        private void SetCSharpDarkStyles()
+        {
+            this.Styles[Style.Default].BackColor = Color.FromArgb(30, 30, 30);
+
+            // Configure the CPP (C#) lexer styles
+            for (int i = 0; i <= Preprocessor; i += Preprocessor)
+            {
+                this.Styles[Style.Cpp.Default + i].ForeColor = Color.White;
+                this.Styles[Style.Cpp.Default + i].BackColor = Color.FromArgb(30, 30, 30);
+                this.Styles[Style.Cpp.Identifier + i].ForeColor = Color.Gainsboro;
+                this.Styles[Style.Cpp.Identifier + i].BackColor = Color.FromArgb(30, 30, 30);
+                this.Styles[Style.Cpp.Comment + i].ForeColor = Color.FromArgb(87, 166, 74); // Green
+                this.Styles[Style.Cpp.Comment + i].BackColor = Color.FromArgb(30, 30, 30);
+                this.Styles[Style.Cpp.CommentLine + i].ForeColor = Color.FromArgb(87, 166, 74); // Green
+                this.Styles[Style.Cpp.CommentLine + i].BackColor = Color.FromArgb(30, 30, 30);
+                this.Styles[Style.Cpp.CommentLineDoc + i].ForeColor = Color.Gray;
+                this.Styles[Style.Cpp.CommentLineDoc + i].BackColor = Color.FromArgb(30, 30, 30);
+                this.Styles[Style.Cpp.Number + i].ForeColor = Color.FromArgb(181, 206, 168);
+                this.Styles[Style.Cpp.Number + i].BackColor = Color.FromArgb(30, 30, 30);
+                this.Styles[Style.Cpp.Word2 + i].ForeColor = Color.FromArgb(78, 201, 176);
+                this.Styles[Style.Cpp.Word2 + i].BackColor = Color.FromArgb(30, 30, 30);
+                this.Styles[Style.Cpp.Word + i].ForeColor = Color.FromArgb(86, 156, 214);
+                this.Styles[Style.Cpp.Word + i].BackColor = Color.FromArgb(30, 30, 30);
+                this.Styles[Style.Cpp.String + i].ForeColor = Color.FromArgb(214, 157, 133); // Red
+                this.Styles[Style.Cpp.String + i].BackColor = Color.FromArgb(30, 30, 30);
+                this.Styles[Style.Cpp.Character + i].ForeColor = Color.FromArgb(214, 157, 133); // Red
+                this.Styles[Style.Cpp.Character + i].BackColor = Color.FromArgb(30, 30, 30);
+                this.Styles[Style.Cpp.Verbatim + i].ForeColor = Color.FromArgb(214, 157, 133); // Red
+                this.Styles[Style.Cpp.Verbatim + i].BackColor = Color.FromArgb(30, 30, 30);
+                this.Styles[Style.Cpp.StringEol + i].ForeColor = Color.FromArgb(214, 157, 133); // Red
+                this.Styles[Style.Cpp.StringEol + i].BackColor = Color.FromArgb(30, 30, 30);
+                this.Styles[Style.Cpp.Operator + i].ForeColor = Color.FromArgb(180, 180, 180);
+                this.Styles[Style.Cpp.Operator + i].BackColor = Color.FromArgb(30, 30, 30);
+                this.Styles[Style.Cpp.Preprocessor + i].ForeColor = Color.FromArgb(155, 155, 155);
+                this.Styles[Style.Cpp.Preprocessor + i].BackColor = Color.FromArgb(30, 30, 30);
+                this.Styles[Style.Cpp.Regex + i].ForeColor = Color.Gainsboro;
+                this.Styles[Style.Cpp.Regex + i].BackColor = Color.FromArgb(30, 30, 30);
+                if (indexForPurpleWords > 0)
+                {
+                    this.Styles[indexForPurpleWords + i].ForeColor = Color.FromArgb(216, 160, 223);
+                    this.Styles[indexForPurpleWords + i].BackColor = Color.FromArgb(30, 30, 30);
+                }
+            }
+        }
+
+        private void SetCSharpLightStyles()
+        {
+            this.Styles[Style.Default].BackColor = Color.White;
+
+            // Configure the CPP (C#) lexer styles
+            for (int i = 0; i <= Preprocessor; i += Preprocessor)
+            {
+                this.Styles[Style.Cpp.Default + i].ForeColor = Color.Black;
+                this.Styles[Style.Cpp.Default + i].BackColor = Color.White;
+                this.Styles[Style.Cpp.Identifier + i].ForeColor = Color.Black;
+                this.Styles[Style.Cpp.Identifier + i].BackColor = Color.White;
+                this.Styles[Style.Cpp.Comment + i].ForeColor = Color.Green;
+                this.Styles[Style.Cpp.Comment + i].BackColor = Color.White;
+                this.Styles[Style.Cpp.CommentLine + i].ForeColor = Color.Green;
+                this.Styles[Style.Cpp.CommentLine + i].BackColor = Color.White;
+                this.Styles[Style.Cpp.CommentLineDoc + i].ForeColor = Color.Gray;
+                this.Styles[Style.Cpp.CommentLineDoc + i].BackColor = Color.White;
+                this.Styles[Style.Cpp.Number + i].ForeColor = Color.Black;
+                this.Styles[Style.Cpp.Number + i].BackColor = Color.White;
+                this.Styles[Style.Cpp.Word2 + i].ForeColor = Color.FromArgb(43, 145, 175);
+                this.Styles[Style.Cpp.Word2 + i].BackColor = Color.White;
+                this.Styles[Style.Cpp.Word + i].ForeColor = Color.Blue;
+                this.Styles[Style.Cpp.Word + i].BackColor = Color.White;
+                this.Styles[Style.Cpp.String + i].ForeColor = Color.FromArgb(163, 21, 21); // Red
+                this.Styles[Style.Cpp.String + i].BackColor = Color.White;
+                this.Styles[Style.Cpp.Character + i].ForeColor = Color.FromArgb(163, 21, 21); // Red
+                this.Styles[Style.Cpp.Character + i].BackColor = Color.White;
+                this.Styles[Style.Cpp.Verbatim + i].ForeColor = Color.FromArgb(128, 0, 0); // Red
+                this.Styles[Style.Cpp.Verbatim + i].BackColor = Color.White;
+                this.Styles[Style.Cpp.StringEol + i].ForeColor = Color.FromArgb(163, 21, 21); // Red
+                this.Styles[Style.Cpp.StringEol + i].BackColor = Color.White;
+                this.Styles[Style.Cpp.Operator + i].ForeColor = Color.Black;
+                this.Styles[Style.Cpp.Operator + i].BackColor = Color.White;
+                this.Styles[Style.Cpp.Preprocessor + i].ForeColor = Color.Gray;
+                this.Styles[Style.Cpp.Preprocessor + i].BackColor = Color.White;
+                this.Styles[Style.Cpp.Regex + i].ForeColor = Color.Black;
+                this.Styles[Style.Cpp.Regex + i].BackColor = Color.White;
+                if (indexForPurpleWords > 0)
+                {
+                    this.Styles[indexForPurpleWords + i].ForeColor = Color.FromArgb(143, 8, 196);
+                    this.Styles[indexForPurpleWords + i].BackColor = Color.White;
+                }
+            }
+        }
+
+        private void SetXMLDarkStyles()
+        {
+            this.Styles[Style.Default].BackColor = Color.FromArgb(30, 30, 30);
+
+            // Configure the XML lexer styles
+            for (int i = 0; i <= Preprocessor; i += Preprocessor)
+            {
+                this.Styles[Style.Xml.Default + i].ForeColor = Color.White;
+                this.Styles[Style.Xml.Default + i].BackColor = Color.FromArgb(30, 30, 30);
+                this.Styles[Style.Xml.Tag + i].ForeColor = Color.FromArgb(86, 156, 214);
+                this.Styles[Style.Xml.Tag + i].BackColor = Color.FromArgb(30, 30, 30);
+                this.Styles[Style.Xml.TagUnknown + i].ForeColor = Color.SkyBlue;
+                this.Styles[Style.Xml.TagUnknown + i].BackColor = Color.FromArgb(30, 30, 30);
+                this.Styles[Style.Xml.Attribute + i].ForeColor = Color.FromArgb(146, 202, 244);
+                this.Styles[Style.Xml.Attribute + i].BackColor = Color.FromArgb(30, 30, 30);
+                this.Styles[Style.Xml.AttributeUnknown + i].ForeColor = Color.PowderBlue;
+                this.Styles[Style.Xml.AttributeUnknown + i].BackColor = Color.FromArgb(30, 30, 30);
+                this.Styles[Style.Xml.Number + i].ForeColor = Color.FromArgb(181, 206, 168);
+                this.Styles[Style.Xml.Number + i].BackColor = Color.FromArgb(30, 30, 30);
+                this.Styles[Style.Xml.DoubleString + i].ForeColor = Color.FromArgb(200, 200, 200);
+                this.Styles[Style.Xml.DoubleString + i].BackColor = Color.FromArgb(30, 30, 30);
+                this.Styles[Style.Xml.SingleString + i].ForeColor = Color.FromArgb(200, 200, 200);
+                this.Styles[Style.Xml.SingleString + i].BackColor = Color.FromArgb(30, 30, 30);
+                this.Styles[Style.Xml.Other + i].ForeColor = Color.Gray;
+                this.Styles[Style.Xml.Other + i].BackColor = Color.FromArgb(30, 30, 30);
+                this.Styles[Style.Xml.Comment + i].ForeColor = Color.FromArgb(87, 166, 74);
+                this.Styles[Style.Xml.Comment + i].BackColor = Color.FromArgb(30, 30, 30);
+                this.Styles[Style.Xml.Entity + i].ForeColor = Color.LimeGreen;
+                this.Styles[Style.Xml.Entity + i].BackColor = Color.FromArgb(30, 30, 30);
+                this.Styles[Style.Xml.TagEnd + i].ForeColor = Color.FromArgb(86, 156, 214);
+                this.Styles[Style.Xml.TagEnd + i].BackColor = Color.FromArgb(30, 30, 30);
+                this.Styles[Style.Xml.XmlStart + i].ForeColor = Color.FromArgb(86, 156, 214);
+                this.Styles[Style.Xml.XmlStart + i].BackColor = Color.FromArgb(30, 30, 30);
+                this.Styles[Style.Xml.XmlEnd + i].ForeColor = Color.FromArgb(86, 156, 214);
+                this.Styles[Style.Xml.XmlEnd + i].BackColor = Color.FromArgb(30, 30, 30);
+                this.Styles[Style.Xml.Script + i].ForeColor = Color.Green;
+                this.Styles[Style.Xml.Script + i].BackColor = Color.FromArgb(30, 30, 30);
+                this.Styles[Style.Xml.Asp + i].ForeColor = Color.Orange;
+                this.Styles[Style.Xml.Asp + i].BackColor = Color.FromArgb(30, 30, 30);
+                this.Styles[Style.Xml.AspAt + i].ForeColor = Color.Purple;
+                this.Styles[Style.Xml.AspAt + i].BackColor = Color.FromArgb(30, 30, 30);
+                this.Styles[Style.Xml.CData + i].ForeColor = Color.FromArgb(233, 213, 133);
+                this.Styles[Style.Xml.CData + i].BackColor = Color.FromArgb(30, 30, 30);
+                this.Styles[Style.Xml.Question + i].ForeColor = Color.Salmon;
+                this.Styles[Style.Xml.Question + i].BackColor = Color.FromArgb(30, 30, 30);
+                this.Styles[Style.Xml.Value + i].ForeColor = Color.Crimson;
+                this.Styles[Style.Xml.Value + i].BackColor = Color.FromArgb(30, 30, 30);
+                this.Styles[Style.Xml.XcComment + i].ForeColor = Color.Aquamarine;
+                this.Styles[Style.Xml.XcComment + i].BackColor = Color.FromArgb(30, 30, 30);
+            }
+        }
+
+        private void SetXMLLightStyles()
+        {
+            this.Styles[Style.Default].BackColor = Color.White;
+
+            // Configure the XML lexer styles
+            for (int i = 0; i <= Preprocessor; i += Preprocessor)
+            {
+                this.Styles[Style.Xml.Default + i].ForeColor = Color.White;
+                this.Styles[Style.Xml.Default + i].BackColor = Color.White;
+                this.Styles[Style.Xml.Tag + i].ForeColor = Color.FromArgb(163, 21, 21);
+                this.Styles[Style.Xml.Tag + i].BackColor = Color.White;
+                this.Styles[Style.Xml.TagUnknown + i].ForeColor = Color.SkyBlue;
+                this.Styles[Style.Xml.TagUnknown + i].BackColor = Color.White;
+                this.Styles[Style.Xml.Attribute + i].ForeColor = Color.Red;
+                this.Styles[Style.Xml.Attribute + i].BackColor = Color.White;
+                this.Styles[Style.Xml.AttributeUnknown + i].ForeColor = Color.PowderBlue;
+                this.Styles[Style.Xml.AttributeUnknown + i].BackColor = Color.White;
+                this.Styles[Style.Xml.Number + i].ForeColor = Color.FromArgb(181, 206, 168);
+                this.Styles[Style.Xml.Number + i].BackColor = Color.White;
+                this.Styles[Style.Xml.DoubleString + i].ForeColor = Color.Blue;
+                this.Styles[Style.Xml.DoubleString + i].BackColor = Color.White;
+                this.Styles[Style.Xml.SingleString + i].ForeColor = Color.Blue;
+                this.Styles[Style.Xml.SingleString + i].BackColor = Color.White;
+                this.Styles[Style.Xml.Other + i].ForeColor = Color.Blue;
+                this.Styles[Style.Xml.Other + i].BackColor = Color.White;
+                this.Styles[Style.Xml.Comment + i].ForeColor = Color.Green;
+                this.Styles[Style.Xml.Comment + i].BackColor = Color.White;
+                this.Styles[Style.Xml.Entity + i].ForeColor = Color.LimeGreen;
+                this.Styles[Style.Xml.Entity + i].BackColor = Color.White;
+                this.Styles[Style.Xml.TagEnd + i].ForeColor = Color.FromArgb(163, 21, 21);
+                this.Styles[Style.Xml.TagEnd + i].BackColor = Color.White;
+                this.Styles[Style.Xml.XmlStart + i].ForeColor = Color.FromArgb(163, 21, 21);
+                this.Styles[Style.Xml.XmlStart + i].BackColor = Color.White;
+                this.Styles[Style.Xml.XmlEnd + i].ForeColor = Color.FromArgb(163, 21, 21);
+                this.Styles[Style.Xml.XmlEnd + i].BackColor = Color.White;
+                this.Styles[Style.Xml.Script + i].ForeColor = Color.Green;
+                this.Styles[Style.Xml.Script + i].BackColor = Color.White;
+                this.Styles[Style.Xml.Asp + i].ForeColor = Color.Orange;
+                this.Styles[Style.Xml.Asp + i].BackColor = Color.White;
+                this.Styles[Style.Xml.AspAt + i].ForeColor = Color.Purple;
+                this.Styles[Style.Xml.AspAt + i].BackColor = Color.White;
+                this.Styles[Style.Xml.CData + i].ForeColor = Color.Gray;
+                this.Styles[Style.Xml.CData + i].BackColor = Color.White;
+                this.Styles[Style.Xml.Question + i].ForeColor = Color.Salmon;
+                this.Styles[Style.Xml.Question + i].BackColor = Color.White;
+                this.Styles[Style.Xml.Value + i].ForeColor = Color.Crimson;
+                this.Styles[Style.Xml.Value + i].BackColor = Color.White;
+                this.Styles[Style.Xml.XcComment + i].ForeColor = Color.Aquamarine;
+                this.Styles[Style.Xml.XcComment + i].BackColor = Color.White;
             }
         }
         #endregion
@@ -1949,6 +2081,12 @@ namespace PaintDotNet.Effects
 
         protected override void OnKeyDown(KeyEventArgs e)
         {
+            if (this.Lexer != Lexer.Cpp)
+            {
+                base.OnKeyDown(e);
+                return;
+            }
+
             if (!iBox.Visible)
             {
                 if (e.KeyCode == Keys.Escape)
@@ -2786,7 +2924,7 @@ namespace PaintDotNet.Effects
 
                 // Has the caret changed position?
                 int caretPos = this.CurrentPosition;
-                if (lastCaretPos != caretPos)
+                if (this.Lexer == Lexer.Cpp && lastCaretPos != caretPos)
                 {
                     lastCaretPos = caretPos;
 
@@ -2833,6 +2971,12 @@ namespace PaintDotNet.Effects
 
         protected override void OnCharAdded(CharAddedEventArgs e)
         {
+            if (this.Lexer != Lexer.Cpp)
+            {
+                base.OnCharAdded(e);
+                return;
+            }
+
             if (iBox.Visible)
             {
                 string word = this.GetWordFromPosition(this.CurrentPosition);
@@ -2935,7 +3079,7 @@ namespace PaintDotNet.Effects
 
         protected override void OnBeforeDelete(BeforeModificationEventArgs e)
         {
-            if (e.Source == ModificationSource.User && e.Text.Trim().Length > 0 && !Replacing)
+            if (this.Lexer == Lexer.Cpp && e.Source == ModificationSource.User && e.Text.Trim().Length > 0 && !Replacing)
             {
                 SetUpRenaming(e.Position);
             }
@@ -2945,7 +3089,7 @@ namespace PaintDotNet.Effects
 
         protected override void OnBeforeInsert(BeforeModificationEventArgs e)
         {
-            if (e.Source == ModificationSource.User && e.Text.Trim().Length > 0 && !Replacing)
+            if (this.Lexer == Lexer.Cpp && e.Source == ModificationSource.User && e.Text.Trim().Length > 0 && !Replacing)
             {
                 SetUpRenaming(e.Position);
             }
@@ -3064,6 +3208,11 @@ namespace PaintDotNet.Effects
 
         internal void UpdateSyntaxHighlighting()
         {
+            if (this.Lexer != Lexer.Cpp)
+            {
+                return;
+            }
+
             this.SetKeywords(1, string.Join(" ", Intelli.AllTypes.Keys) + " " + string.Join(" ", Intelli.UserDefinedTypes.Keys));
             this.SetKeywords(0, "abstract as base bool byte char checked class const decimal delegate double enum event explicit extern "
                 + "false fixed float implicit in int interface internal is lock long namespace new null object operator out override "
@@ -3409,7 +3558,7 @@ namespace PaintDotNet.Effects
         {
             base.OnDwellStart(e);
 
-            if (intelliTip.Visible)
+            if (this.Lexer != Lexer.Cpp || intelliTip.Visible)
             {
                 return;
             }
@@ -3476,7 +3625,7 @@ namespace PaintDotNet.Effects
         #endregion
 
         #region Document Tabs functions
-        internal void CreateNewDocument(Guid guid, Language language)
+        internal void CreateNewDocument(Guid guid, ProjectType projectType)
         {
             this.findPanel.Hide();
 
@@ -3489,12 +3638,13 @@ namespace PaintDotNet.Effects
 
             this.Document = newDocument;
 
-            switch (language)
+            switch (projectType)
             {
-                case Language.None:
+                case ProjectType.None:
 
                     break;
-                case Language.CSharp:
+                case ProjectType.Effect:
+                case ProjectType.FileType:
                     this.Lexer = Lexer.Cpp;
                     indexForPurpleWords = this.AllocateSubstyles(Style.Cpp.Identifier, 1);
                     this.UpdateSyntaxHighlighting();
@@ -3502,6 +3652,34 @@ namespace PaintDotNet.Effects
                     this.SetProperty("fold", "1");
                     this.SetProperty("fold.compact", "0");
                     this.AutomaticFold = (AutomaticFold.Show | AutomaticFold.Click | AutomaticFold.Change);
+
+                    switch (this.theme)
+                    {
+                        case Theme.Light:
+                            SetCSharpLightStyles();
+                            break;
+                        case Theme.Dark:
+                            SetCSharpDarkStyles();
+                            break;
+                    }
+                    break;
+                case ProjectType.Shape:
+                    this.Lexer = Lexer.Xml;
+
+                    this.SetProperty("fold", "1");
+                    this.SetProperty("fold.html", "1");
+                    this.SetProperty("fold.compact", "0");
+                    this.AutomaticFold = (AutomaticFold.Show | AutomaticFold.Click | AutomaticFold.Change);
+
+                    switch (this.theme)
+                    {
+                        case Theme.Light:
+                            SetXMLLightStyles();
+                            break;
+                        case Theme.Dark:
+                            SetXMLDarkStyles();
+                            break;
+                    }
                     break;
             }
         }
@@ -3520,6 +3698,32 @@ namespace PaintDotNet.Effects
 
             this.Document = this.docCollection[guid];
             this.ReleaseDocument(this.docCollection[guid]);
+
+            switch (this.Lexer)
+            {
+                case Lexer.Cpp:
+                    switch (this.theme)
+                    {
+                        case Theme.Light:
+                            SetCSharpLightStyles();
+                            break;
+                        case Theme.Dark:
+                            SetCSharpDarkStyles();
+                            break;
+                    }
+                    break;
+                case Lexer.Xml:
+                    switch (this.theme)
+                    {
+                        case Theme.Light:
+                            SetXMLLightStyles();
+                            break;
+                        case Theme.Dark:
+                            SetXMLDarkStyles();
+                            break;
+                    }
+                    break;
+            }
 
             AdjustLineNumbersWidth();
         }
