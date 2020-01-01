@@ -248,6 +248,7 @@ namespace PaintDotNet.Effects
                 FullScriptPath = token.ScriptPath;
                 if (token.ProjectType != ProjectType.Effect)
                 {
+                    tabStrip1.SelectedTabIsDirty = false;
                     tabStrip1.NewTab(FileName, FullScriptPath, token.ProjectType);
                     tabStrip1.CloseFirstTab();
                 }
