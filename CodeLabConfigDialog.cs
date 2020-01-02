@@ -1086,7 +1086,7 @@ namespace PaintDotNet.Effects
 
             tabStrip1.NewTab(FileName, FullScriptPath, ProjectType.None);
 
-            txtCode.Text = "This is a test\r\nof plain text."; //string.Empty;
+            //txtCode.Text = string.Empty;
             txtCode.EmptyUndoBuffer();
             Build();
             txtCode.Focus();
