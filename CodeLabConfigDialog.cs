@@ -282,6 +282,8 @@ namespace PaintDotNet.Effects
         #region Build Script actions
         private void Build()
         {
+            ClearErrorList();
+
             ProjectType projType = tabStrip1.SelectedTabProjType;
             if (projType == ProjectType.None)
             {
@@ -313,7 +315,7 @@ namespace PaintDotNet.Effects
         private async Task BuildAsync()
         {
             ProjectType projType = tabStrip1.SelectedTabProjType;
-            if (projType == ProjectType.None)
+            if (projType == ProjectType.None || projType == ProjectType.Shape)
             {
                 return;
             }
@@ -330,9 +332,6 @@ namespace PaintDotNet.Effects
                         break;
                     case ProjectType.FileType:
                         ScriptBuilder.BuildFileType(code, debug);
-                        break;
-                    case ProjectType.Shape:
-                        ShapeBuilder.RenderShape(txtCode.Text);
                         break;
                 }
             });
@@ -353,9 +352,6 @@ namespace PaintDotNet.Effects
                 case ProjectType.FileType:
                     txtCode.UpdateSyntaxHighlighting();
                     RunFileType();
-                    break;
-                case ProjectType.Shape:
-                    FinishTokenUpdate();
                     break;
             }
 
@@ -1092,6 +1088,8 @@ namespace PaintDotNet.Effects
 
             txtCode.Text = "This is a test\r\nof plain text."; //string.Empty;
             txtCode.EmptyUndoBuffer();
+            Build();
+            txtCode.Focus();
         }
 
         private void CreateNewFileType()
@@ -1202,6 +1200,8 @@ namespace PaintDotNet.Effects
                 "\r\n";
 
             txtCode.EmptyUndoBuffer();
+            Build();
+            txtCode.Focus();
         }
 
         private void CreateNewShape()
@@ -1216,6 +1216,7 @@ namespace PaintDotNet.Effects
 
                 txtCode.Text = newShape.ShapeCode;
                 txtCode.EmptyUndoBuffer();
+                Build();
             }
             newShape.Dispose();
 
@@ -2393,34 +2394,22 @@ namespace PaintDotNet.Effects
             if (tabStrip1.SelectedTabProjType == ProjectType.Effect ||
                 tabStrip1.SelectedTabProjType == ProjectType.FileType)
             {
-                BuildAsync();
                 EnableCSharpButtons(true);
+                BuildAsync();
             }
             else
             {
-                ClearErrorList();
                 EnableCSharpButtons(false);
+                Build();
             }
         }
 
         private void tabStrip1_NewTabCreated(object sender, EventArgs e)
         {
-            Guid guid = tabStrip1.SelectedTabGuid;
-            ProjectType projType = tabStrip1.SelectedTabProjType;
-
-            txtCode.CreateNewDocument(guid, projType);
+            txtCode.CreateNewDocument(tabStrip1.SelectedTabGuid, tabStrip1.SelectedTabProjType);
             UpdateWindowTitle();
             UpdateToolBarButtons();
-
-            if (projType == ProjectType.Effect ||
-                projType == ProjectType.FileType)
-            {
-                EnableCSharpButtons(true);
-            }
-            else
-            {
-                EnableCSharpButtons(false);
-            }
+            EnableCSharpButtons(tabStrip1.SelectedTabProjType == ProjectType.Effect || tabStrip1.SelectedTabProjType == ProjectType.FileType);
         }
 
         private void EnableCSharpButtons(bool enable)
