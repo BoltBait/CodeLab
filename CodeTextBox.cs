@@ -3684,6 +3684,7 @@ namespace PaintDotNet.Effects
         internal void CreateNewDocument(Guid guid, ProjectType projectType)
         {
             this.findPanel.Hide();
+            this.iBox.Hide();
 
             var document = this.Document ;
             this.AddRefDocument(document);
@@ -3748,6 +3749,7 @@ namespace PaintDotNet.Effects
             }
 
             this.findPanel.Hide();
+            this.iBox.Hide();
 
             var prevDocument = this.Document;
             this.AddRefDocument(prevDocument);
