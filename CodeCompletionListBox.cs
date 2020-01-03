@@ -356,6 +356,68 @@ namespace PaintDotNet.Effects
             }
         }
 
+        internal void PopulateXamlTags()
+        {
+            Clear();
+            this.intelliBoxContents = IntelliBoxContents.NonMembers;
+
+            foreach (string typeName in Intelli.XamlAutoCompleteTypes.Keys)
+            {
+                Type type = Intelli.XamlAutoCompleteTypes[typeName];
+                AddType(type, typeName, false);
+            }
+
+            unFilteredItems.Sort();
+            this.Items.AddRange(unFilteredItems.ToArray());
+
+            if (this.Items.Contains(this.LastUsedMember))
+            {
+                this.SelectedItem = this.LastUsedMember;
+            }
+            else if (this.Items.Contains(this.LastUsedNonMember))
+            {
+                this.SelectedItem = this.LastUsedNonMember;
+            }
+            else if (this.Items.Count > 0)
+            {
+                this.SelectedIndex = 0;
+            }
+        }
+
+        internal void PopulateXamlAttributes(Type tagType)
+        {
+            Clear();
+            this.intelliBoxContents = IntelliBoxContents.Members;
+
+            PropertyInfo[] properties = tagType.GetProperties(BindingFlags.Instance | BindingFlags.FlattenHierarchy | BindingFlags.CreateInstance | BindingFlags.Public);
+
+            foreach (PropertyInfo property in properties)
+            {
+                if (!property.ReflectedType.IsVisible || !property.CanWrite || property.ReflectedType.IsSpecialName || property.IsObsolete() || property.GetIndexParameters().Length > 0)
+                {
+                    continue;
+                }
+
+                AddProperty(property);
+            }
+
+            unFilteredItems.Sort();
+            this.Items.AddRange(unFilteredItems.ToArray());
+
+            if (this.Items.Contains(this.LastUsedMember))
+            {
+                this.SelectedItem = this.LastUsedMember;
+            }
+            else if (this.Items.Contains(this.LastUsedNonMember))
+            {
+                this.SelectedItem = this.LastUsedNonMember;
+            }
+            else if (this.Items.Count > 0)
+            {
+                this.SelectedIndex = 0;
+            }
+        }
+
         private void Clear()
         {
             this.Items.Clear();

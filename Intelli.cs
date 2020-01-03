@@ -29,6 +29,7 @@ namespace PaintDotNet.Effects
         internal static Dictionary<string, Type> Parameters { get; }
         internal static Dictionary<string, Type> UserDefinedTypes { get; }
         internal static Dictionary<string, Type> AutoCompleteTypes { get; }
+        internal static Dictionary<string, Type> XamlAutoCompleteTypes { get; }
         internal static Dictionary<string, Type> AllTypes { get; }
         internal static Dictionary<string, string> Snippets { get; }
         internal static Dictionary<string, string> TypeAliases { get; }
@@ -245,6 +246,23 @@ namespace PaintDotNet.Effects
             }
 
             extMethods = extMethodsList.ToArray();
+
+            XamlAutoCompleteTypes = new Dictionary<string, Type>();
+            foreach (Type type in Assembly.GetAssembly(typeof(System.Windows.Media.Geometry)).GetExportedTypes())
+            {
+                if (type.IsNested || type.IsObsolete())
+                {
+                    continue;
+                }
+
+                if (type.IsClass &&
+                    type.Namespace.Equals("System.Windows.Media", StringComparison.OrdinalIgnoreCase) &&
+                    !XamlAutoCompleteTypes.ContainsKey(type.Name)
+                )
+                {
+                    XamlAutoCompleteTypes.Add(type.Name, type);
+                }
+            }
         }
     }
 

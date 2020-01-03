@@ -1145,6 +1145,11 @@ namespace PaintDotNet.Effects
 
         private void HighlightWordUsage()
         {
+            if (this.Lexer != Lexer.Cpp)
+            {
+                return;
+            }
+
             this.IndicatorCurrent = Indicator.ObjectHighlight;
             this.IndicatorClearRange(0, this.TextLength);
 
@@ -2079,12 +2084,6 @@ namespace PaintDotNet.Effects
 
         protected override void OnKeyDown(KeyEventArgs e)
         {
-            if (this.Lexer != Lexer.Cpp)
-            {
-                base.OnKeyDown(e);
-                return;
-            }
-
             if (!iBox.Visible)
             {
                 if (e.KeyCode == Keys.Escape)
@@ -2591,6 +2590,46 @@ namespace PaintDotNet.Effects
             ShowIntelliBox(position, true);
         }
 
+        private void XamlTagIntelliBox(int position)
+        {
+            iBox.PopulateXamlTags();
+            ShowIntelliBox(position, false);
+        }
+
+        private void XamlAttributeIntelliBox(int position)
+        {
+            int pos = position;
+            bool foundTagStart = false;
+            while (pos != InvalidPosition)
+            {
+                char charAtPos = this.GetCharAt(pos);
+                if (charAtPos == '<')
+                {
+                    foundTagStart = true;
+                    pos++;
+                    break;
+                }
+                else if (charAtPos == '>')
+                {
+                    return;
+                }
+
+                pos--;
+            }
+
+            if (!foundTagStart || this.GetStyleAt(pos) != Style.Xml.Tag)
+            {
+                return;
+            }
+
+            string tagName = this.GetWordFromPosition(pos);
+            if (Intelli.XamlAutoCompleteTypes.TryGetValue(tagName, out Type tag))
+            {
+                iBox.PopulateXamlAttributes(tag);
+                ShowIntelliBox(position, false);
+            }
+        }
+
         private void ShowIntelliBox(int position, bool members)
         {
             if (iBox.Items.Count <= 0)
@@ -2922,7 +2961,7 @@ namespace PaintDotNet.Effects
 
                 // Has the caret changed position?
                 int caretPos = this.CurrentPosition;
-                if (this.Lexer == Lexer.Cpp && lastCaretPos != caretPos)
+                if (this.Lexer != Lexer.Null && lastCaretPos != caretPos)
                 {
                     lastCaretPos = caretPos;
 
@@ -2941,8 +2980,18 @@ namespace PaintDotNet.Effects
                     }
 
                     int style = this.GetStyleAt(bracePos1);
+                    bool correctStyle = false;
+                    switch (this.Lexer)
+                    {
+                        case Lexer.Cpp:
+                            correctStyle = (style == Style.Cpp.Operator || style == Style.Cpp.Operator + Preprocessor);
+                            break;
+                        case Lexer.Xml:
+                            correctStyle = (style == Style.Xml.Tag || style == Style.Xml.TagUnknown);
+                            break;
+                    }
 
-                    if (bracePos1 > InvalidPosition && (style == Style.Cpp.Operator || style == Style.Cpp.Operator + Preprocessor))
+                    if (bracePos1 > InvalidPosition && correctStyle)
                     {
                         // Find the matching brace
                         int bracePos2 = this.BraceMatch(bracePos1);
@@ -2969,12 +3018,6 @@ namespace PaintDotNet.Effects
 
         protected override void OnCharAdded(CharAddedEventArgs e)
         {
-            if (this.Lexer != Lexer.Cpp)
-            {
-                base.OnCharAdded(e);
-                return;
-            }
-
             if (iBox.Visible)
             {
                 string word = this.GetWordFromPosition(this.CurrentPosition);
@@ -2993,7 +3036,7 @@ namespace PaintDotNet.Effects
                     iBox.Visible = false;
                 }
             }
-            else
+            else if (this.Lexer == Lexer.Cpp)
             {
                 if (e.Char == '}')
                 {
@@ -3035,6 +3078,17 @@ namespace PaintDotNet.Effects
                     {
                         SuggestionIntelliBox(this.CurrentPosition - 1);
                     }
+                }
+            }
+            else if (this.Lexer == Lexer.Xml)
+            {
+                if (e.Char == '<')
+                {
+                    XamlTagIntelliBox(this.CurrentPosition - 1);
+                }
+                else if (e.Char == ' ')
+                {
+                    XamlAttributeIntelliBox(this.CurrentPosition - 1);
                 }
             }
 
@@ -3639,7 +3693,7 @@ namespace PaintDotNet.Effects
             switch (projectType)
             {
                 case ProjectType.None:
-
+                    this.Lexer = Lexer.Null;
                     break;
                 case ProjectType.Effect:
                 case ProjectType.FileType:
