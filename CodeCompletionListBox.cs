@@ -77,7 +77,8 @@ namespace PaintDotNet.Effects
                 ResUtil.GetImage("Snippet"),
                 ResUtil.GetImage("Method"), // Use the Method icon for Constructor
                 ResUtil.GetImage("Var"), // Use the Variable icon for Parameter
-                ResUtil.GetImage("Interface")
+                ResUtil.GetImage("Interface"),
+                ResUtil.EmptyImage
             });
         }
 
@@ -389,7 +390,8 @@ namespace PaintDotNet.Effects
             Clear();
             this.intelliBoxContents = IntelliBoxContents.Members;
 
-            PropertyInfo[] properties = tagType.GetProperties(BindingFlags.Instance | BindingFlags.FlattenHierarchy | BindingFlags.CreateInstance | BindingFlags.Public);
+            PropertyInfo[] properties = tagType.GetProperties(BindingFlags.Instance | BindingFlags.Public);
+            bool isSelfClosing = true;
 
             foreach (PropertyInfo property in properties)
             {
@@ -398,10 +400,21 @@ namespace PaintDotNet.Effects
                     continue;
                 }
 
+                if (typeof(System.Collections.IList).IsAssignableFrom(property.PropertyType))
+                {
+                    isSelfClosing = false;
+                    continue;
+                }
+
                 AddProperty(property);
             }
 
             unFilteredItems.Sort();
+            if (isSelfClosing)
+            {
+                unFilteredItems.Add(new IntelliBoxItem("/> Close Tag", "/>", "/> Close Tag", IntelliType.None));
+            }
+
             this.Items.AddRange(unFilteredItems.ToArray());
 
             if (this.Items.Contains(this.LastUsedMember))

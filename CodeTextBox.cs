@@ -3021,7 +3021,11 @@ namespace PaintDotNet.Effects
             if (iBox.Visible)
             {
                 string word = this.GetWordFromPosition(this.CurrentPosition);
-                if (word.IsCSharpIndentifier())
+                if (this.Lexer == Lexer.Xml && e.Char == '/' && this.GetCharAt(this.CurrentPosition - 2) == '<')
+                {
+                    // Do nothing
+                }
+                else if (word.IsCSharpIndentifier())
                 {
                     int wordStartPos = this.WordStartPosition(this.CurrentPosition, true);
                     if (wordStartPos > 0 && this.GetCharAt(wordStartPos - 1).Equals('#'))
