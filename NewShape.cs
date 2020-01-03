@@ -49,25 +49,25 @@ namespace PaintDotNet.Effects
             "    xmlns=\"clr-namespace:PaintDotNet.UI.Media;assembly=PaintDotNet.Framework\"\r\n" +
             "    xmlns:ps=\"clr-namespace:PaintDotNet.Shapes;assembly=PaintDotNet.Framework\"\r\n" +
             "    DisplayName=\"Cube\">\r\n" +
-            "    <PathGeometry FillRule = \"Nonzero\" >\r\n" +
+            "    <PathGeometry FillRule=\"Nonzero\">\r\n" +
             "        <PathFigure IsClosed=\"True\" IsFilled=\"True\" StartPoint=\"0,22\">\r\n" +
-            "            <LineSegment Point = \"58,0\" IsSmoothJoin=\"True\" />\r\n" +
-            "            <LineSegment Point = \"116,22\" IsSmoothJoin=\"True\" />\r\n" +
-            "            <LineSegment Point = \"116,93\" IsSmoothJoin=\"True\" />\r\n" +
-            "            <LineSegment Point = \"58,116\" IsSmoothJoin=\"True\" />\r\n" +
-            "            <LineSegment Point = \"0,93\" IsSmoothJoin=\"True\" />\r\n" +
-            "            <LineSegment Point = \"0,22\" IsSmoothJoin=\"True\" />\r\n" +
+            "            <LineSegment Point=\"58,0\" IsSmoothJoin=\"True\" />\r\n" +
+            "            <LineSegment Point=\"116,22\" IsSmoothJoin=\"True\" />\r\n" +
+            "            <LineSegment Point=\"116,93\" IsSmoothJoin=\"True\" />\r\n" +
+            "            <LineSegment Point=\"58,116\" IsSmoothJoin=\"True\" />\r\n" +
+            "            <LineSegment Point=\"0,93\" IsSmoothJoin=\"True\" />\r\n" +
+            "            <LineSegment Point=\"0,22\" IsSmoothJoin=\"True\" />\r\n" +
             "        </PathFigure>\r\n" +
-            "        <PathFigure IsClosed = \"False\" IsFilled=\"False\" StartPoint=\"58,46\">\r\n" +
-            "            <LineSegment Point = \"0,22\" />\r\n" +
-            "        </PathFigure >\r\n" +
             "        <PathFigure IsClosed=\"False\" IsFilled=\"False\" StartPoint=\"58,46\">\r\n" +
-            "            <LineSegment Point = \"58,116\" />\r\n" +
-            "        </PathFigure >\r\n" +
+            "            <LineSegment Point=\"0,22\" />\r\n" +
+            "        </PathFigure>\r\n" +
             "        <PathFigure IsClosed=\"False\" IsFilled=\"False\" StartPoint=\"58,46\">\r\n" +
-            "            <LineSegment Point = \"116,22\" />\r\n" +
-            "        </PathFigure >\r\n" +
-            "    </PathGeometry >\r\n" +
+            "            <LineSegment Point=\"58,116\" />\r\n" +
+            "        </PathFigure>\r\n" +
+            "        <PathFigure IsClosed=\"False\" IsFilled=\"False\" StartPoint=\"58,46\">\r\n" +
+            "            <LineSegment Point=\"116,22\" />\r\n" +
+            "        </PathFigure>\r\n" +
+            "    </PathGeometry>\r\n" +
             "</ps:SimpleGeometryShape>\r\n";
 
         private const string geometryGroup = "" +
