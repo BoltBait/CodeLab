@@ -4,7 +4,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{6E9302B8-7792-43A4-A4A4-1F5E8F371780}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>PaintDotNet.Effects</RootNamespace>
     <AssemblyName>CodeLab</AssemblyName>
@@ -441,6 +441,7 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Icons\Saturation.png" />
     <EmbeddedResource Include="Icons\ZoomBlur.png" />
     <EmbeddedResource Include="Icons\ReduceNoise.png" />
     <EmbeddedResource Include="Icons\Relief.png" />

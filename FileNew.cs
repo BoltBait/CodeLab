@@ -88,11 +88,21 @@ namespace PaintDotNet.Effects
             return names.ToArray();
         }
 
+        private string getLowerName(string name)
+        {
+            return getName(name).ToLower();
+        }
+        private string getName(string name)
+        {
+            // remove spaces and slashes from the effect name
+            return name.Replace(" ", "").Replace("Brightness/", "").Replace("Hue/", "");
+        }
+
         private string getEffectPropCode(string effect, string src, string dst, int eCount, bool isLastItem, bool effectPreviouslySent, ref string renderCode)
         {
             string cr = "\r\n";
             string propCode = "";
-            string lowerName = effect.ToLower().Replace(" ", "").Replace("brightness/", "");
+            string lowerName = getLowerName(effect);
 
             if (effect == "Clipboard")
             {
@@ -135,6 +145,14 @@ namespace PaintDotNet.Effects
                     propCode += "    " + lowerName + "Parameters.SetPropertyValue(BrightnessAndContrastAdjustment.PropertyNames.Brightness, Amount" + eCount.ToString() + ");" + cr;
                     eCount++;
                     propCode += "    " + lowerName + "Parameters.SetPropertyValue(BrightnessAndContrastAdjustment.PropertyNames.Contrast, Amount" + eCount.ToString() + ");" + cr;
+                }
+                else if (effect.Contains("Saturation"))
+                {
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(HueAndSaturationAdjustment.PropertyNames.Hue, Amount" + eCount.ToString() + ");" + cr;
+                    eCount++;
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(HueAndSaturationAdjustment.PropertyNames.Saturation, Amount" + eCount.ToString() + ");" + cr;
+                    eCount++;
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(HueAndSaturationAdjustment.PropertyNames.Lightness, Amount" + eCount.ToString() + ");" + cr;
                 }
                 else if (effect.Contains("Motion"))
                 {
@@ -387,14 +405,23 @@ namespace PaintDotNet.Effects
             // Add controls for selected options
             if (effect.Contains("Gaussian"))
             {
-                code += "IntSliderControl Amount" + controlCount.ToString() + "=10; // [0,100] " + effect + " Radius" + cr;
+                code += "IntSliderControl Amount" + controlCount.ToString() + " = 10; // [0,100] " + effect + " Radius" + cr;
                 controlCount++;
             }
             else if (effect.Contains("Contrast"))
             {
-                code += "IntSliderControl Amount" + controlCount.ToString() + "=10; // [-100,100] " + effect + " Brightness" + cr;
+                code += "IntSliderControl Amount" + controlCount.ToString() + " = 10; // [-100,100] " + effect + " Brightness" + cr;
                 controlCount++;
-                code += "IntSliderControl Amount" + controlCount.ToString() + "=10; // [-100,100] " + effect + " Contrast" + cr;
+                code += "IntSliderControl Amount" + controlCount.ToString() + " = 10; // [-100,100] " + effect + " Contrast" + cr;
+                controlCount++;
+            }
+            else if (effect.Contains("Saturation"))
+            {
+                code += "IntSliderControl Amount" + controlCount.ToString() + " = 0; // [-180,180] " + effect + " Hue" + cr;
+                controlCount++;
+                code += "IntSliderControl Amount" + controlCount.ToString() + " = 100; // [0,200] " + effect + " Saturation" + cr;
+                controlCount++;
+                code += "IntSliderControl Amount" + controlCount.ToString() + " = 0; // [-100,100] " + effect + " Lightness" + cr;
                 controlCount++;
             }
             else if (effect.Contains("Motion"))
@@ -437,28 +464,28 @@ namespace PaintDotNet.Effects
             }
             else if (effect.Contains("Oil Painting"))
             {
-                code += "IntSliderControl Amount" + controlCount.ToString() + "=3; // [1,8] " + effect + " Brush Size" + cr;
+                code += "IntSliderControl Amount" + controlCount.ToString() + " = 3; // [1,8] " + effect + " Brush Size" + cr;
                 controlCount++;
-                code += "IntSliderControl Amount" + controlCount.ToString() + "=50; // [3,255] " + effect + " Coarseness" + cr;
+                code += "IntSliderControl Amount" + controlCount.ToString() + " = 50; // [3,255] " + effect + " Coarseness" + cr;
                 controlCount++;
             }
             else if (effect.Contains("Reduce Noise"))
             {
-                code += "IntSliderControl Amount" + controlCount.ToString() + "=10; // [0,200] " + effect + " Radius" + cr;
+                code += "IntSliderControl Amount" + controlCount.ToString() + " = 10; // [0,200] " + effect + " Radius" + cr;
                 controlCount++;
-                code += "DoubleSliderControl Amount" + controlCount.ToString() + "=0.4; // [0,1] " + effect + " Strength" + cr;
+                code += "DoubleSliderControl Amount" + controlCount.ToString() + " = 0.4; // [0,1] " + effect + " Strength" + cr;
                 controlCount++;
             }
             else if (effect.Contains("Median"))
             {
-                code += "IntSliderControl Amount" + controlCount.ToString() + "=10; // [1,200] " + effect + " Radius" + cr;
+                code += "IntSliderControl Amount" + controlCount.ToString() + " = 10; // [1,200] " + effect + " Radius" + cr;
                 controlCount++;
-                code += "IntSliderControl Amount" + controlCount.ToString() + "=50; // [0,100] " + effect + " Percentile" + cr;
+                code += "IntSliderControl Amount" + controlCount.ToString() + " = 50; // [0,100] " + effect + " Percentile" + cr;
                 controlCount++;
             }
             else if (effect.Contains("Sharpen"))
             {
-                code += "IntSliderControl Amount" + controlCount.ToString() + "=2; // [1,20] " + effect + " Amount" + cr;
+                code += "IntSliderControl Amount" + controlCount.ToString() + " = 2; // [1,20] " + effect + " Amount" + cr;
                 controlCount++;
             }
             else if (effect.Contains("Edge Detect"))
@@ -478,24 +505,24 @@ namespace PaintDotNet.Effects
             }
             else if (effect.Contains("Outline"))
             {
-                code += "IntSliderControl Amount" + controlCount.ToString() + "=3; // [1,200] " + effect + " Thickness" + cr;
-                code += "IntSliderControl Amount" + controlCount.ToString() + "=50; // [0,100] " + effect + " Intensity" + cr;
+                code += "IntSliderControl Amount" + controlCount.ToString() + " = 3; // [1,200] " + effect + " Thickness" + cr;
+                code += "IntSliderControl Amount" + controlCount.ToString() + " = 50; // [0,100] " + effect + " Intensity" + cr;
                 controlCount++;
             }
             else if (effect.Contains("Pencil Sketch"))
             {
-                code += "IntSliderControl Amount" + controlCount.ToString() + "=2; // [1,20] " + effect + " Pencil Tip Size" + cr;
+                code += "IntSliderControl Amount" + controlCount.ToString() + " = 2; // [1,20] " + effect + " Pencil Tip Size" + cr;
                 controlCount++;
-                code += "IntSliderControl Amount" + controlCount.ToString() + "=0; // [-20,20] " + effect + " Range" + cr;
+                code += "IntSliderControl Amount" + controlCount.ToString() + " = 0; // [-20,20] " + effect + " Range" + cr;
                 controlCount++;
             }
             else if (effect.Contains("Posterize"))
             {
-                code += "IntSliderControl Amount" + controlCount.ToString() + "=16; // [2,64] " + effect + " Red" + cr;
+                code += "IntSliderControl Amount" + controlCount.ToString() + " = 16; // [2,64] " + effect + " Red" + cr;
                 controlCount++;
-                code += "IntSliderControl Amount" + controlCount.ToString() + "=16; // [2,64] " + effect + " Green" + cr;
+                code += "IntSliderControl Amount" + controlCount.ToString() + " = 16; // [2,64] " + effect + " Green" + cr;
                 controlCount++;
-                code += "IntSliderControl Amount" + controlCount.ToString() + "=16; // [2,64] " + effect + " Blue" + cr;
+                code += "IntSliderControl Amount" + controlCount.ToString() + " = 16; // [2,64] " + effect + " Blue" + cr;
                 controlCount++;
                 code += "CheckboxControl Amount" + controlCount.ToString() + " = true; // [0,1] " + effect + " Linked" + cr;
                 controlCount++;
@@ -751,6 +778,15 @@ namespace PaintDotNet.Effects
                 code += cr;
                 disposecode += "        if (contrastEffect != null) contrastEffect.Dispose();" + cr;
                 disposecode += "        contrastEffect = null;" + cr;
+            }
+            if (Array.Exists(flowListArray, element => element.Contains("Saturation")))
+            {
+                code += "// Setup for calling the Hue and Saturation Adjustment function" + cr;
+                code += "HueAndSaturationAdjustment saturationEffect = new HueAndSaturationAdjustment();" + cr;
+                code += "PropertyCollection saturationProps;" + cr;
+                code += cr;
+                disposecode += "        if (saturationEffect != null) saturationEffect.Dispose();" + cr;
+                disposecode += "        saturationEffect = null;" + cr;
             }
             if (Array.Exists(flowListArray, element => element.Contains("Frosted")))
             {
@@ -1234,7 +1270,7 @@ namespace PaintDotNet.Effects
                     switch (etype)
                     {
                         case "Effect":
-                            code += getEffectPropCode(ename, srcsurface, dstsurface, elnum, lastItem, code.Contains("PropertyBasedEffectConfigToken " + ename.ToLower().Replace(" ", "").Replace("brightness/", "") + "Parameters ="), ref rendercode);
+                            code += getEffectPropCode(ename, srcsurface, dstsurface, elnum, lastItem, code.Contains("PropertyBasedEffectConfigToken " + getLowerName(ename) + "Parameters ="), ref rendercode);
                             break;
                         case "Blend":
                             if (lastItem)
@@ -1627,7 +1663,7 @@ namespace PaintDotNet.Effects
                 }
                 else // Effect
                 {
-                    Image imageFill = ResUtil.GetImage(bigText.Replace(" ","").Replace("Brightness/", ""));
+                    Image imageFill = ResUtil.GetImage(getName(bigText));
                     e.Graphics.DrawImage(imageFill, e.Bounds.X + (int)(17 * UIfactor), e.Bounds.Y + (int)(15 * UIfactor), e.Bounds.Height - (int)(32 * UIfactor), e.Bounds.Height - (int)(32 * UIfactor));
                     bigText += " Effect";
                 }

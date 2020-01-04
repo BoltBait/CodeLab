@@ -261,7 +261,7 @@
             this.ST.AutoSize = true;
             this.ST.Location = new System.Drawing.Point(40, 417);
             this.ST.Name = "ST";
-            this.ST.Size = new System.Drawing.Size(111, 19);
+            this.ST.Size = new System.Drawing.Size(110, 19);
             this.ST.TabIndex = 18;
             this.ST.Text = "Single Threaded";
             this.ST.UseVisualStyleBackColor = true;
@@ -414,6 +414,7 @@
             "Frosted Glass",
             "Gaussian Blur",
             "Glow",
+            "Hue/Saturation",
             "Ink Sketch",
             "Julia",
             "Mandelbrot",
