@@ -35,6 +35,7 @@
             this.cancelButton = new System.Windows.Forms.Button();
             this.samplePicture = new System.Windows.Forms.PictureBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.includeSample = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.samplePicture)).BeginInit();
             this.SuspendLayout();
             // 
@@ -121,10 +122,23 @@
             this.label1.TabIndex = 9;
             this.label1.Text = "Shape format:";
             // 
+            // includeSample
+            // 
+            this.includeSample.AutoSize = true;
+            this.includeSample.Checked = true;
+            this.includeSample.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.includeSample.Location = new System.Drawing.Point(13, 122);
+            this.includeSample.Name = "includeSample";
+            this.includeSample.Size = new System.Drawing.Size(106, 19);
+            this.includeSample.TabIndex = 10;
+            this.includeSample.Text = "Include sample";
+            this.includeSample.UseVisualStyleBackColor = true;
+            // 
             // NewShape
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.ClientSize = new System.Drawing.Size(572, 192);
+            this.Controls.Add(this.includeSample);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.samplePicture);
             this.Controls.Add(this.cancelButton);
@@ -150,5 +164,6 @@
         private System.Windows.Forms.Button cancelButton;
         private System.Windows.Forms.PictureBox samplePicture;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.CheckBox includeSample;
     }
 }

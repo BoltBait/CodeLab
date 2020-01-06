@@ -14,19 +14,36 @@ namespace PaintDotNet.Effects
 
         private void okButton_Click(object sender, EventArgs e)
         {
-            if (this.ggRadioButton.Checked)
+            if (includeSample.Checked)
             {
-                this.ShapeCode = geometryGroup;
-            }
-            else if (this.pgRadioButton.Checked)
-            {
-                this.ShapeCode = pathGeometry;
+                if (this.ggRadioButton.Checked)
+                {
+                    this.ShapeCode = geometryGroupSample;
+                }
+                else if (this.pgRadioButton.Checked)
+                {
+                    this.ShapeCode = pathGeometrySample;
+                }
+                else
+                {
+                    this.ShapeCode = streamGeometrySample;
+                }
             }
             else
             {
-                this.ShapeCode = streamGeometry;
+                if (this.ggRadioButton.Checked)
+                {
+                    this.ShapeCode = geometryGroup;
+                }
+                else if (this.pgRadioButton.Checked)
+                {
+                    this.ShapeCode = pathGeometry;
+                }
+                else
+                {
+                    this.ShapeCode = streamGeometry;
+                }
             }
-
             this.DialogResult = DialogResult.OK;
             this.Close();
         }
@@ -42,9 +59,25 @@ namespace PaintDotNet.Effects
             "    xmlns=\"clr-namespace:PaintDotNet.UI.Media;assembly=PaintDotNet.Framework\"\r\n" +
             "    xmlns:ps=\"clr-namespace:PaintDotNet.Shapes;assembly=PaintDotNet.Framework\"\r\n" +
             "    DisplayName=\"Square\"\r\n" +
+            "    Geometry=\"F0 \" />\r\n";
+
+        private const string streamGeometrySample = "" +
+            "<ps:SimpleGeometryShape\r\n" +
+            "    xmlns=\"clr-namespace:PaintDotNet.UI.Media;assembly=PaintDotNet.Framework\"\r\n" +
+            "    xmlns:ps=\"clr-namespace:PaintDotNet.Shapes;assembly=PaintDotNet.Framework\"\r\n" +
+            "    DisplayName=\"Square\"\r\n" +
             "    Geometry=\"F0 M 0,0 L 100,0 L 100,100 L 0,100 Z\" />\r\n";
 
         private const string pathGeometry = "" +
+            "<ps:SimpleGeometryShape\r\n" +
+            "    xmlns=\"clr-namespace:PaintDotNet.UI.Media;assembly=PaintDotNet.Framework\"\r\n" +
+            "    xmlns:ps=\"clr-namespace:PaintDotNet.Shapes;assembly=PaintDotNet.Framework\"\r\n" +
+            "    DisplayName=\"Cube\">\r\n" +
+            "    <PathGeometry FillRule=\"Nonzero\">\r\n\r\n" +
+            "    </PathGeometry>\r\n" +
+            "</ps:SimpleGeometryShape>\r\n";
+
+        private const string pathGeometrySample = "" +
             "<ps:SimpleGeometryShape\r\n" +
             "    xmlns=\"clr-namespace:PaintDotNet.UI.Media;assembly=PaintDotNet.Framework\"\r\n" +
             "    xmlns:ps=\"clr-namespace:PaintDotNet.Shapes;assembly=PaintDotNet.Framework\"\r\n" +
@@ -71,6 +104,15 @@ namespace PaintDotNet.Effects
             "</ps:SimpleGeometryShape>\r\n";
 
         private const string geometryGroup = "" +
+            "<ps:SimpleGeometryShape\r\n" +
+            "    xmlns=\"clr-namespace:PaintDotNet.UI.Media;assembly=PaintDotNet.Framework\"\r\n" +
+            "    xmlns:ps=\"clr-namespace:PaintDotNet.Shapes;assembly=PaintDotNet.Framework\"\r\n" +
+            "    DisplayName=\"Rounded Rectangle\">\r\n" +
+            "        <GeometryGroup>\r\n\r\n" +
+            "        </GeometryGroup>\r\n" +
+            "</ps:SimpleGeometryShape>\r\n";
+
+        private const string geometryGroupSample = "" +
             "<ps:SimpleGeometryShape\r\n" +
             "    xmlns=\"clr-namespace:PaintDotNet.UI.Media;assembly=PaintDotNet.Framework\"\r\n" +
             "    xmlns:ps=\"clr-namespace:PaintDotNet.Shapes;assembly=PaintDotNet.Framework\"\r\n" +
