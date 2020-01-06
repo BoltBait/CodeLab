@@ -18,6 +18,7 @@ using System;
 using System.Drawing;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Threading;
 
 [assembly: AssemblyTitle("CodeLab plugin for Paint.NET")]
 [assembly: AssemblyDescription("C# Code Editor for Paint.NET Plugin Development")]
@@ -77,10 +78,27 @@ namespace PaintDotNet.Effects
             userEffect = sect.UserScriptObject;
             projectType = sect.ProjectType;
 
-            if (projectType == ProjectType.Shape && ShapeBuilder.Shape != null)
+            if (projectType == ProjectType.Shape)
             {
+                Rectangle srcBounds = EnvironmentParameters.SourceSurface.Bounds;
+                Rectangle selection = EnvironmentParameters.GetSelection(srcBounds).GetBoundsInt();
+                ColorBgra strokeColor = EnvironmentParameters.PrimaryColor;
+                ColorBgra fillColor = EnvironmentParameters.SecondaryColor;
+                double strokeThickness = EnvironmentParameters.BrushWidth;
+
+                Thread t = new Thread(() =>
+                {
+                    ShapeBuilder.SetEnviromentParams(srcBounds.Width, srcBounds.Height, selection.X, selection.Y, selection.Width, selection.Height, strokeColor, fillColor, strokeThickness);
+                    ShapeBuilder.RenderShape(sect.UserCode);
+                });
+                t.SetApartmentState(ApartmentState.STA);
+                t.Start();
+                t.Join();
+
                 shapeSurface?.Dispose();
-                shapeSurface = Surface.CopyFromBitmap(ShapeBuilder.Shape);
+                shapeSurface = (ShapeBuilder.Shape != null) ?
+                    Surface.CopyFromBitmap(ShapeBuilder.Shape) :
+                    null;
             }
             else if (projectType == ProjectType.Effect && userEffect != null)
             {

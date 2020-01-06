@@ -305,7 +305,7 @@ namespace PaintDotNet.Effects
                     RunFileType();
                     break;
                 case ProjectType.Shape:
-                    ShapeBuilder.RenderShape(txtCode.Text);
+                    ShapeBuilder.TryParseShapeCode(txtCode.Text);
                     DisplayErrors();
                     FinishTokenUpdate();
                     break;

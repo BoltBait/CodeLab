@@ -35,6 +35,8 @@ namespace PaintDotNet.Effects
 
         internal static bool RenderShape(string shapeCode)
         {
+            Shape?.Dispose();
+            Shape = null;
             exceptionMsg = null;
 
             if (string.IsNullOrWhiteSpace(shapeCode))
@@ -99,9 +101,94 @@ namespace PaintDotNet.Effects
                     }
 
                     StreamGeometry geometry = TryParseStreamGeometry(geometryCode);
-                    if (geometryCode != null)
+                    if (geometry != null)
                     {
                         RenderGeometry(geometry);
+                        return true;
+                    }
+                }
+                else
+                {
+                    exceptionMsg = InvalidShapeFormat;
+                }
+            }
+            else
+            {
+                exceptionMsg = InvalidShapeFormat;
+            }
+
+            return false;
+        }
+
+        internal static bool TryParseShapeCode(string shapeCode)
+        {
+            exceptionMsg = null;
+
+            if (string.IsNullOrWhiteSpace(shapeCode))
+            {
+                exceptionMsg = InvalidShapeFormat;
+                return false;
+            }
+
+            XmlDocument xDoc = TryLoadXml(shapeCode);
+            if (xDoc == null)
+            {
+                return false;
+            }
+
+            XmlElement docElement = xDoc.DocumentElement;
+
+            if (docElement.Name == "Page")
+            {
+                XmlNodeList paths = docElement.GetElementsByTagName("Path");
+                if (paths.Count > 0)
+                {
+                    Path path = TryParsePath(paths[0].OuterXml);
+                    if (path != null)
+                    {
+                        //RenderPath(path);
+                        return true;
+                    }
+                }
+            }
+            else if (docElement.Name == "ps:SimpleGeometryShape")
+            {
+                if (docElement.HasChildNodes)
+                {
+                    string outerXml = docElement.FirstChild.OuterXml;
+                    int xmlnsStartIndex = outerXml.IndexOf(" xmlns=");
+                    int xmlnsEndIndex = outerXml.IndexOf(">");
+
+                    if (xmlnsStartIndex == -1 || xmlnsEndIndex == -1)
+                    {
+                        exceptionMsg = InvalidShapeFormat;
+                        return false;
+                    }
+
+                    string pageCode = "<Page xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\" xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\">"
+                        + outerXml.Substring(0, xmlnsStartIndex) + outerXml.Substring(xmlnsEndIndex)
+                        + "</Page>";
+
+                    Page page = TryParsePage(pageCode);
+                    if (page?.Content is Geometry geometry)
+                    {
+                        //RenderGeometry(geometry);
+                        return true;
+                    }
+                }
+                else if (docElement.HasAttributes && docElement.HasAttribute("Geometry"))
+                {
+                    string geometryCode = docElement.Attributes.GetNamedItem("Geometry").InnerText;
+                    if (string.IsNullOrWhiteSpace(geometryCode))
+                    {
+                        exceptionMsg = "Can not find the Geometry attribute.";
+                        return false;
+                    }
+
+                    StreamGeometry geometry = TryParseStreamGeometry(geometryCode);
+                    if (geometry != null)
+                    {
+                        //RenderGeometry(geometry);
                         return true;
                     }
                 }
