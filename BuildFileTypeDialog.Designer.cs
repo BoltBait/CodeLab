@@ -183,6 +183,7 @@
             this.descriptionBox.Name = "descriptionBox";
             this.descriptionBox.Size = new System.Drawing.Size(150, 23);
             this.descriptionBox.TabIndex = 17;
+            this.descriptionBox.Text = "Filetype Plugin";
             // 
             // descriptionLabel
             // 

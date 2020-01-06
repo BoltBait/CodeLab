@@ -88,9 +88,14 @@ namespace PaintDotNet.Effects
 
             // Preload Description
             Match mds = Regex.Match(scriptText, @"//[\s-[\r\n]]*Desc[\s-[\r\n]]*:[\s-[\r\n]]*(?<desclabel>.*)(?=\r?\n|$)", RegexOptions.IgnoreCase);
-            this.descriptionBox.Text = mds.Success ?
-                mds.Groups["desclabel"].Value.Trim() :
-                this.fileName + " FileType";
+            if (mds.Success && mds.Groups["desclabel"].Value.Trim() != "")
+            {
+                this.descriptionBox.Text = mds.Groups["desclabel"].Value.Trim();
+            }
+            else
+            {
+                this.descriptionBox.Text = this.fileName + " FileType";
+            }
 
             // Preload Support URL
             Match msu = Regex.Match(scriptText, @"//[\s-[\r\n]]*URL[\s-[\r\n]]*:[\s-[\r\n]]*(?<urllabel>.*)(?=\r?\n|$)", RegexOptions.IgnoreCase);
