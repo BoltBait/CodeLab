@@ -58,7 +58,7 @@ namespace PaintDotNet.Effects
             "<ps:SimpleGeometryShape\r\n" +
             "    xmlns=\"clr-namespace:PaintDotNet.UI.Media;assembly=PaintDotNet.Framework\"\r\n" +
             "    xmlns:ps=\"clr-namespace:PaintDotNet.Shapes;assembly=PaintDotNet.Framework\"\r\n" +
-            "    DisplayName=\"Square\"\r\n" +
+            "    DisplayName=\"\"\r\n" +
             "    Geometry=\"F0 \" />\r\n";
 
         private const string streamGeometrySample = "" +
@@ -72,7 +72,7 @@ namespace PaintDotNet.Effects
             "<ps:SimpleGeometryShape\r\n" +
             "    xmlns=\"clr-namespace:PaintDotNet.UI.Media;assembly=PaintDotNet.Framework\"\r\n" +
             "    xmlns:ps=\"clr-namespace:PaintDotNet.Shapes;assembly=PaintDotNet.Framework\"\r\n" +
-            "    DisplayName=\"Cube\">\r\n" +
+            "    DisplayName=\"\">\r\n" +
             "    <PathGeometry FillRule=\"Nonzero\">\r\n\r\n" +
             "    </PathGeometry>\r\n" +
             "</ps:SimpleGeometryShape>\r\n";
@@ -107,7 +107,7 @@ namespace PaintDotNet.Effects
             "<ps:SimpleGeometryShape\r\n" +
             "    xmlns=\"clr-namespace:PaintDotNet.UI.Media;assembly=PaintDotNet.Framework\"\r\n" +
             "    xmlns:ps=\"clr-namespace:PaintDotNet.Shapes;assembly=PaintDotNet.Framework\"\r\n" +
-            "    DisplayName=\"Rounded Rectangle\">\r\n" +
+            "    DisplayName=\"\">\r\n" +
             "        <GeometryGroup>\r\n\r\n" +
             "        </GeometryGroup>\r\n" +
             "</ps:SimpleGeometryShape>\r\n";
