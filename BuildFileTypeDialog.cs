@@ -44,6 +44,7 @@ namespace PaintDotNet.Effects
             this.fileName = Path.GetFileNameWithoutExtension(scriptPath);
             this.userCode = scriptText;
             this.isClassic = isClassic;
+            DecimalSymbol.Text = System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator;
 
             this.Text = $"Building {this.fileName}.DLL";
 

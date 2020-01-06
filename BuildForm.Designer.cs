@@ -88,7 +88,6 @@ namespace PaintDotNet.Effects
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.InsertImageButton = new PaintDotNet.Effects.ScaledToolStripButton();
             this.BulletButton = new PaintDotNet.Effects.ScaledToolStripButton();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.IndentButton = new PaintDotNet.Effects.ScaledToolStripButton();
             this.UnindentButton = new PaintDotNet.Effects.ScaledToolStripButton();
             this.ParagraphLeftButton = new PaintDotNet.Effects.ScaledToolStripButton();
@@ -116,7 +115,7 @@ namespace PaintDotNet.Effects
             this.ButtonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.ButtonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.ButtonCancel.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.ButtonCancel.Location = new System.Drawing.Point(630, 602);
+            this.ButtonCancel.Location = new System.Drawing.Point(635, 602);
             this.ButtonCancel.Name = "ButtonCancel";
             this.ButtonCancel.Size = new System.Drawing.Size(75, 24);
             this.ButtonCancel.TabIndex = 26;
@@ -129,7 +128,7 @@ namespace PaintDotNet.Effects
             this.ButtonSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.ButtonSave.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.ButtonSave.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonSave.Location = new System.Drawing.Point(549, 602);
+            this.ButtonSave.Location = new System.Drawing.Point(554, 602);
             this.ButtonSave.Name = "ButtonSave";
             this.ButtonSave.Size = new System.Drawing.Size(75, 24);
             this.ButtonSave.TabIndex = 25;
@@ -182,7 +181,7 @@ namespace PaintDotNet.Effects
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(16, 104);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(66, 15);
+            this.label2.Size = new System.Drawing.Size(65, 15);
             this.label2.TabIndex = 6;
             this.label2.Text = "Menu Text:";
             // 
@@ -276,7 +275,7 @@ namespace PaintDotNet.Effects
             this.PreviewHelpButton.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.PreviewHelpButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.PreviewHelpButton.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.PreviewHelpButton.Location = new System.Drawing.Point(680, 24);
+            this.PreviewHelpButton.Location = new System.Drawing.Point(684, 25);
             this.PreviewHelpButton.Name = "PreviewHelpButton";
             this.PreviewHelpButton.Size = new System.Drawing.Size(26, 23);
             this.PreviewHelpButton.TabIndex = 16;
@@ -342,7 +341,7 @@ namespace PaintDotNet.Effects
             this.label17.AutoSize = true;
             this.label17.Location = new System.Drawing.Point(16, 246);
             this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(72, 15);
+            this.label17.Size = new System.Drawing.Size(71, 15);
             this.label17.TabIndex = 40;
             this.label17.Text = "DLL Version:";
             // 
@@ -460,7 +459,7 @@ namespace PaintDotNet.Effects
             this.ForceSingleThreadedBox.AutoSize = true;
             this.ForceSingleThreadedBox.Location = new System.Drawing.Point(141, 405);
             this.ForceSingleThreadedBox.Name = "ForceSingleThreadedBox";
-            this.ForceSingleThreadedBox.Size = new System.Drawing.Size(111, 19);
+            this.ForceSingleThreadedBox.Size = new System.Drawing.Size(110, 19);
             this.ForceSingleThreadedBox.TabIndex = 12;
             this.ForceSingleThreadedBox.Text = "Single Threaded";
             this.ForceSingleThreadedBox.UseVisualStyleBackColor = true;
@@ -515,7 +514,7 @@ namespace PaintDotNet.Effects
             this.radioButtonPlain.AutoSize = true;
             this.radioButtonPlain.Location = new System.Drawing.Point(298, 78);
             this.radioButtonPlain.Name = "radioButtonPlain";
-            this.radioButtonPlain.Size = new System.Drawing.Size(76, 19);
+            this.radioButtonPlain.Size = new System.Drawing.Size(77, 19);
             this.radioButtonPlain.TabIndex = 19;
             this.radioButtonPlain.TabStop = true;
             this.radioButtonPlain.Text = "Plain text:";
@@ -527,7 +526,7 @@ namespace PaintDotNet.Effects
             this.radioButtonRich.AutoSize = true;
             this.radioButtonRich.Location = new System.Drawing.Point(298, 134);
             this.radioButtonRich.Name = "radioButtonRich";
-            this.radioButtonRich.Size = new System.Drawing.Size(73, 19);
+            this.radioButtonRich.Size = new System.Drawing.Size(74, 19);
             this.radioButtonRich.TabIndex = 21;
             this.radioButtonRich.TabStop = true;
             this.radioButtonRich.Text = "Rich text:";
@@ -540,7 +539,7 @@ namespace PaintDotNet.Effects
             | System.Windows.Forms.AnchorStyles.Right)));
             this.HelpURL.Location = new System.Drawing.Point(385, 50);
             this.HelpURL.Name = "HelpURL";
-            this.HelpURL.Size = new System.Drawing.Size(320, 23);
+            this.HelpURL.Size = new System.Drawing.Size(325, 23);
             this.HelpURL.TabIndex = 18;
             this.HelpURL.Text = "https://www.getpaint.net/redirect/plugins.html";
             // 
@@ -554,7 +553,7 @@ namespace PaintDotNet.Effects
             this.HelpPlainText.Multiline = true;
             this.HelpPlainText.Name = "HelpPlainText";
             this.HelpPlainText.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.HelpPlainText.Size = new System.Drawing.Size(320, 53);
+            this.HelpPlainText.Size = new System.Drawing.Size(325, 53);
             this.HelpPlainText.TabIndex = 20;
             // 
             // RichHelpContent
@@ -565,9 +564,9 @@ namespace PaintDotNet.Effects
             | System.Windows.Forms.AnchorStyles.Right)));
             this.RichHelpContent.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.RichHelpContent.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.RichHelpContent.Location = new System.Drawing.Point(288, 179);
+            this.RichHelpContent.Location = new System.Drawing.Point(288, 182);
             this.RichHelpContent.Name = "RichHelpContent";
-            this.RichHelpContent.Size = new System.Drawing.Size(417, 404);
+            this.RichHelpContent.Size = new System.Drawing.Size(422, 404);
             this.RichHelpContent.TabIndex = 22;
             this.RichHelpContent.Text = "";
             this.RichHelpContent.KeyDown += new System.Windows.Forms.KeyEventHandler(this.RichHelpContent_KeyDown);
@@ -592,7 +591,6 @@ namespace PaintDotNet.Effects
             this.toolStripSeparator3,
             this.InsertImageButton,
             this.BulletButton,
-            this.toolStripSeparator1,
             this.IndentButton,
             this.UnindentButton,
             this.ParagraphLeftButton,
@@ -600,7 +598,7 @@ namespace PaintDotNet.Effects
             this.toolStrip1.Location = new System.Drawing.Point(288, 155);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Padding = new System.Windows.Forms.Padding(0);
-            this.toolStrip1.Size = new System.Drawing.Size(428, 27);
+            this.toolStrip1.Size = new System.Drawing.Size(422, 27);
             this.toolStrip1.TabIndex = 0;
             // 
             // OpenButton
@@ -750,11 +748,6 @@ namespace PaintDotNet.Effects
             this.BulletButton.Size = new System.Drawing.Size(24, 24);
             this.BulletButton.Text = "Bullets";
             this.BulletButton.Click += new System.EventHandler(this.BulletButton_Click);
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 27);
             // 
             // IndentButton
             // 
@@ -1033,7 +1026,6 @@ namespace PaintDotNet.Effects
         private ScaledToolStripButton BulletButton;
         private ScaledToolStripButton OpenButton;
         private ScaledToolStripButton SaveButton;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.Label PlainTextLabel;
         private ScaledToolStripButton WordPadButton;
