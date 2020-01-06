@@ -441,6 +441,9 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Shape2.png" />
+    <None Include="Resources\Shape1.png" />
+    <None Include="Resources\Shape0.png" />
     <EmbeddedResource Include="Icons\Saturation.png" />
     <EmbeddedResource Include="Icons\ZoomBlur.png" />
     <EmbeddedResource Include="Icons\ReduceNoise.png" />

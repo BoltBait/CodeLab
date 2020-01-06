@@ -28,51 +28,58 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.pgGadioButton = new System.Windows.Forms.RadioButton();
+            this.pgRadioButton = new System.Windows.Forms.RadioButton();
             this.ggRadioButton = new System.Windows.Forms.RadioButton();
             this.sgRadioButton = new System.Windows.Forms.RadioButton();
             this.okButton = new System.Windows.Forms.Button();
             this.cancelButton = new System.Windows.Forms.Button();
+            this.samplePicture = new System.Windows.Forms.PictureBox();
+            this.label1 = new System.Windows.Forms.Label();
+            ((System.ComponentModel.ISupportInitialize)(this.samplePicture)).BeginInit();
             this.SuspendLayout();
             // 
-            // pgGadioButton
+            // pgRadioButton
             // 
-            this.pgGadioButton.AutoSize = true;
-            this.pgGadioButton.Location = new System.Drawing.Point(12, 37);
-            this.pgGadioButton.Name = "pgGadioButton";
-            this.pgGadioButton.Size = new System.Drawing.Size(235, 19);
-            this.pgGadioButton.TabIndex = 5;
-            this.pgGadioButton.TabStop = true;
-            this.pgGadioButton.Text = "SimpleGeometryShape - PathGeometry ";
-            this.pgGadioButton.UseVisualStyleBackColor = true;
+            this.pgRadioButton.AutoSize = true;
+            this.pgRadioButton.Location = new System.Drawing.Point(12, 66);
+            this.pgRadioButton.Name = "pgRadioButton";
+            this.pgRadioButton.Size = new System.Drawing.Size(104, 19);
+            this.pgRadioButton.TabIndex = 5;
+            this.pgRadioButton.TabStop = true;
+            this.pgRadioButton.Text = "Path Geometry";
+            this.pgRadioButton.UseVisualStyleBackColor = true;
+            this.pgRadioButton.CheckedChanged += new System.EventHandler(this.RadioButton_CheckedChanged);
             // 
             // ggRadioButton
             // 
             this.ggRadioButton.AutoSize = true;
-            this.ggRadioButton.Location = new System.Drawing.Point(12, 62);
+            this.ggRadioButton.Location = new System.Drawing.Point(12, 91);
             this.ggRadioButton.Name = "ggRadioButton";
-            this.ggRadioButton.Size = new System.Drawing.Size(241, 19);
+            this.ggRadioButton.Size = new System.Drawing.Size(113, 19);
             this.ggRadioButton.TabIndex = 4;
             this.ggRadioButton.TabStop = true;
-            this.ggRadioButton.Text = "SimpleGeometryShape - GeometryGroup";
+            this.ggRadioButton.Text = "Geometry Group";
             this.ggRadioButton.UseVisualStyleBackColor = true;
+            this.ggRadioButton.CheckedChanged += new System.EventHandler(this.RadioButton_CheckedChanged);
             // 
             // sgRadioButton
             // 
             this.sgRadioButton.AutoSize = true;
-            this.sgRadioButton.Location = new System.Drawing.Point(12, 12);
+            this.sgRadioButton.Location = new System.Drawing.Point(12, 41);
             this.sgRadioButton.Name = "sgRadioButton";
-            this.sgRadioButton.Size = new System.Drawing.Size(245, 19);
+            this.sgRadioButton.Size = new System.Drawing.Size(156, 19);
             this.sgRadioButton.TabIndex = 3;
             this.sgRadioButton.TabStop = true;
-            this.sgRadioButton.Text = "SimpleGeometryShape - StreamGeometry";
+            this.sgRadioButton.Text = "Simple Stream Geometry";
             this.sgRadioButton.UseVisualStyleBackColor = true;
+            this.sgRadioButton.CheckedChanged += new System.EventHandler(this.RadioButton_CheckedChanged);
             // 
             // okButton
             // 
+            this.okButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.okButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.okButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.okButton.Location = new System.Drawing.Point(132, 114);
+            this.okButton.Location = new System.Drawing.Point(404, 156);
             this.okButton.Name = "okButton";
             this.okButton.Size = new System.Drawing.Size(75, 24);
             this.okButton.TabIndex = 6;
@@ -82,8 +89,9 @@
             // 
             // cancelButton
             // 
+            this.cancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.cancelButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.cancelButton.Location = new System.Drawing.Point(213, 114);
+            this.cancelButton.Location = new System.Drawing.Point(485, 156);
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.Size = new System.Drawing.Size(75, 24);
             this.cancelButton.TabIndex = 7;
@@ -91,18 +99,43 @@
             this.cancelButton.UseVisualStyleBackColor = true;
             this.cancelButton.Click += new System.EventHandler(this.cancelButton_Click);
             // 
+            // samplePicture
+            // 
+            this.samplePicture.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.samplePicture.BackgroundImage = global::PaintDotNet.Effects.Properties.Resources.Shape0;
+            this.samplePicture.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.samplePicture.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.samplePicture.Location = new System.Drawing.Point(176, 19);
+            this.samplePicture.Name = "samplePicture";
+            this.samplePicture.Size = new System.Drawing.Size(383, 121);
+            this.samplePicture.TabIndex = 8;
+            this.samplePicture.TabStop = false;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.label1.Location = new System.Drawing.Point(10, 19);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(86, 15);
+            this.label1.TabIndex = 9;
+            this.label1.Text = "Shape format:";
+            // 
             // NewShape
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.ClientSize = new System.Drawing.Size(300, 150);
+            this.ClientSize = new System.Drawing.Size(572, 192);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.samplePicture);
             this.Controls.Add(this.cancelButton);
             this.Controls.Add(this.okButton);
-            this.Controls.Add(this.pgGadioButton);
+            this.Controls.Add(this.pgRadioButton);
             this.Controls.Add(this.ggRadioButton);
             this.Controls.Add(this.sgRadioButton);
             this.IconName = "Shape";
             this.Name = "NewShape";
             this.Text = "New Shape";
+            ((System.ComponentModel.ISupportInitialize)(this.samplePicture)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -110,10 +143,12 @@
 
         #endregion
 
-        private System.Windows.Forms.RadioButton pgGadioButton;
+        private System.Windows.Forms.RadioButton pgRadioButton;
         private System.Windows.Forms.RadioButton ggRadioButton;
         private System.Windows.Forms.RadioButton sgRadioButton;
         private System.Windows.Forms.Button okButton;
         private System.Windows.Forms.Button cancelButton;
+        private System.Windows.Forms.PictureBox samplePicture;
+        private System.Windows.Forms.Label label1;
     }
 }

@@ -18,7 +18,7 @@ namespace PaintDotNet.Effects
             {
                 this.ShapeCode = geometryGroup;
             }
-            else if (this.pgGadioButton.Checked)
+            else if (this.pgRadioButton.Checked)
             {
                 this.ShapeCode = pathGeometry;
             }
@@ -80,5 +80,21 @@ namespace PaintDotNet.Effects
             "            <RectangleGeometry Rect=\"2,2,96,156\" RadiusX=\"5\" RadiusY=\"5\" />\r\n" +
             "        </GeometryGroup>\r\n" +
             "</ps:SimpleGeometryShape>\r\n";
+
+        private void RadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            if (sgRadioButton.Checked)
+            {
+                samplePicture.BackgroundImage = Properties.Resources.Shape0;
+            }
+            else if (pgRadioButton.Checked)
+            {
+                samplePicture.BackgroundImage = Properties.Resources.Shape1;
+            }
+            else
+            {
+                samplePicture.BackgroundImage = Properties.Resources.Shape2;
+            }
+        }
     }
 }
