@@ -65,8 +65,8 @@ namespace PaintDotNet.Effects
             "<ps:SimpleGeometryShape\r\n" +
             "    xmlns=\"clr-namespace:PaintDotNet.UI.Media;assembly=PaintDotNet.Framework\"\r\n" +
             "    xmlns:ps=\"clr-namespace:PaintDotNet.Shapes;assembly=PaintDotNet.Framework\"\r\n" +
-            "    DisplayName=\"Square\"\r\n" +
-            "    Geometry=\"F0 M 0,0 L 100,0 L 100,100 L 0,100 Z\" />\r\n";
+            "    DisplayName=\"House\"\r\n" +
+            "    Geometry=\"F1 M 21,142 L 160,22 L 300,142 L 300,318 L 21,318 Z\" />\r\n";
 
         private const string pathGeometry = "" +
             "<ps:SimpleGeometryShape\r\n" +
@@ -81,24 +81,13 @@ namespace PaintDotNet.Effects
             "<ps:SimpleGeometryShape\r\n" +
             "    xmlns=\"clr-namespace:PaintDotNet.UI.Media;assembly=PaintDotNet.Framework\"\r\n" +
             "    xmlns:ps=\"clr-namespace:PaintDotNet.Shapes;assembly=PaintDotNet.Framework\"\r\n" +
-            "    DisplayName=\"Cube\">\r\n" +
+            "    DisplayName=\"House\">\r\n" +
             "    <PathGeometry FillRule=\"Nonzero\">\r\n" +
-            "        <PathFigure IsClosed=\"True\" IsFilled=\"True\" StartPoint=\"0,22\">\r\n" +
-            "            <LineSegment Point=\"58,0\" IsSmoothJoin=\"True\" />\r\n" +
-            "            <LineSegment Point=\"116,22\" IsSmoothJoin=\"True\" />\r\n" +
-            "            <LineSegment Point=\"116,93\" IsSmoothJoin=\"True\" />\r\n" +
-            "            <LineSegment Point=\"58,116\" IsSmoothJoin=\"True\" />\r\n" +
-            "            <LineSegment Point=\"0,93\" IsSmoothJoin=\"True\" />\r\n" +
-            "            <LineSegment Point=\"0,22\" IsSmoothJoin=\"True\" />\r\n" +
-            "        </PathFigure>\r\n" +
-            "        <PathFigure IsClosed=\"False\" IsFilled=\"False\" StartPoint=\"58,46\">\r\n" +
-            "            <LineSegment Point=\"0,22\" />\r\n" +
-            "        </PathFigure>\r\n" +
-            "        <PathFigure IsClosed=\"False\" IsFilled=\"False\" StartPoint=\"58,46\">\r\n" +
-            "            <LineSegment Point=\"58,116\" />\r\n" +
-            "        </PathFigure>\r\n" +
-            "        <PathFigure IsClosed=\"False\" IsFilled=\"False\" StartPoint=\"58,46\">\r\n" +
-            "            <LineSegment Point=\"116,22\" />\r\n" +
+            "        <PathFigure IsClosed=\"True\" IsFilled=\"True\" StartPoint=\"21,142\">\r\n" +
+            "            <LineSegment Point = \"160,22\" IsSmoothJoin=\"True\" />\r\n" +
+            "            <LineSegment Point = \"300,142\" IsSmoothJoin=\"True\" />\r\n" +
+            "            <LineSegment Point = \"300,318\" IsSmoothJoin=\"True\" />\r\n" +
+            "            <LineSegment Point = \"21,318\" IsSmoothJoin=\"True\" />\r\n" +
             "        </PathFigure>\r\n" +
             "    </PathGeometry>\r\n" +
             "</ps:SimpleGeometryShape>\r\n";
@@ -116,10 +105,13 @@ namespace PaintDotNet.Effects
             "<ps:SimpleGeometryShape\r\n" +
             "    xmlns=\"clr-namespace:PaintDotNet.UI.Media;assembly=PaintDotNet.Framework\"\r\n" +
             "    xmlns:ps=\"clr-namespace:PaintDotNet.Shapes;assembly=PaintDotNet.Framework\"\r\n" +
-            "    DisplayName=\"Rounded Rectangle\">\r\n" +
+            "    DisplayName=\"Cell Phone\">\r\n" +
             "        <GeometryGroup>\r\n" +
             "            <RectangleGeometry Rect=\"0,0,100,160\" RadiusX=\"5\" RadiusY=\"5\" />\r\n" +
             "            <RectangleGeometry Rect=\"2,2,96,156\" RadiusX=\"5\" RadiusY=\"5\" />\r\n" +
+            "            <RectangleGeometry Rect=\"42,5,16,3\" RadiusX=\"2\" RadiusY=\"2\" />\r\n" +
+            "            <EllipseGeometry Center = \"50,150\" RadiusX=\"6\" RadiusY=\"6\" />\r\n" +
+            "            <PathGeometry Figures=\"M 20,72 L 50,52 L 80,72 L 80,110 L 20,110 Z\" />\r\n" +
             "        </GeometryGroup>\r\n" +
             "</ps:SimpleGeometryShape>\r\n";
 
