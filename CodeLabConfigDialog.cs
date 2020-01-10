@@ -30,7 +30,7 @@ namespace PaintDotNet.Effects
 {
     internal partial class CodeLabConfigDialog : EffectConfigDialog
     {
-        private const string ThisVersion = "4.4"; // Remember to change it in CodeLab.cs too!
+        private const string ThisVersion = "5.0"; // Remember to change it in CodeLab.cs too!
         private const string WebUpdateFile = "https://www.boltbait.com/versions.txt"; // The web site to check for updates
         private const string ThisApplication = "1"; // in the WebUpadteFile, CodeLab is application #1
         // format of the versions.txt file:  application number;current version;URL to download current version
@@ -2040,7 +2040,7 @@ namespace PaintDotNet.Effects
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FlexibleMessageBox.Show(WindowTitle + "\nCopyright © 2006-2019, All Rights Reserved.\n\nTom Jackson:\tInitial Code, Compile to DLL\n\nDavid Issel:\tEffect UI Creation, Effect Icons, Effect Help\n\t\tSystem, Editor Enhancements (including\n\t\tFile New Templates, CodeLab Updater,\n\t\tBug Fixes), Coding Tutorials and Installer\n\nJason Wendt:\tMigration to ScintillaNET editor control,\n\t\tIntelligent Assistance (including code\n\t\tcompletion with snippets and tips),\n\t\tDebug Output, Dark Theme, Bug Fixes,\n\t\tHiDPI icons, and Live Effect Preview\n\nJörg Reichert:\tFlexibleMessageBox", "About CodeLab", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            FlexibleMessageBox.Show(WindowTitle + "\nCopyright © 2006-2020, All Rights Reserved.\n\nTom Jackson:\tInitial Code, Compile to DLL\n\nDavid Issel:\tEffect UI Creation, Effect Icons, Effect Help\n\t\tSystem, Editor Enhancements (including\n\t\tFile New Templates, CodeLab Updater,\n\t\tBug Fixes), Coding Tutorials and Installer\n\nJason Wendt:\tMigration to ScintillaNET editor control,\n\t\tIntelligent Assistance (including code\n\t\tcompletion with snippets and tips),\n\t\tDebug Output, Dark Theme, Bug Fixes,\n\t\tHiDPI icons, Live Effect Preview,\n\t\tFiletype editing, and Shape editing\n\nJörg Reichert:\tFlexibleMessageBox", "About CodeLab", MessageBoxButtons.OK, MessageBoxIcon.Information);
             txtCode.Focus();
         }
         #endregion
