@@ -682,11 +682,11 @@ namespace PaintDotNet.Effects
                 code += "CheckboxControl Amount" + controlCount.ToString() + " = false; // [0,1] " + effect + " Invert Colors" + cr;
                 controlCount++;
             }
-            //if (BlendingCode.Text == "User selected blending mode")
-            //{
-            //    code += "BinaryPixelOp Amount" + controlCount.ToString() + " = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Normal); // " + effect + " Blending Mode" + cr;
-            //    controlCount++;
-            //}
+            if (effect.Contains("User selected"))
+            {
+                code += "BinaryPixelOp Amount" + controlCount.ToString() + " = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Normal); // " + effect + " Blending Mode" + cr;
+                controlCount++;
+            }
             return code;
         }
 
@@ -736,7 +736,8 @@ namespace PaintDotNet.Effects
             {
                 flowListArray[i] += "|" + currentUIcount.ToString();
                 var elementDetails = flowListArray[i].Split('|');
-                if (elementDetails[1] == "Effect")
+                if (elementDetails[1] == "Effect" || 
+                    (elementDetails[1] == "Blend" && elementDetails[2] == "User selected"))
                 {
                     code += getUIControls(elementDetails[2], ref currentUIcount);
                 }
@@ -1275,14 +1276,31 @@ namespace PaintDotNet.Effects
                         case "Blend":
                             if (lastItem)
                             {
-                                rendercode = "    // " + ename + " Blend the " + srcsurface + " surface and the " + wrksurface + " surface to the " + dstsurface + " surface" + cr;
-                                rendercode += "    " + ename.ToLower() + "Op.Apply(" + dstsurface + ", " + srcsurface + ", " + wrksurface + ", rect);" + cr;
+                                if (ename == "User selected")
+                                {
+                                    rendercode = "    // Blend the " + srcsurface + " surface and the " + wrksurface + " surface to the " + dstsurface + " surface" + cr;
+                                    rendercode += "    Amount" + elnum.ToString() + ".Apply(" + dstsurface + ", " + srcsurface + ", " + wrksurface + ", rect);" + cr;
+                                }
+                                else
+                                {
+                                    rendercode = "    // " + ename + " Blend the " + srcsurface + " surface and the " + wrksurface + " surface to the " + dstsurface + " surface" + cr;
+                                    rendercode += "    " + ename.ToLower() + "Op.Apply(" + dstsurface + ", " + srcsurface + ", " + wrksurface + ", rect);" + cr;
+                                }
                             }
                             else
                             {
-                                code += "    if (IsCancelRequested) return;" + cr;
-                                code += "    // " + ename + " Blend the " + srcsurface + " surface and the " + wrksurface + " surface to the " + dstsurface + " surface" + cr;
-                                code += "    " + ename.ToLower() + "Op.Apply(" + dstsurface + ", " + srcsurface + ", " + wrksurface + ");" + cr;
+                                if (ename == "User selected")
+                                {
+                                    code += "    if (IsCancelRequested) return;" + cr;
+                                    code += "    // Blend the " + srcsurface + " surface and the " + wrksurface + " surface to the " + dstsurface + " surface" + cr;
+                                    code += "    Amount" + elnum.ToString() + ".Apply(" + dstsurface + ", " + srcsurface + ", " + wrksurface + ");" + cr;
+                                }
+                                else
+                                {
+                                    code += "    if (IsCancelRequested) return;" + cr;
+                                    code += "    // " + ename + " Blend the " + srcsurface + " surface and the " + wrksurface + " surface to the " + dstsurface + " surface" + cr;
+                                    code += "    " + ename.ToLower() + "Op.Apply(" + dstsurface + ", " + srcsurface + ", " + wrksurface + ");" + cr;
+                                }
                             }
                             break;
                         case "Pixel Op":
