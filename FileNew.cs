@@ -51,7 +51,7 @@ namespace PaintDotNet.Effects
             flowList.ItemHeight = (int)(64 * UIfactor);
             DefaultColorComboBox.Items.Add("Primary");
             DefaultColorComboBox.Items.Add("Secondary");
-            //DefaultColorComboBox.Items.Add("UserSelected");
+            DefaultColorComboBox.Items.Add("User selected");
             DefaultColorComboBox.Items.AddRange(GetColorNames());
             DefaultColorComboBox.SelectedIndex = 0;
             catagoryBox.SelectedIndex = 0;
@@ -687,6 +687,11 @@ namespace PaintDotNet.Effects
                 code += "BinaryPixelOp Amount" + controlCount.ToString() + " = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Normal); // " + effect + " Blending Mode" + cr;
                 controlCount++;
             }
+            if (effect.Contains("Fill with Color"))
+            {
+                code += "ColorWheelControl Amount" + controlCount.ToString() + " = ColorBgra.FromBgra(0, 0, 0, 255); // [PrimaryColor?!] Fill with user selected color" + cr;
+                controlCount++;
+            }
             return code;
         }
 
@@ -737,7 +742,8 @@ namespace PaintDotNet.Effects
                 flowListArray[i] += "|" + currentUIcount.ToString();
                 var elementDetails = flowListArray[i].Split('|');
                 if (elementDetails[1] == "Effect" || 
-                    (elementDetails[1] == "Blend" && elementDetails[2] == "User selected"))
+                    (elementDetails[1] == "Blend" && elementDetails[2] == "User selected") ||
+                    (elementDetails[1] == "Fill" && elementDetails[3] == "User selected"))
                 {
                     code += getUIControls(elementDetails[2], ref currentUIcount);
                 }
@@ -1319,14 +1325,30 @@ namespace PaintDotNet.Effects
                         case "Fill":
                             if (lastItem)
                             {
-                                rendercode = "    // Fill the " + dstsurface + " surface with " + ecolor + cr;
-                                rendercode += "    " + dstsurface + ".Clear(rect,Color." + ecolor + ");" + cr;
+                                if (ecolor == "User selected")
+                                {
+                                    rendercode = "    // Fill the " + dstsurface + " surface with a user selected color" + cr;
+                                    rendercode += "    " + dstsurface + ".Clear(rect,Amount" + elnum.ToString() + ");" + cr;
+                                }
+                                else
+                                {
+                                    rendercode = "    // Fill the " + dstsurface + " surface with " + ecolor + cr;
+                                    rendercode += "    " + dstsurface + ".Clear(rect,Color." + ecolor + ");" + cr;
+                                }
                             }
                             else
                             {
                                 code += "    if (IsCancelRequested) return;" + cr;
-                                code += "    // Fill the " + dstsurface + " surface with " + ecolor + cr;
-                                code += "    " + dstsurface + ".Clear(ColorBgra." + ecolor + ");" + cr;
+                                if (ecolor == "User selected")
+                                {
+                                    code += "    // Fill the " + dstsurface + " surface with a user selected color" + cr;
+                                    code += "    " + dstsurface + ".Clear(Amount" + elnum.ToString() + ");" + cr;
+                                }
+                                else
+                                {
+                                    code += "    // Fill the " + dstsurface + " surface with " + ecolor + cr;
+                                    code += "    " + dstsurface + ".Clear(ColorBgra." + ecolor + ");" + cr;
+                                }
                             }
                             break;
                         case "Copy":
@@ -1358,7 +1380,7 @@ namespace PaintDotNet.Effects
             code += "void Render(Surface dst, Surface src, Rectangle rect)" + cr;
             code += "{" + cr;
 
-            // Add in code for the desired variables the user selected
+            // Add in code for the desired variables the user wants
             if (CenterCode.Checked || SelectionCode.Checked)
             {
                 code += "    Rectangle selection = EnvironmentParameters.GetSelection(src.Bounds).GetBoundsInt();" + cr;
@@ -1623,14 +1645,15 @@ namespace PaintDotNet.Effects
 
                 if (groupName == "Fill")
                 {
-                    if ((smallText == "Transparent") || (smallText == "Primary") || (smallText == "Secondary") || (smallText == "UserSelected"))
+                    if ((smallText == "Transparent") || (smallText == "Primary") || (smallText == "Secondary") || (smallText == "User selected"))
                     {
-                        Image imageFill = ResUtil.GetImage(smallText);
+                        string imageName = smallText == "User selected" ? "UserSelected" : smallText;
+                        Image imageFill = ResUtil.GetImage(imageName);
                         e.Graphics.DrawImage(imageFill, e.Bounds.X + (int)(17 * UIfactor), e.Bounds.Y + (int)(16 * UIfactor), e.Bounds.Height - (int)(33 * UIfactor), e.Bounds.Height - (int)(34 * UIfactor));
                         if (smallText == "Transparent") smallText = "Clear " + ((graphicName[0] == 'W') ? "WRK" : "DST") + " surface";
                         if (smallText == "Primary") smallText = "Fill " + ((graphicName[0] == 'W') ? "WRK" : "DST") + " surface with Primary color";
                         if (smallText == "Secondary") smallText = "Fill " + ((graphicName[0] == 'W') ? "WRK" : "DST") + " surface with Secondary color";
-                        if (smallText == "UserSelected") smallText = "Fill " + ((graphicName[0] == 'W') ? "WRK" : "DST") + " surface with User Selected color";
+                        if (smallText == "User selected") smallText = "Fill " + ((graphicName[0] == 'W') ? "WRK" : "DST") + " surface with User Selected color";
                     }
                     else
                     {
@@ -1750,6 +1773,13 @@ namespace PaintDotNet.Effects
 
         private string assembleElement()
         {
+            //[0] = Dest, Src Dest, Top Bottom Dest
+            //[1] = Effect, Blend, Pixel, Fill, or Copy
+            //[2] = Effect / Blend / Pixel Op Name
+            //[3] = Fill color or comment
+            // and added later:
+            //[4] = Starting control name is AmountX
+
             // icon description
             string ret = "";
             if (sourceBox.Visible) ret += sourceBox.Text.Substring(0, 1);
@@ -1978,7 +2008,7 @@ namespace PaintDotNet.Effects
             using (SolidBrush solidBrush = new SolidBrush(e.ForeColor))
             using (Font font = new Font(e.Font, FontStyle.Regular))
             {
-                if (colorName == "Transparent" || colorName == "Primary" || colorName == "Secondary")
+                if (colorName == "Transparent" || colorName == "Primary" || colorName == "Secondary" || colorName == "User selected")
                 {
                     e.Graphics.DrawString(colorName, font, solidBrush, e.Bounds);
                 }
