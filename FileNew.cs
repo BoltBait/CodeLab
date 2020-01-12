@@ -1332,8 +1332,16 @@ namespace PaintDotNet.Effects
                                 }
                                 else
                                 {
-                                    rendercode = "    // Fill the " + dstsurface + " surface with " + ecolor + cr;
-                                    rendercode += "    " + dstsurface + ".Clear(rect,Color." + ecolor + ");" + cr;
+                                    rendercode = "    // Fill the " + dstsurface + " surface with " + ecolor + " color" + cr;
+                                    if (ecolor == "Primary" || ecolor == "Secondary")
+                                    {
+                                        ecolor = "EnvironmentParameters." + ecolor + "Color";
+                                    }
+                                    else
+                                    {
+                                        ecolor = "ColorBgra." + ecolor;
+                                    }
+                                    rendercode += "    " + dstsurface + ".Clear(rect," + ecolor + ");" + cr;
                                 }
                             }
                             else
@@ -1346,8 +1354,16 @@ namespace PaintDotNet.Effects
                                 }
                                 else
                                 {
-                                    code += "    // Fill the " + dstsurface + " surface with " + ecolor + cr;
-                                    code += "    " + dstsurface + ".Clear(ColorBgra." + ecolor + ");" + cr;
+                                    code += "    // Fill the " + dstsurface + " surface with " + ecolor + " color" + cr;
+                                    if (ecolor == "Primary" || ecolor == "Secondary")
+                                    {
+                                        ecolor = "EnvironmentParameters." + ecolor + "Color";
+                                    }
+                                    else
+                                    {
+                                        ecolor = "ColorBgra." + ecolor;
+                                    }
+                                    code += "    " + dstsurface + ".Clear(" + ecolor + ");" + cr;
                                 }
                             }
                             break;
