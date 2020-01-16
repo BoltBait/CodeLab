@@ -1757,21 +1757,26 @@ namespace PaintDotNet.Effects
 
         private void wordWrapToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (txtCode.WrapMode == WrapMode.None)
+            bool inverseValue = txtCode.WrapMode == WrapMode.None;
+            EnableWordWrap(inverseValue);
+
+            if (tabStrip1.SelectedTabProjType == ProjectType.None)
             {
-                txtCode.WrapMode = WrapMode.Whitespace;
-                Settings.WordWrap = true;
-                wordWrapToolStripMenuItem.CheckState = CheckState.Checked;
-                txtCode.WrapVisualFlags = WrapVisualFlags.Start;
+                Settings.WordWrapPlainText = inverseValue;
             }
             else
             {
-                txtCode.WrapMode = WrapMode.None;
-                Settings.WordWrap = false;
-                wordWrapToolStripMenuItem.CheckState = CheckState.Unchecked;
-                txtCode.WrapVisualFlags = WrapVisualFlags.None;
+                Settings.WordWrap = inverseValue;
             }
+
             txtCode.Focus();
+        }
+
+        private void EnableWordWrap(bool enable)
+        {
+            wordWrapToolStripMenuItem.CheckState = enable ? CheckState.Checked : CheckState.Unchecked;
+            txtCode.WrapMode = enable ? WrapMode.Whitespace : WrapMode.None;
+            txtCode.WrapVisualFlags = enable ? WrapVisualFlags.Start : WrapVisualFlags.None;
         }
 
         private void whiteSpaceToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2387,12 +2392,14 @@ namespace PaintDotNet.Effects
         {
             FileName = tabStrip1.SelectedTabTitle;
             FullScriptPath = tabStrip1.SelectedTabPath;
+            ProjectType projectType = tabStrip1.SelectedTabProjType;
             UpdateWindowTitle();
             txtCode.SwitchToDocument(tabStrip1.SelectedTabGuid);
+            EnableWordWrap(projectType == ProjectType.None ? Settings.WordWrapPlainText : Settings.WordWrap);
             UpdateToolBarButtons();
 
-            if (tabStrip1.SelectedTabProjType == ProjectType.Effect ||
-                tabStrip1.SelectedTabProjType == ProjectType.FileType)
+            if (projectType == ProjectType.Effect ||
+                projectType == ProjectType.FileType)
             {
                 EnableCSharpButtons(true);
                 BuildAsync();
@@ -2407,6 +2414,7 @@ namespace PaintDotNet.Effects
         private void tabStrip1_NewTabCreated(object sender, EventArgs e)
         {
             txtCode.CreateNewDocument(tabStrip1.SelectedTabGuid, tabStrip1.SelectedTabProjType);
+            EnableWordWrap(tabStrip1.SelectedTabProjType == ProjectType.None ? Settings.WordWrapPlainText : Settings.WordWrap);
             UpdateWindowTitle();
             UpdateToolBarButtons();
             EnableCSharpButtons(tabStrip1.SelectedTabProjType == ProjectType.Effect || tabStrip1.SelectedTabProjType == ProjectType.FileType);

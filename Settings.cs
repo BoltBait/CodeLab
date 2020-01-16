@@ -129,6 +129,12 @@ namespace PaintDotNet.Effects
             set => SetRegValue("WordWrap", value);
         }
 
+        internal static bool WordWrapPlainText
+        {
+            get => GetRegValue("WordWrapPlainText", true);
+            set => SetRegValue("WordWrapPlainText", value);
+        }
+
         internal static string Snippets
         {
             get => GetRegValue("Snippets", string.Empty);
