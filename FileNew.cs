@@ -49,6 +49,7 @@ namespace PaintDotNet.Effects
                 UIfactor = g.DpiY / 96;
             }
             flowList.ItemHeight = (int)(64 * UIfactor);
+            flowList.Font = this.Font;
             DefaultColorComboBox.Items.Add("Primary");
             DefaultColorComboBox.Items.Add("Secondary");
             DefaultColorComboBox.Items.Add("User selected");

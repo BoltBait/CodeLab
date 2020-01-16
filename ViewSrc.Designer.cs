@@ -43,6 +43,7 @@ namespace PaintDotNet.Effects
             this.TextSrcBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.TextSrcBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TextSrcBox.Location = new System.Drawing.Point(13, 13);
             this.TextSrcBox.Multiline = true;
             this.TextSrcBox.Name = "TextSrcBox";
@@ -73,7 +74,7 @@ namespace PaintDotNet.Effects
             this.CopyButton.ImageName = "Copy";
             this.CopyButton.Location = new System.Drawing.Point(13, 325);
             this.CopyButton.Name = "CopyButton";
-            this.CopyButton.Size = new System.Drawing.Size(27, 23);
+            this.CopyButton.Size = new System.Drawing.Size(27, 27);
             this.CopyButton.TabIndex = 3;
             this.CopyButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.toolTip1.SetToolTip(this.CopyButton, "Copy all to clipboard");
@@ -88,7 +89,7 @@ namespace PaintDotNet.Effects
             this.SaveButton.ImageName = "Save";
             this.SaveButton.Location = new System.Drawing.Point(46, 325);
             this.SaveButton.Name = "SaveButton";
-            this.SaveButton.Size = new System.Drawing.Size(27, 23);
+            this.SaveButton.Size = new System.Drawing.Size(27, 27);
             this.SaveButton.TabIndex = 2;
             this.SaveButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.toolTip1.SetToolTip(this.SaveButton, "Save to file");

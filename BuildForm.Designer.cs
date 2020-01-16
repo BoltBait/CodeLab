@@ -181,7 +181,7 @@ namespace PaintDotNet.Effects
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(16, 104);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(65, 15);
+            this.label2.Size = new System.Drawing.Size(66, 15);
             this.label2.TabIndex = 6;
             this.label2.Text = "Menu Text:";
             // 
@@ -341,7 +341,7 @@ namespace PaintDotNet.Effects
             this.label17.AutoSize = true;
             this.label17.Location = new System.Drawing.Point(16, 246);
             this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(71, 15);
+            this.label17.Size = new System.Drawing.Size(72, 15);
             this.label17.TabIndex = 40;
             this.label17.Text = "DLL Version:";
             // 
@@ -459,7 +459,7 @@ namespace PaintDotNet.Effects
             this.ForceSingleThreadedBox.AutoSize = true;
             this.ForceSingleThreadedBox.Location = new System.Drawing.Point(141, 405);
             this.ForceSingleThreadedBox.Name = "ForceSingleThreadedBox";
-            this.ForceSingleThreadedBox.Size = new System.Drawing.Size(110, 19);
+            this.ForceSingleThreadedBox.Size = new System.Drawing.Size(111, 19);
             this.ForceSingleThreadedBox.TabIndex = 12;
             this.ForceSingleThreadedBox.Text = "Single Threaded";
             this.ForceSingleThreadedBox.UseVisualStyleBackColor = true;
@@ -514,7 +514,7 @@ namespace PaintDotNet.Effects
             this.radioButtonPlain.AutoSize = true;
             this.radioButtonPlain.Location = new System.Drawing.Point(298, 78);
             this.radioButtonPlain.Name = "radioButtonPlain";
-            this.radioButtonPlain.Size = new System.Drawing.Size(77, 19);
+            this.radioButtonPlain.Size = new System.Drawing.Size(76, 19);
             this.radioButtonPlain.TabIndex = 19;
             this.radioButtonPlain.TabStop = true;
             this.radioButtonPlain.Text = "Plain text:";
@@ -526,7 +526,7 @@ namespace PaintDotNet.Effects
             this.radioButtonRich.AutoSize = true;
             this.radioButtonRich.Location = new System.Drawing.Point(298, 134);
             this.radioButtonRich.Name = "radioButtonRich";
-            this.radioButtonRich.Size = new System.Drawing.Size(74, 19);
+            this.radioButtonRich.Size = new System.Drawing.Size(73, 19);
             this.radioButtonRich.TabIndex = 21;
             this.radioButtonRich.TabStop = true;
             this.radioButtonRich.Text = "Rich text:";
@@ -549,6 +549,7 @@ namespace PaintDotNet.Effects
             this.HelpPlainText.AcceptsTab = true;
             this.HelpPlainText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.HelpPlainText.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.HelpPlainText.Location = new System.Drawing.Point(385, 77);
             this.HelpPlainText.Multiline = true;
             this.HelpPlainText.Name = "HelpPlainText";

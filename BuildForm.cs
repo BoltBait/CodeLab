@@ -52,6 +52,8 @@ namespace PaintDotNet.Effects
         {
             InitializeComponent();
 
+            HelpPlainText.Font = this.Font;
+
             // PDN Theme
             toolStrip1.Renderer = PdnTheme.Renderer;
             SubMenuName.ForeColor = this.ForeColor;
@@ -122,7 +124,6 @@ namespace PaintDotNet.Effects
                 label3.Enabled = false;
                 WindowTitleText.Enabled = false;
             }
-
 
             // Preload version checking for period
             Match vsn = Regex.Match(ScriptText, @"//[\s-[\r\n]]*Version[\s-[\r\n]]*:[\s-[\r\n]]*(?<majorversionlabel>\d+)\.(?<minorversionlabel>\d+)(?=\r?\n|$)", RegexOptions.IgnoreCase);

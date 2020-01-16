@@ -261,7 +261,7 @@
             this.ST.AutoSize = true;
             this.ST.Location = new System.Drawing.Point(40, 417);
             this.ST.Name = "ST";
-            this.ST.Size = new System.Drawing.Size(110, 19);
+            this.ST.Size = new System.Drawing.Size(111, 19);
             this.ST.TabIndex = 18;
             this.ST.Text = "Single Threaded";
             this.ST.UseVisualStyleBackColor = true;
@@ -313,6 +313,7 @@
             // flowList
             // 
             this.flowList.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.flowList.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.flowList.FormattingEnabled = true;
             this.flowList.IntegralHeight = false;
             this.flowList.ItemHeight = 64;
