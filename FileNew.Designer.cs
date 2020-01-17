@@ -56,7 +56,7 @@
             this.MoveDown = new System.Windows.Forms.Button();
             this.MoveUp = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.catagoryBox = new System.Windows.Forms.ComboBox();
+            this.categoryBox = new System.Windows.Forms.ComboBox();
             this.label11 = new System.Windows.Forms.Label();
             this.effectLabel = new System.Windows.Forms.Label();
             this.effectBox = new System.Windows.Forms.ComboBox();
@@ -261,7 +261,7 @@
             this.ST.AutoSize = true;
             this.ST.Location = new System.Drawing.Point(40, 417);
             this.ST.Name = "ST";
-            this.ST.Size = new System.Drawing.Size(111, 19);
+            this.ST.Size = new System.Drawing.Size(110, 19);
             this.ST.TabIndex = 18;
             this.ST.Text = "Single Threaded";
             this.ST.UseVisualStyleBackColor = true;
@@ -362,21 +362,21 @@
             this.MoveUp.UseVisualStyleBackColor = true;
             this.MoveUp.Click += new System.EventHandler(this.MoveUp_Click);
             // 
-            // catagoryBox
+            // categoryBox
             // 
-            this.catagoryBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.catagoryBox.FormattingEnabled = true;
-            this.catagoryBox.Items.AddRange(new object[] {
+            this.categoryBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.categoryBox.FormattingEnabled = true;
+            this.categoryBox.Items.AddRange(new object[] {
             "Effect",
             "Blend",
             "Pixel Op",
             "Fill",
             "Copy"});
-            this.catagoryBox.Location = new System.Drawing.Point(64, 12);
-            this.catagoryBox.Name = "catagoryBox";
-            this.catagoryBox.Size = new System.Drawing.Size(92, 23);
-            this.catagoryBox.TabIndex = 26;
-            this.catagoryBox.SelectedIndexChanged += new System.EventHandler(this.catagoryBox_SelectedIndexChanged);
+            this.categoryBox.Location = new System.Drawing.Point(64, 12);
+            this.categoryBox.Name = "categoryBox";
+            this.categoryBox.Size = new System.Drawing.Size(92, 23);
+            this.categoryBox.TabIndex = 26;
+            this.categoryBox.SelectedIndexChanged += new System.EventHandler(this.catagoryBox_SelectedIndexChanged);
             // 
             // label11
             // 
@@ -386,7 +386,7 @@
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(58, 15);
             this.label11.TabIndex = 25;
-            this.label11.Text = "Catagory:";
+            this.label11.Text = "Category:";
             // 
             // effectLabel
             // 
@@ -615,7 +615,7 @@
             this.ElementTab.Controls.Add(this.pixelOpBox);
             this.ElementTab.Controls.Add(this.blendBox);
             this.ElementTab.Controls.Add(this.bottomBox);
-            this.ElementTab.Controls.Add(this.catagoryBox);
+            this.ElementTab.Controls.Add(this.categoryBox);
             this.ElementTab.Controls.Add(this.bottomLabel);
             this.ElementTab.Controls.Add(this.blendLabel);
             this.ElementTab.Controls.Add(this.sourceBox);
@@ -716,7 +716,7 @@
         private System.Windows.Forms.Button MoveDown;
         private System.Windows.Forms.Button MoveUp;
         private System.Windows.Forms.ToolTip toolTip1;
-        private System.Windows.Forms.ComboBox catagoryBox;
+        private System.Windows.Forms.ComboBox categoryBox;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Label effectLabel;
         private System.Windows.Forms.ComboBox effectBox;

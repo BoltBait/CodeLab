@@ -55,7 +55,7 @@ namespace PaintDotNet.Effects
             DefaultColorComboBox.Items.Add("User selected");
             DefaultColorComboBox.Items.AddRange(GetColorNames());
             DefaultColorComboBox.SelectedIndex = 0;
-            catagoryBox.SelectedIndex = 0;
+            categoryBox.SelectedIndex = 0;
             pixelOpBox.SelectedIndex = 0;
             effectBox.SelectedIndex = effectBox.FindString("Gaussian");
             sourceBox.SelectedIndex = 0;
@@ -1805,10 +1805,10 @@ namespace PaintDotNet.Effects
             int iconLength = ret.Length;
             ret += "|";
             // catagory
-            ret += catagoryBox.Text;
+            ret += categoryBox.Text;
             ret += "|";
             // big text
-            switch (catagoryBox.Text)
+            switch (categoryBox.Text)
             {
                 case "Effect":
                     ret += effectBox.Text;
@@ -1828,7 +1828,7 @@ namespace PaintDotNet.Effects
             }
             ret += "|";
             // small text
-            if (catagoryBox.Text == "Fill")
+            if (categoryBox.Text == "Fill")
             {
                 ret += DefaultColorComboBox.Text;
             }
@@ -1860,7 +1860,7 @@ namespace PaintDotNet.Effects
             string[] item = flowList.SelectedItem.ToString().Split('|');
             if (item.Length > 2)
             {
-                catagoryBox.Text = item[1];
+                categoryBox.Text = item[1];
             }
             if (item.Length > 3)
             {
@@ -1932,7 +1932,7 @@ namespace PaintDotNet.Effects
         private void updateScreen()
         {
             sourceLabel.Text = "Source layer:";
-            switch (catagoryBox.Text)
+            switch (categoryBox.Text)
             {
                 case "Effect":
                     effectLabel.Visible = true;
