@@ -177,23 +177,6 @@ namespace PaintDotNet.Effects
             get => !(this.CanUndo || this.CanRedo) && this.Text.Equals(ScriptWriter.DefaultCode);
         }
 
-        public override string Text
-        {
-            get
-            {
-                return base.Text;
-            }
-            set
-            {
-                base.Text = value;
-                // Workaround for a scintilla bug for when WordWrap is off.
-                // Brace matching will fail if the document isn't scrolled first,
-                // causing some aspects of autocomplete to fail.
-                base.ExecuteCmd(Command.ScrollToEnd);
-                base.ExecuteCmd(Command.ScrollToStart);
-            }
-        }
-
         [Category(nameof(CategoryAttribute.Appearance))]
         [RefreshProperties(RefreshProperties.All)]
         [DefaultValue(Theme.Light)]
@@ -754,6 +737,9 @@ namespace PaintDotNet.Effects
 
             // Disable scintilla's own context menu
             this.UsePopup(false);
+
+            // Perform lexer styling for the whole document; not just the scrolled region
+            this.IdleStyling = IdleStyling.All;
             #endregion
 
             this.Controls.Add(iBox);
