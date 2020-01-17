@@ -25,11 +25,11 @@ using System.Threading;
 [assembly: AssemblyConfiguration("C#|development|plugin|build|builder|code|coding|script|scripting")]
 [assembly: AssemblyCompany("BoltBait")]
 [assembly: AssemblyProduct("CodeLab")]
-[assembly: AssemblyCopyright("Copyright ©2019 BoltBait")]
+[assembly: AssemblyCopyright("Copyright ©2020 BoltBait")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]
-[assembly: AssemblyVersion("5.0.*")]
+[assembly: AssemblyVersion("5.1.*")]
 // The next line is for the ScintillaNET text editor control.  This way you don't have to use the "copy attributes" option in IL Merge.
 [assembly: Guid("f8ac48e7-9378-482d-8c7f-92c8408dd4f2")]
 
