@@ -3047,9 +3047,38 @@ namespace PaintDotNet.Effects
             {
                 if (e.Char == '}')
                 {
-                    if (this.Lines[this.CurrentLine].Text.Trim() == "}") //Check whether the bracket is the only thing on the line.. For cases like "if() { }".
+                    if (base.GetCharAt(this.CurrentPosition - 2) == '{' &&
+                        base.GetCharAt(this.CurrentPosition) == '}')
+                    {
+                        this.DeleteRange(this.CurrentPosition, 1);
+                    }
+                    else if (this.Lines[this.CurrentLine].Text.Trim() == "}") //Check whether the bracket is the only thing on the line.. For cases like "if() { }".
                     {
                         this.Lines[this.CurrentLine].Indentation -= this.TabWidth;
+                    }
+                }
+                else if (e.Char == ')')
+                {
+                    if (base.GetCharAt(this.CurrentPosition - 2) == '(' &&
+                        base.GetCharAt(this.CurrentPosition) == ')')
+                    {
+                        this.DeleteRange(this.CurrentPosition, 1);
+                    }
+                }
+                else if (e.Char == ']')
+                {
+                    if (base.GetCharAt(this.CurrentPosition - 2) == '[' &&
+                        base.GetCharAt(this.CurrentPosition) == ']')
+                    {
+                        this.DeleteRange(this.CurrentPosition, 1);
+                    }
+                }
+                else if (e.Char == '>')
+                {
+                    if (base.GetCharAt(this.CurrentPosition - 2) == '<' &&
+                        base.GetCharAt(this.CurrentPosition) == '>')
+                    {
+                        this.DeleteRange(this.CurrentPosition, 1);
                     }
                 }
                 else if (e.Char == '.')
@@ -3058,7 +3087,34 @@ namespace PaintDotNet.Effects
                 }
                 else if (e.Char == '(')
                 {
+                    if (IsRightOfCaretEmpty(this.CurrentPosition))
+                    {
+                        this.InsertText(this.CurrentPosition, ")");
+                    }
+
                     ConstructorIntelliBox(this.CurrentPosition - 1);
+                }
+                else if (e.Char == '[')
+                {
+                    if (IsRightOfCaretEmpty(this.CurrentPosition))
+                    {
+                        this.InsertText(this.CurrentPosition, "]");
+                    }
+                }
+                else if (e.Char == '{')
+                {
+                    if (IsRightOfCaretEmpty(this.CurrentPosition))
+                    {
+                        this.InsertText(this.CurrentPosition, "}");
+                    }
+                }
+                else if (e.Char == '<')
+                {
+                    if (IsRightOfCaretEmpty(this.CurrentPosition) &&
+                        GetReturnType(this.CurrentPosition - 1)?.IsGenericType == true)
+                    {
+                        this.InsertText(this.CurrentPosition, ">");
+                    }
                 }
                 else if (char.IsLetter(e.Char.ToChar()) || e.Char.Equals('#'))
                 {
@@ -3574,6 +3630,12 @@ namespace PaintDotNet.Effects
         private new char GetCharAt(int position)
         {
             return base.GetCharAt(position).ToChar();
+        }
+
+        private bool IsRightOfCaretEmpty(int position)
+        {
+            Line line = this.Lines[this.LineFromPosition(position)];
+            return line.Text.Substring(position - line.Position).Trim().Length == 0;
         }
 
         private void AdjustLineNumbersWidth()

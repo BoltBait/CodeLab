@@ -525,7 +525,7 @@ namespace PaintDotNet.Effects
                 if (typeName.Equals(type.Name, StringComparison.Ordinal))
                 {
                     name = type.GetGenericName();
-                    code = Regex.Replace(type.Name, @"`\d", string.Empty) + "<>";
+                    code = Regex.Replace(type.Name, @"`\d", string.Empty);
                 }
 
                 if (type.IsGenericTypeDefinition)
