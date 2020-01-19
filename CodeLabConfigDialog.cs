@@ -1902,9 +1902,9 @@ namespace PaintDotNet.Effects
         private void HelpWithFonts_Click(object sender, EventArgs e)
         {
             FlexibleMessageBox.Show(
-                "You may choose between Courier New and Verdana fonts to view your code.\n\n" + 
-                "Or, you may download and install additional fonts from the following web sites:\n\n" + 
-                "▪ Consolas\n    http://www.microsoft.com/en-us/download/details.aspx?id=17879 \n\n" + 
+                "You may choose between Consolas, Courier New, and Verdana fonts to view your code.\n\n" +
+                "These fonts are built-in to Windows. If they are not available, you may need to download them.\n\n" +
+                "Or, you may download and install these popular programming fonts from the following web sites:\n\n" + 
                 "▪ Envy Code R\n    http://damieng.com/blog/2008/05/26/envy-code-r-preview-7-coding-font-released \n\n" + 
                 "▪ Hack\n    http://sourcefoundry.org/hack/ \n\n" + 
                 "The following fonts support Programming Ligatures: (Showing  ≤  instead of  <=  etc.)\n\n" + 
