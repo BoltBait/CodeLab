@@ -1877,11 +1877,11 @@ namespace PaintDotNet.Effects
         {
             if (sender is ToolStripMenuItem fontMenuItem)
             {
-                string fontName = fontMenuItem.Name;
+                string fontName = fontMenuItem.Text;
 
                 foreach (ToolStripMenuItem item in fontsToolStripMenuItem.DropDownItems)
                 {
-                    item.Checked = item.Name == fontName;
+                    item.Checked = item.Text == fontName;
                 }
 
                 Settings.FontFamily = fontName;
