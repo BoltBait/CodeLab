@@ -112,11 +112,6 @@
             this.wordWrapToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.whiteSpaceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fontsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.fontsConsolasMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.fontsCourierMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.fontsEnvyRMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.fontsHackMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.fontsVerdanaMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.transparencyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.opacity50MenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.opacity75MenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -893,52 +888,9 @@
             // 
             // fontsToolStripMenuItem
             // 
-            this.fontsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fontsConsolasMenuItem,
-            this.fontsCourierMenuItem,
-            this.fontsEnvyRMenuItem,
-            this.fontsHackMenuItem,
-            this.fontsVerdanaMenuItem});
             this.fontsToolStripMenuItem.Name = "fontsToolStripMenuItem";
             this.fontsToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
             this.fontsToolStripMenuItem.Text = "&Font";
-            // 
-            // fontsConsolasMenuItem
-            // 
-            this.fontsConsolasMenuItem.Name = "fontsConsolasMenuItem";
-            this.fontsConsolasMenuItem.Size = new System.Drawing.Size(140, 22);
-            this.fontsConsolasMenuItem.Text = "Consolas";
-            this.fontsConsolasMenuItem.Click += new System.EventHandler(this.fontsConsolasMenuItem_Click);
-            // 
-            // fontsCourierMenuItem
-            // 
-            this.fontsCourierMenuItem.Checked = true;
-            this.fontsCourierMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.fontsCourierMenuItem.Name = "fontsCourierMenuItem";
-            this.fontsCourierMenuItem.Size = new System.Drawing.Size(140, 22);
-            this.fontsCourierMenuItem.Text = "Courier New";
-            this.fontsCourierMenuItem.Click += new System.EventHandler(this.fontsCourierMenuItem_Click);
-            // 
-            // fontsEnvyRMenuItem
-            // 
-            this.fontsEnvyRMenuItem.Name = "fontsEnvyRMenuItem";
-            this.fontsEnvyRMenuItem.Size = new System.Drawing.Size(140, 22);
-            this.fontsEnvyRMenuItem.Text = "Envy Code R";
-            this.fontsEnvyRMenuItem.Click += new System.EventHandler(this.fontsEnvyRMenuItem_Click);
-            // 
-            // fontsHackMenuItem
-            // 
-            this.fontsHackMenuItem.Name = "fontsHackMenuItem";
-            this.fontsHackMenuItem.Size = new System.Drawing.Size(140, 22);
-            this.fontsHackMenuItem.Text = "Hack";
-            this.fontsHackMenuItem.Click += new System.EventHandler(this.fontsHackMenuItem_Click);
-            // 
-            // fontsVerdanaMenuItem
-            // 
-            this.fontsVerdanaMenuItem.Name = "fontsVerdanaMenuItem";
-            this.fontsVerdanaMenuItem.Size = new System.Drawing.Size(140, 22);
-            this.fontsVerdanaMenuItem.Text = "Verdana";
-            this.fontsVerdanaMenuItem.Click += new System.EventHandler(this.fontsVerdanaMenuItem_Click);
             // 
             // transparencyToolStripMenuItem
             // 
@@ -1526,10 +1478,6 @@
         private System.Windows.Forms.ToolStripMenuItem codeFoldingToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem lineNumbersToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem fontsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem fontsCourierMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem fontsConsolasMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem fontsEnvyRMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem fontsHackMenuItem;
         private ScaledToolStripMenuItem aboutToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem transparencyToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem opacity50MenuItem;
@@ -1579,7 +1527,6 @@
         private System.Windows.Forms.ToolStripMenuItem darkToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openRecentToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem NoRecentsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem fontsVerdanaMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator18;
         private ScaledToolStripMenuItem formatDocMenuItem;
         private ScaledToolStripMenuItem previewEffectMenuItem;

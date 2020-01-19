@@ -179,19 +179,7 @@ namespace PaintDotNet.Effects
                 checkForUpdatesToolStripMenuItem.CheckState = CheckState.Unchecked;
             }
             string editorFont = Settings.FontFamily;
-            if (!IsFontInstalled(editorFont))
-            {
-                editorFont = "Courier New";
-            }
-            if (!IsFontInstalled(editorFont))
-            {
-                editorFont = "Verdana";
-            }
-            fontsCourierMenuItem.CheckState = ("Courier New" == editorFont) ? CheckState.Checked : CheckState.Unchecked;
-            fontsConsolasMenuItem.CheckState = ("Consolas" == editorFont) ? CheckState.Checked : CheckState.Unchecked;
-            fontsEnvyRMenuItem.CheckState = ("Envy Code R" == editorFont) ? CheckState.Checked : CheckState.Unchecked;
-            fontsHackMenuItem.CheckState = ("Hack" == editorFont) ? CheckState.Checked : CheckState.Unchecked;
-            fontsVerdanaMenuItem.CheckState = ("Verdana" == editorFont) ? CheckState.Checked : CheckState.Unchecked;
+            PopulateFontSubMenu(editorFont);
             txtCode.Styles[Style.Default].Font = editorFont;
             OutputTextBox.Font = new Font(editorFont, OutputTextBox.Font.Size);
             errorList.Font = new Font(editorFont, errorList.Font.Size);
@@ -202,19 +190,6 @@ namespace PaintDotNet.Effects
             opacity75MenuItem.Checked = false;
             opacity90MenuItem.Checked = false;
             opacity100MenuItem.Checked = true;
-
-            // Disable menu items if they'll have no effect
-            transparencyToolStripMenuItem.Enabled = EnableOpacity;
-            fontsCourierMenuItem.Enabled = IsFontInstalled("Courier New");
-            fontsConsolasMenuItem.Enabled = IsFontInstalled("Consolas");
-            fontsEnvyRMenuItem.Enabled = IsFontInstalled("Envy Code R");
-            fontsHackMenuItem.Enabled = IsFontInstalled("Hack");
-
-            if (fontsCourierMenuItem.Enabled) fontsCourierMenuItem.Font = new Font("Courier New", fontsCourierMenuItem.Font.Size);
-            if (fontsConsolasMenuItem.Enabled) fontsConsolasMenuItem.Font = new Font("Consolas", fontsConsolasMenuItem.Font.Size);
-            if (fontsEnvyRMenuItem.Enabled) fontsEnvyRMenuItem.Font = new Font("Envy Code R", fontsEnvyRMenuItem.Font.Size);
-            if (fontsHackMenuItem.Enabled) fontsHackMenuItem.Font = new Font("Hack", fontsHackMenuItem.Font.Size);
-            if (fontsVerdanaMenuItem.Enabled) fontsVerdanaMenuItem.Font = new Font("Verdana", fontsVerdanaMenuItem.Font.Size);
 
             // PDN Theme
             ApplyTheme();
@@ -937,6 +912,40 @@ namespace PaintDotNet.Effects
             {
                 return font.Name == fontName;
             }
+        }
+
+        private void PopulateFontSubMenu(string fontToHaveChecked)
+        {
+            if (!IsFontInstalled(fontToHaveChecked))
+            {
+                fontToHaveChecked = "Courier New";
+            }
+            if (!IsFontInstalled(fontToHaveChecked))
+            {
+                fontToHaveChecked = "Verdana";
+            }
+
+            string[] monoFonts = { "Cascadia Code", "Consolas", "Courier New", "Envy Code R", "Fira Code", "Hack", "JetBrains Mono", "Verdana" };
+            List<ToolStripMenuItem> fontMenuItems = new List<ToolStripMenuItem>(monoFonts.Length);
+            for (int i = 0; i < monoFonts.Length; i++)
+            {
+                string fontName = monoFonts[i];
+
+                ToolStripMenuItem fontMenuItem = new ToolStripMenuItem();
+                fontMenuItem.CheckState = (fontName == fontToHaveChecked) ? CheckState.Checked : CheckState.Unchecked;
+                fontMenuItem.Text = fontName;
+                fontMenuItem.Name = $"fontMenuItem{i}";
+                fontMenuItem.Enabled = IsFontInstalled(fontName);
+                if (fontMenuItem.Enabled)
+                {
+                    fontMenuItem.Font = new Font(fontName, fontMenuItem.Font.Size);
+                }
+                fontMenuItem.Click += FontMenuItem_Click;
+
+                fontMenuItems.Add(fontMenuItem);
+            }
+
+            fontsToolStripMenuItem.DropDownItems.AddRange(fontMenuItems.ToArray());
         }
 
         private void ApplyTheme()
@@ -1864,68 +1873,25 @@ namespace PaintDotNet.Effects
             txtCode.Focus();
         }
 
-        private void fontsCourierMenuItem_Click(object sender, EventArgs e)
+        private void FontMenuItem_Click(object sender, EventArgs e)
         {
-            fontsCourierMenuItem.Checked = true;
-            fontsConsolasMenuItem.Checked = false;
-            fontsEnvyRMenuItem.Checked = false;
-            fontsHackMenuItem.Checked = false;
-            fontsVerdanaMenuItem.Checked = false;
-            ChangeFont("Courier New");
-            txtCode.Focus();
-        }
+            if (sender is ToolStripMenuItem fontMenuItem)
+            {
+                string fontName = fontMenuItem.Name;
 
-        private void fontsConsolasMenuItem_Click(object sender, EventArgs e)
-        {
-            fontsCourierMenuItem.Checked = false;
-            fontsConsolasMenuItem.Checked = true;
-            fontsEnvyRMenuItem.Checked = false;
-            fontsHackMenuItem.Checked = false;
-            fontsVerdanaMenuItem.Checked = false;
-            ChangeFont("Consolas");
-            txtCode.Focus();
-        }
+                foreach (ToolStripMenuItem item in fontsToolStripMenuItem.DropDownItems)
+                {
+                    item.Checked = item.Name == fontName;
+                }
 
-        private void fontsEnvyRMenuItem_Click(object sender, EventArgs e)
-        {
-            fontsCourierMenuItem.Checked = false;
-            fontsConsolasMenuItem.Checked = false;
-            fontsEnvyRMenuItem.Checked = true;
-            fontsHackMenuItem.Checked = false;
-            fontsVerdanaMenuItem.Checked = false;
-            ChangeFont("Envy Code R");
-            txtCode.Focus();
-        }
+                Settings.FontFamily = fontName;
+                txtCode.Styles[Style.Default].Font = fontName;
+                txtCode.UpdateMarginWidths();
+                OutputTextBox.Font = new Font(fontName, OutputTextBox.Font.Size);
+                errorList.Font = new Font(fontName, errorList.Font.Size);
 
-        private void fontsHackMenuItem_Click(object sender, EventArgs e)
-        {
-            fontsCourierMenuItem.Checked = false;
-            fontsConsolasMenuItem.Checked = false;
-            fontsEnvyRMenuItem.Checked = false;
-            fontsHackMenuItem.Checked = true;
-            fontsVerdanaMenuItem.Checked = false;
-            ChangeFont("Hack");
-            txtCode.Focus();
-        }
-
-        private void fontsVerdanaMenuItem_Click(object sender, EventArgs e)
-        {
-            fontsCourierMenuItem.Checked = false;
-            fontsConsolasMenuItem.Checked = false;
-            fontsEnvyRMenuItem.Checked = false;
-            fontsHackMenuItem.Checked = false;
-            fontsVerdanaMenuItem.Checked = true;
-            ChangeFont("Verdana");
-            txtCode.Focus();
-        }
-
-        private void ChangeFont(string fontName)
-        {
-            Settings.FontFamily = fontName;
-            txtCode.Styles[Style.Default].Font = fontName;
-            txtCode.UpdateMarginWidths();
-            OutputTextBox.Font = new Font(fontName, OutputTextBox.Font.Size);
-            errorList.Font = new Font(fontName, errorList.Font.Size);
+                txtCode.Focus();
+            }
         }
 
         private void opacity50MenuItem_Click(object sender, EventArgs e)
