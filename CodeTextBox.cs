@@ -740,6 +740,9 @@ namespace PaintDotNet.Effects
 
             // Perform lexer styling for the whole document; not just the scrolled region
             this.IdleStyling = IdleStyling.All;
+
+            // Use DirectWrite text rendering
+            this.Technology = Technology.DirectWrite;
             #endregion
 
             this.Controls.Add(iBox);
