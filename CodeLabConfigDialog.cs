@@ -946,6 +946,8 @@ namespace PaintDotNet.Effects
             }
 
             fontsToolStripMenuItem.DropDownItems.AddRange(fontMenuItems.ToArray());
+            fontsToolStripMenuItem.DropDownItems.Add(new System.Windows.Forms.ToolStripSeparator());
+            fontsToolStripMenuItem.DropDownItems.Add("Help with Fonts", null, HelpWithFonts_Click);
         }
 
         private void ApplyTheme()
@@ -1892,6 +1894,23 @@ namespace PaintDotNet.Effects
 
                 txtCode.Focus();
             }
+        }
+
+        private void HelpWithFonts_Click(object sender, EventArgs e)
+        {
+            FlexibleMessageBox.Show(
+                "You may choose between Courier New and Verdana fonts to view your code.\n\n" + 
+                "Or, you may download and install additional fonts from the following web sites:\n\n" + 
+                "▪ Consolas\n    http://www.microsoft.com/en-us/download/details.aspx?id=17879 \n\n" + 
+                "▪ Envy Code R\n    http://damieng.com/blog/2008/05/26/envy-code-r-preview-7-coding-font-released \n\n" + 
+                "▪ Hack\n    http://sourcefoundry.org/hack/ \n\n" + 
+                "The following fonts support Programming Ligatures: (Showing  ≤  instead of  <=  etc.)\n\n" + 
+                "▪ Cascadia Code\n    https://devblogs.microsoft.com/commandline/cascadia-code/ \n\n" + 
+                "▪ Fira Code\n    https://github.com/tonsky/FiraCode \n\n" + 
+                "▪ JetBrains Mono\n    https://www.jetbrains.com/lp/mono/ \n\n" + 
+                "Once downloaded and installed on your system, you may choose these fonts from the menu.", 
+                "Help With Fonts", MessageBoxButtons.OK,MessageBoxIcon.Information);
+            txtCode.Focus();
         }
 
         private void opacity50MenuItem_Click(object sender, EventArgs e)
