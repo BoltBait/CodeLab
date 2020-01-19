@@ -179,6 +179,15 @@ namespace PaintDotNet.Effects
                 checkForUpdatesToolStripMenuItem.CheckState = CheckState.Unchecked;
             }
             string editorFont = Settings.FontFamily;
+            if (!IsFontInstalled(editorFont))
+            {
+                editorFont = "Courier New";
+            }
+            if (!IsFontInstalled(editorFont))
+            {
+                editorFont = "Verdana";
+            }
+
             PopulateFontSubMenu(editorFont);
             txtCode.Styles[Style.Default].Font = editorFont;
             OutputTextBox.Font = new Font(editorFont, OutputTextBox.Font.Size);
@@ -916,15 +925,6 @@ namespace PaintDotNet.Effects
 
         private void PopulateFontSubMenu(string fontToHaveChecked)
         {
-            if (!IsFontInstalled(fontToHaveChecked))
-            {
-                fontToHaveChecked = "Courier New";
-            }
-            if (!IsFontInstalled(fontToHaveChecked))
-            {
-                fontToHaveChecked = "Verdana";
-            }
-
             string[] monoFonts = { "Cascadia Code", "Consolas", "Courier New", "Envy Code R", "Fira Code", "Hack", "JetBrains Mono", "Verdana" };
             List<ToolStripMenuItem> fontMenuItems = new List<ToolStripMenuItem>(monoFonts.Length);
             for (int i = 0; i < monoFonts.Length; i++)
@@ -1881,9 +1881,12 @@ namespace PaintDotNet.Effects
             {
                 string fontName = fontMenuItem.Text;
 
-                foreach (ToolStripMenuItem item in fontsToolStripMenuItem.DropDownItems)
+                foreach (ToolStripItem item in fontsToolStripMenuItem.DropDownItems)
                 {
-                    item.Checked = item.Text == fontName;
+                    if (item is ToolStripMenuItem menuItem)
+                    {
+                        menuItem.Checked = menuItem.Text == fontName;
+                    }
                 }
 
                 Settings.FontFamily = fontName;
