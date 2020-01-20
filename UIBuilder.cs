@@ -302,7 +302,7 @@ namespace PaintDotNet.Effects
                     ControlMin.Enabled = false;
                     ControlMax.Text = "1";
                     ControlMin.Text = "-1";
-                    ControlDef.Text = "0";
+                    ControlDef.Text = "0.0,0.0";
                     StyleLabel.Enabled = false;
                     ControlStyle.Enabled = false;
                     ControlStyle.SelectedIndex = 0;
