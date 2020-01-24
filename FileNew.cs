@@ -769,7 +769,7 @@ namespace PaintDotNet.Effects
             }
 
             // setup for calling complex effects
-            if (Array.Exists(flowListArray, element => element.Contains("Gaussian")))
+            if (flowListArray.Any(element => element.Contains("Gaussian")))
             {
                 code += "// Setup for calling the Gaussian Blur effect" + cr;
                 code += "GaussianBlurEffect gaussianblurEffect = new GaussianBlurEffect();" + cr;
@@ -778,7 +778,7 @@ namespace PaintDotNet.Effects
                 disposecode += "        if (gaussianblurEffect != null) gaussianblurEffect.Dispose();" + cr;
                 disposecode += "        gaussianblurEffect = null;" + cr;
             }
-            if (Array.Exists(flowListArray, element => element.Contains("Contrast")))
+            if (flowListArray.Any(element => element.Contains("Contrast")))
             {
                 code += "// Setup for calling the Brightness and Contrast Adjustment function" + cr;
                 code += "BrightnessAndContrastAdjustment contrastEffect = new BrightnessAndContrastAdjustment();" + cr;
@@ -787,7 +787,7 @@ namespace PaintDotNet.Effects
                 disposecode += "        if (contrastEffect != null) contrastEffect.Dispose();" + cr;
                 disposecode += "        contrastEffect = null;" + cr;
             }
-            if (Array.Exists(flowListArray, element => element.Contains("Saturation")))
+            if (flowListArray.Any(element => element.Contains("Saturation")))
             {
                 code += "// Setup for calling the Hue and Saturation Adjustment function" + cr;
                 code += "HueAndSaturationAdjustment saturationEffect = new HueAndSaturationAdjustment();" + cr;
@@ -796,7 +796,7 @@ namespace PaintDotNet.Effects
                 disposecode += "        if (saturationEffect != null) saturationEffect.Dispose();" + cr;
                 disposecode += "        saturationEffect = null;" + cr;
             }
-            if (Array.Exists(flowListArray, element => element.Contains("Frosted")))
+            if (flowListArray.Any(element => element.Contains("Frosted")))
             {
                 code += "// Setup for calling the Frosted Glass effect" + cr;
                 code += "FrostedGlassEffect frostedglassEffect = new FrostedGlassEffect();" + cr;
@@ -805,7 +805,7 @@ namespace PaintDotNet.Effects
                 disposecode += "        if (frostedglassEffect != null) frostedglassEffect.Dispose();" + cr;
                 disposecode += "        frostedglassEffect = null;" + cr;
             }
-            if (Array.Exists(flowListArray, element => element.Contains("Add Noise")))
+            if (flowListArray.Any(element => element.Contains("Add Noise")))
             {
                 code += "// Setup for calling the Add Noise effect" + cr;
                 code += "AddNoiseEffect addnoiseEffect = new AddNoiseEffect();" + cr;
@@ -814,7 +814,7 @@ namespace PaintDotNet.Effects
                 disposecode += "        if (addnoiseEffect != null) addnoiseEffect.Dispose();" + cr;
                 disposecode += "        addnoiseEffect = null;" + cr;
             }
-            if (Array.Exists(flowListArray, element => element.Contains("Motion Blur")))
+            if (flowListArray.Any(element => element.Contains("Motion Blur")))
             {
                 code += "// Setup for calling the Motion Blur effect" + cr;
                 code += "MotionBlurEffect motionblurEffect = new MotionBlurEffect();" + cr;
@@ -823,7 +823,7 @@ namespace PaintDotNet.Effects
                 disposecode += "        if (motionblurEffect != null) motionblurEffect.Dispose();" + cr;
                 disposecode += "        motionblurEffect = null;" + cr;
             }
-            if (Array.Exists(flowListArray, element => element.Contains("Clouds")))
+            if (flowListArray.Any(element => element.Contains("Clouds")))
             {
                 code += "// Setup for calling the Render Clouds function" + cr;
                 code += "CloudsEffect cloudsEffect = new CloudsEffect();" + cr;
@@ -832,7 +832,7 @@ namespace PaintDotNet.Effects
                 disposecode += "        if (cloudsEffect != null) cloudsEffect.Dispose();" + cr;
                 disposecode += "        cloudsEffect = null;" + cr;
             }
-            if (Array.Exists(flowListArray, element => element.Contains("Oil Painting")))
+            if (flowListArray.Any(element => element.Contains("Oil Painting")))
             {
                 code += "// Setup for calling the Oil Painting effect" + cr;
                 code += "OilPaintingEffect oilpaintingEffect = new OilPaintingEffect();" + cr;
@@ -841,7 +841,7 @@ namespace PaintDotNet.Effects
                 disposecode += "        if (oilpaintingEffect != null) oilpaintingEffect.Dispose();" + cr;
                 disposecode += "        oilpaintingEffect = null;" + cr;
             }
-            if (Array.Exists(flowListArray, element => element.Contains("Reduce Noise")))
+            if (flowListArray.Any(element => element.Contains("Reduce Noise")))
             {
                 code += "// Setup for calling the Reduce Noise effect" + cr;
                 code += "ReduceNoiseEffect reducenoiseEffect = new ReduceNoiseEffect();" + cr;
@@ -850,7 +850,7 @@ namespace PaintDotNet.Effects
                 disposecode += "        if (reducenoiseEffect != null) reducenoiseEffect.Dispose();" + cr;
                 disposecode += "        reducenoiseEffect = null;" + cr;
             }
-            if (Array.Exists(flowListArray, element => element.Contains("Median")))
+            if (flowListArray.Any(element => element.Contains("Median")))
             {
                 code += "// Setup for calling the Median effect" + cr;
                 code += "MedianEffect medianEffect = new MedianEffect();" + cr;
@@ -859,7 +859,7 @@ namespace PaintDotNet.Effects
                 disposecode += "        if (medianEffect != null) medianEffect.Dispose();" + cr;
                 disposecode += "        medianEffect = null;" + cr;
             }
-            if (Array.Exists(flowListArray, element => element.Contains("Edge Detect")))
+            if (flowListArray.Any(element => element.Contains("Edge Detect")))
             {
                 code += "// Setup for calling the Edge Detect effect" + cr;
                 code += "EdgeDetectEffect edgedetectEffect = new EdgeDetectEffect();" + cr;
@@ -868,7 +868,7 @@ namespace PaintDotNet.Effects
                 disposecode += "        if (edgedetectEffect != null) edgedetectEffect.Dispose();" + cr;
                 disposecode += "        edgedetectEffect = null;" + cr;
             }
-            if (Array.Exists(flowListArray, element => element.Contains("Emboss")))
+            if (flowListArray.Any(element => element.Contains("Emboss")))
             {
                 code += "// Setup for calling the Emboss effect" + cr;
                 code += "EmbossEffect embossEffect = new EmbossEffect();" + cr;
@@ -877,7 +877,7 @@ namespace PaintDotNet.Effects
                 disposecode += "        if (embossEffect != null) embossEffect.Dispose();" + cr;
                 disposecode += "        embossEffect = null;" + cr;
             }
-            if (Array.Exists(flowListArray, element => element.Contains("Relief")))
+            if (flowListArray.Any(element => element.Contains("Relief")))
             {
                 code += "// Setup for calling the Relief effect" + cr;
                 code += "ReliefEffect reliefEffect = new ReliefEffect();" + cr;
@@ -886,7 +886,7 @@ namespace PaintDotNet.Effects
                 disposecode += "        if (reliefEffect != null) reliefEffect.Dispose();" + cr;
                 disposecode += "        reliefEffect = null;" + cr;
             }
-            if (Array.Exists(flowListArray, element => element.Contains("Outline")))
+            if (flowListArray.Any(element => element.Contains("Outline")))
             {
                 code += "// Setup for calling the Outline effect" + cr;
                 code += "OutlineEffect outlineEffect = new OutlineEffect();" + cr;
@@ -895,7 +895,7 @@ namespace PaintDotNet.Effects
                 disposecode += "        if (outlineEffect != null) outlineEffect.Dispose();" + cr;
                 disposecode += "        outlineEffect = null;" + cr;
             }
-            if (Array.Exists(flowListArray, element => element.Contains("Sharpen")))
+            if (flowListArray.Any(element => element.Contains("Sharpen")))
             {
                 code += "// Setup for calling the Sharpen effect" + cr;
                 code += "SharpenEffect sharpenEffect = new SharpenEffect();" + cr;
@@ -904,7 +904,7 @@ namespace PaintDotNet.Effects
                 disposecode += "        if (sharpenEffect != null) sharpenEffect.Dispose();" + cr;
                 disposecode += "        sharpenEffect = null;" + cr;
             }
-            if (Array.Exists(flowListArray, element => element.Contains("Pencil Sketch")))
+            if (flowListArray.Any(element => element.Contains("Pencil Sketch")))
             {
                 code += "// Setup for calling the Pencil Sketch effect" + cr;
                 code += "PencilSketchEffect pencilsketchEffect = new PencilSketchEffect();" + cr;
@@ -913,7 +913,7 @@ namespace PaintDotNet.Effects
                 disposecode += "        if (pencilsketchEffect != null) pencilsketchEffect.Dispose();" + cr;
                 disposecode += "        pencilsketchEffect = null;" + cr;
             }
-            if (Array.Exists(flowListArray, element => element.Contains("Posterize")))
+            if (flowListArray.Any(element => element.Contains("Posterize")))
             {
                 code += "// Setup for calling the Posterize adjustment" + cr;
                 code += "PosterizeAdjustment posterizeEffect = new PosterizeAdjustment();" + cr;
@@ -922,7 +922,7 @@ namespace PaintDotNet.Effects
                 disposecode += "        if (posterizeEffect != null) posterizeEffect.Dispose();" + cr;
                 disposecode += "        posterizeEffect = null;" + cr;
             }
-            if (Array.Exists(flowListArray, element => element.Contains("Sepia")))
+            if (flowListArray.Any(element => element.Contains("Sepia")))
             {
                 code += "// Setup for calling the Sepia effect" + cr;
                 code += "SepiaEffect sepiaEffect = new SepiaEffect();" + cr;
@@ -931,7 +931,7 @@ namespace PaintDotNet.Effects
                 disposecode += "        if (sepiaEffect != null) sepiaEffect.Dispose();" + cr;
                 disposecode += "        sepiaEffect = null;" + cr;
             }
-            if (Array.Exists(flowListArray, element => element.Contains("Ink Sketch")))
+            if (flowListArray.Any(element => element.Contains("Ink Sketch")))
             {
                 code += "// Setup for calling the Ink Sketch effect" + cr;
                 code += "InkSketchEffect inksketchEffect = new InkSketchEffect();" + cr;
@@ -940,7 +940,7 @@ namespace PaintDotNet.Effects
                 disposecode += "        if (inksketchEffect != null) inksketchEffect.Dispose();" + cr;
                 disposecode += "        inksketchEffect = null;" + cr;
             }
-            if (Array.Exists(flowListArray, element => element.Contains("Radial Blur")))
+            if (flowListArray.Any(element => element.Contains("Radial Blur")))
             {
                 code += "// Setup for calling the Radial Blur effect" + cr;
                 code += "RadialBlurEffect radialblurEffect = new RadialBlurEffect();" + cr;
@@ -949,7 +949,7 @@ namespace PaintDotNet.Effects
                 disposecode += "        if (radialblurEffect != null) radialblurEffect.Dispose();" + cr;
                 disposecode += "        radialblurEffect = null;" + cr;
             }
-            if (Array.Exists(flowListArray, element => element.Contains("Surface Blur")))
+            if (flowListArray.Any(element => element.Contains("Surface Blur")))
             {
                 code += "// Setup for calling the Surface Blur effect" + cr;
                 code += "SurfaceBlurEffect surfaceblurEffect = new SurfaceBlurEffect();" + cr;
@@ -958,7 +958,7 @@ namespace PaintDotNet.Effects
                 disposecode += "        if (surfaceblurEffect != null) surfaceblurEffect.Dispose();" + cr;
                 disposecode += "        surfaceblurEffect = null;" + cr;
             }
-            if (Array.Exists(flowListArray, element => element.Contains("Unfocus")))
+            if (flowListArray.Any(element => element.Contains("Unfocus")))
             {
                 code += "// Setup for calling the Unfocus effect" + cr;
                 code += "UnfocusEffect unfocusEffect = new UnfocusEffect();" + cr;
@@ -967,7 +967,7 @@ namespace PaintDotNet.Effects
                 disposecode += "        if (unfocusEffect != null) unfocusEffect.Dispose();" + cr;
                 disposecode += "        unfocusEffect = null;" + cr;
             }
-            if (Array.Exists(flowListArray, element => element.Contains("Zoom Blur")))
+            if (flowListArray.Any(element => element.Contains("Zoom Blur")))
             {
                 code += "// Setup for calling the Zoom Blur effect" + cr;
                 code += "ZoomBlurEffect zoomblurEffect = new ZoomBlurEffect();" + cr;
@@ -976,7 +976,7 @@ namespace PaintDotNet.Effects
                 disposecode += "        if (zoomblurEffect != null) zoomblurEffect.Dispose();" + cr;
                 disposecode += "        zoomblurEffect = null;" + cr;
             }
-            if (Array.Exists(flowListArray, element => element.Contains("Bulge")))
+            if (flowListArray.Any(element => element.Contains("Bulge")))
             {
                 code += "// Setup for calling the Bulge effect" + cr;
                 code += "BulgeEffect bulgeEffect = new BulgeEffect();" + cr;
@@ -985,7 +985,7 @@ namespace PaintDotNet.Effects
                 disposecode += "        if (bulgeEffect != null) bulgeEffect.Dispose();" + cr;
                 disposecode += "        bulgeEffect = null;" + cr;
             }
-            if (Array.Exists(flowListArray, element => element.Contains("Crystalize")))
+            if (flowListArray.Any(element => element.Contains("Crystalize")))
             {
                 code += "// Setup for calling the Crystalize effect" + cr;
                 code += "CrystalizeEffect crystalizeEffect = new CrystalizeEffect();" + cr;
@@ -994,7 +994,7 @@ namespace PaintDotNet.Effects
                 disposecode += "        if (crystalizeEffect != null) crystalizeEffect.Dispose();" + cr;
                 disposecode += "        crystalizeEffect = null;" + cr;
             }
-            if (Array.Exists(flowListArray, element => element.Contains("Dents")))
+            if (flowListArray.Any(element => element.Contains("Dents")))
             {
                 code += "// Setup for calling the Dents effect" + cr;
                 code += "DentsEffect dentsEffect = new DentsEffect();" + cr;
@@ -1003,7 +1003,7 @@ namespace PaintDotNet.Effects
                 disposecode += "        if (dentsEffect != null) dentsEffect.Dispose();" + cr;
                 disposecode += "        dentsEffect = null;" + cr;
             }
-            if (Array.Exists(flowListArray, element => element.Contains("Pixelate")))
+            if (flowListArray.Any(element => element.Contains("Pixelate")))
             {
                 code += "// Setup for calling the Pixelate effect" + cr;
                 code += "PixelateEffect pixelateEffect = new PixelateEffect();" + cr;
@@ -1012,7 +1012,7 @@ namespace PaintDotNet.Effects
                 disposecode += "        if (pixelateEffect != null) pixelateEffect.Dispose();" + cr;
                 disposecode += "        pixelateEffect = null;" + cr;
             }
-            if (Array.Exists(flowListArray, element => element.Contains("Polar Inversion")))
+            if (flowListArray.Any(element => element.Contains("Polar Inversion")))
             {
                 code += "// Setup for calling the Polar Inversion effect" + cr;
                 code += "PolarInversionEffect polarinversionEffect = new PolarInversionEffect();" + cr;
@@ -1021,7 +1021,7 @@ namespace PaintDotNet.Effects
                 disposecode += "        if (polarinversionEffect != null) polarinversionEffect.Dispose();" + cr;
                 disposecode += "        polarinversionEffect = null;" + cr;
             }
-            if (Array.Exists(flowListArray, element => element.Contains("Tile")))
+            if (flowListArray.Any(element => element.Contains("Tile")))
             {
                 code += "// Setup for calling the Tile Reflection effect" + cr;
                 code += "TileEffect tileEffect = new TileEffect();" + cr;
@@ -1030,7 +1030,7 @@ namespace PaintDotNet.Effects
                 disposecode += "        if (tileEffect != null) tileEffect.Dispose();" + cr;
                 disposecode += "        tileEffect = null;" + cr;
             }
-            if (Array.Exists(flowListArray, element => element.Contains("Twist")))
+            if (flowListArray.Any(element => element.Contains("Twist")))
             {
                 code += "// Setup for calling the Twist effect" + cr;
                 code += "TwistEffect twistEffect = new TwistEffect();" + cr;
@@ -1039,7 +1039,7 @@ namespace PaintDotNet.Effects
                 disposecode += "        if (twistEffect != null) twistEffect.Dispose();" + cr;
                 disposecode += "        twistEffect = null;" + cr;
             }
-            if (Array.Exists(flowListArray, element => element.Contains("Glow")))
+            if (flowListArray.Any(element => element.Contains("Glow")))
             {
                 code += "// Setup for calling the Glow effect" + cr;
                 code += "GlowEffect glowEffect = new GlowEffect();" + cr;
@@ -1048,7 +1048,7 @@ namespace PaintDotNet.Effects
                 disposecode += "        if (glowEffect != null) glowEffect.Dispose();" + cr;
                 disposecode += "        glowEffect = null;" + cr;
             }
-            if (Array.Exists(flowListArray, element => element.Contains("Soften Portrait")))
+            if (flowListArray.Any(element => element.Contains("Soften Portrait")))
             {
                 code += "// Setup for calling the Soften Portrait effect" + cr;
                 code += "SoftenPortraitEffect softenportraitEffect = new SoftenPortraitEffect();" + cr;
@@ -1057,7 +1057,7 @@ namespace PaintDotNet.Effects
                 disposecode += "        if (softenportraitEffect != null) softenportraitEffect.Dispose();" + cr;
                 disposecode += "        softenportraitEffect = null;" + cr;
             }
-            if (Array.Exists(flowListArray, element => element.Contains("Vignette")))
+            if (flowListArray.Any(element => element.Contains("Vignette")))
             {
                 code += "// Setup for calling the Vignette effect" + cr;
                 code += "VignetteEffect vignetteEffect = new VignetteEffect();" + cr;
@@ -1066,7 +1066,7 @@ namespace PaintDotNet.Effects
                 disposecode += "        if (vignetteEffect != null) vignetteEffect.Dispose();" + cr;
                 disposecode += "        vignetteEffect = null;" + cr;
             }
-            if (Array.Exists(flowListArray, element => element.Contains("Julia")))
+            if (flowListArray.Any(element => element.Contains("Julia")))
             {
                 code += "// Setup for calling the Julia effect" + cr;
                 code += "JuliaFractalEffect juliaEffect = new JuliaFractalEffect();" + cr;
@@ -1075,7 +1075,7 @@ namespace PaintDotNet.Effects
                 disposecode += "        if (juliaEffect != null) juliaEffect.Dispose();" + cr;
                 disposecode += "        juliaEffect = null;" + cr;
             }
-            if (Array.Exists(flowListArray, element => element.Contains("Mandelbrot")))
+            if (flowListArray.Any(element => element.Contains("Mandelbrot")))
             {
                 code += "// Setup for calling the Mandelbrot effect" + cr;
                 code += "MandelbrotFractalEffect mandelbrotEffect = new MandelbrotFractalEffect();" + cr;
@@ -1085,76 +1085,76 @@ namespace PaintDotNet.Effects
                 disposecode += "        mandelbrotEffect = null;" + cr;
             }
             // Pixel Ops
-            if (Array.Exists(flowListArray, element => element.Contains("Pixel Op")))
+            if (flowListArray.Any(element => element.Contains("Pixel Op")))
             {
                 code += "// Setup for using pixel op" + cr;
-                if (Array.Exists(flowListArray, element => element.Contains("Desaturate")))
+                if (flowListArray.Any(element => element.Contains("Desaturate")))
                 {
                     code += "private UnaryPixelOps.Desaturate desaturateOp = new UnaryPixelOps.Desaturate();" + cr;
                 }
-                if (Array.Exists(flowListArray, element => element.Contains("Invert")))
+                if (flowListArray.Any(element => element.Contains("Invert")))
                 {
                     code += "private UnaryPixelOps.Invert invertOp = new UnaryPixelOps.Invert();" + cr;
                 }
                 code += cr;
             }
             // Blends
-            if (Array.Exists(flowListArray, element => element.Contains("Blend")))
+            if (flowListArray.Any(element => element.Contains("Blend")))
             {
                 code += "// Setup for selected blending op" + cr;
-                if (Array.Exists(flowListArray, element => element.Contains("Blend|Normal")))
+                if (flowListArray.Any(element => element.Contains("Blend|Normal")))
                 {
                     code += "private BinaryPixelOp normalOp = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Normal);" + cr;
                 }
-                if (Array.Exists(flowListArray, element => element.Contains("Blend|Multiply")))
+                if (flowListArray.Any(element => element.Contains("Blend|Multiply")))
                 {
                     code += "private BinaryPixelOp multiplyOp = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Multiply);" + cr;
                 }
-                if (Array.Exists(flowListArray, element => element.Contains("Blend|Darken")))
+                if (flowListArray.Any(element => element.Contains("Blend|Darken")))
                 {
                     code += "private BinaryPixelOp darkenOp = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Darken);" + cr;
                 }
-                if (Array.Exists(flowListArray, element => element.Contains("Blend|Additive")))
+                if (flowListArray.Any(element => element.Contains("Blend|Additive")))
                 {
                     code += "private BinaryPixelOp additiveOp = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Additive);" + cr;
                 }
-                if (Array.Exists(flowListArray, element => element.Contains("Blend|ColorBurn")))
+                if (flowListArray.Any(element => element.Contains("Blend|ColorBurn")))
                 {
                     code += "private BinaryPixelOp colorburnOp = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.ColorBurn);" + cr;
                 }
-                if (Array.Exists(flowListArray, element => element.Contains("Blend|ColorDodge")))
+                if (flowListArray.Any(element => element.Contains("Blend|ColorDodge")))
                 {
                     code += "private BinaryPixelOp colordodgeOp = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.ColorDodge);" + cr;
                 }
-                if (Array.Exists(flowListArray, element => element.Contains("Blend|Difference")))
+                if (flowListArray.Any(element => element.Contains("Blend|Difference")))
                 {
                     code += "private BinaryPixelOp differenceOp = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Difference);" + cr;
                 }
-                if (Array.Exists(flowListArray, element => element.Contains("Blend|Glow")))
+                if (flowListArray.Any(element => element.Contains("Blend|Glow")))
                 {
                     code += "private BinaryPixelOp glowOp = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Glow);" + cr;
                 }
-                if (Array.Exists(flowListArray, element => element.Contains("Blend|Lighten")))
+                if (flowListArray.Any(element => element.Contains("Blend|Lighten")))
                 {
                     code += "private BinaryPixelOp lightenOp = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Lighten);" + cr;
                 }
-                if (Array.Exists(flowListArray, element => element.Contains("Blend|Negation")))
+                if (flowListArray.Any(element => element.Contains("Blend|Negation")))
                 {
                     code += "private BinaryPixelOp negationOp = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Negation);" + cr;
                 }
-                if (Array.Exists(flowListArray, element => element.Contains("Blend|Overlay")))
+                if (flowListArray.Any(element => element.Contains("Blend|Overlay")))
                 {
                     code += "private BinaryPixelOp overlayOp = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Overlay);" + cr;
                 }
-                if (Array.Exists(flowListArray, element => element.Contains("Blend|Reflect")))
+                if (flowListArray.Any(element => element.Contains("Blend|Reflect")))
                 {
                     code += "private BinaryPixelOp reflectOp = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Reflect);" + cr;
                 }
-                if (Array.Exists(flowListArray, element => element.Contains("Blend|Screen")))
+                if (flowListArray.Any(element => element.Contains("Blend|Screen")))
                 {
                     code += "private BinaryPixelOp screenOp = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Screen);" + cr;
                 }
-                if (Array.Exists(flowListArray, element => element.Contains("Blend|Xor")))
+                if (flowListArray.Any(element => element.Contains("Blend|Xor")))
                 {
                     code += "private BinaryPixelOp xorOp = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Xor);" + cr;
                 }
