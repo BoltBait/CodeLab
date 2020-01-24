@@ -28,7 +28,7 @@ namespace PaintDotNet.Effects
         internal string CodeTemplate;
 
         // The following effects are handled differently as they only have DST surface and not a SRC surface:
-        private List<string> renderedEffects = new List<string>() { "Clipboard", "Clouds", "Julia", "Mandelbrot" };
+        private static readonly IReadOnlyCollection<string> renderedEffects = new string[] { "Clipboard", "Clouds", "Julia", "Mandelbrot" };
 
         internal FileNew(string EffectFlag)
         {
@@ -89,19 +89,20 @@ namespace PaintDotNet.Effects
             return names.ToArray();
         }
 
-        private string getLowerName(string name)
+        private static string getLowerName(string name)
         {
             return getName(name).ToLower();
         }
-        private string getName(string name)
+
+        private static string getName(string name)
         {
             // remove spaces and slashes from the effect name
             return name.Replace(" ", "").Replace("Brightness/", "").Replace("Hue/", "");
         }
 
-        private string getEffectPropCode(string effect, string src, string dst, int eCount, bool isLastItem, bool effectPreviouslySent, ref string renderCode)
+        private static string getEffectPropCode(string effect, string src, string dst, int eCount, bool isLastItem, bool effectPreviouslySent, ref string renderCode)
         {
-            string cr = "\r\n";
+            const string cr = "\r\n";
             string propCode = "";
             string lowerName = getLowerName(effect);
 
@@ -398,11 +399,10 @@ namespace PaintDotNet.Effects
             return propCode;
         }
 
-
-        private string getUIControls(string effect, ref int controlCount)
+        private static string getUIControls(string effect, ref int controlCount)
         {
             string code = "";
-            string cr = "\r\n";
+            const string cr = "\r\n";
             // Add controls for selected options
             if (effect.Contains("Gaussian"))
             {
@@ -738,11 +738,11 @@ namespace PaintDotNet.Effects
 
             // Generate a list of required UI controls
             code += "#region UICode" + cr;
-            for(int i=0;i<flowListArray.Length;i++)
+            for (int i = 0; i < flowListArray.Length; i++)
             {
                 flowListArray[i] += "|" + currentUIcount.ToString();
-                var elementDetails = flowListArray[i].Split('|');
-                if (elementDetails[1] == "Effect" || 
+                string[] elementDetails = flowListArray[i].Split('|');
+                if (elementDetails[1] == "Effect" ||
                     (elementDetails[1] == "Blend" && elementDetails[2] == "User selected") ||
                     (elementDetails[1] == "Fill" && elementDetails[3] == "User selected"))
                 {
@@ -1225,10 +1225,10 @@ namespace PaintDotNet.Effects
 
             if (flowListArray.Length > 0)
             {
-                for(int i=0;i<flowListArray.Length;i++)
+                for (int i = 0; i < flowListArray.Length; i++)
                 {
                     bool lastItem = i == flowListArray.Length - 1;
-                    var elementDetails = flowListArray[i].Split('|');
+                    string[] elementDetails = flowListArray[i].Split('|');
                     //[0] = Dest, Src Dest, Top Bottom Dest
                     //[1] = Effect, Blend, Pixel, Fill, or Copy
                     //[2] = Effect / Blend / Pixel Op Name
@@ -1435,7 +1435,7 @@ namespace PaintDotNet.Effects
                 code += cr;
             }
 
-            if (rendercode != "")
+            if (rendercode.Length > 0)
             {
                 code += rendercode;
                 code += cr;
@@ -1577,7 +1577,6 @@ namespace PaintDotNet.Effects
             // Make template available to calling function and we're done!
             CodeTemplate = code;
         }
-
 
         private void NoStyle_CheckedChanged(object sender, EventArgs e)
         {
