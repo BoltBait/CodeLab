@@ -507,6 +507,7 @@ namespace PaintDotNet.Effects
             else if (effect.Contains("Outline"))
             {
                 code += "IntSliderControl Amount" + controlCount.ToString() + " = 3; // [1,200] " + effect + " Thickness" + cr;
+                controlCount++;
                 code += "IntSliderControl Amount" + controlCount.ToString() + " = 50; // [0,100] " + effect + " Intensity" + cr;
                 controlCount++;
             }
@@ -863,7 +864,7 @@ namespace PaintDotNet.Effects
             {
                 code += "// Setup for calling the Edge Detect effect" + cr;
                 code += "EdgeDetectEffect edgedetectEffect = new EdgeDetectEffect();" + cr;
-                code += "PropertyCollection edgeProps;" + cr;
+                code += "PropertyCollection edgedetectProps;" + cr;
                 code += cr;
                 disposecode += "        if (edgedetectEffect != null) edgedetectEffect.Dispose();" + cr;
                 disposecode += "        edgedetectEffect = null;" + cr;
@@ -1024,11 +1025,11 @@ namespace PaintDotNet.Effects
             if (flowListArray.Any(element => element.Contains("Tile")))
             {
                 code += "// Setup for calling the Tile Reflection effect" + cr;
-                code += "TileEffect tileEffect = new TileEffect();" + cr;
-                code += "PropertyCollection tileProps;" + cr;
+                code += "TileEffect tilereflectionEffect = new TileEffect();" + cr;
+                code += "PropertyCollection tilereflectionProps;" + cr;
                 code += cr;
-                disposecode += "        if (tileEffect != null) tileEffect.Dispose();" + cr;
-                disposecode += "        tileEffect = null;" + cr;
+                disposecode += "        if (tilereflectionEffect != null) tilereflectionEffect.Dispose();" + cr;
+                disposecode += "        tilereflectionEffect = null;" + cr;
             }
             if (flowListArray.Any(element => element.Contains("Twist")))
             {
@@ -1099,7 +1100,7 @@ namespace PaintDotNet.Effects
                 code += cr;
             }
             // Blends
-            if (flowListArray.Any(element => element.Contains("Blend")))
+            if (flowListArray.Any(element => element.Contains("Blend") && !element.Contains("User selected")))
             {
                 code += "// Setup for selected blending op" + cr;
                 if (flowListArray.Any(element => element.Contains("Blend|Normal")))

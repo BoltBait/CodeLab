@@ -454,7 +454,7 @@
     <EmbeddedResource Include="Icons\Sharpen.png" />
     <EmbeddedResource Include="Icons\SoftenPortrait.png" />
     <EmbeddedResource Include="Icons\SurfaceBlur.png" />
-    <EmbeddedResource Include="Icons\Tile.png" />
+    <EmbeddedResource Include="Icons\TileReflection.png" />
     <EmbeddedResource Include="Icons\Twist.png" />
     <EmbeddedResource Include="Icons\Unfocus.png" />
     <EmbeddedResource Include="Icons\Vignette.png" />
