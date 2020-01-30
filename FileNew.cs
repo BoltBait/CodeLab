@@ -1297,15 +1297,14 @@ namespace PaintDotNet.Effects
                             }
                             else
                             {
-                                if (ename == "User selected")
+                               code += "    if (IsCancelRequested) return;" + cr;
+                               if (ename == "User selected")
                                 {
-                                    code += "    if (IsCancelRequested) return;" + cr;
                                     code += "    // Blend the " + srcsurface + " surface and the " + wrksurface + " surface to the " + dstsurface + " surface" + cr;
                                     code += "    Amount" + elnum.ToString() + ".Apply(" + dstsurface + ", " + srcsurface + ", " + wrksurface + ");" + cr;
                                 }
                                 else
                                 {
-                                    code += "    if (IsCancelRequested) return;" + cr;
                                     code += "    // " + ename + " Blend the " + srcsurface + " surface and the " + wrksurface + " surface to the " + dstsurface + " surface" + cr;
                                     code += "    " + ename.ToLower() + "Op.Apply(" + dstsurface + ", " + srcsurface + ", " + wrksurface + ");" + cr;
                                 }
