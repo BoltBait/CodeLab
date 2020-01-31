@@ -131,6 +131,12 @@ namespace PaintDotNet.Effects
             else
             {
                 propCode += "    // " + effect + cr;
+                if (lowerName == "clouds")
+                {
+                    propCode += "    // Use this line instead of the next for Black-and-White clouds:" + cr;
+                    propCode += "    //" + lowerName + "Effect.EnvironmentParameters = new EffectEnvironmentParameters(ColorBgra.Black, ColorBgra.White, 0, EnvironmentParameters.GetSelection(" + src + ".Bounds), " + src + ");" + cr;
+                }
+                propCode += "    " + lowerName + "Effect.EnvironmentParameters = EnvironmentParameters;" + cr;
                 propCode += "    " + lowerName + "Props = " + lowerName + "Effect.CreatePropertyCollection();" + cr;
                 propCode += "    ";
                 if (!effectPreviouslySent)
