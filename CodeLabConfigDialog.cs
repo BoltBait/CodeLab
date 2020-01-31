@@ -390,7 +390,7 @@ namespace PaintDotNet.Effects
             //    return;
             //}
 
-            using (SaveConfigDialog saveDialog = new SaveConfigDialog(ScriptBuilder.BuiltFileType, EffectSourceSurface))
+            using (SaveConfigDialog saveDialog = new SaveConfigDialog(ScriptBuilder.BuiltFileType, EnvironmentParameters.SourceSurface))
             {
                 saveDialog.ShowDialog();
             }

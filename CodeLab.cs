@@ -56,7 +56,7 @@ namespace PaintDotNet.Effects
         public override EffectConfigDialog CreateConfigDialog()
         {
             Rectangle srcBounds = EnvironmentParameters.SourceSurface.Bounds;
-            Rectangle selection = EnvironmentParameters.GetSelection(srcBounds).GetBoundsInt();
+            Rectangle selection = EnvironmentParameters.SelectionBounds;
             ColorBgra strokeColor = EnvironmentParameters.PrimaryColor;
             ColorBgra fillColor = EnvironmentParameters.SecondaryColor;
             double strokeThickness = EnvironmentParameters.BrushWidth;
@@ -81,7 +81,7 @@ namespace PaintDotNet.Effects
             if (projectType == ProjectType.Shape)
             {
                 Rectangle srcBounds = EnvironmentParameters.SourceSurface.Bounds;
-                Rectangle selection = EnvironmentParameters.GetSelection(srcBounds).GetBoundsInt();
+                Rectangle selection = EnvironmentParameters.SelectionBounds;
                 ColorBgra strokeColor = EnvironmentParameters.PrimaryColor;
                 ColorBgra fillColor = EnvironmentParameters.SecondaryColor;
                 double strokeThickness = EnvironmentParameters.BrushWidth;

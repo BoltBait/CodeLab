@@ -42,7 +42,7 @@ namespace PaintDotNet.Effects
             + "void Render(Surface dst, Surface src, Rectangle rect)\r\n"
             + "{\r\n"
             + "    // Delete any of these lines you don't need\r\n"
-            + "    Rectangle selection = EnvironmentParameters.GetSelection(src.Bounds).GetBoundsInt();\r\n"
+            + "    Rectangle selection = EnvironmentParameters.SelectionBounds;\r\n"
             + "    int CenterX = ((selection.Right - selection.Left) / 2) + selection.Left;\r\n"
             + "    int CenterY = ((selection.Bottom - selection.Top) / 2) + selection.Top;\r\n"
             + "    ColorBgra PrimaryColor = EnvironmentParameters.PrimaryColor;\r\n"
