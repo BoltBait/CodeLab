@@ -1404,18 +1404,16 @@ namespace PaintDotNet.Effects
             code += "{" + cr;
 
             // Add in code for the desired variables the user wants
-            if (CenterCode.Checked || SelectionCode.Checked)
+            if (SelectionCode.Checked)
             {
-                code += "    Rectangle selection = EnvironmentParameters.GetSelection(src.Bounds).GetBoundsInt();" + cr;
-                if (SelectionCode.Checked)
-                {
-                    code += "    PdnRegion selectionRegion = EnvironmentParameters.GetSelection(src.Bounds);" + cr;
-                }
+                code += "    // Delete this line if you don't need the selection outline shape" + cr;
+                code += "    PdnRegion selectionRegion = EnvironmentParameters.GetSelectionAsPdnRegion();" + cr;
                 code += cr;
             }
             if (CenterCode.Checked)
             {
-                code += "    // Delete these 2 lines if you don't need to know the center point of the current selection" + cr;
+                code += "    // Delete these 3 lines if you don't need to know the center point of the current selection" + cr;
+                code += "    Rectangle selection = EnvironmentParameters.SelectionBounds;" + cr;
                 code += "    int CenterX = ((selection.Right - selection.Left) / 2) + selection.Left;" + cr;
                 code += "    int CenterY = ((selection.Bottom - selection.Top) / 2) + selection.Top;" + cr;
                 code += cr;
