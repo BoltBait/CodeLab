@@ -3891,6 +3891,7 @@ namespace PaintDotNet.Effects
             }
 
             AdjustLineNumbersWidth();
+            UpdateIndicatorBar();
         }
 
         internal void CloseDocument(Guid guid)
