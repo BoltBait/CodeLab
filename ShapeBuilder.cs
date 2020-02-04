@@ -17,10 +17,10 @@ namespace PaintDotNet.Effects
         private static SolidColorBrush fillBrush;
         private static double strokeThickness;
 
-        private const string InvalidShapeFormat = "Shape code is invalid or otherwise unrecognized.";
-        private static string exceptionMsg;
+        private static readonly ScriptError invalidShapeError = new ScriptError(0, 0, "Shape code is invalid or otherwise unrecognized.");
+        private static ScriptError error;
 
-        internal static string Exception => exceptionMsg;
+        internal static ScriptError Error => error;
         internal static System.Drawing.Bitmap Shape;
 
         internal static void SetEnviromentParams(int canvasWidth, int canvasHeight, int selectionX, int selectionY,
@@ -37,11 +37,10 @@ namespace PaintDotNet.Effects
         {
             Shape?.Dispose();
             Shape = null;
-            exceptionMsg = null;
+            error = null;
 
             if (string.IsNullOrWhiteSpace(shapeCode))
             {
-                exceptionMsg = InvalidShapeFormat;
                 return false;
             }
 
@@ -76,7 +75,6 @@ namespace PaintDotNet.Effects
 
                     if (xmlnsStartIndex == -1 || xmlnsEndIndex == -1)
                     {
-                        exceptionMsg = InvalidShapeFormat;
                         return false;
                     }
 
@@ -96,7 +94,6 @@ namespace PaintDotNet.Effects
                     string geometryCode = docElement.Attributes.GetNamedItem("Geometry").InnerText;
                     if (string.IsNullOrWhiteSpace(geometryCode))
                     {
-                        exceptionMsg = "Can not find the Geometry attribute.";
                         return false;
                     }
 
@@ -107,14 +104,6 @@ namespace PaintDotNet.Effects
                         return true;
                     }
                 }
-                else
-                {
-                    exceptionMsg = InvalidShapeFormat;
-                }
-            }
-            else
-            {
-                exceptionMsg = InvalidShapeFormat;
             }
 
             return false;
@@ -122,11 +111,11 @@ namespace PaintDotNet.Effects
 
         internal static bool TryParseShapeCode(string shapeCode)
         {
-            exceptionMsg = null;
+            error = null;
 
             if (string.IsNullOrWhiteSpace(shapeCode))
             {
-                exceptionMsg = InvalidShapeFormat;
+                error = invalidShapeError;
                 return false;
             }
 
@@ -150,6 +139,10 @@ namespace PaintDotNet.Effects
                         return true;
                     }
                 }
+                else
+                {
+                    error = new ScriptError(0, 0, "Can not find the Path tag.");
+                }
             }
             else if (docElement.Name == "ps:SimpleGeometryShape")
             {
@@ -161,7 +154,7 @@ namespace PaintDotNet.Effects
 
                     if (xmlnsStartIndex == -1 || xmlnsEndIndex == -1)
                     {
-                        exceptionMsg = InvalidShapeFormat;
+                        error = invalidShapeError;
                         return false;
                     }
 
@@ -181,7 +174,7 @@ namespace PaintDotNet.Effects
                     string geometryCode = docElement.Attributes.GetNamedItem("Geometry").InnerText;
                     if (string.IsNullOrWhiteSpace(geometryCode))
                     {
-                        exceptionMsg = "Can not find the Geometry attribute.";
+                        error = new ScriptError(0, 0, "The Geometry attribute is empty.");
                         return false;
                     }
 
@@ -194,12 +187,12 @@ namespace PaintDotNet.Effects
                 }
                 else
                 {
-                    exceptionMsg = InvalidShapeFormat;
+                    error = new ScriptError(0, 0, "Can not find the Geometry attribute.");
                 }
             }
             else
             {
-                exceptionMsg = InvalidShapeFormat;
+                error = invalidShapeError;
             }
 
             return false;
@@ -212,9 +205,9 @@ namespace PaintDotNet.Effects
             {
                 xmlDoc.LoadXml(xml);
             }
-            catch (Exception ex)
+            catch (XmlException ex)
             {
-                exceptionMsg = ex.Message;
+                error = new ScriptError(ex.LineNumber, ex.LinePosition, ex.Message);
                 return null;
             }
 
@@ -229,9 +222,9 @@ namespace PaintDotNet.Effects
             {
                 page = (Page)XamlReader.Parse(shape);
             }
-            catch (Exception ex)
+            catch (XamlParseException ex)
             {
-                exceptionMsg = ex.Message;
+                error = new ScriptError(ex.LineNumber, ex.LinePosition, ex.Message);
             }
 
             return page;
@@ -245,9 +238,9 @@ namespace PaintDotNet.Effects
             {
                 path = (Path)XamlReader.Parse(shape);
             }
-            catch (Exception ex)
+            catch (XamlParseException ex)
             {
-                exceptionMsg = ex.Message;
+                error = new ScriptError(ex.LineNumber, ex.LinePosition, ex.Message);
             }
 
             return path;
@@ -261,9 +254,9 @@ namespace PaintDotNet.Effects
             {
                 geometry = (StreamGeometry)Geometry.Parse(streamGeometry);
             }
-            catch (Exception ex)
+            catch (FormatException ex)
             {
-                exceptionMsg = ex.Message;
+                error = new ScriptError(0, 0, ex.Message);
             }
 
             return geometry;

@@ -3985,7 +3985,7 @@ namespace PaintDotNet.Effects
         {
             errorLines.Add(line);
 
-            int errPosition = this.Lines[line].Position + column;
+            int errPosition = this.WordStartPosition(this.Lines[line].Position + column, true);
             int errorLength = this.GetWordFromPosition(errPosition).Length;
 
             // if error is at the end of the line (missing semi-colon), or is a stray '.'

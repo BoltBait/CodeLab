@@ -21,7 +21,15 @@ namespace PaintDotNet.Effects
     /// </summary>
     internal class ScriptError : CompilerError
     {
-        private readonly bool isInternal;
+        private readonly ErrorType errorType;
+
+        public ScriptError(int line, int column, string errorText)
+        {
+            this.Column = column;
+            this.ErrorText = errorText;
+            this.Line = line;
+            this.errorType = ErrorType.Xaml;
+        }
 
         internal ScriptError(CompilerError error)
         {
@@ -31,23 +39,38 @@ namespace PaintDotNet.Effects
             this.FileName = error.FileName;
             this.IsWarning = error.IsWarning;
             this.Line = error.Line - ScriptBuilder.LineOffset;
-            this.isInternal = false;
+            this.errorType = ErrorType.CSharp;
         }
 
         internal ScriptError(string internalError)
         {
             this.ErrorText = internalError;
-            this.isInternal = true;
+            this.errorType = ErrorType.Internal;
         }
 
         public override string ToString()
         {
-            if (this.isInternal)
+            switch (this.errorType)
             {
-                return $"Internal Error: {this.ErrorText}";
+                case ErrorType.CSharp:
+                    return $"{(this.IsWarning ? "Warning" : "Error")} at line {this.Line}: {this.ErrorText} ({this.ErrorNumber})";
+                    break;
+                case ErrorType.Xaml:
+                    return this.ErrorText;
+                    break;
+                case ErrorType.Internal:
+                    return $"Internal Error: {this.ErrorText}";
+                    break;
             }
 
-            return $"{(this.IsWarning ? "Warning" : "Error")} at line {this.Line}: {this.ErrorText} ({this.ErrorNumber})";
+            return string.Empty;
+        }
+
+        private enum ErrorType
+        {
+            CSharp,
+            Xaml,
+            Internal
         }
     }
 }

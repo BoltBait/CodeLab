@@ -474,13 +474,19 @@ namespace PaintDotNet.Effects
 
                     break;
                 case ProjectType.Shape:
-                    if (string.IsNullOrEmpty(ShapeBuilder.Exception))
+                    if (ShapeBuilder.Error == null)
                     {
                         txtCode.UpdateIndicatorBar();
                         return;
                     }
 
-                    errorList.Items.Add(ShapeBuilder.Exception);
+                    errorList.Items.Add(ShapeBuilder.Error);
+
+                    if (ShapeBuilder.Error.Line > 0)
+                    {
+                        txtCode.AddError(ShapeBuilder.Error.Line - 1, ShapeBuilder.Error.Column);
+                    }
+
                     break;
             }
 
