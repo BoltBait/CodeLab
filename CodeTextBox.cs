@@ -1874,7 +1874,95 @@ namespace PaintDotNet.Effects
             return null;
         }
 
+        private Type GetXamlTag(int position)
+        {
+            int pos = position;
+            bool foundTagStart = false;
+            while (pos != InvalidPosition)
+            {
+                char charAtPos = this.GetCharAt(pos);
+                if (charAtPos == '<')
+                {
+                    foundTagStart = true;
+                    pos++;
+                    break;
+                }
+                else if (charAtPos == '>')
+                {
+                    return null;
+                }
+
+                pos--;
+            }
+
+            if (!foundTagStart || this.GetStyleAt(pos) != Style.Xml.Tag)
+            {
+                return null;
+            }
+
+            string tagName = this.GetWordFromPosition(pos);
+            if (!Intelli.XamlAutoCompleteTypes.TryGetValue(tagName, out Type tag) || tag == null)
+            {
+                return null;
+            }
+
+            return tag;
+        }
+
         private bool GoToDefinition()
+        {
+            switch (this.Lexer)
+            {
+                case Lexer.Cpp:
+                    return GoToDefinitionCSharp();
+                case Lexer.Xml:
+                    return GoToDefinitionXaml();
+            }
+
+            return false;
+        }
+
+        private bool GoToDefinitionXaml()
+        {
+            int position = this.WordStartPosition(this.CurrentPosition, true);
+            int style = this.GetStyleAt(position);
+
+            if (style == Style.Xml.Attribute)
+            {
+                Type tag = GetXamlTag(position);
+                if (tag == null)
+                {
+                    return false;
+                }
+
+                string attribute = this.GetWordFromPosition(position);
+                PropertyInfo property = tag.GetProperty(attribute, BindingFlags.Instance | BindingFlags.Public);
+                if (property == null)
+                {
+                    return false;
+                }
+
+                string fullName = $"{property.DeclaringType.FullName}.{property.Name}";
+                OpenMsDocs(fullName);
+                return true;
+            }
+
+            if (style == Style.Xml.Tag)
+            {
+                Type tag = GetXamlTag(position);
+                if (tag == null)
+                {
+                    return false;
+                }
+
+                OpenMsDocs(tag.FullName);
+                return true;
+            }
+
+            return false;
+        }
+
+        private bool GoToDefinitionCSharp()
         {
             int position = this.WordStartPosition(this.CurrentPosition, true);
 
@@ -2068,12 +2156,11 @@ namespace PaintDotNet.Effects
 
             OpenMsDocs(fullName2);
             return true;
+        }
 
-
-            void OpenMsDocs(string fullName)
-            {
-                System.Diagnostics.Process.Start($"https://docs.microsoft.com/dotnet/api/{fullName}");
-            }
+        private void OpenMsDocs(string fullName)
+        {
+            System.Diagnostics.Process.Start($"https://docs.microsoft.com/dotnet/api/{fullName}");
         }
 
         protected override void OnMouseWheel(MouseEventArgs e)
@@ -2604,36 +2691,14 @@ namespace PaintDotNet.Effects
 
         private void XamlAttributeIntelliBox(int position)
         {
-            int pos = position;
-            bool foundTagStart = false;
-            while (pos != InvalidPosition)
-            {
-                char charAtPos = this.GetCharAt(pos);
-                if (charAtPos == '<')
-                {
-                    foundTagStart = true;
-                    pos++;
-                    break;
-                }
-                else if (charAtPos == '>')
-                {
-                    return;
-                }
-
-                pos--;
-            }
-
-            if (!foundTagStart || this.GetStyleAt(pos) != Style.Xml.Tag)
+            Type tag = GetXamlTag(position);
+            if (tag == null)
             {
                 return;
             }
 
-            string tagName = this.GetWordFromPosition(pos);
-            if (Intelli.XamlAutoCompleteTypes.TryGetValue(tagName, out Type tag))
-            {
-                iBox.PopulateXamlAttributes(tag);
-                ShowIntelliBox(position, false);
-            }
+            iBox.PopulateXamlAttributes(tag);
+            ShowIntelliBox(position, false);
         }
 
         private void ShowIntelliBox(int position, bool members)
