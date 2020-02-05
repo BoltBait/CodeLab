@@ -84,10 +84,10 @@ namespace PaintDotNet.Effects
             "    DisplayName=\"House\">\r\n" +
             "    <PathGeometry FillRule=\"Nonzero\">\r\n" +
             "        <PathFigure IsClosed=\"True\" IsFilled=\"True\" StartPoint=\"21,142\">\r\n" +
-            "            <LineSegment Point = \"160,22\" IsSmoothJoin=\"True\" />\r\n" +
-            "            <LineSegment Point = \"300,142\" IsSmoothJoin=\"True\" />\r\n" +
-            "            <LineSegment Point = \"300,318\" IsSmoothJoin=\"True\" />\r\n" +
-            "            <LineSegment Point = \"21,318\" IsSmoothJoin=\"True\" />\r\n" +
+            "            <LineSegment Point=\"160,22\" IsSmoothJoin=\"True\" />\r\n" +
+            "            <LineSegment Point=\"300,142\" IsSmoothJoin=\"True\" />\r\n" +
+            "            <LineSegment Point=\"300,318\" IsSmoothJoin=\"True\" />\r\n" +
+            "            <LineSegment Point=\"21,318\" IsSmoothJoin=\"True\" />\r\n" +
             "        </PathFigure>\r\n" +
             "    </PathGeometry>\r\n" +
             "</ps:SimpleGeometryShape>\r\n";
@@ -110,7 +110,7 @@ namespace PaintDotNet.Effects
             "            <RectangleGeometry Rect=\"0,0,100,160\" RadiusX=\"5\" RadiusY=\"5\" />\r\n" +
             "            <RectangleGeometry Rect=\"2,2,96,156\" RadiusX=\"5\" RadiusY=\"5\" />\r\n" +
             "            <RectangleGeometry Rect=\"42,5,16,3\" RadiusX=\"2\" RadiusY=\"2\" />\r\n" +
-            "            <EllipseGeometry Center = \"50,150\" RadiusX=\"6\" RadiusY=\"6\" />\r\n" +
+            "            <EllipseGeometry Center=\"50,150\" RadiusX=\"6\" RadiusY=\"6\" />\r\n" +
             "            <PathGeometry Figures=\"M 20,72 L 50,52 L 80,72 L 80,110 L 20,110 Z\" />\r\n" +
             "        </GeometryGroup>\r\n" +
             "</ps:SimpleGeometryShape>\r\n";
