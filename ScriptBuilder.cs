@@ -22,6 +22,11 @@ using System.IO;
 using System.Text.RegularExpressions;
 using System.IO.Compression;
 using System.Linq;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.Emit;
+using System.Reflection;
+using System.Diagnostics;
 
 namespace PaintDotNet.Effects
 {
@@ -43,6 +48,9 @@ namespace PaintDotNet.Effects
         private static string exceptionMsg;
         private const string defaultOptions = " /unsafe /optimize";
         private static readonly Regex preRenderRegex = new Regex(@"void PreRender\(Surface dst, Surface src\)(\s)*{(.|\s)*}", RegexOptions.Singleline);
+
+        private static readonly IEnumerable<MetadataReference> references = AssemblyUtil.ReferenceAssemblies.Select(a => MetadataReference.CreateFromFile(a.Location));
+        private static IEnumerable<Diagnostic> failures;
 
         #region Properties
         internal static Effect BuiltEffect => builtEffect;
@@ -66,6 +74,10 @@ namespace PaintDotNet.Effects
                 {
                     errorList.Add(new ScriptError(exceptionMsg));
                 }
+                if (failures != null)
+                {
+                    errorList.AddRange(failures.Select(diag => new ScriptError(diag)));
+                }
                 return errorList;
             }
         }
@@ -82,6 +94,50 @@ namespace PaintDotNet.Effects
                 ScriptWriter.UserEnteredPart(scriptText) +
                 ScriptWriter.append_code;
 
+            failures = null;
+            lineOffset = CalculateLineOffset(SourceCode);
+
+            SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(SourceCode);
+
+            string assemblyName = Path.GetRandomFileName();
+
+            CSharpCompilation compilation = CSharpCompilation.Create(assemblyName, new[] { syntaxTree }, references, new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
+
+            using (MemoryStream ms = new MemoryStream())
+            {
+                EmitResult result = compilation.Emit(ms);
+
+                failures = result.Diagnostics.Where(diag => !diag.Id.Equals("CS8019", StringComparison.OrdinalIgnoreCase));
+
+                if (!result.Success)
+                {
+                    return false;
+                    //IEnumerable<Diagnostic> failures = result.Diagnostics.Where(diagnostic =>
+                    //    diagnostic.IsWarningAsError ||
+                    //    diagnostic.Severity == DiagnosticSeverity.Error);
+                }
+
+                ms.Seek(0, SeekOrigin.Begin);
+                Assembly assembly = Assembly.Load(ms.ToArray());
+
+                foreach (Type type in assembly.GetTypes())
+                {
+                    if (type.IsSubclassOf(typeof(Effect)) && !type.IsAbstract)
+                    {
+                        builtEffect = (Effect)type.GetConstructor(Type.EmptyTypes).Invoke(null);
+                        Intelli.UserScript = type;
+                    }
+                    else if (type.DeclaringType != null && type.DeclaringType.FullName.StartsWith(Intelli.UserScriptFullName, StringComparison.Ordinal) && !Intelli.UserDefinedTypes.ContainsKey(type.Name))
+                    {
+                        Intelli.UserDefinedTypes.Add(type.Name, type);
+                    }
+                }
+            }
+
+            return builtEffect != null;
+
+
+            /*
             exceptionMsg = null;
             builtEffect = null;
             // Compile code
@@ -119,6 +175,7 @@ namespace PaintDotNet.Effects
                 exceptionMsg = ex.Message;
             }
             return false;
+            */
         }
 
         internal static bool BuildEffectDll(string scriptText, string scriptPath, string subMenuname, string menuName, string iconPath, string author, int majorVersion, int minorVersion, string supportURL, string windowTitle, bool isAdjustment, string description, string keyWords, EffectFlags effectFlags, EffectRenderingSchedule renderingSchedule, HelpType helpType, string helpText)

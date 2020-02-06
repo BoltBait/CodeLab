@@ -12,6 +12,8 @@
 // Latest distribution: https://www.BoltBait.com/pdn/codelab
 /////////////////////////////////////////////////////////////////////////////////
 
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.Text;
 using System.CodeDom.Compiler;
 
 namespace PaintDotNet.Effects
@@ -22,6 +24,18 @@ namespace PaintDotNet.Effects
     internal class ScriptError : CompilerError
     {
         private readonly ErrorType errorType;
+
+        public ScriptError(Diagnostic diag)
+        {
+            LinePosition linePosition  = diag.Location.GetLineSpan().StartLinePosition;
+            this.Column = linePosition.Character - ScriptBuilder.ColumnOffset + 1;
+            this.ErrorNumber = diag.Id;
+            this.ErrorText = diag.GetMessage();
+            //this.FileName = diag.;
+            this.IsWarning = diag.Severity == DiagnosticSeverity.Warning;
+            this.Line = linePosition.Line - ScriptBuilder.LineOffset + 1;
+            this.errorType = ErrorType.CSharp;
+        }
 
         public ScriptError(int line, int column, string errorText)
         {
