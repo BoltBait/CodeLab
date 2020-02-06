@@ -358,16 +358,13 @@ namespace PaintDotNet.Effects
 
             EffectPart += "            : base(StaticName, StaticIcon, SubmenuName, new EffectOptions() { Flags = " + flags + schedule + " })\r\n";
             EffectPart += "        {\r\n";
-            foreach (UIElement u in UserControls)
+
+            if (UserControls.Any(u => u.ElementType == ElementType.ReseedButton))
             {
-                if (u.ElementType == ElementType.ReseedButton)
-                {
-                    // if we have a random number generator control, include the following line...
-                    EffectPart += "            instanceSeed = unchecked((int)DateTime.Now.Ticks);\r\n";
-                    // ... only once!
-                    break;
-                }
+                // if we have a random number generator control, include the following line...
+                EffectPart += "            instanceSeed = unchecked((int)DateTime.Now.Ticks);\r\n";
             }
+
             EffectPart += "        }\r\n";
             EffectPart += "\r\n";
             return EffectPart;
@@ -704,7 +701,7 @@ namespace PaintDotNet.Effects
 
             if (UserControls.Any(u => u.ElementType == ElementType.PanSlider))
             {
-                PropertyPart += "            Rectangle selection = EnvironmentParameters.GetSelection(EnvironmentParameters.SourceSurface.Bounds).GetBoundsInt();\r\n";
+                PropertyPart += "            Rectangle selection = EnvironmentParameters.SelectionBounds;\r\n";
                 PropertyPart += "            ImageResource imageResource = ImageResource.FromImage(EnvironmentParameters.SourceSurface.CreateAliasedBitmap(selection));\r\n";
                 PropertyPart += "\r\n";
             }
@@ -1095,20 +1092,17 @@ namespace PaintDotNet.Effects
 
         internal static string RenderLoopPart(UIElement[] UserControls)
         {
+            bool hasReseed = UserControls.Any(u => u.ElementType == ElementType.ReseedButton);
+
             string RenderLoopPart = "";
             RenderLoopPart += "        protected override unsafe void OnRender(Rectangle[] rois, int startIndex, int length)\r\n";
             RenderLoopPart += "        {\r\n";
             RenderLoopPart += "            if (length == 0) return;\r\n";
 
-            foreach (UIElement u in UserControls)
+            if (hasReseed)
             {
-                if (u.ElementType == ElementType.ReseedButton)
-                {
-                    // if we have a random number generator control, include the following line...
-                    RenderLoopPart += "            RandomNumber = GetRandomNumberGenerator(rois, startIndex);\r\n";
-                    // ... only once!
-                    break;
-                }
+                // if we have a random number generator control, include the following line...
+                RenderLoopPart += "            RandomNumber = GetRandomNumberGenerator(rois, startIndex);\r\n";
             }
 
             RenderLoopPart += "            for (int i = startIndex; i < startIndex + length; ++i)\r\n";
@@ -1118,21 +1112,17 @@ namespace PaintDotNet.Effects
             RenderLoopPart += "        }\r\n";
             RenderLoopPart += "\r\n";
 
-            foreach (UIElement u in UserControls)
+            if (hasReseed)
             {
-                if (u.ElementType == ElementType.ReseedButton)
-                {
-                    // if we have a random number generator control, include the following line...
-                    RenderLoopPart += "        private Random GetRandomNumberGenerator(Rectangle[] rois, int startIndex)\r\n";
-                    RenderLoopPart += "        {\r\n";
-                    RenderLoopPart += "            Rectangle roi = rois[startIndex];\r\n";
-                    RenderLoopPart += "            return new Random(instanceSeed ^ (randomSeed << 16) ^ (roi.X << 8) ^ roi.Y);\r\n";
-                    RenderLoopPart += "        }\r\n";
-                    RenderLoopPart += "\r\n";
-                    // ... only once!
-                    break;
-                }
+                // if we have a random number generator control, include the following line...
+                RenderLoopPart += "        private Random GetRandomNumberGenerator(Rectangle[] rois, int startIndex)\r\n";
+                RenderLoopPart += "        {\r\n";
+                RenderLoopPart += "            Rectangle roi = rois[startIndex];\r\n";
+                RenderLoopPart += "            return new Random(instanceSeed ^ (randomSeed << 16) ^ (roi.X << 8) ^ roi.Y);\r\n";
+                RenderLoopPart += "        }\r\n";
+                RenderLoopPart += "\r\n";
             }
+
             return RenderLoopPart;
         }
 
