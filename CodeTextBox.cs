@@ -1429,7 +1429,7 @@ namespace PaintDotNet.Effects
                             return string.Empty;
                         }
 
-                        memberInfo = this.GetOverload(members.Cast<MethodInfo>(), position);
+                        memberInfo = this.GetOverload(members.OfType<MethodInfo>(), position);
                     }
 
                     MethodInfo method = (MethodInfo)memberInfo;
@@ -1855,12 +1855,12 @@ namespace PaintDotNet.Effects
                     // We're at the last iteration. Return the MemberInfo.
                     length = mi.Length;
                     return (mi[0].MemberType == MemberTypes.Method) ?
-                        GetOverload(mi.Cast<MethodInfo>(), tokenPos[i]) :
+                        GetOverload(mi.OfType<MethodInfo>(), tokenPos[i]) :
                         mi[0];
                 }
 
                 type = (mi[0].MemberType == MemberTypes.Method) ?
-                    GetOverload(mi.Cast<MethodInfo>(), tokenPos[i]).ReturnType :
+                    GetOverload(mi.OfType<MethodInfo>(), tokenPos[i]).ReturnType :
                     mi[0].GetReturnType();
 
                 if (type == null)
