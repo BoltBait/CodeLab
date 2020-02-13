@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -42,9 +43,9 @@ namespace PaintDotNet.Effects
 
         private Theme theme = Theme.Light;
         private int caret = 0;
-        private int[] errors = Array.Empty<int>();
-        private int[] matches = Array.Empty<int>();
-        private int[] bookmarks = Array.Empty<int>();
+        private IEnumerable<int> errors = Array.Empty<int>();
+        private IEnumerable<int> matches = Array.Empty<int>();
+        private IEnumerable<int> bookmarks = Array.Empty<int>();
         private int maximum = 100;
         private int largeChange = 50;
 
@@ -116,7 +117,7 @@ namespace PaintDotNet.Effects
             }
         }
 
-        internal int[] Errors
+        internal IEnumerable<int> Errors
         {
             get
             {
@@ -129,7 +130,7 @@ namespace PaintDotNet.Effects
             }
         }
 
-        internal int[] Matches
+        internal IEnumerable<int> Matches
         {
             get
             {
@@ -142,7 +143,7 @@ namespace PaintDotNet.Effects
             }
         }
 
-        internal int[] Bookmarks
+        internal IEnumerable<int> Bookmarks
         {
             get
             {
@@ -477,25 +478,25 @@ namespace PaintDotNet.Effects
             using (Pen indicatorPen = new Pen(matchColor, 4f * dpiY))
             {
                 indicatorPen.Color = bookmarkColor;
-                for (int i = 0; i < this.bookmarks.Length; i++)
+                foreach (int bookmark in this.bookmarks)
                 {
-                    float bkmkVPos = (float)bookmarks[i] / maximum * posTrackRect.Height + posTrackRect.Top;
+                    float bkmkVPos = (float)bookmark / maximum * posTrackRect.Height + posTrackRect.Top;
                     bkmkVPos = bkmkVPos.Clamp(posTrackRect.Top, posTrackRect.Bottom);
                     e.Graphics.DrawLine(indicatorPen, posTrackRect.Left + 6f * dpiY, bkmkVPos, posTrackRect.Right - 6f * dpiY, bkmkVPos);
                 }
 
                 indicatorPen.Color = matchColor;
-                for (int i = 0; i < matches.Length; i++)
+                foreach (int match in this.matches)
                 {
-                    float matchLineVPos = (float)matches[i] / maximum * posTrackRect.Height + posTrackRect.Top;
+                    float matchLineVPos = (float)match / maximum * posTrackRect.Height + posTrackRect.Top;
                     matchLineVPos = matchLineVPos.Clamp(posTrackRect.Top, posTrackRect.Bottom);
                     e.Graphics.DrawLine(indicatorPen, posTrackRect.Left, matchLineVPos, posTrackRect.Left + 4f * dpiY, matchLineVPos);
                 }
 
                 indicatorPen.Color = errorColor;
-                for (int i = 0; i < errors.Length; i++)
+                foreach (int error in this.errors)
                 {
-                    float errLineVPos = (float)errors[i] / maximum * posTrackRect.Height + posTrackRect.Top;
+                    float errLineVPos = (float)error / maximum * posTrackRect.Height + posTrackRect.Top;
                     errLineVPos = errLineVPos.Clamp(posTrackRect.Top, posTrackRect.Bottom);
                     e.Graphics.DrawLine(indicatorPen, posTrackRect.Right - 4f * dpiY, errLineVPos, posTrackRect.Right, errLineVPos);
                 }

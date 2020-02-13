@@ -55,12 +55,12 @@ namespace PaintDotNet.Effects
 
         public override EffectConfigDialog CreateConfigDialog()
         {
-            Rectangle srcBounds = EnvironmentParameters.SourceSurface.Bounds;
+            Size srcSize = EnvironmentParameters.SourceSurface.Size;
             Rectangle selection = EnvironmentParameters.SelectionBounds;
             ColorBgra strokeColor = EnvironmentParameters.PrimaryColor;
             ColorBgra fillColor = EnvironmentParameters.SecondaryColor;
             double strokeThickness = EnvironmentParameters.BrushWidth;
-            ShapeBuilder.SetEnviromentParams(srcBounds.Width, srcBounds.Height, selection.X, selection.Y, selection.Width, selection.Height, strokeColor, fillColor, strokeThickness);
+            ShapeBuilder.SetEnviromentParams(srcSize.Width, srcSize.Height, selection.X, selection.Y, selection.Width, selection.Height, strokeColor, fillColor, strokeThickness);
 
             return new CodeLabConfigDialog();
         }
@@ -80,7 +80,7 @@ namespace PaintDotNet.Effects
 
             if (projectType == ProjectType.Shape)
             {
-                Rectangle srcBounds = EnvironmentParameters.SourceSurface.Bounds;
+                Size srcSize = EnvironmentParameters.SourceSurface.Size;
                 Rectangle selection = EnvironmentParameters.SelectionBounds;
                 ColorBgra strokeColor = EnvironmentParameters.PrimaryColor;
                 ColorBgra fillColor = EnvironmentParameters.SecondaryColor;
@@ -88,7 +88,7 @@ namespace PaintDotNet.Effects
 
                 Thread t = new Thread(() =>
                 {
-                    ShapeBuilder.SetEnviromentParams(srcBounds.Width, srcBounds.Height, selection.X, selection.Y, selection.Width, selection.Height, strokeColor, fillColor, strokeThickness);
+                    ShapeBuilder.SetEnviromentParams(srcSize.Width, srcSize.Height, selection.X, selection.Y, selection.Width, selection.Height, strokeColor, fillColor, strokeThickness);
                     ShapeBuilder.RenderShape(sect.UserCode);
                 });
                 t.SetApartmentState(ApartmentState.STA);

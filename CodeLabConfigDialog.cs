@@ -456,7 +456,7 @@ namespace PaintDotNet.Effects
             {
                 case ProjectType.Effect:
                 case ProjectType.FileType:
-                    if (ScriptBuilder.Errors.Length == 0)
+                    if (ScriptBuilder.Errors.Count == 0)
                     {
                         txtCode.UpdateIndicatorBar();
                         return;
@@ -1887,12 +1887,9 @@ namespace PaintDotNet.Effects
             {
                 string fontName = fontMenuItem.Text;
 
-                foreach (ToolStripItem item in fontsToolStripMenuItem.DropDownItems)
+                foreach (ToolStripMenuItem menuItem in fontsToolStripMenuItem.DropDownItems.OfType<ToolStripMenuItem>())
                 {
-                    if (item is ToolStripMenuItem menuItem)
-                    {
-                        menuItem.Checked = menuItem.Text == fontName;
-                    }
+                    menuItem.Checked = menuItem.Text == fontName;
                 }
 
                 Settings.FontFamily = fontName;

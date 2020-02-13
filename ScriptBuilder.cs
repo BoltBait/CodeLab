@@ -50,7 +50,7 @@ namespace PaintDotNet.Effects
         internal static int LineOffset => lineOffset;
         internal static int ColumnOffset => 9;
         internal static string Exception => exceptionMsg;
-        internal static ScriptError[] Errors
+        internal static IReadOnlyCollection<ScriptError> Errors
         {
             get
             {
@@ -66,7 +66,7 @@ namespace PaintDotNet.Effects
                 {
                     errorList.Add(new ScriptError(exceptionMsg));
                 }
-                return errorList.ToArray();
+                return errorList;
             }
         }
         #endregion

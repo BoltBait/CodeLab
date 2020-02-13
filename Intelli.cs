@@ -65,21 +65,21 @@ namespace PaintDotNet.Effects
         internal const string UserScriptFullName = "PaintDotNet.Effects.UserScript";
 
         private static Type userScript;
-        private static readonly MethodInfo[] extMethods;
+        private static readonly IEnumerable<MethodInfo> extMethods;
 
-        internal static MethodInfo[] GetExtensionMethod(this Type extendedType, string methodName)
+        internal static IEnumerable<MethodInfo> GetExtensionMethod(this Type extendedType, string methodName)
         {
-            return extMethods.Where(method => method.Name == methodName && method.Extends(extendedType)).ToArray();
+            return extMethods.Where(method => method.Name == methodName && method.Extends(extendedType));
         }
 
-        internal static MethodInfo[] GetExtensionMethods(this Type extendedType)
+        internal static IEnumerable<MethodInfo> GetExtensionMethods(this Type extendedType)
         {
-            return extMethods.Where(method => method.Extends(extendedType)).ToArray();
+            return extMethods.Where(method => method.Extends(extendedType));
         }
 
         internal static bool IsEnum(string enumName)
         {
-            return enumName != null &&  (UserDefinedTypes.TryGetValue(enumName, out Type type) || AllTypes.TryGetValue(enumName, out type)) &&
+            return enumName != null && (UserDefinedTypes.TryGetValue(enumName, out Type type) || AllTypes.TryGetValue(enumName, out type)) &&
                 type.IsEnum && Enum.GetValues(type).Length > 0;
         }
 
@@ -245,7 +245,7 @@ namespace PaintDotNet.Effects
                 }
             }
 
-            extMethods = extMethodsList.ToArray();
+            extMethods = extMethodsList;
 
             XamlAutoCompleteTypes = new Dictionary<string, Type>();
             foreach (Type type in Assembly.GetAssembly(typeof(System.Windows.Media.Geometry)).GetExportedTypes())

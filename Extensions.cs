@@ -69,12 +69,7 @@ namespace PaintDotNet.Effects
 
         internal static bool IsCSharpIndentifier(this string value)
         {
-            if (value.Length == 0)
-            {
-                return false;
-            }
-
-            if (char.IsNumber(value[0]))
+            if (value.Length == 0 || char.IsNumber(value[0]))
             {
                 return false;
             }
@@ -470,8 +465,7 @@ namespace PaintDotNet.Effects
                 return null;
             }
 
-            FieldInfo field = type.GetField(name);
-            return field?.GetCustomAttribute<DescriptionAttribute>(false)?.Description;
+            return type.GetField(name)?.GetCustomAttribute<DescriptionAttribute>(false)?.Description;
         }
 
         private static Type[] StringToTypeArray(string types)

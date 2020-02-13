@@ -1841,7 +1841,7 @@ namespace PaintDotNet.Effects
 
                 if (mi.Length == 0 || mi[0].MemberType == MemberTypes.Method)
                 {
-                    MemberInfo[] ext = type.GetExtensionMethod(tokens[i]);
+                    IEnumerable<MemberInfo> ext = type.GetExtensionMethod(tokens[i]);
                     mi = mi.Concat(ext).ToArray();
                 }
 
@@ -3801,7 +3801,7 @@ namespace PaintDotNet.Effects
             string tooltipText = null;
 
             // If there's an error here, we'll show that instead
-            if (ScriptBuilder.Errors.Length > 0)
+            if (ScriptBuilder.Errors.Count > 0)
             {
                 int wordStartPos = this.WordStartPosition(e.Position, true);
                 int wordEndPos = this.WordEndPosition(e.Position, true);

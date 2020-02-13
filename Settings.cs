@@ -141,7 +141,7 @@ namespace PaintDotNet.Effects
             set => SetRegValue("Snippets", value);
         }
 
-        internal static void OpenRegKey()
+        private static void OpenRegKey()
         {
             if (regKey == null)
             {

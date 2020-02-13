@@ -114,10 +114,11 @@ namespace PaintDotNet.Effects
             Clear();
             this.intelliBoxContents = IntelliBoxContents.Members;
 
-            MemberInfo[] members = isStatic ?
-                type.GetMembers(BindingFlags.Static | BindingFlags.Public) :
-                type.GetMembers(BindingFlags.Instance | BindingFlags.FlattenHierarchy | BindingFlags.CreateInstance | BindingFlags.Public);
+            BindingFlags bindingFlags = isStatic ?
+                BindingFlags.Static | BindingFlags.Public :
+                BindingFlags.Instance | BindingFlags.FlattenHierarchy | BindingFlags.CreateInstance | BindingFlags.Public;
 
+            MemberInfo[] members = type.GetMembers(bindingFlags);
             foreach (MemberInfo memberInfo in members)
             {
                 if ((!memberInfo.ReflectedType.IsVisible && memberInfo.DeclaringType?.DeclaringType?.FullName != Intelli.UserScriptFullName) ||
