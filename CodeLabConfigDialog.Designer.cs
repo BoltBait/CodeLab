@@ -820,8 +820,9 @@
             // viewDebugToolStripMenuItem
             // 
             this.viewDebugToolStripMenuItem.Name = "viewDebugToolStripMenuItem";
-            this.viewDebugToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D)));
             this.viewDebugToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
+            this.viewDebugToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Alt) 
+            | System.Windows.Forms.Keys.O)));
             this.viewDebugToolStripMenuItem.Text = "&Debug output";
             this.viewDebugToolStripMenuItem.Click += new System.EventHandler(this.viewDebugToolStripMenuItem_Click);
             // 

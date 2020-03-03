@@ -714,7 +714,6 @@ namespace PaintDotNet.Effects
             // Free up default HotKeys, so they can be used for other things
             // or just to disable undesired features (see comments for defaults)
             this.ClearCmdKey(Keys.Control | Keys.B); // Insert u002
-            this.ClearCmdKey(Keys.Control | Keys.D); // Duplicate Line
             this.ClearCmdKey(Keys.Control | Keys.E); // Insert u005
             this.ClearCmdKey(Keys.Control | Keys.F); // Insert u006
             this.ClearCmdKey(Keys.Control | Keys.G); // Insert u007
