@@ -54,13 +54,10 @@ namespace PaintDotNet.Effects
             {
                 case ErrorType.CSharp:
                     return $"{(this.IsWarning ? "Warning" : "Error")} at line {this.Line}: {this.ErrorText} ({this.ErrorNumber})";
-                    break;
                 case ErrorType.Xaml:
                     return this.ErrorText;
-                    break;
                 case ErrorType.Internal:
                     return $"Internal Error: {this.ErrorText}";
-                    break;
             }
 
             return string.Empty;

@@ -1281,7 +1281,7 @@ namespace PaintDotNet.Effects
                                 MemberInfo member = Intelli.UserScript.GetMember(word, BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly)[0];
                                 string returnType = member.GetReturnType()?.GetDisplayName();
 
-                                if (returnType.Length > 0 && t.GetDisplayName() == returnType)
+                                if (returnType?.Length > 0 && t.GetDisplayName() == returnType)
                                 {
                                     this.IndicatorCurrent = Indicator.ObjectHighlightDef;
                                 }
@@ -2080,7 +2080,7 @@ namespace PaintDotNet.Effects
             {
                 string returnType = memberInfo.GetReturnType()?.GetDisplayName();
 
-                if (returnType.Length == 0)
+                if (returnType?.Length == 0)
                 {
                     return false;
                 }

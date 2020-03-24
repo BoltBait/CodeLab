@@ -352,10 +352,7 @@ namespace PaintDotNet.Effects
             }
 
             this.Items.AddRange(unFilteredItems.ToArray());
-            if (unFilteredItems.Count > 0)
-            {
-                this.SelectedIndex = 0;
-            }
+            this.SelectedIndex = 0;
         }
 
         internal void PopulateXamlTags()
