@@ -63,7 +63,7 @@ namespace PaintDotNet.Effects
         #endregion
 
         #region Properties
-        internal int[] Bookmarks
+        internal IReadOnlyCollection<int> Bookmarks
         {
             get
             {
@@ -80,9 +80,9 @@ namespace PaintDotNet.Effects
             }
             set
             {
-                for (int i = 0; i < value.Length; i++)
+                foreach (int line in value)
                 {
-                    this.Lines[value[i]].MarkerAdd(BookmarkMargin.Marker);
+                    this.Lines[line].MarkerAdd(BookmarkMargin.Marker);
                 }
             }
         }
@@ -3985,19 +3985,19 @@ namespace PaintDotNet.Effects
             int curLine = GetVisibleLine(this.CurrentLine);
             indicatorBar.Caret = CountVisibleLines(curLine);
 
-            if (this.Bookmarks.Length == 0)
+            if (this.Bookmarks.Count == 0)
             {
                 indicatorBar.Bookmarks = Array.Empty<int>();
             }
             else
             {
                 List<int> bkmks = new List<int>();
-                for (int i = 0; i < this.Bookmarks.Length; i++)
+                foreach (int line in this.Bookmarks)
                 {
-                    int bkmkLine = GetVisibleLine(Bookmarks[i]);
+                    int bkmkLine = GetVisibleLine(line);
                     bkmks.Add(CountVisibleLines(bkmkLine));
                 }
-                indicatorBar.Bookmarks = bkmks.ToArray();
+                indicatorBar.Bookmarks = bkmks;
             }
 
             if (matchLines.Count == 0)
@@ -4007,12 +4007,12 @@ namespace PaintDotNet.Effects
             else
             {
                 List<int> matches = new List<int>();
-                for (int i = 0; i < matchLines.Count; i++)
+                foreach (int line in matchLines)
                 {
-                    int matchLine = GetVisibleLine(matchLines[i]);
+                    int matchLine = GetVisibleLine(line);
                     matches.Add(CountVisibleLines(matchLine));
                 }
-                indicatorBar.Matches = matches.ToArray();
+                indicatorBar.Matches = matches;
             }
 
             if (errorLines.Count == 0)
@@ -4022,12 +4022,12 @@ namespace PaintDotNet.Effects
             else
             {
                 List<int> errors = new List<int>();
-                for (int i = 0; i < errorLines.Count; i++)
+                foreach (int line in errorLines)
                 {
-                    int errorLine = GetVisibleLine(errorLines[i]);
+                    int errorLine = GetVisibleLine(line);
                     errors.Add(CountVisibleLines(errorLine));
                 }
-                indicatorBar.Errors = errors.ToArray();
+                indicatorBar.Errors = errors;
             }
         }
 

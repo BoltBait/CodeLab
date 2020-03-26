@@ -28,7 +28,7 @@ namespace PaintDotNet.Effects
         internal string ScriptPath;
         internal bool Dirty;
         internal EffectConfigToken PreviewToken;
-        internal int[] Bookmarks;
+        internal IReadOnlyCollection<int> Bookmarks;
         internal ProjectType ProjectType;
 
         internal CodeLabConfigToken()

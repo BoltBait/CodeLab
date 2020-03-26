@@ -33,7 +33,7 @@ namespace PaintDotNet.Effects
         internal static Dictionary<string, Type> AllTypes { get; }
         internal static Dictionary<string, string> Snippets { get; }
         internal static Dictionary<string, string> TypeAliases { get; }
-        internal static string[] Keywords { get; }
+        internal static IEnumerable<string> Keywords { get; }
         internal static Type UserScript
         {
             get

@@ -441,7 +441,7 @@ namespace PaintDotNet.Effects
             }
         }
 
-        internal static string GetConstraints(this Type[] args)
+        internal static string GetConstraints(this IEnumerable<Type> args)
         {
             List<string> constraints = new List<string>();
             foreach (Type arg in args)
