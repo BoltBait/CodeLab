@@ -430,6 +430,7 @@
             "Radial Blur",
             "Reduce Noise",
             "Relief",
+            "Rotate Zoom",
             "Sepia",
             "Sharpen",
             "Soften Portrait",

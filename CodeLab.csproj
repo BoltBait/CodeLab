@@ -443,6 +443,7 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Icons\RotateZoom.png" />
     <None Include="Resources\Shape2.png" />
     <None Include="Resources\Shape1.png" />
     <None Include="Resources\Shape0.png" />

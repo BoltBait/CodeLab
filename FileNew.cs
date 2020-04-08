@@ -368,6 +368,18 @@ namespace PaintDotNet.Effects
                     eCount++;
                     propCode += "    " + lowerName + "Parameters.SetPropertyValue(VignetteEffect.PropertyNames.Amount, Amount" + eCount.ToString() + ");" + cr;
                 }
+                else if (effect.Contains("Rotate Zoom"))
+                { 
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(RotateZoomEffect.PropertyNames.RollAndRotate, Amount" + eCount.ToString() + ");" + cr;
+                    eCount++;
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(RotateZoomEffect.PropertyNames.Offset, Amount" + eCount.ToString() + ");" + cr;
+                    eCount++;
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(RotateZoomEffect.PropertyNames.Zoom, Amount" + eCount.ToString() + ");" + cr;
+                    eCount++;
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(RotateZoomEffect.PropertyNames.Tiling, Amount" + eCount.ToString() + ");" + cr;
+                    eCount++;
+                    propCode += "    " + lowerName + "Parameters.SetPropertyValue(RotateZoomEffect.PropertyNames.PreserveBackground, Amount" + eCount.ToString() + ");" + cr;
+                }
                 else if (effect.Contains("Julia"))
                 {
                     propCode += "    " + lowerName + "Parameters.SetPropertyValue(JuliaFractalEffect.PropertyNames.Factor, Amount" + eCount.ToString() + ");" + cr;
@@ -664,6 +676,19 @@ namespace PaintDotNet.Effects
                 code += "DoubleSliderControl Amount" + controlCount.ToString() + " = 0.5; // [0.1,4] " + effect + " Radius" + cr;
                 controlCount++;
                 code += "DoubleSliderControl Amount" + controlCount.ToString() + " = 1; // [0,1] " + effect + " Density" + cr;
+                controlCount++;
+            }
+            else if (effect.Contains("Rotate Zoom"))
+            {
+                code += "RollControl Amount" + controlCount.ToString() + " = Tuple.Create<double, double, double>(0.0,0.0,0.0); // " + effect + " Roll / Rotate" + cr;
+                controlCount++;
+                code += "PanSliderControl Amount" + controlCount.ToString() + " = Pair.Create(0.0,0.0); // " + effect + " Pan" + cr;
+                controlCount++;
+                code += "DoubleSliderControl Amount" + controlCount.ToString() + " = 1; // [0.6,16.0] " + effect + " Zoom" + cr;
+                controlCount++;
+                code += "CheckboxControl Amount" + controlCount.ToString() + " = false; // " + effect + " Tiling" + cr;
+                controlCount++;
+                code += "CheckboxControl Amount" + controlCount.ToString() + " = false; // " + effect + " Preserve background" + cr;
                 controlCount++;
             }
             else if (effect.Contains("Julia"))
@@ -1072,6 +1097,15 @@ namespace PaintDotNet.Effects
                 code += cr;
                 disposecode += "        if (vignetteEffect != null) vignetteEffect.Dispose();" + cr;
                 disposecode += "        vignetteEffect = null;" + cr;
+            }
+            if (flowListArray.Any(element => element.Contains("Rotate Zoom")))
+            {
+                code += "// Setup for calling the Rotate Zoom effect" + cr;
+                code += "RotateZoomEffect rotatezoomEffect = new RotateZoomEffect();" + cr;
+                code += "PropertyCollection rotatezoomProps;" + cr;
+                code += cr;
+                disposecode += "        if (rotatezoomEffect != null) rotatezoomEffect.Dispose();" + cr;
+                disposecode += "        rotatezoomEffect = null;" + cr;
             }
             if (flowListArray.Any(element => element.Contains("Julia")))
             {
