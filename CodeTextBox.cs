@@ -755,7 +755,8 @@ namespace PaintDotNet.Effects
         #region Intelligent Assistance functions
         private string GetLastWords(int position)
         {
-            string strippedText = this.GetTextRange(0, position).StripParens().StripAngleBrackets();
+            int wordEndPos = this.WordEndPosition(position, true);
+            string strippedText = this.GetTextRange(0, wordEndPos).StripParens().StripAngleBrackets();
 
             int posIndex = strippedText.Length;
 
@@ -1104,7 +1105,7 @@ namespace PaintDotNet.Effects
                 return IntelliType.None;
             }
 
-            string lastWords = GetLastWords(this.WordEndPosition(position, true));
+            string lastWords = GetLastWords(position);
             if (lastWords.Length == 0)
             {
                 return IntelliType.None;
@@ -1327,7 +1328,7 @@ namespace PaintDotNet.Effects
                 return (numType != null) ? $"{numType.GetObjectType()} - {numType.Namespace}.{numType.Name}" : string.Empty;
             }
 
-            string lastWords = GetLastWords(this.WordEndPosition(position, true));
+            string lastWords = GetLastWords(position);
             if (lastWords.Length == 0)
             {
                 return string.Empty;
@@ -1761,7 +1762,7 @@ namespace PaintDotNet.Effects
                 return null;
             }
 
-            string lastWords = GetLastWords(this.WordEndPosition(position, true));
+            string lastWords = GetLastWords(position);
             if (lastWords.Length == 0)
             {
                 return null;
@@ -1786,7 +1787,7 @@ namespace PaintDotNet.Effects
         private MemberInfo GetMember(int position, out int length)
         {
             length = 0;
-            string lastWords = GetLastWords(this.WordEndPosition(position, true));
+            string lastWords = GetLastWords(position);
             string[] tokens = lastWords.Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
             if (tokens.Length == 0)
             {
@@ -1998,7 +1999,7 @@ namespace PaintDotNet.Effects
                 return true;
             }
 
-            string lastWords = GetLastWords(this.WordEndPosition(position, true));
+            string lastWords = GetLastWords(position);
             if (lastWords.Length == 0)
             {
                 return false;
