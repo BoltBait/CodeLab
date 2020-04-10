@@ -121,7 +121,7 @@ namespace PaintDotNet.Effects
             MemberInfo[] members = type.GetMembers(bindingFlags);
             foreach (MemberInfo memberInfo in members)
             {
-                if ((!memberInfo.ReflectedType.IsVisible && memberInfo.DeclaringType?.DeclaringType?.FullName != Intelli.UserScriptFullName) ||
+                if ((!memberInfo.ReflectedType.IsVisible && memberInfo.ReflectedType?.DeclaringType?.FullName != Intelli.UserScriptFullName) ||
                     memberInfo.ReflectedType.IsSpecialName || memberInfo.IsObsolete())
                 {
                     continue;
@@ -154,6 +154,10 @@ namespace PaintDotNet.Effects
                         break;
                     case MemberTypes.Field:
                         FieldInfo field = (FieldInfo)memberInfo;
+                        if (field.IsSpecialName)
+                        {
+                            continue;
+                        }
 
                         AddField(field);
                         break;
