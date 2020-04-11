@@ -60,6 +60,7 @@ namespace PaintDotNet.Effects
         private bool Replacing = false;
         private int maxLineNumberCharLength = 0;
         private int indexForPurpleWords = -1;
+        private int disableIntelliTipPos = InvalidPosition;
         #endregion
 
         #region Properties
@@ -2563,6 +2564,12 @@ namespace PaintDotNet.Effects
                 iBox.Visible = false;
             }
 
+            if (intelliTip.Visible)
+            {
+                intelliTip.Hide(this);
+                disableIntelliTipPos = this.CharPositionFromPointClose(e.X, e.Y);
+            }
+
             base.OnMouseDown(e);
         }
 
@@ -3045,6 +3052,12 @@ namespace PaintDotNet.Effects
 
             if (e.Change.HasFlag(UpdateChange.Selection) || e.Change.HasFlag(UpdateChange.Content))
             {
+                if (intelliTip.Visible)
+                {
+                    intelliTip.Hide(this);
+                    disableIntelliTipPos = InvalidPosition;
+                }
+
                 if (MapEnabled)
                 {
                     int curLine = GetVisibleLine(this.CurrentLine);
@@ -3799,7 +3812,8 @@ namespace PaintDotNet.Effects
         {
             base.OnDwellStart(e);
 
-            if (this.Lexer != Lexer.Cpp || intelliTip.Visible)
+            if (this.Lexer == Lexer.Null || intelliTip.Visible ||
+                e.Position == disableIntelliTipPos || e.Position == disableIntelliTipPos + 1)
             {
                 return;
             }
@@ -3860,6 +3874,7 @@ namespace PaintDotNet.Effects
                 if (wordStartPos != dwellWordPos)
                 {
                     intelliTip.Hide(this);
+                    disableIntelliTipPos = InvalidPosition;
                 }
             }
         }
