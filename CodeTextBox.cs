@@ -1302,7 +1302,7 @@ namespace PaintDotNet.Effects
             }
         }
 
-        private string GetIntelliTip(int position)
+        private string GetIntelliTipCSharp(int position)
         {
             int style = this.GetStyleAt(position);
             if (style == Style.Cpp.Comment || style == Style.Cpp.Comment + Preprocessor ||
@@ -1503,6 +1503,43 @@ namespace PaintDotNet.Effects
                     string name = (type.IsGenericType) ? type.GetGenericName() : type.Name;
 
                     return $"{typeName} - {type.Namespace}.{precedingType}.{name}\nNested Type";
+            }
+
+            return string.Empty;
+        }
+
+        private string GetIntelliTipXaml(int position)
+        {
+            int style = this.GetStyleAt(position);
+            if (style != Style.Xml.Tag && style != Style.Xml.Attribute)
+            {
+                return string.Empty;
+            }
+
+            Type type = GetXamlTag(position);
+            if (type == null)
+            {
+                return string.Empty;
+            }
+
+            if (style == Style.Xml.Tag)
+            {
+                string typeName = type.GetObjectType();
+
+                return $"{typeName} - {type.Namespace}.{type.Name}";
+            }
+            else if (style == Style.Xml.Attribute)
+            {
+                string attribute = this.GetWordFromPosition(position);
+                PropertyInfo property = type.GetProperty(attribute, BindingFlags.Instance | BindingFlags.Public);
+                if (property == null)
+                {
+                    return string.Empty;
+                }
+
+                string returnType = property.PropertyType.GetDisplayName();
+
+                return $"{returnType} - {property.DeclaringType.Name}.{property.Name}";
             }
 
             return string.Empty;
@@ -3845,7 +3882,18 @@ namespace PaintDotNet.Effects
 
             if (tooltipText == null)
             {
-                tooltipText = this.GetIntelliTip(e.Position);
+                switch (this.Lexer)
+                {
+                    case Lexer.Cpp:
+                        tooltipText = this.GetIntelliTipCSharp(e.Position);
+                        break;
+                    case Lexer.Xml:
+                        tooltipText = this.GetIntelliTipXaml(e.Position);
+                        break;
+                    default:
+                        tooltipText = string.Empty;
+                        break;
+                }
             }
 
             if (tooltipText.Length > 0)
