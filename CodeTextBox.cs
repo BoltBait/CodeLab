@@ -875,33 +875,7 @@ namespace PaintDotNet.Effects
 
         private Tuple<int, int> GetMethodBounds(int position)
         {
-            bool insideMethod = false;
-            this.SetTargetRange(0, position);
-            while (this.SearchInTarget("{") != InvalidPosition)
-            {
-                int openBrace = this.TargetStart;
-                int closeBrace = this.BraceMatch(this.TargetStart);
-
-                if (closeBrace == InvalidPosition)
-                {
-                    break;
-                }
-
-                if (position > openBrace && position < closeBrace)
-                {
-                    insideMethod = true;
-                    break;
-                }
-
-                if (closeBrace >= position)
-                {
-                    break;
-                }
-
-                this.SetTargetRange(closeBrace, position);
-            }
-
-            if (!insideMethod)
+            if (IsInClassRoot(position))
             {
                 return new Tuple<int, int>(InvalidPosition, InvalidPosition);
             }
@@ -943,6 +917,35 @@ namespace PaintDotNet.Effects
             }
 
             return false;
+        }
+
+        private bool IsInClassRoot(int position)
+        {
+            this.SetTargetRange(0, position);
+            while (this.SearchInTarget("{") != InvalidPosition)
+            {
+                int openBrace = this.TargetStart;
+                int closeBrace = this.BraceMatch(this.TargetStart);
+
+                if (closeBrace == InvalidPosition)
+                {
+                    return true;
+                }
+
+                if (position > openBrace && position < closeBrace)
+                {
+                    return false;
+                }
+
+                if (closeBrace >= position)
+                {
+                    return true;
+                }
+
+                this.SetTargetRange(closeBrace, position);
+            }
+
+            return true;
         }
 
         private void ParseLocalVariables(int position)
@@ -2677,7 +2680,9 @@ namespace PaintDotNet.Effects
                 return;
             }
 
-            iBox.PopulateNonMembers(this.GetCharAt(position));
+            bool inClassRoot = IsInClassRoot(position);
+
+            iBox.PopulateNonMembers(this.GetCharAt(position), inClassRoot);
             ShowIntelliBox(position, false);
         }
 

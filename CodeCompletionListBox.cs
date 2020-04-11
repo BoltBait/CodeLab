@@ -202,36 +202,10 @@ namespace PaintDotNet.Effects
         /// <summary>
         /// Fills the iBox with all non-member objects, and then filters them with the given char.
         /// </summary>
-        internal void PopulateNonMembers(char startChar)
+        internal void PopulateNonMembers(char startChar, bool inClassRoot)
         {
             Clear();
             this.intelliBoxContents = IntelliBoxContents.NonMembers;
-
-            foreach (string typeName in Intelli.AutoCompleteTypes.Keys)
-            {
-                Type type = Intelli.AutoCompleteTypes[typeName];
-                AddType(type, typeName, false);
-            }
-
-            foreach (string typeName in Intelli.UserDefinedTypes.Keys)
-            {
-                Type type = Intelli.UserDefinedTypes[typeName];
-                AddType(type, typeName, null);
-            }
-
-            foreach (string var in Intelli.Variables.Keys)
-            {
-                string type = Intelli.Variables[var].GetDisplayName();
-                string toolTip = $"{type} - {var}\nLocal Variable";
-                unFilteredItems.Add(new IntelliBoxItem(var, var, toolTip, IntelliType.Variable));
-            }
-
-            foreach (string para in Intelli.Parameters.Keys)
-            {
-                string type = Intelli.Parameters[para].GetDisplayName();
-                string toolTip = $"{type} - {para}\nParameter";
-                unFilteredItems.Add(new IntelliBoxItem(para, para, toolTip, IntelliType.Parameter));
-            }
 
             foreach (string key in Intelli.Keywords)
             {
@@ -245,53 +219,82 @@ namespace PaintDotNet.Effects
                 unFilteredItems.Add(new IntelliBoxItem(snip, snip, toolTip, IntelliType.Snippet));
             }
 
-            MemberInfo[] members = Intelli.UserScript.GetMembers(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
-            foreach (MemberInfo memberInfo in members)
+            foreach (string typeName in Intelli.AutoCompleteTypes.Keys)
             {
-                if (memberInfo.IsObsolete())
+                Type type = Intelli.AutoCompleteTypes[typeName];
+                AddType(type, typeName, false);
+            }
+
+            foreach (string typeName in Intelli.UserDefinedTypes.Keys)
+            {
+                Type type = Intelli.UserDefinedTypes[typeName];
+                AddType(type, typeName, null);
+            }
+
+            if (!inClassRoot)
+            {
+                foreach (string var in Intelli.Variables.Keys)
                 {
-                    continue;
+                    string type = Intelli.Variables[var].GetDisplayName();
+                    string toolTip = $"{type} - {var}\nLocal Variable";
+                    unFilteredItems.Add(new IntelliBoxItem(var, var, toolTip, IntelliType.Variable));
                 }
 
-                switch (memberInfo.MemberType)
+                foreach (string para in Intelli.Parameters.Keys)
                 {
-                    case MemberTypes.Method:
-                        MethodInfo methodInfo = (MethodInfo)memberInfo;
-                        if (methodInfo.IsSpecialName || methodInfo.DeclaringType != Intelli.UserScript ||
-                            methodInfo.Name.Equals("Render", StringComparison.Ordinal) || methodInfo.Name.Equals("PreRender", StringComparison.Ordinal))
-                        {
-                            continue;
-                        }
+                    string type = Intelli.Parameters[para].GetDisplayName();
+                    string toolTip = $"{type} - {para}\nParameter";
+                    unFilteredItems.Add(new IntelliBoxItem(para, para, toolTip, IntelliType.Parameter));
+                }
 
-                        AddMethod(methodInfo, false);
-                        break;
-                    case MemberTypes.Property:
-                        PropertyInfo property = (PropertyInfo)memberInfo;
-                        if (property.Name.Equals("SetRenderInfoCalled", StringComparison.Ordinal) || property.Name.Equals("__DebugMsgs", StringComparison.Ordinal) ||
-                            property.GetIndexParameters().Length > 0)
-                        {
-                            continue;
-                        }
+                MemberInfo[] members = Intelli.UserScript.GetMembers(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
+                foreach (MemberInfo memberInfo in members)
+                {
+                    if (memberInfo.IsObsolete())
+                    {
+                        continue;
+                    }
 
-                        AddProperty(property);
-                        break;
-                    case MemberTypes.Event:
-                        EventInfo eventInfo = (EventInfo)memberInfo;
+                    switch (memberInfo.MemberType)
+                    {
+                        case MemberTypes.Method:
+                            MethodInfo methodInfo = (MethodInfo)memberInfo;
+                            if (methodInfo.IsSpecialName || methodInfo.DeclaringType != Intelli.UserScript ||
+                                methodInfo.Name.Equals("Render", StringComparison.Ordinal) || methodInfo.Name.Equals("PreRender", StringComparison.Ordinal))
+                            {
+                                continue;
+                            }
 
-                        AddEvent(eventInfo);
-                        break;
-                    case MemberTypes.Field:
-                        if (memberInfo.Name.Equals("RandomNumber", StringComparison.Ordinal) || memberInfo.Name.Equals("instanceSeed", StringComparison.Ordinal) ||
-                            memberInfo.Name.EndsWith("_BackingField", StringComparison.Ordinal) ||
-                            memberInfo.Name.Equals("__listener", StringComparison.Ordinal) || memberInfo.Name.Equals("__debugWriter", StringComparison.Ordinal))
-                        {
-                            continue;
-                        }
+                            AddMethod(methodInfo, false);
+                            break;
+                        case MemberTypes.Property:
+                            PropertyInfo property = (PropertyInfo)memberInfo;
+                            if (property.Name.Equals("SetRenderInfoCalled", StringComparison.Ordinal) || property.Name.Equals("__DebugMsgs", StringComparison.Ordinal) ||
+                                property.GetIndexParameters().Length > 0)
+                            {
+                                continue;
+                            }
 
-                        FieldInfo field = (FieldInfo)memberInfo;
+                            AddProperty(property);
+                            break;
+                        case MemberTypes.Event:
+                            EventInfo eventInfo = (EventInfo)memberInfo;
 
-                        AddField(field);
-                        break;
+                            AddEvent(eventInfo);
+                            break;
+                        case MemberTypes.Field:
+                            if (memberInfo.Name.Equals("RandomNumber", StringComparison.Ordinal) || memberInfo.Name.Equals("instanceSeed", StringComparison.Ordinal) ||
+                                memberInfo.Name.EndsWith("_BackingField", StringComparison.Ordinal) ||
+                                memberInfo.Name.Equals("__listener", StringComparison.Ordinal) || memberInfo.Name.Equals("__debugWriter", StringComparison.Ordinal))
+                            {
+                                continue;
+                            }
+
+                            FieldInfo field = (FieldInfo)memberInfo;
+
+                            AddField(field);
+                            break;
+                    }
                 }
             }
 
