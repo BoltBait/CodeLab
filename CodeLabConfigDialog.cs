@@ -933,14 +933,11 @@ namespace PaintDotNet.Effects
         {
             string[] monoFonts = { "Cascadia Code", "Consolas", "Courier New", "Envy Code R", "Fira Code", "Hack", "JetBrains Mono", "Verdana" };
             List<ToolStripMenuItem> fontMenuItems = new List<ToolStripMenuItem>(monoFonts.Length);
-            for (int i = 0; i < monoFonts.Length; i++)
+            foreach (string fontName in monoFonts)
             {
-                string fontName = monoFonts[i];
-
                 ToolStripMenuItem fontMenuItem = new ToolStripMenuItem();
                 fontMenuItem.CheckState = (fontName == fontToHaveChecked) ? CheckState.Checked : CheckState.Unchecked;
                 fontMenuItem.Text = fontName;
-                fontMenuItem.Name = $"fontMenuItem{i}";
                 fontMenuItem.Enabled = IsFontInstalled(fontName);
                 if (fontMenuItem.Enabled)
                 {
@@ -952,7 +949,7 @@ namespace PaintDotNet.Effects
             }
 
             fontsToolStripMenuItem.DropDownItems.AddRange(fontMenuItems.ToArray());
-            fontsToolStripMenuItem.DropDownItems.Add(new System.Windows.Forms.ToolStripSeparator());
+            fontsToolStripMenuItem.DropDownItems.Add(new ToolStripSeparator());
             fontsToolStripMenuItem.DropDownItems.Add("Help with Fonts", null, HelpWithFonts_Click);
         }
 

@@ -1837,9 +1837,11 @@ namespace PaintDotNet.Effects
             for (int i = 1; i < tokens.Length; i++)
             {
                 // get the member information for this token
-                MemberInfo[] mi = (i == 1 && type == Intelli.UserScript) ?
-                    type.GetMember(tokens[i], BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic) :
-                    type.GetMember(tokens[i], (isStatic ? BindingFlags.Static : BindingFlags.Instance) | BindingFlags.Public);
+                BindingFlags bindingFlags = (i == 1 && type == Intelli.UserScript) ?
+                    BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic :
+                    (isStatic ? BindingFlags.Static : BindingFlags.Instance) | BindingFlags.Public;
+
+                MemberInfo[] mi = type.GetMember(tokens[i], bindingFlags);
 
                 if (mi.Length == 0 || mi[0].MemberType == MemberTypes.Method)
                 {
