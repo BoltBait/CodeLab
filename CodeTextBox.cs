@@ -225,6 +225,7 @@ namespace PaintDotNet.Effects
                         // Braces & Brackets
                         this.Styles[Style.BraceLight].BackColor = Color.FromArgb(17, 61, 111);
                         this.Styles[Style.BraceLight].ForeColor = Color.Gainsboro;
+                        this.Styles[Style.BraceBad].BackColor = Color.FromArgb(17, 61, 111);
                         this.Styles[Style.BraceBad].ForeColor = Color.Red;
 
                         // White Space
@@ -290,6 +291,7 @@ namespace PaintDotNet.Effects
                         // Braces & Brackets
                         this.Styles[Style.BraceLight].BackColor = Color.Gainsboro;
                         this.Styles[Style.BraceLight].ForeColor = Color.Black;
+                        this.Styles[Style.BraceBad].BackColor = Color.Gainsboro;
                         this.Styles[Style.BraceBad].ForeColor = Color.Red;
 
                         // White Space
@@ -3085,7 +3087,16 @@ namespace PaintDotNet.Effects
                         int bracePos2 = this.BraceMatch(bracePos1);
                         if (bracePos2 == InvalidPosition)
                         {
-                            this.BraceBadLight(bracePos1);
+                            if (this.Lexer == Lexer.Cpp)
+                            {
+                                this.BraceBadLight(bracePos1);
+                            }
+                            else
+                            {
+                                // Turn off brace matching
+                                this.BraceHighlight(InvalidPosition, InvalidPosition);
+                            }
+
                             this.HighlightGuide = 0;
                         }
                         else
