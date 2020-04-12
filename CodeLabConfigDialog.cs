@@ -535,7 +535,7 @@ namespace PaintDotNet.Effects
             FileName = Path.GetFileNameWithoutExtension(filePath);
 
             ProjectType projType;
-            switch (Path.GetExtension(filePath))
+            switch (Path.GetExtension(filePath).ToLowerInvariant())
             {
                 case ".cs":
                     if (Regex.IsMatch(fileContents, @"void\s+Render\s*\(\s*Surface\s+dst\s*,\s*Surface\s+src\s*,\s*Rectangle\s+rect\s*\)\s*{(.|\s)*}", RegexOptions.Singleline))
