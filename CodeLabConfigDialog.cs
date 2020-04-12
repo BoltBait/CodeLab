@@ -538,11 +538,11 @@ namespace PaintDotNet.Effects
             switch (Path.GetExtension(filePath))
             {
                 case ".cs":
-                    if (Regex.IsMatch(fileContents, @"void Render\(Surface dst, Surface src, Rectangle rect\)(\s)*{(.|\s)*}", RegexOptions.Singleline))
+                    if (Regex.IsMatch(fileContents, @"void\s+Render\s*\(\s*Surface\s+dst\s*,\s*Surface\s+src\s*,\s*Rectangle\s+rect\s*\)\s*{(.|\s)*}", RegexOptions.Singleline))
                     {
                         projType = ProjectType.Effect;
                     }
-                    else if (Regex.IsMatch(fileContents, @"void SaveImage\(Document input, Stream output, PropertyBasedSaveConfigToken token, Surface scratchSurface, ProgressEventHandler progressCallback\)(\s)*{(.|\s)*}", RegexOptions.Singleline))
+                    else if (Regex.IsMatch(fileContents, @"void\s+SaveImage\s*\(\s*Document\s+input\s*,\s*Stream\s+output\s*,\s*PropertyBasedSaveConfigToken\s+token\s*,\s*Surface\s+scratchSurface\s*,\s*ProgressEventHandler\s+progressCallback\s*\)\s*{(.|\s)*}", RegexOptions.Singleline))
                     {
                         projType = ProjectType.FileType;
                     }
