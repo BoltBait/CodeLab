@@ -82,6 +82,13 @@ namespace PaintDotNet.Effects
             });
         }
 
+        protected override void OnLocationChanged(EventArgs e)
+        {
+            itemToolTip.Hide(this);
+
+            base.OnLocationChanged(e);
+        }
+
         protected override void OnMouseEnter(EventArgs e)
         {
             mouseOver = true;
@@ -721,11 +728,6 @@ namespace PaintDotNet.Effects
             this.ForeColor = PdnTheme.ForeColor;
             this.BackColor = PdnTheme.BackColor;
             itemToolTip.UpdateTheme(toolTipFore, toolTipBack);
-        }
-
-        internal void HideToolTip()
-        {
-            itemToolTip.Hide(this);
         }
 
         internal void SaveUsedItem()

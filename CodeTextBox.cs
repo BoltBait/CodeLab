@@ -2976,7 +2976,6 @@ namespace PaintDotNet.Effects
                     }
 
                     iBox.Location = newLocation;
-                    iBox.HideToolTip();
                 }
 
                 if (lightBulbMenu.Visible)
@@ -2995,8 +2994,6 @@ namespace PaintDotNet.Effects
                         X = iBox.Location.X,
                         Y = PointYFromPosition(posAtIBox) + lineHeight
                     };
-
-                    iBox.HideToolTip();
                 }
 
                 if (lightBulbMenu.Visible)
@@ -3323,7 +3320,6 @@ namespace PaintDotNet.Effects
 
             if (iBox.Visible)
             {
-                iBox.HideToolTip();
                 iBox.Location = new Point(
                     PointXFromPosition(posAtIBox) - iBox.IconWidth,
                     PointYFromPosition(posAtIBox) + this.Lines[this.CurrentLine].Height);
