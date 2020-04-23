@@ -44,6 +44,7 @@ namespace PaintDotNet.Effects
         internal bool MouseOver => mouseOver;
         internal bool Matches => filterMatches;
         internal int IconWidth => imageList.ImageSize.Width + 2;
+        internal bool ExtraSpace => (intelliBoxContents == IntelliBoxContents.Members || intelliBoxContents == IntelliBoxContents.Suggestions);
 
         internal IntelliBox()
         {

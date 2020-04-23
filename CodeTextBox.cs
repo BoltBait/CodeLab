@@ -2635,7 +2635,7 @@ namespace PaintDotNet.Effects
 
             iBox.PopulateMembers(type, isStatic);
 
-            ShowIntelliBox(position, true);
+            ShowIntelliBox(position);
         }
 
         private void NonMemberIntelliBox(int position)
@@ -2683,7 +2683,7 @@ namespace PaintDotNet.Effects
             bool inClassRoot = IsInClassRoot(position);
 
             iBox.PopulateNonMembers(this.GetCharAt(position), inClassRoot);
-            ShowIntelliBox(position, false);
+            ShowIntelliBox(position);
         }
 
         private void ConstructorIntelliBox(int position)
@@ -2713,7 +2713,7 @@ namespace PaintDotNet.Effects
             }
 
             iBox.PopulateConstructors(type);
-            ShowIntelliBox(position, false);
+            ShowIntelliBox(position);
         }
 
         private void SuggestionIntelliBox(int position)
@@ -2733,13 +2733,13 @@ namespace PaintDotNet.Effects
 
             iBox.PopulateSuggestions(type);
 
-            ShowIntelliBox(position, true);
+            ShowIntelliBox(position);
         }
 
         private void XamlTagIntelliBox(int position)
         {
             iBox.PopulateXamlTags();
-            ShowIntelliBox(position, false);
+            ShowIntelliBox(position);
         }
 
         private void XamlAttributeIntelliBox(int position)
@@ -2754,21 +2754,20 @@ namespace PaintDotNet.Effects
             ShowIntelliBox(position, false);
         }
 
-        private void ShowIntelliBox(int position, bool members)
+        private void ShowIntelliBox(int position)
         {
             if (iBox.Items.Count <= 0)
             {
                 return; // For some reason, the box is empty... don't bother showing it.
             }
 
-            posAtIBox = members ? position + 1 : position;
+            posAtIBox = iBox.ExtraSpace ? position + 1 : position;
 
             int lineHeight = this.Lines[this.CurrentLine].Height;
-            int periodWidth = members ? this.TextWidth(Style.Default, ".") : 0;
             Point topLeft = new Point
             {
-                X = PointXFromPosition(position) + periodWidth - iBox.IconWidth,
-                Y = PointYFromPosition(position) + lineHeight
+                X = PointXFromPosition(posAtIBox) - iBox.IconWidth,
+                Y = PointYFromPosition(posAtIBox) + lineHeight
             };
 
             if (this.ClientSize.Height < (topLeft.Y + iBox.Height))
