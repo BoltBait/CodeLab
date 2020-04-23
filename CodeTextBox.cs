@@ -3313,13 +3313,21 @@ namespace PaintDotNet.Effects
 
         protected override void OnZoomChanged(EventArgs e)
         {
+            base.OnZoomChanged(e);
+
             UpdateMarginWidths();
 
             this.WhitespaceSize = GetDpiX((this.Zoom >= 2) ? 2 : 1);
 
             UpdateIndicatorBar();
 
-            base.OnZoomChanged(e);
+            if (iBox.Visible)
+            {
+                iBox.HideToolTip();
+                iBox.Location = new Point(
+                    PointXFromPosition(posAtIBox) - iBox.IconWidth,
+                    PointYFromPosition(posAtIBox) + this.Lines[this.CurrentLine].Height);
+            }
         }
 
         protected override void OnTextChanged(EventArgs e)
