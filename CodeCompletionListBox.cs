@@ -197,10 +197,6 @@ namespace PaintDotNet.Effects
             {
                 this.SelectedItem = this.LastUsedMember;
             }
-            else if (this.Items.Contains(this.LastUsedNonMember))
-            {
-                this.SelectedItem = this.LastUsedNonMember;
-            }
             else if (this.Items.Count > 0)
             {
                 this.SelectedIndex = 0;
@@ -384,11 +380,7 @@ namespace PaintDotNet.Effects
             unFilteredItems.Sort();
             this.Items.AddRange(unFilteredItems.ToArray());
 
-            if (this.Items.Contains(this.LastUsedMember))
-            {
-                this.SelectedItem = this.LastUsedMember;
-            }
-            else if (this.Items.Contains(this.LastUsedNonMember))
+            if (this.Items.Contains(this.LastUsedNonMember))
             {
                 this.SelectedItem = this.LastUsedNonMember;
             }
@@ -433,10 +425,6 @@ namespace PaintDotNet.Effects
             if (this.Items.Contains(this.LastUsedMember))
             {
                 this.SelectedItem = this.LastUsedMember;
-            }
-            else if (this.Items.Contains(this.LastUsedNonMember))
-            {
-                this.SelectedItem = this.LastUsedNonMember;
             }
             else if (this.Items.Count > 0)
             {
