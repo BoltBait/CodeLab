@@ -2751,7 +2751,7 @@ namespace PaintDotNet.Effects
             }
 
             iBox.PopulateXamlAttributes(tag);
-            ShowIntelliBox(position, false);
+            ShowIntelliBox(position);
         }
 
         private void ShowIntelliBox(int position)

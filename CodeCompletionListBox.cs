@@ -44,7 +44,7 @@ namespace PaintDotNet.Effects
         internal bool MouseOver => mouseOver;
         internal bool Matches => filterMatches;
         internal int IconWidth => imageList.ImageSize.Width + 2;
-        internal bool ExtraSpace => (intelliBoxContents == IntelliBoxContents.Members || intelliBoxContents == IntelliBoxContents.Suggestions);
+        internal bool ExtraSpace => (intelliBoxContents != IntelliBoxContents.NonMembers && intelliBoxContents != IntelliBoxContents.Constructors);
 
         internal IntelliBox()
         {
@@ -373,7 +373,7 @@ namespace PaintDotNet.Effects
         internal void PopulateXamlTags()
         {
             Clear();
-            this.intelliBoxContents = IntelliBoxContents.NonMembers;
+            this.intelliBoxContents = IntelliBoxContents.XamlTags;
 
             foreach (string typeName in Intelli.XamlAutoCompleteTypes.Keys)
             {
@@ -401,7 +401,7 @@ namespace PaintDotNet.Effects
         internal void PopulateXamlAttributes(Type tagType)
         {
             Clear();
-            this.intelliBoxContents = IntelliBoxContents.Members;
+            this.intelliBoxContents = IntelliBoxContents.XamlAttributes;
 
             PropertyInfo[] properties = tagType.GetProperties(BindingFlags.Instance | BindingFlags.Public);
             bool isSelfClosing = true;
@@ -735,11 +735,11 @@ namespace PaintDotNet.Effects
         {
             if (this.SelectedItem is IntelliBoxItem item)
             {
-                if (this.intelliBoxContents == IntelliBoxContents.Members)
+                if (this.intelliBoxContents == IntelliBoxContents.Members || this.intelliBoxContents == IntelliBoxContents.XamlAttributes)
                 {
                     this.LastUsedMember = item;
                 }
-                else if (this.intelliBoxContents == IntelliBoxContents.NonMembers &&
+                else if ((this.intelliBoxContents == IntelliBoxContents.NonMembers || this.intelliBoxContents == IntelliBoxContents.XamlTags) &&
                     item.ImageIndex != (int)IntelliType.Keyword && item.ImageIndex != (int)IntelliType.Snippet)
                 {
                     this.LastUsedNonMember = item;
@@ -822,7 +822,9 @@ namespace PaintDotNet.Effects
             Members,
             NonMembers,
             Constructors,
-            Suggestions
+            Suggestions,
+            XamlTags,
+            XamlAttributes
         }
     }
 }
