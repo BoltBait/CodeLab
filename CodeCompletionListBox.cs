@@ -148,7 +148,7 @@ namespace PaintDotNet.Effects
                         break;
                     case MemberTypes.Property:
                         PropertyInfo property = (PropertyInfo)memberInfo;
-                        if (property.GetIndexParameters().Length > 0)
+                        if (property.IsIndexer())
                         {
                             continue;
                         }
@@ -278,7 +278,7 @@ namespace PaintDotNet.Effects
                         case MemberTypes.Property:
                             PropertyInfo property = (PropertyInfo)memberInfo;
                             if (property.Name.Equals("SetRenderInfoCalled", StringComparison.Ordinal) || property.Name.Equals("__DebugMsgs", StringComparison.Ordinal) ||
-                                property.GetIndexParameters().Length > 0)
+                                property.IsIndexer())
                             {
                                 continue;
                             }
@@ -408,7 +408,7 @@ namespace PaintDotNet.Effects
 
             foreach (PropertyInfo property in properties)
             {
-                if (!property.ReflectedType.IsVisible || !property.CanWrite || property.ReflectedType.IsSpecialName || property.IsObsolete() || property.GetIndexParameters().Length > 0)
+                if (!property.ReflectedType.IsVisible || !property.CanWrite || property.ReflectedType.IsSpecialName || property.IsObsolete() || property.IsIndexer())
                 {
                     continue;
                 }

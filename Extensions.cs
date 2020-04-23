@@ -307,6 +307,11 @@ namespace PaintDotNet.Effects
             return string.Empty;
         }
 
+        internal static bool IsIndexer(this PropertyInfo property)
+        {
+            return property.GetIndexParameters().Length > 0;
+        }
+
         internal static string Params(this MethodBase method)
         {
             List<string> methodParams = new List<string>();
