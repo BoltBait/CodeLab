@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
+using System.Linq;
 
 namespace PaintDotNet.Effects
 {
@@ -15,7 +16,8 @@ namespace PaintDotNet.Effects
                 {
                     List<Assembly> assemblyList = new List<Assembly>
                     {
-                        typeof(Effect).Assembly
+                        typeof(Effect).Assembly,
+                        typeof(Enumerable).Assembly // System.Core Assembly
                     };
 
                     foreach (AssemblyName assemblyName in typeof(Effect).Assembly.GetReferencedAssemblies())
@@ -37,7 +39,7 @@ namespace PaintDotNet.Effects
                         }
                     }
 
-                    referenceAssemblies = assemblyList.ToArray();
+                    referenceAssemblies = assemblyList.Distinct().ToArray();
                 }
 
                 return referenceAssemblies;
