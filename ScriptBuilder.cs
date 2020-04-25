@@ -28,7 +28,7 @@ namespace PaintDotNet.Effects
     internal static class ScriptBuilder
     {
         private static readonly CSharpCodeProvider cscp = new CSharpCodeProvider();
-        private static readonly CompilerParameters param = new CompilerParameters(AssemblyUtil.ReferenceAssemblies.Select(a => a.Location).ToArray())
+        private static readonly CompilerParameters param = new CompilerParameters(Intelli.ReferenceAssemblies.Select(a => a.Location).ToArray())
         {
             GenerateInMemory = true,
             IncludeDebugInformation = false,

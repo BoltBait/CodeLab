@@ -13,12 +13,15 @@
 // Latest distribution: https://www.BoltBait.com/pdn/codelab
 /////////////////////////////////////////////////////////////////////////////////
 
+using PaintDotNet.PropertySystem;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Web.Script.Serialization;
+using System.Windows.Forms;
 
 namespace PaintDotNet.Effects
 {
@@ -34,6 +37,7 @@ namespace PaintDotNet.Effects
         internal static Dictionary<string, string> Snippets { get; }
         internal static Dictionary<string, string> TypeAliases { get; }
         internal static IEnumerable<string> Keywords { get; }
+        internal static IEnumerable<Assembly> ReferenceAssemblies { get; }
         internal static Type UserScript
         {
             get
@@ -143,6 +147,19 @@ namespace PaintDotNet.Effects
                 "#endif", "#endregion"
             };
 
+            ReferenceAssemblies = new Assembly[]
+            {
+                typeof(int).Assembly,           // mscorlib.dll
+                typeof(Property).Assembly,      // PaintDotNet.Base.dll
+                typeof(ColorBgra).Assembly,     // PaintDotNet.Core.dll
+                typeof(Document).Assembly,      // PaintDotNet.Data.dll
+                typeof(Effect).Assembly,        // PaintDotNet.Effects.dll
+                typeof(Uri).Assembly,           // System.dll
+                typeof(Enumerable).Assembly,    // System.Core.dll
+                typeof(Size).Assembly,          // System.Drawing.dll
+                typeof(Control).Assembly,       // System.Windows.Forms.dll
+            };
+
             JavaScriptSerializer ser = new JavaScriptSerializer();
             Snippets = ser.Deserialize<Dictionary<string, string>>(Settings.Snippets) ??
                 new Dictionary<string, string>()
@@ -213,7 +230,7 @@ namespace PaintDotNet.Effects
             };
 
             // Add the referenced assembly types
-            foreach (Assembly a in AssemblyUtil.ReferenceAssemblies)
+            foreach (Assembly a in ReferenceAssemblies)
             {
                 foreach (Type type in a.GetExportedTypes())
                 {

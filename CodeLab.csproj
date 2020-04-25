@@ -107,7 +107,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AssemUtil.cs" />
     <Compile Include="BuildFileTypeDialog.cs">
       <SubType>Form</SubType>
     </Compile>
