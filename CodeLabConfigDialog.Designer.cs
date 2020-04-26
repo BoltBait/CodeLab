@@ -1309,6 +1309,7 @@
             this.txtCode.TabIndex = 1;
             this.txtCode.WrapIndentMode = ScintillaNET.WrapIndentMode.Indent;
             this.txtCode.BuildNeeded += new System.EventHandler(this.txtCode_BuildNeeded);
+            this.txtCode.DefTabNeeded += new System.EventHandler<PaintDotNet.Effects.NewTabEventArgs>(this.txtCode_DefTabNeeded);
             this.txtCode.SavePointLeft += new System.EventHandler<System.EventArgs>(this.txtCode_SavePointLeft);
             this.txtCode.SavePointReached += new System.EventHandler<System.EventArgs>(this.txtCode_SavePointReached);
             this.txtCode.UpdateUI += new System.EventHandler<ScintillaNET.UpdateUIEventArgs>(this.txtCode_UpdateUI);

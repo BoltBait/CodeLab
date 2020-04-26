@@ -269,7 +269,7 @@ namespace PaintDotNet.Effects
             ClearErrorList();
 
             ProjectType projType = tabStrip1.SelectedTabProjType;
-            if (projType == ProjectType.None)
+            if (projType == ProjectType.None || projType == ProjectType.Reference)
             {
                 return;
             }
@@ -2435,6 +2435,14 @@ namespace PaintDotNet.Effects
             }
         }
 
+        private void txtCode_DefTabNeeded(object sender, NewTabEventArgs e)
+        {
+            FileName = e.Name;
+            FullScriptPath = string.Empty;
+
+            tabStrip1.NewTab(FileName, FullScriptPath, ProjectType.Reference);
+        }
+
         private void tabStrip1_TabClosed(object sender, TabClosedEventArgs e)
         {
             this.txtCode.CloseDocument(e.TabGuid);
@@ -2496,6 +2504,7 @@ namespace PaintDotNet.Effects
         None,
         Effect,
         FileType,
+        Reference,
         Shape
     }
 }

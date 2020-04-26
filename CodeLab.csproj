@@ -442,6 +442,7 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Icons\F12.png" />
     <EmbeddedResource Include="Icons\RotateZoom.png" />
     <None Include="Resources\Shape2.png" />
     <None Include="Resources\Shape1.png" />

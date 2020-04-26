@@ -29,6 +29,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
@@ -528,6 +529,12 @@ namespace PaintDotNet.Effects
         private void OnBuildNeeded()
         {
             this.BuildNeeded?.Invoke(this, EventArgs.Empty);
+        }
+
+        public event EventHandler<NewTabEventArgs> DefTabNeeded;
+        private void OnDefTabNeeded(string name)
+        {
+            this.DefTabNeeded?.Invoke(this, new NewTabEventArgs(name));
         }
         #endregion
 
@@ -1954,6 +1961,275 @@ namespace PaintDotNet.Effects
             return tag;
         }
 
+        private void GenerateDefRef()
+        {
+            int wordEndPos = this.WordEndPosition(this.CurrentPosition, true);
+
+            IntelliType intelliType = GetIntelliType(this.CurrentPosition);
+            Type type;
+
+            if (intelliType == IntelliType.None)
+            {
+                return;
+            }
+            else if (intelliType == IntelliType.Type)
+            {
+                type = GetReturnType(wordEndPos);
+            }
+            else
+            {
+                type = GetDeclaringType(this.CurrentPosition);
+            }
+
+            if (type == null)
+            {
+                return;
+            }
+
+            if (type.IsNested)
+            {
+                type = type.DeclaringType;
+            }
+
+            string defRef = GenerateDefRef(type);
+
+            OnDefTabNeeded(type.GetDisplayName());
+            this.Text = defRef;
+            this.ReadOnly = true;
+            this.EmptyUndoBuffer();
+            this.SetSavePoint();
+        }
+
+        private static string GenerateDefRef(Type type)
+        {
+            StringBuilder defRef = new StringBuilder();
+
+            defRef.AppendLine("namespace " + type.Namespace);
+            defRef.AppendLine("{");
+
+            int indent = 1;
+
+            defRef.AppendLine(getIndent(indent) + "public " + type.GetModifiers() + type.GetObjectType() + " " + type.GetDisplayName() + type.GetInheritance());
+            defRef.AppendLine(getIndent(indent) + "{");
+            indent++;
+
+            iterateMembers(type);
+
+            indent--;
+            defRef.AppendLine(getIndent(indent) + "}");
+            defRef.AppendLine("}");
+
+            return defRef.ToString();
+
+
+            string getIndent(int indentLevel)
+            {
+                return new string(' ', 4 * indentLevel);
+            }
+
+            void iterateMembers(Type t)
+            {
+                bool isInterface = type.IsInterface;
+                string access = isInterface ? string.Empty : "public ";
+
+                FieldInfo[] fields = t.GetFields();
+                if (fields.Length > 0)
+                {
+                    foreach (FieldInfo field in fields)
+                    {
+                        if (field.IsSpecialName)
+                        {
+                            continue;
+                        }
+
+                        if (field.FieldType.IsEnum)
+                        {
+                            defRef.AppendLine(getIndent(indent) + field.Name + " = " + field.GetEnumValue() + ",");
+                        }
+                        else
+                        {
+                            string value = (field.IsLiteral && !field.IsInitOnly) ? $" = {field.GetValue(null)}" : string.Empty;
+                            defRef.AppendLine(getIndent(indent) + access + field.GetModifiers() + field.FieldType.GetDisplayName() + " " + field.Name + value + ";");
+                        }
+                    }
+
+                    defRef.AppendLine();
+                }
+
+                ConstructorInfo[] constructors = t.GetConstructors();
+                if (constructors.Length > 0)
+                {
+                    foreach (ConstructorInfo ctor in constructors)
+                    {
+                        defRef.AppendLine(getIndent(indent) + access + t.Name + "(" + ctor.Params() + ");");
+                    }
+
+                    defRef.AppendLine();
+                }
+
+                PropertyInfo[] properties = t.GetProperties();
+                if (properties.Length > 0)
+                {
+                    foreach (PropertyInfo property in properties)
+                    {
+                        if (property.DeclaringType != t)
+                        {
+                            continue;
+                        }
+
+                        ParameterInfo[] indexParams = property.GetIndexParameters();
+                        if (indexParams.Length > 0)
+                        {
+                            defRef.AppendLine(getIndent(indent) + access + property.PropertyType.GetDisplayName() + " this[" + indexParams.Select(p => p.BuildParamString()).Join(", ") + "]" + property.GetterSetter());
+                        }
+                        else
+                        {
+                            defRef.AppendLine(getIndent(indent) + access + property.PropertyType.GetDisplayName() + " " + property.Name + property.GetterSetter());
+                        }
+                    }
+
+                    defRef.AppendLine();
+                }
+
+                MethodInfo[] methods = t.GetMethods();
+                if (methods.Length > 0)
+                {
+                    List<string> staticMethods = new List<string>();
+                    List<string> opMethods = new List<string>();
+                    List<string> opImExMethods = new List<string>();
+                    List<string> otherMethods = new List<string>();
+
+                    foreach (MethodInfo method in methods)
+                    {
+                        if ((method.IsSpecialName && !method.Name.StartsWith("op_", StringComparison.Ordinal)) || method.DeclaringType != t)
+                        {
+                            continue;
+                        }
+
+                        bool isStatic = method.IsStatic;
+                        bool isOperator = false;
+                        bool isImExOperator = false;
+
+                        string returnType = method.ReturnType.GetDisplayName();
+                        string name = method.Name;
+                        if (method.IsSpecialName && name.StartsWith("op_", StringComparison.Ordinal))
+                        {
+                            isOperator = true;
+
+                            if (name.Equals("op_Equality", StringComparison.Ordinal))
+                            {
+                                name = returnType + " operator ==";
+                            }
+                            else if (name.Equals("op_Inequality", StringComparison.Ordinal))
+                            {
+                                name = returnType + " operator !=";
+                            }
+                            else if (name.Equals("op_Addition", StringComparison.Ordinal))
+                            {
+                                name = returnType + " operator +";
+                            }
+                            else if (name.Equals("op_Subtraction", StringComparison.Ordinal))
+                            {
+                                name = returnType + " operator -";
+                            }
+                            else if (name.Equals("op_Implicit", StringComparison.Ordinal))
+                            {
+                                isImExOperator = true;
+                                name = "implicit operator " + returnType;
+                            }
+                            else if (name.Equals("op_Explicit", StringComparison.Ordinal))
+                            {
+                                isImExOperator = true;
+                                name = "explicit operator " + returnType;
+                            }
+                            else
+                            {
+                                name = returnType + " " + name;
+                                MessageBox.Show(
+                                    "Unregcognized operator! Report to toe_head2001.\r\n + method.DeclaringType.FullName + " + " + method.Name",
+                                    "Debug Message", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            }
+                        }
+                        else
+                        {
+                            name = returnType + " " + name;
+                        }
+
+                        string modifier = isInterface ? string.Empty : method.GetModifiers();
+                        string methodDef = getIndent(indent) + access + modifier + name + "(" + method.Params() + ");";
+
+                        if (isImExOperator)
+                        {
+                            opImExMethods.Add(methodDef);
+                        }
+                        else if (isOperator)
+                        {
+                            opMethods.Add(methodDef);
+                        }
+                        else if (isStatic)
+                        {
+                            staticMethods.Add(methodDef);
+                        }
+                        else
+                        {
+                            otherMethods.Add(methodDef);
+                        }
+                    }
+
+                    if (staticMethods.Count > 0 || otherMethods.Count > 0)
+                    {
+                        foreach (string methodDef in staticMethods)
+                        {
+                            defRef.AppendLine(methodDef);
+                        }
+
+                        foreach (string methodDef in otherMethods)
+                        {
+                            defRef.AppendLine(methodDef);
+                        }
+
+                        defRef.AppendLine();
+                    }
+
+                    if (opMethods.Count > 0)
+                    {
+                        foreach (string methodDef in opMethods)
+                        {
+                            defRef.AppendLine(methodDef);
+                        }
+
+                        defRef.AppendLine();
+                    }
+
+                    if (opImExMethods.Count > 0)
+                    {
+                        foreach (string methodDef in opImExMethods)
+                        {
+                            defRef.AppendLine(methodDef);
+                        }
+
+                        defRef.AppendLine();
+                    }
+                }
+
+                Type[] nestedTypes = t.GetNestedTypes();
+                if (nestedTypes.Length > 0)
+                {
+                    foreach (Type nestedType in nestedTypes)
+                    {
+                        defRef.AppendLine(getIndent(indent) + "public " + nestedType.GetModifiers() + nestedType.GetObjectType() + " " + nestedType.GetDisplayName() + type.GetInheritance());
+                        defRef.AppendLine(getIndent(indent) + "{");
+                        indent++;
+
+                        iterateMembers(nestedType);
+
+                        indent--;
+                        defRef.AppendLine(getIndent(indent) + "}");
+                    }
+                }
+            }
+        }
+
         private bool GoToDefinition()
         {
             switch (this.Lexer)
@@ -2326,10 +2602,12 @@ namespace PaintDotNet.Effects
                 }
                 else if (e.KeyCode == Keys.F12)
                 {
-                    if (!GoToDefinition())
-                    {
-                        FlexibleMessageBox.Show("Cannot navigate to the symbol under the caret.", "CodeLab", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    }
+                    GenerateDefRef();
+
+                    //if (!GoToDefinition())
+                    //{
+                    //    FlexibleMessageBox.Show("Cannot navigate to the symbol under the caret.", "CodeLab", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    //}
                 }
                 else if (e.Alt && e.KeyCode == Keys.Up)
                 {
@@ -3488,7 +3766,7 @@ namespace PaintDotNet.Effects
             this.SetKeywords(0, "abstract as base bool byte char checked class const decimal delegate double enum event explicit extern "
                 + "false fixed float implicit in int interface internal is lock long namespace new null object operator out override "
                 + "params partial private protected public readonly ref sbyte sealed short sizeof stackalloc static string struct "
-                + "this true typeof uint unchecked unsafe ulong ushort using var virtual void volatile");
+                + "this true typeof uint unchecked unsafe ulong ushort using var virtual void volatile where");
             this.SetIdentifiers(indexForPurpleWords, "break case catch continue default do else finally for foreach goto if return throw try switch while");
         }
 
@@ -3958,6 +4236,7 @@ namespace PaintDotNet.Effects
                     break;
                 case ProjectType.Effect:
                 case ProjectType.FileType:
+                case ProjectType.Reference:
                     this.Lexer = Lexer.Cpp;
                     indexForPurpleWords = this.AllocateSubstyles(Style.Cpp.Identifier, 1);
                     this.UpdateSyntaxHighlighting();

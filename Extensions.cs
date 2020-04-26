@@ -328,7 +328,7 @@ namespace PaintDotNet.Effects
             return methodParams.Join(", ");
         }
 
-        private static string BuildParamString(this ParameterInfo parameterInfo)
+        internal static string BuildParamString(this ParameterInfo parameterInfo)
         {
             string modifier = parameterInfo.IsOut ? "out " : parameterInfo.ParameterType.IsByRef ? "ref " : parameterInfo.IsDefined(typeof(ParamArrayAttribute), false) ? "params " : string.Empty;
             return $"{modifier}{parameterInfo.ParameterType.GetDisplayName()} {parameterInfo.Name}";
@@ -415,6 +415,88 @@ namespace PaintDotNet.Effects
             }
 
             return "Type";
+        }
+
+        internal static string GetInheritance(this Type type)
+        {
+            IEnumerable<Type> inheritList = type.GetInterfaces();
+            if (type.IsClass && type.BaseType != typeof(object))
+            {
+                IEnumerable<Type> baseClassInterfaces = type.BaseType.GetDirectBaseInterfaces();
+                inheritList = inheritList.Except(baseClassInterfaces).Prepend(type.BaseType);
+            }
+
+            string inheritance = inheritList.Any() ? " : " + inheritList.Select(i => i.GetDisplayName()).Join(", ") : string.Empty;
+            string constraints = type.IsGenericType ? type.GetGenericArguments().GetConstraints() : string.Empty;
+
+            return inheritance + constraints;
+        }
+
+        internal static string GetModifiers(this Type type)
+        {
+            if (type.IsEnum)
+            {
+                return string.Empty;
+            }
+            else if (type.IsAbstract && type.IsSealed)
+            {
+                return "static ";
+            }
+            else if (type.IsAbstract && !type.IsInterface)
+            {
+                return "abstract ";
+            }
+            else if (type.IsSealed && !type.IsValueType)
+            {
+                return "sealed ";
+            }
+
+            return string.Empty;
+        }
+
+        internal static string GetModifiers(this FieldInfo field)
+        {
+            if (!field.IsStatic && field.IsInitOnly)
+            {
+                return "readonly ";
+            }
+            else if (field.FieldType.IsEnum)
+            {
+                // "Enum Value";
+                return string.Empty;
+            }
+            else if (field.IsLiteral && !field.IsInitOnly)
+            {
+                return "const ";
+            }
+            else if (field.IsStatic && field.IsInitOnly)
+            {
+                return "static readonly ";
+            }
+            else if (field.IsStatic)
+            {
+                return "static ";
+            }
+
+            return string.Empty;
+        }
+
+        internal static string GetModifiers(this MethodInfo method)
+        {
+            if (method.IsStatic)
+            {
+                return "static ";
+            }
+            else if (method.IsVirtual && method.IsHideBySig)
+            {
+                return "override ";
+            }
+            else if (method.IsVirtual)
+            {
+                return "virtual ";
+            }
+
+            return string.Empty;
         }
 
         private static string GetAliasName(this Type type)
