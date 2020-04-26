@@ -420,7 +420,7 @@ namespace PaintDotNet.Effects
         internal static string GetInheritance(this Type type)
         {
             IEnumerable<Type> inheritList = type.GetInterfaces();
-            if (type.IsClass && type.BaseType != typeof(object))
+            if (type.IsClass && type != typeof(object) && type.BaseType != typeof(object))
             {
                 IEnumerable<Type> baseClassInterfaces = type.BaseType.GetDirectBaseInterfaces();
                 inheritList = inheritList.Except(baseClassInterfaces).Prepend(type.BaseType);
