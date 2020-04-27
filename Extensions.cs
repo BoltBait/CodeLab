@@ -206,6 +206,11 @@ namespace PaintDotNet.Effects
             return (type.IsGenericType) ? type.GetGenericName() : type.GetAliasName();
         }
 
+        internal static string GetDisplayNameWithExclusion(this Type type, Type typeExclusion)
+        {
+            return (type.IsGenericType) ? type.GetGenericName() : (type == typeExclusion) ? type.Name : type.GetAliasName();
+        }
+
         internal static string GetGenericName(this Type type)
         {
             string typeName = Regex.Replace(type.Name, @"`\d", string.Empty);
