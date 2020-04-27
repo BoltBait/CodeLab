@@ -390,6 +390,7 @@
     <EmbeddedResource Include="Icons\Json.png" />
     <EmbeddedResource Include="Icons\Shape.png" />
     <EmbeddedResource Include="Icons\PlainText.png" />
+    <EmbeddedResource Include="Icons\Book.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Icons\CodeLab.32.png" />
@@ -435,6 +436,7 @@
     <EmbeddedResource Include="Icons\Json.32.png" />
     <EmbeddedResource Include="Icons\Shape.32.png" />
     <EmbeddedResource Include="Icons\PlainText.32.png" />
+    <EmbeddedResource Include="Icons\Book.32.png" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="jacobslusser.ScintillaNET.Signed">
@@ -442,7 +444,6 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Icons\F12.png" />
     <EmbeddedResource Include="Icons\RotateZoom.png" />
     <None Include="Resources\Shape2.png" />
     <None Include="Resources\Shape1.png" />

@@ -372,7 +372,7 @@ namespace PaintDotNet.Effects
                     this.ImageName = "Save";
                     break;
                 case ProjectType.Reference:
-                    this.ImageName = "F12";
+                    this.ImageName = "Book";
                     break;
                 case ProjectType.Shape:
                     this.ImageName = "Shape";
