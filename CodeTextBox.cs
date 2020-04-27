@@ -2053,7 +2053,10 @@ namespace PaintDotNet.Effects
                         }
                     }
 
-                    defRef.AppendLine();
+                    if (!t.IsEnum)
+                    {
+                        defRef.AppendLine();
+                    }
                 }
 
                 ConstructorInfo[] constructors = t.GetConstructors();
