@@ -3201,7 +3201,7 @@ namespace PaintDotNet.Effects
 
         private void Replace(string oldTerm, string newTerm, SearchFlags searchFlags)
         {
-            if (oldTerm.Length == 0)
+            if (this.ReadOnly || oldTerm.Length == 0)
             {
                 return;
             }
