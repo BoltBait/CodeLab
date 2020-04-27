@@ -424,6 +424,12 @@ namespace PaintDotNet.Effects
 
         internal static string GetInheritance(this Type type)
         {
+            if (type.IsEnum)
+            {
+                Type baseType = Enum.GetUnderlyingType(type);
+                return (baseType != typeof(int)) ? " : " + baseType.GetDisplayName() : string.Empty;
+            }
+
             IEnumerable<Type> inheritList = type.GetInterfaces();
             if (type.IsClass && type != typeof(object) && type.BaseType != typeof(object))
             {
