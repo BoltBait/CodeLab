@@ -2064,7 +2064,7 @@ namespace PaintDotNet.Effects
                 {
                     foreach (ConstructorInfo ctor in constructors)
                     {
-                        defRef.AppendLine(getIndent(indent) + access + t.Name + "(" + ctor.Params() + ");");
+                        defRef.AppendLine(getIndent(indent) + access + Regex.Replace(type.Name, @"`\d", string.Empty) + "(" + ctor.Params() + ");");
                     }
 
                     defRef.AppendLine();
