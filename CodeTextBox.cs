@@ -1972,7 +1972,8 @@ namespace PaintDotNet.Effects
             {
                 return;
             }
-            else if (intelliType == IntelliType.Type)
+
+            if (intelliType == IntelliType.Type)
             {
                 type = GetReturnType(wordEndPos);
             }
