@@ -2029,7 +2029,7 @@ namespace PaintDotNet.Effects
 
             void iterateMembers(Type t)
             {
-                bool isInterface = type.IsInterface;
+                bool isInterface = t.IsInterface;
                 string access = isInterface ? string.Empty : "public ";
 
                 FieldInfo[] fields = t.GetFields();
@@ -2049,7 +2049,7 @@ namespace PaintDotNet.Effects
                         else
                         {
                             string value = (field.IsLiteral && !field.IsInitOnly) ? $" = {field.GetValue(null)}" : string.Empty;
-                            defRef.AppendLine(getIndent(indent) + access + field.GetModifiers() + field.FieldType.GetDisplayNameWithExclusion(type) + " " + field.Name + value + ";");
+                            defRef.AppendLine(getIndent(indent) + access + field.GetModifiers() + field.FieldType.GetDisplayNameWithExclusion(t) + " " + field.Name + value + ";");
                         }
                     }
 
@@ -2080,11 +2080,11 @@ namespace PaintDotNet.Effects
                         ParameterInfo[] indexParams = property.GetIndexParameters();
                         if (indexParams.Length > 0)
                         {
-                            defRef.AppendLine(getIndent(indent) + access + property.PropertyType.GetDisplayNameWithExclusion(type) + " this[" + indexParams.Select(p => p.BuildParamString()).Join(", ") + "]" + property.GetterSetter());
+                            defRef.AppendLine(getIndent(indent) + access + property.PropertyType.GetDisplayNameWithExclusion(t) + " this[" + indexParams.Select(p => p.BuildParamString()).Join(", ") + "]" + property.GetterSetter());
                         }
                         else
                         {
-                            defRef.AppendLine(getIndent(indent) + access + property.PropertyType.GetDisplayNameWithExclusion(type) + " " + property.Name + property.GetterSetter());
+                            defRef.AppendLine(getIndent(indent) + access + property.PropertyType.GetDisplayNameWithExclusion(t) + " " + property.Name + property.GetterSetter());
                         }
                     }
 
@@ -2110,7 +2110,7 @@ namespace PaintDotNet.Effects
                         bool isOperator = false;
                         bool isImExOperator = false;
 
-                        string returnType = method.ReturnType.GetDisplayNameWithExclusion(type);
+                        string returnType = method.ReturnType.GetDisplayNameWithExclusion(t);
                         string name = method.Name;
                         if (method.IsSpecialName && name.StartsWith("op_", StringComparison.Ordinal))
                         {
@@ -2217,7 +2217,7 @@ namespace PaintDotNet.Effects
                 {
                     foreach (Type nestedType in nestedTypes)
                     {
-                        defRef.AppendLine(getIndent(indent) + "public " + nestedType.GetModifiers() + nestedType.GetObjectType() + " " + nestedType.GetDisplayNameWithExclusion(type) + type.GetInheritance());
+                        defRef.AppendLine(getIndent(indent) + "public " + nestedType.GetModifiers() + nestedType.GetObjectType() + " " + nestedType.GetDisplayNameWithExclusion(t) + nestedType.GetInheritance());
                         defRef.AppendLine(getIndent(indent) + "{");
                         indent++;
 
