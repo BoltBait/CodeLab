@@ -347,28 +347,51 @@ namespace PaintDotNet.Effects
         internal static bool Extends(this MethodInfo method, Type type)
         {
             Type extType = method.ExtendingType();
-            if (extType.IsAssignableFrom(type))
+            return extType.IsAssignableFrom(type) || extType.IsAssignableFromAsIEnumerable(type);
+        }
+
+        private static bool IsAssignableFromAsIEnumerable(this Type type1, Type type)
+        {
+            if (!type1.Name.Equals("IEnumerable`1", StringComparison.OrdinalIgnoreCase))
             {
-                return true;
+                return false;
             }
 
-            // Ugly Hack for IEnumerable<T> Extensions
-            if (extType.IsGenericType && typeof(System.Collections.IEnumerable).IsAssignableFrom(type))
+            Type iEnumType = type.GetInterface("IEnumerable`1");
+            if (iEnumType == null)
             {
-                Type[] args = extType.GenericTypeArguments;
-                if (args.Length == 1 && args[0].IsGenericParameter && extType.Name.Equals("IEnumerable`1", StringComparison.OrdinalIgnoreCase))
-                {
-                    Type innerType = type.IsArray ? type.GetElementType() : (type.IsGenericType && !type.IsGenericTypeDefinition) ? type.GenericTypeArguments[0] : type;
-                    Type[] constraints = args[0].GetGenericParameterConstraints();
-                    if (constraints.All(t => t.IsAssignableFrom(innerType)))
-                    {
-                        extType = extType.GetGenericTypeDefinition().MakeGenericType(innerType);
-                        return extType.IsAssignableFrom(type);
-                    }
-                }
+                return false;
             }
 
-            return false;
+            Type[] args = type1.GenericTypeArguments;
+            if (args.Length != 1 || !args[0].IsGenericParameter)
+            {
+                return false;
+            }
+
+            Type innerType = iEnumType.GenericTypeArguments[0];
+
+            if (args[0].IsConstrainedToClass() && !innerType.IsClass)
+            {
+                return false;
+            }
+
+            Type[] constraints = args[0].GetGenericParameterConstraints();
+            if (!constraints.All(t => t.IsAssignableFrom(innerType)))
+            {
+                return false;
+            }
+
+            Type genericType = type1.GetGenericTypeDefinition().MakeGenericType(innerType);
+
+            return genericType.IsAssignableFrom(type);
+        }
+
+        private static bool IsConstrainedToClass(this Type t)
+        {
+            return (t.GenericParameterAttributes &
+                GenericParameterAttributes.SpecialConstraintMask &
+                GenericParameterAttributes.ReferenceTypeConstraint) != 0;
         }
 
         internal static Type GetReturnType(this MemberInfo member)
@@ -452,9 +475,17 @@ namespace PaintDotNet.Effects
             foreach (Type arg in args)
             {
                 Type[] argConstraints = arg.GetGenericParameterConstraints();
-                if (argConstraints.Length > 0)
+                bool mustBeClass = arg.IsConstrainedToClass();
+
+                if (argConstraints.Length > 0 || mustBeClass)
                 {
-                    constraints.Add($"\r\n    where {arg.GetDisplayName()} : {argConstraints.Select(t => t.GetDisplayName()).Join(", ")}");
+                    IEnumerable<string> types = argConstraints.Select(t => t.GetDisplayName());
+                    if (mustBeClass)
+                    {
+                        types = types.Prepend("class");
+                    }
+
+                    constraints.Add($"\r\n    where {arg.GetDisplayName()} : {types.Join(", ")}");
                 }
             }
 
