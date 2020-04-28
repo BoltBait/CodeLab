@@ -337,9 +337,21 @@ namespace PaintDotNet.Effects
             Clear();
             this.intelliBoxContents = IntelliBoxContents.Suggestions;
 
-            string typeName = type.Name;
+            bool plural = false;
+            Type iEnumType = type.GetInterface("IEnumerable`1");
+            if (iEnumType != null && !iEnumType.IsGenericTypeDefinition)
+            {
+                plural = true;
+                type = iEnumType.GenericTypeArguments[0];
+            }
+
+            string typeName = Regex.Replace(type.Name, @"`\d", string.Empty);
 
             string fullNameSuggest = typeName.FirstCharToLower();
+            if (plural)
+            {
+                fullNameSuggest = fullNameSuggest.MakePlural();
+            }
             unFilteredItems.Add(new IntelliBoxItem(fullNameSuggest, fullNameSuggest, "(Suggested name)", IntelliType.Variable));
 
             string[] splitCamelCase = Regex.Split(typeName, "(?<!^)(?=[A-Z])");
@@ -351,6 +363,10 @@ namespace PaintDotNet.Effects
                     subtractEnd.Append(splitCamelCase[j]);
                 }
                 string subtractedEndSuggest = subtractEnd.ToString().FirstCharToLower();
+                if (plural)
+                {
+                    subtractedEndSuggest = subtractedEndSuggest.MakePlural();
+                }
                 unFilteredItems.Add(new IntelliBoxItem(subtractedEndSuggest, subtractedEndSuggest, "(Suggested name)", IntelliType.Variable));
 
                 StringBuilder subtractStart = new StringBuilder(i);
@@ -359,6 +375,10 @@ namespace PaintDotNet.Effects
                     subtractStart.Append(splitCamelCase[j]);
                 }
                 string subtractedStartSuggest = subtractStart.ToString().FirstCharToLower();
+                if (plural)
+                {
+                    subtractedStartSuggest = subtractedStartSuggest.MakePlural();
+                }
                 unFilteredItems.Add(new IntelliBoxItem(subtractedStartSuggest, subtractedStartSuggest, "(Suggested name)", IntelliType.Variable));
             }
 

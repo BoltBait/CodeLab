@@ -15,6 +15,8 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data.Entity.Design.PluralizationServices;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -134,6 +136,11 @@ namespace PaintDotNet.Effects
             return Regex.Replace(str, @"\<(?:\<[^<>]*\>|[^<>])*\>", string.Empty);
         }
 
+        internal static string StripSquareBrackets(this string str)
+        {
+            return Regex.Replace(str, @"\[(?:\[[^[\]]*\]|[^[\]])*\]", string.Empty);
+        }
+
         internal static string GetInitials(this string str)
         {
             return new string(str.Where(c => char.IsUpper(c)).ToArray());
@@ -171,6 +178,11 @@ namespace PaintDotNet.Effects
             }
 
             return unCapped + str.Substring(1);
+        }
+
+        internal static string MakePlural(this string str)
+        {
+            return pluralization.Pluralize(str);
         }
 
         internal static bool Contains(this string source, string value, StringComparison comparisonType)
@@ -532,5 +544,7 @@ namespace PaintDotNet.Effects
 
             return argTypes.ToArray();
         }
+
+        private static readonly PluralizationService pluralization = PluralizationService.CreateService(new CultureInfo("en-US"));
     }
 }
