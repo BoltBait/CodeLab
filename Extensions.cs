@@ -529,7 +529,7 @@ namespace PaintDotNet.Effects
             {
                 return method.IsFinal ? "sealed override " : "override ";
             }
-            else if (method.IsVirtual)
+            else if (method.IsVirtual && !method.IsFinal)
             {
                 return "virtual ";
             }
