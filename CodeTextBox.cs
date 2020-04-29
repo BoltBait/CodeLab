@@ -1960,27 +1960,8 @@ namespace PaintDotNet.Effects
             return tag;
         }
 
-        private void GenerateDefRef()
+        private void OpenDefinitionTab(Type type)
         {
-            int wordEndPos = this.WordEndPosition(this.CurrentPosition, true);
-
-            IntelliType intelliType = GetIntelliType(this.CurrentPosition);
-            Type type;
-
-            if (intelliType == IntelliType.None)
-            {
-                return;
-            }
-
-            if (intelliType == IntelliType.Type)
-            {
-                type = GetReturnType(wordEndPos);
-            }
-            else
-            {
-                type = GetDeclaringType(this.CurrentPosition);
-            }
-
             if (type == null)
             {
                 return;
@@ -2005,7 +1986,7 @@ namespace PaintDotNet.Effects
             switch (this.Lexer)
             {
                 case Lexer.Cpp:
-                    return GoToDefinitionCSharp();
+                    return GoToDefinitionCSharp(false);
                 case Lexer.Xml:
                     return GoToDefinitionXaml();
             }
@@ -2053,7 +2034,7 @@ namespace PaintDotNet.Effects
             return false;
         }
 
-        private bool GoToDefinitionCSharp()
+        private bool GoToDefinitionCSharp(bool msDocs)
         {
             int position = this.WordStartPosition(this.CurrentPosition, true);
 
@@ -2070,12 +2051,28 @@ namespace PaintDotNet.Effects
                 style == Style.Cpp.StringEol || style == Style.Cpp.StringEol + Preprocessor ||
                 style == Style.Cpp.Verbatim || style == Style.Cpp.Verbatim + Preprocessor)
             {
-                OpenMsDocs(typeof(string).FullName);
+                if (msDocs)
+                {
+                    OpenMsDocs(typeof(string).FullName);
+                }
+                else
+                {
+                    OpenDefinitionTab(typeof(string));
+                }
+
                 return true;
             }
             if (style == Style.Cpp.Character || style == Style.Cpp.Character + Preprocessor)
             {
-                OpenMsDocs(typeof(char).FullName);
+                if (msDocs)
+                {
+                    OpenMsDocs(typeof(char).FullName);
+                }
+                else
+                {
+                    OpenDefinitionTab(typeof(char));
+                }
+
                 return true;
             }
             if (style == Style.Cpp.Number || style == Style.Cpp.Number + Preprocessor)
@@ -2086,7 +2083,15 @@ namespace PaintDotNet.Effects
                     return false;
                 }
 
-                OpenMsDocs(numType.FullName);
+                if (msDocs)
+                {
+                    OpenMsDocs(numType.FullName);
+                }
+                else
+                {
+                    OpenDefinitionTab(numType);
+                }
+
                 return true;
             }
 
@@ -2150,15 +2155,24 @@ namespace PaintDotNet.Effects
             if (Intelli.AllTypes.ContainsKey(lastWords))
             {
                 Type t = Intelli.AllTypes[lastWords];
-                if (t.Namespace.StartsWith("PaintDotNet", StringComparison.Ordinal))
+
+                if (msDocs)
                 {
-                    return false;
+                    if (t.Namespace.StartsWith("PaintDotNet", StringComparison.Ordinal))
+                    {
+                        return false;
+                    }
+
+                    string typeName1 = (t.IsGenericType) ? t.Name.Replace("`", "-") : t.Name;
+                    string fullName1 = $"{t.Namespace}.{typeName1}";
+
+                    OpenMsDocs(fullName1);
+                }
+                else
+                {
+                    OpenDefinitionTab(t);
                 }
 
-                string typeName1 = (t.IsGenericType) ? t.Name.Replace("`", "-") : t.Name;
-                string fullName1 = $"{t.Namespace}.{typeName1}";
-
-                OpenMsDocs(fullName1);
                 return true;
             }
 
@@ -2237,19 +2251,28 @@ namespace PaintDotNet.Effects
             }
 
             Type declaringType = memberInfo.DeclaringType;
-            if (declaringType.Namespace.StartsWith("PaintDotNet", StringComparison.Ordinal))
+
+            if (msDocs)
             {
-                return false;
+                if (declaringType.Namespace.StartsWith("PaintDotNet", StringComparison.Ordinal))
+                {
+                    return false;
+                }
+
+                string typeName2 = (declaringType.IsGenericType) ? declaringType.Name.Replace("`", "-") : declaringType.Name;
+                string fullName2 = $"{declaringType.Namespace}.{typeName2}.{memberInfo.Name}";
+
+                OpenMsDocs(typeName2);
+            }
+            else
+            {
+                OpenDefinitionTab(declaringType);
             }
 
-            string typeName2 = (declaringType.IsGenericType) ? declaringType.Name.Replace("`", "-") : declaringType.Name;
-            string fullName2 = $"{declaringType.Namespace}.{typeName2}.{memberInfo.Name}";
-
-            OpenMsDocs(fullName2);
             return true;
         }
 
-        private void OpenMsDocs(string fullName)
+        private static void OpenMsDocs(string fullName)
         {
             System.Diagnostics.Process.Start($"https://docs.microsoft.com/dotnet/api/{fullName}");
         }
@@ -2372,12 +2395,10 @@ namespace PaintDotNet.Effects
                 }
                 else if (e.KeyCode == Keys.F12)
                 {
-                    GenerateDefRef();
-
-                    //if (!GoToDefinition())
-                    //{
-                    //    FlexibleMessageBox.Show("Cannot navigate to the symbol under the caret.", "CodeLab", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    //}
+                    if (!GoToDefinition())
+                    {
+                        FlexibleMessageBox.Show("Cannot navigate to the symbol under the caret.", "CodeLab", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
                 }
                 else if (e.Alt && e.KeyCode == Keys.Up)
                 {
