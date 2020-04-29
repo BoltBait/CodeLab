@@ -327,10 +327,10 @@ namespace PaintDotNet.Effects
             }
         }
 
-        internal static string GetEnumValue(this FieldInfo fieldInfo)
+        internal static string GetEnumValue(this FieldInfo field)
         {
-            object value = fieldInfo.GetValue(null);
-            Type type = Enum.GetUnderlyingType(fieldInfo.FieldType);
+            object value = field.GetValue(null);
+            Type type = Enum.GetUnderlyingType(field.FieldType);
             return Convert.ChangeType(value, type).ToString();
         }
 
@@ -367,11 +367,11 @@ namespace PaintDotNet.Effects
             return methodParams.Join(", ");
         }
 
-        internal static string BuildParamString(this ParameterInfo parameterInfo)
+        internal static string BuildParamString(this ParameterInfo parameter)
         {
-            string modifier = parameterInfo.IsOut ? "out " : parameterInfo.ParameterType.IsByRef ? "ref " : parameterInfo.IsDefined(typeof(ParamArrayAttribute), false) ? "params " : string.Empty;
-            string defaultValue = parameterInfo.HasDefaultValue ? " = " + parameterInfo.DefaultValue.ToString() : string.Empty;
-            return $"{modifier}{parameterInfo.ParameterType.GetDisplayName()} {parameterInfo.Name}{defaultValue}";
+            string modifier = parameter.IsOut ? "out " : parameter.ParameterType.IsByRef ? "ref " : parameter.IsDefined(typeof(ParamArrayAttribute), false) ? "params " : string.Empty;
+            string defaultValue = parameter.HasDefaultValue ? " = " + parameter.DefaultValue.ToString() : string.Empty;
+            return $"{modifier}{parameter.ParameterType.GetDisplayName()} {parameter.Name}{defaultValue}";
         }
 
         internal static bool IsOrHasExtension(this MemberInfo member)
@@ -427,9 +427,9 @@ namespace PaintDotNet.Effects
             return genericType.IsAssignableFrom(type);
         }
 
-        private static bool IsConstrainedToClass(this Type t)
+        private static bool IsConstrainedToClass(this Type type)
         {
-            return (t.GenericParameterAttributes &
+            return (type.GenericParameterAttributes &
                 GenericParameterAttributes.SpecialConstraintMask &
                 GenericParameterAttributes.ReferenceTypeConstraint) != 0;
         }
