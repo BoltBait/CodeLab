@@ -1490,7 +1490,7 @@ namespace PaintDotNet.Effects
                     else if (field.IsLiteral && !field.IsInitOnly)
                     {
                         fieldTypeName = "Constant";
-                        fieldValue = $" ({field.GetValue(null)})";
+                        fieldValue = $" ({field.GetConstValue()})";
                     }
                     else
                     {
