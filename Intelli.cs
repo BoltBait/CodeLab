@@ -239,6 +239,15 @@ namespace PaintDotNet.Effects
                     {
                         AllTypes.Add(name, type);
                     }
+                    else
+                    {
+                        Type t = AllTypes[name];
+                        if ((type.IsGenericType && !t.IsGenericType) ||
+                            (namespaceWhiteList.Contains(type.Namespace) && !namespaceWhiteList.Contains(t.Namespace)))
+                        {
+                            AllTypes[name] = type;
+                        }
+                    }
 
                     if (type.IsNested || type.IsObsolete())
                     {
