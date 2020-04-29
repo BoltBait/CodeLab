@@ -11,7 +11,7 @@ namespace PaintDotNet.Effects
     internal static class DefinitionGenerator
     {
         private static readonly StringBuilder defRef = new StringBuilder();
-        private static readonly BindingFlags bindingFlags = BindingFlags.Static | BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.DeclaredOnly;
+        private const BindingFlags bindingFlags = BindingFlags.Static | BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.DeclaredOnly;
         private static int indent = 1;
 
         internal static string Generate(Type type)
