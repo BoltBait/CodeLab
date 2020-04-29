@@ -2108,7 +2108,7 @@ namespace PaintDotNet.Effects
                 return false;
             }
 
-            if ((Intelli.Variables.ContainsKey(lastWords) || Intelli.Parameters.ContainsKey(lastWords)) && Intelli.VarPos.ContainsKey(lastWords))
+            if (!msDocs && (Intelli.Variables.ContainsKey(lastWords) || Intelli.Parameters.ContainsKey(lastWords)) && Intelli.VarPos.ContainsKey(lastWords))
             {
                 this.SelectionStart = Intelli.VarPos[lastWords];
                 this.SelectionEnd = this.WordEndPosition(Intelli.VarPos[lastWords], true);
@@ -2116,7 +2116,7 @@ namespace PaintDotNet.Effects
                 return true;
             }
 
-            if (Intelli.UserDefinedTypes.ContainsKey(lastWords))
+            if (!msDocs && Intelli.UserDefinedTypes.ContainsKey(lastWords))
             {
                 Type t = Intelli.UserDefinedTypes[lastWords];
 
@@ -2189,7 +2189,7 @@ namespace PaintDotNet.Effects
                 return false;
             }
 
-            if (memberInfo.DeclaringType == Intelli.UserScript)
+            if (!msDocs && memberInfo.DeclaringType == Intelli.UserScript)
             {
                 string returnType = memberInfo.GetReturnType()?.GetDisplayName();
 
