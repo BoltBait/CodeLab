@@ -336,7 +336,8 @@ namespace PaintDotNet.Effects
         internal static string BuildParamString(this ParameterInfo parameterInfo)
         {
             string modifier = parameterInfo.IsOut ? "out " : parameterInfo.ParameterType.IsByRef ? "ref " : parameterInfo.IsDefined(typeof(ParamArrayAttribute), false) ? "params " : string.Empty;
-            return $"{modifier}{parameterInfo.ParameterType.GetDisplayName()} {parameterInfo.Name}";
+            string defaultValue = parameterInfo.HasDefaultValue ? " = " + parameterInfo.DefaultValue.ToString() : string.Empty;
+            return $"{modifier}{parameterInfo.ParameterType.GetDisplayName()} {parameterInfo.Name}{defaultValue}";
         }
 
         internal static bool IsOrHasExtension(this MemberInfo member)
