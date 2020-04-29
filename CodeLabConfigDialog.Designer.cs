@@ -1410,7 +1410,7 @@
             // 
             // LookUpDefMenuItem
             // 
-            this.LookUpDefMenuItem.ImageName = "Search";
+            this.LookUpDefMenuItem.ImageName = "Docs";
             this.LookUpDefMenuItem.Name = "LookUpDefMenuItem";
             this.LookUpDefMenuItem.Size = new System.Drawing.Size(234, 22);
             this.LookUpDefMenuItem.Text = "Look Up Definition";
