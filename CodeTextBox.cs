@@ -4010,6 +4010,10 @@ namespace PaintDotNet.Effects
                     }
                     break;
             }
+
+            AdjustLineNumbersWidth();
+            ClearErrors();
+            UpdateIndicatorBar();
         }
 
         internal void SwitchToDocument(Guid guid)
@@ -4055,6 +4059,7 @@ namespace PaintDotNet.Effects
             }
 
             AdjustLineNumbersWidth();
+            ClearErrors();
             UpdateIndicatorBar();
         }
 
