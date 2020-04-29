@@ -72,7 +72,7 @@ namespace PaintDotNet.Effects
                 else
                 {
                     areFields = true;
-                    string value = (field.IsLiteral && !field.IsInitOnly) ? $" = {field.GetValue(null)}" : string.Empty;
+                    string value = (field.IsLiteral && !field.IsInitOnly) ? $" = {field.GetConstValue()}" : string.Empty;
                     defRef.AppendLine(spaces + access + field.GetModifiers() + field.FieldType.GetDisplayNameWithExclusion(type) + " " + field.Name + value + ";");
                 }
             }

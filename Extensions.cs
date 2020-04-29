@@ -282,6 +282,33 @@ namespace PaintDotNet.Effects
             return char.ToLowerInvariant(c);
         }
 
+        private static string ToLiteral(this char c)
+        {
+            switch (c)
+            {
+                case '\'': return @"\'";
+                case '\"': return "\\\"";
+                case '\\': return @"\\";
+                case '\0': return @"\0";
+                case '\a': return @"\a";
+                case '\b': return @"\b";
+                case '\f': return @"\f";
+                case '\n': return @"\n";
+                case '\r': return @"\r";
+                case '\t': return @"\t";
+                case '\v': return @"\v";
+                default:
+                    if (char.GetUnicodeCategory(c) != UnicodeCategory.Control && !c.Equals('\uffff'))
+                    {
+                        return c.ToString();
+                    }
+                    else
+                    {
+                        return @"\u" + ((ushort)c).ToString("x4");
+                    }
+            }
+        }
+
         internal static bool IsBrace(this char c, bool openBrace)
         {
             if (openBrace)
@@ -332,6 +359,24 @@ namespace PaintDotNet.Effects
             object value = field.GetValue(null);
             Type type = Enum.GetUnderlyingType(field.FieldType);
             return Convert.ChangeType(value, type).ToString();
+        }
+
+        internal static string GetConstValue(this FieldInfo field)
+        {
+            object objValue = field.GetValue(null);
+            Type fieldType = field.FieldType;
+
+            if (fieldType == typeof(string))
+            {
+                return "\"" + objValue.ToString() + "\"";
+            }
+
+            if (fieldType == typeof(char))
+            {
+                return "'" + ((char)objValue).ToLiteral() + "'";
+            }
+
+            return objValue.ToString();
         }
 
         internal static string GetterSetter(this PropertyInfo property)
