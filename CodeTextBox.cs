@@ -1981,17 +1981,24 @@ namespace PaintDotNet.Effects
             this.SetSavePoint();
         }
 
-        private bool GoToDefinition()
+        internal void GoToDefinition(bool msDocs)
         {
+            bool success = false;
+
             switch (this.Lexer)
             {
                 case Lexer.Cpp:
-                    return GoToDefinitionCSharp(false);
+                    success = GoToDefinitionCSharp(msDocs);
+                    break;
                 case Lexer.Xml:
-                    return GoToDefinitionXaml();
+                    success = GoToDefinitionXaml();
+                    break;
             }
 
-            return false;
+            if (!success)
+            {
+                FlexibleMessageBox.Show("Cannot navigate to the symbol under the caret.", "CodeLab", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
         }
 
         private bool GoToDefinitionXaml()
@@ -2395,10 +2402,7 @@ namespace PaintDotNet.Effects
                 }
                 else if (e.KeyCode == Keys.F12)
                 {
-                    if (!GoToDefinition())
-                    {
-                        FlexibleMessageBox.Show("Cannot navigate to the symbol under the caret.", "CodeLab", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    }
+                    GoToDefinition(false);
                 }
                 else if (e.Alt && e.KeyCode == Keys.Up)
                 {

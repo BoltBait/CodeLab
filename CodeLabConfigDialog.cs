@@ -2073,6 +2073,7 @@ namespace PaintDotNet.Effects
             this.redoToolStripMenuItem.Enabled = txtCode.CanRedo;
             this.commentSelectionToolStripMenuItem1.Enabled = cSharp;
             this.uncommentSelectionToolStripMenuItem1.Enabled = cSharp;
+            this.GoToDefMenuItem.Enabled = cSharp;
         }
 
         private void undoToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -2135,6 +2136,16 @@ namespace PaintDotNet.Effects
         private void uncommentSelectionToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             UnCommentCommand();
+        }
+
+        private void GoToDefMenuItem_Click(object sender, EventArgs e)
+        {
+            txtCode.GoToDefinition(false);
+        }
+
+        private void LookUpDefMenuItem_Click(object sender, EventArgs e)
+        {
+            txtCode.GoToDefinition(true);
         }
         #endregion
 

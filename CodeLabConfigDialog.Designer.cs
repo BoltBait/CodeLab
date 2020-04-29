@@ -151,6 +151,7 @@
             this.toolStripSeparator21 = new System.Windows.Forms.ToolStripSeparator();
             this.FindButton = new PaintDotNet.Effects.ScaledToolStripButton();
             this.ReplaceButton = new PaintDotNet.Effects.ScaledToolStripButton();
+            this.toolStripSeparator22 = new System.Windows.Forms.ToolStripSeparator();
             this.SnippetManButton = new PaintDotNet.Effects.ScaledToolStripButton();
             this.txtCode = new PaintDotNet.Effects.CodeTextBox();
             this.ShowErrors = new System.Windows.Forms.CheckBox();
@@ -158,7 +159,9 @@
             this.ClearOutput = new System.Windows.Forms.Button();
             this.ShowOutput = new System.Windows.Forms.CheckBox();
             this.tabStrip1 = new PaintDotNet.Effects.TabStrip();
-            this.toolStripSeparator22 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator23 = new System.Windows.Forms.ToolStripSeparator();
+            this.GoToDefMenuItem = new PaintDotNet.Effects.ScaledToolStripMenuItem();
+            this.LookUpDefMenuItem = new PaintDotNet.Effects.ScaledToolStripMenuItem();
             this.errorListMenu.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -286,9 +289,12 @@
             this.unindentToolStripMenuItem1,
             this.toolStripSeparator9,
             this.commentSelectionToolStripMenuItem1,
-            this.uncommentSelectionToolStripMenuItem1});
+            this.uncommentSelectionToolStripMenuItem1,
+            this.toolStripSeparator23,
+            this.GoToDefMenuItem,
+            this.LookUpDefMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(235, 298);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(235, 370);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
             // undoToolStripMenuItem
@@ -1279,6 +1285,11 @@
             this.ReplaceButton.ToolTipText = "Replace (Ctrl+H)";
             this.ReplaceButton.Click += new System.EventHandler(this.ReplaceButton_Click);
             // 
+            // toolStripSeparator22
+            // 
+            this.toolStripSeparator22.Name = "toolStripSeparator22";
+            this.toolStripSeparator22.Size = new System.Drawing.Size(6, 27);
+            // 
             // SnippetManButton
             // 
             this.SnippetManButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -1383,10 +1394,27 @@
             this.tabStrip1.TabClosingAndDirty += new System.EventHandler<System.ComponentModel.CancelEventArgs>(this.tabStrip1_TabClosingAndDirty);
             this.tabStrip1.TabClosed += new System.EventHandler<PaintDotNet.Effects.TabClosedEventArgs>(this.tabStrip1_TabClosed);
             // 
-            // toolStripSeparator22
+            // toolStripSeparator23
             // 
-            this.toolStripSeparator22.Name = "toolStripSeparator22";
-            this.toolStripSeparator22.Size = new System.Drawing.Size(6, 27);
+            this.toolStripSeparator23.Name = "toolStripSeparator23";
+            this.toolStripSeparator23.Size = new System.Drawing.Size(231, 6);
+            // 
+            // GoToDefMenuItem
+            // 
+            this.GoToDefMenuItem.ImageName = "Book";
+            this.GoToDefMenuItem.Name = "GoToDefMenuItem";
+            this.GoToDefMenuItem.ShortcutKeyDisplayString = "F12";
+            this.GoToDefMenuItem.Size = new System.Drawing.Size(234, 22);
+            this.GoToDefMenuItem.Text = "Go To Definition";
+            this.GoToDefMenuItem.Click += new System.EventHandler(this.GoToDefMenuItem_Click);
+            // 
+            // LookUpDefMenuItem
+            // 
+            this.LookUpDefMenuItem.ImageName = "Search";
+            this.LookUpDefMenuItem.Name = "LookUpDefMenuItem";
+            this.LookUpDefMenuItem.Size = new System.Drawing.Size(234, 22);
+            this.LookUpDefMenuItem.Text = "Look Up Definition";
+            this.LookUpDefMenuItem.Click += new System.EventHandler(this.LookUpDefMenuItem_Click);
             // 
             // CodeLabConfigDialog
             // 
@@ -1559,5 +1587,8 @@
         private ScaledToolStripMenuItem NewFileTypeMenuItem;
         private ScaledToolStripMenuItem NewShapeMenuItem;
         private ScaledToolStripMenuItem NewTextMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator23;
+        private ScaledToolStripMenuItem GoToDefMenuItem;
+        private ScaledToolStripMenuItem LookUpDefMenuItem;
     }
 }
