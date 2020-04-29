@@ -2042,7 +2042,7 @@ namespace PaintDotNet.Effects
                 {
                     foreach (FieldInfo field in fields)
                     {
-                        if (field.IsPrivate || (!field.IsPublic && !field.IsFamily) || field.IsSpecialName)
+                        if (field.IsPrivate || (!field.IsPublic && !field.IsFamily) || field.IsSpecialName || field.IsObsolete())
                         {
                             continue;
                         }
@@ -2071,7 +2071,7 @@ namespace PaintDotNet.Effects
                 {
                     foreach (ConstructorInfo ctor in constructors)
                     {
-                        if (ctor.IsPrivate || (!ctor.IsPublic && !ctor.IsFamily))
+                        if (ctor.IsPrivate || (!ctor.IsPublic && !ctor.IsFamily) || ctor.IsObsolete())
                         {
                             continue;
                         }
@@ -2091,7 +2091,7 @@ namespace PaintDotNet.Effects
                     {
                         MethodInfo propMethod = property.GetMethod;
 
-                        if (propMethod.IsPrivate || (!propMethod.IsPublic && !propMethod.IsFamily))
+                        if (propMethod.IsPrivate || (!propMethod.IsPublic && !propMethod.IsFamily) || property.IsObsolete())
                         {
                             continue;
                         }
@@ -2123,7 +2123,7 @@ namespace PaintDotNet.Effects
 
                     foreach (MethodInfo method in methods)
                     {
-                        if (method.IsPrivate || (!method.IsPublic && !method.IsFamily) ||
+                        if (method.IsPrivate || (!method.IsPublic && !method.IsFamily) || method.IsObsolete() ||
                             (method.IsSpecialName && !method.Name.StartsWith("op_", StringComparison.Ordinal)))
                         {
                             continue;
@@ -2242,7 +2242,7 @@ namespace PaintDotNet.Effects
                 {
                     foreach (Type nestedType in nestedTypes)
                     {
-                        if (!nestedType.IsVisible)
+                        if (!nestedType.IsVisible || nestedType.IsObsolete())
                         {
                             continue;
                         }
