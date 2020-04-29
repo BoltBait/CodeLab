@@ -507,15 +507,18 @@ namespace PaintDotNet.Effects
             {
                 return string.Empty;
             }
-            else if (type.IsAbstract && type.IsSealed)
+
+            if (type.IsAbstract && type.IsSealed)
             {
                 return "static ";
             }
-            else if (type.IsAbstract && !type.IsInterface)
+
+            if (type.IsAbstract && !type.IsInterface)
             {
                 return "abstract ";
             }
-            else if (type.IsSealed && !type.IsValueType)
+
+            if (type.IsSealed && !type.IsValueType)
             {
                 return "sealed ";
             }
@@ -529,19 +532,23 @@ namespace PaintDotNet.Effects
             {
                 return string.Empty;
             }
-            else if (!field.IsStatic && field.IsInitOnly)
+
+            if (!field.IsStatic && field.IsInitOnly)
             {
                 return "readonly ";
             }
-            else if (field.IsLiteral && !field.IsInitOnly)
+
+            if (field.IsLiteral && !field.IsInitOnly)
             {
                 return "const ";
             }
-            else if (field.IsStatic && field.IsInitOnly)
+
+            if (field.IsStatic && field.IsInitOnly)
             {
                 return "static readonly ";
             }
-            else if (field.IsStatic)
+
+            if (field.IsStatic)
             {
                 return "static ";
             }
@@ -555,15 +562,18 @@ namespace PaintDotNet.Effects
             {
                 return "static ";
             }
-            else if (method.IsAbstract)
+
+            if (method.IsAbstract)
             {
                 return "abstract ";
             }
-            else if (method.IsVirtual && method != method.GetBaseDefinition())
+
+            if (method.IsVirtual && method != method.GetBaseDefinition())
             {
                 return method.IsFinal ? "sealed override " : "override ";
             }
-            else if (method.IsVirtual && !method.IsFinal)
+
+            if (method.IsVirtual && !method.IsFinal)
             {
                 return "virtual ";
             }
