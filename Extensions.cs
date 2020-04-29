@@ -527,7 +527,7 @@ namespace PaintDotNet.Effects
             }
             else if (method.IsVirtual && method != method.GetBaseDefinition())
             {
-                return "override ";
+                return method.IsFinal ? "sealed override " : "override ";
             }
             else if (method.IsVirtual)
             {
