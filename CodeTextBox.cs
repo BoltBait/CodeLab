@@ -766,7 +766,7 @@ namespace PaintDotNet.Effects
         private string GetLastWords(int position)
         {
             int wordEndPos = this.WordEndPosition(position, true);
-            string strippedText = this.GetTextRange(0, wordEndPos).StripParens().StripAngleBrackets();
+            string strippedText = this.GetTextRange(0, wordEndPos).StripParens().StripAngleBrackets().StripSquareBrackets();
 
             int posIndex = strippedText.Length;
 
@@ -1112,8 +1112,7 @@ namespace PaintDotNet.Effects
             int style = this.GetStyleAt(position);
             if (style != Style.Cpp.Word && style != Style.Cpp.Word + Preprocessor &&
                 style != Style.Cpp.Word2 && style != Style.Cpp.Word2 + Preprocessor &&
-                style != Style.Cpp.Identifier && style != Style.Cpp.Identifier + Preprocessor &&
-                style != Style.Cpp.Default)
+                style != Style.Cpp.Identifier && style != Style.Cpp.Identifier + Preprocessor)
             {
                 return IntelliType.None;
             }
@@ -1121,7 +1120,7 @@ namespace PaintDotNet.Effects
             string lastWords = GetLastWords(position);
             if (lastWords.Length == 0)
             {
-                return IntelliType.None;
+               return IntelliType.None;
             }
 
             if (Intelli.Variables.ContainsKey(lastWords))
@@ -2768,7 +2767,8 @@ namespace PaintDotNet.Effects
         private void SuggestionIntelliBox(int position)
         {
             int style = this.GetStyleAt(position - 1);
-            if (style != Style.Cpp.Word2 && style != Style.Cpp.Word2 + Preprocessor)
+            if (style != Style.Cpp.Word2 && style != Style.Cpp.Word2 + Preprocessor &&
+                style != Style.Cpp.Operator && style != Style.Cpp.Operator + Preprocessor)
             {
                 return;
             }
@@ -2778,6 +2778,20 @@ namespace PaintDotNet.Effects
             if (type == null || type == typeof(void) || Intelli.TypeAliases.ContainsKey(type.Name))
             {
                 return;
+            }
+
+            if (position > 1 && this.GetCharAt(position - 1) == ']' && this.GetCharAt(position - 2) == '[')
+            {
+                type = type.MakeArrayType();
+            }
+            else if (type.IsGenericType && this.GetCharAt(position - 1) == '>')
+            {
+                int openBrace = this.BraceMatch(position - 1);
+                if (openBrace != InvalidPosition)
+                {
+                    string args = GetGenericArgs(openBrace);
+                    type = type.MakeGenericType(args);
+                }
             }
 
             iBox.PopulateSuggestions(type);
@@ -2856,6 +2870,7 @@ namespace PaintDotNet.Effects
 
             this.SetTargetRange(startPos, endPos);
             this.ReplaceTarget(fill);
+            this.Colorize(startPos, startPos + fill.Length);
             this.SetEmptySelection(startPos + fill.Length);
 
             iBox.SaveUsedItem();
@@ -4045,6 +4060,10 @@ namespace PaintDotNet.Effects
                     }
                     break;
             }
+
+            AdjustLineNumbersWidth();
+            ClearErrors();
+            UpdateIndicatorBar();
         }
 
         internal void SwitchToDocument(Guid guid)
@@ -4090,6 +4109,7 @@ namespace PaintDotNet.Effects
             }
 
             AdjustLineNumbersWidth();
+            ClearErrors();
             UpdateIndicatorBar();
         }
 

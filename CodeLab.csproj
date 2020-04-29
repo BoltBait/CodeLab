@@ -79,6 +79,7 @@
     <Reference Include="System.Data">
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Data.Entity.Design" />
     <Reference Include="System.Drawing">
       <Name>System.Drawing</Name>
       <Private>True</Private>
