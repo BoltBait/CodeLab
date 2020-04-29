@@ -2113,6 +2113,26 @@ namespace PaintDotNet.Effects
                     defRef.AppendLine();
                 }
 
+                EventInfo[] events = t.GetEvents(bindingFlags);
+                if (events.Length > 0)
+                {
+                    foreach (EventInfo eventInfo in events)
+                    {
+                        MethodInfo eventMethod = eventInfo.AddMethod;
+
+                        if (eventMethod.IsPrivate || (!eventMethod.IsPublic && !eventMethod.IsFamily) || eventInfo.IsObsolete())
+                        {
+                            continue;
+                        }
+
+                        string access = isInterface ? string.Empty : (!eventMethod.IsPublic && eventMethod.IsFamily) ? "protected " : "public ";
+
+                        defRef.AppendLine(getIndent(indent) + access + eventMethod.GetModifiers() + "event " + eventInfo.EventHandlerType.GetDisplayName() + " "  + eventInfo.Name + ";");
+                    }
+
+                    defRef.AppendLine();
+                }
+
                 MethodInfo[] methods = t.GetMethods(bindingFlags);
                 if (methods.Length > 0)
                 {
