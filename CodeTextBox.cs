@@ -2170,10 +2170,10 @@ namespace PaintDotNet.Effects
                         return false;
                     }
 
-                    string typeName1 = (t.IsGenericType) ? t.Name.Replace("`", "-") : t.Name;
-                    string fullName1 = $"{t.Namespace}.{typeName1}";
+                    string typeName = (t.IsGenericType) ? t.Name.Replace("`", "-") : t.Name;
+                    string fullName = $"{t.Namespace}.{typeName}";
 
-                    OpenMsDocs(fullName1);
+                    OpenMsDocs(fullName);
                 }
                 else
                 {
@@ -2266,10 +2266,10 @@ namespace PaintDotNet.Effects
                     return false;
                 }
 
-                string typeName2 = (declaringType.IsGenericType) ? declaringType.Name.Replace("`", "-") : declaringType.Name;
-                string fullName2 = $"{declaringType.Namespace}.{typeName2}.{memberInfo.Name}";
+                string typeName = (declaringType.IsGenericType) ? declaringType.Name.Replace("`", "-") : declaringType.Name;
+                string fullName = $"{declaringType.Namespace}.{typeName}.{memberInfo.Name}";
 
-                OpenMsDocs(fullName2);
+                OpenMsDocs(fullName);
             }
             else
             {
