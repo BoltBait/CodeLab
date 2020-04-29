@@ -2089,11 +2089,11 @@ namespace PaintDotNet.Effects
                         ParameterInfo[] indexParams = property.GetIndexParameters();
                         if (indexParams.Length > 0)
                         {
-                            defRef.AppendLine(getIndent(indent) + access + property.PropertyType.GetDisplayNameWithExclusion(t) + " this[" + indexParams.Select(p => p.BuildParamString()).Join(", ") + "]" + property.GetterSetter());
+                            defRef.AppendLine(getIndent(indent) + access + property.GetMethod.GetModifiers() + property.PropertyType.GetDisplayNameWithExclusion(t) + " this[" + indexParams.Select(p => p.BuildParamString()).Join(", ") + "]" + property.GetterSetter());
                         }
                         else
                         {
-                            defRef.AppendLine(getIndent(indent) + access + property.PropertyType.GetDisplayNameWithExclusion(t) + " " + property.Name + property.GetterSetter());
+                            defRef.AppendLine(getIndent(indent) + access + property.GetMethod.GetModifiers() + property.PropertyType.GetDisplayNameWithExclusion(t) + " " + property.Name + property.GetterSetter());
                         }
                     }
 
