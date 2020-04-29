@@ -529,11 +529,6 @@ namespace PaintDotNet.Effects
             {
                 return "readonly ";
             }
-            else if (field.FieldType.IsEnum)
-            {
-                // "Enum Value";
-                return string.Empty;
-            }
             else if (field.IsLiteral && !field.IsInitOnly)
             {
                 return "const ";
