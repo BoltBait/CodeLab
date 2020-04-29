@@ -476,10 +476,11 @@ namespace PaintDotNet.Effects
                 return (baseType != typeof(int)) ? " : " + baseType.GetDisplayName() : string.Empty;
             }
 
-            IEnumerable<Type> inheritList = type.GetDirectBaseInterfaces();
+            IEnumerable<Type> inheritList = type.GetInterfaces();
             if (type.IsClass && type != typeof(object) && type.BaseType != typeof(object))
             {
-                inheritList = inheritList.Prepend(type.BaseType);
+                IEnumerable<Type> baseClassInterfaces = type.BaseType.GetDirectBaseInterfaces();
+                inheritList = inheritList.Except(baseClassInterfaces).Prepend(type.BaseType);
             }
 
             string inheritance = inheritList.Any() ? " : " + inheritList.Select(i => i.GetDisplayName()).Join(", ") : string.Empty;
