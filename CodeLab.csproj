@@ -126,6 +126,7 @@
       <DependentUpon>CodeTextBox.cs</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="DefinitionGenerator.cs" />
     <Compile Include="IntelliTip.cs">
       <SubType>Component</SubType>
     </Compile>
