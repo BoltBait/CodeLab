@@ -2010,6 +2010,11 @@ namespace PaintDotNet.Effects
 
             int indent = 1;
 
+            if (type.IsEnum && type.GetCustomAttribute<FlagsAttribute>() != null)
+            {
+                defRef.AppendLine(getIndent(indent) + "[Flags]");
+            }
+
             defRef.AppendLine(getIndent(indent) + "public " + type.GetModifiers() + type.GetObjectType() + " " + type.GetDisplayNameWithExclusion(type) + type.GetInheritance());
             defRef.AppendLine(getIndent(indent) + "{");
             indent++;
@@ -2221,6 +2226,11 @@ namespace PaintDotNet.Effects
                 {
                     foreach (Type nestedType in nestedTypes)
                     {
+                        if (type.IsEnum && type.GetCustomAttribute<FlagsAttribute>() != null)
+                        {
+                            defRef.AppendLine(getIndent(indent) + "[Flags]");
+                        }
+
                         defRef.AppendLine(getIndent(indent) + "public " + nestedType.GetModifiers() + nestedType.GetObjectType() + " " + nestedType.GetDisplayNameWithExclusion(t) + nestedType.GetInheritance());
                         defRef.AppendLine(getIndent(indent) + "{");
                         indent++;
