@@ -25,28 +25,28 @@ namespace PaintDotNet.Effects
 
             if (type.IsEnum && type.GetCustomAttribute<FlagsAttribute>() != null)
             {
-                defRef.AppendLine(getIndent(indent) + "[Flags]");
+                defRef.AppendLine(GetIndent(indent) + "[Flags]");
             }
 
-            defRef.AppendLine(getIndent(indent) + "public " + type.GetModifiers() + type.GetObjectType() + " " + type.GetDisplayNameWithExclusion(type) + type.GetInheritance());
-            defRef.AppendLine(getIndent(indent) + "{");
+            defRef.AppendLine(GetIndent(indent) + "public " + type.GetModifiers() + type.GetObjectType() + " " + type.GetDisplayNameWithExclusion(type) + type.GetInheritance());
+            defRef.AppendLine(GetIndent(indent) + "{");
             indent++;
 
-            iterateMembers(type);
+            IterateMembers(type);
 
             indent--;
-            defRef.AppendLine(getIndent(indent) + "}");
+            defRef.AppendLine(GetIndent(indent) + "}");
             defRef.AppendLine("}");
 
             return defRef.ToString();
         }
 
-        private static void iterateMembers(Type t)
+        private static void IterateMembers(Type type)
         {
-            bool isInterface = t.IsInterface;
-            string spaces = getIndent(indent);
+            bool isInterface = type.IsInterface;
+            string spaces = GetIndent(indent);
 
-            FieldInfo[] fields = t.GetFields(bindingFlags);
+            FieldInfo[] fields = type.GetFields(bindingFlags);
             int fieldCount = 0;
             foreach (FieldInfo field in fields)
             {
@@ -65,7 +65,7 @@ namespace PaintDotNet.Effects
                 {
                     fieldCount++;
                     string value = (field.IsLiteral && !field.IsInitOnly) ? $" = {field.GetValue(null)}" : string.Empty;
-                    defRef.AppendLine(spaces + access + field.GetModifiers() + field.FieldType.GetDisplayNameWithExclusion(t) + " " + field.Name + value + ";");
+                    defRef.AppendLine(spaces + access + field.GetModifiers() + field.FieldType.GetDisplayNameWithExclusion(type) + " " + field.Name + value + ";");
                 }
             }
 
@@ -74,7 +74,7 @@ namespace PaintDotNet.Effects
                 defRef.AppendLine();
             }
 
-            ConstructorInfo[] constructors = t.GetConstructors(bindingFlags);
+            ConstructorInfo[] constructors = type.GetConstructors(bindingFlags);
             int ctorCount = 0;
             foreach (ConstructorInfo ctor in constructors)
             {
@@ -87,7 +87,7 @@ namespace PaintDotNet.Effects
 
                 string access = isInterface ? string.Empty : (!ctor.IsPublic && ctor.IsFamily) ? "protected " : "public ";
 
-                defRef.AppendLine(spaces + access + Regex.Replace(t.Name, @"`\d", string.Empty) + "(" + ctor.Params() + ");");
+                defRef.AppendLine(spaces + access + Regex.Replace(type.Name, @"`\d", string.Empty) + "(" + ctor.Params() + ");");
             }
 
             if (ctorCount > 0)
@@ -95,7 +95,7 @@ namespace PaintDotNet.Effects
                 defRef.AppendLine();
             }
 
-            PropertyInfo[] properties = t.GetProperties(bindingFlags);
+            PropertyInfo[] properties = type.GetProperties(bindingFlags);
             int propCount = 0;
             foreach (PropertyInfo property in properties)
             {
@@ -114,11 +114,11 @@ namespace PaintDotNet.Effects
                 ParameterInfo[] indexParams = property.GetIndexParameters();
                 if (indexParams.Length > 0)
                 {
-                    defRef.AppendLine(spaces + access + modifier + property.PropertyType.GetDisplayNameWithExclusion(t) + " this[" + indexParams.Select(p => p.BuildParamString()).Join(", ") + "]" + property.GetterSetter());
+                    defRef.AppendLine(spaces + access + modifier + property.PropertyType.GetDisplayNameWithExclusion(type) + " this[" + indexParams.Select(p => p.BuildParamString()).Join(", ") + "]" + property.GetterSetter());
                 }
                 else
                 {
-                    defRef.AppendLine(spaces + access + modifier + property.PropertyType.GetDisplayNameWithExclusion(t) + " " + property.Name + property.GetterSetter());
+                    defRef.AppendLine(spaces + access + modifier + property.PropertyType.GetDisplayNameWithExclusion(type) + " " + property.Name + property.GetterSetter());
                 }
             }
 
@@ -127,7 +127,7 @@ namespace PaintDotNet.Effects
                 defRef.AppendLine();
             }
 
-            EventInfo[] events = t.GetEvents(bindingFlags);
+            EventInfo[] events = type.GetEvents(bindingFlags);
             int eventCount = 0;
             foreach (EventInfo eventInfo in events)
             {
@@ -150,7 +150,7 @@ namespace PaintDotNet.Effects
                 defRef.AppendLine();
             }
 
-            MethodInfo[] methods = t.GetMethods(bindingFlags);
+            MethodInfo[] methods = type.GetMethods(bindingFlags);
 
             List<string> staticMethods = new List<string>();
             List<string> opMethods = new List<string>();
@@ -171,7 +171,7 @@ namespace PaintDotNet.Effects
                 bool isOperator = false;
                 bool isImExOperator = false;
 
-                string returnType = method.ReturnType.GetDisplayNameWithExclusion(t);
+                string returnType = method.ReturnType.GetDisplayNameWithExclusion(type);
                 string name = method.Name;
                 if (method.IsSpecialName && name.StartsWith("op_", StringComparison.Ordinal))
                 {
@@ -269,7 +269,7 @@ namespace PaintDotNet.Effects
                 defRef.AppendLine();
             }
 
-            Type[] nestedTypes = t.GetNestedTypes(bindingFlags);
+            Type[] nestedTypes = type.GetNestedTypes(bindingFlags);
             int nestedCount = 0;
             foreach (Type nestedType in nestedTypes)
             {
@@ -283,11 +283,11 @@ namespace PaintDotNet.Effects
                     defRef.AppendLine(spaces + "[Flags]");
                 }
 
-                defRef.AppendLine(spaces + "public " + nestedType.GetModifiers() + nestedType.GetObjectType() + " " + nestedType.GetDisplayNameWithExclusion(t) + nestedType.GetInheritance());
+                defRef.AppendLine(spaces + "public " + nestedType.GetModifiers() + nestedType.GetObjectType() + " " + nestedType.GetDisplayNameWithExclusion(type) + nestedType.GetInheritance());
                 defRef.AppendLine(spaces + "{");
                 indent++;
 
-                iterateMembers(nestedType);
+                IterateMembers(nestedType);
 
                 indent--;
                 defRef.AppendLine(spaces + "}");
@@ -299,7 +299,7 @@ namespace PaintDotNet.Effects
             }
         }
 
-        private static string getIndent(int indentLevel)
+        private static string GetIndent(int indentLevel)
         {
             return new string(' ', 4 * indentLevel);
         }
