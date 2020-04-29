@@ -2047,7 +2047,7 @@ namespace PaintDotNet.Effects
                             continue;
                         }
 
-                        string access = isInterface ? string.Empty : (!field.IsPublic && field.IsFamily) ? "protected " : "public";
+                        string access = isInterface ? string.Empty : (!field.IsPublic && field.IsFamily) ? "protected " : "public ";
 
                         if (field.FieldType.IsEnum)
                         {
@@ -2076,7 +2076,7 @@ namespace PaintDotNet.Effects
                             continue;
                         }
 
-                        string access = isInterface ? string.Empty : (!ctor.IsPublic && ctor.IsFamily) ? "protected " : "public";
+                        string access = isInterface ? string.Empty : (!ctor.IsPublic && ctor.IsFamily) ? "protected " : "public ";
 
                         defRef.AppendLine(getIndent(indent) + access + Regex.Replace(type.Name, @"`\d", string.Empty) + "(" + ctor.Params() + ");");
                     }
@@ -2096,7 +2096,7 @@ namespace PaintDotNet.Effects
                             continue;
                         }
 
-                        string access = isInterface ? string.Empty : (!propMethod.IsPublic && propMethod.IsFamily) ? "protected " : "public";
+                        string access = isInterface ? string.Empty : (!propMethod.IsPublic && propMethod.IsFamily) ? "protected " : "public ";
                         string modifier = isInterface ? string.Empty : propMethod.GetModifiers();
 
                         ParameterInfo[] indexParams = property.GetIndexParameters();
@@ -2129,7 +2129,7 @@ namespace PaintDotNet.Effects
                             continue;
                         }
 
-                        string access = isInterface ? string.Empty : (!method.IsPublic && method.IsFamily) ? "protected " : "public";
+                        string access = isInterface ? string.Empty : (!method.IsPublic && method.IsFamily) ? "protected " : "public ";
 
                         bool isStatic = method.IsStatic;
                         bool isOperator = false;
