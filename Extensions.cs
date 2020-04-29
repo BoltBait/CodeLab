@@ -520,7 +520,11 @@ namespace PaintDotNet.Effects
             {
                 return "static ";
             }
-            else if (method.IsVirtual && method.IsHideBySig)
+            else if (method.IsAbstract)
+            {
+                return "abstract ";
+            }
+            else if (method.IsVirtual && method != method.GetBaseDefinition())
             {
                 return "override ";
             }
