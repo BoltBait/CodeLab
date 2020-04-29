@@ -2079,7 +2079,7 @@ namespace PaintDotNet.Effects
 
                     string access = isInterface ? string.Empty : (!ctor.IsPublic && ctor.IsFamily) ? "protected " : "public ";
 
-                    defRef.AppendLine(spaces + access + Regex.Replace(type.Name, @"`\d", string.Empty) + "(" + ctor.Params() + ");");
+                    defRef.AppendLine(spaces + access + Regex.Replace(t.Name, @"`\d", string.Empty) + "(" + ctor.Params() + ");");
                 }
 
                 if (ctorCount > 0)
@@ -2274,7 +2274,7 @@ namespace PaintDotNet.Effects
                         continue;
                     }
 
-                    if (type.IsEnum && type.GetCustomAttribute<FlagsAttribute>() != null)
+                    if (nestedType.IsEnum && nestedType.GetCustomAttribute<FlagsAttribute>() != null)
                     {
                         defRef.AppendLine(spaces + "[Flags]");
                     }
