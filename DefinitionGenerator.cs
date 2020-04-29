@@ -46,9 +46,8 @@ namespace PaintDotNet.Effects
             bool isInterface = type.IsInterface;
             string spaces = GetIndent(indent);
 
-            FieldInfo[] fields = type.GetFields(bindingFlags);
             int fieldCount = 0;
-            foreach (FieldInfo field in fields)
+            foreach (FieldInfo field in type.GetFields(bindingFlags))
             {
                 if (field.IsPrivate || (!field.IsPublic && !field.IsFamily) || field.IsSpecialName || field.IsObsolete())
                 {
@@ -74,9 +73,8 @@ namespace PaintDotNet.Effects
                 defRef.AppendLine();
             }
 
-            ConstructorInfo[] constructors = type.GetConstructors(bindingFlags);
             int ctorCount = 0;
-            foreach (ConstructorInfo ctor in constructors)
+            foreach (ConstructorInfo ctor in type.GetConstructors(bindingFlags))
             {
                 if (ctor.IsPrivate || (!ctor.IsPublic && !ctor.IsFamily) || ctor.IsObsolete())
                 {
@@ -95,9 +93,8 @@ namespace PaintDotNet.Effects
                 defRef.AppendLine();
             }
 
-            PropertyInfo[] properties = type.GetProperties(bindingFlags);
             int propCount = 0;
-            foreach (PropertyInfo property in properties)
+            foreach (PropertyInfo property in type.GetProperties(bindingFlags))
             {
                 MethodInfo propMethod = property.GetMethod;
 
@@ -127,9 +124,8 @@ namespace PaintDotNet.Effects
                 defRef.AppendLine();
             }
 
-            EventInfo[] events = type.GetEvents(bindingFlags);
             int eventCount = 0;
-            foreach (EventInfo eventInfo in events)
+            foreach (EventInfo eventInfo in type.GetEvents(bindingFlags))
             {
                 MethodInfo eventMethod = eventInfo.AddMethod;
 
@@ -150,14 +146,12 @@ namespace PaintDotNet.Effects
                 defRef.AppendLine();
             }
 
-            MethodInfo[] methods = type.GetMethods(bindingFlags);
-
             List<string> staticMethods = new List<string>();
             List<string> opMethods = new List<string>();
             List<string> opImExMethods = new List<string>();
             List<string> otherMethods = new List<string>();
 
-            foreach (MethodInfo method in methods)
+            foreach (MethodInfo method in type.GetMethods(bindingFlags))
             {
                 if (method.IsPrivate || (!method.IsPublic && !method.IsFamily) || method.IsObsolete() ||
                     (method.IsSpecialName && !method.Name.StartsWith("op_", StringComparison.Ordinal)))
@@ -269,9 +263,8 @@ namespace PaintDotNet.Effects
                 defRef.AppendLine();
             }
 
-            Type[] nestedTypes = type.GetNestedTypes(bindingFlags);
             int nestedCount = 0;
-            foreach (Type nestedType in nestedTypes)
+            foreach (Type nestedType in type.GetNestedTypes(bindingFlags))
             {
                 if (!nestedType.IsVisible || nestedType.IsObsolete())
                 {
