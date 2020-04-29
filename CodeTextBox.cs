@@ -2004,6 +2004,7 @@ namespace PaintDotNet.Effects
         private static string GenerateDefRef(Type type)
         {
             StringBuilder defRef = new StringBuilder();
+            BindingFlags bindingFlags = BindingFlags.Static | BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.DeclaredOnly;
 
             defRef.AppendLine("namespace " + type.Namespace);
             defRef.AppendLine("{");
@@ -2027,7 +2028,6 @@ namespace PaintDotNet.Effects
 
             return defRef.ToString();
 
-
             string getIndent(int indentLevel)
             {
                 return new string(' ', 4 * indentLevel);
@@ -2036,17 +2036,18 @@ namespace PaintDotNet.Effects
             void iterateMembers(Type t)
             {
                 bool isInterface = t.IsInterface;
-                string access = isInterface ? string.Empty : "public ";
 
-                FieldInfo[] fields = t.GetFields();
+                FieldInfo[] fields = t.GetFields(bindingFlags);
                 if (fields.Length > 0)
                 {
                     foreach (FieldInfo field in fields)
                     {
-                        if (field.IsSpecialName)
+                        if (field.IsPrivate || (!field.IsPublic && !field.IsFamily) || field.IsSpecialName)
                         {
                             continue;
                         }
+
+                        string access = isInterface ? string.Empty : (!field.IsPublic && field.IsFamily) ? "protected " : "public";
 
                         if (field.FieldType.IsEnum)
                         {
@@ -2065,42 +2066,54 @@ namespace PaintDotNet.Effects
                     }
                 }
 
-                ConstructorInfo[] constructors = t.GetConstructors();
+                ConstructorInfo[] constructors = t.GetConstructors(bindingFlags);
                 if (constructors.Length > 0)
                 {
                     foreach (ConstructorInfo ctor in constructors)
                     {
+                        if (ctor.IsPrivate || (!ctor.IsPublic && !ctor.IsFamily))
+                        {
+                            continue;
+                        }
+
+                        string access = isInterface ? string.Empty : (!ctor.IsPublic && ctor.IsFamily) ? "protected " : "public";
+
                         defRef.AppendLine(getIndent(indent) + access + Regex.Replace(type.Name, @"`\d", string.Empty) + "(" + ctor.Params() + ");");
                     }
 
                     defRef.AppendLine();
                 }
 
-                PropertyInfo[] properties = t.GetProperties();
+                PropertyInfo[] properties = t.GetProperties(bindingFlags);
                 if (properties.Length > 0)
                 {
                     foreach (PropertyInfo property in properties)
                     {
-                        if (property.DeclaringType != t)
+                        MethodInfo propMethod = property.GetMethod;
+
+                        if (propMethod.IsPrivate || (!propMethod.IsPublic && !propMethod.IsFamily))
                         {
                             continue;
                         }
 
+                        string access = isInterface ? string.Empty : (!propMethod.IsPublic && propMethod.IsFamily) ? "protected " : "public";
+                        string modifier = isInterface ? string.Empty : propMethod.GetModifiers();
+
                         ParameterInfo[] indexParams = property.GetIndexParameters();
                         if (indexParams.Length > 0)
                         {
-                            defRef.AppendLine(getIndent(indent) + access + property.GetMethod.GetModifiers() + property.PropertyType.GetDisplayNameWithExclusion(t) + " this[" + indexParams.Select(p => p.BuildParamString()).Join(", ") + "]" + property.GetterSetter());
+                            defRef.AppendLine(getIndent(indent) + access + modifier + property.PropertyType.GetDisplayNameWithExclusion(t) + " this[" + indexParams.Select(p => p.BuildParamString()).Join(", ") + "]" + property.GetterSetter());
                         }
                         else
                         {
-                            defRef.AppendLine(getIndent(indent) + access + property.GetMethod.GetModifiers() + property.PropertyType.GetDisplayNameWithExclusion(t) + " " + property.Name + property.GetterSetter());
+                            defRef.AppendLine(getIndent(indent) + access + modifier + property.PropertyType.GetDisplayNameWithExclusion(t) + " " + property.Name + property.GetterSetter());
                         }
                     }
 
                     defRef.AppendLine();
                 }
 
-                MethodInfo[] methods = t.GetMethods();
+                MethodInfo[] methods = t.GetMethods(bindingFlags);
                 if (methods.Length > 0)
                 {
                     List<string> staticMethods = new List<string>();
@@ -2110,10 +2123,13 @@ namespace PaintDotNet.Effects
 
                     foreach (MethodInfo method in methods)
                     {
-                        if ((method.IsSpecialName && !method.Name.StartsWith("op_", StringComparison.Ordinal)) || method.DeclaringType != t)
+                        if (method.IsPrivate || (!method.IsPublic && !method.IsFamily) ||
+                            (method.IsSpecialName && !method.Name.StartsWith("op_", StringComparison.Ordinal)))
                         {
                             continue;
                         }
+
+                        string access = isInterface ? string.Empty : (!method.IsPublic && method.IsFamily) ? "protected " : "public";
 
                         bool isStatic = method.IsStatic;
                         bool isOperator = false;
@@ -2221,11 +2237,16 @@ namespace PaintDotNet.Effects
                     }
                 }
 
-                Type[] nestedTypes = t.GetNestedTypes();
+                Type[] nestedTypes = t.GetNestedTypes(bindingFlags);
                 if (nestedTypes.Length > 0)
                 {
                     foreach (Type nestedType in nestedTypes)
                     {
+                        if (!nestedType.IsVisible)
+                        {
+                            continue;
+                        }
+
                         if (type.IsEnum && type.GetCustomAttribute<FlagsAttribute>() != null)
                         {
                             defRef.AppendLine(getIndent(indent) + "[Flags]");
