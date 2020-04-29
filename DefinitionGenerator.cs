@@ -46,7 +46,7 @@ namespace PaintDotNet.Effects
             bool isInterface = type.IsInterface;
             string spaces = GetIndent(indent);
 
-            int fieldCount = 0;
+            bool areFields = false;
             foreach (FieldInfo field in type.GetFields(bindingFlags))
             {
                 if (field.IsPrivate || (!field.IsPublic && !field.IsFamily) || field.IsSpecialName || field.IsObsolete())
@@ -62,18 +62,18 @@ namespace PaintDotNet.Effects
                 }
                 else
                 {
-                    fieldCount++;
+                    areFields = true;
                     string value = (field.IsLiteral && !field.IsInitOnly) ? $" = {field.GetValue(null)}" : string.Empty;
                     defRef.AppendLine(spaces + access + field.GetModifiers() + field.FieldType.GetDisplayNameWithExclusion(type) + " " + field.Name + value + ";");
                 }
             }
 
-            if (fieldCount > 0)
+            if (areFields)
             {
                 defRef.AppendLine();
             }
 
-            int ctorCount = 0;
+            bool areCtors = false;
             foreach (ConstructorInfo ctor in type.GetConstructors(bindingFlags))
             {
                 if (ctor.IsPrivate || (!ctor.IsPublic && !ctor.IsFamily) || ctor.IsObsolete())
@@ -81,19 +81,19 @@ namespace PaintDotNet.Effects
                     continue;
                 }
 
-                ctorCount++;
+                areCtors = true;
 
                 string access = isInterface ? string.Empty : (!ctor.IsPublic && ctor.IsFamily) ? "protected " : "public ";
 
                 defRef.AppendLine(spaces + access + Regex.Replace(type.Name, @"`\d", string.Empty) + "(" + ctor.Params() + ");");
             }
 
-            if (ctorCount > 0)
+            if (areCtors)
             {
                 defRef.AppendLine();
             }
 
-            int propCount = 0;
+            bool areProps = false;
             foreach (PropertyInfo property in type.GetProperties(bindingFlags))
             {
                 MethodInfo propMethod = property.GetMethod;
@@ -103,7 +103,7 @@ namespace PaintDotNet.Effects
                     continue;
                 }
 
-                propCount++;
+                areProps = true;
 
                 string access = isInterface ? string.Empty : (!propMethod.IsPublic && propMethod.IsFamily) ? "protected " : "public ";
                 string modifier = isInterface ? string.Empty : propMethod.GetModifiers();
@@ -119,12 +119,12 @@ namespace PaintDotNet.Effects
                 }
             }
 
-            if (propCount > 0)
+            if (areProps)
             {
                 defRef.AppendLine();
             }
 
-            int eventCount = 0;
+            bool areEvents = false;
             foreach (EventInfo eventInfo in type.GetEvents(bindingFlags))
             {
                 MethodInfo eventMethod = eventInfo.AddMethod;
@@ -134,14 +134,14 @@ namespace PaintDotNet.Effects
                     continue;
                 }
 
-                eventCount++;
+                areEvents = true;
 
                 string access = isInterface ? string.Empty : (!eventMethod.IsPublic && eventMethod.IsFamily) ? "protected " : "public ";
 
                 defRef.AppendLine(spaces + access + eventMethod.GetModifiers() + "event " + eventInfo.EventHandlerType.GetDisplayName() + " " + eventInfo.Name + ";");
             }
 
-            if (eventCount > 0)
+            if (areEvents)
             {
                 defRef.AppendLine();
             }
@@ -270,6 +270,8 @@ namespace PaintDotNet.Effects
                 {
                     continue;
                 }
+
+                nestedCount++;
 
                 if (nestedType.IsEnum && nestedType.GetCustomAttribute<FlagsAttribute>() != null)
                 {
