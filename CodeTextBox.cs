@@ -2269,7 +2269,7 @@ namespace PaintDotNet.Effects
                 string typeName2 = (declaringType.IsGenericType) ? declaringType.Name.Replace("`", "-") : declaringType.Name;
                 string fullName2 = $"{declaringType.Namespace}.{typeName2}.{memberInfo.Name}";
 
-                OpenMsDocs(typeName2);
+                OpenMsDocs(fullName2);
             }
             else
             {
