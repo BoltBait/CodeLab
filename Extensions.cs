@@ -525,7 +525,11 @@ namespace PaintDotNet.Effects
 
         internal static string GetModifiers(this FieldInfo field)
         {
-            if (!field.IsStatic && field.IsInitOnly)
+            if (field.FieldType.IsEnum)
+            {
+                return string.Empty;
+            }
+            else if (!field.IsStatic && field.IsInitOnly)
             {
                 return "readonly ";
             }
