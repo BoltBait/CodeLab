@@ -151,7 +151,10 @@ namespace PaintDotNet.Effects
             List<string> opImExMethods = new List<string>();
             List<string> otherMethods = new List<string>();
 
-            foreach (MethodInfo method in type.GetMethods(bindingFlags))
+            List<MethodInfo> methods = type.GetMethods(bindingFlags).ToList();
+            methods.Sort((a, b) => a.Name.CompareTo(b.Name));
+
+            foreach (MethodInfo method in methods)
             {
                 if (method.IsPrivate || (!method.IsPublic && !method.IsFamily) || method.IsObsolete() ||
                     (method.IsSpecialName && !method.Name.StartsWith("op_", StringComparison.Ordinal)))
