@@ -2036,6 +2036,7 @@ namespace PaintDotNet.Effects
             void iterateMembers(Type t)
             {
                 bool isInterface = t.IsInterface;
+                string spaces = getIndent(indent);
 
                 FieldInfo[] fields = t.GetFields(bindingFlags);
                 if (fields.Length > 0)
@@ -2051,12 +2052,12 @@ namespace PaintDotNet.Effects
 
                         if (field.FieldType.IsEnum)
                         {
-                            defRef.AppendLine(getIndent(indent) + field.Name + " = " + field.GetEnumValue() + ",");
+                            defRef.AppendLine(spaces + field.Name + " = " + field.GetEnumValue() + ",");
                         }
                         else
                         {
                             string value = (field.IsLiteral && !field.IsInitOnly) ? $" = {field.GetValue(null)}" : string.Empty;
-                            defRef.AppendLine(getIndent(indent) + access + field.GetModifiers() + field.FieldType.GetDisplayNameWithExclusion(t) + " " + field.Name + value + ";");
+                            defRef.AppendLine(spaces + access + field.GetModifiers() + field.FieldType.GetDisplayNameWithExclusion(t) + " " + field.Name + value + ";");
                         }
                     }
 
@@ -2078,7 +2079,7 @@ namespace PaintDotNet.Effects
 
                         string access = isInterface ? string.Empty : (!ctor.IsPublic && ctor.IsFamily) ? "protected " : "public ";
 
-                        defRef.AppendLine(getIndent(indent) + access + Regex.Replace(type.Name, @"`\d", string.Empty) + "(" + ctor.Params() + ");");
+                        defRef.AppendLine(spaces + access + Regex.Replace(type.Name, @"`\d", string.Empty) + "(" + ctor.Params() + ");");
                     }
 
                     defRef.AppendLine();
@@ -2102,11 +2103,11 @@ namespace PaintDotNet.Effects
                         ParameterInfo[] indexParams = property.GetIndexParameters();
                         if (indexParams.Length > 0)
                         {
-                            defRef.AppendLine(getIndent(indent) + access + modifier + property.PropertyType.GetDisplayNameWithExclusion(t) + " this[" + indexParams.Select(p => p.BuildParamString()).Join(", ") + "]" + property.GetterSetter());
+                            defRef.AppendLine(spaces + access + modifier + property.PropertyType.GetDisplayNameWithExclusion(t) + " this[" + indexParams.Select(p => p.BuildParamString()).Join(", ") + "]" + property.GetterSetter());
                         }
                         else
                         {
-                            defRef.AppendLine(getIndent(indent) + access + modifier + property.PropertyType.GetDisplayNameWithExclusion(t) + " " + property.Name + property.GetterSetter());
+                            defRef.AppendLine(spaces + access + modifier + property.PropertyType.GetDisplayNameWithExclusion(t) + " " + property.Name + property.GetterSetter());
                         }
                     }
 
@@ -2127,7 +2128,7 @@ namespace PaintDotNet.Effects
 
                         string access = isInterface ? string.Empty : (!eventMethod.IsPublic && eventMethod.IsFamily) ? "protected " : "public ";
 
-                        defRef.AppendLine(getIndent(indent) + access + eventMethod.GetModifiers() + "event " + eventInfo.EventHandlerType.GetDisplayName() + " "  + eventInfo.Name + ";");
+                        defRef.AppendLine(spaces + access + eventMethod.GetModifiers() + "event " + eventInfo.EventHandlerType.GetDisplayName() + " "  + eventInfo.Name + ";");
                     }
 
                     defRef.AppendLine();
@@ -2201,7 +2202,7 @@ namespace PaintDotNet.Effects
                         }
 
                         string modifier = isInterface ? string.Empty : method.GetModifiers();
-                        string methodDef = getIndent(indent) + access + modifier + name + "(" + method.Params() + ");";
+                        string methodDef = spaces + access + modifier + name + "(" + method.Params() + ");";
 
                         if (isImExOperator)
                         {
@@ -2269,17 +2270,17 @@ namespace PaintDotNet.Effects
 
                         if (type.IsEnum && type.GetCustomAttribute<FlagsAttribute>() != null)
                         {
-                            defRef.AppendLine(getIndent(indent) + "[Flags]");
+                            defRef.AppendLine(spaces + "[Flags]");
                         }
 
-                        defRef.AppendLine(getIndent(indent) + "public " + nestedType.GetModifiers() + nestedType.GetObjectType() + " " + nestedType.GetDisplayNameWithExclusion(t) + nestedType.GetInheritance());
-                        defRef.AppendLine(getIndent(indent) + "{");
+                        defRef.AppendLine(spaces + "public " + nestedType.GetModifiers() + nestedType.GetObjectType() + " " + nestedType.GetDisplayNameWithExclusion(t) + nestedType.GetInheritance());
+                        defRef.AppendLine(spaces + "{");
                         indent++;
 
                         iterateMembers(nestedType);
 
                         indent--;
-                        defRef.AppendLine(getIndent(indent) + "}");
+                        defRef.AppendLine(spaces + "}");
                     }
                 }
             }
