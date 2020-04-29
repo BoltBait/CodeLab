@@ -23,6 +23,15 @@ namespace PaintDotNet.Effects
 
             indent = 1;
 
+            if (typeof(Delegate).IsAssignableFrom(type))
+            {
+                MethodInfo method = type.GetMethod("Invoke");
+                defRef.AppendLine(GetIndent(indent) + "public delegate " + method.ReturnType.GetDisplayName() + " " + type.GetDisplayNameWithExclusion(type) + "(" + method.Params() + ");");
+                defRef.AppendLine("}");
+
+                return defRef.ToString();
+            }
+
             if (type.IsEnum && type.GetCustomAttribute<FlagsAttribute>() != null)
             {
                 defRef.AppendLine(GetIndent(indent) + "[Flags]");
