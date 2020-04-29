@@ -1105,8 +1105,7 @@ namespace PaintDotNet.Effects
             int style = this.GetStyleAt(position);
             if (style != Style.Cpp.Word && style != Style.Cpp.Word + Preprocessor &&
                 style != Style.Cpp.Word2 && style != Style.Cpp.Word2 + Preprocessor &&
-                style != Style.Cpp.Identifier && style != Style.Cpp.Identifier + Preprocessor &&
-                style != Style.Cpp.Default)
+                style != Style.Cpp.Identifier && style != Style.Cpp.Identifier + Preprocessor)
             {
                 return IntelliType.None;
             }
@@ -2822,6 +2821,7 @@ namespace PaintDotNet.Effects
 
             this.SetTargetRange(startPos, endPos);
             this.ReplaceTarget(fill);
+            this.Colorize(startPos, startPos + fill.Length);
             this.SetEmptySelection(startPos + fill.Length);
 
             iBox.SaveUsedItem();
