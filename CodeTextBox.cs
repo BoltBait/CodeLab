@@ -3301,9 +3301,24 @@ namespace PaintDotNet.Effects
                     {
                         NonMemberIntelliBox(this.CurrentPosition);
                     }
-                    else if (GetIntelliType(this.CurrentPosition - 1) == IntelliType.Type)
+                    else
                     {
-                        SuggestionIntelliBox(this.CurrentPosition - 1);
+                        int testPos = this.CurrentPosition - 2;
+                        char c = this.GetCharAt(testPos);
+                        if (c == ']' || c == '>')
+                        {
+                            int openBrace = this.BraceMatch(testPos);
+                            if (openBrace != InvalidPosition &&
+                                this.LineFromPosition(openBrace) == this.LineFromPosition(testPos))
+                            {
+                                testPos = openBrace;
+                            }
+                        }
+
+                        if (GetIntelliType(testPos - 1) == IntelliType.Type)
+                        {
+                            SuggestionIntelliBox(this.CurrentPosition - 1);
+                        }
                     }
                 }
             }
