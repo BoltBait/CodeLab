@@ -1976,6 +1976,7 @@ namespace PaintDotNet.Effects
             string name = type.GetDisplayNameWithExclusion(type);
 
             OnDefTabNeeded(name, type.Namespace + "." + name);
+            OnBuildNeeded();
             this.Text = defRef;
             this.ReadOnly = true;
             this.EmptyUndoBuffer();
