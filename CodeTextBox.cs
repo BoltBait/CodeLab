@@ -990,11 +990,11 @@ namespace PaintDotNet.Effects
             int methodStart = methodBounds.Item1 + 1;
             int methodEnd = methodBounds.Item2 - 1;
 
-            string lastWords = this.GetTextRange(methodStart, methodEnd - methodStart);
-            var docWords = lastWords.Split(new char[] { ' ', '(', '{', '<', '\n' }, StringSplitOptions.RemoveEmptyEntries).Distinct();
+            string bodyText = this.GetTextRange(methodStart, methodEnd - methodStart);
+            IEnumerable<string> bodyWords = bodyText.Split(new char[] { ' ', '(', '{', '<', '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries).Distinct();
 
             this.SearchFlags = SearchFlags.MatchCase | SearchFlags.WholeWord;
-            foreach (string word in docWords)
+            foreach (string word in bodyWords)
             {
                 bool isArray = word.EndsWith("[]", StringComparison.Ordinal);
                 string typeStr = isArray ? word.Replace("[]", string.Empty) : word;
