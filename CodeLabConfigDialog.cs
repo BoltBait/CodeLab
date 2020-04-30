@@ -2473,7 +2473,7 @@ namespace PaintDotNet.Effects
         private void txtCode_DefTabNeeded(object sender, NewTabEventArgs e)
         {
             FileName = e.Name;
-            FullScriptPath = string.Empty;
+            FullScriptPath = e.Path;
 
             tabStrip1.NewTab(FileName, FullScriptPath, ProjectType.Reference);
         }

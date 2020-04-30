@@ -532,9 +532,9 @@ namespace PaintDotNet.Effects
         }
 
         public event EventHandler<NewTabEventArgs> DefTabNeeded;
-        private void OnDefTabNeeded(string name)
+        private void OnDefTabNeeded(string name, string path)
         {
-            this.DefTabNeeded?.Invoke(this, new NewTabEventArgs(name));
+            this.DefTabNeeded?.Invoke(this, new NewTabEventArgs(name, path));
         }
         #endregion
 
@@ -1973,8 +1973,9 @@ namespace PaintDotNet.Effects
             }
 
             string defRef = DefinitionGenerator.Generate(type);
+            string name = type.GetDisplayNameWithExclusion(type);
 
-            OnDefTabNeeded(type.GetDisplayNameWithExclusion(type));
+            OnDefTabNeeded(name, type.Namespace + "." + name);
             this.Text = defRef;
             this.ReadOnly = true;
             this.EmptyUndoBuffer();

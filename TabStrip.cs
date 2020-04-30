@@ -320,10 +320,12 @@ namespace PaintDotNet.Effects
     public class NewTabEventArgs : EventArgs
     {
         public string Name { get; }
+        public string Path { get; }
 
-        public NewTabEventArgs(string name)
+        public NewTabEventArgs(string name, string path)
         {
             this.Name = name;
+            this.Path = path;
         }
     }
 
