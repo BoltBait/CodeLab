@@ -950,13 +950,43 @@ namespace PaintDotNet.Effects
 
         private void ParseLocalVariables(int position)
         {
+            Intelli.Parameters.Clear();
             Intelli.Variables.Clear();
             Intelli.VarPos.Clear();
+
             Tuple<int, int> methodBounds = GetMethodBounds(position);
             if (methodBounds.Item1 == InvalidPosition || methodBounds.Item2 == InvalidPosition)
             {
                 return;
             }
+
+            int closeParenPos = methodBounds.Item1 - 1;
+            while (closeParenPos > InvalidPosition && this.GetCharAt(closeParenPos) != ')')
+            {
+                closeParenPos--;
+            }
+
+            int openParenPos = this.BraceMatch(closeParenPos);
+            if (openParenPos != InvalidPosition)
+            {
+                string methodName = this.GetWordFromPosition(openParenPos);
+                IEnumerable<MethodInfo> methods = Intelli.UserScript.GetMethods(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly)
+                    .Where(m => !m.IsVirtual && m.Name.Equals(methodName, StringComparison.Ordinal));
+
+                if (methods.Any())
+                {
+                    MethodInfo methodInfo = GetOverload(methods, openParenPos);
+
+                    foreach (ParameterInfo parameter in methodInfo.GetParameters())
+                    {
+                        if (!Intelli.Parameters.ContainsKey(parameter.Name))
+                        {
+                            Intelli.Parameters.Add(parameter.Name, parameter.ParameterType);
+                        }
+                    }
+                }
+            }
+
             int methodStart = methodBounds.Item1 + 1;
             int methodEnd = methodBounds.Item2 - 1;
 
