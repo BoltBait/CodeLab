@@ -990,7 +990,7 @@ namespace PaintDotNet.Effects
             int methodStart = methodBounds.Item1 + 1;
             int methodEnd = methodBounds.Item2 - 1;
 
-            string lastWords = this.GetTextRange(methodStart, methodEnd);
+            string lastWords = this.GetTextRange(methodStart, methodEnd - methodStart);
             var docWords = lastWords.Split(new char[] { ' ', '(', '{', '<', '\n' }, StringSplitOptions.RemoveEmptyEntries).Distinct();
 
             this.SearchFlags = SearchFlags.MatchCase | SearchFlags.WholeWord;
