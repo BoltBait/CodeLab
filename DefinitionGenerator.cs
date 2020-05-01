@@ -108,6 +108,13 @@ namespace PaintDotNet.Effects
                 defRef.AppendLine();
             }
 
+            MethodInfo finalizer = type.GetMethod("Finalize", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+            if (finalizer != null)
+            {
+                defRef.AppendLine(spaces + "~" + type.Name + "()");
+                defRef.AppendLine();
+            }
+
             List<string> indexerProp = new List<string>();
             List<string> regularProp = new List<string>();
 
