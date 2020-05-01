@@ -158,6 +158,7 @@ namespace PaintDotNet.Effects
             List<string> staticMethods = new List<string>();
             List<string> opMethods = new List<string>();
             List<string> opImExMethods = new List<string>();
+            List<string> protectedMethods = new List<string>();
             List<string> otherMethods = new List<string>();
 
             List<MethodInfo> methods = type.GetMethods(bindingFlags).ToList();
@@ -171,11 +172,12 @@ namespace PaintDotNet.Effects
                     continue;
                 }
 
-                string access = isInterface ? string.Empty : (!method.IsPublic && method.IsFamily) ? "protected " : "public ";
-
                 bool isStatic = method.IsStatic;
+                bool isProtected = !method.IsPublic && method.IsFamily;
                 bool isOperator = false;
                 bool isImExOperator = false;
+
+                string access = isInterface ? string.Empty : isProtected ? "protected " : "public ";
 
                 string returnType = method.ReturnType.GetDisplayNameWithExclusion(type);
                 string name = method.Name;
@@ -234,13 +236,17 @@ namespace PaintDotNet.Effects
                 {
                     staticMethods.Add(methodDef);
                 }
+                else if (isProtected)
+                {
+                    protectedMethods.Add(methodDef);
+                }
                 else
                 {
                     otherMethods.Add(methodDef);
                 }
             }
 
-            if (staticMethods.Count > 0 || otherMethods.Count > 0)
+            if (staticMethods.Count > 0 || otherMethods.Count > 0 || protectedMethods.Count > 0)
             {
                 foreach (string methodDef in staticMethods)
                 {
@@ -248,6 +254,11 @@ namespace PaintDotNet.Effects
                 }
 
                 foreach (string methodDef in otherMethods)
+                {
+                    defRef.AppendLine(methodDef);
+                }
+
+                foreach (string methodDef in protectedMethods)
                 {
                     defRef.AppendLine(methodDef);
                 }
