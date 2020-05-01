@@ -1150,7 +1150,7 @@ namespace PaintDotNet.Effects
             string lastWords = GetLastWords(position);
             if (lastWords.Length == 0)
             {
-               return IntelliType.None;
+                return IntelliType.None;
             }
 
             if (Intelli.Variables.ContainsKey(lastWords))
@@ -4088,7 +4088,7 @@ namespace PaintDotNet.Effects
             this.findPanel.Hide();
             this.iBox.Hide();
 
-            var document = this.Document ;
+            var document = this.Document;
             this.AddRefDocument(document);
 
             // Replace the current document with a new one
