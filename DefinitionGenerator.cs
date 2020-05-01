@@ -109,7 +109,7 @@ namespace PaintDotNet.Effects
             }
 
             List<PropertyInfo> properties = type.GetProperties(bindingFlags).ToList();
-            properties.Sort((a, b) => MethodCompare(a.GetMethod, b.GetMethod));
+            properties.Sort((x, y) => MethodCompare(x.GetMethod, y.GetMethod));
 
             bool areProps = false;
             foreach (PropertyInfo property in properties)
