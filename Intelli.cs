@@ -38,37 +38,9 @@ namespace PaintDotNet.Effects
         internal static Dictionary<string, string> TypeAliases { get; }
         internal static IEnumerable<string> Keywords { get; }
         internal static IEnumerable<Assembly> ReferenceAssemblies { get; }
-        internal static Type UserScript
-        {
-            get
-            {
-                return userScript;
-            }
-            set
-            {
-                userScript = value;
-                Intelli.Parameters.Clear();
-                foreach (MethodInfo method in userScript.GetMethods(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly))
-                {
-                    if (method.IsVirtual)
-                    {
-                        continue;
-                    }
-
-                    foreach (ParameterInfo parameter in method.GetParameters())
-                    {
-                        if (!Intelli.Parameters.ContainsKey(parameter.Name))
-                        {
-                            Intelli.Parameters.Add(parameter.Name, parameter.ParameterType);
-                        }
-                    }
-                }
-            }
-        }
+        internal static Type UserScript { get; set; }
 
         internal const string UserScriptFullName = "PaintDotNet.Effects.UserScript";
-
-        private static Type userScript;
         private static readonly IEnumerable<MethodInfo> extMethods;
 
         internal static IEnumerable<MethodInfo> GetExtensionMethod(this Type extendedType, string methodName)
