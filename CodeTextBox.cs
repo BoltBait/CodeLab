@@ -758,7 +758,7 @@ namespace PaintDotNet.Effects
         #region Intelligent Assistance functions
         private string GetLastWords(int position)
         {
-            int wordEndPos = this.WordEndPosition(position, true);
+            int wordEndPos = this.WordEndPosition(position);
             string strippedText = this.GetTextRange(0, wordEndPos).StripParens().StripAngleBrackets().StripSquareBrackets();
 
             int posIndex = strippedText.Length;
@@ -1197,7 +1197,7 @@ namespace PaintDotNet.Effects
             this.IndicatorCurrent = Indicator.ObjectHighlightDef;
             this.IndicatorClearRange(0, this.TextLength);
 
-            int position = this.WordStartPosition(this.CurrentPosition, true);
+            int position = this.WordStartPosition(this.CurrentPosition);
             ParseLocalVariables(position);
             IntelliType currentType = GetIntelliType(position);
             if (currentType == IntelliType.None)
@@ -1394,8 +1394,8 @@ namespace PaintDotNet.Effects
 
                 if (type.IsClass || type.IsValueType)
                 {
-                    int newPos = this.WordStartPosition(position, true) - 1;
-                    int parenPos = this.WordEndPosition(position, true);
+                    int newPos = this.WordStartPosition(position) - 1;
+                    int parenPos = this.WordEndPosition(position);
                     if (newPos > InvalidPosition && this.GetWordFromPosition(newPos).Equals("new", StringComparison.Ordinal) && this.GetCharAt(parenPos).Equals('('))
                     {
                         // Constructor
@@ -1579,7 +1579,7 @@ namespace PaintDotNet.Effects
 
         private string GetGenericArgs(int position)
         {
-            int openPos = this.WordEndPosition(position, true);
+            int openPos = this.WordEndPosition(position);
             if (this.GetCharAt(openPos) != '<')
             {
                 return string.Empty;
@@ -1601,7 +1601,7 @@ namespace PaintDotNet.Effects
 
             bool isExplicitGeneric = false;
             string genericArgs = null;
-            int paramStart = this.WordEndPosition(position, true);
+            int paramStart = this.WordEndPosition(position);
             char openBrace = this.GetCharAt(paramStart);
             if (openBrace == '<')
             {
@@ -1998,7 +1998,7 @@ namespace PaintDotNet.Effects
 
         private bool GoToDefinitionXaml()
         {
-            int position = this.WordStartPosition(this.CurrentPosition, true);
+            int position = this.WordStartPosition(this.CurrentPosition);
             int style = this.GetStyleAt(position);
 
             if (style == Style.Xml.Attribute)
@@ -2038,7 +2038,7 @@ namespace PaintDotNet.Effects
 
         private bool GoToDefinitionCSharp()
         {
-            int position = this.WordStartPosition(this.CurrentPosition, true);
+            int position = this.WordStartPosition(this.CurrentPosition);
 
             int style = this.GetStyleAt(position);
             if (style == Style.Cpp.Comment || style == Style.Cpp.Comment + Preprocessor ||
@@ -2082,7 +2082,7 @@ namespace PaintDotNet.Effects
             if ((Intelli.Variables.ContainsKey(lastWords) || Intelli.Parameters.ContainsKey(lastWords)) && Intelli.VarPos.ContainsKey(lastWords))
             {
                 this.SelectionStart = Intelli.VarPos[lastWords];
-                this.SelectionEnd = this.WordEndPosition(Intelli.VarPos[lastWords], true);
+                this.SelectionEnd = this.WordEndPosition(Intelli.VarPos[lastWords]);
                 this.ScrollCaret();
                 return true;
             }
@@ -2121,7 +2121,7 @@ namespace PaintDotNet.Effects
 
                     found = true;
                     this.SelectionStart = typePos;
-                    this.SelectionEnd = this.WordEndPosition(typePos, true);
+                    this.SelectionEnd = this.WordEndPosition(typePos);
                     this.ScrollCaret();
 
                     break;
@@ -2210,7 +2210,7 @@ namespace PaintDotNet.Effects
 
                     found = true;
                     this.SelectionStart = memberPos;
-                    this.SelectionEnd = this.WordEndPosition(memberPos, true);
+                    this.SelectionEnd = this.WordEndPosition(memberPos);
                     this.ScrollCaret();
 
                     break;
@@ -2261,8 +2261,8 @@ namespace PaintDotNet.Effects
                 else if (e.KeyCode == Keys.Tab)
                 {
                     string prevWord = this.GetWordFromPosition(this.CurrentPosition);
-                    int prevWordStartPos = this.WordStartPosition(this.CurrentPosition, true);
-                    int prevWordEndPos = this.WordEndPosition(this.CurrentPosition, true);
+                    int prevWordStartPos = this.WordStartPosition(this.CurrentPosition);
+                    int prevWordEndPos = this.WordEndPosition(this.CurrentPosition);
 
                     if (this.GetCharAt(prevWordStartPos - 1).Equals('#'))
                     {
@@ -2296,8 +2296,8 @@ namespace PaintDotNet.Effects
                         if (this.SearchInTarget("$") != InvalidPosition)
                         {
                             this.DeleteRange(this.TargetStart, 1);
-                            this.SelectionStart = this.WordStartPosition(this.TargetStart, true);
-                            this.SelectionEnd = this.WordEndPosition(this.TargetStart, true);
+                            this.SelectionStart = this.WordStartPosition(this.TargetStart);
+                            this.SelectionEnd = this.WordEndPosition(this.TargetStart);
                         }
 
                         this.EndUndoAction();
@@ -2306,7 +2306,7 @@ namespace PaintDotNet.Effects
                 }
                 else if (e.Control && e.KeyCode == Keys.J)
                 {
-                    int startPos = this.WordStartPosition(this.CurrentPosition, true);
+                    int startPos = this.WordStartPosition(this.CurrentPosition);
                     if (this.GetCharAt(startPos - 1).Equals('.'))
                     {
                         MemberIntelliBox(startPos - 1);
@@ -2490,7 +2490,7 @@ namespace PaintDotNet.Effects
             }
             else if (e.KeyCode == Keys.Back)
             {
-                int wordStartPos = this.WordStartPosition(this.CurrentPosition - 1, true);
+                int wordStartPos = this.WordStartPosition(this.CurrentPosition - 1);
                 if (wordStartPos != posAtIBox)
                 {
                     iBox.Visible = false;
@@ -2507,7 +2507,7 @@ namespace PaintDotNet.Effects
             }
             else if (e.KeyCode == Keys.Left)
             {
-                int wordStartPos = this.WordStartPosition(this.CurrentPosition - 1, true);
+                int wordStartPos = this.WordStartPosition(this.CurrentPosition - 1);
                 if (wordStartPos != posAtIBox)
                 {
                     iBox.Visible = false;
@@ -2515,7 +2515,7 @@ namespace PaintDotNet.Effects
             }
             else if (e.KeyCode == Keys.Right)
             {
-                int wordStartPos = this.WordStartPosition(this.CurrentPosition + 1, true);
+                int wordStartPos = this.WordStartPosition(this.CurrentPosition + 1);
                 if (wordStartPos != posAtIBox)
                 {
                     iBox.Visible = false;
@@ -2717,7 +2717,7 @@ namespace PaintDotNet.Effects
 
         private void ConstructorIntelliBox(int position)
         {
-            int style = this.GetStyleAt(this.WordStartPosition(position, true));
+            int style = this.GetStyleAt(this.WordStartPosition(position));
             if (style != Style.Cpp.Word && style != Style.Cpp.Word + Preprocessor &&
                 style != Style.Cpp.Word2 && style != Style.Cpp.Word2 + Preprocessor)
             {
@@ -2840,8 +2840,8 @@ namespace PaintDotNet.Effects
 
         internal void ConfirmIntelliBox()
         {
-            int startPos = this.WordStartPosition(this.CurrentPosition, true);
-            int endPos = this.WordEndPosition(this.CurrentPosition, true);
+            int startPos = this.WordStartPosition(this.CurrentPosition);
+            int endPos = this.WordEndPosition(this.CurrentPosition);
             string fill = iBox.SelectedItem.ToString();
 
             if (this.GetCharAt(startPos - 1).Equals('#'))
@@ -3224,7 +3224,7 @@ namespace PaintDotNet.Effects
                 }
                 else if (word.IsCSharpIndentifier())
                 {
-                    int wordStartPos = this.WordStartPosition(this.CurrentPosition, true);
+                    int wordStartPos = this.WordStartPosition(this.CurrentPosition);
                     if (wordStartPos > 0 && this.GetCharAt(wordStartPos - 1).Equals('#'))
                     {
                         word = "#" + word;
@@ -3657,7 +3657,7 @@ namespace PaintDotNet.Effects
         #region Renaming
         private void SetUpRenaming(int position)
         {
-            int wordStartPos = this.WordStartPosition(position, true);
+            int wordStartPos = this.WordStartPosition(position);
             IntelliType intelliType = GetIntelliType(wordStartPos);
             if (IsIndicatorOn(Indicator.Rename, wordStartPos) ||
                 (intelliType != IntelliType.Variable && intelliType != IntelliType.Field))
@@ -3674,7 +3674,7 @@ namespace PaintDotNet.Effects
             RenameInfo.Identifier = this.GetWordFromPosition(position);
             RenameInfo.IntelliType = intelliType;
 
-            int length = this.WordEndPosition(position, true) - wordStartPos;
+            int length = this.WordEndPosition(position) - wordStartPos;
 
             this.IndicatorCurrent = Indicator.Rename;
             this.IndicatorFillRange(wordStartPos, length);
@@ -3682,8 +3682,8 @@ namespace PaintDotNet.Effects
 
         private void AdjustRenaming()
         {
-            int wordStartPos = this.WordStartPosition(this.CurrentPosition, true);
-            int wordEndPos = this.WordEndPosition(this.CurrentPosition, true) - 1;
+            int wordStartPos = this.WordStartPosition(this.CurrentPosition);
+            int wordEndPos = this.WordEndPosition(this.CurrentPosition) - 1;
             if (IsIndicatorOn(Indicator.Rename, wordStartPos) || IsIndicatorOn(Indicator.Rename, wordEndPos) || this.CurrentPosition == RenameInfo.Position)
             {
                 int endPos = wordStartPos;
@@ -3700,7 +3700,7 @@ namespace PaintDotNet.Effects
 
                 if ((endPos == nonSpacePos - 1 || endPos == nonSpacePos) && this.GetWordFromPosition(this.CurrentPosition) != RenameInfo.Identifier)
                 {
-                    int length = this.WordEndPosition(this.CurrentPosition, true) - wordStartPos;
+                    int length = this.WordEndPosition(this.CurrentPosition) - wordStartPos;
 
                     this.IndicatorCurrent = Indicator.Rename;
                     this.IndicatorFillRange(wordStartPos, length);
@@ -3848,6 +3848,16 @@ namespace PaintDotNet.Effects
             return base.GetCharAt(position).ToChar();
         }
 
+        private int WordStartPosition(int position)
+        {
+            return this.WordStartPosition(position, true);
+        }
+
+        private int WordEndPosition(int position)
+        {
+            return this.WordEndPosition(position, true);
+        }
+
         private bool IsRightOfCaretEmpty(int position)
         {
             Line line = this.Lines[this.LineFromPosition(position)];
@@ -3928,15 +3938,15 @@ namespace PaintDotNet.Effects
                 lightBulbMenu.Hide();
             }
 
-            dwellWordPos = this.WordStartPosition(e.Position, true);
+            dwellWordPos = this.WordStartPosition(e.Position);
 
             string tooltipText = null;
 
             // If there's an error here, we'll show that instead
             if (ScriptBuilder.Errors.Count > 0)
             {
-                int wordStartPos = this.WordStartPosition(e.Position, true);
-                int wordEndPos = this.WordEndPosition(e.Position, true);
+                int wordStartPos = this.WordStartPosition(e.Position);
+                int wordEndPos = this.WordEndPosition(e.Position);
                 foreach (ScriptError error in ScriptBuilder.Errors)
                 {
                     int errorPos = this.Lines[error.Line - 1].Position + error.Column;
@@ -3986,7 +3996,7 @@ namespace PaintDotNet.Effects
             if (intelliTip.Visible)
             {
                 int pos = this.CharPositionFromPointClose(e.X, e.Y);
-                int wordStartPos = this.WordStartPosition(pos, true);
+                int wordStartPos = this.WordStartPosition(pos);
                 if (wordStartPos != dwellWordPos)
                 {
                     intelliTip.Hide(this);
@@ -4200,7 +4210,7 @@ namespace PaintDotNet.Effects
         {
             errorLines.Add(line);
 
-            int errPosition = this.WordStartPosition(this.Lines[line].Position + column, true);
+            int errPosition = this.WordStartPosition(this.Lines[line].Position + column);
             int errorLength = this.GetWordFromPosition(errPosition).Length;
 
             // if error is at the end of the line (missing semi-colon), or is a stray '.'
