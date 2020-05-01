@@ -108,10 +108,12 @@ namespace PaintDotNet.Effects
                 defRef.AppendLine();
             }
 
+            List<string> indexerProp = new List<string>();
+            List<string> regularProp = new List<string>();
+
             List<PropertyInfo> properties = type.GetProperties(bindingFlags).ToList();
             properties.Sort((x, y) => MethodCompare(x.GetMethod, y.GetMethod));
 
-            bool areProps = false;
             foreach (PropertyInfo property in properties)
             {
                 MethodInfo propMethod = property.GetMethod;
@@ -121,24 +123,37 @@ namespace PaintDotNet.Effects
                     continue;
                 }
 
-                areProps = true;
-
                 string access = isInterface ? string.Empty : (!propMethod.IsPublic && !propMethod.IsFamily && propMethod.IsFamilyOrAssembly) ? "protected internal " : (!propMethod.IsPublic && propMethod.IsFamily) ? "protected " : "public ";
                 string modifier = isInterface ? string.Empty : propMethod.GetModifiers();
 
                 ParameterInfo[] indexParams = property.GetIndexParameters();
                 if (indexParams.Length > 0)
                 {
-                    defRef.AppendLine(spaces + access + modifier + property.PropertyType.GetDisplayNameWithExclusion(type) + " this[" + indexParams.Select(p => p.BuildParamString()).Join(", ") + "]" + property.GetterSetter());
+                    indexerProp.Add(spaces + access + modifier + property.PropertyType.GetDisplayNameWithExclusion(type) + " this[" + indexParams.Select(p => p.BuildParamString()).Join(", ") + "]" + property.GetterSetter());
                 }
                 else
                 {
-                    defRef.AppendLine(spaces + access + modifier + property.PropertyType.GetDisplayNameWithExclusion(type) + " " + property.Name + property.GetterSetter());
+                    regularProp.Add(spaces + access + modifier + property.PropertyType.GetDisplayNameWithExclusion(type) + " " + property.Name + property.GetterSetter());
                 }
             }
 
-            if (areProps)
+            if (indexerProp.Count > 0)
             {
+                foreach (string propDef in indexerProp)
+                {
+                    defRef.AppendLine(propDef);
+                }
+
+                defRef.AppendLine();
+            }
+
+            if (regularProp.Count > 0)
+            {
+                foreach (string propDef in regularProp)
+                {
+                    defRef.AppendLine(propDef);
+                }
+
                 defRef.AppendLine();
             }
 
