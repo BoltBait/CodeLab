@@ -61,12 +61,12 @@ namespace PaintDotNet.Effects
             bool areFields = false;
             foreach (FieldInfo field in fields)
             {
-                if (field.IsPrivate || (!field.IsPublic && !field.IsFamily && !field.IsFamilyOrAssembly) || field.IsSpecialName || field.IsObsolete())
+                if (field.IsNotVisible() || field.IsSpecialName || field.IsObsolete())
                 {
                     continue;
                 }
 
-                string access = isInterface ? string.Empty : (!field.IsPublic && !field.IsFamily && field.IsFamilyOrAssembly) ? "protected internal " : (!field.IsPublic && field.IsFamily) ? "protected " : "public ";
+                string access = isInterface ? string.Empty : field.GetAccessModifiers();
 
                 if (field.FieldType.IsEnum)
                 {
@@ -91,14 +91,14 @@ namespace PaintDotNet.Effects
             bool areCtors = false;
             foreach (ConstructorInfo ctor in ctors)
             {
-                if (ctor.IsPrivate || (!ctor.IsPublic && !ctor.IsFamily && !ctor.IsFamilyOrAssembly) || ctor.IsObsolete())
+                if (ctor.IsNotVisible() || ctor.IsObsolete())
                 {
                     continue;
                 }
 
                 areCtors = true;
 
-                string access = isInterface ? string.Empty : (!ctor.IsPublic && !ctor.IsFamily && ctor.IsFamilyOrAssembly) ? "protected internal " : (!ctor.IsPublic && ctor.IsFamily) ? "protected " : "public ";
+                string access = isInterface ? string.Empty : ctor.GetAccessModifiers();
 
                 defRef.AppendLine(spaces + access + Regex.Replace(type.Name, @"`\d", string.Empty) + "(" + ctor.Params() + ");");
             }
@@ -125,12 +125,12 @@ namespace PaintDotNet.Effects
             {
                 MethodInfo propMethod = property.GetMethod;
 
-                if (propMethod.IsPrivate || (!propMethod.IsPublic && !propMethod.IsFamily && !propMethod.IsFamilyOrAssembly) || property.IsObsolete())
+                if (propMethod.IsNotVisible() || property.IsObsolete())
                 {
                     continue;
                 }
 
-                string access = isInterface ? string.Empty : (!propMethod.IsPublic && !propMethod.IsFamily && propMethod.IsFamilyOrAssembly) ? "protected internal " : (!propMethod.IsPublic && propMethod.IsFamily) ? "protected " : "public ";
+                string access = isInterface ? string.Empty : propMethod.GetAccessModifiers();
                 string modifier = isInterface ? string.Empty : propMethod.GetModifiers();
 
                 ParameterInfo[] indexParams = property.GetIndexParameters();
@@ -169,14 +169,14 @@ namespace PaintDotNet.Effects
             {
                 MethodInfo eventMethod = eventInfo.AddMethod;
 
-                if (eventMethod.IsPrivate || (!eventMethod.IsPublic && !eventMethod.IsFamily && !eventMethod.IsFamilyOrAssembly) || eventInfo.IsObsolete())
+                if (eventMethod.IsNotVisible() || eventInfo.IsObsolete())
                 {
                     continue;
                 }
 
                 areEvents = true;
 
-                string access = isInterface ? string.Empty : (!eventMethod.IsPublic && !eventMethod.IsFamily && eventMethod.IsFamilyOrAssembly) ? "protected internal " : (!eventMethod.IsPublic && eventMethod.IsFamily) ? "protected " : "public ";
+                string access = isInterface ? string.Empty : eventMethod.GetAccessModifiers();
 
                 defRef.AppendLine(spaces + access + eventMethod.GetModifiers() + "event " + eventInfo.EventHandlerType.GetDisplayName() + " " + eventInfo.Name + ";");
             }
@@ -195,7 +195,7 @@ namespace PaintDotNet.Effects
 
             foreach (MethodInfo method in methods)
             {
-                if (method.IsPrivate || (!method.IsPublic && !method.IsFamily && !method.IsFamilyOrAssembly) || method.IsObsolete() ||
+                if (method.IsNotVisible() || method.IsObsolete() ||
                     (method.IsSpecialName && !method.Name.StartsWith("op_", StringComparison.Ordinal)))
                 {
                     continue;
@@ -247,7 +247,7 @@ namespace PaintDotNet.Effects
                 }
 
                 string modifier = isInterface ? string.Empty : method.GetModifiers();
-                string access = isInterface ? string.Empty : (!method.IsPublic && !method.IsFamily && method.IsFamilyOrAssembly) ? "protected internal " : (!method.IsPublic && method.IsFamily) ? "protected " : "public ";
+                string access = isInterface ? string.Empty : method.GetAccessModifiers();
 
                 string methodDef = spaces + access + modifier + name + "(" + method.Params(false) + ");";
 
@@ -395,6 +395,46 @@ namespace PaintDotNet.Effects
             }
 
             return x.Name.CompareTo(y.Name);
+        }
+
+        private static string GetAccessModifiers(this FieldInfo field)
+        {
+            if (!field.IsPublic && !field.IsFamily && field.IsFamilyOrAssembly)
+            {
+                return "protected internal ";
+            }
+
+            if (!field.IsPublic && field.IsFamily)
+            {
+                return "protected ";
+            }
+
+            return "public ";
+        }
+
+        private static string GetAccessModifiers(this MethodBase method)
+        {
+            if (!method.IsPublic && !method.IsFamily && method.IsFamilyOrAssembly)
+            {
+                return "protected internal ";
+            }
+
+            if (!method.IsPublic && method.IsFamily)
+            {
+                return "protected ";
+            }
+
+            return "public ";
+        }
+
+        private static bool IsNotVisible(this FieldInfo field)
+        {
+            return field.IsPrivate || (!field.IsPublic && !field.IsFamily && !field.IsFamilyOrAssembly);
+        }
+
+        private static bool IsNotVisible(this MethodBase method)
+        {
+            return method.IsPrivate || (!method.IsPublic && !method.IsFamily && !method.IsFamilyOrAssembly);
         }
     }
 }
