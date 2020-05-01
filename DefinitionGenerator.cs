@@ -55,8 +55,11 @@ namespace PaintDotNet.Effects
             bool isInterface = type.IsInterface;
             string spaces = GetIndent(indent);
 
+            List<FieldInfo> fields = type.GetFields(bindingFlags).ToList();
+            fields.Sort(FieldCompare);
+
             bool areFields = false;
-            foreach (FieldInfo field in type.GetFields(bindingFlags))
+            foreach (FieldInfo field in fields)
             {
                 if (field.IsPrivate || (!field.IsPublic && !field.IsFamily) || field.IsSpecialName || field.IsObsolete())
                 {
@@ -82,8 +85,11 @@ namespace PaintDotNet.Effects
                 defRef.AppendLine();
             }
 
+            List<ConstructorInfo> ctors = type.GetConstructors(bindingFlags).ToList();
+            ctors.Sort(MethodCompare);
+
             bool areCtors = false;
-            foreach (ConstructorInfo ctor in type.GetConstructors(bindingFlags))
+            foreach (ConstructorInfo ctor in ctors)
             {
                 if (ctor.IsPrivate || (!ctor.IsPublic && !ctor.IsFamily) || ctor.IsObsolete())
                 {
@@ -102,8 +108,11 @@ namespace PaintDotNet.Effects
                 defRef.AppendLine();
             }
 
+            List<PropertyInfo> properties = type.GetProperties(bindingFlags).ToList();
+            properties.Sort((a, b) => MethodCompare(a.GetMethod, b.GetMethod));
+
             bool areProps = false;
-            foreach (PropertyInfo property in type.GetProperties(bindingFlags))
+            foreach (PropertyInfo property in properties)
             {
                 MethodInfo propMethod = property.GetMethod;
 
@@ -155,14 +164,12 @@ namespace PaintDotNet.Effects
                 defRef.AppendLine();
             }
 
-            List<string> staticMethods = new List<string>();
             List<string> opMethods = new List<string>();
             List<string> opImExMethods = new List<string>();
-            List<string> protectedMethods = new List<string>();
             List<string> otherMethods = new List<string>();
 
             List<MethodInfo> methods = type.GetMethods(bindingFlags).ToList();
-            methods.Sort((a, b) => a.Name.CompareTo(b.Name));
+            methods.Sort(MethodCompare);
 
             foreach (MethodInfo method in methods)
             {
@@ -172,12 +179,8 @@ namespace PaintDotNet.Effects
                     continue;
                 }
 
-                bool isStatic = method.IsStatic;
-                bool isProtected = !method.IsPublic && method.IsFamily;
                 bool isOperator = false;
                 bool isImExOperator = false;
-
-                string access = isInterface ? string.Empty : isProtected ? "protected " : "public ";
 
                 string returnType = method.ReturnType.GetDisplayNameWithExclusion(type);
                 string name = method.Name;
@@ -222,6 +225,8 @@ namespace PaintDotNet.Effects
                 }
 
                 string modifier = isInterface ? string.Empty : method.GetModifiers();
+                string access = isInterface ? string.Empty : (!method.IsPublic && method.IsFamily) ? "protected " : "public ";
+
                 string methodDef = spaces + access + modifier + name + "(" + method.Params(false) + ");";
 
                 if (isImExOperator)
@@ -232,33 +237,15 @@ namespace PaintDotNet.Effects
                 {
                     opMethods.Add(methodDef);
                 }
-                else if (isStatic)
-                {
-                    staticMethods.Add(methodDef);
-                }
-                else if (isProtected)
-                {
-                    protectedMethods.Add(methodDef);
-                }
                 else
                 {
                     otherMethods.Add(methodDef);
                 }
             }
 
-            if (staticMethods.Count > 0 || otherMethods.Count > 0 || protectedMethods.Count > 0)
+            if (otherMethods.Count > 0)
             {
-                foreach (string methodDef in staticMethods)
-                {
-                    defRef.AppendLine(methodDef);
-                }
-
                 foreach (string methodDef in otherMethods)
-                {
-                    defRef.AppendLine(methodDef);
-                }
-
-                foreach (string methodDef in protectedMethods)
                 {
                     defRef.AppendLine(methodDef);
                 }
@@ -313,6 +300,63 @@ namespace PaintDotNet.Effects
         private static string GetIndent(int indentLevel)
         {
             return new string(' ', 4 * indentLevel);
+        }
+
+        private static int MethodCompare<T>(T x, T y)
+            where T : MethodBase
+        {
+            bool isStaticX = x.IsStatic;
+            bool isStaticY = y.IsStatic;
+
+            if (isStaticX != isStaticY)
+            {
+                return isStaticX ? -1 : 1;
+            }
+
+            bool isProtectedX = !x.IsPublic && x.IsFamily;
+            bool isProtectedY = !y.IsPublic && y.IsFamily;
+
+            if (isProtectedX != isProtectedY)
+            {
+                return isProtectedX ? 1 : -1;
+            }
+
+            return x.Name.CompareTo(y.Name);
+        }
+
+        private static int FieldCompare<T>(T x, T y)
+            where T : FieldInfo
+        {
+            if (x.FieldType.IsEnum)
+            {
+                return 0;
+            }
+
+            bool isConstX = x.IsLiteral && !x.IsInitOnly;
+            bool isConstY = y.IsLiteral && !y.IsInitOnly;
+
+            if (isConstX != isConstY)
+            {
+                return isConstX ? -1 : 1;
+            }
+
+            bool isStaticX = x.IsStatic;
+            bool isStaticY = y.IsStatic;
+
+            if (isStaticX != isStaticY)
+            {
+                return isStaticX ? -1 : 1;
+            }
+
+            bool isProtectedX = !x.IsPublic && x.IsFamily;
+            bool isProtectedY = !y.IsPublic && y.IsFamily;
+
+            if (isProtectedX != isProtectedY)
+            {
+                return isProtectedX ? 1 : -1;
+            }
+
+            return x.Name.CompareTo(y.Name);
         }
     }
 }
