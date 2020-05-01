@@ -61,12 +61,12 @@ namespace PaintDotNet.Effects
             bool areFields = false;
             foreach (FieldInfo field in fields)
             {
-                if (field.IsPrivate || (!field.IsPublic && !field.IsFamily) || field.IsSpecialName || field.IsObsolete())
+                if (field.IsPrivate || (!field.IsPublic && !field.IsFamily && !field.IsFamilyOrAssembly) || field.IsSpecialName || field.IsObsolete())
                 {
                     continue;
                 }
 
-                string access = isInterface ? string.Empty : (!field.IsPublic && field.IsFamily) ? "protected " : "public ";
+                string access = isInterface ? string.Empty : (!field.IsPublic && !field.IsFamily && field.IsFamilyOrAssembly) ? "protected internal " : (!field.IsPublic && field.IsFamily) ? "protected " : "public ";
 
                 if (field.FieldType.IsEnum)
                 {
@@ -91,14 +91,14 @@ namespace PaintDotNet.Effects
             bool areCtors = false;
             foreach (ConstructorInfo ctor in ctors)
             {
-                if (ctor.IsPrivate || (!ctor.IsPublic && !ctor.IsFamily) || ctor.IsObsolete())
+                if (ctor.IsPrivate || (!ctor.IsPublic && !ctor.IsFamily && !ctor.IsFamilyOrAssembly) || ctor.IsObsolete())
                 {
                     continue;
                 }
 
                 areCtors = true;
 
-                string access = isInterface ? string.Empty : (!ctor.IsPublic && ctor.IsFamily) ? "protected " : "public ";
+                string access = isInterface ? string.Empty : (!ctor.IsPublic && !ctor.IsFamily && ctor.IsFamilyOrAssembly) ? "protected internal " : (!ctor.IsPublic && ctor.IsFamily) ? "protected " : "public ";
 
                 defRef.AppendLine(spaces + access + Regex.Replace(type.Name, @"`\d", string.Empty) + "(" + ctor.Params() + ");");
             }
@@ -116,14 +116,14 @@ namespace PaintDotNet.Effects
             {
                 MethodInfo propMethod = property.GetMethod;
 
-                if (propMethod.IsPrivate || (!propMethod.IsPublic && !propMethod.IsFamily) || property.IsObsolete())
+                if (propMethod.IsPrivate || (!propMethod.IsPublic && !propMethod.IsFamily && !propMethod.IsFamilyOrAssembly) || property.IsObsolete())
                 {
                     continue;
                 }
 
                 areProps = true;
 
-                string access = isInterface ? string.Empty : (!propMethod.IsPublic && propMethod.IsFamily) ? "protected " : "public ";
+                string access = isInterface ? string.Empty : (!propMethod.IsPublic && !propMethod.IsFamily && propMethod.IsFamilyOrAssembly) ? "protected internal " : (!propMethod.IsPublic && propMethod.IsFamily) ? "protected " : "public ";
                 string modifier = isInterface ? string.Empty : propMethod.GetModifiers();
 
                 ParameterInfo[] indexParams = property.GetIndexParameters();
@@ -147,14 +147,14 @@ namespace PaintDotNet.Effects
             {
                 MethodInfo eventMethod = eventInfo.AddMethod;
 
-                if (eventMethod.IsPrivate || (!eventMethod.IsPublic && !eventMethod.IsFamily) || eventInfo.IsObsolete())
+                if (eventMethod.IsPrivate || (!eventMethod.IsPublic && !eventMethod.IsFamily && !eventMethod.IsFamilyOrAssembly) || eventInfo.IsObsolete())
                 {
                     continue;
                 }
 
                 areEvents = true;
 
-                string access = isInterface ? string.Empty : (!eventMethod.IsPublic && eventMethod.IsFamily) ? "protected " : "public ";
+                string access = isInterface ? string.Empty : (!eventMethod.IsPublic && !eventMethod.IsFamily && eventMethod.IsFamilyOrAssembly) ? "protected internal " : (!eventMethod.IsPublic && eventMethod.IsFamily) ? "protected " : "public ";
 
                 defRef.AppendLine(spaces + access + eventMethod.GetModifiers() + "event " + eventInfo.EventHandlerType.GetDisplayName() + " " + eventInfo.Name + ";");
             }
@@ -173,7 +173,7 @@ namespace PaintDotNet.Effects
 
             foreach (MethodInfo method in methods)
             {
-                if (method.IsPrivate || (!method.IsPublic && !method.IsFamily) || method.IsObsolete() ||
+                if (method.IsPrivate || (!method.IsPublic && !method.IsFamily && !method.IsFamilyOrAssembly) || method.IsObsolete() ||
                     (method.IsSpecialName && !method.Name.StartsWith("op_", StringComparison.Ordinal)))
                 {
                     continue;
@@ -225,7 +225,7 @@ namespace PaintDotNet.Effects
                 }
 
                 string modifier = isInterface ? string.Empty : method.GetModifiers();
-                string access = isInterface ? string.Empty : (!method.IsPublic && method.IsFamily) ? "protected " : "public ";
+                string access = isInterface ? string.Empty : (!method.IsPublic && !method.IsFamily && method.IsFamilyOrAssembly) ? "protected internal " : (!method.IsPublic && method.IsFamily) ? "protected " : "public ";
 
                 string methodDef = spaces + access + modifier + name + "(" + method.Params(false) + ");";
 
@@ -313,6 +313,14 @@ namespace PaintDotNet.Effects
                 return isStaticX ? -1 : 1;
             }
 
+            bool isProtectedInternalX = !x.IsPublic && !x.IsFamily && x.IsFamilyOrAssembly;
+            bool isProtectedInternalY = !y.IsPublic && !y.IsFamily && y.IsFamilyOrAssembly;
+
+            if (isProtectedInternalX != isProtectedInternalY)
+            {
+                return isProtectedInternalX ? 1 : -1;
+            }
+
             bool isProtectedX = !x.IsPublic && x.IsFamily;
             bool isProtectedY = !y.IsPublic && y.IsFamily;
 
@@ -346,6 +354,14 @@ namespace PaintDotNet.Effects
             if (isStaticX != isStaticY)
             {
                 return isStaticX ? -1 : 1;
+            }
+
+            bool isProtectedInternalX = !x.IsPublic && !x.IsFamily && x.IsFamilyOrAssembly;
+            bool isProtectedInternalY = !y.IsPublic && !y.IsFamily && y.IsFamilyOrAssembly;
+
+            if (isProtectedInternalX != isProtectedInternalY)
+            {
+                return isProtectedInternalX ? 1 : -1;
             }
 
             bool isProtectedX = !x.IsPublic && x.IsFamily;
