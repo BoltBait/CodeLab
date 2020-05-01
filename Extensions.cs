@@ -336,6 +336,26 @@ namespace PaintDotNet.Effects
             return false;
         }
 
+        private static string ObjectToString(this object obj)
+        {
+            if (obj is null)
+            {
+                return "null";
+            }
+
+            if (obj is string)
+            {
+                return "\"" + obj.ToString() + "\"";
+            }
+
+            if (obj is char c)
+            {
+                return "'" + c.ToLiteral() + "'";
+            }
+
+            return obj.ToString();
+        }
+
         internal static MethodInfo MakeGenericMethod(this MethodInfo method, string args)
         {
             Type[] types = StringToTypeArray(args);
@@ -363,20 +383,7 @@ namespace PaintDotNet.Effects
 
         internal static string GetConstValue(this FieldInfo field)
         {
-            object objValue = field.GetValue(null);
-            Type fieldType = field.FieldType;
-
-            if (fieldType == typeof(string))
-            {
-                return "\"" + objValue.ToString() + "\"";
-            }
-
-            if (fieldType == typeof(char))
-            {
-                return "'" + ((char)objValue).ToLiteral() + "'";
-            }
-
-            return objValue.ToString();
+            return field.GetValue(null).ObjectToString();
         }
 
         internal static string GetterSetter(this PropertyInfo property)
@@ -419,7 +426,7 @@ namespace PaintDotNet.Effects
         internal static string BuildParamString(this ParameterInfo parameter)
         {
             string modifier = parameter.IsOut ? "out " : parameter.ParameterType.IsByRef ? "ref " : parameter.IsDefined(typeof(ParamArrayAttribute), false) ? "params " : string.Empty;
-            string defaultValue = parameter.HasDefaultValue ? " = " + parameter.DefaultValue.ToString() : string.Empty;
+            string defaultValue = parameter.HasDefaultValue ? " = " + parameter.DefaultValue.ObjectToString() : string.Empty;
             return $"{modifier}{parameter.ParameterType.GetDisplayName()} {parameter.Name}{defaultValue}";
         }
 
