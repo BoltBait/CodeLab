@@ -396,12 +396,14 @@ namespace PaintDotNet.Effects
             return property.GetIndexParameters().Length > 0;
         }
 
-        internal static string Params(this MethodBase method)
+        internal static string Params(this MethodBase method, bool skipExtensionParam = true)
         {
             List<string> methodParams = new List<string>();
+            bool isExtension = method.IsOrHasExtension();
+
             foreach (ParameterInfo param in method.GetParameters())
             {
-                if (param.Position == 0 && method.IsOrHasExtension())
+                if (skipExtensionParam && param.Position == 0 && isExtension)
                 {
                     continue;
                 }
@@ -409,7 +411,9 @@ namespace PaintDotNet.Effects
                 methodParams.Add(param.BuildParamString());
             }
 
-            return methodParams.Join(", ");
+            return (isExtension && !skipExtensionParam)
+                ? "this " + methodParams.Join(", ")
+                : methodParams.Join(", ");
         }
 
         internal static string BuildParamString(this ParameterInfo parameter)

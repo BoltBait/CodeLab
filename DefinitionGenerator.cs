@@ -222,7 +222,7 @@ namespace PaintDotNet.Effects
                 }
 
                 string modifier = isInterface ? string.Empty : method.GetModifiers();
-                string methodDef = spaces + access + modifier + name + "(" + method.Params() + ");";
+                string methodDef = spaces + access + modifier + name + "(" + method.Params(false) + ");";
 
                 if (isImExOperator)
                 {
