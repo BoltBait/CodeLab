@@ -139,7 +139,7 @@ namespace PaintDotNet.Effects
                 {
                     case MemberTypes.Method:
                         MethodInfo methodInfo = (MethodInfo)memberInfo;
-                        if (methodInfo.IsSpecialName)
+                        if (methodInfo.IsSpecialName || (type.IsArray && methodInfo.DeclaringType == type))
                         {
                             continue;
                         }
