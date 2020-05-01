@@ -286,15 +286,12 @@ namespace PaintDotNet.Effects
                 defRef.AppendLine();
             }
 
-            int nestedCount = 0;
             foreach (Type nestedType in type.GetNestedTypes(bindingFlags))
             {
                 if (!nestedType.IsVisible || nestedType.IsObsolete())
                 {
                     continue;
                 }
-
-                nestedCount++;
 
                 if (nestedType.IsEnum && nestedType.GetCustomAttribute<FlagsAttribute>() != null)
                 {
@@ -309,10 +306,6 @@ namespace PaintDotNet.Effects
 
                 indent--;
                 defRef.AppendLine(spaces + "}");
-            }
-
-            if (nestedCount > 1)
-            {
                 defRef.AppendLine();
             }
         }
