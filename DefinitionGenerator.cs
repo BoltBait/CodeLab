@@ -191,8 +191,9 @@ namespace PaintDotNet.Effects
                 areEvents = true;
 
                 string access = isInterface ? string.Empty : eventMethod.GetAccessModifiers();
+                string modifier = isInterface ? string.Empty : eventMethod.GetModifiers();
 
-                defRef.AppendLine(spaces + access + eventMethod.GetModifiers() + "event " + eventInfo.EventHandlerType.GetDisplayName() + " " + eventInfo.Name + ";");
+                defRef.AppendLine(spaces + access + modifier + "event " + eventInfo.EventHandlerType.GetDisplayName() + " " + eventInfo.Name + ";");
             }
 
             if (areEvents)
