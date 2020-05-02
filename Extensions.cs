@@ -218,12 +218,39 @@ namespace PaintDotNet.Effects
             return (type.IsGenericType) ? type.GetGenericName() : type.GetAliasName();
         }
 
+        internal static string GetDisplayNameWithExclusion(this Type type, Type typeExclusion)
+        {
+            return (type.IsGenericType) ? type.GetGenericName() : (type == typeExclusion) ? type.Name : type.GetAliasName();
+        }
+
         internal static string GetGenericName(this Type type)
         {
             string typeName = Regex.Replace(type.Name, @"`\d", string.Empty);
-            string args = type.GetGenericArguments().Select(t => t.GetDisplayName()).Join(", ");
 
-            return $"{typeName}<{args}>";
+            List<string> argList = new List<string>();
+            foreach (Type argType in type.GetGenericArguments())
+            {
+                string arg = string.Empty;
+
+                if (argType.IsGenericParameter)
+                {
+                    GenericParameterAttributes attributes = argType.GenericParameterAttributes;
+                    if (attributes == GenericParameterAttributes.Contravariant)
+                    {
+                        arg += "in ";
+                    }
+                    else if (attributes == GenericParameterAttributes.Covariant)
+                    {
+                        arg += "out ";
+                    }
+                }
+
+                arg += argType.GetDisplayName();
+
+                argList.Add(arg);
+            }
+
+            return $"{typeName}<{argList.Join(", ")}>";
         }
 
         internal static bool Contains(this Type type, string memberName, bool onlyUserDefined)
@@ -255,6 +282,33 @@ namespace PaintDotNet.Effects
             return char.ToLowerInvariant(c);
         }
 
+        private static string ToLiteral(this char c)
+        {
+            switch (c)
+            {
+                case '\'': return @"\'";
+                case '\"': return "\\\"";
+                case '\\': return @"\\";
+                case '\0': return @"\0";
+                case '\a': return @"\a";
+                case '\b': return @"\b";
+                case '\f': return @"\f";
+                case '\n': return @"\n";
+                case '\r': return @"\r";
+                case '\t': return @"\t";
+                case '\v': return @"\v";
+                default:
+                    if (char.GetUnicodeCategory(c) != UnicodeCategory.Control && !c.Equals('\uffff'))
+                    {
+                        return c.ToString();
+                    }
+                    else
+                    {
+                        return @"\u" + ((ushort)c).ToString("x4");
+                    }
+            }
+        }
+
         internal static bool IsBrace(this char c, bool openBrace)
         {
             if (openBrace)
@@ -282,6 +336,26 @@ namespace PaintDotNet.Effects
             return false;
         }
 
+        private static string ObjectToString(this object obj)
+        {
+            if (obj is null)
+            {
+                return "null";
+            }
+
+            if (obj is string)
+            {
+                return "\"" + obj.ToString() + "\"";
+            }
+
+            if (obj is char c)
+            {
+                return "'" + c.ToLiteral() + "'";
+            }
+
+            return obj.ToString();
+        }
+
         internal static MethodInfo MakeGenericMethod(this MethodInfo method, string args)
         {
             Type[] types = StringToTypeArray(args);
@@ -300,11 +374,16 @@ namespace PaintDotNet.Effects
             }
         }
 
-        internal static string GetEnumValue(this FieldInfo fieldInfo)
+        internal static string GetEnumValue(this FieldInfo field)
         {
-            object value = fieldInfo.GetValue(null);
-            Type type = Enum.GetUnderlyingType(fieldInfo.FieldType);
+            object value = field.GetValue(null);
+            Type type = Enum.GetUnderlyingType(field.FieldType);
             return Convert.ChangeType(value, type).ToString();
+        }
+
+        internal static string GetConstValue(this FieldInfo field)
+        {
+            return field.GetValue(null).ObjectToString();
         }
 
         internal static string GetterSetter(this PropertyInfo property)
@@ -324,12 +403,14 @@ namespace PaintDotNet.Effects
             return property.GetIndexParameters().Length > 0;
         }
 
-        internal static string Params(this MethodBase method)
+        internal static string Params(this MethodBase method, bool skipExtensionParam = true)
         {
             List<string> methodParams = new List<string>();
+            bool isExtension = method.IsOrHasExtension();
+
             foreach (ParameterInfo param in method.GetParameters())
             {
-                if (param.Position == 0 && method.IsOrHasExtension())
+                if (skipExtensionParam && param.Position == 0 && isExtension)
                 {
                     continue;
                 }
@@ -337,13 +418,16 @@ namespace PaintDotNet.Effects
                 methodParams.Add(param.BuildParamString());
             }
 
-            return methodParams.Join(", ");
+            return (isExtension && !skipExtensionParam)
+                ? "this " + methodParams.Join(", ")
+                : methodParams.Join(", ");
         }
 
-        private static string BuildParamString(this ParameterInfo parameterInfo)
+        internal static string BuildParamString(this ParameterInfo parameter)
         {
-            string modifier = parameterInfo.IsOut ? "out " : parameterInfo.ParameterType.IsByRef ? "ref " : parameterInfo.IsDefined(typeof(ParamArrayAttribute), false) ? "params " : string.Empty;
-            return $"{modifier}{parameterInfo.ParameterType.GetDisplayName()} {parameterInfo.Name}";
+            string modifier = parameter.IsOut ? "out " : parameter.ParameterType.IsByRef ? "ref " : parameter.IsDefined(typeof(ParamArrayAttribute), false) ? "params " : string.Empty;
+            string defaultValue = parameter.HasDefaultValue ? " = " + parameter.DefaultValue.ObjectToString() : string.Empty;
+            return $"{modifier}{parameter.ParameterType.GetDisplayName()} {parameter.Name}{defaultValue}";
         }
 
         internal static bool IsOrHasExtension(this MemberInfo member)
@@ -399,9 +483,9 @@ namespace PaintDotNet.Effects
             return genericType.IsAssignableFrom(type);
         }
 
-        private static bool IsConstrainedToClass(this Type t)
+        private static bool IsConstrainedToClass(this Type type)
         {
-            return (t.GenericParameterAttributes &
+            return (type.GenericParameterAttributes &
                 GenericParameterAttributes.SpecialConstraintMask &
                 GenericParameterAttributes.ReferenceTypeConstraint) != 0;
         }

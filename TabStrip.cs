@@ -317,6 +317,18 @@ namespace PaintDotNet.Effects
         }
     }
 
+    public class NewTabEventArgs : EventArgs
+    {
+        public string Name { get; }
+        public string Path { get; }
+
+        public NewTabEventArgs(string name, string path)
+        {
+            this.Name = name;
+            this.Path = path;
+        }
+    }
+
     public sealed class Tab : ScaledToolStripButton
     {
         internal int Index { get; set; }
@@ -360,6 +372,9 @@ namespace PaintDotNet.Effects
                     break;
                 case ProjectType.FileType:
                     this.ImageName = "Save";
+                    break;
+                case ProjectType.Reference:
+                    this.ImageName = "Book";
                     break;
                 case ProjectType.Shape:
                     this.ImageName = "Shape";

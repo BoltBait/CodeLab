@@ -521,7 +521,7 @@ namespace PaintDotNet.Effects
             {
                 fieldTypeName = "Constant";
                 fieldType = IntelliType.Constant;
-                fieldValue = $" ({field.GetValue(null)})";
+                fieldValue = $" ({field.GetConstValue()})";
             }
             else
             {

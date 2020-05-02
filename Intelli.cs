@@ -105,7 +105,8 @@ namespace PaintDotNet.Effects
                 { "Char[]", "char[]" },
                 { "String[]", "string[]" },
                 { "Object[]", "object[]" },
-                { "Void", "void" }
+                { "Void", "void" },
+                { "ValueType", "struct" }
             };
 
             Keywords = new string[]

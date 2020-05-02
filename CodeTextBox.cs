@@ -529,6 +529,12 @@ namespace PaintDotNet.Effects
         {
             this.BuildNeeded?.Invoke(this, EventArgs.Empty);
         }
+
+        public event EventHandler<NewTabEventArgs> DefTabNeeded;
+        private void OnDefTabNeeded(string name, string path)
+        {
+            this.DefTabNeeded?.Invoke(this, new NewTabEventArgs(name, path));
+        }
         #endregion
 
         public CodeTextBox()
@@ -1143,7 +1149,7 @@ namespace PaintDotNet.Effects
             string lastWords = GetLastWords(position);
             if (lastWords.Length == 0)
             {
-               return IntelliType.None;
+                return IntelliType.None;
             }
 
             if (Intelli.Variables.ContainsKey(lastWords))
@@ -1513,7 +1519,7 @@ namespace PaintDotNet.Effects
                     else if (field.IsLiteral && !field.IsInitOnly)
                     {
                         fieldTypeName = "Constant";
-                        fieldValue = $" ({field.GetValue(null)})";
+                        fieldValue = $" ({field.GetConstValue()})";
                     }
                     else
                     {
@@ -1983,17 +1989,47 @@ namespace PaintDotNet.Effects
             return tag;
         }
 
-        private bool GoToDefinition()
+        private void OpenDefinitionTab(Type type)
         {
+            if (type == null)
+            {
+                return;
+            }
+
+            if (type.IsNested)
+            {
+                type = type.DeclaringType;
+            }
+
+            string defRef = DefinitionGenerator.Generate(type);
+            string name = type.GetDisplayNameWithExclusion(type);
+
+            OnDefTabNeeded(name, type.Namespace + "." + name);
+            OnBuildNeeded();
+            this.Text = defRef;
+            this.ReadOnly = true;
+            this.EmptyUndoBuffer();
+            this.SetSavePoint();
+        }
+
+        internal void GoToDefinition(bool msDocs)
+        {
+            bool success = false;
+
             switch (this.Lexer)
             {
                 case Lexer.Cpp:
-                    return GoToDefinitionCSharp();
+                    success = GoToDefinitionCSharp(msDocs);
+                    break;
                 case Lexer.Xml:
-                    return GoToDefinitionXaml();
+                    success = GoToDefinitionXaml();
+                    break;
             }
 
-            return false;
+            if (!success)
+            {
+                FlexibleMessageBox.Show("Cannot navigate to the symbol under the caret.", "CodeLab", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
         }
 
         private bool GoToDefinitionXaml()
@@ -2036,7 +2072,7 @@ namespace PaintDotNet.Effects
             return false;
         }
 
-        private bool GoToDefinitionCSharp()
+        private bool GoToDefinitionCSharp(bool msDocs)
         {
             int position = this.WordStartPosition(this.CurrentPosition);
 
@@ -2053,12 +2089,28 @@ namespace PaintDotNet.Effects
                 style == Style.Cpp.StringEol || style == Style.Cpp.StringEol + Preprocessor ||
                 style == Style.Cpp.Verbatim || style == Style.Cpp.Verbatim + Preprocessor)
             {
-                OpenMsDocs(typeof(string).FullName);
+                if (msDocs)
+                {
+                    OpenMsDocs(typeof(string).FullName);
+                }
+                else
+                {
+                    OpenDefinitionTab(typeof(string));
+                }
+
                 return true;
             }
             if (style == Style.Cpp.Character || style == Style.Cpp.Character + Preprocessor)
             {
-                OpenMsDocs(typeof(char).FullName);
+                if (msDocs)
+                {
+                    OpenMsDocs(typeof(char).FullName);
+                }
+                else
+                {
+                    OpenDefinitionTab(typeof(char));
+                }
+
                 return true;
             }
             if (style == Style.Cpp.Number || style == Style.Cpp.Number + Preprocessor)
@@ -2069,7 +2121,15 @@ namespace PaintDotNet.Effects
                     return false;
                 }
 
-                OpenMsDocs(numType.FullName);
+                if (msDocs)
+                {
+                    OpenMsDocs(numType.FullName);
+                }
+                else
+                {
+                    OpenDefinitionTab(numType);
+                }
+
                 return true;
             }
 
@@ -2079,7 +2139,7 @@ namespace PaintDotNet.Effects
                 return false;
             }
 
-            if ((Intelli.Variables.ContainsKey(lastWords) || Intelli.Parameters.ContainsKey(lastWords)) && Intelli.VarPos.ContainsKey(lastWords))
+            if (!msDocs && (Intelli.Variables.ContainsKey(lastWords) || Intelli.Parameters.ContainsKey(lastWords)) && Intelli.VarPos.ContainsKey(lastWords))
             {
                 this.SelectionStart = Intelli.VarPos[lastWords];
                 this.SelectionEnd = this.WordEndPosition(Intelli.VarPos[lastWords]);
@@ -2087,7 +2147,7 @@ namespace PaintDotNet.Effects
                 return true;
             }
 
-            if (Intelli.UserDefinedTypes.ContainsKey(lastWords))
+            if (!msDocs && Intelli.UserDefinedTypes.ContainsKey(lastWords))
             {
                 Type t = Intelli.UserDefinedTypes[lastWords];
 
@@ -2133,15 +2193,24 @@ namespace PaintDotNet.Effects
             if (Intelli.AllTypes.ContainsKey(lastWords))
             {
                 Type t = Intelli.AllTypes[lastWords];
-                if (t.Namespace.StartsWith("PaintDotNet", StringComparison.Ordinal))
+
+                if (msDocs)
                 {
-                    return false;
+                    if (t.Namespace.StartsWith("PaintDotNet", StringComparison.Ordinal))
+                    {
+                        return false;
+                    }
+
+                    string typeName = (t.IsGenericType) ? t.Name.Replace("`", "-") : t.Name;
+                    string fullName = $"{t.Namespace}.{typeName}";
+
+                    OpenMsDocs(fullName);
+                }
+                else
+                {
+                    OpenDefinitionTab(t);
                 }
 
-                string typeName1 = (t.IsGenericType) ? t.Name.Replace("`", "-") : t.Name;
-                string fullName1 = $"{t.Namespace}.{typeName1}";
-
-                OpenMsDocs(fullName1);
                 return true;
             }
 
@@ -2151,7 +2220,7 @@ namespace PaintDotNet.Effects
                 return false;
             }
 
-            if (memberInfo.DeclaringType == Intelli.UserScript)
+            if (!msDocs && memberInfo.DeclaringType == Intelli.UserScript)
             {
                 string returnType = memberInfo.GetReturnType()?.GetDisplayName();
 
@@ -2220,19 +2289,28 @@ namespace PaintDotNet.Effects
             }
 
             Type declaringType = memberInfo.DeclaringType;
-            if (declaringType.Namespace.StartsWith("PaintDotNet", StringComparison.Ordinal))
+
+            if (msDocs)
             {
-                return false;
+                if (declaringType.Namespace.StartsWith("PaintDotNet", StringComparison.Ordinal))
+                {
+                    return false;
+                }
+
+                string typeName = (declaringType.IsGenericType) ? declaringType.Name.Replace("`", "-") : declaringType.Name;
+                string fullName = $"{declaringType.Namespace}.{typeName}.{memberInfo.Name}";
+
+                OpenMsDocs(fullName);
+            }
+            else
+            {
+                OpenDefinitionTab(declaringType);
             }
 
-            string typeName2 = (declaringType.IsGenericType) ? declaringType.Name.Replace("`", "-") : declaringType.Name;
-            string fullName2 = $"{declaringType.Namespace}.{typeName2}.{memberInfo.Name}";
-
-            OpenMsDocs(fullName2);
             return true;
         }
 
-        private void OpenMsDocs(string fullName)
+        private static void OpenMsDocs(string fullName)
         {
             System.Diagnostics.Process.Start($"https://docs.microsoft.com/dotnet/api/{fullName}");
         }
@@ -2355,10 +2433,7 @@ namespace PaintDotNet.Effects
                 }
                 else if (e.KeyCode == Keys.F12)
                 {
-                    if (!GoToDefinition())
-                    {
-                        FlexibleMessageBox.Show("Cannot navigate to the symbol under the caret.", "CodeLab", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    }
+                    GoToDefinition(false);
                 }
                 else if (e.Alt && e.KeyCode == Keys.Up)
                 {
@@ -2965,7 +3040,7 @@ namespace PaintDotNet.Effects
 
         private void Replace(string oldTerm, string newTerm, SearchFlags searchFlags)
         {
-            if (oldTerm.Length == 0)
+            if (this.ReadOnly || oldTerm.Length == 0)
             {
                 return;
             }
@@ -3546,9 +3621,9 @@ namespace PaintDotNet.Effects
 
             this.SetKeywords(1, string.Join(" ", Intelli.AllTypes.Keys) + " " + string.Join(" ", Intelli.UserDefinedTypes.Keys));
             this.SetKeywords(0, "abstract as base bool byte char checked class const decimal delegate double enum event explicit extern "
-                + "false fixed float implicit in int interface internal is lock long namespace new null object operator out override "
-                + "params partial private protected public readonly ref sbyte sealed short sizeof stackalloc static string struct "
-                + "this true typeof uint unchecked unsafe ulong ushort using var virtual void volatile");
+                + "false fixed float get implicit in int interface internal is lock long namespace new null object operator out override "
+                + "params partial private protected public readonly ref sbyte sealed set short sizeof stackalloc static string struct "
+                + "this true typeof uint unchecked unsafe ulong ushort using var virtual void volatile where");
             this.SetIdentifiers(indexForPurpleWords, "break case catch continue default do else finally for foreach goto if return throw try switch while");
         }
 
@@ -4012,7 +4087,7 @@ namespace PaintDotNet.Effects
             this.findPanel.Hide();
             this.iBox.Hide();
 
-            var document = this.Document ;
+            var document = this.Document;
             this.AddRefDocument(document);
 
             // Replace the current document with a new one
@@ -4028,6 +4103,7 @@ namespace PaintDotNet.Effects
                     break;
                 case ProjectType.Effect:
                 case ProjectType.FileType:
+                case ProjectType.Reference:
                     this.Lexer = Lexer.Cpp;
                     indexForPurpleWords = this.AllocateSubstyles(Style.Cpp.Identifier, 1);
                     this.UpdateSyntaxHighlighting();
