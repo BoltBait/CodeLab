@@ -1,4 +1,18 @@
-﻿using System;
+﻿/////////////////////////////////////////////////////////////////////////////////
+// CodeLab for Paint.NET
+// Copyright 2020 Jason Wendt. All Rights Reserved.
+// Portions Copyright ©Microsoft Corporation. All Rights Reserved.
+//
+// THE DEVELOPERS MAKE NO WARRANTY OF ANY KIND REGARDING THE CODE. THEY
+// SPECIFICALLY DISCLAIM ANY WARRANTY OF FITNESS FOR ANY PARTICULAR PURPOSE OR
+// ANY OTHER WARRANTY.  THE CODELAB DEVELOPERS DISCLAIM ALL LIABILITY RELATING
+// TO THE USE OF THIS CODE.  NO LICENSE, EXPRESS OR IMPLIED, BY ESTOPPEL OR
+// OTHERWISE, TO ANY INTELLECTUAL PROPERTY RIGHTS IS GRANTED HEREIN.
+//
+// Latest distribution: https://www.BoltBait.com/pdn/codelab
+/////////////////////////////////////////////////////////////////////////////////
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
