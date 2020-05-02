@@ -345,8 +345,7 @@ namespace PaintDotNet.Effects
             return new string(' ', 4 * indentLevel);
         }
 
-        private static int MethodCompare<T>(T x, T y)
-            where T : MethodBase
+        private static int MethodCompare(MethodBase x, MethodBase y)
         {
             bool isStaticX = x.IsStatic;
             bool isStaticY = y.IsStatic;
@@ -375,8 +374,7 @@ namespace PaintDotNet.Effects
             return x.Name.CompareTo(y.Name);
         }
 
-        private static int FieldCompare<T>(T x, T y)
-            where T : FieldInfo
+        private static int FieldCompare(FieldInfo x, FieldInfo y)
         {
             if (x.FieldType.IsEnum)
             {
