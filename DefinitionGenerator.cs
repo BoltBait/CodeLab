@@ -302,6 +302,14 @@ namespace PaintDotNet.Effects
                     continue;
                 }
 
+                if (typeof(Delegate).IsAssignableFrom(nestedType))
+                {
+                    MethodInfo method = nestedType.GetMethod("Invoke");
+                    defRef.AppendLine(GetIndent(indent) + "public delegate " + method.ReturnType.GetDisplayName() + " " + nestedType.GetDisplayNameWithExclusion(nestedType) + "(" + method.Params() + ");");
+
+                    continue;
+                }
+
                 if (nestedType.IsEnum && nestedType.GetCustomAttribute<FlagsAttribute>() != null)
                 {
                     defRef.AppendLine(spaces + "[Flags]");
@@ -315,7 +323,6 @@ namespace PaintDotNet.Effects
 
                 indent--;
                 defRef.AppendLine(spaces + "}");
-                defRef.AppendLine();
             }
         }
 
