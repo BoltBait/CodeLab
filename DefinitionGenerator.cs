@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -404,17 +405,38 @@ namespace PaintDotNet.Effects
                 return (baseType != typeof(int)) ? " : " + baseType.GetDisplayName() : string.Empty;
             }
 
-            IEnumerable<Type> inheritList = type.GetInterfaces();
+            IEnumerable<Type> directInterfaces = type.GetDirectBaseInterfaces().Where(i => i.IsVisibleInterface());
+            IEnumerable<Type> inheritedInterfaces = directInterfaces.SelectMany(i => i.GetInterfaces());
+            IEnumerable<Type> allInheritance = directInterfaces.Concat(inheritedInterfaces).Distinct();
             if (type.IsClass && type != typeof(object) && type.BaseType != typeof(object))
             {
-                IEnumerable<Type> baseClassInterfaces = type.BaseType.GetDirectBaseInterfaces();
-                inheritList = inheritList.Except(baseClassInterfaces).Prepend(type.BaseType);
+                allInheritance = allInheritance.Prepend(type.BaseType);
             }
 
-            string inheritance = inheritList.Any() ? " : " + inheritList.Select(i => i.GetDisplayName()).Join(", ") : string.Empty;
+            string inheritance = allInheritance.Any() ? " : " + allInheritance.Select(i => i.GetDisplayName()).Join(", ") : string.Empty;
             string constraints = type.IsGenericType ? type.GetGenericArguments().GetConstraints() : string.Empty;
 
             return inheritance + constraints;
+        }
+
+        private static bool IsVisibleInterface(this Type type)
+        {
+            if (type.IsPublic)
+            {
+                return true;
+            }
+
+            if (type.GetCustomAttribute<InterfaceTypeAttribute>()?.Value == ComInterfaceType.InterfaceIsIUnknown)
+            {
+                return false;
+            }
+
+            if (type.IsNotPublic && type.GetInterfaces().Length == 0)
+            {
+                return false;
+            }
+
+            return true;
         }
 
         private static string GetModifiers(this Type type)
