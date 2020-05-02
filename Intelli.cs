@@ -214,8 +214,8 @@ namespace PaintDotNet.Effects
                     else
                     {
                         Type t = AllTypes[name];
-                        if ((type.IsGenericType && !t.IsGenericType) ||
-                            (namespaceWhiteList.Contains(type.Namespace) && !namespaceWhiteList.Contains(t.Namespace)))
+                        if (namespaceWhiteList.Contains(type.Namespace) &&
+                            ((type.IsGenericType && !t.IsGenericType) || !namespaceWhiteList.Contains(t.Namespace)))
                         {
                             AllTypes[name] = type;
                         }
