@@ -61,6 +61,7 @@ namespace PaintDotNet.Effects
         private int maxLineNumberCharLength = 0;
         private int indexForPurpleWords = -1;
         private int disableIntelliTipPos = InvalidPosition;
+        private bool resizing = false;
         #endregion
 
         #region Properties
@@ -3460,6 +3461,17 @@ namespace PaintDotNet.Effects
             }
         }
 
+        protected override void OnPainted(EventArgs e)
+        {
+            base.OnPainted(e);
+
+            if (this.resizing)
+            {
+                this.resizing = false;
+                UpdateIndicatorBar();
+            }
+        }
+
         protected override void OnTextChanged(EventArgs e)
         {
             AdjustLineNumbersWidth();
@@ -3517,7 +3529,7 @@ namespace PaintDotNet.Effects
                 iBox.Visible = false;
             }
 
-            UpdateIndicatorBar();
+            this.resizing = true;
         }
 
         protected override void OnLostFocus(EventArgs e)
