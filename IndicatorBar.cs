@@ -176,7 +176,7 @@ namespace PaintDotNet.Effects
                     posSliderRect.Y = posTrackRect.Bottom - posSliderRect.Height;
                 }
 
-                Invalidate();
+                Refresh(); // Need to redraw very quickly here. Refresh() rather than Invalidate().
             }
         }
 
