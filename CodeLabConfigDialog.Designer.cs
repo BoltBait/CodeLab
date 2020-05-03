@@ -1108,7 +1108,7 @@
             this.UIDesignerButton.Padding = new System.Windows.Forms.Padding(2);
             this.UIDesignerButton.Size = new System.Drawing.Size(24, 24);
             this.UIDesignerButton.Text = "UIDesigner";
-            this.UIDesignerButton.ToolTipText = "Interface Designer (Ctrl+I)";
+            this.UIDesignerButton.ToolTipText = "User Interface Designer (Ctrl+I)";
             this.UIDesignerButton.Click += new System.EventHandler(this.UIDesignerButton_Click);
             // 
             // RunButton
