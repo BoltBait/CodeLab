@@ -3915,12 +3915,20 @@ namespace PaintDotNet.Effects
 
         private int CountVisibleLines(int untilLine)
         {
+            bool wordWrapDisabled = this.WrapMode == WrapMode.None;
+            bool allLinesVisible = this.Lines.AllLinesVisible;
+
+            if (wordWrapDisabled && allLinesVisible)
+            {
+                return untilLine;
+            }
+
             int count = 0;
             for (int i = 0; i < untilLine; i++)
             {
-                if (this.Lines[i].Visible)
+                if (allLinesVisible || this.Lines[i].Visible)
                 {
-                    count += this.Lines[i].WrapCount;
+                    count += wordWrapDisabled ? 1 : this.Lines[i].WrapCount;
                 }
             }
 
@@ -4230,12 +4238,28 @@ namespace PaintDotNet.Effects
                 return;
             }
 
-            indicatorBar.Maximum = CountUILines();
+            Dictionary<int, int> visibleLine = new Dictionary<int, int>();
+
+            bool wordWrapDisabled = this.WrapMode == WrapMode.None;
+            bool allLinesVisible = this.Lines.AllLinesVisible;
+
+            int count = 0;
+            for (int i = 0; i < this.Lines.Count; i++)
+            {
+                visibleLine.Add(i, count);
+
+                if (allLinesVisible || this.Lines[i].Visible)
+                {
+                    count += wordWrapDisabled ? 1 : this.Lines[i].WrapCount;
+                }
+            }
+
+            indicatorBar.Maximum = count;
             indicatorBar.LargeChange = this.LinesOnScreen;
             indicatorBar.Value = this.FirstVisibleLine;
 
             int curLine = GetVisibleLine(this.CurrentLine);
-            indicatorBar.Caret = CountVisibleLines(curLine);
+            indicatorBar.Caret = visibleLine[curLine];
 
             if (this.Bookmarks.Count == 0)
             {
@@ -4247,7 +4271,7 @@ namespace PaintDotNet.Effects
                 foreach (int line in this.Bookmarks)
                 {
                     int bkmkLine = GetVisibleLine(line);
-                    bkmks.Add(CountVisibleLines(bkmkLine));
+                    bkmks.Add(visibleLine[bkmkLine]);
                 }
                 indicatorBar.Bookmarks = bkmks;
             }
@@ -4262,7 +4286,7 @@ namespace PaintDotNet.Effects
                 foreach (int line in matchLines)
                 {
                     int matchLine = GetVisibleLine(line);
-                    matches.Add(CountVisibleLines(matchLine));
+                    matches.Add(visibleLine[matchLine]);
                 }
                 indicatorBar.Matches = matches;
             }
@@ -4277,7 +4301,7 @@ namespace PaintDotNet.Effects
                 foreach (int line in errorLines)
                 {
                     int errorLine = GetVisibleLine(line);
-                    errors.Add(CountVisibleLines(errorLine));
+                    errors.Add(visibleLine[errorLine]);
                 }
                 indicatorBar.Errors = errors;
             }
