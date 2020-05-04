@@ -4128,7 +4128,6 @@ namespace PaintDotNet.Effects
 
                     this.SetProperty("fold", "1");
                     this.SetProperty("fold.compact", "0");
-                    this.AutomaticFold = (AutomaticFold.Show | AutomaticFold.Click | AutomaticFold.Change);
 
                     switch (this.theme)
                     {
@@ -4146,7 +4145,6 @@ namespace PaintDotNet.Effects
                     this.SetProperty("fold", "1");
                     this.SetProperty("fold.html", "1");
                     this.SetProperty("fold.compact", "0");
-                    this.AutomaticFold = (AutomaticFold.Show | AutomaticFold.Click | AutomaticFold.Change);
 
                     switch (this.theme)
                     {
