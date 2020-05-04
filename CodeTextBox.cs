@@ -961,6 +961,12 @@ namespace PaintDotNet.Effects
             Intelli.Variables.Clear();
             Intelli.VarPos.Clear();
 
+            if (this.ReadOnly)
+            {
+                // We can use ReadOnly to indicate the document is a Type Definition
+                return;
+            }
+
             Tuple<int, int> methodBounds = GetMethodBounds(position);
             if (methodBounds.Item1 == InvalidPosition || methodBounds.Item2 == InvalidPosition)
             {
