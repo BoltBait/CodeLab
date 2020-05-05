@@ -565,7 +565,7 @@ namespace PaintDotNet.Effects
             }
         }
 
-        internal static string GetConstraints(this IEnumerable<Type> args)
+        internal static IEnumerable<string> GetConstraints(this IEnumerable<Type> args)
         {
             List<string> constraints = new List<string>();
             foreach (Type arg in args)
@@ -581,11 +581,11 @@ namespace PaintDotNet.Effects
                         types = types.Prepend("class");
                     }
 
-                    constraints.Add($"\r\n    where {arg.GetDisplayName()} : {types.Join(", ")}");
+                    constraints.Add($"where {arg.GetDisplayName()} : {types.Join(", ")}");
                 }
             }
 
-            return constraints.Join(string.Empty);
+            return constraints;
         }
 
         internal static string GetDescription(this Enum value)

@@ -1501,7 +1501,11 @@ namespace PaintDotNet.Effects
 
                         if (method.IsGenericMethodDefinition)
                         {
-                            genericContraints = args.GetConstraints();
+                            string constraints = args.GetConstraints().Join("\r\n    ");
+                            if (constraints.Length > 0)
+                            {
+                                genericContraints = "\r\n    " + constraints;
+                            }
                         }
                     }
 

@@ -475,7 +475,11 @@ namespace PaintDotNet.Effects
 
                 if (methodInfo.IsGenericMethodDefinition)
                 {
-                    genericContraints = args.GetConstraints();
+                    string constraints = args.GetConstraints().Join("\r\n    ");
+                    if (constraints.Length > 0)
+                    {
+                        genericContraints = "\r\n    " + constraints;
+                    }
                 }
             }
 
@@ -551,7 +555,11 @@ namespace PaintDotNet.Effects
 
                 if (type.IsGenericTypeDefinition)
                 {
-                    realName += type.GetGenericArguments().GetConstraints();
+                    string constraints = type.GetGenericArguments().GetConstraints().Join("\r\n    ");
+                    if (constraints.Length > 0)
+                    {
+                        realName += "\r\n    " + constraints;
+                    }
                 }
             }
 

@@ -36,11 +36,12 @@ namespace PaintDotNet.Effects
             defRef.AppendLine("{");
 
             indent = 1;
+            string spaces = GetIndent(indent);
 
             if (typeof(Delegate).IsAssignableFrom(type))
             {
                 MethodInfo method = type.GetMethod("Invoke");
-                defRef.AppendLine(GetIndent(indent) + "public delegate " + method.ReturnType.GetDisplayName() + " " + type.GetDisplayNameWithExclusion(type) + "(" + method.Params() + ");");
+                defRef.AppendLine(spaces + "public delegate " + method.ReturnType.GetDisplayName() + " " + type.GetDisplayNameWithExclusion(type) + "(" + method.Params() + ");");
                 defRef.AppendLine("}");
 
                 return defRef.ToString();
@@ -48,11 +49,18 @@ namespace PaintDotNet.Effects
 
             if (type.IsEnum && type.IsDefined(typeof(FlagsAttribute)))
             {
-                defRef.AppendLine(GetIndent(indent) + "[Flags]");
+                defRef.AppendLine(spaces + "[Flags]");
             }
 
-            defRef.AppendLine(GetIndent(indent) + "public " + type.GetModifiers() + type.GetObjectType() + " " + type.GetDisplayNameWithExclusion(type) + type.GetInheritance());
-            defRef.AppendLine(GetIndent(indent) + "{");
+            defRef.AppendLine(spaces + "public " + type.GetModifiers() + type.GetObjectType() + " " + type.GetDisplayNameWithExclusion(type) + type.GetInheritance());
+            if (type.IsGenericType)
+            {
+                foreach (string constraint in type.GetGenericArguments().GetConstraints())
+                {
+                    defRef.AppendLine(spaces + "    " + constraint);
+                }
+            }
+            defRef.AppendLine(spaces + "{");
             indent++;
 
             IterateMembers(type);
@@ -261,10 +269,28 @@ namespace PaintDotNet.Effects
                     name = returnType + " " + name;
                 }
 
+                string genericArgs = string.Empty;
+                string genericContraints = string.Empty;
+
+                if (method.IsGenericMethod)
+                {
+                    Type[] args = method.GetGenericArguments();
+                    genericArgs = $"<{args.Select(t => t.GetDisplayName()).Join(", ")}>";
+
+                    if (method.IsGenericMethodDefinition)
+                    {
+                        string constraints = args.GetConstraints().Join("\r\n    " + spaces);
+                        if (constraints.Length > 0)
+                        {
+                            genericContraints = "\r\n    " + spaces + constraints;
+                        }
+                    }
+                }
+
                 string modifier = isInterface ? string.Empty : method.GetModifiers();
                 string access = isInterface ? string.Empty : method.GetAccessModifiers();
 
-                string methodDef = spaces + access + modifier + name + "(" + method.Params(false) + ");";
+                string methodDef = spaces + access + modifier + name + genericArgs + "(" + method.Params(false) + ")" + genericContraints + ";";
 
                 if (isImExOperator)
                 {
@@ -331,6 +357,13 @@ namespace PaintDotNet.Effects
                 }
 
                 defRef.AppendLine(spaces + "public " + nestedType.GetModifiers() + nestedType.GetObjectType() + " " + nestedType.GetDisplayNameWithExclusion(type) + nestedType.GetInheritance());
+                if (nestedType.IsGenericType)
+                {
+                    foreach (string constraint in nestedType.GetGenericArguments().GetConstraints())
+                    {
+                        defRef.AppendLine(spaces + "    " + constraint);
+                    }
+                }
                 defRef.AppendLine(spaces + "{");
                 indent++;
 
@@ -433,10 +466,7 @@ namespace PaintDotNet.Effects
                 allInheritance = allInheritance.Prepend(type.BaseType);
             }
 
-            string inheritance = allInheritance.Any() ? " : " + allInheritance.Select(i => i.GetDisplayName()).Join(", ") : string.Empty;
-            string constraints = type.IsGenericType ? type.GetGenericArguments().GetConstraints() : string.Empty;
-
-            return inheritance + constraints;
+            return allInheritance.Any() ? " : " + allInheritance.Select(i => i.GetDisplayName()).Join(", ") : string.Empty;
         }
 
         private static bool IsVisibleInterface(this Type type)
