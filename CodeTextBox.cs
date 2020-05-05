@@ -2002,12 +2002,14 @@ namespace PaintDotNet.Effects
             return tag;
         }
 
-        private void OpenDefinitionTab(Type type)
+        private void OpenDefinitionTab(Type type, MemberInfo member = null)
         {
             if (type == null)
             {
                 return;
             }
+
+            string wordToFind = member?.Name ?? type.GetDisplayNameWithExclusion(type);
 
             if (type.IsNested)
             {
@@ -2021,6 +2023,16 @@ namespace PaintDotNet.Effects
             OnBuildNeeded();
             this.Text = defRef;
             this.ReadOnly = true;
+
+            this.TargetWholeDocument();
+            this.SearchFlags = SearchFlags.MatchCase | SearchFlags.WholeWord | SearchFlags.WordStart;
+
+            if (this.SearchInTarget(wordToFind) != InvalidPosition)
+            {
+                this.SetSel(this.TargetStart, this.TargetEnd);
+                this.ScrollCaret();
+            }
+
             this.EmptyUndoBuffer();
             this.SetSavePoint();
         }
@@ -2317,7 +2329,7 @@ namespace PaintDotNet.Effects
             }
             else
             {
-                OpenDefinitionTab(declaringType);
+                OpenDefinitionTab(declaringType, memberInfo);
             }
 
             return true;
