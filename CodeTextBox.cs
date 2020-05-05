@@ -48,10 +48,12 @@ namespace PaintDotNet.Effects
         private readonly ScaledToolStripDropDownButton bulbIcon = new ScaledToolStripDropDownButton();
         private readonly ToolStripMenuItem renameVarMenuItem = new ToolStripMenuItem();
         private readonly Dictionary<Guid, ScintillaNET.Document> docCollection = new Dictionary<Guid, ScintillaNET.Document>();
+        private readonly Dictionary<Guid, int> scrollPosCollection = new Dictionary<Guid, int>();
         private const int Preprocessor = 64;
 
         #region Variables for different states
         private Theme theme;
+        private Guid docGuid = Guid.Empty;
         private int posAtIBox = InvalidPosition;
         private int previousLine = 0;
         private int dwellWordPos = InvalidPosition;
@@ -4113,6 +4115,9 @@ namespace PaintDotNet.Effects
             this.findPanel.Hide();
             this.iBox.Hide();
 
+            this.scrollPosCollection[this.docGuid] = this.DocLineFromVisible(this.FirstVisibleLine);
+            this.docGuid = guid;
+
             var document = this.Document;
             this.AddRefDocument(document);
 
@@ -4181,11 +4186,16 @@ namespace PaintDotNet.Effects
             this.findPanel.Hide();
             this.iBox.Hide();
 
+            this.scrollPosCollection[this.docGuid] = this.DocLineFromVisible(this.FirstVisibleLine);
+            this.docGuid = guid;
+
             var prevDocument = this.Document;
             this.AddRefDocument(prevDocument);
 
             this.Document = this.docCollection[guid];
             this.ReleaseDocument(this.docCollection[guid]);
+
+            this.FirstVisibleLine = this.scrollPosCollection[guid];
 
             switch (this.Lexer)
             {
@@ -4227,6 +4237,7 @@ namespace PaintDotNet.Effects
 
             this.ReleaseDocument(this.docCollection[guid]);
             this.docCollection.Remove(guid);
+            this.scrollPosCollection.Remove(guid);
         }
         #endregion
 
