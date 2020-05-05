@@ -82,6 +82,7 @@
             this.FindBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.FindBox.Name = "FindBox";
             this.FindBox.Size = new System.Drawing.Size(150, 23);
+            this.FindBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.FindBox_KeyPress);
             this.FindBox.TextChanged += new System.EventHandler(this.FindBox_TextChanged);
             // 
             // Next

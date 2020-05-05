@@ -218,6 +218,15 @@ namespace PaintDotNet.Effects
             OnParametersChanged();
         }
 
+        private void FindBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Enter)
+            {
+                e.Handled = true;
+                OnFindNextClicked();
+            }
+        }
+
         private void ReplaceAll_Click(object sender, EventArgs e)
         {
             OnReplaceAllClicked();
