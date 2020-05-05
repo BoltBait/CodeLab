@@ -46,7 +46,7 @@ namespace PaintDotNet.Effects
                 return defRef.ToString();
             }
 
-            if (type.IsEnum && type.GetCustomAttribute<FlagsAttribute>() != null)
+            if (type.IsEnum && type.IsDefined(typeof(FlagsAttribute)))
             {
                 defRef.AppendLine(GetIndent(indent) + "[Flags]");
             }
