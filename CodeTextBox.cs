@@ -3911,6 +3911,8 @@ namespace PaintDotNet.Effects
         #region Helper functions
         private int GetVisibleLine(int line)
         {
+            line = line.Clamp(0, this.Lines.Count - 1);
+
             while (!this.Lines[line].Visible)
             {
                 if (line != this.Lines[line].FoldParent && this.Lines[line].FoldParent != -1)
