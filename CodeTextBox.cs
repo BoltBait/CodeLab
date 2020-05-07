@@ -2002,18 +2002,21 @@ namespace PaintDotNet.Effects
             return tag;
         }
 
-        private void OpenDefinitionTab(Type type, MemberInfo member = null)
+        private void OpenDefinitionTab(MemberInfo memberInfo)
         {
-            if (type == null)
+            Type type;
+            switch (memberInfo.MemberType)
             {
-                return;
-            }
-
-            string wordToFind = member?.Name ?? type.GetDisplayNameWithExclusion(type);
-
-            if (type.IsNested)
-            {
-                type = type.DeclaringType;
+                case MemberTypes.TypeInfo:
+                    type = (Type)memberInfo;
+                    break;
+                default:
+                    type = memberInfo.DeclaringType;
+                    if (type.IsNested)
+                    {
+                        type = type.DeclaringType;
+                    }
+                    break;
             }
 
             string defRef = DefinitionGenerator.Generate(type);
@@ -2026,6 +2029,7 @@ namespace PaintDotNet.Effects
 
             this.TargetWholeDocument();
             this.SearchFlags = SearchFlags.MatchCase | SearchFlags.WholeWord | SearchFlags.WordStart;
+            string wordToFind = memberInfo.Name;
 
             if (this.SearchInTarget(wordToFind) != InvalidPosition)
             {
@@ -2313,10 +2317,9 @@ namespace PaintDotNet.Effects
                 return found;
             }
 
-            Type declaringType = memberInfo.DeclaringType;
-
             if (msDocs)
             {
+                Type declaringType = memberInfo.DeclaringType;
                 if (declaringType.Namespace.StartsWith("PaintDotNet", StringComparison.Ordinal))
                 {
                     return false;
@@ -2329,7 +2332,7 @@ namespace PaintDotNet.Effects
             }
             else
             {
-                OpenDefinitionTab(declaringType, memberInfo);
+                OpenDefinitionTab(memberInfo);
             }
 
             return true;
