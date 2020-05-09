@@ -48,7 +48,7 @@ namespace PaintDotNet.Effects
         private readonly ScaledToolStripDropDownButton bulbIcon = new ScaledToolStripDropDownButton();
         private readonly ToolStripMenuItem renameVarMenuItem = new ToolStripMenuItem();
         private readonly Dictionary<Guid, ScintillaNET.Document> docCollection = new Dictionary<Guid, ScintillaNET.Document>();
-        private readonly Dictionary<Guid, int> scrollPosCollection = new Dictionary<Guid, int>();
+        private readonly Dictionary<Guid, DocMeta> docMetaCollection = new Dictionary<Guid, DocMeta>();
         private const int Preprocessor = 64;
 
         #region Variables for different states
@@ -67,6 +67,36 @@ namespace PaintDotNet.Effects
         #endregion
 
         #region Properties
+        private DocMeta DocumentMeta
+        {
+            get
+            {
+                List<int> foldedLines = new List<int>();
+                for (int lineIndex = 0; lineIndex < this.Lines.Count; lineIndex++)
+                {
+                    lineIndex = this.Lines[lineIndex].ContractedFoldNext;
+                    if (lineIndex == InvalidPosition)
+                    {
+                        break;
+                    }
+
+                    foldedLines.Add(lineIndex);
+                }
+
+                return new DocMeta(this.DocLineFromVisible(this.FirstVisibleLine), this.AnchorPosition, this.CurrentPosition, foldedLines);
+            }
+            set
+            {
+                this.AnchorPosition = value.AnchorPos;
+                this.CurrentPosition = value.CaretPos;
+                this.FirstVisibleLine = value.ScrollPos;
+                foreach (int line in value.FoldedLines)
+                {
+                    this.Lines[line].FoldLine(FoldAction.Contract);
+                }
+            }
+        }
+
         internal IReadOnlyCollection<int> Bookmarks
         {
             get
@@ -4136,7 +4166,7 @@ namespace PaintDotNet.Effects
             this.findPanel.Hide();
             this.iBox.Hide();
 
-            this.scrollPosCollection[this.docGuid] = this.DocLineFromVisible(this.FirstVisibleLine);
+            this.docMetaCollection[this.docGuid] = this.DocumentMeta;
             this.docGuid = guid;
 
             var document = this.Document;
@@ -4207,7 +4237,7 @@ namespace PaintDotNet.Effects
             this.findPanel.Hide();
             this.iBox.Hide();
 
-            this.scrollPosCollection[this.docGuid] = this.DocLineFromVisible(this.FirstVisibleLine);
+            this.docMetaCollection[this.docGuid] = this.DocumentMeta;
             this.docGuid = guid;
 
             var prevDocument = this.Document;
@@ -4216,7 +4246,7 @@ namespace PaintDotNet.Effects
             this.Document = this.docCollection[guid];
             this.ReleaseDocument(this.docCollection[guid]);
 
-            this.FirstVisibleLine = this.scrollPosCollection[guid];
+            this.DocumentMeta = this.docMetaCollection[guid];
 
             switch (this.Lexer)
             {
@@ -4258,7 +4288,7 @@ namespace PaintDotNet.Effects
 
             this.ReleaseDocument(this.docCollection[guid]);
             this.docCollection.Remove(guid);
-            this.scrollPosCollection.Remove(guid);
+            this.docMetaCollection.Remove(guid);
         }
         #endregion
 
@@ -4399,5 +4429,21 @@ namespace PaintDotNet.Effects
             internal const uint Mask = (1 << 3);
         }
         #endregion
+
+        private class DocMeta
+        {
+            internal int ScrollPos { get; }
+            internal int AnchorPos { get; }
+            internal int CaretPos { get; }
+            internal IEnumerable<int> FoldedLines { get; }
+
+            internal DocMeta(int scrollPos, int anchorPos, int caretPos, IEnumerable<int> foldedLines)
+            {
+                this.ScrollPos = scrollPos;
+                this.AnchorPos = anchorPos;
+                this.CaretPos = caretPos;
+                this.FoldedLines = foldedLines;
+            }
+        }
     }
 }
