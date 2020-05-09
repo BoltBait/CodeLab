@@ -4,6 +4,7 @@
 // Substyles --- https://github.com/jacobslusser/ScintillaNET/pull/443
 // CaretLineVisibleAlways --- https://github.com/jacobslusser/ScintillaNET/pull/389
 // InternalFocusFlag --- https://github.com/jacobslusser/ScintillaNET/pull/448
+// DocLineFromVisible Bugfix https://github.com/jacobslusser/ScintillaNET/pull/480
 
 using System;
 using System.Text;
@@ -72,6 +73,11 @@ namespace PaintDotNet.Effects
         internal int GetSubstylesStart(int styleBase)
         {
             return DirectMessage(4021, new IntPtr(styleBase), IntPtr.Zero).ToInt32();
+        }
+
+        internal new int DocLineFromVisible(int displayLine)
+        {
+            return DirectMessage(2221, new IntPtr(displayLine), IntPtr.Zero).ToInt32();
         }
 
         // Copied from Scinilla.NET's internal Helper class
