@@ -51,6 +51,13 @@ namespace PaintDotNet.Effects
         private readonly Dictionary<Guid, DocMeta> docMetaCollection = new Dictionary<Guid, DocMeta>();
         private const int Preprocessor = 64;
 
+        private enum DelayedOperation
+        {
+            None,
+            UpdateIndicatorBar,
+            ScrollCaret
+        }
+
         #region Variables for different states
         private Theme theme;
         private Guid docGuid = Guid.Empty;
@@ -63,7 +70,7 @@ namespace PaintDotNet.Effects
         private int maxLineNumberCharLength = 0;
         private int indexForPurpleWords = -1;
         private int disableIntelliTipPos = InvalidPosition;
-        private bool resizing = false;
+        private DelayedOperation delayedOperation = DelayedOperation.None;
         #endregion
 
         #region Properties
@@ -2064,7 +2071,7 @@ namespace PaintDotNet.Effects
             if (this.SearchInTarget(wordToFind) != InvalidPosition)
             {
                 this.SetSel(this.TargetStart, this.TargetEnd);
-                this.ScrollCaret();
+                this.delayedOperation = DelayedOperation.ScrollCaret;
             }
 
             this.EmptyUndoBuffer();
@@ -3522,11 +3529,27 @@ namespace PaintDotNet.Effects
         {
             base.OnPainted(e);
 
-            if (this.resizing)
+            // Sometimes the native Scintilla control takes too long to paint itself,
+            // and consecutive calls don't work properly. So, we'll execute those
+            // calls after Scintilla has reported it has finished re-painting itself.
+            // As far as I can tell, this is just thread safety issue that ScintillaNET
+            // should handle, but it doesn't.
+
+            if (this.delayedOperation == DelayedOperation.None)
             {
-                this.resizing = false;
+                return;
+            }
+
+            if (this.delayedOperation == DelayedOperation.UpdateIndicatorBar)
+            {
                 UpdateIndicatorBar();
             }
+            else if (this.delayedOperation == DelayedOperation.ScrollCaret)
+            {
+                this.ScrollCaret();
+            }
+
+            this.delayedOperation = DelayedOperation.None;
         }
 
         protected override void OnTextChanged(EventArgs e)
@@ -3586,7 +3609,7 @@ namespace PaintDotNet.Effects
                 iBox.Visible = false;
             }
 
-            this.resizing = true;
+            this.delayedOperation = DelayedOperation.UpdateIndicatorBar;
         }
 
         protected override void OnLostFocus(EventArgs e)
