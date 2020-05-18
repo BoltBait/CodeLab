@@ -463,7 +463,7 @@
             this.sourceBox.Items.AddRange(new object[] {
             "SRC",
             "WRK",
-            "DST"});
+            "AUX"});
             this.sourceBox.Location = new System.Drawing.Point(250, 49);
             this.sourceBox.Name = "sourceBox";
             this.sourceBox.Size = new System.Drawing.Size(51, 23);
@@ -485,6 +485,7 @@
             this.destinationBox.FormattingEnabled = true;
             this.destinationBox.Items.AddRange(new object[] {
             "WRK",
+            "AUX",
             "DST"});
             this.destinationBox.Location = new System.Drawing.Point(105, 49);
             this.destinationBox.Name = "destinationBox";
@@ -508,7 +509,7 @@
             this.bottomBox.Items.AddRange(new object[] {
             "SRC",
             "WRK",
-            "DST"});
+            "AUX"});
             this.bottomBox.Location = new System.Drawing.Point(393, 49);
             this.bottomBox.Name = "bottomBox";
             this.bottomBox.Size = new System.Drawing.Size(51, 23);

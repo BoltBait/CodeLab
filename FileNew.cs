@@ -1,6 +1,6 @@
 /////////////////////////////////////////////////////////////////////////////////
 // CodeLab for Paint.NET
-// Portions Copyright ©2007-2018 BoltBait. All Rights Reserved.
+// Portions Copyright ©2007-2020 BoltBait. All Rights Reserved.
 // Portions Copyright ©2018 Jason Wendt. All Rights Reserved.
 // Portions Copyright ©2019 Nicholas Hayes. All Rights Reserved.
 // Portions Copyright ©Microsoft Corporation. All Rights Reserved.
@@ -734,6 +734,7 @@ namespace PaintDotNet.Effects
             string wrksurface = "dst";
             string dstsurface = "dst";
             string srcsurface = "src";
+            string SimpleLoopSource = "src";
             string disposecode = "";
             string rendercode = "";
             string code = "// Name:\r\n// Submenu:\r\n// Author:\r\n// Title:\r\n// Version:\r\n// Desc:\r\n// Keywords:\r\n// URL:\r\n// Help:\r\n";
@@ -757,6 +758,7 @@ namespace PaintDotNet.Effects
             string srccode = "src[x,y]";
             int currentUIcount = 1;
             bool workSurfaceNeeded = false;
+            bool auxSurfaceNeeded = false;
             bool clipboardNeeded = false;
             string[] flowListArray = flowList.Items.OfType<string>().ToArray();
 
@@ -784,6 +786,10 @@ namespace PaintDotNet.Effects
                 {
                     workSurfaceNeeded = true;
                 }
+                if (elementDetails[0].Contains("A"))
+                {
+                    auxSurfaceNeeded = true;
+                }
                 if (elementDetails[2] == "Clipboard")
                 {
                     clipboardNeeded = true;
@@ -797,6 +803,12 @@ namespace PaintDotNet.Effects
             {
                 code += "// Working surface" + cr;
                 code += "Surface wrk = null;" + cr;
+                code += cr;
+            }
+            if (auxSurfaceNeeded)
+            {
+                code += "// Aux surface" + cr;
+                code += "Surface aux = null;" + cr;
                 code += cr;
             }
 
@@ -1210,7 +1222,7 @@ namespace PaintDotNet.Effects
             }
 
             // OnDispose
-            if (workSurfaceNeeded || disposecode.Length > 0 || clipboardNeeded)
+            if (workSurfaceNeeded || auxSurfaceNeeded || disposecode.Length > 0 || clipboardNeeded)
             {
                 code += "protected override void OnDispose(bool disposing)" + cr;
                 code += "{" + cr;
@@ -1221,6 +1233,11 @@ namespace PaintDotNet.Effects
                 {
                     code += "        if (wrk != null) wrk.Dispose();" + cr;
                     code += "        wrk = null;" + cr;
+                }
+                if (auxSurfaceNeeded)
+                {
+                    code += "        if (aux != null) aux.Dispose();" + cr;
+                    code += "        aux = null;" + cr;
                 }
                 if (clipboardNeeded)
                 {
@@ -1253,6 +1270,14 @@ namespace PaintDotNet.Effects
                 code += "    }" + cr;
                 code += cr;
             }
+            if (auxSurfaceNeeded)
+            {
+                code += "    if (aux == null)" + cr;
+                code += "    {" + cr;
+                code += "        aux = new Surface(src.Size);" + cr;
+                code += "    }" + cr;
+                code += cr;
+            }
 
             // Clipboard
             if (clipboardNeeded)
@@ -1281,25 +1306,28 @@ namespace PaintDotNet.Effects
                     string ecolor = elementDetails[3];
                     int elnum = int.Parse(elementDetails[4]);
 
-                    dstsurface = "dst";
-                    wrksurface = "wrk";
                     srcsurface = "src";
+                    wrksurface = "wrk";
+                    dstsurface = "dst";
                     switch (targets.Length)
                     {
                         case 1:
                             if (targets[0] == 'W') dstsurface = "wrk";
+                            if (targets[0] == 'A') dstsurface = "aux";
                             break;
                         case 2:
                             if (targets[0] == 'W') srcsurface = "wrk";
-                            if (targets[0] == 'D') srcsurface = "dst";
+                            if (targets[0] == 'A') srcsurface = "aux";
                             if (targets[1] == 'W') dstsurface = "wrk";
+                            if (targets[1] == 'A') dstsurface = "aux";
                             break;
                         case 3:
                             if (targets[0] == 'W') srcsurface = "wrk";
-                            if (targets[0] == 'D') srcsurface = "dst";
+                            if (targets[0] == 'A') srcsurface = "aux";
                             if (targets[1] == 'S') wrksurface = "src";
-                            if (targets[1] == 'D') wrksurface = "dst";
+                            if (targets[1] == 'A') wrksurface = "aux";
                             if (targets[2] == 'W') dstsurface = "wrk";
+                            if (targets[2] == 'A') dstsurface = "aux";
                             break;
                     }
                     // prepare for the Render loop
@@ -1320,6 +1348,10 @@ namespace PaintDotNet.Effects
                     {
                         case "Effect":
                             code += getEffectPropCode(ename, srcsurface, dstsurface, elnum, lastItem, code.Contains("PropertyBasedEffectConfigToken " + getLowerName(ename) + "Parameters ="), ref rendercode);
+                            if (lastItem)
+                            {
+                                SimpleLoopSource = dstsurface;
+                            }
                             break;
                         case "Blend":
                             if (lastItem)
@@ -1327,12 +1359,14 @@ namespace PaintDotNet.Effects
                                 if (ename == "User selected")
                                 {
                                     rendercode = "    // Blend the " + srcsurface + " surface and the " + wrksurface + " surface to the " + dstsurface + " surface" + cr;
-                                    rendercode += "    Amount" + elnum.ToString() + ".Apply(" + dstsurface + ", " + srcsurface + ", " + wrksurface + ", rect);" + cr;
+                                    rendercode += "    Amount" + elnum.ToString() + ".Apply(" + dstsurface + ", " + wrksurface + ", " + srcsurface + ", rect);" + cr;
+                                    SimpleLoopSource = dstsurface;
                                 }
                                 else
                                 {
                                     rendercode = "    // " + ename + " Blend the " + srcsurface + " surface and the " + wrksurface + " surface to the " + dstsurface + " surface" + cr;
-                                    rendercode += "    " + ename.ToLower() + "Op.Apply(" + dstsurface + ", " + srcsurface + ", " + wrksurface + ", rect);" + cr;
+                                    rendercode += "    " + ename.ToLower() + "Op.Apply(" + dstsurface + ", " + wrksurface + ", " + srcsurface + ", rect);" + cr;
+                                    SimpleLoopSource = dstsurface;
                                 }
                             }
                             else
@@ -1341,12 +1375,12 @@ namespace PaintDotNet.Effects
                                if (ename == "User selected")
                                 {
                                     code += "    // Blend the " + srcsurface + " surface and the " + wrksurface + " surface to the " + dstsurface + " surface" + cr;
-                                    code += "    Amount" + elnum.ToString() + ".Apply(" + dstsurface + ", " + srcsurface + ", " + wrksurface + ");" + cr;
+                                    code += "    Amount" + elnum.ToString() + ".Apply(" + dstsurface + ", " + wrksurface + ", " + srcsurface + ");" + cr;
                                 }
                                 else
                                 {
                                     code += "    // " + ename + " Blend the " + srcsurface + " surface and the " + wrksurface + " surface to the " + dstsurface + " surface" + cr;
-                                    code += "    " + ename.ToLower() + "Op.Apply(" + dstsurface + ", " + srcsurface + ", " + wrksurface + ");" + cr;
+                                    code += "    " + ename.ToLower() + "Op.Apply(" + dstsurface + ", " + wrksurface + ", " + srcsurface + ");" + cr;
                                 }
                             }
                             break;
@@ -1355,6 +1389,7 @@ namespace PaintDotNet.Effects
                             {
                                 rendercode = "    // " + ename + " the " + srcsurface + " surface to the " + dstsurface + " surface" + cr;
                                 rendercode += "    " + ename.ToLower() + "Op.Apply(" + dstsurface + ", " + srcsurface + ", rect);" + cr;
+                                SimpleLoopSource = dstsurface;
                             }
                             else
                             {
@@ -1370,6 +1405,7 @@ namespace PaintDotNet.Effects
                                 {
                                     rendercode = "    // Fill the " + dstsurface + " surface with a user selected color" + cr;
                                     rendercode += "    " + dstsurface + ".Clear(rect,Amount" + elnum.ToString() + ");" + cr;
+                                    SimpleLoopSource = dstsurface;
                                 }
                                 else
                                 {
@@ -1383,6 +1419,7 @@ namespace PaintDotNet.Effects
                                         ecolor = "ColorBgra." + ecolor;
                                     }
                                     rendercode += "    " + dstsurface + ".Clear(rect," + ecolor + ");" + cr;
+                                    SimpleLoopSource = dstsurface;
                                 }
                             }
                             else
@@ -1413,6 +1450,7 @@ namespace PaintDotNet.Effects
                             {
                                 rendercode = "    // Copy the " + srcsurface + " surface to the " + dstsurface + " surface" + cr;
                                 rendercode += "    " + dstsurface + ".CopySurface(" + srcsurface + ",rect.Location,rect);" + cr;
+                                SimpleLoopSource = dstsurface;
                             }
                             else
                             {
@@ -1490,7 +1528,7 @@ namespace PaintDotNet.Effects
                         code += "    dst.CopySurface(" + dstsurface + ", rect.Location, rect);" + cr;
                         code += cr;
                     }
-                    // else we've already rendered to the DST surface.
+                    // else we've already rendered to the DST surface. XXX
                 }
                 else
                 {
@@ -1533,11 +1571,54 @@ namespace PaintDotNet.Effects
                     {
                         code += "        ColorBgra* wrkPtr = wrk.GetPointAddressUnchecked(rect.Left, y);" + cr;
                     }
+                    if (auxSurfaceNeeded)
+                    {
+                        code += "        ColorBgra* auxPtr = aux.GetPointAddressUnchecked(rect.Left, y);" + cr;
+                    }
                 }
                 code += "        // Step through each pixel on the current row of the rectangle" + cr;
                 code += "        for (int x = rect.Left; x < rect.Right; x++)" + cr;
                 code += "        {" + cr;
-                code += "            ColorBgra CurrentPixel = " + srccode + ";" + cr;
+                if (AdvancedStyle.Checked)
+                {
+                    code += "            ColorBgra SrcPixel = *srcPtr;" + cr;
+                }
+                else
+                {
+                    code += "            ColorBgra SrcPixel = src[x,y];" + cr;
+                }
+                if (workSurfaceNeeded)
+                {
+                    if (AdvancedStyle.Checked)
+                    {
+                        code += "            ColorBgra WrkPixel = *wrkPtr;" + cr;
+                    }
+                    else
+                    {
+                        code += "            ColorBgra WrkPixel = wrk[x,y];" + cr;
+                    }
+                }
+                if (auxSurfaceNeeded)
+                {
+                    if (AdvancedStyle.Checked)
+                    {
+                        code += "            ColorBgra AuxPixel = *auxPtr;" + cr;
+                    }
+                    else
+                    {
+                        code += "            ColorBgra AuxPixel = aux[x,y];" + cr;
+                    }
+                }
+                if (AdvancedStyle.Checked)
+                {
+                    code += "            ColorBgra DstPixel = *dstPtr;" + cr;
+                }
+                else
+                {
+                    code += "            ColorBgra DstPixel = dst[x,y];" + cr;
+                }
+                code += cr;
+                code += "            ColorBgra CurrentPixel = " + SimpleLoopSource.FirstCharToUpper() + "Pixel;" + cr;
                 code += cr;
 
                 string additionalindent = "";
@@ -1591,6 +1672,10 @@ namespace PaintDotNet.Effects
                     if (workSurfaceNeeded)
                     {
                         code += "            wrkPtr++;" + cr;
+                    }
+                    if (auxSurfaceNeeded)
+                    {
+                        code += "            auxPtr++;" + cr;
                     }
                 }
                 code += "        }" + cr;
@@ -1666,23 +1751,69 @@ namespace PaintDotNet.Effects
             */
             string graphicName = listItemText.Substring(0, listItemText.IndexOf("|"));
             // This is to minimize the number of graphic files I had to include...
-            if (graphicName.Length == 3)
+            string srcGraphicName = "Src";
+            string dstGraphicName = "Dest";
+            switch (graphicName.Substring(graphicName.Length-1))
             {
-                string source = graphicName.Substring(0, 2);
-                string destination = graphicName.Substring(2);
-                if (source == "WS") source = "SW";
-                if (source == "DW") source = "WD";
-                if (source == "DS") source = "SD";
-                if (source == "SS") source = "S";
-                if (source == "WW") source = "W";
-                if (source == "DD") source = "D";
-                graphicName = source + destination;
-                listItemText = listItemText.Substring(4);
+                case "D":
+                    dstGraphicName += "DST";
+                    break;
+                case "W":
+                    dstGraphicName += "WRK";
+                    break;
+                case "A":
+                    dstGraphicName += "AUX";
+                    break;
+                default:
+                    break;
             }
-            else
+            graphicName = graphicName.Substring(0, graphicName.Length - 1);
+            if (graphicName.Length == 2)
             {
-                listItemText = listItemText.Substring(graphicName.Length + 1);
+                // sort these to use less graphics
+                if (graphicName == "WS") graphicName = "SW";
+                if (graphicName == "AS") graphicName = "SA";
+                if (graphicName == "AW") graphicName = "WA";
+                // it is ok to blend the same layer with itself, just use the single source picture
+                if (graphicName == "WW") graphicName = "W";
+                if (graphicName == "AA") graphicName = "A";
+                if (graphicName == "SS") graphicName = "S";
             }
+            if (graphicName.Length > 0)
+            {
+                switch (graphicName.Substring(0,1))
+                {
+                    case "S":
+                        srcGraphicName += "SRC";
+                        break;
+                    case "W":
+                        srcGraphicName += "WRK";
+                        break;
+                    case "A":
+                        srcGraphicName += "AUX";
+                        break;
+                    default:
+                        break;
+                }
+                if (graphicName.Length > 1)
+                {
+                    switch (graphicName.Substring(1, 1))
+                    {
+                        case "S":
+                            srcGraphicName += "SRC";
+                            break;
+                        case "W":
+                            srcGraphicName += "WRK";
+                            break;
+                        case "A":
+                            srcGraphicName += "AUX";
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+            listItemText = listItemText.Substring(listItemText.IndexOf("|")+1);
             string groupName = listItemText.Substring(0, listItemText.IndexOf("|"));
             listItemText = listItemText.Substring(groupName.Length + 1);
             string bigText = listItemText.Substring(0, listItemText.IndexOf("|"));
@@ -1694,8 +1825,10 @@ namespace PaintDotNet.Effects
             using (Font smallfont = new Font(e.Font, FontStyle.Regular))
             {
                 solidBrush.Color = Color.FromName(smallText);
-                Image iconImage = ResUtil.GetImage(graphicName);
-                e.Graphics.DrawImage(iconImage, new Rectangle(e.Bounds.X + 1, e.Bounds.Y + 1, e.Bounds.Height - 2, e.Bounds.Height - 2));
+                Image iconImage = ResUtil.GetImage(srcGraphicName);
+                e.Graphics.DrawImage(iconImage, new Rectangle(e.Bounds.X + 1, e.Bounds.Y + 1, e.Bounds.Height - 2, (e.Bounds.Height - 2) / 2));
+                iconImage = ResUtil.GetImage(dstGraphicName);
+                e.Graphics.DrawImage(iconImage, new Rectangle(e.Bounds.X + 1, e.Bounds.Y+ ((e.Bounds.Height - 2) / 2) + 1, e.Bounds.Height - 2, (e.Bounds.Height - 2) / 2));
 
                 if (groupName == "Fill")
                 {
@@ -1704,43 +1837,20 @@ namespace PaintDotNet.Effects
                         string imageName = smallText == "User selected" ? "UserSelected" : smallText;
                         Image imageFill = ResUtil.GetImage(imageName);
                         e.Graphics.DrawImage(imageFill, e.Bounds.X + (int)(17 * UIfactor), e.Bounds.Y + (int)(16 * UIfactor), e.Bounds.Height - (int)(33 * UIfactor), e.Bounds.Height - (int)(34 * UIfactor));
-                        if (smallText == "Transparent") smallText = "Clear " + ((graphicName[0] == 'W') ? "WRK" : "DST") + " surface";
-                        if (smallText == "Primary") smallText = "Fill " + ((graphicName[0] == 'W') ? "WRK" : "DST") + " surface with Primary color";
-                        if (smallText == "Secondary") smallText = "Fill " + ((graphicName[0] == 'W') ? "WRK" : "DST") + " surface with Secondary color";
-                        if (smallText == "User selected") smallText = "Fill " + ((graphicName[0] == 'W') ? "WRK" : "DST") + " surface with User Selected color";
+                        if (smallText == "Transparent") smallText = "Clear " + dstGraphicName.Substring(4) + " surface";
+                        if (smallText == "Primary") smallText = "Fill " + dstGraphicName.Substring(4) + " surface with Primary color";
+                        if (smallText == "Secondary") smallText = "Fill " + dstGraphicName.Substring(4) + " surface with Secondary color";
+                        if (smallText == "User selected") smallText = "Fill " + dstGraphicName.Substring(4) + " surface with User Selected color";
                     }
                     else
                     {
                         e.Graphics.FillRectangle(solidBrush, new Rectangle(e.Bounds.X + (int)(16 * UIfactor), e.Bounds.Y + (int)(16 * UIfactor), e.Bounds.Height - (int)(32 * UIfactor), e.Bounds.Height - (int)(34 * UIfactor)));
-                        if (graphicName[0] == 'W')
-                        {
-                            smallText = "WRK with " + smallText;
-                        }
-                        else
-                        {
-                            smallText = "DST with " + smallText;
-                        }
+                        smallText = dstGraphicName.Substring(4) + " with " + smallText;
                     }
                 }
                 else if (groupName == "Copy")
                 {
-                    string fillName = "SRC";
-                    if (graphicName[0] == 'W')
-                    {
-                        fillName = "WRK";
-                    }
-                    else if (graphicName[0] == 'D')
-                    {
-                        fillName = "DST";
-                    }
-                    if (graphicName[1] == 'W')
-                    {
-                        fillName += "WRK";
-                    }
-                    else
-                    {
-                        fillName += "DST";
-                    }
+                    string fillName = srcGraphicName.Substring(3) + "2" + dstGraphicName.Substring(4);
                     Image imageFill = ResUtil.GetImage(fillName);
                     e.Graphics.DrawImage(imageFill, e.Bounds.X + (int)(16 * UIfactor), e.Bounds.Y + (int)(16 * UIfactor), e.Bounds.Height - (int)(32 * UIfactor), e.Bounds.Height - (int)(32 * UIfactor));
                 }
@@ -1764,7 +1874,7 @@ namespace PaintDotNet.Effects
                 }
 
                 e.Graphics.DrawString(bigText, bigfont, foreBrush, new Rectangle(e.Bounds.X + e.Bounds.Height, e.Bounds.Y + (int)(7 * UIfactor), e.Bounds.Width - e.Bounds.Height, e.Bounds.Height));
-                e.Graphics.DrawString(smallText, smallfont, foreBrush, new Rectangle(e.Bounds.X + e.Bounds.Height + 2, e.Bounds.Y + (int)(bigfont.SizeInPoints / 72 * e.Graphics.DpiY) + (int)(14 * UIfactor), e.Bounds.Width - e.Bounds.Height, e.Bounds.Height));
+                e.Graphics.DrawString(smallText/*flowList.Items[e.Index].ToString()*/, smallfont, foreBrush, new Rectangle(e.Bounds.X + e.Bounds.Height + 2, e.Bounds.Y + (int)(bigfont.SizeInPoints / 72 * e.Graphics.DpiY) + (int)(14 * UIfactor), e.Bounds.Width - e.Bounds.Height, e.Bounds.Height));
             }
             e.DrawFocusRectangle();
         }
@@ -1977,7 +2087,6 @@ namespace PaintDotNet.Effects
                     bottomLabel.Visible = false;
                     bottomBox.Visible = false;
                     if (renderedEffects.Contains(effectBox.Text))
-                    //if (effectBox.SelectedIndex < 4)
                     {
                         sourceLabel.Visible = false;
                         sourceBox.Visible = false;
@@ -2076,14 +2185,46 @@ namespace PaintDotNet.Effects
             e.DrawFocusRectangle();
         }
 
+        private bool validateEffectTargets()
+        {
+            if (categoryBox.Text == "Effect")
+            {
+                if (!renderedEffects.Contains(effectBox.Text))
+                {
+                    if (sourceBox.Text == destinationBox.Text)
+                    {
+                        FlexibleMessageBox.Show("Effects can not render to the same canvas they use as the source.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return false;
+                    }
+                }
+            }
+            else if (categoryBox.Text == "Copy")
+            {
+                if (sourceBox.Text == destinationBox.Text)
+                {
+                    FlexibleMessageBox.Show("You should not copy to the same canvas used as the source.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return false;
+                }
+            }
+            return true;
+        }
+
         private void addButton_Click(object sender, EventArgs e)
         {
+            if (!validateEffectTargets())
+            {
+                return;
+            }
             flowList.Items.Add(assembleElement());
             flowList.SelectedIndex = flowList.Items.Count - 1;
         }
 
         private void updateButton_Click(object sender, EventArgs e)
         {
+            if (!validateEffectTargets())
+            {
+                return;
+            }
             string element = assembleElement();
             if (flowList.SelectedItems.Count == 0)
             {

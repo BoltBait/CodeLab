@@ -450,6 +450,21 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Icons\SrcWRK.png" />
+    <EmbeddedResource Include="Icons\DestAUX.png" />
+    <EmbeddedResource Include="Icons\DestDST.png" />
+    <EmbeddedResource Include="Icons\DestWRK.png" />
+    <EmbeddedResource Include="Icons\Src.png" />
+    <EmbeddedResource Include="Icons\SRC2AUX.png" />
+    <EmbeddedResource Include="Icons\SRC2DST.png" />
+    <EmbeddedResource Include="Icons\SRC2WRK.png" />
+    <EmbeddedResource Include="Icons\SrcAUX.png" />
+    <EmbeddedResource Include="Icons\SrcSRC.png" />
+    <EmbeddedResource Include="Icons\SrcSRCAUX.png" />
+    <EmbeddedResource Include="Icons\SrcSRCWRK.png" />
+    <EmbeddedResource Include="Icons\SrcWRKAUX.png" />
+    <EmbeddedResource Include="Icons\WRK2AUX.png" />
+    <EmbeddedResource Include="Icons\WRK2DST.png" />
     <EmbeddedResource Include="Icons\RotateZoom.png" />
     <None Include="Resources\Shape2.png" />
     <None Include="Resources\Shape1.png" />
@@ -496,6 +511,8 @@
     <EmbeddedResource Include="Icons\AddNoise.png" />
     <EmbeddedResource Include="Icons\Contrast.png" />
     <EmbeddedResource Include="Icons\Bulge.png" />
+    <EmbeddedResource Include="Icons\AUX2DST.png" />
+    <EmbeddedResource Include="Icons\AUX2WRK.png" />
     <Content Include="Icons\CodeLab.64.png" />
     <EmbeddedResource Include="Icons\D.png" />
     <EmbeddedResource Include="Icons\DD.png" />
@@ -505,17 +522,8 @@
     <EmbeddedResource Include="Icons\SDD.png" />
     <EmbeddedResource Include="Icons\SDW.png" />
     <EmbeddedResource Include="Icons\SRCDST.png" />
-    <EmbeddedResource Include="Icons\SRCWRK.png" />
-    <EmbeddedResource Include="Icons\SW.png" />
-    <EmbeddedResource Include="Icons\SWD.png" />
-    <EmbeddedResource Include="Icons\SWW.png" />
     <EmbeddedResource Include="Icons\Transparent.png" />
-    <EmbeddedResource Include="Icons\W.png" />
-    <EmbeddedResource Include="Icons\WD.png" />
-    <EmbeddedResource Include="Icons\WDD.png" />
-    <EmbeddedResource Include="Icons\WDW.png" />
     <EmbeddedResource Include="Icons\WRKDST.png" />
-    <EmbeddedResource Include="Icons\WW.png" />
   </ItemGroup>
   <PropertyGroup>
     <PostBuildEvent>if $(ConfigurationName) == Release (
