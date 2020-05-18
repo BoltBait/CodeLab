@@ -351,7 +351,7 @@ namespace PaintDotNet.Effects
                     continue;
                 }
 
-                if (nestedType.IsEnum && nestedType.GetCustomAttribute<FlagsAttribute>() != null)
+                if (nestedType.IsEnum && nestedType.IsDefined(typeof(FlagsAttribute)))
                 {
                     defRef.AppendLine(spaces + "[Flags]");
                 }
