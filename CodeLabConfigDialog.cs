@@ -480,7 +480,7 @@ namespace PaintDotNet.Effects
 
                         if (err.Line > 0)
                         {
-                            txtCode.AddError(err.Line - 1, err.Column);
+                            txtCode.AddError(err.Line - 1, err.Column, err.IsWarning);
                         }
                     }
 
@@ -496,7 +496,7 @@ namespace PaintDotNet.Effects
 
                     if (ShapeBuilder.Error.Line > 0)
                     {
-                        txtCode.AddError(ShapeBuilder.Error.Line - 1, ShapeBuilder.Error.Column);
+                        txtCode.AddError(ShapeBuilder.Error.Line - 1, ShapeBuilder.Error.Column, ShapeBuilder.Error.IsWarning);
                     }
 
                     break;
@@ -504,8 +504,12 @@ namespace PaintDotNet.Effects
 
             txtCode.UpdateIndicatorBar();
 
-            ShowErrors.Text = $"Show Errors List ({errorList.Items.Count})";
-            ShowErrors.ForeColor = Color.Red;
+            int errorCount = errorList.Items.OfType<Error>().Count(error => !error.IsWarning);
+            if (errorCount > 0)
+            {
+                ShowErrors.Text = $"Show Errors List ({errorCount})";
+                ShowErrors.ForeColor = Color.Red;
+            }
         }
 
         private void ClearErrorList()

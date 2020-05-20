@@ -281,6 +281,7 @@ namespace PaintDotNet.Effects
 
                         // Error
                         this.Indicators[Indicator.Error].ForeColor = Color.FromArgb(252, 62, 54);
+                        this.Indicators[Indicator.Warning].ForeColor = Color.FromArgb(149, 219, 125);
 
                         // Selection
                         this.SetSelectionBackColor(true, Color.FromArgb(38, 79, 120));
@@ -344,6 +345,7 @@ namespace PaintDotNet.Effects
 
                         // Find
                         this.Indicators[Indicator.Find].ForeColor = Color.FromArgb(246, 185, 77);
+                        this.Indicators[Indicator.Warning].ForeColor = Color.Green;
 
                         // Error
                         this.Indicators[Indicator.Error].ForeColor = Color.Red;
@@ -663,7 +665,8 @@ namespace PaintDotNet.Effects
             this.Indicators[Indicator.Find].Alpha = 204;
 
             // Set the styles for Errors underlines
-            this.Indicators[Indicator.Error].Style = IndicatorStyle.SquiggleLow;
+            this.Indicators[Indicator.Error].Style = IndicatorStyle.Squiggle;
+            this.Indicators[Indicator.Warning].Style = IndicatorStyle.Squiggle;
 
             // Set the styles for focused Object
             this.Indicators[Indicator.ObjectHighlight].Style = IndicatorStyle.StraightBox;
@@ -4403,11 +4406,16 @@ namespace PaintDotNet.Effects
         internal void ClearErrors()
         {
             errorLines.Clear();
+
+            // Clear underlines from the previous time
             this.IndicatorCurrent = Indicator.Error;
-            this.IndicatorClearRange(0, this.TextLength); // Clear underlines from the previous time
+            this.IndicatorClearRange(0, this.TextLength);
+            
+            this.IndicatorCurrent = Indicator.Warning;
+            this.IndicatorClearRange(0, this.TextLength);
         }
 
-        internal void AddError(int line, int column)
+        internal void AddError(int line, int column, bool isWarning)
         {
             errorLines.Add(line);
 
@@ -4422,7 +4430,7 @@ namespace PaintDotNet.Effects
             }
 
             // Underline the error
-            this.IndicatorCurrent = Indicator.Error;
+            this.IndicatorCurrent = isWarning ? Indicator.Warning : Indicator.Error;
             this.IndicatorFillRange(errPosition, errorLength);
         }
         #endregion
@@ -4432,6 +4440,7 @@ namespace PaintDotNet.Effects
         {
             // 0 - 7 are reserved by Scintilla internally... used by the lexers
             internal const int Error = 8;
+            internal const int Warning = 13;
             internal const int ObjectHighlight = 9;
             internal const int ObjectHighlightDef = 10;
             internal const int Rename = 11;
