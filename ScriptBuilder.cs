@@ -448,6 +448,7 @@ namespace PaintDotNet.Effects
 
         private static Assembly CreateAssembly(string sourceCode, bool debug)
         {
+            exceptionMsg = null;
             errors = null;
 
             if (debug)
