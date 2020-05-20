@@ -38,7 +38,7 @@ namespace PaintDotNet.Effects
         private static readonly IEnumerable<MetadataReference> references = Intelli.ReferenceAssemblies.Select(a => MetadataReference.CreateFromFile(a.Location));
         private static readonly CSharpCompilationOptions compilationOptions = new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary).WithAllowUnsafe(true);
 
-        private static IEnumerable<Diagnostic> failures;
+        private static IEnumerable<Diagnostic> errors;
 
         #region Properties
         internal static Effect BuiltEffect => builtEffect;
@@ -55,9 +55,9 @@ namespace PaintDotNet.Effects
                 {
                     errorList.Add(Error.NewInternalError(exceptionMsg));
                 }
-                if (failures != null)
+                if (errors != null)
                 {
-                    errorList.AddRange(failures.Select(diag => Error.NewCodeError(diag)));
+                    errorList.AddRange(errors.Select(diag => Error.NewCodeError(diag)));
                 }
                 return errorList;
             }
@@ -256,7 +256,7 @@ namespace PaintDotNet.Effects
         {
             lineOffset = CalculateLineOffset(sourceCode);
             exceptionMsg = null;
-            failures = null;
+            errors = null;
 
             try
             {
@@ -282,7 +282,7 @@ namespace PaintDotNet.Effects
                 {
                     EmitResult result = compilation.Emit(peStream: dllStream, manifestResources: resourceDescriptions, win32Resources: win32resStream);
 
-                    failures = result.Diagnostics.Where(diag => diag.Severity != DiagnosticSeverity.Hidden);
+                    errors = result.Diagnostics.Where(diag => diag.Severity != DiagnosticSeverity.Hidden);
 
                     if (!result.Success)
                     {
@@ -448,7 +448,7 @@ namespace PaintDotNet.Effects
 
         private static Assembly CreateAssembly(string sourceCode)
         {
-            failures = null;
+            errors = null;
             lineOffset = CalculateLineOffset(sourceCode);
 
             string assemblyName = Path.GetRandomFileName();
@@ -460,7 +460,7 @@ namespace PaintDotNet.Effects
             {
                 EmitResult result = compilation.Emit(ms);
 
-                failures = result.Diagnostics.Where(diag => diag.Severity != DiagnosticSeverity.Hidden);
+                errors = result.Diagnostics.Where(diag => diag.Severity != DiagnosticSeverity.Hidden);
 
                 if (!result.Success)
                 {
