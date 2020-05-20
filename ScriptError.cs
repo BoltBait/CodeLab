@@ -16,7 +16,8 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
 
 namespace PaintDotNet.Effects
-{    internal sealed class Error
+{
+    internal sealed class Error
     {
         private readonly ErrorType errorType;
 
@@ -28,7 +29,7 @@ namespace PaintDotNet.Effects
 
         internal static Error NewCodeError(Diagnostic diagnostic)
         {
-            LinePosition linePosition  = diagnostic.Location.GetLineSpan().StartLinePosition;
+            LinePosition linePosition = diagnostic.Location.GetLineSpan().StartLinePosition;
 
             return new Error(
                 ErrorType.CSharp,
