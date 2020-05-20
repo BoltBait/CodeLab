@@ -37,10 +37,6 @@ namespace PaintDotNet.Effects
 
         private static readonly IEnumerable<MetadataReference> references = Intelli.ReferenceAssemblies.Select(a => MetadataReference.CreateFromFile(a.Location));
         private static readonly CSharpCompilationOptions compilationOptions = new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary).WithAllowUnsafe(true);
-        private static readonly IEnumerable<string> errorBlacklist = new string[]
-        {
-            "CS8019", // Unnecessary using directive.
-        };
 
         private static IEnumerable<Diagnostic> failures;
 
@@ -285,7 +281,7 @@ namespace PaintDotNet.Effects
                 {
                     EmitResult result = compilation.Emit(fs, manifestResources: resourceDescriptions);
 
-                    failures = result.Diagnostics.Where(diag => !errorBlacklist.Contains(diag.Id, StringComparer.Ordinal));
+                    failures = result.Diagnostics.Where(diag => diag.Severity != DiagnosticSeverity.Hidden);
 
                     if (!result.Success)
                     {
@@ -463,7 +459,7 @@ namespace PaintDotNet.Effects
             {
                 EmitResult result = compilation.Emit(ms);
 
-                failures = result.Diagnostics.Where(diag => !errorBlacklist.Contains(diag.Id, StringComparer.Ordinal));
+                failures = result.Diagnostics.Where(diag => diag.Severity != DiagnosticSeverity.Hidden);
 
                 if (!result.Success)
                 {
