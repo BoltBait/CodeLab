@@ -14,52 +14,49 @@
 
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
-using System.CodeDom.Compiler;
 
 namespace PaintDotNet.Effects
-{
-    /// <summary>
-    /// Container for a CompilerError object, overrides ToString to a more readable form.
-    /// </summary>
-    internal class ScriptError : CompilerError
+{    internal sealed class Error
     {
         private readonly ErrorType errorType;
 
-        public ScriptError(Diagnostic diag)
+        internal int Line { get; }
+        internal int Column { get; }
+        internal string ErrorNumber { get; }
+        internal string ErrorText { get; }
+        internal bool IsWarning { get; }
+
+        internal static Error NewCodeError(Diagnostic diagnostic)
         {
-            LinePosition linePosition  = diag.Location.GetLineSpan().StartLinePosition;
-            this.Column = linePosition.Character - ScriptBuilder.ColumnOffset + 1;
-            this.ErrorNumber = diag.Id;
-            this.ErrorText = diag.GetMessage();
-            //this.FileName = diag.;
-            this.IsWarning = diag.Severity == DiagnosticSeverity.Warning;
-            this.Line = linePosition.Line - ScriptBuilder.LineOffset + 1;
-            this.errorType = ErrorType.CSharp;
+            LinePosition linePosition  = diagnostic.Location.GetLineSpan().StartLinePosition;
+
+            return new Error(
+                ErrorType.CSharp,
+                linePosition.Line - ScriptBuilder.LineOffset + 1,
+                linePosition.Character - ScriptBuilder.ColumnOffset + 1,
+                diagnostic.Id,
+                diagnostic.GetMessage(),
+                diagnostic.Severity == DiagnosticSeverity.Warning);
         }
 
-        public ScriptError(int line, int column, string errorText)
+        internal static Error NewShapeError(int line, int column, string errorText)
         {
-            this.Column = column;
-            this.ErrorText = errorText;
+            return new Error(ErrorType.Xaml, line, column, string.Empty, errorText, false);
+        }
+
+        internal static Error NewInternalError(string internalError)
+        {
+            return new Error(ErrorType.Internal, 0, 0, string.Empty, internalError, false);
+        }
+
+        private Error(ErrorType errorType, int line, int column, string errorNumber, string errorText, bool isWarning)
+        {
+            this.errorType = errorType;
             this.Line = line;
-            this.errorType = ErrorType.Xaml;
-        }
-
-        internal ScriptError(CompilerError error)
-        {
-            this.Column = error.Column - ScriptBuilder.ColumnOffset;
-            this.ErrorNumber = error.ErrorNumber;
-            this.ErrorText = error.ErrorText;
-            this.FileName = error.FileName;
-            this.IsWarning = error.IsWarning;
-            this.Line = error.Line - ScriptBuilder.LineOffset;
-            this.errorType = ErrorType.CSharp;
-        }
-
-        internal ScriptError(string internalError)
-        {
-            this.ErrorText = internalError;
-            this.errorType = ErrorType.Internal;
+            this.Column = column;
+            this.ErrorNumber = errorNumber;
+            this.ErrorText = errorText;
+            this.IsWarning = isWarning;
         }
 
         public override string ToString()

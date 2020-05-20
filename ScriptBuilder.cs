@@ -50,18 +50,18 @@ namespace PaintDotNet.Effects
         internal static int LineOffset => lineOffset;
         internal static int ColumnOffset => 9;
         internal static string Exception => exceptionMsg;
-        internal static IReadOnlyCollection<ScriptError> Errors
+        internal static IReadOnlyCollection<Error> Errors
         {
             get
             {
-                List<ScriptError> errorList = new List<ScriptError>();
+                List<Error> errorList = new List<Error>();
                 if (!exceptionMsg.IsNullOrEmpty())
                 {
-                    errorList.Add(new ScriptError(exceptionMsg));
+                    errorList.Add(Error.NewInternalError(exceptionMsg));
                 }
                 if (failures != null)
                 {
-                    errorList.AddRange(failures.Select(diag => new ScriptError(diag)));
+                    errorList.AddRange(failures.Select(diag => Error.NewCodeError(diag)));
                 }
                 return errorList;
             }

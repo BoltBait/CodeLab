@@ -462,7 +462,7 @@ namespace PaintDotNet.Effects
                         return;
                     }
 
-                    foreach (ScriptError err in ScriptBuilder.Errors)
+                    foreach (Error err in ScriptBuilder.Errors)
                     {
                         errorList.Items.Add(err);
 
@@ -718,14 +718,14 @@ namespace PaintDotNet.Effects
                 return;
             }
 
-            ErrorCodeMenuItem.Visible = (errorList.SelectedItem is ScriptError error && error.ErrorNumber.Length > 0);
+            ErrorCodeMenuItem.Visible = (errorList.SelectedItem is Error error && error.ErrorNumber.Length > 0);
         }
 
         private void CopyErrorMenuItem_Click(object sender, EventArgs e)
         {
             if (errorList.SelectedIndex > -1)
             {
-                string errorMsg = (errorList.SelectedItem is ScriptError error) ? error.ErrorText : errorList.SelectedItem.ToString();
+                string errorMsg = (errorList.SelectedItem is Error error) ? error.ErrorText : errorList.SelectedItem.ToString();
                 if (!errorMsg.IsNullOrEmpty())
                 {
                     System.Windows.Forms.Clipboard.SetText(errorMsg);
@@ -746,7 +746,7 @@ namespace PaintDotNet.Effects
 
         private void ErrorCodeMenuItem_Click(object sender, EventArgs e)
         {
-            if (errorList.SelectedIndex > -1 && errorList.SelectedItem is ScriptError error)
+            if (errorList.SelectedIndex > -1 && errorList.SelectedItem is Error error)
             {
                 LaunchUrl($"https://docs.microsoft.com/dotnet/csharp/language-reference/compiler-messages/{error.ErrorNumber}");
             }
@@ -782,7 +782,7 @@ namespace PaintDotNet.Effects
 
         private void ScrollToError()
         {
-            if (errorList.SelectedIndex >= 0 && errorList.SelectedItem is ScriptError errw && errw.Line > 0)
+            if (errorList.SelectedIndex >= 0 && errorList.SelectedItem is Error errw && errw.Line > 0)
             {
                 txtCode.SetEmptySelection(txtCode.Lines[errw.Line - 1].Position + errw.Column);
                 txtCode.Lines[errw.Line - 1].EnsureVisible();

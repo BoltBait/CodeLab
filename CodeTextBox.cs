@@ -4124,7 +4124,7 @@ namespace PaintDotNet.Effects
             {
                 int wordStartPos = this.WordStartPosition(e.Position);
                 int wordEndPos = this.WordEndPosition(e.Position);
-                foreach (ScriptError error in ScriptBuilder.Errors)
+                foreach (Error error in ScriptBuilder.Errors)
                 {
                     int errorPos = this.Lines[error.Line - 1].Position + error.Column;
                     if (errorPos == wordStartPos || errorPos == wordEndPos)
