@@ -42,6 +42,7 @@ namespace PaintDotNet.Effects
         private readonly IntelliTip intelliTip = new IntelliTip();
         private readonly IndicatorBar indicatorBar = new IndicatorBar();
         private readonly List<int> errorLines = new List<int>();
+        private readonly List<int> warningLines = new List<int>();
         private readonly List<int> matchLines = new List<int>();
         private readonly SizeF dpi = new SizeF(1f, 1f);
         private readonly ToolStrip lightBulbMenu = new ToolStrip();
@@ -4393,6 +4394,21 @@ namespace PaintDotNet.Effects
                 }
                 indicatorBar.Errors = errors;
             }
+
+            if (warningLines.Count == 0)
+            {
+                indicatorBar.Warnings = Array.Empty<int>();
+            }
+            else
+            {
+                List<int> warnings = new List<int>();
+                foreach (int line in warningLines)
+                {
+                    int warningLine = GetVisibleLine(line);
+                    warnings.Add(visibleLine[warningLine]);
+                }
+                indicatorBar.Warnings = warnings;
+            }
         }
 
         private void IndicatorBar_Scroll(object sender, ScrollEventArgs e)
@@ -4406,6 +4422,7 @@ namespace PaintDotNet.Effects
         internal void ClearErrors()
         {
             errorLines.Clear();
+            warningLines.Clear();
 
             // Clear underlines from the previous time
             this.IndicatorCurrent = Indicator.Error;
@@ -4417,7 +4434,14 @@ namespace PaintDotNet.Effects
 
         internal void AddError(int line, int column, bool isWarning)
         {
-            errorLines.Add(line);
+            if (isWarning)
+            {
+                warningLines.Add(line);
+            }
+            else
+            {
+                errorLines.Add(line);
+            }
 
             int errPosition = this.WordStartPosition(this.Lines[line].Position + column);
             int errorLength = this.GetWordFromPosition(errPosition).Length;

@@ -33,6 +33,7 @@ namespace PaintDotNet.Effects
 
         private Color caretColor;
         private Color errorColor;
+        private Color warningColor;
         private Color matchColor;
         private Color bookmarkColor;
 
@@ -44,6 +45,7 @@ namespace PaintDotNet.Effects
         private Theme theme = Theme.Light;
         private int caret = 0;
         private IEnumerable<int> errors = Array.Empty<int>();
+        private IEnumerable<int> warnings = Array.Empty<int>();
         private IEnumerable<int> matches = Array.Empty<int>();
         private IEnumerable<int> bookmarks = Array.Empty<int>();
         private int maximum = 100;
@@ -80,6 +82,7 @@ namespace PaintDotNet.Effects
 
                         caretColor = Color.Gainsboro;
                         errorColor = Color.FromArgb(252, 62, 54);
+                        warningColor = Color.FromArgb(149, 219, 125);
                         matchColor = Color.Orange;
                         bookmarkColor = Color.DeepSkyBlue;
                         break;
@@ -97,6 +100,7 @@ namespace PaintDotNet.Effects
 
                         caretColor = Color.FromArgb(0, 0, 205);
                         errorColor = Color.Red;
+                        warningColor = Color.Green;
                         matchColor = Color.FromArgb(246, 185, 77);
                         bookmarkColor = Color.DeepSkyBlue;
                         break;
@@ -126,6 +130,19 @@ namespace PaintDotNet.Effects
             set
             {
                 errors = value;
+                Invalidate();
+            }
+        }
+
+        internal IEnumerable<int> Warnings
+        {
+            get
+            {
+                return warnings;
+            }
+            set
+            {
+                warnings = value;
                 Invalidate();
             }
         }
@@ -491,6 +508,14 @@ namespace PaintDotNet.Effects
                     float matchLineVPos = (float)match / maximum * posTrackRect.Height + posTrackRect.Top;
                     matchLineVPos = matchLineVPos.Clamp(posTrackRect.Top, posTrackRect.Bottom);
                     e.Graphics.DrawLine(indicatorPen, posTrackRect.Left, matchLineVPos, posTrackRect.Left + 4f * dpiY, matchLineVPos);
+                }
+
+                indicatorPen.Color = warningColor;
+                foreach (int error in this.warnings)
+                {
+                    float warnLineVPos = (float)error / maximum * posTrackRect.Height + posTrackRect.Top;
+                    warnLineVPos = warnLineVPos.Clamp(posTrackRect.Top, posTrackRect.Bottom);
+                    e.Graphics.DrawLine(indicatorPen, posTrackRect.Right - 4f * dpiY, warnLineVPos, posTrackRect.Right, warnLineVPos);
                 }
 
                 indicatorPen.Color = errorColor;
