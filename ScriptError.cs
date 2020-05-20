@@ -14,10 +14,11 @@
 
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
+using System;
 
 namespace PaintDotNet.Effects
 {
-    internal sealed class Error
+    internal sealed class Error : IComparable<Error>
     {
         private readonly ErrorType errorType;
 
@@ -73,6 +74,11 @@ namespace PaintDotNet.Effects
             }
 
             return string.Empty;
+        }
+
+        public int CompareTo(Error other)
+        {
+            return this.Line.CompareTo(other.Line);
         }
 
         private enum ErrorType

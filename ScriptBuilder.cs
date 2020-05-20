@@ -59,6 +59,8 @@ namespace PaintDotNet.Effects
                 {
                     errorList.AddRange(errors.Select(diag => Error.NewCodeError(diag)));
                 }
+
+                errorList.Sort();
                 return errorList;
             }
         }
