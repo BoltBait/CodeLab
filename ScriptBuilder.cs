@@ -76,7 +76,7 @@ namespace PaintDotNet.Effects
                 ScriptWriter.UserEnteredPart(scriptText) +
                 ScriptWriter.append_code;
 
-            Assembly assembly = CreateAssembly(SourceCode);
+            Assembly assembly = CreateAssembly(SourceCode, debug);
             if (assembly == null)
             {
                 return false;
@@ -151,7 +151,7 @@ namespace PaintDotNet.Effects
                 ScriptWriter.UserEnteredPart(scriptText) +
                 ScriptWriter.EndPart();
 
-            Assembly assembly = CreateAssembly(SourceCode);
+            Assembly assembly = CreateAssembly(SourceCode, false);
             if (assembly == null)
             {
                 return false;
@@ -188,7 +188,7 @@ namespace PaintDotNet.Effects
                 ScriptWriter.EmptyCode +
                 ScriptWriter.EndPart();
 
-            Assembly assembly = CreateAssembly(SourceCode);
+            Assembly assembly = CreateAssembly(SourceCode, false);
             if (assembly == null)
             {
                 return false;
@@ -224,7 +224,7 @@ namespace PaintDotNet.Effects
                 ScriptWriter.UserEnteredPart(fileTypeCode) +
                 ScriptWriter.EndPart();
 
-            Assembly assembly = CreateAssembly(sourceCode);
+            Assembly assembly = CreateAssembly(sourceCode, debug);
             if (assembly == null)
             {
                 return false;
@@ -446,15 +446,23 @@ namespace PaintDotNet.Effects
             return sourceCode.Substring(0, sourceCode.IndexOf("#region User Entered Code", StringComparison.Ordinal)).CountLines() + 1;
         }
 
-        private static Assembly CreateAssembly(string sourceCode)
+        private static Assembly CreateAssembly(string sourceCode, bool debug)
         {
             errors = null;
+
+            if (debug)
+            {
+                sourceCode = "#define DEBUG\r\n" + sourceCode;
+            }
+
             lineOffset = CalculateLineOffset(sourceCode);
 
             string assemblyName = Path.GetRandomFileName();
             IEnumerable<SyntaxTree> syntaxTree = new[] { CSharpSyntaxTree.ParseText(sourceCode) };
 
-            CSharpCompilation compilation = CSharpCompilation.Create(assemblyName, syntaxTree, references, compilationOptions);
+            CSharpCompilation compilation = CSharpCompilation.Create(
+                assemblyName, syntaxTree, references,
+                compilationOptions.WithOptimizationLevel(debug ? OptimizationLevel.Debug : OptimizationLevel.Release));
 
             using (MemoryStream ms = new MemoryStream())
             {
