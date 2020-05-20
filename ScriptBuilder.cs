@@ -36,7 +36,7 @@ namespace PaintDotNet.Effects
         private static readonly Regex preRenderRegex = new Regex(@"void PreRender\(Surface dst, Surface src\)(\s)*{(.|\s)*}", RegexOptions.Singleline);
 
         private static readonly IEnumerable<MetadataReference> references = Intelli.ReferenceAssemblies.Select(a => MetadataReference.CreateFromFile(a.Location));
-        private static readonly CSharpCompilationOptions compilationOptions = new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary, allowUnsafe: true, optimizationLevel: OptimizationLevel.Release);
+        private static CSharpCompilationOptions compilationOptions = new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary, allowUnsafe: true, optimizationLevel: OptimizationLevel.Release);
 
         private static IEnumerable<Diagnostic> errors;
 
@@ -63,6 +63,11 @@ namespace PaintDotNet.Effects
             }
         }
         #endregion
+
+        internal static void SetWarningLevel(int level)
+        {
+            compilationOptions = compilationOptions.WithWarningLevel(level);
+        }
 
         internal static bool Build(string scriptText, bool debug)
         {
