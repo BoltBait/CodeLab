@@ -277,9 +277,10 @@ namespace PaintDotNet.Effects
                     () => File.OpenRead(res),
                     true));
 
-                using (FileStream fs = new FileStream(dllPath, FileMode.Create))
+                using (FileStream dllStream = new FileStream(dllPath, FileMode.Create))
+                using (Stream win32resStream = compilation.CreateDefaultWin32Resources(true, true, null, null))
                 {
-                    EmitResult result = compilation.Emit(fs, manifestResources: resourceDescriptions);
+                    EmitResult result = compilation.Emit(peStream: dllStream, manifestResources: resourceDescriptions, win32Resources: win32resStream);
 
                     failures = result.Diagnostics.Where(diag => diag.Severity != DiagnosticSeverity.Hidden);
 
