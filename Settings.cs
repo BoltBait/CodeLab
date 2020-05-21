@@ -143,7 +143,7 @@ namespace PaintDotNet.Effects
 
         internal static int WarningLevel
         {
-            get => GetRegValue("WarningLevel", 2);
+            get => GetRegValue("WarningLevel", 4);
             set => SetRegValue("WarningLevel", value);
         }
 
