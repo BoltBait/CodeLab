@@ -357,7 +357,7 @@ namespace PaintDotNet.Effects
 
         private void RunEffectWithDialog()
         {
-            if (errorList.Items.Count != 0)
+            if (errorList.Items.OfType<Error>().Any(error => !error.IsWarning))
             {
                 FlexibleMessageBox.Show("Before you can preview your Effect, you must resolve all code errors.", "Build Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -391,7 +391,7 @@ namespace PaintDotNet.Effects
 
         private void RunFileTypeWithDialog()
         {
-            if (errorList.Items.Count != 0)
+            if (errorList.Items.OfType<Error>().Any(error => !error.IsWarning))
             {
                 FlexibleMessageBox.Show("Before you can preview your FileType, you must resolve all code errors.", "Build Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -451,8 +451,8 @@ namespace PaintDotNet.Effects
                 }
                 catch (Exception ex)
                 {
-                    errorList.Items.Add(ex.ToString());
-                    ShowErrors.Text = $"Show Errors List ({errorList.Items.Count})";
+                    errorList.Items.Add(Error.NewExceptionError(ex));
+                    ShowErrors.Text = $"Show Errors List ({errorList.Items.OfType<Error>().Count(error => !error.IsWarning)})";
                     ShowErrors.ForeColor = Color.Red;
                 }
 
@@ -821,11 +821,11 @@ namespace PaintDotNet.Effects
 
             if (sect.LastExceptions.Count > 0)
             {
-                string exc = sect.LastExceptions[0].ToString();
+                Error exc = Error.NewExceptionError(sect.LastExceptions[0]);
                 sect.LastExceptions.Clear();
 
                 errorList.Items.Add(exc);
-                ShowErrors.Text = $"Show Errors List ({errorList.Items.Count})";
+                ShowErrors.Text = $"Show Errors List ({errorList.Items.OfType<Error>().Count(error => !error.IsWarning)})";
                 ShowErrors.ForeColor = Color.Red;
             }
 
@@ -1303,7 +1303,7 @@ namespace PaintDotNet.Effects
         private void SaveAsDLL()
         {
             Build();
-            if (errorList.Items.Count != 0)
+            if (errorList.Items.OfType<Error>().Any(error => !error.IsWarning))
             {
                 FlexibleMessageBox.Show("Before you can build a DLL, you must resolve all code errors.", "Build Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;

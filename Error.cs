@@ -51,6 +51,11 @@ namespace PaintDotNet.Effects
             return new Error(ErrorType.Internal, 0, 0, string.Empty, internalError, false);
         }
 
+        internal static Error NewExceptionError(Exception exception)
+        {
+            return new Error(ErrorType.Exception, 0, 0, string.Empty, exception.ToString(), false);
+        }
+
         private Error(ErrorType errorType, int line, int column, string errorNumber, string errorText, bool isWarning)
         {
             this.errorType = errorType;
@@ -71,6 +76,8 @@ namespace PaintDotNet.Effects
                     return this.ErrorText;
                 case ErrorType.Internal:
                     return $"Internal Error: {this.ErrorText}";
+                case ErrorType.Exception:
+                    return this.ErrorText;
             }
 
             return string.Empty;
@@ -85,7 +92,8 @@ namespace PaintDotNet.Effects
         {
             CSharp,
             Xaml,
-            Internal
+            Internal,
+            Exception
         }
     }
 }
