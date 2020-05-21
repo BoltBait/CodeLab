@@ -130,6 +130,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="DefinitionGenerator.cs" />
+    <Compile Include="Error.cs" />
     <Compile Include="IntelliTip.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -190,9 +191,6 @@
     </Compile>
     <Compile Include="ColorWindow.Designer.cs">
       <DependentUpon>ColorWindow.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ScriptError.cs">
-      <SubType>Code</SubType>
     </Compile>
     <Compile Include="CodeCompletionListBox.cs">
       <SubType>Component</SubType>
