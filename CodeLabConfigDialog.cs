@@ -30,7 +30,7 @@ namespace PaintDotNet.Effects
 {
     internal partial class CodeLabConfigDialog : EffectConfigDialog
     {
-        private const string ThisVersion = "5.3"; // Remember to change it in CodeLab.cs too!
+        private const string ThisVersion = "5.4"; // Remember to change it in CodeLab.cs too!
         private const string WebUpdateFile = "https://www.boltbait.com/versions.txt"; // The web site to check for updates
         private const string ThisApplication = "1"; // in the WebUpadteFile, CodeLab is application #1
         // format of the versions.txt file:  application number;current version;URL to download current version
