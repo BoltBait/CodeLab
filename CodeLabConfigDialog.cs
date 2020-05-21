@@ -764,7 +764,11 @@ namespace PaintDotNet.Effects
         {
             if (errorList.SelectedIndex > -1 && errorList.SelectedItem is Error error)
             {
-                LaunchUrl($"https://docs.microsoft.com/dotnet/csharp/language-reference/compiler-messages/{error.ErrorNumber}");
+                string url = error.IsWarning
+                    ? "https://docs.microsoft.com/dotnet/csharp/misc/"
+                    : "https://docs.microsoft.com/dotnet/csharp/language-reference/compiler-messages/";
+
+                LaunchUrl(url + error.ErrorNumber);
             }
         }
 
