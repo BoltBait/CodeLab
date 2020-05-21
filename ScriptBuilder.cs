@@ -38,11 +38,6 @@ namespace PaintDotNet.Effects
         private static readonly IEnumerable<MetadataReference> references = Intelli.ReferenceAssemblies.Select(a => MetadataReference.CreateFromFile(a.Location));
         private static CSharpCompilationOptions compilationOptions = new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary, allowUnsafe: true, optimizationLevel: OptimizationLevel.Release);
 
-        private static readonly IEnumerable<string> errorBlacklist = new string[]
-       {
-            "CS0414", // The field [...] is assigned but its value is never used
-       };
-
         private static IEnumerable<Diagnostic> errors;
 
         #region Properties
@@ -294,7 +289,7 @@ namespace PaintDotNet.Effects
                 {
                     EmitResult result = compilation.Emit(peStream: dllStream, manifestResources: resourceDescriptions, win32Resources: win32resStream);
 
-                    errors = result.Diagnostics.Where(diag => !(diag.Severity == DiagnosticSeverity.Hidden || errorBlacklist.Contains(diag.Id)));
+                    errors = result.Diagnostics.Where(ErrorFilter);
 
                     if (!result.Success)
                     {
@@ -481,7 +476,7 @@ namespace PaintDotNet.Effects
             {
                 EmitResult result = compilation.Emit(ms);
 
-                errors = result.Diagnostics.Where(diag => !(diag.Severity == DiagnosticSeverity.Hidden || errorBlacklist.Contains(diag.Id)));
+                errors = result.Diagnostics.Where(ErrorFilter);
 
                 if (!result.Success)
                 {
@@ -491,6 +486,16 @@ namespace PaintDotNet.Effects
                 ms.Seek(0, SeekOrigin.Begin);
                 return Assembly.Load(ms.ToArray());
             }
+        }
+
+        private static bool ErrorFilter(Diagnostic diagnostic)
+        {
+            IEnumerable<string> errorBlacklist = new string[]
+            {
+                "CS0414" // The field [...] is assigned but its value is never used
+            };
+
+            return !(diagnostic.Severity == DiagnosticSeverity.Hidden || errorBlacklist.Contains(diagnostic.Id));
         }
     }
 }
