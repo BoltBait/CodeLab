@@ -200,6 +200,7 @@ namespace PaintDotNet.Effects
             opacity90MenuItem.Checked = false;
             opacity100MenuItem.Checked = true;
 
+            // TODO: Remove all this
             warnLevelBox.BackColor = this.BackColor;
             warnLevelBox.ForeColor = this.ForeColor;
             warnLevelBox.Items.AddRange(new object[] { 0, 1, 2, 3, 4 });
@@ -208,16 +209,16 @@ namespace PaintDotNet.Effects
                 int warningLevel = warnLevelBox.SelectedIndex;
                 Settings.WarningLevel = warningLevel;
                 ScriptBuilder.SetWarningLevel(warningLevel);
-                Build();
+                BuildAsync();
             };
-            warnLevelBox.SelectedIndex = Settings.WarningLevel;
 
             // PDN Theme
             ApplyTheme();
             txtCode.Theme = PdnTheme.Theme;
 
             ResetScript();
-            BuildAsync();
+            warnLevelBox.SelectedIndex = Settings.WarningLevel; // TODO: Remove this line
+            //BuildAsync();
             txtCode.Focus();
         }
         #endregion

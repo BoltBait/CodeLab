@@ -262,6 +262,8 @@ namespace PaintDotNet.Effects
                     XamlAutoCompleteTypes.Add(type.Name, type);
                 }
             }
+
+            UserScript = typeof(object);
         }
     }
 
