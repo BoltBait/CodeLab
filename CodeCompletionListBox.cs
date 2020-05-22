@@ -41,6 +41,7 @@ namespace PaintDotNet.Effects
         private string stringFilter = string.Empty;
         private IntelliType intelliTypeFilter = IntelliType.None;
 
+        internal string AutoCompleteCode => SelectedItem.ToString();
         internal bool MouseOver => mouseOver;
         internal bool Matches => filterMatches;
         internal int IconWidth => imageList.ImageSize.Width + 2;
@@ -683,11 +684,11 @@ namespace PaintDotNet.Effects
                             break;
                         }
                     }
-                }
 
-                if (this.SelectedIndex == -1)
-                {
-                    this.SelectedIndex = 0;
+                    if (this.SelectedIndex == -1)
+                    {
+                        this.SelectedIndex = 0;
+                    }
                 }
             }
         }

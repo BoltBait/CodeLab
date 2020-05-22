@@ -2986,7 +2986,7 @@ namespace PaintDotNet.Effects
         {
             int startPos = this.WordStartPosition(this.CurrentPosition);
             int endPos = this.WordEndPosition(this.CurrentPosition);
-            string fill = iBox.SelectedItem.ToString();
+            string fill = iBox.AutoCompleteCode;
 
             if (this.GetCharAt(startPos - 1).Equals('#'))
             {
