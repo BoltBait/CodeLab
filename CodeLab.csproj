@@ -531,15 +531,17 @@
   </ItemGroup>
   <PropertyGroup>
     <PostBuildEvent>
+if $(ConfigurationName)==FastDebug goto end
 if not exist "$(TargetDir)Desktop\" mkdir "$(TargetDir)Desktop\"
 set deps="$(TargetDir)ScintillaNET.dll" "$(TargetDir)Microsoft.CodeAnalysis.CSharp.dll" "$(TargetDir)Microsoft.CodeAnalysis.dll" "$(TargetDir)System.Collections.Immutable.dll" "$(TargetDir)System.Reflection.Metadata.dll"
-if $(ConfigurationName) == Release (
+if $(ConfigurationName)==Release (
     "$(ILMergeConsolePath)" /ndebug /targetplatform:4.0,"C:\Windows\Microsoft.NET\Framework\v4.0.30319" /out:"$(TargetDir)Desktop\$(TargetFileName)" "$(TargetPath)" %25deps%25
     cmd /c explorer "$(TargetDir)Desktop"
-) else if $(ConfigurationName) == Debug (
+) else if $(ConfigurationName)==Debug (
     "$(ILMergeConsolePath)" /targetplatform:4.0,"C:\Windows\Microsoft.NET\Framework\v4.0.30319" /out:"$(TargetDir)Desktop\$(TargetFileName)" "$(TargetPath)" %25deps%25
     copy "$(TargetDir)Desktop\$(TargetFileName)" "C:\Program Files\Paint.NET\Effects\"
 )
+:end
 exit 0
 </PostBuildEvent>
   </PropertyGroup>
