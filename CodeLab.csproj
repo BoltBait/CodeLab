@@ -534,10 +534,10 @@
 if not exist "$(TargetDir)Desktop\" mkdir "$(TargetDir)Desktop\"
 set deps="$(TargetDir)ScintillaNET.dll" "$(TargetDir)Microsoft.CodeAnalysis.CSharp.dll" "$(TargetDir)Microsoft.CodeAnalysis.dll" "$(TargetDir)System.Collections.Immutable.dll" "$(TargetDir)System.Reflection.Metadata.dll"
 if $(ConfigurationName) == Release (
-    "$(PkgILMerge)\tools\net452\ILMerge.exe" /ndebug /targetplatform:4.0,"C:\Windows\Microsoft.NET\Framework\v4.0.30319" /out:"$(TargetDir)Desktop\$(TargetFileName)" "$(TargetPath)" %25deps%25
+    "$(ILMergeConsolePath)" /ndebug /targetplatform:4.0,"C:\Windows\Microsoft.NET\Framework\v4.0.30319" /out:"$(TargetDir)Desktop\$(TargetFileName)" "$(TargetPath)" %25deps%25
     cmd /c explorer "$(TargetDir)Desktop"
 ) else if $(ConfigurationName) == Debug (
-    "$(PkgILMerge)\tools\net452\ILMerge.exe" /targetplatform:4.0,"C:\Windows\Microsoft.NET\Framework\v4.0.30319" /out:"$(TargetDir)Desktop\$(TargetFileName)" "$(TargetPath)" %25deps%25
+    "$(ILMergeConsolePath)" /targetplatform:4.0,"C:\Windows\Microsoft.NET\Framework\v4.0.30319" /out:"$(TargetDir)Desktop\$(TargetFileName)" "$(TargetPath)" %25deps%25
     copy "$(TargetDir)Desktop\$(TargetFileName)" "C:\Program Files\Paint.NET\Effects\"
 )
 exit 0
