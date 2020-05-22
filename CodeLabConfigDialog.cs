@@ -357,7 +357,7 @@ namespace PaintDotNet.Effects
 
         private void RunEffectWithDialog()
         {
-            if (errorList.Items.OfType<Error>().Any(error => !error.IsWarning))
+            if (errorList.HasErrors)
             {
                 FlexibleMessageBox.Show("Before you can preview your Effect, you must resolve all code errors.", "Build Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -391,7 +391,7 @@ namespace PaintDotNet.Effects
 
         private void RunFileTypeWithDialog()
         {
-            if (errorList.Items.OfType<Error>().Any(error => !error.IsWarning))
+            if (errorList.HasErrors)
             {
                 FlexibleMessageBox.Show("Before you can preview your FileType, you must resolve all code errors.", "Build Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -451,8 +451,8 @@ namespace PaintDotNet.Effects
                 }
                 catch (Exception ex)
                 {
-                    errorList.Items.Add(Error.NewExceptionError(ex));
-                    ShowErrors.Text = $"Show Errors List ({errorList.Items.OfType<Error>().Count(error => !error.IsWarning)})";
+                    errorList.AddError(Error.NewExceptionError(ex));
+                    ShowErrors.Text = $"Show Errors List ({errorList.ErrorCount})";
                     ShowErrors.ForeColor = Color.Red;
                 }
 
@@ -477,7 +477,7 @@ namespace PaintDotNet.Effects
 
                     foreach (Error err in ScriptBuilder.Errors)
                     {
-                        errorList.Items.Add(err);
+                        errorList.AddError(err);
 
                         if (err.Line > 0)
                         {
@@ -493,7 +493,7 @@ namespace PaintDotNet.Effects
                         return;
                     }
 
-                    errorList.Items.Add(ShapeBuilder.Error);
+                    errorList.AddError(ShapeBuilder.Error);
 
                     if (ShapeBuilder.Error.Line > 0)
                     {
@@ -505,7 +505,7 @@ namespace PaintDotNet.Effects
 
             txtCode.UpdateIndicatorBar();
 
-            int errorCount = errorList.Items.OfType<Error>().Count(error => !error.IsWarning);
+            int errorCount = errorList.ErrorCount;
             if (errorCount > 0)
             {
                 ShowErrors.Text = $"Show Errors List ({errorCount})";
@@ -515,7 +515,7 @@ namespace PaintDotNet.Effects
 
         private void ClearErrorList()
         {
-            errorList.Items.Clear();
+            errorList.ClearErrors();
             toolTips.SetToolTip(errorList, "");
 
             ShowErrors.Text = "Show Errors List";
@@ -735,14 +735,14 @@ namespace PaintDotNet.Effects
                 return;
             }
 
-            ErrorCodeMenuItem.Visible = (errorList.SelectedItem is Error error && error.ErrorNumber.Length > 0);
+            ErrorCodeMenuItem.Visible = errorList.SelectedError.ErrorNumber.Length > 0;
         }
 
         private void CopyErrorMenuItem_Click(object sender, EventArgs e)
         {
             if (errorList.SelectedIndex > -1)
             {
-                string errorMsg = (errorList.SelectedItem is Error error) ? error.ErrorText : errorList.SelectedItem.ToString();
+                string errorMsg = errorList.SelectedError.ErrorText;
                 if (!errorMsg.IsNullOrEmpty())
                 {
                     System.Windows.Forms.Clipboard.SetText(errorMsg);
@@ -754,7 +754,7 @@ namespace PaintDotNet.Effects
         {
             if (errorList.SelectedIndex > -1)
             {
-                using (ViewSrc VSW = new ViewSrc("Full Error Message", errorList.SelectedItem.ToString(), false))
+                using (ViewSrc VSW = new ViewSrc("Full Error Message", errorList.SelectedError.FullError, false))
                 {
                     VSW.ShowDialog();
                 }
@@ -763,8 +763,9 @@ namespace PaintDotNet.Effects
 
         private void ErrorCodeMenuItem_Click(object sender, EventArgs e)
         {
-            if (errorList.SelectedIndex > -1 && errorList.SelectedItem is Error error)
+            if (errorList.SelectedIndex > -1)
             {
+                Error error = errorList.SelectedError;
                 string url = error.IsWarning
                     ? "https://docs.microsoft.com/dotnet/csharp/misc/"
                     : "https://docs.microsoft.com/dotnet/csharp/language-reference/compiler-messages/";
@@ -786,7 +787,7 @@ namespace PaintDotNet.Effects
             if (errorList.SelectedIndex >= 0)
             {
                 ScrollToError();
-                using (ViewSrc VSW = new ViewSrc("Full Error Message", errorList.SelectedItem.ToString(), false))
+                using (ViewSrc VSW = new ViewSrc("Full Error Message", errorList.SelectedError.FullError, false))
                 {
                     VSW.ShowDialog();
                 }
@@ -803,14 +804,21 @@ namespace PaintDotNet.Effects
 
         private void ScrollToError()
         {
-            if (errorList.SelectedIndex >= 0 && errorList.SelectedItem is Error errw && errw.Line > 0)
+            if (errorList.SelectedIndex < 0)
             {
-                txtCode.SetEmptySelection(txtCode.Lines[errw.Line - 1].Position + errw.Column);
-                txtCode.Lines[errw.Line - 1].EnsureVisible();
+                return;
+            }
+
+            Error error = errorList.SelectedError;
+            if (error.Line > 0)
+            {
+                txtCode.SetEmptySelection(txtCode.Lines[error.Line - 1].Position + error.Column);
+                txtCode.Lines[error.Line - 1].EnsureVisible();
                 txtCode.ScrollCaret();    // Make error visible by scrolling to it
                 txtCode.Focus();
             }
-            toolTips.SetToolTip(errorList, errorList.SelectedItem.ToString().InsertLineBreaks(100));
+
+            toolTips.SetToolTip(errorList, error.FullError.InsertLineBreaks(100));
         }
         #endregion
 
@@ -824,8 +832,8 @@ namespace PaintDotNet.Effects
                 Error exc = Error.NewExceptionError(sect.LastExceptions[0]);
                 sect.LastExceptions.Clear();
 
-                errorList.Items.Add(exc);
-                ShowErrors.Text = $"Show Errors List ({errorList.Items.OfType<Error>().Count(error => !error.IsWarning)})";
+                errorList.AddError(exc);
+                ShowErrors.Text = $"Show Errors List ({errorList.ErrorCount})";
                 ShowErrors.ForeColor = Color.Red;
             }
 
@@ -1303,7 +1311,7 @@ namespace PaintDotNet.Effects
         private void SaveAsDLL()
         {
             Build();
-            if (errorList.Items.OfType<Error>().Any(error => !error.IsWarning))
+            if (errorList.HasErrors)
             {
                 FlexibleMessageBox.Show("Before you can build a DLL, you must resolve all code errors.", "Build Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;

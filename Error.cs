@@ -27,6 +27,7 @@ namespace PaintDotNet.Effects
         internal string ErrorNumber { get; }
         internal string ErrorText { get; }
         internal bool IsWarning { get; }
+        internal string FullError => ToString();
 
         internal static Error NewCodeError(Diagnostic diagnostic)
         {
