@@ -42,6 +42,7 @@ namespace PaintDotNet.Effects
         private readonly IntelliTip intelliTip = new IntelliTip();
         private readonly IndicatorBar indicatorBar = new IndicatorBar();
         private readonly List<int> errorLines = new List<int>();
+        private readonly List<int> warningLines = new List<int>();
         private readonly List<int> matchLines = new List<int>();
         private readonly SizeF dpi = new SizeF(1f, 1f);
         private readonly ToolStrip lightBulbMenu = new ToolStrip();
@@ -281,6 +282,7 @@ namespace PaintDotNet.Effects
 
                         // Error
                         this.Indicators[Indicator.Error].ForeColor = Color.FromArgb(252, 62, 54);
+                        this.Indicators[Indicator.Warning].ForeColor = Color.FromArgb(149, 219, 125);
 
                         // Selection
                         this.SetSelectionBackColor(true, Color.FromArgb(38, 79, 120));
@@ -344,6 +346,7 @@ namespace PaintDotNet.Effects
 
                         // Find
                         this.Indicators[Indicator.Find].ForeColor = Color.FromArgb(246, 185, 77);
+                        this.Indicators[Indicator.Warning].ForeColor = Color.Green;
 
                         // Error
                         this.Indicators[Indicator.Error].ForeColor = Color.Red;
@@ -663,7 +666,8 @@ namespace PaintDotNet.Effects
             this.Indicators[Indicator.Find].Alpha = 204;
 
             // Set the styles for Errors underlines
-            this.Indicators[Indicator.Error].Style = IndicatorStyle.SquiggleLow;
+            this.Indicators[Indicator.Error].Style = IndicatorStyle.Squiggle;
+            this.Indicators[Indicator.Warning].Style = IndicatorStyle.Squiggle;
 
             // Set the styles for focused Object
             this.Indicators[Indicator.ObjectHighlight].Style = IndicatorStyle.StraightBox;
@@ -4124,7 +4128,7 @@ namespace PaintDotNet.Effects
             {
                 int wordStartPos = this.WordStartPosition(e.Position);
                 int wordEndPos = this.WordEndPosition(e.Position);
-                foreach (ScriptError error in ScriptBuilder.Errors)
+                foreach (Error error in ScriptBuilder.Errors)
                 {
                     int errorPos = this.Lines[error.Line - 1].Position + error.Column;
                     if (errorPos == wordStartPos || errorPos == wordEndPos)
@@ -4390,6 +4394,21 @@ namespace PaintDotNet.Effects
                 }
                 indicatorBar.Errors = errors;
             }
+
+            if (warningLines.Count == 0)
+            {
+                indicatorBar.Warnings = Array.Empty<int>();
+            }
+            else
+            {
+                List<int> warnings = new List<int>();
+                foreach (int line in warningLines)
+                {
+                    int warningLine = GetVisibleLine(line);
+                    warnings.Add(visibleLine[warningLine]);
+                }
+                indicatorBar.Warnings = warnings;
+            }
         }
 
         private void IndicatorBar_Scroll(object sender, ScrollEventArgs e)
@@ -4403,13 +4422,26 @@ namespace PaintDotNet.Effects
         internal void ClearErrors()
         {
             errorLines.Clear();
+            warningLines.Clear();
+
+            // Clear underlines from the previous time
             this.IndicatorCurrent = Indicator.Error;
-            this.IndicatorClearRange(0, this.TextLength); // Clear underlines from the previous time
+            this.IndicatorClearRange(0, this.TextLength);
+            
+            this.IndicatorCurrent = Indicator.Warning;
+            this.IndicatorClearRange(0, this.TextLength);
         }
 
-        internal void AddError(int line, int column)
+        internal void AddError(int line, int column, bool isWarning)
         {
-            errorLines.Add(line);
+            if (isWarning)
+            {
+                warningLines.Add(line);
+            }
+            else
+            {
+                errorLines.Add(line);
+            }
 
             int errPosition = this.WordStartPosition(this.Lines[line].Position + column);
             int errorLength = this.GetWordFromPosition(errPosition).Length;
@@ -4422,7 +4454,7 @@ namespace PaintDotNet.Effects
             }
 
             // Underline the error
-            this.IndicatorCurrent = Indicator.Error;
+            this.IndicatorCurrent = isWarning ? Indicator.Warning : Indicator.Error;
             this.IndicatorFillRange(errPosition, errorLength);
         }
         #endregion
@@ -4432,6 +4464,7 @@ namespace PaintDotNet.Effects
         {
             // 0 - 7 are reserved by Scintilla internally... used by the lexers
             internal const int Error = 8;
+            internal const int Warning = 13;
             internal const int ObjectHighlight = 9;
             internal const int ObjectHighlightDef = 10;
             internal const int Rename = 11;

@@ -153,6 +153,7 @@
             this.ReplaceButton = new PaintDotNet.Effects.ScaledToolStripButton();
             this.toolStripSeparator22 = new System.Windows.Forms.ToolStripSeparator();
             this.SnippetManButton = new PaintDotNet.Effects.ScaledToolStripButton();
+            this.warnLevelBox = new System.Windows.Forms.ToolStripComboBox();
             this.txtCode = new PaintDotNet.Effects.CodeTextBox();
             this.ShowErrors = new System.Windows.Forms.CheckBox();
             this.OutputTextBox = new System.Windows.Forms.TextBox();
@@ -258,7 +259,7 @@
             // ErrorCodeMenuItem
             // 
             this.ErrorCodeMenuItem.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.ErrorCodeMenuItem.ImageName = "Search";
+            this.ErrorCodeMenuItem.ImageName = "Docs";
             this.ErrorCodeMenuItem.Name = "ErrorCodeMenuItem";
             this.ErrorCodeMenuItem.Size = new System.Drawing.Size(179, 22);
             this.ErrorCodeMenuItem.Text = "Look up Error Code";
@@ -1043,7 +1044,8 @@
             this.FindButton,
             this.ReplaceButton,
             this.toolStripSeparator22,
-            this.SnippetManButton});
+            this.SnippetManButton,
+            this.warnLevelBox});
             this.toolStrip1.Location = new System.Drawing.Point(0, 24);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Padding = new System.Windows.Forms.Padding(5, 0, 0, 0);
@@ -1299,6 +1301,11 @@
             this.SnippetManButton.Size = new System.Drawing.Size(24, 24);
             this.SnippetManButton.Text = "Snippet Manager";
             this.SnippetManButton.Click += new System.EventHandler(this.SnippetManButton_Click);
+            // 
+            // warnLevelBox
+            // 
+            this.warnLevelBox.Name = "warnLevelBox";
+            this.warnLevelBox.Size = new System.Drawing.Size(75, 27);
             // 
             // txtCode
             // 
@@ -1590,5 +1597,6 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator23;
         private ScaledToolStripMenuItem GoToDefMenuItem;
         private ScaledToolStripMenuItem LookUpDefMenuItem;
+        private System.Windows.Forms.ToolStripComboBox warnLevelBox;
     }
 }

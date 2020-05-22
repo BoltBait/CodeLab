@@ -130,6 +130,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="DefinitionGenerator.cs" />
+    <Compile Include="Error.cs" />
     <Compile Include="IntelliTip.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -190,9 +191,6 @@
     </Compile>
     <Compile Include="ColorWindow.Designer.cs">
       <DependentUpon>ColorWindow.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ScriptError.cs">
-      <SubType>Code</SubType>
     </Compile>
     <Compile Include="CodeCompletionListBox.cs">
       <SubType>Component</SubType>
@@ -445,8 +443,14 @@
     <EmbeddedResource Include="Icons\Docs.32.png" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="ILMerge">
+      <Version>3.0.40</Version>
+    </PackageReference>
     <PackageReference Include="jacobslusser.ScintillaNET.Signed">
       <Version>3.6.3</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp">
+      <Version>3.6.0</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
@@ -526,15 +530,19 @@
     <EmbeddedResource Include="Icons\WRKDST.png" />
   </ItemGroup>
   <PropertyGroup>
-    <PostBuildEvent>if $(ConfigurationName) == Release (
-    "C:\Program Files (x86)\Microsoft\ILMerge\ILMerge.exe" /ndebug /targetplatform:4.0,"C:\Windows\Microsoft.NET\Framework\v4.0.30319" /out:"$(TargetDir)Desktop\CodeLab.dll" "$(TargetDir)CodeLab.dll" "$(TargetDir)ScintillaNET.dll"
+    <PostBuildEvent>
+if $(ConfigurationName)==FastDebug goto end
+if not exist "$(TargetDir)Desktop\" mkdir "$(TargetDir)Desktop\"
+set deps="$(TargetDir)ScintillaNET.dll" "$(TargetDir)Microsoft.CodeAnalysis.CSharp.dll" "$(TargetDir)Microsoft.CodeAnalysis.dll" "$(TargetDir)System.Collections.Immutable.dll" "$(TargetDir)System.Reflection.Metadata.dll"
+if $(ConfigurationName)==Release (
+    "$(ILMergeConsolePath)" /ndebug /targetplatform:4.0,"C:\Windows\Microsoft.NET\Framework\v4.0.30319" /out:"$(TargetDir)Desktop\$(TargetFileName)" "$(TargetPath)" %25deps%25
     cmd /c explorer "$(TargetDir)Desktop"
-) else if $(ConfigurationName) == Debug (
-    "C:\Program Files (x86)\Microsoft\ILMerge\ILMerge.exe" /targetplatform:4.0,"C:\Windows\Microsoft.NET\Framework\v4.0.30319" /out:"$(TargetDir)Desktop\CodeLab.dll" "$(TargetDir)CodeLab.dll" "$(TargetDir)ScintillaNET.dll"
+) else if $(ConfigurationName)==Debug (
+    "$(ILMergeConsolePath)" /targetplatform:4.0,"C:\Windows\Microsoft.NET\Framework\v4.0.30319" /out:"$(TargetDir)Desktop\$(TargetFileName)" "$(TargetPath)" %25deps%25
     copy "$(TargetDir)Desktop\$(TargetFileName)" "C:\Program Files\Paint.NET\Effects\"
 )
+:end
 exit 0
-
 </PostBuildEvent>
   </PropertyGroup>
 </Project>

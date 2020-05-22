@@ -141,6 +141,12 @@ namespace PaintDotNet.Effects
             set => SetRegValue("Snippets", value);
         }
 
+        internal static int WarningLevel
+        {
+            get => GetRegValue("WarningLevel", 4);
+            set => SetRegValue("WarningLevel", value);
+        }
+
         private static void OpenRegKey()
         {
             if (regKey == null)
@@ -167,6 +173,10 @@ namespace PaintDotNet.Effects
                 int regValue = (int)regKey.GetValue(valueName, defaultInt);
                 object boolObj = regValue == 1;
                 return (TType)boolObj;
+            }
+            else if (defaultValue is int integer)
+            {
+                return (TType)regKey.GetValue(valueName, integer);
             }
             else if (defaultValue is string str)
             {
@@ -196,6 +206,10 @@ namespace PaintDotNet.Effects
             {
                 int regValue = b ? 1 : 0;
                 regKey.SetValue(valueName, regValue, RegistryValueKind.DWord);
+            }
+            else if (value is int integer)
+            {
+                regKey.SetValue(valueName, integer, RegistryValueKind.DWord);
             }
             else if (value is string str)
             {
