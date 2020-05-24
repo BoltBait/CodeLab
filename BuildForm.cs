@@ -45,6 +45,7 @@ namespace PaintDotNet.Effects
         internal string RTZPath = "";
         private string FullScriptText = "";
         private string FileName = "";
+        private readonly string resourcePath;
         private readonly bool isClassic;
         private readonly bool customHelp;
 
@@ -183,7 +184,7 @@ namespace PaintDotNet.Effects
             forceSingleRenderBox.Checked = Regex.IsMatch(ScriptText, @"//[\s-[\r\n]]*(Force\s*Single\s*Render\s*Call|FSR)[\s-[\r\n]]*(?=\r?\n|$)", RegexOptions.IgnoreCase);
             #endregion
 
-            string resourcePath = Path.Combine(Path.GetDirectoryName(ScriptPath), ScriptName);
+            resourcePath = Path.Combine(Path.GetDirectoryName(ScriptPath), ScriptName);
 
             #region Load Help Text
             if (hasUI)
@@ -1166,7 +1167,7 @@ namespace PaintDotNet.Effects
                 if (fbd.ShowDialog() == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
                 {
                     string SourceCode = ScriptWriter.FullSourceCode(FullScriptText, FileName, isAdjustment, SubMenuName.Text, MenuName.Text, IconPath, URL, EffectFlags, RenderingSchedule, Author, MajorVer, MinorVer, Description, KeyWords, WindowTitle, HelpType, HelpStr);
-                    Solution.Generate(fbd.SelectedPath, FileName, SourceCode, IconPath);
+                    Solution.Generate(fbd.SelectedPath, FileName, SourceCode, IconPath, resourcePath);
 
                     Settings.LastSlnDirectory = fbd.SelectedPath;
                 }

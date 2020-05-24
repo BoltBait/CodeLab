@@ -33,7 +33,7 @@
             this.btnOK = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnBuild = new System.Windows.Forms.Button();
-            this.errorList = new System.Windows.Forms.ListBox();
+            this.errorList = new PaintDotNet.Effects.ErrorBox();
             this.errorListMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.CopyErrorMenuItem = new PaintDotNet.Effects.ScaledToolStripMenuItem();
             this.FullErrorMenuItem = new PaintDotNet.Effects.ScaledToolStripMenuItem();
@@ -1468,7 +1468,7 @@
         private System.Windows.Forms.Button btnOK;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Button btnBuild;
-        private System.Windows.Forms.ListBox errorList;
+        private ErrorBox errorList;
         private System.Windows.Forms.ToolTip toolTips;
         private System.Windows.Forms.Timer tmrExceptionCheck;
         private CodeTextBox txtCode;

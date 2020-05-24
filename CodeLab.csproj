@@ -131,6 +131,9 @@
     </Compile>
     <Compile Include="DefinitionGenerator.cs" />
     <Compile Include="Error.cs" />
+    <Compile Include="ErrorBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="IntelliTip.cs">
       <SubType>Component</SubType>
     </Compile>

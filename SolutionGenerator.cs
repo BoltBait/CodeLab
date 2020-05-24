@@ -23,7 +23,7 @@ namespace PaintDotNet.Effects
 {
     internal static class Solution
     {
-        internal static bool Generate(string slnPath, string name, string effectSource, string iconPath)
+        internal static bool Generate(string slnPath, string name, string effectSource, string iconPath, string resourcePath)
         {
             string effectName = Regex.Replace(name, @"[^\w]", "");
             string projectName = effectName + "Effect";
@@ -33,9 +33,9 @@ namespace PaintDotNet.Effects
             string pdnPath = Application.StartupPath;
             string projPath = Path.Combine(slnPath, projectName);
             bool iconExists = File.Exists(iconPath);
-            string samplePath = Path.ChangeExtension(iconPath, ".sample.png");
+            string samplePath = Path.ChangeExtension(resourcePath, ".sample.png");
             bool sampleExists = File.Exists(samplePath);
-            string rtfPath = Path.ChangeExtension(iconPath, ".rtz");
+            string rtfPath = Path.ChangeExtension(resourcePath, ".rtz");
             bool rtfExists = File.Exists(rtfPath);
 
             // Tab indent

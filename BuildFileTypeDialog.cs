@@ -150,7 +150,7 @@ namespace PaintDotNet.Effects
                 if (fbd.ShowDialog() == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
                 {
                     string sourceCode = ScriptWriter.FullFileTypeSourceCode(this.userCode, this.fileName, this.Author, this.Major, this.Minor, this.URL, this.Description, this.LoadExt, this.SaveExt, this.Layers, this.PluginName);
-                    Solution.Generate(fbd.SelectedPath, this.fileName, sourceCode, string.Empty);
+                    Solution.Generate(fbd.SelectedPath, this.fileName, sourceCode, string.Empty, string.Empty);
 
                     Settings.LastSlnDirectory = fbd.SelectedPath;
                 }

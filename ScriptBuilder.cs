@@ -120,14 +120,13 @@ namespace PaintDotNet.Effects
             {
                 // If an icon is specified and exists, add it to the build as an embedded resource to the same namespace as the effect.
                 resourceFiles.Add(iconPath);
+            }
 
-                // If an icon exists, see if a sample image exists
-                string samplepath = Path.ChangeExtension(iconPath, ".sample.png");
-                if (File.Exists(samplepath))
-                {
-                    // If an image exists in the icon directory with a ".sample.png" extension, add it to the build as an embedded resource.
-                    resourceFiles.Add(samplepath);
-                }
+            string samplepath = Path.ChangeExtension(scriptPath, ".sample.png");
+            if (File.Exists(samplepath))
+            {
+                // If an image exists in the icon directory with a ".sample.png" extension, add it to the build as an embedded resource.
+                resourceFiles.Add(samplepath);
             }
 
             string helpPath = Path.ChangeExtension(scriptPath, ".rtz");
