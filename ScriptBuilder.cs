@@ -455,18 +455,12 @@ namespace PaintDotNet.Effects
 
         private static Assembly CreateAssembly(string sourceCode, bool debug)
         {
+            lineOffset = CalculateLineOffset(sourceCode);
             exceptionMsg = null;
             errors = null;
 
-            if (debug)
-            {
-                sourceCode = "#define DEBUG\r\n" + sourceCode;
-            }
-
-            lineOffset = CalculateLineOffset(sourceCode);
-
             string assemblyName = Path.GetRandomFileName();
-            IEnumerable<SyntaxTree> syntaxTree = new[] { CSharpSyntaxTree.ParseText(sourceCode, options: parseOptions) };
+            IEnumerable<SyntaxTree> syntaxTree = new[] { CSharpSyntaxTree.ParseText(sourceCode, options: debug ? parseOptions.WithPreprocessorSymbols("DEBUG") : parseOptions) };
 
             CSharpCompilation compilation = CSharpCompilation.Create(
                 assemblyName, syntaxTree, references,
