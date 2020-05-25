@@ -36,6 +36,7 @@ namespace PaintDotNet.Effects
         private static readonly Regex preRenderRegex = new Regex(@"void PreRender\(Surface dst, Surface src\)(\s)*{(.|\s)*}", RegexOptions.Singleline);
 
         private static readonly IEnumerable<MetadataReference> references = Intelli.ReferenceAssemblies.Select(a => MetadataReference.CreateFromFile(a.Location));
+        private static readonly CSharpParseOptions parseOptions = CSharpParseOptions.Default.WithLanguageVersion(LanguageVersion.CSharp7_3);
         private static CSharpCompilationOptions compilationOptions = new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary, allowUnsafe: true, optimizationLevel: OptimizationLevel.Release);
 
         private static IEnumerable<Diagnostic> errors;
@@ -272,7 +273,7 @@ namespace PaintDotNet.Effects
                 dllPath = Path.ChangeExtension(dllPath, ".dll");
 
                 string assemblyName = Path.GetFileName(dllPath);
-                IEnumerable<SyntaxTree> syntaxTree = new[] { CSharpSyntaxTree.ParseText(sourceCode) };
+                IEnumerable<SyntaxTree> syntaxTree = new[] { CSharpSyntaxTree.ParseText(sourceCode, options: parseOptions) };
 
                 CSharpCompilation compilation = CSharpCompilation.Create(assemblyName, syntaxTree, references, compilationOptions);
 
@@ -465,7 +466,7 @@ namespace PaintDotNet.Effects
             lineOffset = CalculateLineOffset(sourceCode);
 
             string assemblyName = Path.GetRandomFileName();
-            IEnumerable<SyntaxTree> syntaxTree = new[] { CSharpSyntaxTree.ParseText(sourceCode) };
+            IEnumerable<SyntaxTree> syntaxTree = new[] { CSharpSyntaxTree.ParseText(sourceCode, options: parseOptions) };
 
             CSharpCompilation compilation = CSharpCompilation.Create(
                 assemblyName, syntaxTree, references,
