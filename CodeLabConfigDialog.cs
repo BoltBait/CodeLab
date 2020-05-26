@@ -30,7 +30,7 @@ namespace PaintDotNet.Effects
 {
     internal partial class CodeLabConfigDialog : EffectConfigDialog
     {
-        private const string ThisVersion = "5.4"; // Remember to change it in CodeLab.cs too!
+        private const string ThisVersion = "5.5"; // Remember to change it in CodeLab.cs too!
         private const string WebUpdateFile = "https://www.boltbait.com/versions.txt"; // The web site to check for updates
         private const string ThisApplication = "1"; // in the WebUpadteFile, CodeLab is application #1
         // format of the versions.txt file:  application number;current version;URL to download current version
@@ -40,7 +40,6 @@ namespace PaintDotNet.Effects
         private const string WindowTitle = "CodeLab v" + ThisVersion;
         private string FileName = "Untitled";
         private string FullScriptPath = "";
-        private bool CheckForUpdates;
         private string UpdateURL = "";
         private string UpdateVER = "";
         private EffectConfigToken previewToken = null;
@@ -80,45 +79,59 @@ namespace PaintDotNet.Effects
             this.Icon = ResUtil.CreateIcon("CodeLab");
             this.ShowInTaskbar = true;
 #endif
+            OriginalForeColor = this.ForeColor;
+            OriginalBackColor = this.BackColor;
+            LoadSettingsFromRegistry();
 
-            #region Load Settings from registry
+            this.Opacity = 1.00;
+            opacity50MenuItem.Checked = false;
+            opacity75MenuItem.Checked = false;
+            opacity90MenuItem.Checked = false;
+            opacity100MenuItem.Checked = true;
+
+            // PDN Theme
+            ApplyTheme();
+            txtCode.Theme = PdnTheme.Theme;
+
+            ResetScript();
+            BuildAsync();
+            txtCode.Focus();
+        }
+
+        void LoadSettingsFromRegistry()
+        {
             if (Settings.WordWrap)
             {
                 txtCode.WrapMode = WrapMode.Whitespace;
-                wordWrapToolStripMenuItem.CheckState = CheckState.Checked;
+            }
+            else
+            {
+                txtCode.WrapMode = WrapMode.None;
             }
             if (Settings.WhiteSpace)
             {
                 txtCode.ViewWhitespace = WhitespaceMode.VisibleAlways;
-                whiteSpaceToolStripMenuItem.CheckState = CheckState.Checked;
                 txtCode.WrapVisualFlags = WrapVisualFlags.Start;
-            }
-            if (Settings.CodeFolding)
-            {
-                txtCode.CodeFoldingEnabled = true;
-                codeFoldingToolStripMenuItem.CheckState = CheckState.Checked;
-            }
-            if (Settings.LineNumbers)
-            {
-                txtCode.LineNumbersEnabled = true;
-                lineNumbersToolStripMenuItem.CheckState = CheckState.Checked;
-            }
-            if (Settings.Bookmarks)
-            {
-                txtCode.BookmarksEnabled = true;
-                bookmarksToolStripMenuItem.CheckState = CheckState.Checked;
-            }
-            if (Settings.ToolBar)
-            {
-                toolBarToolStripMenuItem.CheckState = CheckState.Checked;
-                toolStrip1.Visible = true;
-                txtCode.Location = new Point(txtCode.Left, tabStrip1.Bottom);
             }
             else
             {
-                toolBarToolStripMenuItem.CheckState = CheckState.Unchecked;
+                txtCode.ViewWhitespace = WhitespaceMode.Invisible;
+                txtCode.WrapVisualFlags = WrapVisualFlags.None;
+            }
+            txtCode.CodeFoldingEnabled = Settings.CodeFolding;
+            txtCode.LineNumbersEnabled = Settings.LineNumbers;
+            txtCode.BookmarksEnabled = Settings.Bookmarks;
+            if (Settings.ToolBar)
+            {
+                toolStrip1.Visible = true;
+                txtCode.Location = new Point(txtCode.Left, tabStrip1.Bottom);
+                viewToolStripMenuItem.CheckState = CheckState.Checked;
+            }
+            else
+            {
                 toolStrip1.Visible = false;
                 txtCode.Location = new Point(txtCode.Left, tabStrip1.Top);
+                viewToolStripMenuItem.CheckState = CheckState.Unchecked;
             }
             if (Settings.ErrorBox)
             {
@@ -132,51 +145,37 @@ namespace PaintDotNet.Effects
             {
                 viewCheckBoxes(false, false);
             }
-            OriginalForeColor = this.ForeColor;
-            OriginalBackColor = this.BackColor;
             if (Settings.EditorTheme == Theme.Auto)
             {
-                autoToolStripMenuItem.CheckState = CheckState.Checked;
-                darkToolStripMenuItem.CheckState = CheckState.Unchecked;
-                lightToolStripMenuItem.CheckState = CheckState.Unchecked;
+                this.ForeColor = this.OriginalForeColor;
+                this.BackColor = this.OriginalBackColor;
+                txtCode.Theme = Theme.Auto;
             }
             else if (Settings.EditorTheme == Theme.Dark)
             {
                 this.ForeColor = Color.White;
                 this.BackColor = Color.FromArgb(40, 40, 40);
                 txtCode.Theme = Theme.Dark;
-                autoToolStripMenuItem.CheckState = CheckState.Unchecked;
-                darkToolStripMenuItem.CheckState = CheckState.Checked;
-                lightToolStripMenuItem.CheckState = CheckState.Unchecked;
             }
             else if (Settings.EditorTheme == Theme.Light)
             {
                 this.ForeColor = Color.Black;
                 this.BackColor = Color.White;
                 txtCode.Theme = Theme.Light;
-                autoToolStripMenuItem.CheckState = CheckState.Unchecked;
-                darkToolStripMenuItem.CheckState = CheckState.Unchecked;
-                lightToolStripMenuItem.CheckState = CheckState.Checked;
             }
+            ApplyTheme();
             if (Settings.LargeFonts)
             {
                 txtCode.Zoom = 2;
-                largeFontToolStripMenuItem.CheckState = CheckState.Checked;
-            }
-            if (Settings.Map)
-            {
-                txtCode.MapEnabled = true;
-                indicatorMapMenuItem.CheckState = CheckState.Checked;
-            }
-            if (Settings.CheckForUpdates)
-            {
-                CheckForUpdates = true;
-                checkForUpdatesToolStripMenuItem.CheckState = CheckState.Checked;
-                GoCheckForUpdates(true, false);
             }
             else
             {
-                checkForUpdatesToolStripMenuItem.CheckState = CheckState.Unchecked;
+                txtCode.Zoom = 0;
+            }
+            txtCode.MapEnabled = Settings.Map;
+            if (Settings.CheckForUpdates)
+            {
+                GoCheckForUpdates(true, false);
             }
             string editorFont = Settings.FontFamily;
             if (!IsFontInstalled(editorFont))
@@ -188,38 +187,10 @@ namespace PaintDotNet.Effects
                 editorFont = "Verdana";
             }
 
-            PopulateFontSubMenu(editorFont);
+            //PopulateFontSubMenu(editorFont);
             txtCode.Styles[Style.Default].Font = editorFont;
             OutputTextBox.Font = new Font(editorFont, OutputTextBox.Font.Size);
             errorList.Font = new Font(editorFont, errorList.Font.Size);
-            #endregion
-
-            this.Opacity = 1.00;
-            opacity50MenuItem.Checked = false;
-            opacity75MenuItem.Checked = false;
-            opacity90MenuItem.Checked = false;
-            opacity100MenuItem.Checked = true;
-
-            // TODO: Remove all this
-            warnLevelBox.BackColor = this.BackColor;
-            warnLevelBox.ForeColor = this.ForeColor;
-            warnLevelBox.Items.AddRange(new object[] { 0, 1, 2, 3, 4 });
-            warnLevelBox.SelectedIndexChanged += (sender, e) =>
-            {
-                int warningLevel = warnLevelBox.SelectedIndex;
-                Settings.WarningLevel = warningLevel;
-                ScriptBuilder.SetWarningLevel(warningLevel);
-                BuildAsync();
-            };
-
-            // PDN Theme
-            ApplyTheme();
-            txtCode.Theme = PdnTheme.Theme;
-
-            ResetScript();
-            warnLevelBox.SelectedIndex = Settings.WarningLevel; // TODO: Remove this line
-            //BuildAsync();
-            txtCode.Focus();
         }
         #endregion
 
@@ -977,9 +948,6 @@ namespace PaintDotNet.Effects
                 fontMenuItems.Add(fontMenuItem);
             }
 
-            fontsToolStripMenuItem.DropDownItems.AddRange(fontMenuItems.ToArray());
-            fontsToolStripMenuItem.DropDownItems.Add(new ToolStripSeparator());
-            fontsToolStripMenuItem.DropDownItems.Add("Help with Fonts", null, HelpWithFonts_Click);
         }
 
         private void ApplyTheme()
@@ -1038,60 +1006,62 @@ namespace PaintDotNet.Effects
 
         private void GoCheckForUpdates(bool silentMode, bool force)
         {
-            UpdateVER = "";
-            UpdateURL = "";
+            Freshness freshness = new Freshness(UpdateURL, UpdateVER, ThisVersion, ThisApplication, WebUpdateFile);
+            freshness.GoCheckForUpdates(silentMode, force);
+            //UpdateVER = "";
+            //UpdateURL = "";
 
-            if (!force)
-            {
-                // only check for updates every 7 days
-                if (Math.Abs((Settings.LatestUpdateCheck - DateTime.Today).TotalDays) < 7)
-                {
-                    return; // not time yet
-                }
-            }
+            //if (!force)
+            //{
+            //    // only check for updates every 7 days
+            //    if (Math.Abs((Settings.LatestUpdateCheck - DateTime.Today).TotalDays) < 7)
+            //    {
+            //        return; // not time yet
+            //    }
+            //}
 
-            Random r = new Random(); // defeat any cache by appending a random number to the URL
+            //Random r = new Random(); // defeat any cache by appending a random number to the URL
 
-            WebClient web = new WebClient();
-            web.OpenReadAsync(new Uri(WebUpdateFile + "?r=" + r.Next(int.MaxValue).ToString()));
+            //WebClient web = new WebClient();
+            //web.OpenReadAsync(new Uri(WebUpdateFile + "?r=" + r.Next(int.MaxValue).ToString()));
 
-            web.OpenReadCompleted += (sender, e) =>
-            {
-                try
-                {
-                    string text = "";
-                    Stream stream = e.Result;
-                    using (StreamReader reader = new StreamReader(stream))
-                    {
-                        text = reader.ReadToEnd();
-                    }
-                    string[] lines = text.Split('\n');
-                    for (int i = 0; i < lines.Length; i++)
-                    {
-                        string[] data = lines[i].Split(';');
-                        if (data.Length >= 2)
-                        {
-                            if (data[0].Trim() == ThisApplication.Trim())
-                            {
-                                UpdateVER = data[1].Trim();
-                                if (data[1].Trim() != ThisVersion.Trim())
-                                {
-                                    UpdateURL = data[2].Trim();
-                                }
-                            }
-                        }
-                    }
-                }
-                catch
-                {
-                    UpdateVER = "";
-                    UpdateURL = "";
-                }
+            //web.OpenReadCompleted += (sender, e) =>
+            //{
+            //    try
+            //    {
+            //        string text = "";
+            //        Stream stream = e.Result;
+            //        using (StreamReader reader = new StreamReader(stream))
+            //        {
+            //            text = reader.ReadToEnd();
+            //        }
+            //        string[] lines = text.Split('\n');
+            //        for (int i = 0; i < lines.Length; i++)
+            //        {
+            //            string[] data = lines[i].Split(';');
+            //            if (data.Length >= 2)
+            //            {
+            //                if (data[0].Trim() == ThisApplication.Trim())
+            //                {
+            //                    UpdateVER = data[1].Trim();
+            //                    if (data[1].Trim() != ThisVersion.Trim())
+            //                    {
+            //                        UpdateURL = data[2].Trim();
+            //                    }
+            //                }
+            //            }
+            //        }
+            //    }
+            //    catch
+            //    {
+            //        UpdateVER = "";
+            //        UpdateURL = "";
+            //    }
 
-                Settings.LatestUpdateCheck = DateTime.Now;
+            //    Settings.LatestUpdateCheck = DateTime.Now;
 
-                DisplayUpdates(silentMode);
-            };
+            //    DisplayUpdates(silentMode);
+            //};
         }
         #endregion
 
@@ -1680,27 +1650,6 @@ namespace PaintDotNet.Effects
         #endregion
 
         #region View menu Event functions
-        private void toolBarToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (!toolStrip1.Visible)
-            {
-                Settings.ToolBar = true;
-                toolBarToolStripMenuItem.CheckState = CheckState.Checked;
-                toolStrip1.Visible = true;
-                txtCode.Location = new Point(txtCode.Left, tabStrip1.Bottom);
-                txtCode.Height -= toolStrip1.Height;
-            }
-            else
-            {
-                Settings.ToolBar = false;
-                toolBarToolStripMenuItem.CheckState = CheckState.Unchecked;
-                toolStrip1.Visible = false;
-                txtCode.Location = new Point(txtCode.Left, tabStrip1.Bottom);
-                txtCode.Height += toolStrip1.Height;
-            }
-            txtCode.Focus();
-        }
-
         private void viewCheckBoxes(bool ErrorsVisible, bool DebugVisible)
         {
             if (ErrorsVisible)
@@ -1796,23 +1745,6 @@ namespace PaintDotNet.Effects
             txtCode.Focus();
         }
 
-        private void largeFontToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (txtCode.Zoom != 2)
-            {
-                txtCode.Zoom = 2;
-                Settings.LargeFonts = true;
-                largeFontToolStripMenuItem.CheckState = CheckState.Checked;
-            }
-            else
-            {
-                txtCode.Zoom = 0;
-                Settings.LargeFonts = false;
-                largeFontToolStripMenuItem.CheckState = CheckState.Unchecked;
-            }
-            txtCode.Focus();
-        }
-
         private void wordWrapToolStripMenuItem_Click(object sender, EventArgs e)
         {
             bool inverseValue = txtCode.WrapMode == WrapMode.None;
@@ -1832,106 +1764,16 @@ namespace PaintDotNet.Effects
 
         private void EnableWordWrap(bool enable)
         {
-            wordWrapToolStripMenuItem.CheckState = enable ? CheckState.Checked : CheckState.Unchecked;
             txtCode.WrapMode = enable ? WrapMode.Whitespace : WrapMode.None;
             txtCode.WrapVisualFlags = enable ? WrapVisualFlags.Start : WrapVisualFlags.None;
         }
 
-        private void whiteSpaceToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (txtCode.ViewWhitespace == WhitespaceMode.Invisible)
-            {
-                txtCode.ViewWhitespace = WhitespaceMode.VisibleAlways;
-                Settings.WhiteSpace = true;
-                whiteSpaceToolStripMenuItem.CheckState = CheckState.Checked;
-            }
-            else
-            {
-                txtCode.ViewWhitespace = WhitespaceMode.Invisible;
-                Settings.WhiteSpace = false;
-                whiteSpaceToolStripMenuItem.CheckState = CheckState.Unchecked;
-            }
-            txtCode.Focus();
-        }
-
-        private void codeFoldingToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (!txtCode.CodeFoldingEnabled)
-            {
-                txtCode.CodeFoldingEnabled = true;
-                Settings.CodeFolding = true;
-                codeFoldingToolStripMenuItem.CheckState = CheckState.Checked;
-            }
-            else
-            {
-                txtCode.CodeFoldingEnabled = false;
-                Settings.CodeFolding = false;
-                codeFoldingToolStripMenuItem.CheckState = CheckState.Unchecked;
-            }
-            txtCode.Focus();
-        }
-
-        private void lineNumbersToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (!txtCode.LineNumbersEnabled)
-            {
-                txtCode.LineNumbersEnabled = true;
-                Settings.LineNumbers = true;
-                lineNumbersToolStripMenuItem.CheckState = CheckState.Checked;
-            }
-            else
-            {
-                txtCode.LineNumbersEnabled = false;
-                Settings.LineNumbers = false;
-                lineNumbersToolStripMenuItem.CheckState = CheckState.Unchecked;
-            }
-            txtCode.Focus();
-        }
-
-        private void bookmarksToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (!txtCode.BookmarksEnabled)
-            {
-                txtCode.BookmarksEnabled = true;
-                Settings.Bookmarks = true;
-                bookmarksToolStripMenuItem.CheckState = CheckState.Checked;
-            }
-            else
-            {
-                txtCode.BookmarksEnabled = false;
-                Settings.Bookmarks = false;
-                bookmarksToolStripMenuItem.CheckState = CheckState.Unchecked;
-            }
-            txtCode.Focus();
-        }
-
-        private void indicatorMapMenuItem_Click(object sender, EventArgs e)
-        {
-            if (!txtCode.MapEnabled)
-            {
-                txtCode.MapEnabled = true;
-                Settings.Map = true;
-                indicatorMapMenuItem.CheckState = CheckState.Checked;
-            }
-            else
-            {
-                txtCode.MapEnabled = false;
-                Settings.Map = false;
-                indicatorMapMenuItem.CheckState = CheckState.Unchecked;
-            }
-            txtCode.Focus();
-        }
 
         private void FontMenuItem_Click(object sender, EventArgs e)
         {
             if (sender is ToolStripMenuItem fontMenuItem)
             {
                 string fontName = fontMenuItem.Text;
-
-                foreach (ToolStripMenuItem menuItem in fontsToolStripMenuItem.DropDownItems.OfType<ToolStripMenuItem>())
-                {
-                    menuItem.Checked = menuItem.Text == fontName;
-                }
 
                 Settings.FontFamily = fontName;
                 txtCode.Styles[Style.Default].Font = fontName;
@@ -2052,27 +1894,16 @@ namespace PaintDotNet.Effects
             LaunchUrl("https://www.BoltBait.com/pdn/codelab/help");
         }
 
-        private void checkForUpdatesToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (!CheckForUpdates)
-            {
-                Settings.CheckForUpdates = true;
-                checkForUpdatesToolStripMenuItem.CheckState = CheckState.Checked;
-                CheckForUpdates = true;
-                GoCheckForUpdates(false, true);
-            }
-            else
-            {
-                Settings.CheckForUpdates = false;
-                checkForUpdatesToolStripMenuItem.CheckState = CheckState.Unchecked;
-                CheckForUpdates = false;
-            }
-            txtCode.Focus();
-        }
-
         private void changesInThisVersionToolStripMenuItem_Click(object sender, EventArgs e)
         {
             LaunchUrl("https://www.boltbait.com/pdn/codelab/history/#v" + ThisVersion);
+        }
+
+        private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SettingsForm sf = new SettingsForm(UpdateURL, UpdateVER, ThisVersion, ThisApplication, WebUpdateFile);
+            sf.ShowDialog();
+            LoadSettingsFromRegistry();
         }
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2561,6 +2392,7 @@ namespace PaintDotNet.Effects
             }
         }
         #endregion
+
     }
 
     public enum ProjectType
