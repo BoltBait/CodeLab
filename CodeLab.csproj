@@ -134,6 +134,7 @@
     <Compile Include="ErrorBox.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Freshness.cs" />
     <Compile Include="IntelliTip.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -159,6 +160,12 @@
     <Compile Include="ScriptBuilder.cs" />
     <Compile Include="ScriptWriter.cs" />
     <Compile Include="Settings.cs" />
+    <Compile Include="SettingsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SettingsForm.Designer.cs">
+      <DependentUpon>SettingsForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="ShapeBuilder.cs" />
     <Compile Include="SnippetManager.cs">
       <SubType>Form</SubType>
@@ -258,6 +265,9 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SettingsForm.resx">
+      <DependentUpon>SettingsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SnippetManager.resx">
       <DependentUpon>SnippetManager.cs</DependentUpon>
@@ -452,14 +462,16 @@
     <PackageReference Include="jacobslusser.ScintillaNET.Signed">
       <Version>3.6.3</Version>
     </PackageReference>
-    <PackageReference Include="Microsoft.CodeAnalysis">
-      <Version>3.6.0</Version>
-    </PackageReference>
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp">
       <Version>3.6.0</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Icons\Compiler.png" />
+    <EmbeddedResource Include="Icons\UI.png" />
+    <EmbeddedResource Include="Icons\Updates.png" />
+    <EmbeddedResource Include="Icons\Settings.32.png" />
+    <EmbeddedResource Include="Icons\Settings.png" />
     <EmbeddedResource Include="Icons\SrcWRK.png" />
     <EmbeddedResource Include="Icons\DestAUX.png" />
     <EmbeddedResource Include="Icons\DestDST.png" />
@@ -539,7 +551,7 @@
     <PostBuildEvent>
 if $(ConfigurationName)==FastDebug goto end
 if not exist "$(TargetDir)Desktop\" mkdir "$(TargetDir)Desktop\"
-set deps="$(TargetDir)ScintillaNET.dll" "$(TargetDir)Microsoft.CodeAnalysis.CSharp.dll" "$(TargetDir)Microsoft.CodeAnalysis.dll" "$(TargetDir)System.Collections.Immutable.dll" "$(TargetDir)System.Reflection.Metadata.dll"
+set deps="$(TargetDir)ScintillaNET.dll" "$(TargetDir)Microsoft.CodeAnalysis.CSharp.dll" "$(TargetDir)Microsoft.CodeAnalysis.dll" "$(TargetDir)System.Collections.Immutable.dll" "$(TargetDir)System.Reflection.Metadata.dll" "$(TargetDir)System.Threading.Tasks.Extensions.dll"
 if $(ConfigurationName)==Release (
     "$(ILMergeConsolePath)" /ndebug /targetplatform:4.0,"C:\Windows\Microsoft.NET\Framework\v4.0.30319" /out:"$(TargetDir)Desktop\$(TargetFileName)" "$(TargetPath)" %25deps%25
     cmd /c explorer "$(TargetDir)Desktop"
