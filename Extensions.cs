@@ -318,7 +318,7 @@ namespace PaintDotNet.Effects
                     case '(':
                     case '[':
                     case '{':
-                    case '<':
+                    //case '<':
                         return true;
                 }
             }
@@ -329,7 +329,7 @@ namespace PaintDotNet.Effects
                     case ')':
                     case ']':
                     case '}':
-                    case '>':
+                    //case '>':
                         return true;
                 }
             }
