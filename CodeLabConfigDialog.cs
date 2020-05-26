@@ -167,7 +167,6 @@ namespace PaintDotNet.Effects
                 editorFont = "Verdana";
             }
 
-            //PopulateFontSubMenu(editorFont);
             txtCode.Styles[Style.Default].Font = editorFont;
             OutputTextBox.Font = new Font(editorFont, OutputTextBox.Font.Size);
             errorList.Font = new Font(editorFont, errorList.Font.Size);
@@ -909,27 +908,6 @@ namespace PaintDotNet.Effects
             }
         }
 
-        private void PopulateFontSubMenu(string fontToHaveChecked)
-        {
-            string[] monoFonts = { "Cascadia Code", "Consolas", "Courier New", "Envy Code R", "Fira Code", "Hack", "JetBrains Mono", "Verdana" };
-            List<ToolStripMenuItem> fontMenuItems = new List<ToolStripMenuItem>(monoFonts.Length);
-            foreach (string fontName in monoFonts)
-            {
-                ToolStripMenuItem fontMenuItem = new ToolStripMenuItem();
-                fontMenuItem.CheckState = (fontName == fontToHaveChecked) ? CheckState.Checked : CheckState.Unchecked;
-                fontMenuItem.Text = fontName;
-                fontMenuItem.Enabled = IsFontInstalled(fontName);
-                if (fontMenuItem.Enabled)
-                {
-                    fontMenuItem.Font = new Font(fontName, fontMenuItem.Font.Size);
-                }
-                fontMenuItem.Click += FontMenuItem_Click;
-
-                fontMenuItems.Add(fontMenuItem);
-            }
-
-        }
-
         private void ApplyTheme(Theme theme)
         {
             switch (theme)
@@ -1005,60 +983,6 @@ namespace PaintDotNet.Effects
         {
             Freshness freshness = new Freshness(UpdateURL, UpdateVER, ThisVersion, ThisApplication, WebUpdateFile);
             freshness.GoCheckForUpdates(silentMode, force);
-            //UpdateVER = "";
-            //UpdateURL = "";
-
-            //if (!force)
-            //{
-            //    // only check for updates every 7 days
-            //    if (Math.Abs((Settings.LatestUpdateCheck - DateTime.Today).TotalDays) < 7)
-            //    {
-            //        return; // not time yet
-            //    }
-            //}
-
-            //Random r = new Random(); // defeat any cache by appending a random number to the URL
-
-            //WebClient web = new WebClient();
-            //web.OpenReadAsync(new Uri(WebUpdateFile + "?r=" + r.Next(int.MaxValue).ToString()));
-
-            //web.OpenReadCompleted += (sender, e) =>
-            //{
-            //    try
-            //    {
-            //        string text = "";
-            //        Stream stream = e.Result;
-            //        using (StreamReader reader = new StreamReader(stream))
-            //        {
-            //            text = reader.ReadToEnd();
-            //        }
-            //        string[] lines = text.Split('\n');
-            //        for (int i = 0; i < lines.Length; i++)
-            //        {
-            //            string[] data = lines[i].Split(';');
-            //            if (data.Length >= 2)
-            //            {
-            //                if (data[0].Trim() == ThisApplication.Trim())
-            //                {
-            //                    UpdateVER = data[1].Trim();
-            //                    if (data[1].Trim() != ThisVersion.Trim())
-            //                    {
-            //                        UpdateURL = data[2].Trim();
-            //                    }
-            //                }
-            //            }
-            //        }
-            //    }
-            //    catch
-            //    {
-            //        UpdateVER = "";
-            //        UpdateURL = "";
-            //    }
-
-            //    Settings.LatestUpdateCheck = DateTime.Now;
-
-            //    DisplayUpdates(silentMode);
-            //};
         }
         #endregion
 
