@@ -96,14 +96,8 @@ namespace PaintDotNet.Effects
 
         void LoadSettingsFromRegistry()
         {
-            if (Settings.WordWrap)
-            {
-                txtCode.WrapMode = WrapMode.Whitespace;
-            }
-            else
-            {
-                txtCode.WrapMode = WrapMode.None;
-            }
+            txtCode.WrapMode = Settings.WordWrap ? WrapMode.Whitespace : WrapMode.None;
+
             if (Settings.WhiteSpace)
             {
                 txtCode.ViewWhitespace = WhitespaceMode.VisibleAlways;
@@ -114,9 +108,11 @@ namespace PaintDotNet.Effects
                 txtCode.ViewWhitespace = WhitespaceMode.Invisible;
                 txtCode.WrapVisualFlags = WrapVisualFlags.None;
             }
+
             txtCode.CodeFoldingEnabled = Settings.CodeFolding;
             txtCode.LineNumbersEnabled = Settings.LineNumbers;
             txtCode.BookmarksEnabled = Settings.Bookmarks;
+
             if (Settings.ToolBar)
             {
                 toolStrip1.Visible = true;
@@ -129,34 +125,20 @@ namespace PaintDotNet.Effects
                 txtCode.Location = new Point(txtCode.Left, tabStrip1.Top);
                 viewToolStripMenuItem.CheckState = CheckState.Unchecked;
             }
-            if (Settings.ErrorBox)
-            {
-                viewCheckBoxes(true, false);
-            }
-            else if (Settings.Output)
-            {
-                viewCheckBoxes(false, true);
-            }
-            else
-            {
-                viewCheckBoxes(false, false);
-            }
+
+            viewCheckBoxes(Settings.ErrorBox, Settings.Output);
 
             ApplyTheme(Settings.EditorTheme);
 
-            if (Settings.LargeFonts)
-            {
-                txtCode.Zoom = 2;
-            }
-            else
-            {
-                txtCode.Zoom = 0;
-            }
+            txtCode.Zoom = Settings.LargeFonts ? 2 : 0;
+
             txtCode.MapEnabled = Settings.Map;
+
             if (Settings.CheckForUpdates)
             {
                 GoCheckForUpdates(true, false);
             }
+
             string editorFont = Settings.FontFamily;
             if (!IsFontInstalled(editorFont))
             {
