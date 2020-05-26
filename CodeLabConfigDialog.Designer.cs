@@ -115,10 +115,6 @@
             this.changesInThisVersionToolStripMenuItem = new PaintDotNet.Effects.ScaledToolStripMenuItem();
             this.settingsToolStripMenuItem = new PaintDotNet.Effects.ScaledToolStripMenuItem();
             this.aboutToolStripMenuItem = new PaintDotNet.Effects.ScaledToolStripMenuItem();
-            this.toolStripSeparator20 = new System.Windows.Forms.ToolStripSeparator();
-            this.autoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.lightToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.darkToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.NewButton = new PaintDotNet.Effects.ScaledToolStripButton();
             this.OpenButton = new PaintDotNet.Effects.ScaledToolStripButton();
@@ -916,32 +912,6 @@
             this.aboutToolStripMenuItem.Text = "&About...";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
-            // toolStripSeparator20
-            // 
-            this.toolStripSeparator20.Name = "toolStripSeparator20";
-            this.toolStripSeparator20.Size = new System.Drawing.Size(211, 6);
-            // 
-            // autoToolStripMenuItem
-            // 
-            this.autoToolStripMenuItem.Name = "autoToolStripMenuItem";
-            this.autoToolStripMenuItem.Size = new System.Drawing.Size(101, 22);
-            this.autoToolStripMenuItem.Text = "Auto";
-            this.autoToolStripMenuItem.Click += new System.EventHandler(this.autoToolStripMenuItem_Click);
-            // 
-            // lightToolStripMenuItem
-            // 
-            this.lightToolStripMenuItem.Name = "lightToolStripMenuItem";
-            this.lightToolStripMenuItem.Size = new System.Drawing.Size(101, 22);
-            this.lightToolStripMenuItem.Text = "Light";
-            this.lightToolStripMenuItem.Click += new System.EventHandler(this.lightToolStripMenuItem_Click);
-            // 
-            // darkToolStripMenuItem
-            // 
-            this.darkToolStripMenuItem.Name = "darkToolStripMenuItem";
-            this.darkToolStripMenuItem.Size = new System.Drawing.Size(101, 22);
-            this.darkToolStripMenuItem.Text = "Dark";
-            this.darkToolStripMenuItem.Click += new System.EventHandler(this.darkToolStripMenuItem_Click);
-            // 
             // toolStrip1
             // 
             this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
@@ -1464,21 +1434,17 @@
         private ScaledToolStripButton UnCommentButton;
         private System.Windows.Forms.CheckBox ShowErrors;
         private ScaledToolStripButton NewButton;
-        private System.Windows.Forms.ToolStripMenuItem lightToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem darkToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openRecentToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem NoRecentsToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator18;
         private ScaledToolStripMenuItem formatDocMenuItem;
         private ScaledToolStripMenuItem previewEffectMenuItem;
         private ScaledToolStripButton RunButton;
-        private System.Windows.Forms.ToolStripMenuItem autoToolStripMenuItem;
         private System.Windows.Forms.TextBox OutputTextBox;
         private System.Windows.Forms.Button ClearOutput;
         private System.Windows.Forms.CheckBox ShowOutput;
         private System.Windows.Forms.ToolStripMenuItem viewDebugToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator19;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator20;
         private System.Windows.Forms.ContextMenuStrip errorListMenu;
         private PaintDotNet.Effects.ScaledToolStripMenuItem CopyErrorMenuItem;
         private ScaledToolStripMenuItem FullErrorMenuItem;

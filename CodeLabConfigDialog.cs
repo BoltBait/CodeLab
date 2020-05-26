@@ -89,10 +89,6 @@ namespace PaintDotNet.Effects
             opacity90MenuItem.Checked = false;
             opacity100MenuItem.Checked = true;
 
-            // PDN Theme
-            ApplyTheme();
-            txtCode.Theme = PdnTheme.Theme;
-
             ResetScript();
             BuildAsync();
             txtCode.Focus();
@@ -145,25 +141,9 @@ namespace PaintDotNet.Effects
             {
                 viewCheckBoxes(false, false);
             }
-            if (Settings.EditorTheme == Theme.Auto)
-            {
-                this.ForeColor = this.OriginalForeColor;
-                this.BackColor = this.OriginalBackColor;
-                txtCode.Theme = Theme.Auto;
-            }
-            else if (Settings.EditorTheme == Theme.Dark)
-            {
-                this.ForeColor = Color.White;
-                this.BackColor = Color.FromArgb(40, 40, 40);
-                txtCode.Theme = Theme.Dark;
-            }
-            else if (Settings.EditorTheme == Theme.Light)
-            {
-                this.ForeColor = Color.Black;
-                this.BackColor = Color.White;
-                txtCode.Theme = Theme.Light;
-            }
-            ApplyTheme();
+
+            ApplyTheme(Settings.EditorTheme);
+
             if (Settings.LargeFonts)
             {
                 txtCode.Zoom = 2;
@@ -950,9 +930,26 @@ namespace PaintDotNet.Effects
 
         }
 
-        private void ApplyTheme()
+        private void ApplyTheme(Theme theme)
         {
+            switch (theme)
+            {
+                case Theme.Auto:
+                    ForeColor = OriginalForeColor;
+                    BackColor = OriginalBackColor;
+                    break;
+                case Theme.Dark:
+                    ForeColor = Color.White;
+                    BackColor = Color.FromArgb(40, 40, 40);
+                    break;
+                case Theme.Light:
+                    ForeColor = Color.Black;
+                    BackColor = Color.White;
+                    break;
+            }
+
             PdnTheme.SetColors(this.ForeColor, this.BackColor);
+            txtCode.Theme = PdnTheme.Theme;
             toolStrip1.Renderer = PdnTheme.Renderer;
             tabStrip1.Renderer = PdnTheme.TabRenderer;
             menuStrip1.Renderer = PdnTheme.Renderer;
@@ -1839,45 +1836,6 @@ namespace PaintDotNet.Effects
             opacity75MenuItem.Checked = false;
             opacity90MenuItem.Checked = true;
             opacity100MenuItem.Checked = false;
-            txtCode.Focus();
-        }
-
-        private void lightToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            this.ForeColor = Color.Black;
-            this.BackColor = Color.White;
-            ApplyTheme();
-            txtCode.Theme = Theme.Light;
-            Settings.EditorTheme = Theme.Light;
-            lightToolStripMenuItem.CheckState = CheckState.Checked;
-            darkToolStripMenuItem.CheckState = CheckState.Unchecked;
-            autoToolStripMenuItem.CheckState = CheckState.Unchecked;
-            txtCode.Focus();
-        }
-
-        private void darkToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            this.ForeColor = Color.White;
-            this.BackColor = Color.FromArgb(40, 40, 40);
-            ApplyTheme();
-            txtCode.Theme = Theme.Dark;
-            Settings.EditorTheme = Theme.Dark;
-            lightToolStripMenuItem.CheckState = CheckState.Unchecked;
-            darkToolStripMenuItem.CheckState = CheckState.Checked;
-            autoToolStripMenuItem.CheckState = CheckState.Unchecked;
-            txtCode.Focus();
-        }
-
-        private void autoToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            this.ForeColor = OriginalForeColor;
-            this.BackColor = OriginalBackColor;
-            ApplyTheme();
-            txtCode.Theme = PdnTheme.Theme;
-            Settings.EditorTheme = Theme.Auto;
-            lightToolStripMenuItem.CheckState = CheckState.Unchecked;
-            darkToolStripMenuItem.CheckState = CheckState.Unchecked;
-            autoToolStripMenuItem.CheckState = CheckState.Checked;
             txtCode.Focus();
         }
 
