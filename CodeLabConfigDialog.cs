@@ -43,8 +43,6 @@ namespace PaintDotNet.Effects
         private string UpdateURL = "";
         private string UpdateVER = "";
         private EffectConfigToken previewToken = null;
-        private readonly Color OriginalForeColor;
-        private readonly Color OriginalBackColor;
         private string effectFlag = null;
 
         private string EffectFlag
@@ -79,8 +77,7 @@ namespace PaintDotNet.Effects
             this.Icon = ResUtil.CreateIcon("CodeLab");
             this.ShowInTaskbar = true;
 #endif
-            OriginalForeColor = this.ForeColor;
-            OriginalBackColor = this.BackColor;
+            PdnTheme.InitialColors(this.ForeColor, this.BackColor);
             LoadSettingsFromRegistry();
 
             this.Opacity = 1.00;
@@ -892,23 +889,9 @@ namespace PaintDotNet.Effects
 
         private void ApplyTheme(Theme theme)
         {
-            switch (theme)
-            {
-                case Theme.Auto:
-                    ForeColor = OriginalForeColor;
-                    BackColor = OriginalBackColor;
-                    break;
-                case Theme.Dark:
-                    ForeColor = Color.White;
-                    BackColor = Color.FromArgb(40, 40, 40);
-                    break;
-                case Theme.Light:
-                    ForeColor = Color.Black;
-                    BackColor = Color.White;
-                    break;
-            }
-
-            PdnTheme.SetColors(this.ForeColor, this.BackColor);
+            PdnTheme.Theme = theme;
+            ForeColor = PdnTheme.ForeColor;
+            BackColor = PdnTheme.BackColor;
             txtCode.Theme = PdnTheme.Theme;
             toolStrip1.Renderer = PdnTheme.Renderer;
             tabStrip1.Renderer = PdnTheme.TabRenderer;

@@ -164,20 +164,47 @@ namespace PaintDotNet.Effects
 
     internal static class PdnTheme
     {
+        private static Color originalForeColor;
+        private static Color originalBackColor;
         private static Color foreColor;
         private static Color backColor;
         private static ThemeRenderer themeRenderer;
         private static TabRenderer tabRenderer;
 
-        internal static void SetColors(Color foreColor, Color backColor)
+        internal static void InitialColors(Color foreColor, Color backColor)
         {
-            PdnTheme.foreColor = foreColor;
-            PdnTheme.backColor = backColor;
-            PdnTheme.themeRenderer = null;
-            PdnTheme.tabRenderer = null;
+            originalForeColor = foreColor;
+            originalBackColor = backColor;
         }
 
-        internal static Theme Theme => (PdnTheme.backColor.R < 128 && PdnTheme.backColor.G < 128 && PdnTheme.backColor.B < 128) ? Theme.Dark : Theme.Light;
+        internal static Theme Theme
+        {
+            get
+            {
+                return (backColor.R < 128 && backColor.G < 128 && backColor.B < 128) ? Theme.Dark : Theme.Light;
+            }
+            set
+            {
+                switch (value)
+                {
+                    case Theme.Auto:
+                        foreColor = originalForeColor;
+                        backColor = originalBackColor;
+                        break;
+                    case Theme.Dark:
+                        foreColor = Color.White;
+                        backColor = Color.FromArgb(40, 40, 40);
+                        break;
+                    case Theme.Light:
+                        foreColor = Color.Black;
+                        backColor = Color.White;
+                        break;
+                }
+
+                themeRenderer = null;
+                tabRenderer = null;
+            }
+        }
 
         internal static Color ForeColor => foreColor;
         internal static Color BackColor => backColor;
