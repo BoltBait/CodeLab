@@ -141,6 +141,7 @@ namespace PaintDotNet.Effects
             txtCode.Styles[Style.Default].Font = editorFont;
             OutputTextBox.Font = new Font(editorFont, OutputTextBox.Font.Size);
             errorList.Font = new Font(editorFont, errorList.Font.Size);
+            txtCode.UpdateMarginWidths();
 
             ScriptBuilder.SetWarningLevel(Settings.WarningLevel);
             ScriptBuilder.SetWarningsToIgnore(Settings.WarningsToIgnore);
@@ -1633,40 +1634,6 @@ namespace PaintDotNet.Effects
         {
             txtCode.WrapMode = enable ? WrapMode.Whitespace : WrapMode.None;
             txtCode.WrapVisualFlags = enable ? WrapVisualFlags.Start : WrapVisualFlags.None;
-        }
-
-
-        private void FontMenuItem_Click(object sender, EventArgs e)
-        {
-            if (sender is ToolStripMenuItem fontMenuItem)
-            {
-                string fontName = fontMenuItem.Text;
-
-                Settings.FontFamily = fontName;
-                txtCode.Styles[Style.Default].Font = fontName;
-                txtCode.UpdateMarginWidths();
-                OutputTextBox.Font = new Font(fontName, OutputTextBox.Font.Size);
-                errorList.Font = new Font(fontName, errorList.Font.Size);
-
-                txtCode.Focus();
-            }
-        }
-
-        private void HelpWithFonts_Click(object sender, EventArgs e)
-        {
-            FlexibleMessageBox.Show(
-                "You may choose between Consolas, Courier New, and Verdana fonts to view your code.\n\n" +
-                "These fonts are built-in to Windows. If they are not available, you may need to download them.\n\n" +
-                "Or, you may download and install these popular programming fonts from the following web sites:\n\n" + 
-                "▪ Envy Code R\n    http://damieng.com/blog/2008/05/26/envy-code-r-preview-7-coding-font-released \n\n" + 
-                "▪ Hack\n    http://sourcefoundry.org/hack/ \n\n" + 
-                "The following fonts support Programming Ligatures: (Showing  ≤  instead of  <=  etc.)\n\n" + 
-                "▪ Cascadia Code\n    https://devblogs.microsoft.com/commandline/cascadia-code/ \n\n" + 
-                "▪ Fira Code\n    https://github.com/tonsky/FiraCode \n\n" + 
-                "▪ JetBrains Mono\n    https://www.jetbrains.com/lp/mono/ \n\n" + 
-                "Once downloaded and installed on your system, you may choose these fonts from the menu.", 
-                "Help With Fonts", MessageBoxButtons.OK,MessageBoxIcon.Information);
-            txtCode.Focus();
         }
 
         private void opacity50MenuItem_Click(object sender, EventArgs e)
