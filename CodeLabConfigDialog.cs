@@ -1563,53 +1563,25 @@ namespace PaintDotNet.Effects
 
         private void viewErrorsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (ShowErrors.Checked)
-            {
-                viewCheckBoxes(false, false);
-            }
-            else
-            {
-                viewCheckBoxes(true, false);
-            }
+            viewCheckBoxes(!ShowErrors.Checked, false);
             txtCode.Focus();
         }
 
         private void viewDebugToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (ShowOutput.Checked)
-            {
-                viewCheckBoxes(false, false);
-            }
-            else
-            {
-                viewCheckBoxes(false, true);
-            }
+            viewCheckBoxes(false, !ShowOutput.Checked);
             txtCode.Focus();
         }
 
         private void ShowErrors_Click(object sender, EventArgs e)
         {
-            if (ShowErrors.Checked)
-            {
-                viewCheckBoxes(true, false);
-            }
-            else
-            {
-                viewCheckBoxes(false, false);
-            }
+            viewCheckBoxes(ShowErrors.Checked, false);
             txtCode.Focus();
         }
 
         private void ShowOutput_Click(object sender, EventArgs e)
         {
-            if (ShowOutput.Checked)
-            {
-                viewCheckBoxes(false, true);
-            }
-            else
-            {
-                viewCheckBoxes(false, false);
-            }
+            viewCheckBoxes(false, ShowOutput.Checked);
             txtCode.Focus();
         }
 
