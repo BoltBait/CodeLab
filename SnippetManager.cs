@@ -108,6 +108,7 @@ namespace PaintDotNet.Effects
             string snippetName = $"snippet{nextNum}";
             Intelli.Snippets.Add(snippetName, "Enter your snippet here.");
             this.SnippetList.Items.Add(snippetName);
+            SaveSnippets();
             int newIndex = this.SnippetList.Items.Count - 1;
             this.SnippetList.SelectedIndex = newIndex;
             if (this.SnippetList.SelectedIndex == newIndex)
@@ -150,13 +151,19 @@ namespace PaintDotNet.Effects
 
             Intelli.Snippets.Remove(this.currentSnippet);
             Intelli.Snippets.Add(snippetName, snippetBody);
-            JavaScriptSerializer ser = new JavaScriptSerializer();
-            Settings.Snippets = ser.Serialize(Intelli.Snippets);
+
+            SaveSnippets();
 
             int itemIndex = this.SnippetList.SelectedIndex;
             this.SnippetList.Items.Insert(this.SnippetList.SelectedIndex, snippetName);
             this.SnippetList.Items.RemoveAt(this.SnippetList.SelectedIndex);
             this.SnippetList.SelectedIndex = itemIndex;
+        }
+
+        private void SaveSnippets()
+        {
+            JavaScriptSerializer ser = new JavaScriptSerializer();
+            Settings.Snippets = ser.Serialize(Intelli.Snippets);
         }
 
         private void DeleteButton_Click(object sender, EventArgs e)
@@ -174,6 +181,8 @@ namespace PaintDotNet.Effects
             }
 
             Intelli.Snippets.Remove(snippetName);
+
+            SaveSnippets();
 
             this.dirty = false;
             this.SnippetList.Items.RemoveAt(this.SnippetList.SelectedIndex);
@@ -336,6 +345,7 @@ namespace PaintDotNet.Effects
 
             if (importCount > 0)
             {
+                SaveSnippets();
                 this.SnippetList.Items.Clear();
                 this.SnippetList.Items.AddRange(Intelli.Snippets.Keys.ToArray());
                 this.SnippetList.SelectedIndex = this.SnippetList.Items.Count - 1;
