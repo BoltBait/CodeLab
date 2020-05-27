@@ -27,6 +27,12 @@ namespace PaintDotNet.Effects
                     control.BackColor = this.BackColor;
                 }
             }
+            float UIfactor;
+            using (Graphics g = settingsList.CreateGraphics())
+            {
+                UIfactor = g.DpiY / 96;
+            }
+            settingsList.ItemHeight = (int)(32 * UIfactor);
             linkLabel1.LinkColor = this.ForeColor;
             settingsList.SelectedIndex = 0;
             toolbarCheckbox.Checked = Settings.ToolBar;
