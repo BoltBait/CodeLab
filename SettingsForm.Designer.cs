@@ -130,6 +130,9 @@
             // 
             // label6
             // 
+            this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.label6.Location = new System.Drawing.Point(133, 203);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(313, 75);
@@ -305,10 +308,10 @@
             // wordWrapTextFilesCheckbox
             // 
             this.wordWrapTextFilesCheckbox.AutoSize = true;
-            this.wordWrapTextFilesCheckbox.Location = new System.Drawing.Point(32, 106);
+            this.wordWrapTextFilesCheckbox.Location = new System.Drawing.Point(237, 80);
             this.wordWrapTextFilesCheckbox.Name = "wordWrapTextFilesCheckbox";
             this.wordWrapTextFilesCheckbox.Size = new System.Drawing.Size(150, 19);
-            this.wordWrapTextFilesCheckbox.TabIndex = 7;
+            this.wordWrapTextFilesCheckbox.TabIndex = 6;
             this.wordWrapTextFilesCheckbox.Text = "Word wrap text files  ‹‒\'";
             this.wordWrapTextFilesCheckbox.UseVisualStyleBackColor = true;
             this.wordWrapTextFilesCheckbox.CheckedChanged += new System.EventHandler(this.wordWrapTextFilesCheckbox_CheckedChanged);
@@ -401,10 +404,10 @@
             // wordWrapCheckbox
             // 
             this.wordWrapCheckbox.AutoSize = true;
-            this.wordWrapCheckbox.Location = new System.Drawing.Point(32, 80);
+            this.wordWrapCheckbox.Location = new System.Drawing.Point(237, 54);
             this.wordWrapCheckbox.Name = "wordWrapCheckbox";
             this.wordWrapCheckbox.Size = new System.Drawing.Size(155, 19);
-            this.wordWrapCheckbox.TabIndex = 5;
+            this.wordWrapCheckbox.TabIndex = 4;
             this.wordWrapCheckbox.Text = "Word wrap C# code files";
             this.wordWrapCheckbox.UseVisualStyleBackColor = true;
             this.wordWrapCheckbox.CheckedChanged += new System.EventHandler(this.wordWrapCheckbox_CheckedChanged);
@@ -412,10 +415,10 @@
             // indicatorMapCheckbox
             // 
             this.indicatorMapCheckbox.AutoSize = true;
-            this.indicatorMapCheckbox.Location = new System.Drawing.Point(32, 54);
+            this.indicatorMapCheckbox.Location = new System.Drawing.Point(237, 28);
             this.indicatorMapCheckbox.Name = "indicatorMapCheckbox";
             this.indicatorMapCheckbox.Size = new System.Drawing.Size(156, 19);
-            this.indicatorMapCheckbox.TabIndex = 3;
+            this.indicatorMapCheckbox.TabIndex = 2;
             this.indicatorMapCheckbox.Text = "Indicator map (scrollbar)";
             this.indicatorMapCheckbox.UseVisualStyleBackColor = true;
             this.indicatorMapCheckbox.CheckedChanged += new System.EventHandler(this.indicatorMapCheckbox_CheckedChanged);
@@ -423,10 +426,10 @@
             // codeFoldingCheckbox
             // 
             this.codeFoldingCheckbox.AutoSize = true;
-            this.codeFoldingCheckbox.Location = new System.Drawing.Point(237, 80);
+            this.codeFoldingCheckbox.Location = new System.Drawing.Point(32, 105);
             this.codeFoldingCheckbox.Name = "codeFoldingCheckbox";
             this.codeFoldingCheckbox.Size = new System.Drawing.Size(114, 19);
-            this.codeFoldingCheckbox.TabIndex = 6;
+            this.codeFoldingCheckbox.TabIndex = 7;
             this.codeFoldingCheckbox.Text = "Code folding [+]";
             this.codeFoldingCheckbox.UseVisualStyleBackColor = true;
             this.codeFoldingCheckbox.CheckedChanged += new System.EventHandler(this.codeFoldingCheckbox_CheckedChanged);
@@ -434,10 +437,10 @@
             // bookMarksCheckbox
             // 
             this.bookMarksCheckbox.AutoSize = true;
-            this.bookMarksCheckbox.Location = new System.Drawing.Point(237, 54);
+            this.bookMarksCheckbox.Location = new System.Drawing.Point(32, 79);
             this.bookMarksCheckbox.Name = "bookMarksCheckbox";
             this.bookMarksCheckbox.Size = new System.Drawing.Size(101, 19);
-            this.bookMarksCheckbox.TabIndex = 4;
+            this.bookMarksCheckbox.TabIndex = 5;
             this.bookMarksCheckbox.Text = "Book marks ■";
             this.bookMarksCheckbox.UseVisualStyleBackColor = true;
             this.bookMarksCheckbox.CheckedChanged += new System.EventHandler(this.bookMarksCheckbox_CheckedChanged);
@@ -445,10 +448,10 @@
             // lineNumbersCheckbox
             // 
             this.lineNumbersCheckbox.AutoSize = true;
-            this.lineNumbersCheckbox.Location = new System.Drawing.Point(237, 28);
+            this.lineNumbersCheckbox.Location = new System.Drawing.Point(32, 53);
             this.lineNumbersCheckbox.Name = "lineNumbersCheckbox";
             this.lineNumbersCheckbox.Size = new System.Drawing.Size(98, 19);
-            this.lineNumbersCheckbox.TabIndex = 2;
+            this.lineNumbersCheckbox.TabIndex = 3;
             this.lineNumbersCheckbox.Text = "Line numbers";
             this.lineNumbersCheckbox.UseVisualStyleBackColor = true;
             this.lineNumbersCheckbox.CheckedChanged += new System.EventHandler(this.lineNumbersCheckbox_CheckedChanged);
@@ -493,8 +496,8 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.CancelButton = this.closeButton;
             this.ClientSize = new System.Drawing.Size(691, 468);
-            this.Controls.Add(this.compilerPanel);
             this.Controls.Add(this.uiPanel);
+            this.Controls.Add(this.compilerPanel);
             this.Controls.Add(this.snippetPanel);
             this.Controls.Add(this.updatesPanel);
             this.Controls.Add(this.settingsList);
