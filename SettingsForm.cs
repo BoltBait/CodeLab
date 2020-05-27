@@ -18,7 +18,6 @@ namespace PaintDotNet.Effects
         {
             Initializing = true;
             InitializeComponent();
-            this.Icon = ResUtil.CreateIcon("Settings");
             // PDN Theme
             foreach (Control control in this.Controls)
             {

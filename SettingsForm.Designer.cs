@@ -385,8 +385,7 @@
             // 
             // SettingsForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.CancelButton = this.closeButton;
             this.ClientSize = new System.Drawing.Size(691, 468);
             this.Controls.Add(this.compilerPanel);
@@ -394,6 +393,7 @@
             this.Controls.Add(this.uiPanel);
             this.Controls.Add(this.settingsList);
             this.Controls.Add(this.closeButton);
+            this.IconName = "Settings";
             this.Name = "SettingsForm";
             this.Text = "CodeLab Settings";
             this.updatesPanel.ResumeLayout(false);
