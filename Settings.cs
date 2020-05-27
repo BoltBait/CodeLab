@@ -147,6 +147,12 @@ namespace PaintDotNet.Effects
             set => SetRegValue("WarningLevel", value);
         }
 
+        internal static int IndentSpaces
+        {
+            get => GetRegValue("IndentSpaces", 4);
+            set => SetRegValue("IndentSpaces", value);
+        }
+
         private static void OpenRegKey()
         {
             if (regKey == null)

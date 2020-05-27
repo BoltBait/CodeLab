@@ -85,6 +85,7 @@ namespace PaintDotNet.Effects
         void LoadSettingsFromRegistry()
         {
             txtCode.WrapMode = Settings.WordWrap ? WrapMode.Whitespace : WrapMode.None;
+            txtCode.TabWidth = Settings.IndentSpaces;
 
             if (Settings.WhiteSpace)
             {
@@ -934,6 +935,7 @@ namespace PaintDotNet.Effects
                 }
 
                 txtCode.Text = fn.CodeTemplate;
+                txtCode.FormatDocument();
                 txtCode.EmptyUndoBuffer();
                 Build();
             }

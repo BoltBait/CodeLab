@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace PaintDotNet.Effects
@@ -44,6 +38,7 @@ namespace PaintDotNet.Effects
             wordWrapCheckbox.Checked = Settings.WordWrap;
             wordWrapTextFilesCheckbox.Checked = Settings.WordWrapPlainText;
             showWhiteSpaceCheckbox.Checked = Settings.WhiteSpace;
+            indentSpacesComboBox.SelectedIndex = Settings.IndentSpaces == 4 ? 1 : 0;
             largeFontCheckbox.Checked = Settings.LargeFonts;
             for(int i=0; i<fontCombobox.Items.Count; i++)
             {
@@ -173,6 +168,12 @@ namespace PaintDotNet.Effects
         {
             if (Initializing) return;
             Settings.WhiteSpace = showWhiteSpaceCheckbox.Checked;
+        }
+
+        private void indentSpacesComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (Initializing) return;
+            Settings.IndentSpaces = indentSpacesComboBox.SelectedIndex == 0 ? 2 : 4;
         }
 
         private void fontCombobox_SelectedIndexChanged(object sender, EventArgs e)

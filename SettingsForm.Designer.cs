@@ -56,6 +56,8 @@
             this.lineNumbersCheckbox = new System.Windows.Forms.CheckBox();
             this.settingsList = new System.Windows.Forms.ListBox();
             this.snippetPanel = new PaintDotNet.Effects.SnippetManager();
+            this.indentSpacesComboBox = new System.Windows.Forms.ComboBox();
+            this.indentSpacesLabel = new System.Windows.Forms.Label();
             this.updatesPanel.SuspendLayout();
             this.compilerPanel.SuspendLayout();
             this.uiPanel.SuspendLayout();
@@ -151,6 +153,8 @@
             // 
             // uiPanel
             // 
+            this.uiPanel.Controls.Add(this.indentSpacesLabel);
+            this.uiPanel.Controls.Add(this.indentSpacesComboBox);
             this.uiPanel.Controls.Add(this.toolbarCheckbox);
             this.uiPanel.Controls.Add(this.label5);
             this.uiPanel.Controls.Add(this.linkLabel1);
@@ -393,6 +397,28 @@
             this.snippetPanel.TabIndex = 4;
             this.snippetPanel.Text = "Snippet Manager";
             // 
+            // indentSpacesComboBox
+            // 
+            this.indentSpacesComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.indentSpacesComboBox.FormattingEnabled = true;
+            this.indentSpacesComboBox.Items.AddRange(new object[] {
+            "2",
+            "4"});
+            this.indentSpacesComboBox.Location = new System.Drawing.Point(332, 26);
+            this.indentSpacesComboBox.Name = "indentSpacesComboBox";
+            this.indentSpacesComboBox.Size = new System.Drawing.Size(50, 23);
+            this.indentSpacesComboBox.TabIndex = 16;
+            this.indentSpacesComboBox.SelectedIndexChanged += new System.EventHandler(this.indentSpacesComboBox_SelectedIndexChanged);
+            // 
+            // indentSpacesLabel
+            // 
+            this.indentSpacesLabel.AutoSize = true;
+            this.indentSpacesLabel.Location = new System.Drawing.Point(243, 29);
+            this.indentSpacesLabel.Name = "indentSpacesLabel";
+            this.indentSpacesLabel.Size = new System.Drawing.Size(83, 15);
+            this.indentSpacesLabel.TabIndex = 17;
+            this.indentSpacesLabel.Text = "Indent Spaces:";
+            // 
             // SettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -446,5 +472,7 @@
         private System.Windows.Forms.ComboBox warningLevelCombobox;
         private System.Windows.Forms.CheckBox toolbarCheckbox;
         private SnippetManager snippetPanel;
+        private System.Windows.Forms.Label indentSpacesLabel;
+        private System.Windows.Forms.ComboBox indentSpacesComboBox;
     }
 }

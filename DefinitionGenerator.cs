@@ -27,6 +27,7 @@ namespace PaintDotNet.Effects
         private static readonly StringBuilder defRef = new StringBuilder();
         private const BindingFlags bindingFlags = BindingFlags.Static | BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.DeclaredOnly;
         private static int indent = 1;
+        private static int indentSpaces = 4;
 
         internal static string Generate(Type type)
         {
@@ -34,6 +35,8 @@ namespace PaintDotNet.Effects
 
             defRef.AppendLine("namespace " + type.Namespace);
             defRef.AppendLine("{");
+
+            indentSpaces = Settings.IndentSpaces;
 
             indent = 1;
             string spaces = GetIndent(indent);
@@ -376,7 +379,7 @@ namespace PaintDotNet.Effects
 
         private static string GetIndent(int indentLevel)
         {
-            return new string(' ', 4 * indentLevel);
+            return new string(' ', indentSpaces * indentLevel);
         }
 
         private static int MethodCompare(MethodBase x, MethodBase y)
