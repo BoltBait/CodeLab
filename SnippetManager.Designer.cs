@@ -41,7 +41,6 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.ExportToFileButton = new PaintDotNet.Effects.ScaledToolStripMenuItem();
             this.ExportToClipButton = new PaintDotNet.Effects.ScaledToolStripMenuItem();
-            this.CloseButton = new System.Windows.Forms.Button();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -52,13 +51,13 @@
             this.SnippetList.ItemHeight = 15;
             this.SnippetList.Location = new System.Drawing.Point(12, 41);
             this.SnippetList.Name = "SnippetList";
-            this.SnippetList.Size = new System.Drawing.Size(100, 302);
+            this.SnippetList.Size = new System.Drawing.Size(75, 362);
             this.SnippetList.TabIndex = 0;
             this.SnippetList.SelectedIndexChanged += new System.EventHandler(this.SnippetList_SelectedIndexChanged);
             // 
             // SnippetName
             // 
-            this.SnippetName.Location = new System.Drawing.Point(138, 12);
+            this.SnippetName.Location = new System.Drawing.Point(100, 14);
             this.SnippetName.Name = "SnippetName";
             this.SnippetName.Size = new System.Drawing.Size(100, 23);
             this.SnippetName.TabIndex = 3;
@@ -67,7 +66,7 @@
             // UpdateButton
             // 
             this.UpdateButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.UpdateButton.Location = new System.Drawing.Point(497, 12);
+            this.UpdateButton.Location = new System.Drawing.Point(401, 12);
             this.UpdateButton.Name = "UpdateButton";
             this.UpdateButton.Size = new System.Drawing.Size(75, 23);
             this.UpdateButton.TabIndex = 4;
@@ -81,12 +80,14 @@
             this.SnippetBody.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.SnippetBody.CaretLineBackColor = System.Drawing.Color.GhostWhite;
             this.SnippetBody.CaretLineVisible = true;
+            this.SnippetBody.IdleStyling = ScintillaNET.IdleStyling.All;
             this.SnippetBody.Lexer = ScintillaNET.Lexer.Cpp;
-            this.SnippetBody.Location = new System.Drawing.Point(138, 41);
+            this.SnippetBody.Location = new System.Drawing.Point(100, 41);
             this.SnippetBody.MouseDwellTime = 250;
             this.SnippetBody.Name = "SnippetBody";
-            this.SnippetBody.Size = new System.Drawing.Size(434, 302);
+            this.SnippetBody.Size = new System.Drawing.Size(376, 364);
             this.SnippetBody.TabIndex = 5;
+            this.SnippetBody.Technology = ScintillaNET.Technology.DirectWrite;
             this.SnippetBody.WrapIndentMode = ScintillaNET.WrapIndentMode.Indent;
             this.SnippetBody.TextChanged += new System.EventHandler(this.SnippetButton_TextChanged);
             // 
@@ -95,7 +96,7 @@
             this.DeleteButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.DeleteButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.DeleteButton.ForeColor = System.Drawing.Color.Red;
-            this.DeleteButton.Location = new System.Drawing.Point(468, 12);
+            this.DeleteButton.Location = new System.Drawing.Point(372, 12);
             this.DeleteButton.Name = "DeleteButton";
             this.DeleteButton.Size = new System.Drawing.Size(23, 23);
             this.DeleteButton.TabIndex = 6;
@@ -177,31 +178,17 @@
             this.ExportToClipButton.Text = "Export JSON to Clipboard";
             this.ExportToClipButton.Click += new System.EventHandler(this.ExportToClipButton_Click);
             // 
-            // CloseButton
-            // 
-            this.CloseButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.CloseButton.Location = new System.Drawing.Point(496, 352);
-            this.CloseButton.Name = "CloseButton";
-            this.CloseButton.Size = new System.Drawing.Size(75, 23);
-            this.CloseButton.TabIndex = 8;
-            this.CloseButton.Text = "Close";
-            this.CloseButton.UseVisualStyleBackColor = true;
-            this.CloseButton.Click += new System.EventHandler(this.CloseButton_Click);
-            // 
             // SnippetManager
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.ClientSize = new System.Drawing.Size(584, 383);
-            this.Controls.Add(this.CloseButton);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.DeleteButton);
             this.Controls.Add(this.SnippetBody);
             this.Controls.Add(this.UpdateButton);
             this.Controls.Add(this.SnippetName);
             this.Controls.Add(this.SnippetList);
-            this.IconName = "Snippet";
+            this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Name = "SnippetManager";
-            this.Text = "Snippet Manager";
+            this.Size = new System.Drawing.Size(476, 405);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             this.ResumeLayout(false);
@@ -224,6 +211,5 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private ScaledToolStripMenuItem ExportToFileButton;
         private ScaledToolStripMenuItem ExportToClipButton;
-        private System.Windows.Forms.Button CloseButton;
     }
 }

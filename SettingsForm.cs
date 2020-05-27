@@ -69,7 +69,8 @@ namespace PaintDotNet.Effects
             string item = settingsList.Items[e.Index].ToString();
             string graphicName = "UI";
             if (item == "Updates") { graphicName = "Updates"; }
-            if (item == "Compiler") { graphicName = "Compiler"; }
+            else if (item == "Compiler") { graphicName = "Compiler"; }
+            else if (item == "Snippets") { graphicName = "Snippet"; }
             Image iconImage = ResUtil.GetImage(graphicName);
             e.Graphics.DrawImage(iconImage, new Rectangle(e.Bounds.X + 1, e.Bounds.Y + 1, e.Bounds.Height - 2, e.Bounds.Height - 2));
             using (SolidBrush solidBrush = new SolidBrush(e.ForeColor))
@@ -91,18 +92,28 @@ namespace PaintDotNet.Effects
             if (item == "User Interface")
             {
                 updatesPanel.Visible = false;
+                snippetPanel.Visible = false;
                 uiPanel.Visible = true;
+                compilerPanel.Visible = false;
+            }
+            else if (item == "Snippets")
+            {
+                updatesPanel.Visible = false;
+                snippetPanel.Visible = true;
+                uiPanel.Visible = false;
                 compilerPanel.Visible = false;
             }
             else if (item == "Updates")
             {
                 updatesPanel.Visible = true;
+                snippetPanel.Visible = false;
                 uiPanel.Visible = false;
                 compilerPanel.Visible = false;
             }
             else if (item == "Compiler")
             {
                 updatesPanel.Visible = false;
+                snippetPanel.Visible = false;
                 uiPanel.Visible = false;
                 compilerPanel.Visible = true;
             }

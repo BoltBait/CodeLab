@@ -55,6 +55,7 @@
             this.bookMarksCheckbox = new System.Windows.Forms.CheckBox();
             this.lineNumbersCheckbox = new System.Windows.Forms.CheckBox();
             this.settingsList = new System.Windows.Forms.ListBox();
+            this.snippetPanel = new PaintDotNet.Effects.SnippetManager();
             this.updatesPanel.SuspendLayout();
             this.compilerPanel.SuspendLayout();
             this.uiPanel.SuspendLayout();
@@ -374,6 +375,7 @@
             this.settingsList.ItemHeight = 32;
             this.settingsList.Items.AddRange(new object[] {
             "User Interface",
+            "Snippets",
             "Compiler",
             "Updates"});
             this.settingsList.Location = new System.Drawing.Point(12, 12);
@@ -383,14 +385,23 @@
             this.settingsList.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.settingsList_DrawItem);
             this.settingsList.SelectedIndexChanged += new System.EventHandler(this.settingsList_SelectedIndexChanged);
             // 
+            // snippetPanel
+            // 
+            this.snippetPanel.Location = new System.Drawing.Point(202, 12);
+            this.snippetPanel.Name = "snippetPanel";
+            this.snippetPanel.Size = new System.Drawing.Size(476, 405);
+            this.snippetPanel.TabIndex = 4;
+            this.snippetPanel.Text = "Snippet Manager";
+            // 
             // SettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.CancelButton = this.closeButton;
             this.ClientSize = new System.Drawing.Size(691, 468);
+            this.Controls.Add(this.uiPanel);
+            this.Controls.Add(this.snippetPanel);
             this.Controls.Add(this.compilerPanel);
             this.Controls.Add(this.updatesPanel);
-            this.Controls.Add(this.uiPanel);
             this.Controls.Add(this.settingsList);
             this.Controls.Add(this.closeButton);
             this.IconName = "Settings";
@@ -434,5 +445,6 @@
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.ComboBox warningLevelCombobox;
         private System.Windows.Forms.CheckBox toolbarCheckbox;
+        private SnippetManager snippetPanel;
     }
 }

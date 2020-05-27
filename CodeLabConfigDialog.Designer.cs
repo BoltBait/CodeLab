@@ -141,7 +141,6 @@
             this.FindButton = new PaintDotNet.Effects.ScaledToolStripButton();
             this.ReplaceButton = new PaintDotNet.Effects.ScaledToolStripButton();
             this.toolStripSeparator22 = new System.Windows.Forms.ToolStripSeparator();
-            this.SnippetManButton = new PaintDotNet.Effects.ScaledToolStripButton();
             this.txtCode = new PaintDotNet.Effects.CodeTextBox();
             this.ShowErrors = new System.Windows.Forms.CheckBox();
             this.OutputTextBox = new System.Windows.Forms.TextBox();
@@ -941,7 +940,6 @@
             this.FindButton,
             this.ReplaceButton,
             this.toolStripSeparator22,
-            this.SnippetManButton,
             this.settingsButton});
             this.toolStrip1.Location = new System.Drawing.Point(0, 24);
             this.toolStrip1.Name = "toolStrip1";
@@ -1188,16 +1186,6 @@
             // 
             this.toolStripSeparator22.Name = "toolStripSeparator22";
             this.toolStripSeparator22.Size = new System.Drawing.Size(6, 27);
-            // 
-            // SnippetManButton
-            // 
-            this.SnippetManButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.SnippetManButton.ImageName = "Snippet";
-            this.SnippetManButton.Name = "SnippetManButton";
-            this.SnippetManButton.Padding = new System.Windows.Forms.Padding(2);
-            this.SnippetManButton.Size = new System.Drawing.Size(24, 24);
-            this.SnippetManButton.Text = "Snippet Manager";
-            this.SnippetManButton.Click += new System.EventHandler(this.SnippetManButton_Click);
             // 
             // txtCode
             // 
@@ -1455,7 +1443,6 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator21;
         private ScaledToolStripButton FindButton;
         private ScaledToolStripButton ReplaceButton;
-        private ScaledToolStripButton SnippetManButton;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator22;
         private ScaledToolStripMenuItem NewEffectMenuItem;
         private ScaledToolStripMenuItem NewFileTypeMenuItem;

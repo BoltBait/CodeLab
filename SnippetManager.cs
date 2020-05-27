@@ -1,7 +1,5 @@
-﻿using Microsoft.VisualBasic;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -9,10 +7,11 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Web.Script.Serialization;
 using System.Windows.Forms;
+using ScintillaNET;
 
 namespace PaintDotNet.Effects
 {
-    public partial class SnippetManager : ChildFormBase
+    public partial class SnippetManager : UserControl
     {
         private string currentSnippet = string.Empty;
         private int currentIndex = -1;
@@ -29,10 +28,11 @@ namespace PaintDotNet.Effects
             this.SnippetName.BackColor = PdnTheme.BackColor;
             this.toolStrip1.Renderer = PdnTheme.Renderer;
 
-            this.SnippetList.Height = this.SnippetBody.Height; // HiDPI Fix
             this.SnippetList.Items.AddRange(Intelli.Snippets.Keys.ToArray());
+            this.SnippetList.Height = this.SnippetBody.Height; // HiDPI Fix
             this.SnippetBody.Theme = PdnTheme.Theme;
-            this.SnippetBody.LineNumbersEnabled = true;
+            this.SnippetBody.LineNumbersEnabled = Settings.LineNumbers;
+            this.SnippetBody.WrapMode = Settings.WordWrap ? WrapMode.Whitespace : WrapMode.None;
 
             if (this.SnippetList.Items.Count > 0)
             {
@@ -45,22 +45,6 @@ namespace PaintDotNet.Effects
                 this.DeleteButton.Enabled = false;
                 this.UpdateButton.Enabled = false;
             }
-        }
-
-        protected override void OnClosing(CancelEventArgs e)
-        {
-            if (this.dirty && (int)FlexibleMessageBox.Show($"There are unsaved Changes to {this.currentSnippet}. Discard?", "Unsaved Changes", new string[] { "Discard", "Return to Editor" }, MessageBoxIcon.Question) == 2)
-            {
-                e.Cancel = true;
-            }
-
-            if (!e.Cancel)
-            {
-                JavaScriptSerializer ser = new JavaScriptSerializer();
-                Settings.Snippets = ser.Serialize(Intelli.Snippets);
-            }
-
-            base.OnClosing(e);
         }
 
         private void SnippetList_SelectedIndexChanged(object sender, EventArgs e)
@@ -163,8 +147,12 @@ namespace PaintDotNet.Effects
             }
 
             this.dirty = false;
+
             Intelli.Snippets.Remove(this.currentSnippet);
             Intelli.Snippets.Add(snippetName, snippetBody);
+            JavaScriptSerializer ser = new JavaScriptSerializer();
+            Settings.Snippets = ser.Serialize(Intelli.Snippets);
+
             int itemIndex = this.SnippetList.SelectedIndex;
             this.SnippetList.Items.Insert(this.SnippetList.SelectedIndex, snippetName);
             this.SnippetList.Items.RemoveAt(this.SnippetList.SelectedIndex);
@@ -472,11 +460,6 @@ namespace PaintDotNet.Effects
                 }
             }
             return sb.ToString();
-        }
-
-        private void CloseButton_Click(object sender, EventArgs e)
-        {
-            this.Close();
         }
     }
 }

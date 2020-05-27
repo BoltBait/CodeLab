@@ -168,7 +168,7 @@
     </Compile>
     <Compile Include="ShapeBuilder.cs" />
     <Compile Include="SnippetManager.cs">
-      <SubType>Form</SubType>
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="SnippetManager.Designer.cs">
       <DependentUpon>SnippetManager.cs</DependentUpon>
