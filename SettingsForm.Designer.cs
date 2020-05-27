@@ -34,6 +34,8 @@
             this.checkNowButton = new System.Windows.Forms.Button();
             this.checkForUpdates = new System.Windows.Forms.CheckBox();
             this.compilerPanel = new System.Windows.Forms.Panel();
+            this.label6 = new System.Windows.Forms.Label();
+            this.lookupWarningButton = new System.Windows.Forms.Button();
             this.warningToIgnoreLabel = new System.Windows.Forms.Label();
             this.warningsToIgnoreList = new System.Windows.Forms.ListBox();
             this.removeWarningButton = new System.Windows.Forms.Button();
@@ -62,7 +64,6 @@
             this.lineNumbersCheckbox = new System.Windows.Forms.CheckBox();
             this.settingsList = new System.Windows.Forms.ListBox();
             this.snippetPanel = new PaintDotNet.Effects.SnippetManager();
-            this.lookupWarningButton = new System.Windows.Forms.Button();
             this.imageList = new System.Windows.Forms.ImageList(this.components);
             this.updatesPanel.SuspendLayout();
             this.compilerPanel.SuspendLayout();
@@ -114,6 +115,7 @@
             // 
             // compilerPanel
             // 
+            this.compilerPanel.Controls.Add(this.label6);
             this.compilerPanel.Controls.Add(this.lookupWarningButton);
             this.compilerPanel.Controls.Add(this.warningToIgnoreLabel);
             this.compilerPanel.Controls.Add(this.warningsToIgnoreList);
@@ -126,14 +128,35 @@
             this.compilerPanel.Size = new System.Drawing.Size(476, 405);
             this.compilerPanel.TabIndex = 0;
             // 
+            // label6
+            // 
+            this.label6.Location = new System.Drawing.Point(132, 188);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(313, 75);
+            this.label6.TabIndex = 7;
+            this.label6.Text = "To add a specific warning to the list of warnings to ignore, when you see a warni" +
+    "ng in the error\'s list below the code window, right-click on the warning and cho" +
+    "ose \"Ignore this Warning\".";
+            // 
+            // lookupWarningButton
+            // 
+            this.lookupWarningButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.lookupWarningButton.Location = new System.Drawing.Point(132, 152);
+            this.lookupWarningButton.Name = "lookupWarningButton";
+            this.lookupWarningButton.Size = new System.Drawing.Size(108, 25);
+            this.lookupWarningButton.TabIndex = 6;
+            this.lookupWarningButton.Text = "Lookup Warning";
+            this.lookupWarningButton.UseVisualStyleBackColor = true;
+            this.lookupWarningButton.Click += new System.EventHandler(this.lookupWarningButton_Click);
+            // 
             // warningToIgnoreLabel
             // 
             this.warningToIgnoreLabel.AutoSize = true;
             this.warningToIgnoreLabel.Location = new System.Drawing.Point(44, 103);
             this.warningToIgnoreLabel.Name = "warningToIgnoreLabel";
             this.warningToIgnoreLabel.Size = new System.Drawing.Size(111, 15);
-            this.warningToIgnoreLabel.TabIndex = 6;
-            this.warningToIgnoreLabel.Text = "Warnings to Ignore:";
+            this.warningToIgnoreLabel.TabIndex = 3;
+            this.warningToIgnoreLabel.Text = "Warnings to ignore:";
             // 
             // warningsToIgnoreList
             // 
@@ -142,7 +165,7 @@
             this.warningsToIgnoreList.Location = new System.Drawing.Point(47, 121);
             this.warningsToIgnoreList.Name = "warningsToIgnoreList";
             this.warningsToIgnoreList.Size = new System.Drawing.Size(75, 139);
-            this.warningsToIgnoreList.TabIndex = 5;
+            this.warningsToIgnoreList.TabIndex = 4;
             // 
             // removeWarningButton
             // 
@@ -150,7 +173,7 @@
             this.removeWarningButton.Location = new System.Drawing.Point(132, 121);
             this.removeWarningButton.Name = "removeWarningButton";
             this.removeWarningButton.Size = new System.Drawing.Size(108, 25);
-            this.removeWarningButton.TabIndex = 4;
+            this.removeWarningButton.TabIndex = 5;
             this.removeWarningButton.Text = "Remove Warning";
             this.removeWarningButton.UseVisualStyleBackColor = true;
             this.removeWarningButton.Click += new System.EventHandler(this.removeWarningButton_Click);
@@ -219,10 +242,11 @@
             // indentSpacesLabel
             // 
             this.indentSpacesLabel.AutoSize = true;
-            this.indentSpacesLabel.Location = new System.Drawing.Point(243, 29);
+            this.indentSpacesLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.indentSpacesLabel.Location = new System.Drawing.Point(13, 152);
             this.indentSpacesLabel.Name = "indentSpacesLabel";
-            this.indentSpacesLabel.Size = new System.Drawing.Size(83, 15);
-            this.indentSpacesLabel.TabIndex = 17;
+            this.indentSpacesLabel.Size = new System.Drawing.Size(88, 15);
+            this.indentSpacesLabel.TabIndex = 8;
             this.indentSpacesLabel.Text = "Indent Spaces:";
             // 
             // indentSpacesComboBox
@@ -232,10 +256,10 @@
             this.indentSpacesComboBox.Items.AddRange(new object[] {
             "2",
             "4"});
-            this.indentSpacesComboBox.Location = new System.Drawing.Point(332, 26);
+            this.indentSpacesComboBox.Location = new System.Drawing.Point(32, 178);
             this.indentSpacesComboBox.Name = "indentSpacesComboBox";
             this.indentSpacesComboBox.Size = new System.Drawing.Size(50, 23);
-            this.indentSpacesComboBox.TabIndex = 16;
+            this.indentSpacesComboBox.TabIndex = 9;
             this.indentSpacesComboBox.SelectedIndexChanged += new System.EventHandler(this.indentSpacesComboBox_SelectedIndexChanged);
             // 
             // toolbarCheckbox
@@ -255,7 +279,7 @@
             this.label5.Location = new System.Drawing.Point(228, 369);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(190, 15);
-            this.label5.TabIndex = 15;
+            this.label5.TabIndex = 18;
             this.label5.Text = "\"Auto\" matches Paint.NET\'s theme";
             // 
             // linkLabel1
@@ -264,7 +288,7 @@
             this.linkLabel1.Location = new System.Drawing.Point(234, 298);
             this.linkLabel1.Name = "linkLabel1";
             this.linkLabel1.Size = new System.Drawing.Size(88, 15);
-            this.linkLabel1.TabIndex = 13;
+            this.linkLabel1.TabIndex = 15;
             this.linkLabel1.TabStop = true;
             this.linkLabel1.Text = "Help with fonts";
             this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
@@ -275,13 +299,13 @@
             this.label4.Location = new System.Drawing.Point(225, 272);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(177, 15);
-            this.label4.TabIndex = 11;
+            this.label4.TabIndex = 13;
             this.label4.Text = "* = not available on your system";
             // 
             // wordWrapTextFilesCheckbox
             // 
             this.wordWrapTextFilesCheckbox.AutoSize = true;
-            this.wordWrapTextFilesCheckbox.Location = new System.Drawing.Point(32, 182);
+            this.wordWrapTextFilesCheckbox.Location = new System.Drawing.Point(32, 106);
             this.wordWrapTextFilesCheckbox.Name = "wordWrapTextFilesCheckbox";
             this.wordWrapTextFilesCheckbox.Size = new System.Drawing.Size(150, 19);
             this.wordWrapTextFilesCheckbox.TabIndex = 7;
@@ -300,7 +324,7 @@
             this.themeCombobox.Location = new System.Drawing.Point(32, 364);
             this.themeCombobox.Name = "themeCombobox";
             this.themeCombobox.Size = new System.Drawing.Size(166, 23);
-            this.themeCombobox.TabIndex = 14;
+            this.themeCombobox.TabIndex = 17;
             this.themeCombobox.SelectedIndexChanged += new System.EventHandler(this.themeCombobox_SelectedIndexChanged);
             // 
             // label3
@@ -310,7 +334,7 @@
             this.label3.Location = new System.Drawing.Point(13, 345);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(49, 15);
-            this.label3.TabIndex = 14;
+            this.label3.TabIndex = 16;
             this.label3.Text = "Theme:";
             // 
             // largeFontCheckbox
@@ -319,7 +343,7 @@
             this.largeFontCheckbox.Location = new System.Drawing.Point(32, 297);
             this.largeFontCheckbox.Name = "largeFontCheckbox";
             this.largeFontCheckbox.Size = new System.Drawing.Size(85, 19);
-            this.largeFontCheckbox.TabIndex = 12;
+            this.largeFontCheckbox.TabIndex = 14;
             this.largeFontCheckbox.Text = "Large fonts";
             this.largeFontCheckbox.UseVisualStyleBackColor = true;
             this.largeFontCheckbox.CheckedChanged += new System.EventHandler(this.largeFontCheckbox_CheckedChanged);
@@ -340,7 +364,7 @@
             this.fontCombobox.Location = new System.Drawing.Point(32, 267);
             this.fontCombobox.Name = "fontCombobox";
             this.fontCombobox.Size = new System.Drawing.Size(166, 23);
-            this.fontCombobox.TabIndex = 10;
+            this.fontCombobox.TabIndex = 12;
             this.fontCombobox.SelectedIndexChanged += new System.EventHandler(this.fontCombobox_SelectedIndexChanged);
             // 
             // label2
@@ -350,16 +374,16 @@
             this.label2.Location = new System.Drawing.Point(13, 248);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(40, 15);
-            this.label2.TabIndex = 9;
+            this.label2.TabIndex = 11;
             this.label2.Text = "Fonts:";
             // 
             // showWhiteSpaceCheckbox
             // 
             this.showWhiteSpaceCheckbox.AutoSize = true;
-            this.showWhiteSpaceCheckbox.Location = new System.Drawing.Point(32, 207);
+            this.showWhiteSpaceCheckbox.Location = new System.Drawing.Point(32, 208);
             this.showWhiteSpaceCheckbox.Name = "showWhiteSpaceCheckbox";
             this.showWhiteSpaceCheckbox.Size = new System.Drawing.Size(129, 19);
-            this.showWhiteSpaceCheckbox.TabIndex = 8;
+            this.showWhiteSpaceCheckbox.TabIndex = 10;
             this.showWhiteSpaceCheckbox.Text = "Show whitespace ···";
             this.showWhiteSpaceCheckbox.UseVisualStyleBackColor = true;
             this.showWhiteSpaceCheckbox.CheckedChanged += new System.EventHandler(this.showWhiteSpaceCheckbox_CheckedChanged);
@@ -377,10 +401,10 @@
             // wordWrapCheckbox
             // 
             this.wordWrapCheckbox.AutoSize = true;
-            this.wordWrapCheckbox.Location = new System.Drawing.Point(32, 156);
+            this.wordWrapCheckbox.Location = new System.Drawing.Point(32, 80);
             this.wordWrapCheckbox.Name = "wordWrapCheckbox";
             this.wordWrapCheckbox.Size = new System.Drawing.Size(155, 19);
-            this.wordWrapCheckbox.TabIndex = 6;
+            this.wordWrapCheckbox.TabIndex = 5;
             this.wordWrapCheckbox.Text = "Word wrap C# code files";
             this.wordWrapCheckbox.UseVisualStyleBackColor = true;
             this.wordWrapCheckbox.CheckedChanged += new System.EventHandler(this.wordWrapCheckbox_CheckedChanged);
@@ -388,10 +412,10 @@
             // indicatorMapCheckbox
             // 
             this.indicatorMapCheckbox.AutoSize = true;
-            this.indicatorMapCheckbox.Location = new System.Drawing.Point(32, 130);
+            this.indicatorMapCheckbox.Location = new System.Drawing.Point(32, 54);
             this.indicatorMapCheckbox.Name = "indicatorMapCheckbox";
             this.indicatorMapCheckbox.Size = new System.Drawing.Size(156, 19);
-            this.indicatorMapCheckbox.TabIndex = 5;
+            this.indicatorMapCheckbox.TabIndex = 3;
             this.indicatorMapCheckbox.Text = "Indicator map (scrollbar)";
             this.indicatorMapCheckbox.UseVisualStyleBackColor = true;
             this.indicatorMapCheckbox.CheckedChanged += new System.EventHandler(this.indicatorMapCheckbox_CheckedChanged);
@@ -399,10 +423,10 @@
             // codeFoldingCheckbox
             // 
             this.codeFoldingCheckbox.AutoSize = true;
-            this.codeFoldingCheckbox.Location = new System.Drawing.Point(32, 104);
+            this.codeFoldingCheckbox.Location = new System.Drawing.Point(237, 80);
             this.codeFoldingCheckbox.Name = "codeFoldingCheckbox";
             this.codeFoldingCheckbox.Size = new System.Drawing.Size(114, 19);
-            this.codeFoldingCheckbox.TabIndex = 4;
+            this.codeFoldingCheckbox.TabIndex = 6;
             this.codeFoldingCheckbox.Text = "Code folding [+]";
             this.codeFoldingCheckbox.UseVisualStyleBackColor = true;
             this.codeFoldingCheckbox.CheckedChanged += new System.EventHandler(this.codeFoldingCheckbox_CheckedChanged);
@@ -410,10 +434,10 @@
             // bookMarksCheckbox
             // 
             this.bookMarksCheckbox.AutoSize = true;
-            this.bookMarksCheckbox.Location = new System.Drawing.Point(32, 78);
+            this.bookMarksCheckbox.Location = new System.Drawing.Point(237, 54);
             this.bookMarksCheckbox.Name = "bookMarksCheckbox";
             this.bookMarksCheckbox.Size = new System.Drawing.Size(101, 19);
-            this.bookMarksCheckbox.TabIndex = 3;
+            this.bookMarksCheckbox.TabIndex = 4;
             this.bookMarksCheckbox.Text = "Book marks ■";
             this.bookMarksCheckbox.UseVisualStyleBackColor = true;
             this.bookMarksCheckbox.CheckedChanged += new System.EventHandler(this.bookMarksCheckbox_CheckedChanged);
@@ -421,7 +445,7 @@
             // lineNumbersCheckbox
             // 
             this.lineNumbersCheckbox.AutoSize = true;
-            this.lineNumbersCheckbox.Location = new System.Drawing.Point(32, 52);
+            this.lineNumbersCheckbox.Location = new System.Drawing.Point(237, 28);
             this.lineNumbersCheckbox.Name = "lineNumbersCheckbox";
             this.lineNumbersCheckbox.Size = new System.Drawing.Size(98, 19);
             this.lineNumbersCheckbox.TabIndex = 2;
@@ -458,17 +482,6 @@
             this.snippetPanel.Size = new System.Drawing.Size(476, 405);
             this.snippetPanel.TabIndex = 4;
             // 
-            // lookupWarningButton
-            // 
-            this.lookupWarningButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.lookupWarningButton.Location = new System.Drawing.Point(132, 152);
-            this.lookupWarningButton.Name = "lookupWarningButton";
-            this.lookupWarningButton.Size = new System.Drawing.Size(108, 25);
-            this.lookupWarningButton.TabIndex = 7;
-            this.lookupWarningButton.Text = "Lookup Warning";
-            this.lookupWarningButton.UseVisualStyleBackColor = true;
-            this.lookupWarningButton.Click += new System.EventHandler(this.lookupWarningButton_Click);
-            // 
             // imageList
             // 
             this.imageList.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
@@ -481,8 +494,8 @@
             this.CancelButton = this.closeButton;
             this.ClientSize = new System.Drawing.Size(691, 468);
             this.Controls.Add(this.uiPanel);
-            this.Controls.Add(this.snippetPanel);
             this.Controls.Add(this.compilerPanel);
+            this.Controls.Add(this.snippetPanel);
             this.Controls.Add(this.updatesPanel);
             this.Controls.Add(this.settingsList);
             this.Controls.Add(this.closeButton);
@@ -535,5 +548,6 @@
         private System.Windows.Forms.ListBox warningsToIgnoreList;
         private System.Windows.Forms.Button lookupWarningButton;
         private System.Windows.Forms.ImageList imageList;
+        private System.Windows.Forms.Label label6;
     }
 }

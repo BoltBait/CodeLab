@@ -254,7 +254,7 @@
             // 
             // ignoreWarningMenuItem
             // 
-            this.ignoreWarningMenuItem.ImageName = "";
+            this.ignoreWarningMenuItem.ImageName = "Warning";
             this.ignoreWarningMenuItem.Name = "ignoreWarningMenuItem";
             this.ignoreWarningMenuItem.Size = new System.Drawing.Size(179, 22);
             this.ignoreWarningMenuItem.Text = "Ignore this Warning";

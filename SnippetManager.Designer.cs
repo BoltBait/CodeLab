@@ -48,6 +48,7 @@
             // 
             this.SnippetList.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.SnippetList.FormattingEnabled = true;
+            this.SnippetList.IntegralHeight = false;
             this.SnippetList.ItemHeight = 15;
             this.SnippetList.Location = new System.Drawing.Point(12, 41);
             this.SnippetList.Name = "SnippetList";
@@ -60,7 +61,7 @@
             this.SnippetName.Location = new System.Drawing.Point(100, 14);
             this.SnippetName.Name = "SnippetName";
             this.SnippetName.Size = new System.Drawing.Size(100, 23);
-            this.SnippetName.TabIndex = 3;
+            this.SnippetName.TabIndex = 1;
             this.SnippetName.TextChanged += new System.EventHandler(this.SnippetName_TextChanged);
             // 
             // UpdateButton
@@ -69,7 +70,7 @@
             this.UpdateButton.Location = new System.Drawing.Point(401, 12);
             this.UpdateButton.Name = "UpdateButton";
             this.UpdateButton.Size = new System.Drawing.Size(75, 23);
-            this.UpdateButton.TabIndex = 4;
+            this.UpdateButton.TabIndex = 3;
             this.UpdateButton.Text = "Update";
             this.UpdateButton.UseVisualStyleBackColor = true;
             this.UpdateButton.Click += new System.EventHandler(this.UpdateButton_Click);
@@ -86,7 +87,7 @@
             this.SnippetBody.MouseDwellTime = 250;
             this.SnippetBody.Name = "SnippetBody";
             this.SnippetBody.Size = new System.Drawing.Size(376, 364);
-            this.SnippetBody.TabIndex = 5;
+            this.SnippetBody.TabIndex = 2;
             this.SnippetBody.Technology = ScintillaNET.Technology.DirectWrite;
             this.SnippetBody.WrapIndentMode = ScintillaNET.WrapIndentMode.Indent;
             this.SnippetBody.TextChanged += new System.EventHandler(this.SnippetButton_TextChanged);
@@ -99,7 +100,7 @@
             this.DeleteButton.Location = new System.Drawing.Point(372, 12);
             this.DeleteButton.Name = "DeleteButton";
             this.DeleteButton.Size = new System.Drawing.Size(23, 23);
-            this.DeleteButton.TabIndex = 6;
+            this.DeleteButton.TabIndex = 4;
             this.DeleteButton.Text = "✗";
             this.DeleteButton.UseVisualStyleBackColor = true;
             this.DeleteButton.Click += new System.EventHandler(this.DeleteButton_Click);
@@ -114,7 +115,7 @@
             this.toolStrip1.Location = new System.Drawing.Point(9, 9);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(56, 27);
-            this.toolStrip1.TabIndex = 7;
+            this.toolStrip1.TabIndex = 5;
             this.toolStrip1.Text = "toolStrip1";
             // 
             // AddNewButton

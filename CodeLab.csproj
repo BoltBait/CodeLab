@@ -467,6 +467,8 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Icons\Warning.32.png" />
+    <EmbeddedResource Include="Icons\Warning.png" />
     <EmbeddedResource Include="Icons\Compiler.png" />
     <EmbeddedResource Include="Icons\UI.png" />
     <EmbeddedResource Include="Icons\Updates.png" />
