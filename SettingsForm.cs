@@ -66,6 +66,10 @@ namespace PaintDotNet.Effects
             themeCombobox.Text = Settings.EditorTheme.ToString();
             warningLevelCombobox.SelectedIndex = Settings.WarningLevel;
             warningsToIgnoreList.Items.AddRange(Settings.WarningsToIgnore.ToArray());
+            if (warningsToIgnoreList.Items.Count > 0)
+            {
+                warningsToIgnoreList.SelectedIndex = 0;
+            }
             Initializing = false;
         }
 

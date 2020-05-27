@@ -130,7 +130,7 @@
             // 
             // label6
             // 
-            this.label6.Location = new System.Drawing.Point(132, 188);
+            this.label6.Location = new System.Drawing.Point(133, 203);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(313, 75);
             this.label6.TabIndex = 7;
@@ -141,7 +141,7 @@
             // lookupWarningButton
             // 
             this.lookupWarningButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.lookupWarningButton.Location = new System.Drawing.Point(132, 152);
+            this.lookupWarningButton.Location = new System.Drawing.Point(133, 167);
             this.lookupWarningButton.Name = "lookupWarningButton";
             this.lookupWarningButton.Size = new System.Drawing.Size(108, 25);
             this.lookupWarningButton.TabIndex = 6;
@@ -152,7 +152,7 @@
             // warningToIgnoreLabel
             // 
             this.warningToIgnoreLabel.AutoSize = true;
-            this.warningToIgnoreLabel.Location = new System.Drawing.Point(44, 103);
+            this.warningToIgnoreLabel.Location = new System.Drawing.Point(35, 111);
             this.warningToIgnoreLabel.Name = "warningToIgnoreLabel";
             this.warningToIgnoreLabel.Size = new System.Drawing.Size(111, 15);
             this.warningToIgnoreLabel.TabIndex = 3;
@@ -162,7 +162,7 @@
             // 
             this.warningsToIgnoreList.FormattingEnabled = true;
             this.warningsToIgnoreList.ItemHeight = 15;
-            this.warningsToIgnoreList.Location = new System.Drawing.Point(47, 121);
+            this.warningsToIgnoreList.Location = new System.Drawing.Point(48, 136);
             this.warningsToIgnoreList.Name = "warningsToIgnoreList";
             this.warningsToIgnoreList.Size = new System.Drawing.Size(75, 139);
             this.warningsToIgnoreList.TabIndex = 4;
@@ -170,7 +170,7 @@
             // removeWarningButton
             // 
             this.removeWarningButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.removeWarningButton.Location = new System.Drawing.Point(132, 121);
+            this.removeWarningButton.Location = new System.Drawing.Point(133, 136);
             this.removeWarningButton.Name = "removeWarningButton";
             this.removeWarningButton.Size = new System.Drawing.Size(108, 25);
             this.removeWarningButton.TabIndex = 5;
@@ -181,7 +181,7 @@
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(44, 50);
+            this.label9.Location = new System.Drawing.Point(35, 44);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(82, 15);
             this.label9.TabIndex = 1;
@@ -191,7 +191,7 @@
             // 
             this.label8.AutoSize = true;
             this.label8.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            this.label8.Location = new System.Drawing.Point(23, 23);
+            this.label8.Location = new System.Drawing.Point(14, 17);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(120, 15);
             this.label8.TabIndex = 0;
@@ -207,7 +207,7 @@
             "2",
             "3",
             "4"});
-            this.warningLevelCombobox.Location = new System.Drawing.Point(132, 47);
+            this.warningLevelCombobox.Location = new System.Drawing.Point(48, 68);
             this.warningLevelCombobox.Name = "warningLevelCombobox";
             this.warningLevelCombobox.Size = new System.Drawing.Size(50, 23);
             this.warningLevelCombobox.TabIndex = 2;
@@ -493,8 +493,8 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.CancelButton = this.closeButton;
             this.ClientSize = new System.Drawing.Size(691, 468);
-            this.Controls.Add(this.uiPanel);
             this.Controls.Add(this.compilerPanel);
+            this.Controls.Add(this.uiPanel);
             this.Controls.Add(this.snippetPanel);
             this.Controls.Add(this.updatesPanel);
             this.Controls.Add(this.settingsList);
