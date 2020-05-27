@@ -35,12 +35,12 @@ namespace PaintDotNet.Effects
         {
             if (needToShowNotification)
             {
+                needToShowNotification = false;
+
                 if (FlexibleMessageBox.Show("An update to CodeLab is available.\n\nWould you like to download CodeLab v" + updateVER + "?\n\n(This will not close your current CodeLab session.)", "CodeLab Updater", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
                 {
                     LaunchUrl(updateURL);
                 }
-
-                needToShowNotification = false;
             }
         }
 
@@ -55,7 +55,7 @@ namespace PaintDotNet.Effects
                 // only check for updates every 7 days
                 if (Math.Abs((Settings.LatestUpdateCheck - DateTime.Today).TotalDays) < 7)
                 {
-                    //return; // not time yet
+                    return; // not time yet
                 }
             }
 
