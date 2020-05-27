@@ -29,7 +29,7 @@ using System.Threading;
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]
-[assembly: AssemblyVersion("5.4.*")]
+[assembly: AssemblyVersion(PaintDotNet.Effects.CodeLab.Version + ".*")]
 // The next line is for the ScintillaNET text editor control.  This way you don't have to use the "copy attributes" option in IL Merge.
 [assembly: Guid("f8ac48e7-9378-482d-8c7f-92c8408dd4f2")]
 
@@ -46,6 +46,8 @@ namespace PaintDotNet.Effects
 
     public abstract class CodeLab : Effect
     {
+        internal const string Version = "5.5";
+
         private static Image StaticImage => ResUtil.GetImage("CodeLab");
 
         protected CodeLab(string extendedName, EffectFlags flags, EffectRenderingSchedule renderingSchedule)

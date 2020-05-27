@@ -14,18 +14,8 @@ namespace PaintDotNet.Effects
     {
         #region Initialize
         bool Initializing;
-        private string UpdateURL;
-        private string UpdateVER;
-        private string ThisVersion;
-        private string ThisApplication;
-        private string WebUpdateFile;
-        public SettingsForm(string updateURL, string updateVer, string thisVersion, string thisApplication, string webUpdateFile)
+        public SettingsForm()
         {
-            UpdateURL = updateURL;
-            UpdateVER = updateVer;
-            ThisVersion = thisVersion;
-            ThisApplication = thisApplication;
-            WebUpdateFile = webUpdateFile;
             Initializing = true;
             InitializeComponent();
             this.Icon = ResUtil.CreateIcon("Settings");
@@ -123,8 +113,7 @@ namespace PaintDotNet.Effects
 
         private void checkNowButton_Click(object sender, EventArgs e)
         {
-            Freshness f = new Freshness(UpdateURL, UpdateVER, ThisVersion, ThisApplication, WebUpdateFile);
-            f.GoCheckForUpdates(false, true);
+            Freshness.GoCheckForUpdates(false, true);
         }
         #endregion
 
@@ -234,6 +223,5 @@ namespace PaintDotNet.Effects
                 return font.Name == fontName;
             }
         }
-
     }
 }

@@ -21,7 +21,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -30,18 +29,10 @@ namespace PaintDotNet.Effects
 {
     internal partial class CodeLabConfigDialog : EffectConfigDialog
     {
-        private const string ThisVersion = "5.5"; // Remember to change it in CodeLab.cs too!
-        private const string WebUpdateFile = "https://www.boltbait.com/versions.txt"; // The web site to check for updates
-        private const string ThisApplication = "1"; // in the WebUpadteFile, CodeLab is application #1
-        // format of the versions.txt file:  application number;current version;URL to download current version
-        // for example: 1;2.13;https://boltbait.com/pdn/CodeLab/CodeLab213.zip
-        // each application on its own line
         #region Constructor
-        private const string WindowTitle = "CodeLab v" + ThisVersion;
+        private const string WindowTitle = "CodeLab v" + CodeLab.Version;
         private string FileName = "Untitled";
         private string FullScriptPath = "";
-        private string UpdateURL = "";
-        private string UpdateVER = "";
         private EffectConfigToken previewToken = null;
         private string effectFlag = null;
 
@@ -133,7 +124,7 @@ namespace PaintDotNet.Effects
 
             if (Settings.CheckForUpdates)
             {
-                GoCheckForUpdates(true, false);
+                Freshness.GoCheckForUpdates(true, false);
             }
 
             string editorFont = Settings.FontFamily;
@@ -781,7 +772,7 @@ namespace PaintDotNet.Effects
         private void tmrCompile_Tick(object sender, EventArgs e)
         {
             tmrCompile.Enabled = false;
-            DisplayUpdates(true);
+            DisplayUpdates();
             UpdateToolBarButtons();
             Build();
         }
@@ -915,39 +906,12 @@ namespace PaintDotNet.Effects
         #endregion
 
         #region Freshness Check functions
-        private void DisplayUpdates(bool silentMode)
+        private void DisplayUpdates()
         {
-            if (UpdateURL != "")
+            if (txtCode.Focused)
             {
-                if (txtCode.Focused) // only popup if code editor has focus (otherwise, we might be doing something that we shouldn't interrupt)
-                {
-                    if (FlexibleMessageBox.Show("An update to CodeLab is available.\n\nWould you like to download CodeLab v" + UpdateVER + "?\n\n(This will not close your current CodeLab session.)", "CodeLab Updater", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
-                    {
-                        LaunchUrl(UpdateURL);
-                    }
-                    else
-                    {
-                        UpdateURL = "";
-                    }
-                }
+                Freshness.DisplayUpdateNotification();
             }
-            else if (!silentMode)
-            {
-                if (UpdateVER == ThisVersion)
-                {
-                    FlexibleMessageBox.Show("You are up-to-date!", "CodeLab Updater", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-                else
-                {
-                    FlexibleMessageBox.Show("I'm not sure if you are up-to-date.\n\nI was not able to reach the update website.\n\nTry again later.", "CodeLab Updater", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                }
-            }
-        }
-
-        private void GoCheckForUpdates(bool silentMode, bool force)
-        {
-            Freshness freshness = new Freshness(UpdateURL, UpdateVER, ThisVersion, ThisApplication, WebUpdateFile);
-            freshness.GoCheckForUpdates(silentMode, force);
         }
         #endregion
 
@@ -1743,13 +1707,15 @@ namespace PaintDotNet.Effects
 
         private void changesInThisVersionToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            LaunchUrl("https://www.boltbait.com/pdn/codelab/history/#v" + ThisVersion);
+            LaunchUrl("https://www.boltbait.com/pdn/codelab/history/#v" + CodeLab.Version);
         }
 
         private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            SettingsForm sf = new SettingsForm(UpdateURL, UpdateVER, ThisVersion, ThisApplication, WebUpdateFile);
-            sf.ShowDialog();
+            using (SettingsForm sf = new SettingsForm())
+            {
+                sf.ShowDialog();
+            }
             LoadSettingsFromRegistry();
         }
 

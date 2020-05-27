@@ -13,118 +13,121 @@
 /////////////////////////////////////////////////////////////////////////////////
 
 using System;
-using System.IO;
 using System.Net;
 using System.Windows.Forms;
 
 namespace PaintDotNet.Effects
 {
-    internal class Freshness
+    internal static class Freshness
     {
-        private string UpdateURL;
-        private string UpdateVER;
-        private string ThisVersion;
-        private string ThisApplication;
-        private string WebUpdateFile;
+        private const string ThisVersion = CodeLab.Version;
+        private const string WebUpdateFile = "https://www.boltbait.com/versions.txt"; // The web site to check for updates
+        private const string ThisApplication = "1"; // in the WebUpadteFile, CodeLab is application #1
+        // format of the versions.txt file:  application number;current version;URL to download current version
+        // for example: 1;2.13;https://boltbait.com/pdn/CodeLab/CodeLab213.zip
+        // each application on its own line
 
-        public Freshness(string updateURL, string updateVer, string thisVersion, string thisApplication, string webUpdateFile)
+        private static string updateURL;
+        private static string updateVER;
+        private static bool needToShowNotification = false;
+
+        internal static void DisplayUpdateNotification()
         {
-            UpdateURL = updateURL;
-            UpdateVER = updateVer;
-            ThisVersion = thisVersion;
-            ThisApplication = thisApplication;
-            WebUpdateFile = webUpdateFile;
-        }
-        private void DisplayUpdates(bool silentMode, bool popupOK)
-        {
-            if (UpdateURL != "")
+            if (needToShowNotification)
             {
-                if (popupOK) // only popup if code editor has focus (otherwise, we might be doing something that we shouldn't interrupt)
+                if (FlexibleMessageBox.Show("An update to CodeLab is available.\n\nWould you like to download CodeLab v" + updateVER + "?\n\n(This will not close your current CodeLab session.)", "CodeLab Updater", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
                 {
-                    if (FlexibleMessageBox.Show("An update to CodeLab is available.\n\nWould you like to download CodeLab v" + UpdateVER + "?\n\n(This will not close your current CodeLab session.)", "CodeLab Updater", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
-                    {
-                        LaunchUrl(UpdateURL);
-                    }
-                    else
-                    {
-                        UpdateURL = "";
-                    }
+                    LaunchUrl(updateURL);
                 }
-            }
-            else if (!silentMode)
-            {
-                if (UpdateVER == ThisVersion)
-                {
-                    FlexibleMessageBox.Show("You are up-to-date!", "CodeLab Updater", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-                else
-                {
-                    FlexibleMessageBox.Show("I'm not sure if you are up-to-date.\n\nI was not able to reach the update website.\n\nTry again later.", "CodeLab Updater", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                }
+
+                needToShowNotification = false;
             }
         }
 
-        public void GoCheckForUpdates(bool silentMode, bool force)
+        internal static void GoCheckForUpdates(bool silentMode, bool force)
         {
-            UpdateVER = "";
-            UpdateURL = "";
+            updateURL = string.Empty;
+            updateVER = string.Empty;
+            needToShowNotification = false;
 
             if (!force)
             {
                 // only check for updates every 7 days
                 if (Math.Abs((Settings.LatestUpdateCheck - DateTime.Today).TotalDays) < 7)
                 {
-                    return; // not time yet
+                    //return; // not time yet
                 }
             }
 
             Random r = new Random(); // defeat any cache by appending a random number to the URL
 
             WebClient web = new WebClient();
-            web.OpenReadAsync(new Uri(WebUpdateFile + "?r=" + r.Next(int.MaxValue).ToString()));
+            web.DownloadStringAsync(new Uri(WebUpdateFile + "?r=" + r.Next(int.MaxValue).ToString()));
 
-            web.OpenReadCompleted += (sender, e) =>
+            web.DownloadStringCompleted += (sender, e) =>
             {
-                try
+                UpdateStatus updateStatus = UpdateStatus.Unknown;
+
+                if (!e.Cancelled && e.Error == null)
                 {
-                    string text = "";
-                    Stream stream = e.Result;
-                    using (StreamReader reader = new StreamReader(stream))
+                    Settings.LatestUpdateCheck = DateTime.Now;
+
+                    foreach (string line in e.Result.Split('\n'))
                     {
-                        text = reader.ReadToEnd();
-                    }
-                    string[] lines = text.Split('\n');
-                    for (int i = 0; i < lines.Length; i++)
-                    {
-                        string[] data = lines[i].Split(';');
-                        if (data.Length >= 2)
+                        string[] data = line.Split(';');
+                        if (data.Length >= 2 && data[0].Trim() == ThisApplication.Trim())
                         {
-                            if (data[0].Trim() == ThisApplication.Trim())
+                            if (data[1].Trim() != ThisVersion.Trim())
                             {
-                                UpdateVER = data[1].Trim();
-                                if (data[1].Trim() != ThisVersion.Trim())
-                                {
-                                    UpdateURL = data[2].Trim();
-                                }
+                                updateStatus = UpdateStatus.UpdateAvailable;
+                                updateVER = data[1].Trim();
+                                updateURL = data[2].Trim();
                             }
+                            else
+                            {
+                                updateStatus = UpdateStatus.UpToDate;
+                            }
+
+                            break;
                         }
                     }
                 }
-                catch
+
+                if (silentMode)
                 {
-                    UpdateVER = "";
-                    UpdateURL = "";
+                    needToShowNotification = updateStatus == UpdateStatus.UpdateAvailable;
                 }
-
-                Settings.LatestUpdateCheck = DateTime.Now;
-
-                DisplayUpdates(silentMode, true);
+                else
+                {
+                    switch (updateStatus)
+                    {
+                        case UpdateStatus.Unknown:
+                            FlexibleMessageBox.Show("I'm not sure if you are up-to-date.\n\nI was not able to reach the update website.\n\nTry again later.", "CodeLab Updater", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            break;
+                        case UpdateStatus.UpToDate:
+                            FlexibleMessageBox.Show("You are up-to-date!", "CodeLab Updater", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            break;
+                        case UpdateStatus.UpdateAvailable:
+                            if (FlexibleMessageBox.Show("An update to CodeLab is available.\n\nWould you like to download CodeLab v" + updateVER + "?\n\n(This will not close your current CodeLab session.)", "CodeLab Updater", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
+                            {
+                                LaunchUrl(updateURL);
+                            }
+                            break;
+                    }
+                }
             };
         }
-        private void LaunchUrl(string url)
+
+        private static void LaunchUrl(string url)
         {
             System.Diagnostics.Process.Start(url);
         }
 
+        private enum UpdateStatus
+        {
+            Unknown,
+            UpToDate,
+            UpdateAvailable
+        }
     }
 }
