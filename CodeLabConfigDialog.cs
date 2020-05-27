@@ -141,6 +141,8 @@ namespace PaintDotNet.Effects
             txtCode.Styles[Style.Default].Font = editorFont;
             OutputTextBox.Font = new Font(editorFont, OutputTextBox.Font.Size);
             errorList.Font = new Font(editorFont, errorList.Font.Size);
+
+            ScriptBuilder.SetWarningLevel(Settings.WarningLevel);
         }
         #endregion
 
