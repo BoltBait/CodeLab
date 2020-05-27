@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.closeButton = new System.Windows.Forms.Button();
             this.updatesPanel = new System.Windows.Forms.Panel();
             this.checkNowButton = new System.Windows.Forms.Button();
@@ -62,6 +63,7 @@
             this.settingsList = new System.Windows.Forms.ListBox();
             this.snippetPanel = new PaintDotNet.Effects.SnippetManager();
             this.lookupWarningButton = new System.Windows.Forms.Button();
+            this.imageList = new System.Windows.Forms.ImageList(this.components);
             this.updatesPanel.SuspendLayout();
             this.compilerPanel.SuspendLayout();
             this.uiPanel.SuspendLayout();
@@ -432,7 +434,7 @@
             this.settingsList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.settingsList.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-            this.settingsList.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.settingsList.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.settingsList.FormattingEnabled = true;
             this.settingsList.IntegralHeight = false;
             this.settingsList.ItemHeight = 32;
@@ -466,6 +468,12 @@
             this.lookupWarningButton.Text = "Lookup Warning";
             this.lookupWarningButton.UseVisualStyleBackColor = true;
             this.lookupWarningButton.Click += new System.EventHandler(this.lookupWarningButton_Click);
+            // 
+            // imageList
+            // 
+            this.imageList.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
+            this.imageList.ImageSize = new System.Drawing.Size(24, 24);
+            this.imageList.TransparentColor = System.Drawing.Color.Transparent;
             // 
             // SettingsForm
             // 
@@ -526,5 +534,6 @@
         private System.Windows.Forms.Label warningToIgnoreLabel;
         private System.Windows.Forms.ListBox warningsToIgnoreList;
         private System.Windows.Forms.Button lookupWarningButton;
+        private System.Windows.Forms.ImageList imageList;
     }
 }

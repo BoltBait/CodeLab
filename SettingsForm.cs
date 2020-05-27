@@ -7,6 +7,8 @@ namespace PaintDotNet.Effects
 {
     public partial class SettingsForm : ChildFormBase
     {
+        private readonly SizeF UIfactor;
+
         #region Initialize
         bool Initializing;
         public SettingsForm()
@@ -24,12 +26,22 @@ namespace PaintDotNet.Effects
                     control.BackColor = this.BackColor;
                 }
             }
-            float UIfactor;
-            using (Graphics g = settingsList.CreateGraphics())
+
+            using (Graphics g = this.CreateGraphics())
             {
-                UIfactor = g.DpiY / 96;
+                UIfactor = new SizeF(g.DpiX / 96f, g.DpiY / 96f);
             }
-            settingsList.ItemHeight = (int)(32 * UIfactor);
+
+            imageList.ImageSize = new Size((int)Math.Round(24 * UIfactor.Width), (int)Math.Round(24 * UIfactor.Height));
+            imageList.Images.AddRange(new Image[]
+            {
+                ResUtil.GetImage("UI"),
+                ResUtil.GetImage("Snippet"),
+                ResUtil.GetImage("Compiler"),
+                ResUtil.GetImage("Updates")
+            });
+
+            settingsList.ItemHeight = (int)(32 * UIfactor.Height);
             linkLabel1.LinkColor = this.ForeColor;
             settingsList.SelectedIndex = 0;
             toolbarCheckbox.Checked = Settings.ToolBar;
@@ -63,22 +75,16 @@ namespace PaintDotNet.Effects
             {
                 return;
             }
-            float UIfactor = e.Graphics.DpiY / 96;
-            e.DrawBackground();
-            string item = settingsList.Items[e.Index].ToString();
-            string graphicName = "UI";
-            if (item == "Updates") { graphicName = "Updates"; }
-            else if (item == "Compiler") { graphicName = "Compiler"; }
-            else if (item == "Snippets") { graphicName = "Snippet"; }
-            Image iconImage = ResUtil.GetImage(graphicName);
-            e.Graphics.DrawImage(iconImage, new Rectangle(e.Bounds.X + 1, e.Bounds.Y + 1, e.Bounds.Height - 2, e.Bounds.Height - 2));
-            using (SolidBrush solidBrush = new SolidBrush(e.ForeColor))
-            using (SolidBrush foreBrush = new SolidBrush(e.ForeColor))
-            using (SolidBrush backBrush = new SolidBrush(Color.Gray))
-            using (Font bigfont = new Font(e.Font.FontFamily, e.Font.Size, FontStyle.Bold))
-            {
-                e.Graphics.DrawString(item, bigfont, foreBrush, new Rectangle(e.Bounds.X + e.Bounds.Height, e.Bounds.Y + (int)(7 * UIfactor), e.Bounds.Width - e.Bounds.Height, e.Bounds.Height));
-            }
+
+            e.DrawBackground(); 
+
+            Point iconLocation = new Point(e.Bounds.X + (int)(4 * UIfactor.Width), e.Bounds.Y + (int)(4 * UIfactor.Height));
+            imageList.Draw(e.Graphics, iconLocation, e.Index);
+
+            string itemName = settingsList.Items[e.Index].ToString();
+            Rectangle textBounds = new Rectangle(e.Bounds.X + e.Bounds.Height, e.Bounds.Y, e.Bounds.Width - e.Bounds.Height, e.Bounds.Height);
+            TextRenderer.DrawText(e.Graphics, itemName, e.Font, textBounds, e.ForeColor, TextFormatFlags.VerticalCenter);
+
             e.DrawFocusRectangle();
         }
 
