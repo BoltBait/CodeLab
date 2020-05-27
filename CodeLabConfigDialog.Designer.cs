@@ -38,6 +38,7 @@
             this.CopyErrorMenuItem = new PaintDotNet.Effects.ScaledToolStripMenuItem();
             this.FullErrorMenuItem = new PaintDotNet.Effects.ScaledToolStripMenuItem();
             this.ErrorCodeMenuItem = new PaintDotNet.Effects.ScaledToolStripMenuItem();
+            this.ignoreWarningMenuItem = new PaintDotNet.Effects.ScaledToolStripMenuItem();
             this.toolTips = new System.Windows.Forms.ToolTip(this.components);
             this.tmrExceptionCheck = new System.Windows.Forms.Timer(this.components);
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -141,13 +142,13 @@
             this.FindButton = new PaintDotNet.Effects.ScaledToolStripButton();
             this.ReplaceButton = new PaintDotNet.Effects.ScaledToolStripButton();
             this.toolStripSeparator22 = new System.Windows.Forms.ToolStripSeparator();
+            this.settingsButton = new PaintDotNet.Effects.ScaledToolStripButton();
             this.txtCode = new PaintDotNet.Effects.CodeTextBox();
             this.ShowErrors = new System.Windows.Forms.CheckBox();
             this.OutputTextBox = new System.Windows.Forms.TextBox();
             this.ClearOutput = new System.Windows.Forms.Button();
             this.ShowOutput = new System.Windows.Forms.CheckBox();
             this.tabStrip1 = new PaintDotNet.Effects.TabStrip();
-            this.settingsButton = new PaintDotNet.Effects.ScaledToolStripButton();
             this.errorListMenu.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -218,9 +219,10 @@
             this.errorListMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.CopyErrorMenuItem,
             this.FullErrorMenuItem,
-            this.ErrorCodeMenuItem});
+            this.ErrorCodeMenuItem,
+            this.ignoreWarningMenuItem});
             this.errorListMenu.Name = "errorListMenu";
-            this.errorListMenu.Size = new System.Drawing.Size(180, 70);
+            this.errorListMenu.Size = new System.Drawing.Size(180, 92);
             this.errorListMenu.Opening += new System.ComponentModel.CancelEventHandler(this.errorListMenu_Opening);
             // 
             // CopyErrorMenuItem
@@ -249,6 +251,14 @@
             this.ErrorCodeMenuItem.Size = new System.Drawing.Size(179, 22);
             this.ErrorCodeMenuItem.Text = "Look up Error Code";
             this.ErrorCodeMenuItem.Click += new System.EventHandler(this.ErrorCodeMenuItem_Click);
+            // 
+            // ignoreWarningMenuItem
+            // 
+            this.ignoreWarningMenuItem.ImageName = "";
+            this.ignoreWarningMenuItem.Name = "ignoreWarningMenuItem";
+            this.ignoreWarningMenuItem.Size = new System.Drawing.Size(179, 22);
+            this.ignoreWarningMenuItem.Text = "Ignore this Warning";
+            this.ignoreWarningMenuItem.Click += new System.EventHandler(this.ignoreWarningMenuItem_Click);
             // 
             // tmrExceptionCheck
             // 
@@ -1187,6 +1197,16 @@
             this.toolStripSeparator22.Name = "toolStripSeparator22";
             this.toolStripSeparator22.Size = new System.Drawing.Size(6, 27);
             // 
+            // settingsButton
+            // 
+            this.settingsButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.settingsButton.ImageName = "Settings";
+            this.settingsButton.Name = "settingsButton";
+            this.settingsButton.Padding = new System.Windows.Forms.Padding(2);
+            this.settingsButton.Size = new System.Drawing.Size(24, 24);
+            this.settingsButton.Text = "Settings";
+            this.settingsButton.Click += new System.EventHandler(this.settingsToolStripMenuItem_Click);
+            // 
             // txtCode
             // 
             this.txtCode.AccessibleRole = System.Windows.Forms.AccessibleRole.Text;
@@ -1282,16 +1302,6 @@
             this.tabStrip1.NewTabCreated += new System.EventHandler(this.tabStrip1_NewTabCreated);
             this.tabStrip1.TabClosingAndDirty += new System.EventHandler<System.ComponentModel.CancelEventArgs>(this.tabStrip1_TabClosingAndDirty);
             this.tabStrip1.TabClosed += new System.EventHandler<PaintDotNet.Effects.TabClosedEventArgs>(this.tabStrip1_TabClosed);
-            // 
-            // settingsButton
-            // 
-            this.settingsButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.settingsButton.ImageName = "Settings";
-            this.settingsButton.Name = "settingsButton";
-            this.settingsButton.Padding = new System.Windows.Forms.Padding(2);
-            this.settingsButton.Size = new System.Drawing.Size(24, 24);
-            this.settingsButton.Text = "Settings";
-            this.settingsButton.Click += new System.EventHandler(this.settingsToolStripMenuItem_Click);
             // 
             // CodeLabConfigDialog
             // 
@@ -1453,5 +1463,6 @@
         private ScaledToolStripMenuItem LookUpDefMenuItem;
         private ScaledToolStripMenuItem settingsToolStripMenuItem;
         private ScaledToolStripButton settingsButton;
+        private ScaledToolStripMenuItem ignoreWarningMenuItem;
     }
 }

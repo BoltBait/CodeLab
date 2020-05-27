@@ -33,10 +33,15 @@
             this.checkNowButton = new System.Windows.Forms.Button();
             this.checkForUpdates = new System.Windows.Forms.CheckBox();
             this.compilerPanel = new System.Windows.Forms.Panel();
+            this.warningToIgnoreLabel = new System.Windows.Forms.Label();
+            this.warningsToIgnoreList = new System.Windows.Forms.ListBox();
+            this.removeWarningButton = new System.Windows.Forms.Button();
             this.label9 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.warningLevelCombobox = new System.Windows.Forms.ComboBox();
             this.uiPanel = new System.Windows.Forms.Panel();
+            this.indentSpacesLabel = new System.Windows.Forms.Label();
+            this.indentSpacesComboBox = new System.Windows.Forms.ComboBox();
             this.toolbarCheckbox = new System.Windows.Forms.CheckBox();
             this.label5 = new System.Windows.Forms.Label();
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
@@ -56,8 +61,7 @@
             this.lineNumbersCheckbox = new System.Windows.Forms.CheckBox();
             this.settingsList = new System.Windows.Forms.ListBox();
             this.snippetPanel = new PaintDotNet.Effects.SnippetManager();
-            this.indentSpacesComboBox = new System.Windows.Forms.ComboBox();
-            this.indentSpacesLabel = new System.Windows.Forms.Label();
+            this.lookupWarningButton = new System.Windows.Forms.Button();
             this.updatesPanel.SuspendLayout();
             this.compilerPanel.SuspendLayout();
             this.uiPanel.SuspendLayout();
@@ -108,6 +112,10 @@
             // 
             // compilerPanel
             // 
+            this.compilerPanel.Controls.Add(this.lookupWarningButton);
+            this.compilerPanel.Controls.Add(this.warningToIgnoreLabel);
+            this.compilerPanel.Controls.Add(this.warningsToIgnoreList);
+            this.compilerPanel.Controls.Add(this.removeWarningButton);
             this.compilerPanel.Controls.Add(this.label9);
             this.compilerPanel.Controls.Add(this.label8);
             this.compilerPanel.Controls.Add(this.warningLevelCombobox);
@@ -115,6 +123,35 @@
             this.compilerPanel.Name = "compilerPanel";
             this.compilerPanel.Size = new System.Drawing.Size(476, 405);
             this.compilerPanel.TabIndex = 0;
+            // 
+            // warningToIgnoreLabel
+            // 
+            this.warningToIgnoreLabel.AutoSize = true;
+            this.warningToIgnoreLabel.Location = new System.Drawing.Point(44, 103);
+            this.warningToIgnoreLabel.Name = "warningToIgnoreLabel";
+            this.warningToIgnoreLabel.Size = new System.Drawing.Size(111, 15);
+            this.warningToIgnoreLabel.TabIndex = 6;
+            this.warningToIgnoreLabel.Text = "Warnings to Ignore:";
+            // 
+            // warningsToIgnoreList
+            // 
+            this.warningsToIgnoreList.FormattingEnabled = true;
+            this.warningsToIgnoreList.ItemHeight = 15;
+            this.warningsToIgnoreList.Location = new System.Drawing.Point(47, 121);
+            this.warningsToIgnoreList.Name = "warningsToIgnoreList";
+            this.warningsToIgnoreList.Size = new System.Drawing.Size(75, 139);
+            this.warningsToIgnoreList.TabIndex = 5;
+            // 
+            // removeWarningButton
+            // 
+            this.removeWarningButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.removeWarningButton.Location = new System.Drawing.Point(132, 121);
+            this.removeWarningButton.Name = "removeWarningButton";
+            this.removeWarningButton.Size = new System.Drawing.Size(108, 25);
+            this.removeWarningButton.TabIndex = 4;
+            this.removeWarningButton.Text = "Remove Warning";
+            this.removeWarningButton.UseVisualStyleBackColor = true;
+            this.removeWarningButton.Click += new System.EventHandler(this.removeWarningButton_Click);
             // 
             // label9
             // 
@@ -145,9 +182,9 @@
             "2",
             "3",
             "4"});
-            this.warningLevelCombobox.Location = new System.Drawing.Point(132, 45);
+            this.warningLevelCombobox.Location = new System.Drawing.Point(132, 47);
             this.warningLevelCombobox.Name = "warningLevelCombobox";
-            this.warningLevelCombobox.Size = new System.Drawing.Size(76, 23);
+            this.warningLevelCombobox.Size = new System.Drawing.Size(50, 23);
             this.warningLevelCombobox.TabIndex = 2;
             this.warningLevelCombobox.SelectedIndexChanged += new System.EventHandler(this.warningLevelCombobox_SelectedIndexChanged);
             // 
@@ -176,6 +213,28 @@
             this.uiPanel.Name = "uiPanel";
             this.uiPanel.Size = new System.Drawing.Size(476, 405);
             this.uiPanel.TabIndex = 1;
+            // 
+            // indentSpacesLabel
+            // 
+            this.indentSpacesLabel.AutoSize = true;
+            this.indentSpacesLabel.Location = new System.Drawing.Point(243, 29);
+            this.indentSpacesLabel.Name = "indentSpacesLabel";
+            this.indentSpacesLabel.Size = new System.Drawing.Size(83, 15);
+            this.indentSpacesLabel.TabIndex = 17;
+            this.indentSpacesLabel.Text = "Indent Spaces:";
+            // 
+            // indentSpacesComboBox
+            // 
+            this.indentSpacesComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.indentSpacesComboBox.FormattingEnabled = true;
+            this.indentSpacesComboBox.Items.AddRange(new object[] {
+            "2",
+            "4"});
+            this.indentSpacesComboBox.Location = new System.Drawing.Point(332, 26);
+            this.indentSpacesComboBox.Name = "indentSpacesComboBox";
+            this.indentSpacesComboBox.Size = new System.Drawing.Size(50, 23);
+            this.indentSpacesComboBox.TabIndex = 16;
+            this.indentSpacesComboBox.SelectedIndexChanged += new System.EventHandler(this.indentSpacesComboBox_SelectedIndexChanged);
             // 
             // toolbarCheckbox
             // 
@@ -391,33 +450,22 @@
             // 
             // snippetPanel
             // 
+            this.snippetPanel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.snippetPanel.Location = new System.Drawing.Point(202, 12);
             this.snippetPanel.Name = "snippetPanel";
             this.snippetPanel.Size = new System.Drawing.Size(476, 405);
             this.snippetPanel.TabIndex = 4;
-            this.snippetPanel.Text = "Snippet Manager";
             // 
-            // indentSpacesComboBox
+            // lookupWarningButton
             // 
-            this.indentSpacesComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.indentSpacesComboBox.FormattingEnabled = true;
-            this.indentSpacesComboBox.Items.AddRange(new object[] {
-            "2",
-            "4"});
-            this.indentSpacesComboBox.Location = new System.Drawing.Point(332, 26);
-            this.indentSpacesComboBox.Name = "indentSpacesComboBox";
-            this.indentSpacesComboBox.Size = new System.Drawing.Size(50, 23);
-            this.indentSpacesComboBox.TabIndex = 16;
-            this.indentSpacesComboBox.SelectedIndexChanged += new System.EventHandler(this.indentSpacesComboBox_SelectedIndexChanged);
-            // 
-            // indentSpacesLabel
-            // 
-            this.indentSpacesLabel.AutoSize = true;
-            this.indentSpacesLabel.Location = new System.Drawing.Point(243, 29);
-            this.indentSpacesLabel.Name = "indentSpacesLabel";
-            this.indentSpacesLabel.Size = new System.Drawing.Size(83, 15);
-            this.indentSpacesLabel.TabIndex = 17;
-            this.indentSpacesLabel.Text = "Indent Spaces:";
+            this.lookupWarningButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.lookupWarningButton.Location = new System.Drawing.Point(132, 152);
+            this.lookupWarningButton.Name = "lookupWarningButton";
+            this.lookupWarningButton.Size = new System.Drawing.Size(108, 25);
+            this.lookupWarningButton.TabIndex = 7;
+            this.lookupWarningButton.Text = "Lookup Warning";
+            this.lookupWarningButton.UseVisualStyleBackColor = true;
+            this.lookupWarningButton.Click += new System.EventHandler(this.lookupWarningButton_Click);
             // 
             // SettingsForm
             // 
@@ -474,5 +522,9 @@
         private SnippetManager snippetPanel;
         private System.Windows.Forms.Label indentSpacesLabel;
         private System.Windows.Forms.ComboBox indentSpacesComboBox;
+        private System.Windows.Forms.Button removeWarningButton;
+        private System.Windows.Forms.Label warningToIgnoreLabel;
+        private System.Windows.Forms.ListBox warningsToIgnoreList;
+        private System.Windows.Forms.Button lookupWarningButton;
     }
 }

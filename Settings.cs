@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 
 namespace PaintDotNet.Effects
@@ -145,6 +146,12 @@ namespace PaintDotNet.Effects
         {
             get => GetRegValue("WarningLevel", 4);
             set => SetRegValue("WarningLevel", value);
+        }
+
+        internal static IEnumerable<string> WarningsToIgnore
+        {
+            get => GetRegValue("WarningsToIgnore", "CS0414").Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
+            set => SetRegValue("WarningsToIgnore", value.Join("|"));
         }
 
         internal static int IndentSpaces

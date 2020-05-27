@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace PaintDotNet.Effects
@@ -13,7 +14,9 @@ namespace PaintDotNet.Effects
             Initializing = true;
             InitializeComponent();
             // PDN Theme
-            foreach (Control control in this.Controls)
+            foreach (Control control in this.Controls.OfType<Control>()
+                .Concat(this.Controls.OfType<Panel>().SelectMany(panel => panel.Controls.OfType<Control>()))
+                )
             {
                 if ((control is ComboBox) || (control is ListBox))
                 {
@@ -50,6 +53,7 @@ namespace PaintDotNet.Effects
             fontCombobox.SelectedIndex = fontCombobox.FindString(Settings.FontFamily);
             themeCombobox.Text = Settings.EditorTheme.ToString();
             warningLevelCombobox.SelectedIndex = Settings.WarningLevel;
+            warningsToIgnoreList.Items.AddRange(Settings.WarningsToIgnore.ToArray());
             Initializing = false;
         }
 
@@ -230,6 +234,24 @@ namespace PaintDotNet.Effects
         {
             if (Initializing) return;
             Settings.WarningLevel = warningLevelCombobox.SelectedIndex;
+        }
+
+        private void removeWarningButton_Click(object sender, EventArgs e)
+        {
+            if (warningsToIgnoreList.SelectedIndex > -1)
+            {
+                warningsToIgnoreList.Items.RemoveAt(warningsToIgnoreList.SelectedIndex);
+                Settings.WarningsToIgnore = warningsToIgnoreList.Items.OfType<string>();
+            }
+        }
+
+        private void lookupWarningButton_Click(object sender, EventArgs e)
+        {
+            if (warningsToIgnoreList.SelectedIndex > -1)
+            {
+                string url = "https://docs.microsoft.com/dotnet/csharp/misc/" + warningsToIgnoreList.SelectedItem.ToString();
+                System.Diagnostics.Process.Start(url);
+            }
         }
         #endregion
 

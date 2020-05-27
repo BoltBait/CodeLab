@@ -38,6 +38,7 @@ namespace PaintDotNet.Effects
         private static readonly IEnumerable<MetadataReference> references = Intelli.ReferenceAssemblies.Select(a => MetadataReference.CreateFromFile(a.Location));
         private static readonly CSharpParseOptions parseOptions = CSharpParseOptions.Default.WithLanguageVersion(LanguageVersion.CSharp7_3);
         private static CSharpCompilationOptions compilationOptions = new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary, allowUnsafe: true, optimizationLevel: OptimizationLevel.Release);
+        private static IEnumerable<string> warningsToIgnore = Array.Empty<string>();
 
         private static IEnumerable<Diagnostic> errors;
 
@@ -70,6 +71,11 @@ namespace PaintDotNet.Effects
         internal static void SetWarningLevel(int level)
         {
             compilationOptions = compilationOptions.WithWarningLevel(level);
+        }
+
+        internal static void SetWarningsToIgnore(IEnumerable<string> warnings)
+        {
+            warningsToIgnore = warnings;
         }
 
         internal static bool Build(string scriptText, bool debug)
@@ -484,12 +490,7 @@ namespace PaintDotNet.Effects
 
         private static bool ErrorFilter(Diagnostic diagnostic)
         {
-            IEnumerable<string> errorBlacklist = new string[]
-            {
-                "CS0414" // The field [...] is assigned but its value is never used
-            };
-
-            return !(diagnostic.Severity == DiagnosticSeverity.Hidden || errorBlacklist.Contains(diagnostic.Id));
+            return !(diagnostic.Severity == DiagnosticSeverity.Hidden || warningsToIgnore.Contains(diagnostic.Id));
         }
     }
 }

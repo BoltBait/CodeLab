@@ -143,6 +143,7 @@ namespace PaintDotNet.Effects
             errorList.Font = new Font(editorFont, errorList.Font.Size);
 
             ScriptBuilder.SetWarningLevel(Settings.WarningLevel);
+            ScriptBuilder.SetWarningsToIgnore(Settings.WarningsToIgnore);
         }
         #endregion
 
@@ -659,6 +660,7 @@ namespace PaintDotNet.Effects
             }
 
             ErrorCodeMenuItem.Visible = errorList.SelectedError.ErrorNumber.Length > 0;
+            ignoreWarningMenuItem.Visible = errorList.SelectedError.IsWarning;
         }
 
         private void CopyErrorMenuItem_Click(object sender, EventArgs e)
@@ -694,6 +696,17 @@ namespace PaintDotNet.Effects
                     : "https://docs.microsoft.com/dotnet/csharp/language-reference/compiler-messages/";
 
                 LaunchUrl(url + error.ErrorNumber);
+            }
+        }
+
+        private void ignoreWarningMenuItem_Click(object sender, EventArgs e)
+        {
+            if (errorList.SelectedIndex > -1)
+            {
+                IEnumerable<string> warnings = Settings.WarningsToIgnore.Append(errorList.SelectedError.ErrorNumber);
+                Settings.WarningsToIgnore = warnings;
+                ScriptBuilder.SetWarningsToIgnore(warnings);
+                BuildAsync();
             }
         }
 
@@ -1721,6 +1734,7 @@ namespace PaintDotNet.Effects
                 sf.ShowDialog();
             }
             LoadSettingsFromRegistry();
+            BuildAsync();
         }
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
