@@ -1678,7 +1678,7 @@ namespace PaintDotNet.Effects
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FlexibleMessageBox.Show(WindowTitle + "\nCopyright © 2006-2020, All Rights Reserved.\n\nTom Jackson:\tInitial Code, Compile to DLL\n\nDavid Issel:\tEffect UI Creation, Effect Icons, Effect Help\n\t\tSystem, Editor Enhancements (including\n\t\tFile New Templates, CodeLab Updater,\n\t\tBug Fixes), Coding Tutorials and Installer\n\nJason Wendt:\tMigration to ScintillaNET editor control,\n\t\tIntelligent Assistance (including code\n\t\tcompletion with snippets and tips),\n\t\tDebug Output, Dark Theme, Bug Fixes,\n\t\tHiDPI icons, Live Effect Preview,\n\t\tFiletype editing, and Shape editing\n\nJörg Reichert:\tFlexibleMessageBox", "About CodeLab", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            FlexibleMessageBox.Show(WindowTitle + "\nCopyright ©2006-2020, All Rights Reserved.\n\nTom Jackson:\tInitial Code, Compile to DLL\n\nDavid Issel:\tEffect UI Creation, Effect Icons, Effect Help\n\t\tSystem, File New Complex Code Flow\n\t\tGeneration, CodeLab Updater, Settings\n\t\tScreen, Bug Fixes), Tutorials and Installer.\n\nJason Wendt:\tMigration to ScintillaNET editor control and\n\t\tthe C# 7.3 Compiler (\"Roslyn\"), Intelligent\n\t\tAssistance (including code completion, tips,\n\t\tsnippets, and variable name suggestions),\n\t\tDebug Output, Dark Theme, HiDPI icons,\n\t\tLive Effect Preview, Filetype editing, and\n\t\tShape editing.\n\nJörg Reichert:\tFlexibleMessageBox", "About CodeLab", MessageBoxButtons.OK, MessageBoxIcon.Information);
             txtCode.Focus();
         }
         #endregion

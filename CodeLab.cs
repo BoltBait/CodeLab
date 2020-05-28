@@ -46,7 +46,7 @@ namespace PaintDotNet.Effects
 
     public abstract class CodeLab : Effect
     {
-        internal const string Version = "5.5";
+        internal const string Version = "6.0";
 
         private static Image StaticImage => ResUtil.GetImage("CodeLab");
 
