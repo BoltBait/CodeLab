@@ -905,6 +905,7 @@ namespace PaintDotNet.Effects
             tabStrip1.Renderer = PdnTheme.TabRenderer;
             menuStrip1.Renderer = PdnTheme.Renderer;
             contextMenuStrip1.Renderer = PdnTheme.Renderer;
+            errorListMenu.Renderer = PdnTheme.Renderer;
             errorList.ForeColor = PdnTheme.ForeColor;
             errorList.BackColor = PdnTheme.BackColor;
             OutputTextBox.ForeColor = PdnTheme.ForeColor;
