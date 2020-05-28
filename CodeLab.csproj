@@ -231,7 +231,7 @@
     <Compile Include="FindAndReplace.Designer.cs">
       <DependentUpon>FindAndReplace.cs</DependentUpon>
     </Compile>
-    <Compile Include="ResUtil.cs" />
+    <Compile Include="UIUtil.cs" />
     <Compile Include="ViewSrc.cs">
       <SubType>Form</SubType>
     </Compile>
