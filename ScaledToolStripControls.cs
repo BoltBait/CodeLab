@@ -28,7 +28,7 @@ namespace PaintDotNet.Effects
             set
             {
                 imageName = value.Trim();
-                this.Image = ResUtil.GetImage(imageName);
+                this.Image = UIUtil.GetImage(imageName);
             }
         }
     }
@@ -52,7 +52,7 @@ namespace PaintDotNet.Effects
             set
             {
                 imageName = value.Trim();
-                this.Image = ResUtil.GetImage(imageName);
+                this.Image = UIUtil.GetImage(imageName);
             }
         }
     }
@@ -76,7 +76,7 @@ namespace PaintDotNet.Effects
             set
             {
                 imageName = value.Trim();
-                this.Image = ResUtil.GetImage(imageName);
+                this.Image = UIUtil.GetImage(imageName);
             }
         }
     }
@@ -100,7 +100,7 @@ namespace PaintDotNet.Effects
             set
             {
                 imageName = value.Trim();
-                this.Image = ResUtil.GetImage(imageName);
+                this.Image = UIUtil.GetImage(imageName);
             }
         }
     }

@@ -64,23 +64,23 @@ namespace PaintDotNet.Effects
             imageList.ColorDepth = ColorDepth.Depth32Bit;
             imageList.Images.AddRange(new Image[]
             {
-                ResUtil.GetImage("Method"),
-                ResUtil.GetImage("Property"),
-                ResUtil.GetImage("Event"),
-                ResUtil.GetImage("Field"),
-                ResUtil.GetImage("Keyword"),
-                ResUtil.GetImage("Type"),
-                ResUtil.GetImage("Var"),
-                ResUtil.GetImage("Class"),
-                ResUtil.GetImage("Struct"),
-                ResUtil.GetImage("Enum"),
-                ResUtil.GetImage("Const"),
-                ResUtil.GetImage("EnumItem"),
-                ResUtil.GetImage("Snippet"),
-                ResUtil.GetImage("Method"), // Use the Method icon for Constructor
-                ResUtil.GetImage("Var"), // Use the Variable icon for Parameter
-                ResUtil.GetImage("Interface"),
-                ResUtil.EmptyImage
+                UIUtil.GetImage("Method"),
+                UIUtil.GetImage("Property"),
+                UIUtil.GetImage("Event"),
+                UIUtil.GetImage("Field"),
+                UIUtil.GetImage("Keyword"),
+                UIUtil.GetImage("Type"),
+                UIUtil.GetImage("Var"),
+                UIUtil.GetImage("Class"),
+                UIUtil.GetImage("Struct"),
+                UIUtil.GetImage("Enum"),
+                UIUtil.GetImage("Const"),
+                UIUtil.GetImage("EnumItem"),
+                UIUtil.GetImage("Snippet"),
+                UIUtil.GetImage("Method"), // Use the Method icon for Constructor
+                UIUtil.GetImage("Var"), // Use the Variable icon for Parameter
+                UIUtil.GetImage("Interface"),
+                UIUtil.EmptyImage
             });
         }
 

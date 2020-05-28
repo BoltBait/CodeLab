@@ -35,10 +35,10 @@ namespace PaintDotNet.Effects
             imageList.ImageSize = new Size((int)Math.Round(24 * UIfactor.Width), (int)Math.Round(24 * UIfactor.Height));
             imageList.Images.AddRange(new Image[]
             {
-                ResUtil.GetImage("UI"),
-                ResUtil.GetImage("Snippet"),
-                ResUtil.GetImage("Compiler"),
-                ResUtil.GetImage("Updates")
+                UIUtil.GetImage("UI"),
+                UIUtil.GetImage("Snippet"),
+                UIUtil.GetImage("Compiler"),
+                UIUtil.GetImage("Updates")
             });
 
             settingsList.ItemHeight = (int)(32 * UIfactor.Height);

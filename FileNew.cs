@@ -1825,9 +1825,9 @@ namespace PaintDotNet.Effects
             using (Font smallfont = new Font(e.Font, FontStyle.Regular))
             {
                 solidBrush.Color = Color.FromName(smallText);
-                Image iconImage = ResUtil.GetImage(srcGraphicName);
+                Image iconImage = UIUtil.GetImage(srcGraphicName);
                 e.Graphics.DrawImage(iconImage, new Rectangle(e.Bounds.X + 1, e.Bounds.Y + 1, e.Bounds.Height - 2, (e.Bounds.Height - 2) / 2));
-                iconImage = ResUtil.GetImage(dstGraphicName);
+                iconImage = UIUtil.GetImage(dstGraphicName);
                 e.Graphics.DrawImage(iconImage, new Rectangle(e.Bounds.X + 1, e.Bounds.Y+ ((e.Bounds.Height - 2) / 2) + 1, e.Bounds.Height - 2, (e.Bounds.Height - 2) / 2));
 
                 if (groupName == "Fill")
@@ -1835,7 +1835,7 @@ namespace PaintDotNet.Effects
                     if ((smallText == "Transparent") || (smallText == "Primary") || (smallText == "Secondary") || (smallText == "User selected"))
                     {
                         string imageName = smallText == "User selected" ? "UserSelected" : smallText;
-                        Image imageFill = ResUtil.GetImage(imageName);
+                        Image imageFill = UIUtil.GetImage(imageName);
                         e.Graphics.DrawImage(imageFill, e.Bounds.X + (int)(17 * UIfactor), e.Bounds.Y + (int)(16 * UIfactor), e.Bounds.Height - (int)(33 * UIfactor), e.Bounds.Height - (int)(34 * UIfactor));
                         if (smallText == "Transparent") smallText = "Clear " + dstGraphicName.Substring(4) + " surface";
                         if (smallText == "Primary") smallText = "Fill " + dstGraphicName.Substring(4) + " surface with Primary color";
@@ -1851,24 +1851,24 @@ namespace PaintDotNet.Effects
                 else if (groupName == "Copy")
                 {
                     string fillName = srcGraphicName.Substring(3) + "2" + dstGraphicName.Substring(4);
-                    Image imageFill = ResUtil.GetImage(fillName);
+                    Image imageFill = UIUtil.GetImage(fillName);
                     e.Graphics.DrawImage(imageFill, e.Bounds.X + (int)(16 * UIfactor), e.Bounds.Y + (int)(16 * UIfactor), e.Bounds.Height - (int)(32 * UIfactor), e.Bounds.Height - (int)(32 * UIfactor));
                 }
                 else if (groupName == "Blend")
                 {
-                    Image imageFill = ResUtil.GetImage("Blend");
+                    Image imageFill = UIUtil.GetImage("Blend");
                     e.Graphics.DrawImage(imageFill, e.Bounds.X + (int)(16 * UIfactor), e.Bounds.Y + (int)(16 * UIfactor), e.Bounds.Height - (int)(32 * UIfactor), e.Bounds.Height - (int)(32 * UIfactor));
                     bigText += " Blend";
                 }
                 else if (groupName == "Pixel Op")
                 {
-                    Image imageFill = ResUtil.GetImage(bigText);
+                    Image imageFill = UIUtil.GetImage(bigText);
                     e.Graphics.DrawImage(imageFill, e.Bounds.X + (int)(17 * UIfactor), e.Bounds.Y + (int)(16 * UIfactor), e.Bounds.Height - (int)(33 * UIfactor), e.Bounds.Height - (int)(34 * UIfactor));
                     bigText += " Pixels";
                 }
                 else // Effect
                 {
-                    Image imageFill = ResUtil.GetImage(getName(bigText));
+                    Image imageFill = UIUtil.GetImage(getName(bigText));
                     e.Graphics.DrawImage(imageFill, e.Bounds.X + (int)(17 * UIfactor), e.Bounds.Y + (int)(15 * UIfactor), e.Bounds.Height - (int)(32 * UIfactor), e.Bounds.Height - (int)(32 * UIfactor));
                     bigText += " Effect";
                 }

@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace PaintDotNet.Effects
 {
-    internal static class ResUtil
+    internal static class UIUtil
     {
         private static readonly bool hiDpi = UIScaleFactor.Current.Scale > 1;
         private static readonly Assembly assembly = Assembly.GetExecutingAssembly();

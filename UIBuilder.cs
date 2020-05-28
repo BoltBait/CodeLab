@@ -84,22 +84,22 @@ namespace PaintDotNet.Effects
             imgList.ImageSize = new Size((int)Math.Round(16 * dpi.Width), (int)Math.Round(16 * dpi.Height));
             imgList.Images.AddRange(new Image[]
             {
-                ResUtil.GetImage("00int"),
-                ResUtil.GetImage("01CheckBox"),
-                ResUtil.GetImage("02ColorWheel"),
-                ResUtil.GetImage("03AngleChooser"),
-                ResUtil.GetImage("04PanSlider"),
-                ResUtil.GetImage("05TextBox"),
-                ResUtil.GetImage("06DoubleSlider"),
-                ResUtil.GetImage("07DropDown"),
-                ResUtil.GetImage("08BlendOps"),
-                ResUtil.GetImage("09Fonts"),
-                ResUtil.GetImage("10RadioButton"),
-                ResUtil.GetImage("11ReseedButton"),
-                ResUtil.GetImage("12MultiTextBox"),
-                ResUtil.GetImage("13RollControl"),
-                ResUtil.GetImage("14FilenameControl"),
-                ResUtil.GetImage("15Uri")
+                UIUtil.GetImage("00int"),
+                UIUtil.GetImage("01CheckBox"),
+                UIUtil.GetImage("02ColorWheel"),
+                UIUtil.GetImage("03AngleChooser"),
+                UIUtil.GetImage("04PanSlider"),
+                UIUtil.GetImage("05TextBox"),
+                UIUtil.GetImage("06DoubleSlider"),
+                UIUtil.GetImage("07DropDown"),
+                UIUtil.GetImage("08BlendOps"),
+                UIUtil.GetImage("09Fonts"),
+                UIUtil.GetImage("10RadioButton"),
+                UIUtil.GetImage("11ReseedButton"),
+                UIUtil.GetImage("12MultiTextBox"),
+                UIUtil.GetImage("13RollControl"),
+                UIUtil.GetImage("14FilenameControl"),
+                UIUtil.GetImage("15Uri")
             });
 
             ControlListView.SmallImageList = imgList;

@@ -48,7 +48,7 @@ namespace PaintDotNet.Effects
     {
         internal const string Version = "6.0";
 
-        private static Image StaticImage => ResUtil.GetImage("CodeLab");
+        private static Image StaticImage => UIUtil.GetImage("CodeLab");
 
         protected CodeLab(string extendedName, EffectFlags flags, EffectRenderingSchedule renderingSchedule)
             : base("CodeLab" + extendedName, StaticImage, "Advanced", new EffectOptions() { Flags = EffectFlags.Configurable | flags, RenderingSchedule = renderingSchedule })

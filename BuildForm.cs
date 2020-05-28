@@ -296,7 +296,7 @@ namespace PaintDotNet.Effects
             string samplePath = Path.ChangeExtension(resourcePath, ".sample.png");
             if (File.Exists(samplePath))
             {
-                Bitmap SampleImage = ResUtil.GetBitmapFromFile(samplePath);
+                Bitmap SampleImage = UIUtil.GetBitmapFromFile(samplePath);
                 if (SampleImage != null)
                 {
                     if ((SampleImage.Width != 200) || (SampleImage.Height != 150))
@@ -428,7 +428,7 @@ namespace PaintDotNet.Effects
                 return;
             }
 
-            Bitmap newicon = ResUtil.GetBitmapFromFile(filePath);
+            Bitmap newicon = UIUtil.GetBitmapFromFile(filePath);
             if (newicon is null)
             {
                 MenuIcon.Image = null;

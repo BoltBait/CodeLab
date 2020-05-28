@@ -42,7 +42,7 @@ namespace PaintDotNet.Effects
             set
             {
                 this.iconName = value.Trim();
-                this.Icon = ResUtil.CreateIcon(this.iconName);
+                this.Icon = UIUtil.CreateIcon(this.iconName);
             }
         }
     }

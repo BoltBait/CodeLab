@@ -65,7 +65,7 @@ namespace PaintDotNet.Effects
             InitializeComponent();
 
 #if FASTDEBUG
-            this.Icon = ResUtil.CreateIcon("CodeLab");
+            this.Icon = UIUtil.CreateIcon("CodeLab");
             this.ShowInTaskbar = true;
 #endif
             PdnTheme.InitialColors(this.ForeColor, this.BackColor);
@@ -1957,7 +1957,7 @@ namespace PaintDotNet.Effects
                 string imagePath = Path.ChangeExtension(itemPath, ".png");
                 if (File.Exists(imagePath))
                 {
-                    recentItem.Image = ResUtil.GetBitmapFromFile(imagePath);
+                    recentItem.Image = UIUtil.GetBitmapFromFile(imagePath);
                 }
 
                 recentsList.Add(recentItem);
