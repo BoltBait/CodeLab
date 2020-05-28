@@ -3212,11 +3212,12 @@ namespace PaintDotNet.Effects
             {
                 if (this.CurrentLine != previousLine)
                 {
-                    previousLine = this.CurrentLine;
-
                     if (this.SelectionStart == this.SelectionEnd)
                     {
-                        if (this.Lines[this.CurrentLine].Text.TrimEnd('\r', '\n').Length == 0)
+                        string lineText = this.Lines[this.CurrentLine].Text;
+                        int trimmedEndLength = lineText.TrimEnd('\r', '\n').Length;
+
+                        if (trimmedEndLength == 0)
                         {
                             // Move to an empty (no whitespace) line
                             // Click or Up/Down Keys or Enter/Return
@@ -3229,30 +3230,23 @@ namespace PaintDotNet.Effects
                                 this.ChooseCaretX();
                             }
                         }
-                        else if (e.Change.HasFlag(UpdateChange.Content))
+                        else if (e.Change.HasFlag(UpdateChange.Content) && Math.Abs(this.CurrentLine - previousLine) == 1)
                         {
-                            // Enter/Return with characters to right of caret
+                            // Enter/Return/Backspace with characters to right of caret
                             int indent = GetIndentFromPrevLine(this.CurrentLine);
-                            this.BeginUndoAction();
 
-                            bool justAnEndBrace = this.Lines[this.CurrentLine].Text.TrimEnd().Equals("}");
-                            if (justAnEndBrace)
+                            if (lineText.Trim().Equals("}"))
                             {
                                 indent -= this.TabWidth;
-                                this.ExecuteCmd(Command.NewLine);
                             }
 
                             this.Lines[this.CurrentLine].Indentation = indent;
 
-                            if (justAnEndBrace)
-                            {
-                                this.ExecuteCmd(Command.LineUp);
-                                int indent2 = GetIndentFromPrevLine(this.CurrentLine);
-                                this.Selections[0].CaretVirtualSpace = indent2;
-                                this.Selections[0].AnchorVirtualSpace = indent2;
-                            }
+                            int newCaretPos = this.CurrentLine > previousLine
+                                ? this.Lines[this.CurrentLine].Position + indent
+                                : this.Lines[this.CurrentLine].Position + trimmedEndLength;
 
-                            this.EndUndoAction();
+                            this.SetEmptySelection(newCaretPos);
                         }
                     }
                     else
@@ -3261,6 +3255,8 @@ namespace PaintDotNet.Effects
                         this.Selections[0].CaretVirtualSpace = 0;
                         this.Selections[0].AnchorVirtualSpace = 0;
                     }
+
+                    previousLine = this.CurrentLine;
                 }
                 else if (this.Selections[0].AnchorVirtualSpace != this.Selections[0].CaretVirtualSpace)
                 {
