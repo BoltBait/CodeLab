@@ -7,8 +7,6 @@ namespace PaintDotNet.Effects
 {
     public partial class SettingsForm : ChildFormBase
     {
-        private readonly SizeF UIfactor;
-
         #region Initialize
         bool Initializing;
         public SettingsForm()
@@ -27,12 +25,7 @@ namespace PaintDotNet.Effects
                 }
             }
 
-            using (Graphics g = this.CreateGraphics())
-            {
-                UIfactor = new SizeF(g.DpiX / 96f, g.DpiY / 96f);
-            }
-
-            imageList.ImageSize = new Size((int)Math.Round(24 * UIfactor.Width), (int)Math.Round(24 * UIfactor.Height));
+            imageList.ImageSize = UIUtil.ScaleSize(24, 24);
             imageList.Images.AddRange(new Image[]
             {
                 UIUtil.GetImage("UI"),
@@ -41,7 +34,7 @@ namespace PaintDotNet.Effects
                 UIUtil.GetImage("Updates")
             });
 
-            settingsList.ItemHeight = (int)(32 * UIfactor.Height);
+            settingsList.ItemHeight = UIUtil.Scale(32);
             linkLabel1.LinkColor = this.ForeColor;
             settingsList.SelectedIndex = 0;
             toolbarCheckbox.Checked = Settings.ToolBar;
@@ -57,7 +50,7 @@ namespace PaintDotNet.Effects
             largeFontCheckbox.Checked = Settings.LargeFonts;
             for(int i=0; i<fontCombobox.Items.Count; i++)
             {
-                if (!IsFontInstalled(fontCombobox.Items[i].ToString()))
+                if (!UIUtil.IsFontInstalled(fontCombobox.Items[i].ToString()))
                 {
                     fontCombobox.Items[i] = fontCombobox.Items[i].ToString() + "*";
                 }
@@ -82,7 +75,7 @@ namespace PaintDotNet.Effects
 
             e.DrawBackground(); 
 
-            Point iconLocation = new Point(e.Bounds.X + (int)(4 * UIfactor.Width), e.Bounds.Y + (int)(4 * UIfactor.Height));
+            Point iconLocation = new Point(e.Bounds.X + UIUtil.Scale(4), e.Bounds.Y + UIUtil.Scale(4));
             imageList.Draw(e.Graphics, iconLocation, e.Index);
 
             string itemName = settingsList.Items[e.Index].ToString();
@@ -264,13 +257,5 @@ namespace PaintDotNet.Effects
             }
         }
         #endregion
-
-        private static bool IsFontInstalled(string fontName)
-        {
-            using (Font font = new Font(fontName, 12f))
-            {
-                return font.Name == fontName;
-            }
-        }
     }
 }

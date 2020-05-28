@@ -108,7 +108,7 @@ namespace PaintDotNet.Effects
             DefaultColorComboBox.Items.Add("None");
             DefaultColorComboBox.Items.Add("PrimaryColor");
             DefaultColorComboBox.Items.Add("SecondaryColor");
-            DefaultColorComboBox.Items.AddRange(GetColorNames());
+            DefaultColorComboBox.Items.AddRange(UIUtil.GetColorNames(false));
 
             MasterList.AddRange(UIElement.ProcessUIControls(UserScriptText, projectType));
 
@@ -816,17 +816,6 @@ namespace PaintDotNet.Effects
                 }
             }
             e.DrawFocusRectangle();
-        }
-
-        private static string[] GetColorNames()
-        {
-            List<string> names = typeof(Color).GetProperties(BindingFlags.Public | BindingFlags.Static)
-                     .Where(prop => prop.PropertyType == typeof(Color) && prop.Name != "Transparent")
-                     .Select(prop => prop.Name).ToList();
-
-            names.Sort();
-
-            return names.ToArray();
         }
 
         private void ControlType_DrawItem(object sender, DrawItemEventArgs e)

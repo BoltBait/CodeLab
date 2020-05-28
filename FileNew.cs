@@ -43,17 +43,12 @@ namespace PaintDotNet.Effects
                 }
             }
 
-            float UIfactor;
-            using (Graphics g = flowList.CreateGraphics())
-            {
-                UIfactor = g.DpiY / 96;
-            }
-            flowList.ItemHeight = (int)(64 * UIfactor);
+            flowList.ItemHeight = UIUtil.Scale(64);
             flowList.Font = this.Font;
             DefaultColorComboBox.Items.Add("Primary");
             DefaultColorComboBox.Items.Add("Secondary");
             DefaultColorComboBox.Items.Add("User selected");
-            DefaultColorComboBox.Items.AddRange(GetColorNames());
+            DefaultColorComboBox.Items.AddRange(UIUtil.GetColorNames(true));
             DefaultColorComboBox.SelectedIndex = 0;
             categoryBox.SelectedIndex = 0;
             pixelOpBox.SelectedIndex = 0;
@@ -76,17 +71,6 @@ namespace PaintDotNet.Effects
             {
                 SRC.Checked = true;
             }
-        }
-
-        private static string[] GetColorNames()
-        {
-            List<string> names = typeof(Color).GetProperties(BindingFlags.Public | BindingFlags.Static)
-                     .Where(prop => prop.PropertyType == typeof(Color))
-                     .Select(prop => prop.Name).ToList();
-
-            names.Sort();
-
-            return names.ToArray();
         }
 
         private static string getLowerName(string name)

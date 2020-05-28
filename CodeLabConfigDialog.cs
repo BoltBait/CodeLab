@@ -129,11 +129,11 @@ namespace PaintDotNet.Effects
             }
 
             string editorFont = Settings.FontFamily;
-            if (!IsFontInstalled(editorFont))
+            if (!UIUtil.IsFontInstalled(editorFont))
             {
                 editorFont = "Courier New";
             }
-            if (!IsFontInstalled(editorFont))
+            if (!UIUtil.IsFontInstalled(editorFont))
             {
                 editorFont = "Verdana";
             }
@@ -885,14 +885,6 @@ namespace PaintDotNet.Effects
 #if FASTDEBUG
             this.Close();
 #endif
-        }
-
-        private static bool IsFontInstalled(string fontName)
-        {
-            using (Font font = new Font(fontName, 12f))
-            {
-                return font.Name == fontName;
-            }
         }
 
         private void ApplyTheme(Theme theme)

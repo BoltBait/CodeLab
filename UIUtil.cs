@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 
 namespace PaintDotNet.Effects
@@ -63,6 +65,40 @@ namespace PaintDotNet.Effects
             Bitmap resBmp = GetImage(resName) as Bitmap;
             IntPtr hIcon = resBmp.GetHicon();
             return Icon.FromHandle(hIcon);
+        }
+
+        internal static int Scale(int value)
+        {
+            return (int)Math.Round(value * UIScaleFactor.Current.Scale);
+        }
+
+        internal static Size ScaleSize(int width, int height)
+        {
+            return new Size(Scale(width), Scale(height));
+        }
+
+        internal static bool IsFontInstalled(string fontName)
+        {
+            using (Font font = new Font(fontName, 12f))
+            {
+                return font.Name == fontName;
+            }
+        }
+
+        internal static string[] GetColorNames(bool includeTransparent)
+        {
+            List<string> names = typeof(Color).GetProperties(BindingFlags.Public | BindingFlags.Static)
+                     .Where(prop => prop.PropertyType == typeof(Color))
+                     .Select(prop => prop.Name).ToList();
+
+            if (!includeTransparent)
+            {
+                names.Remove("Transparent");
+            }
+
+            names.Sort();
+
+            return names.ToArray();
         }
     }
 }

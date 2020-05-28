@@ -49,18 +49,14 @@ namespace PaintDotNet.Effects
 
         internal IntelliBox()
         {
-            SizeF dpi;
-            using (Graphics g = this.CreateGraphics())
-                dpi = new SizeF(g.DpiX / 96f, g.DpiY / 96f);
-
             // Set owner draw mode
             this.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
             this.DrawMode = DrawMode.OwnerDrawFixed;
-            this.ItemHeight = (int)Math.Round(16 * dpi.Height);
+            this.ItemHeight = UIUtil.Scale(16);
             this.BorderStyle = BorderStyle.FixedSingle;
             this.Cursor = Cursors.Default;
 
-            imageList.ImageSize = new Size((int)Math.Round(16 * dpi.Width), (int)Math.Round(16 * dpi.Height));
+            imageList.ImageSize = UIUtil.ScaleSize(16, 16);
             imageList.ColorDepth = ColorDepth.Depth32Bit;
             imageList.Images.AddRange(new Image[]
             {

@@ -44,7 +44,6 @@ namespace PaintDotNet.Effects
         private readonly List<int> errorLines = new List<int>();
         private readonly List<int> warningLines = new List<int>();
         private readonly List<int> matchLines = new List<int>();
-        private readonly SizeF dpi = new SizeF(1f, 1f);
         private readonly ToolStrip lightBulbMenu = new ToolStrip();
         private readonly ScaledToolStripDropDownButton bulbIcon = new ScaledToolStripDropDownButton();
         private readonly ToolStripMenuItem renameVarMenuItem = new ToolStripMenuItem();
@@ -587,11 +586,6 @@ namespace PaintDotNet.Effects
                 timer.Interval = 1000;
                 timer.Tick += (sender, e) => ParseLocalVariables(this.CurrentPosition);
                 timer.Start();
-            }
-
-            using (Graphics g = this.CreateGraphics())
-            {
-                dpi = new SizeF(g.DpiX / 96f, g.DpiY / 96f);
             }
 
             InitializeComponent();
@@ -3513,7 +3507,7 @@ namespace PaintDotNet.Effects
 
             UpdateMarginWidths();
 
-            this.WhitespaceSize = GetDpiX((this.Zoom >= 2) ? 2 : 1);
+            this.WhitespaceSize = UIUtil.Scale((this.Zoom >= 2) ? 2 : 1);
 
             UpdateIndicatorBar();
 
@@ -4010,8 +4004,6 @@ namespace PaintDotNet.Effects
 
             return count;
         }
-
-        private int GetDpiX(int value) => (int)Math.Round(value * dpi.Width);
 
         private bool IsIndicatorOn(int indicator, int position)
         {
