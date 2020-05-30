@@ -68,7 +68,9 @@ namespace PaintDotNet.Effects
             + "}\r\n";
 
         internal const string EmptyCode = "\r\n"
-            + "void Render(Surface dst, Surface src, Rectangle rect) { }\r\n";
+            + "#region User Entered Code\r\n"
+            + "void Render(Surface dst, Surface src, Rectangle rect) { }\r\n"
+            + "#endregion\r\n";
 
         internal static string UsingPartCode(ProjectType projectType)
         {
