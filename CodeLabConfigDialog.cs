@@ -82,6 +82,22 @@ namespace PaintDotNet.Effects
             txtCode.Focus();
         }
 
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+
+#if FASTDEBUG
+            ShapeBuilder.SetEnviromentParams(100, 100, 0, 0, 100, 100, ColorBgra.Black, ColorBgra.White, 2);
+#else
+            Size srcSize = EnvironmentParameters.SourceSurface.Size;
+            Rectangle selection = EnvironmentParameters.SelectionBounds;
+            ColorBgra strokeColor = EnvironmentParameters.PrimaryColor;
+            ColorBgra fillColor = EnvironmentParameters.SecondaryColor;
+            double strokeThickness = EnvironmentParameters.BrushWidth;
+            ShapeBuilder.SetEnviromentParams(srcSize.Width, srcSize.Height, selection.X, selection.Y, selection.Width, selection.Height, strokeColor, fillColor, strokeThickness);
+#endif
+        }
+
         void LoadSettingsFromRegistry()
         {
             txtCode.WrapMode = Settings.WordWrap ? WrapMode.Whitespace : WrapMode.None;

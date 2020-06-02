@@ -57,13 +57,6 @@ namespace PaintDotNet.Effects
 
         public override EffectConfigDialog CreateConfigDialog()
         {
-            Size srcSize = EnvironmentParameters.SourceSurface.Size;
-            Rectangle selection = EnvironmentParameters.SelectionBounds;
-            ColorBgra strokeColor = EnvironmentParameters.PrimaryColor;
-            ColorBgra fillColor = EnvironmentParameters.SecondaryColor;
-            double strokeThickness = EnvironmentParameters.BrushWidth;
-            ShapeBuilder.SetEnviromentParams(srcSize.Width, srcSize.Height, selection.X, selection.Y, selection.Width, selection.Height, strokeColor, fillColor, strokeThickness);
-
             return new CodeLabConfigDialog();
         }
 
