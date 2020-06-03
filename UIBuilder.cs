@@ -366,6 +366,7 @@ namespace PaintDotNet.Effects
                     StyleLabel.Enabled = false;
                     ControlStyle.Enabled = false;
                     ControlStyle.SelectedIndex = 0;
+                    OptionsText.Text = "Option1|Option2";
                     break;
                 case ElementType.BinaryPixelOp:
                     OptionsLabel.Visible = false;
@@ -426,6 +427,7 @@ namespace PaintDotNet.Effects
                     StyleLabel.Enabled = false;
                     ControlStyle.Enabled = false;
                     ControlStyle.SelectedIndex = 0;
+                    OptionsText.Text = "Option1|Option2";
                     break;
                 case ElementType.ReseedButton:
                     OptionsLabel.Visible = false;
