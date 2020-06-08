@@ -410,6 +410,8 @@ namespace PaintDotNet.Effects
                 this.Styles[Style.Cpp.Preprocessor + i].BackColor = backColor;
                 this.Styles[Style.Cpp.Regex + i].ForeColor = Color.Gainsboro;
                 this.Styles[Style.Cpp.Regex + i].BackColor = backColor;
+                this.Styles[Style.Cpp.EscapeSequence + i].ForeColor = Color.FromArgb(255, 214, 143);
+                this.Styles[Style.Cpp.EscapeSequence + i].BackColor = backColor;
                 if (indexForPurpleWords > 0)
                 {
                     this.Styles[indexForPurpleWords + i].ForeColor = Color.FromArgb(216, 160, 223);
@@ -456,6 +458,8 @@ namespace PaintDotNet.Effects
                 this.Styles[Style.Cpp.Preprocessor + i].BackColor = backColor;
                 this.Styles[Style.Cpp.Regex + i].ForeColor = Color.Black;
                 this.Styles[Style.Cpp.Regex + i].BackColor = backColor;
+                this.Styles[Style.Cpp.EscapeSequence + i].ForeColor = Color.FromArgb(183, 118, 251);
+                this.Styles[Style.Cpp.EscapeSequence + i].BackColor = backColor;
                 if (indexForPurpleWords > 0)
                 {
                     this.Styles[indexForPurpleWords + i].ForeColor = Color.FromArgb(143, 8, 196);
@@ -717,6 +721,7 @@ namespace PaintDotNet.Effects
             this.SetProperty("fold", "1");
             this.SetProperty("fold.compact", "0");
             this.SetProperty("lexer.cpp.allow.dollars", "0");
+            this.SetProperty("lexer.cpp.escape.sequence", "1");
 
             // Configure a margin to display folding symbols
             this.Margins[LeftMargin.CodeFolding].Type = MarginType.Symbol;
@@ -4209,6 +4214,7 @@ namespace PaintDotNet.Effects
                     this.SetProperty("fold", "1");
                     this.SetProperty("fold.compact", "0");
                     this.SetProperty("lexer.cpp.allow.dollars", "0");
+                    this.SetProperty("lexer.cpp.escape.sequence", "1");
 
                     switch (this.theme)
                     {
