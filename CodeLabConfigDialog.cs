@@ -865,6 +865,12 @@ namespace PaintDotNet.Effects
                 e.Handled = true;
                 e.SuppressKeyPress = true;
             }
+            if (e.KeyCode == Keys.F6)
+            {
+                btnBuild_Click(sender, EventArgs.Empty);
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+            }
             base.OnKeyUp(e);
             UpdateToolBarButtons();
         }

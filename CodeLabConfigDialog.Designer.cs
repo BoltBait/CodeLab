@@ -191,7 +191,7 @@
             this.btnBuild.Size = new System.Drawing.Size(64, 24);
             this.btnBuild.TabIndex = 2;
             this.btnBuild.Text = "Build";
-            this.toolTips.SetToolTip(this.btnBuild, "Compile and run this effect");
+            this.toolTips.SetToolTip(this.btnBuild, "Compile and run this effect (F6)");
             this.btnBuild.UseVisualStyleBackColor = true;
             this.btnBuild.Click += new System.EventHandler(this.btnBuild_Click);
             // 
