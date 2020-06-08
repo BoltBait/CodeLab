@@ -34,7 +34,7 @@ using System.Windows.Forms;
 
 namespace PaintDotNet.Effects
 {
-    public sealed partial class CodeTextBox : Scintilla
+    public sealed class CodeTextBox : Scintilla
     {
         private readonly Timer timer = new Timer();
         private readonly IntelliBox iBox = new IntelliBox();
