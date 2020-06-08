@@ -716,6 +716,7 @@ namespace PaintDotNet.Effects
             // Instruct the lexer to calculate folding
             this.SetProperty("fold", "1");
             this.SetProperty("fold.compact", "0");
+            this.SetProperty("lexer.cpp.allow.dollars", "0");
 
             // Configure a margin to display folding symbols
             this.Margins[LeftMargin.CodeFolding].Type = MarginType.Symbol;
@@ -4207,6 +4208,7 @@ namespace PaintDotNet.Effects
 
                     this.SetProperty("fold", "1");
                     this.SetProperty("fold.compact", "0");
+                    this.SetProperty("lexer.cpp.allow.dollars", "0");
 
                     switch (this.theme)
                     {
