@@ -70,6 +70,7 @@ namespace PaintDotNet.Effects
         private int maxLineNumberCharLength = 0;
         private int disableIntelliTipPos = InvalidPosition;
         private DelayedOperation delayedOperation = DelayedOperation.None;
+        private bool useExtendedColors = false;
         #endregion
 
         #region Properties
@@ -236,6 +237,21 @@ namespace PaintDotNet.Effects
                         SetCaretLineLightColor();
                         break;
                 }
+            }
+        }
+
+        internal bool UseExtendedColors
+        {
+            get
+            {
+                return this.useExtendedColors;
+            }
+            set
+            {
+                this.useExtendedColors = value;
+                this.FreeSubstyles();
+                int substyleStart = this.AllocateSubstyles(Style.Cpp.Identifier, value ? Substyle.NeededStyles : 1);
+                Substyle.SetStyles(substyleStart);
             }
         }
 
@@ -745,7 +761,7 @@ namespace PaintDotNet.Effects
             this.Indicators[Indicator.ObjectHighlightDef].Alpha = 204;
             this.Indicators[Indicator.ObjectHighlightDef].OutlineAlpha = 255;
 
-            int substyleStart = this.AllocateSubstyles(Style.Cpp.Identifier, Substyle.NeededStyles);
+            int substyleStart = this.AllocateSubstyles(Style.Cpp.Identifier, 1);
             Substyle.SetStyles(substyleStart);
 
             // Set the keywords for Syntax Highlighting
@@ -3807,65 +3823,73 @@ namespace PaintDotNet.Effects
                 return;
             }
 
-            string classWords = Intelli.ClassList;
-            string structWords = Intelli.StructList;
-            string enumWords = Intelli.EnumList;
-            string interfaceWords = Intelli.InterfaceList;
-
-            if (Intelli.UserDefinedTypes.Count > 0)
-            {
-                HashSet<string> userEnums = new HashSet<string>();
-                HashSet<string> userInterfaces = new HashSet<string>();
-                HashSet<string> userStructs = new HashSet<string>();
-                HashSet<string> userClasses = new HashSet<string>();
-                foreach (KeyValuePair<string, Type> kvp in Intelli.UserDefinedTypes)
-                {
-                    if (kvp.Value.IsEnum)
-                    {
-                        userEnums.Add(kvp.Key);
-                    }
-                    else if (kvp.Value.IsValueType)
-                    {
-                        userStructs.Add(kvp.Key);
-                    }
-                    else if (kvp.Value.IsClass)
-                    {
-                        userClasses.Add(kvp.Key);
-                    }
-                    else if (kvp.Value.IsInterface)
-                    {
-                        userInterfaces.Add(kvp.Key);
-                    }
-                }
-
-                if (userClasses.Count > 0)
-                {
-                    classWords += " " + userClasses.Join(" ");
-                }
-                if (userStructs.Count > 0)
-                {
-                    structWords += " " + userStructs.Join(" ");
-                }
-                if (userEnums.Count > 0)
-                {
-                    enumWords += " " + userEnums.Join(" ");
-                }
-                if (userInterfaces.Count > 0)
-                {
-                    interfaceWords += " " + userInterfaces.Join(" ");
-                }
-            }
-
-            this.SetKeywords(1, classWords);
             this.SetKeywords(0, "abstract as base bool byte char checked class const decimal delegate double enum event explicit extern "
                 + "false fixed float get implicit in int interface internal is lock long namespace new null object operator out override "
                 + "params partial private protected public readonly ref sbyte sealed set short sizeof stackalloc static string struct "
                 + "this true typeof uint unchecked unsafe ulong ushort using var virtual void volatile where");
 
-            this.SetIdentifiers(Substyle.Keyword, "break case catch continue default do else finally for foreach goto if return throw try switch while");
-            this.SetIdentifiers(Substyle.Struct, structWords);
-            this.SetIdentifiers(Substyle.Enum, enumWords);
-            this.SetIdentifiers(Substyle.Interface, interfaceWords);
+            this.SetIdentifiers(Substyle.Keyword, "break case catch continue default do else finally for foreach goto if in return throw try switch while");
+
+            if (!this.useExtendedColors)
+            {
+                this.SetKeywords(1, Intelli.ClassList + " " + Intelli.StructList + " " + Intelli.EnumList + " " + Intelli.InterfaceList + " " + Intelli.UserDefinedTypes.Keys);
+            }
+            else
+            {
+                string classWords = Intelli.ClassList;
+                string structWords = Intelli.StructList;
+                string enumWords = Intelli.EnumList;
+                string interfaceWords = Intelli.InterfaceList;
+
+                if (Intelli.UserDefinedTypes.Count > 0)
+                {
+                    HashSet<string> userEnums = new HashSet<string>();
+                    HashSet<string> userInterfaces = new HashSet<string>();
+                    HashSet<string> userStructs = new HashSet<string>();
+                    HashSet<string> userClasses = new HashSet<string>();
+                    foreach (KeyValuePair<string, Type> kvp in Intelli.UserDefinedTypes)
+                    {
+                        if (kvp.Value.IsEnum)
+                        {
+                            userEnums.Add(kvp.Key);
+                        }
+                        else if (kvp.Value.IsValueType)
+                        {
+                            userStructs.Add(kvp.Key);
+                        }
+                        else if (kvp.Value.IsClass)
+                        {
+                            userClasses.Add(kvp.Key);
+                        }
+                        else if (kvp.Value.IsInterface)
+                        {
+                            userInterfaces.Add(kvp.Key);
+                        }
+                    }
+
+                    if (userClasses.Count > 0)
+                    {
+                        classWords += " " + userClasses.Join(" ");
+                    }
+                    if (userStructs.Count > 0)
+                    {
+                        structWords += " " + userStructs.Join(" ");
+                    }
+                    if (userEnums.Count > 0)
+                    {
+                        enumWords += " " + userEnums.Join(" ");
+                    }
+                    if (userInterfaces.Count > 0)
+                    {
+                        interfaceWords += " " + userInterfaces.Join(" ");
+                    }
+                }
+
+                this.SetKeywords(1, classWords);
+                this.SetIdentifiers(Substyle.Struct, structWords);
+                this.SetIdentifiers(Substyle.Enum, enumWords);
+                this.SetIdentifiers(Substyle.Interface, interfaceWords);
+            }
         }
 
         internal void FormatDocument()
@@ -4664,10 +4688,10 @@ namespace PaintDotNet.Effects
 
             internal static void SetStyles(int startIndex)
             {
-                enums = startIndex;
+                keywords = startIndex;
                 methods = startIndex + 1;
                 structs = startIndex + 2;
-                keywords = startIndex + 3;
+                enums = startIndex + 3;
                 interfaces = startIndex + 4;
                 paramsAndVars = startIndex + 5;
 

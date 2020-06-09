@@ -43,6 +43,7 @@
             this.label8 = new System.Windows.Forms.Label();
             this.warningLevelCombobox = new System.Windows.Forms.ComboBox();
             this.uiPanel = new System.Windows.Forms.Panel();
+            this.caretLineFrameCheckBox = new System.Windows.Forms.CheckBox();
             this.indentSpacesLabel = new System.Windows.Forms.Label();
             this.indentSpacesComboBox = new System.Windows.Forms.ComboBox();
             this.toolbarCheckbox = new System.Windows.Forms.CheckBox();
@@ -65,7 +66,7 @@
             this.settingsList = new System.Windows.Forms.ListBox();
             this.snippetPanel = new PaintDotNet.Effects.SnippetManager();
             this.imageList = new System.Windows.Forms.ImageList(this.components);
-            this.caretLineFrameCheckBox = new System.Windows.Forms.CheckBox();
+            this.extendedColorsCheckBox = new System.Windows.Forms.CheckBox();
             this.updatesPanel.SuspendLayout();
             this.compilerPanel.SuspendLayout();
             this.uiPanel.SuspendLayout();
@@ -219,6 +220,7 @@
             // 
             // uiPanel
             // 
+            this.uiPanel.Controls.Add(this.extendedColorsCheckBox);
             this.uiPanel.Controls.Add(this.caretLineFrameCheckBox);
             this.uiPanel.Controls.Add(this.indentSpacesLabel);
             this.uiPanel.Controls.Add(this.indentSpacesComboBox);
@@ -244,11 +246,22 @@
             this.uiPanel.Size = new System.Drawing.Size(476, 405);
             this.uiPanel.TabIndex = 1;
             // 
+            // caretLineFrameCheckBox
+            // 
+            this.caretLineFrameCheckBox.AutoSize = true;
+            this.caretLineFrameCheckBox.Location = new System.Drawing.Point(237, 105);
+            this.caretLineFrameCheckBox.Name = "caretLineFrameCheckBox";
+            this.caretLineFrameCheckBox.Size = new System.Drawing.Size(115, 19);
+            this.caretLineFrameCheckBox.TabIndex = 8;
+            this.caretLineFrameCheckBox.Text = "Caret Line Frame";
+            this.caretLineFrameCheckBox.UseVisualStyleBackColor = true;
+            this.caretLineFrameCheckBox.CheckedChanged += new System.EventHandler(this.caretLineFrameCheckBox_CheckedChanged);
+            // 
             // indentSpacesLabel
             // 
             this.indentSpacesLabel.AutoSize = true;
             this.indentSpacesLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            this.indentSpacesLabel.Location = new System.Drawing.Point(13, 152);
+            this.indentSpacesLabel.Location = new System.Drawing.Point(13, 145);
             this.indentSpacesLabel.Name = "indentSpacesLabel";
             this.indentSpacesLabel.Size = new System.Drawing.Size(88, 15);
             this.indentSpacesLabel.TabIndex = 8;
@@ -261,7 +274,7 @@
             this.indentSpacesComboBox.Items.AddRange(new object[] {
             "2",
             "4"});
-            this.indentSpacesComboBox.Location = new System.Drawing.Point(32, 178);
+            this.indentSpacesComboBox.Location = new System.Drawing.Point(32, 171);
             this.indentSpacesComboBox.Name = "indentSpacesComboBox";
             this.indentSpacesComboBox.Size = new System.Drawing.Size(50, 23);
             this.indentSpacesComboBox.TabIndex = 9;
@@ -272,7 +285,7 @@
             this.toolbarCheckbox.AutoSize = true;
             this.toolbarCheckbox.Location = new System.Drawing.Point(32, 28);
             this.toolbarCheckbox.Name = "toolbarCheckbox";
-            this.toolbarCheckbox.Size = new System.Drawing.Size(65, 19);
+            this.toolbarCheckbox.Size = new System.Drawing.Size(67, 19);
             this.toolbarCheckbox.TabIndex = 1;
             this.toolbarCheckbox.Text = "Toolbar";
             this.toolbarCheckbox.UseVisualStyleBackColor = true;
@@ -281,16 +294,16 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(228, 369);
+            this.label5.Location = new System.Drawing.Point(228, 354);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(190, 15);
+            this.label5.Size = new System.Drawing.Size(191, 15);
             this.label5.TabIndex = 18;
             this.label5.Text = "\"Auto\" matches Paint.NET\'s theme";
             // 
             // linkLabel1
             // 
             this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Location = new System.Drawing.Point(234, 298);
+            this.linkLabel1.Location = new System.Drawing.Point(234, 291);
             this.linkLabel1.Name = "linkLabel1";
             this.linkLabel1.Size = new System.Drawing.Size(88, 15);
             this.linkLabel1.TabIndex = 15;
@@ -301,7 +314,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(225, 272);
+            this.label4.Location = new System.Drawing.Point(225, 265);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(177, 15);
             this.label4.TabIndex = 13;
@@ -312,7 +325,7 @@
             this.wordWrapTextFilesCheckbox.AutoSize = true;
             this.wordWrapTextFilesCheckbox.Location = new System.Drawing.Point(237, 80);
             this.wordWrapTextFilesCheckbox.Name = "wordWrapTextFilesCheckbox";
-            this.wordWrapTextFilesCheckbox.Size = new System.Drawing.Size(150, 19);
+            this.wordWrapTextFilesCheckbox.Size = new System.Drawing.Size(149, 19);
             this.wordWrapTextFilesCheckbox.TabIndex = 6;
             this.wordWrapTextFilesCheckbox.Text = "Word wrap text files  ‹‒\'";
             this.wordWrapTextFilesCheckbox.UseVisualStyleBackColor = true;
@@ -326,7 +339,7 @@
             "Auto",
             "Light",
             "Dark"});
-            this.themeCombobox.Location = new System.Drawing.Point(32, 364);
+            this.themeCombobox.Location = new System.Drawing.Point(32, 349);
             this.themeCombobox.Name = "themeCombobox";
             this.themeCombobox.Size = new System.Drawing.Size(166, 23);
             this.themeCombobox.TabIndex = 17;
@@ -336,7 +349,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            this.label3.Location = new System.Drawing.Point(13, 345);
+            this.label3.Location = new System.Drawing.Point(13, 330);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(49, 15);
             this.label3.TabIndex = 16;
@@ -345,7 +358,7 @@
             // largeFontCheckbox
             // 
             this.largeFontCheckbox.AutoSize = true;
-            this.largeFontCheckbox.Location = new System.Drawing.Point(32, 297);
+            this.largeFontCheckbox.Location = new System.Drawing.Point(32, 290);
             this.largeFontCheckbox.Name = "largeFontCheckbox";
             this.largeFontCheckbox.Size = new System.Drawing.Size(85, 19);
             this.largeFontCheckbox.TabIndex = 14;
@@ -366,7 +379,7 @@
             "Hack",
             "JetBrains Mono",
             "Verdana"});
-            this.fontCombobox.Location = new System.Drawing.Point(32, 267);
+            this.fontCombobox.Location = new System.Drawing.Point(32, 260);
             this.fontCombobox.Name = "fontCombobox";
             this.fontCombobox.Size = new System.Drawing.Size(166, 23);
             this.fontCombobox.TabIndex = 12;
@@ -376,7 +389,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            this.label2.Location = new System.Drawing.Point(13, 248);
+            this.label2.Location = new System.Drawing.Point(13, 241);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(40, 15);
             this.label2.TabIndex = 11;
@@ -385,7 +398,7 @@
             // showWhiteSpaceCheckbox
             // 
             this.showWhiteSpaceCheckbox.AutoSize = true;
-            this.showWhiteSpaceCheckbox.Location = new System.Drawing.Point(32, 208);
+            this.showWhiteSpaceCheckbox.Location = new System.Drawing.Point(32, 201);
             this.showWhiteSpaceCheckbox.Name = "showWhiteSpaceCheckbox";
             this.showWhiteSpaceCheckbox.Size = new System.Drawing.Size(129, 19);
             this.showWhiteSpaceCheckbox.TabIndex = 10;
@@ -493,16 +506,16 @@
             this.imageList.ImageSize = new System.Drawing.Size(24, 24);
             this.imageList.TransparentColor = System.Drawing.Color.Transparent;
             // 
-            // caretLineFrameCheckBox
+            // extendedColorsCheckBox
             // 
-            this.caretLineFrameCheckBox.AutoSize = true;
-            this.caretLineFrameCheckBox.Location = new System.Drawing.Point(237, 105);
-            this.caretLineFrameCheckBox.Name = "caretLineFrameCheckBox";
-            this.caretLineFrameCheckBox.Size = new System.Drawing.Size(115, 19);
-            this.caretLineFrameCheckBox.TabIndex = 8;
-            this.caretLineFrameCheckBox.Text = "Caret Line Frame";
-            this.caretLineFrameCheckBox.UseVisualStyleBackColor = true;
-            this.caretLineFrameCheckBox.CheckedChanged += new System.EventHandler(this.caretLineFrameCheckBox_CheckedChanged);
+            this.extendedColorsCheckBox.AutoSize = true;
+            this.extendedColorsCheckBox.Location = new System.Drawing.Point(32, 378);
+            this.extendedColorsCheckBox.Name = "extendedColorsCheckBox";
+            this.extendedColorsCheckBox.Size = new System.Drawing.Size(190, 19);
+            this.extendedColorsCheckBox.TabIndex = 19;
+            this.extendedColorsCheckBox.Text = "Extended Colors (Experimental)";
+            this.extendedColorsCheckBox.UseVisualStyleBackColor = true;
+            this.extendedColorsCheckBox.CheckedChanged += new System.EventHandler(this.extendedColorsCheckBox_CheckedChanged);
             // 
             // SettingsForm
             // 
@@ -566,5 +579,6 @@
         private System.Windows.Forms.ImageList imageList;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.CheckBox caretLineFrameCheckBox;
+        private System.Windows.Forms.CheckBox extendedColorsCheckBox;
     }
 }

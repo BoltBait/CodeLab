@@ -58,6 +58,7 @@ namespace PaintDotNet.Effects
             }
             fontCombobox.SelectedIndex = fontCombobox.FindString(Settings.FontFamily);
             themeCombobox.Text = Settings.EditorTheme.ToString();
+            extendedColorsCheckBox.Checked = Settings.ExtendedColors;
             warningLevelCombobox.SelectedIndex = Settings.WarningLevel;
             warningsToIgnoreList.Items.AddRange(Settings.WarningsToIgnore.ToArray());
             if (warningsToIgnoreList.Items.Count > 0)
@@ -208,6 +209,12 @@ namespace PaintDotNet.Effects
             if (themeCombobox.Text == "Auto") Settings.EditorTheme = Theme.Auto;
             if (themeCombobox.Text == "Dark") Settings.EditorTheme = Theme.Dark;
             if (themeCombobox.Text == "Light") Settings.EditorTheme = Theme.Light;
+        }
+
+        private void extendedColorsCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (Initializing) return;
+            Settings.ExtendedColors = extendedColorsCheckBox.Checked;
         }
 
         private void wordWrapTextFilesCheckbox_CheckedChanged(object sender, EventArgs e)

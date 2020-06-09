@@ -15,6 +15,7 @@
 /////////////////////////////////////////////////////////////////////////////////
 
 using PaintDotNet.AppModel;
+using PaintDotNet.Collections;
 using ScintillaNET;
 using System;
 using System.Collections.Generic;
@@ -103,6 +104,7 @@ namespace PaintDotNet.Effects
             txtCode.WrapMode = Settings.WordWrap ? WrapMode.Whitespace : WrapMode.None;
             txtCode.TabWidth = Settings.IndentSpaces;
             txtCode.CaretLineFrameEnabled = Settings.CaretLineFrame;
+            txtCode.UseExtendedColors = Settings.ExtendedColors;
 
             if (Settings.WhiteSpace)
             {
