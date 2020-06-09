@@ -45,6 +45,7 @@ namespace PaintDotNet.Effects
             indicatorMapCheckbox.Checked = Settings.Map;
             wordWrapCheckbox.Checked = Settings.WordWrap;
             wordWrapTextFilesCheckbox.Checked = Settings.WordWrapPlainText;
+            caretLineFrameCheckBox.Checked = Settings.CaretLineFrame;
             showWhiteSpaceCheckbox.Checked = Settings.WhiteSpace;
             indentSpacesComboBox.SelectedIndex = Settings.IndentSpaces == 4 ? 1 : 0;
             largeFontCheckbox.Checked = Settings.LargeFonts;
@@ -213,6 +214,12 @@ namespace PaintDotNet.Effects
         {
             if (Initializing) return;
             Settings.WordWrapPlainText = wordWrapTextFilesCheckbox.Checked;
+        }
+
+        private void caretLineFrameCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (Initializing) return;
+            Settings.CaretLineFrame = caretLineFrameCheckBox.Checked;
         }
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

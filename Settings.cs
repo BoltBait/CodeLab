@@ -160,6 +160,12 @@ namespace PaintDotNet.Effects
             set => SetRegValue("IndentSpaces", value);
         }
 
+        internal static bool CaretLineFrame
+        {
+            get => GetRegValue("CaretLineFrame", false);
+            set => SetRegValue("CaretLineFrame", value);
+        }
+
         private static void OpenRegKey()
         {
             if (regKey == null)

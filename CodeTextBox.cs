@@ -218,6 +218,28 @@ namespace PaintDotNet.Effects
             get => !(this.CanUndo || this.CanRedo) && this.Text.Equals(ScriptWriter.DefaultCode);
         }
 
+        internal bool CaretLineFrameEnabled
+        {
+            get
+            {
+                return this.CaretLineFrame > 0;
+            }
+            set
+            {
+                this.CaretLineFrame = value ? UIUtil.Scale(2) : 0;
+                switch (this.theme)
+                {
+                    case Theme.Dark:
+                        SetCaretLineDarkColor();
+                        break;
+                    case Theme.Light:
+                    default:
+                        SetCaretLineLightColor();
+                        break;
+                }
+            }
+        }
+
         [Category(nameof(CategoryAttribute.Appearance))]
         [RefreshProperties(RefreshProperties.All)]
         [DefaultValue(Theme.Light)]
@@ -287,7 +309,7 @@ namespace PaintDotNet.Effects
                         this.SetSelectionBackColor(true, Color.FromArgb(38, 79, 120));
 
                         // Current Line Highlight
-                        this.CaretLineBackColor = Color.FromArgb(40, 40, 40);
+                        SetCaretLineDarkColor();
 
                         // Caret
                         this.CaretForeColor = Color.Gainsboro;
@@ -354,7 +376,7 @@ namespace PaintDotNet.Effects
                         this.SetSelectionBackColor(true, Color.FromArgb(173, 214, 255));
 
                         // Current Line Highlight
-                        this.CaretLineBackColor = Color.GhostWhite;
+                        SetCaretLineLightColor();
 
                         // Caret
                         this.CaretForeColor = Color.Black;
@@ -566,6 +588,20 @@ namespace PaintDotNet.Effects
             this.Styles[Style.Xml.Value].BackColor = backColor;
             this.Styles[Style.Xml.XcComment].ForeColor = Color.Aquamarine;
             this.Styles[Style.Xml.XcComment].BackColor = backColor;
+        }
+
+        private void SetCaretLineDarkColor()
+        {
+            this.CaretLineBackColor = CaretLineFrameEnabled
+                ? Color.FromArgb(70, 70, 70)
+                : Color.FromArgb(40, 40, 40);
+        }
+
+        private void SetCaretLineLightColor()
+        {
+            this.CaretLineBackColor = CaretLineFrameEnabled
+                ? Color.FromArgb(234, 234, 242)
+                : Color.GhostWhite; ;
         }
         #endregion
 

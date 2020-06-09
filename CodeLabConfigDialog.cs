@@ -102,6 +102,7 @@ namespace PaintDotNet.Effects
         {
             txtCode.WrapMode = Settings.WordWrap ? WrapMode.Whitespace : WrapMode.None;
             txtCode.TabWidth = Settings.IndentSpaces;
+            txtCode.CaretLineFrameEnabled = Settings.CaretLineFrame;
 
             if (Settings.WhiteSpace)
             {

@@ -65,6 +65,7 @@
             this.settingsList = new System.Windows.Forms.ListBox();
             this.snippetPanel = new PaintDotNet.Effects.SnippetManager();
             this.imageList = new System.Windows.Forms.ImageList(this.components);
+            this.caretLineFrameCheckBox = new System.Windows.Forms.CheckBox();
             this.updatesPanel.SuspendLayout();
             this.compilerPanel.SuspendLayout();
             this.uiPanel.SuspendLayout();
@@ -218,6 +219,7 @@
             // 
             // uiPanel
             // 
+            this.uiPanel.Controls.Add(this.caretLineFrameCheckBox);
             this.uiPanel.Controls.Add(this.indentSpacesLabel);
             this.uiPanel.Controls.Add(this.indentSpacesComboBox);
             this.uiPanel.Controls.Add(this.toolbarCheckbox);
@@ -491,6 +493,17 @@
             this.imageList.ImageSize = new System.Drawing.Size(24, 24);
             this.imageList.TransparentColor = System.Drawing.Color.Transparent;
             // 
+            // caretLineFrameCheckBox
+            // 
+            this.caretLineFrameCheckBox.AutoSize = true;
+            this.caretLineFrameCheckBox.Location = new System.Drawing.Point(237, 105);
+            this.caretLineFrameCheckBox.Name = "caretLineFrameCheckBox";
+            this.caretLineFrameCheckBox.Size = new System.Drawing.Size(115, 19);
+            this.caretLineFrameCheckBox.TabIndex = 8;
+            this.caretLineFrameCheckBox.Text = "Caret Line Frame";
+            this.caretLineFrameCheckBox.UseVisualStyleBackColor = true;
+            this.caretLineFrameCheckBox.CheckedChanged += new System.EventHandler(this.caretLineFrameCheckBox_CheckedChanged);
+            // 
             // SettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -552,5 +565,6 @@
         private System.Windows.Forms.Button lookupWarningButton;
         private System.Windows.Forms.ImageList imageList;
         private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.CheckBox caretLineFrameCheckBox;
     }
 }
