@@ -15,7 +15,6 @@
 /////////////////////////////////////////////////////////////////////////////////
 
 using PaintDotNet.AppModel;
-using PaintDotNet.Collections;
 using ScintillaNET;
 using System;
 using System.Collections.Generic;

@@ -1097,6 +1097,7 @@ namespace PaintDotNet.Effects
                     return;
                 }
 
+                // Gather parameters of method
                 int closeParenPos = methodBounds.Item1 - 1;
                 while (closeParenPos > InvalidPosition && this.GetCharAt(closeParenPos) != ')')
                 {
@@ -1129,7 +1130,7 @@ namespace PaintDotNet.Effects
             }
 
             string bodyText = this.GetTextRange(rangeStart, rangeEnd - rangeStart);
-            IEnumerable<string> bodyWords = bodyText.Split(new char[] { ' ', '(', '{', '<', '\n' }, StringSplitOptions.RemoveEmptyEntries).Distinct();
+            IEnumerable<string> bodyWords = bodyText.Split(new char[] { ' ', '(', '{', '<', '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries).Distinct();
 
             this.SearchFlags = SearchFlags.MatchCase | SearchFlags.WholeWord;
             foreach (string word in bodyWords)
@@ -1241,31 +1242,14 @@ namespace PaintDotNet.Effects
                             continue;
                         }
 
-                        if (!Intelli.VarPos.ContainsKey(varName))
+                        Intelli.VarPos[varName] = thisVarPos;
+
+                        if (localOnly && Intelli.Parameters.ContainsKey(varName))
                         {
-                            Intelli.VarPos.Add(varName, thisVarPos);
-                        }
-                        else
-                        {
-                            Intelli.VarPos[varName] = thisVarPos;
+                            continue;
                         }
 
-                        if (Intelli.Parameters.ContainsKey(varName))
-                        {
-                            if (localOnly)
-                            {
-                                continue;
-                            }
-                        }
-
-                        if (!Intelli.Variables.ContainsKey(varName))
-                        {
-                            Intelli.Variables.Add(varName, type);
-                        }
-                        else
-                        {
-                            Intelli.Variables[varName] = type;
-                        }
+                        Intelli.Variables[varName] = type;
                     }
                 }
             }
