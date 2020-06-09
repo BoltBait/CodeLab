@@ -661,7 +661,10 @@ namespace PaintDotNet.Effects
                 timer.Interval = 1000;
                 timer.Tick += (sender, e) =>
                 {
-                    ParseMethods();
+                    if (this.useExtendedColors)
+                    {
+                        ParseMethods();
+                    }
                     ParseVariables(this.CurrentPosition);
                 };
                 timer.Start();
@@ -1274,7 +1277,7 @@ namespace PaintDotNet.Effects
                     methods.Add(this.GetWordFromPosition(pos));
                 }
 
-                int endPos = this.WordEndPosition(pos, true);
+                int endPos = this.WordEndPosition(pos);
                 pos = (endPos > pos) ? endPos : pos + 1;
             }
 
