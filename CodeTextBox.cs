@@ -1234,7 +1234,8 @@ namespace PaintDotNet.Effects
                         }
 
                         int style = this.GetStyleAt(thisVarPos);
-                        if (style != Style.Cpp.Identifier && style != Style.Cpp.Identifier + Preprocessor)
+                        if (style != Style.Cpp.Identifier && style != Style.Cpp.Identifier + Preprocessor &&
+                            style != Substyle.ParamAndVar && style != Substyle.ParamAndVar + Preprocessor)
                         {
                             continue;
                         }
@@ -1274,7 +1275,9 @@ namespace PaintDotNet.Effects
             int pos = 0;
             while (pos < this.TextLength)
             {
-                if (this.GetStyleAt(pos) == Style.Cpp.Identifier &&
+                int style = this.GetStyleAt(pos);
+                if ((style == Style.Cpp.Identifier || style == Style.Cpp.Identifier + Preprocessor ||
+                    style == Substyle.Method || style == Substyle.Method + Preprocessor) &&
                     this.GetIntelliType(pos) == IntelliType.Method)
                 {
                     methodNames.Add(this.GetWordFromPosition(pos));
@@ -1300,7 +1303,12 @@ namespace PaintDotNet.Effects
             int style = this.GetStyleAt(position);
             if (style != Style.Cpp.Word && style != Style.Cpp.Word + Preprocessor &&
                 style != Style.Cpp.Word2 && style != Style.Cpp.Word2 + Preprocessor &&
-                style != Style.Cpp.Identifier && style != Style.Cpp.Identifier + Preprocessor)
+                style != Substyle.Enum && style != Substyle.Enum + Preprocessor &&
+                style != Substyle.Interface && style != Substyle.Interface + Preprocessor &&
+                style != Substyle.Struct && style != Substyle.Struct + Preprocessor &&
+                style != Style.Cpp.Identifier && style != Style.Cpp.Identifier + Preprocessor &&
+                style != Substyle.Method && style != Substyle.Method + Preprocessor &&
+                style != Substyle.ParamAndVar && style != Substyle.ParamAndVar + Preprocessor)
             {
                 return IntelliType.None;
             }
@@ -1460,7 +1468,12 @@ namespace PaintDotNet.Effects
                         int style = this.GetStyleAt(typePos);
                         if (style == Style.Cpp.Word || style == Style.Cpp.Word + Preprocessor ||
                             style == Style.Cpp.Word2 || style == Style.Cpp.Word2 + Preprocessor ||
-                            style == Style.Cpp.Identifier || style == Style.Cpp.Identifier + Preprocessor)
+                            style == Substyle.Enum || style == Substyle.Enum + Preprocessor &&
+                            style == Substyle.Interface || style == Substyle.Interface + Preprocessor ||
+                            style == Substyle.Struct || style == Substyle.Struct + Preprocessor ||
+                            style == Style.Cpp.Identifier || style == Style.Cpp.Identifier + Preprocessor ||
+                            style == Substyle.Method || style == Substyle.Method + Preprocessor ||
+                            style == Substyle.ParamAndVar || style == Substyle.ParamAndVar + Preprocessor)
                         {
                             string foundType = this.GetWordFromPosition(typePos);
                             Type t = null;
@@ -1998,7 +2011,12 @@ namespace PaintDotNet.Effects
             int style = this.GetStyleAt(position);
             if (style != Style.Cpp.Word && style != Style.Cpp.Word + Preprocessor &&
                 style != Style.Cpp.Word2 && style != Style.Cpp.Word2 + Preprocessor &&
-                style != Style.Cpp.Identifier && style != Style.Cpp.Identifier + Preprocessor)
+                style != Substyle.Enum && style != Substyle.Enum + Preprocessor &&
+                style != Substyle.Interface && style != Substyle.Interface + Preprocessor &&
+                style != Substyle.Struct && style != Substyle.Struct + Preprocessor &&
+                style != Style.Cpp.Identifier && style != Style.Cpp.Identifier + Preprocessor &&
+                style != Substyle.Method && style != Substyle.Method + Preprocessor &&
+                style != Substyle.ParamAndVar && style != Substyle.ParamAndVar + Preprocessor)
             {
                 return null;
             }
@@ -2354,7 +2372,9 @@ namespace PaintDotNet.Effects
                     int style2 = this.GetStyleAt(typePos);
                     if (style2 != Style.Cpp.Word && style2 != Style.Cpp.Word + Preprocessor &&
                         style2 != Style.Cpp.Word2 && style2 != Style.Cpp.Word2 + Preprocessor &&
-                        style2 != Style.Cpp.Identifier && style2 != Style.Cpp.Identifier + Preprocessor)
+                        style2 != Substyle.Enum && style2 != Substyle.Enum + Preprocessor &&
+                        style2 != Substyle.Interface && style2 != Substyle.Interface + Preprocessor &&
+                        style2 != Substyle.Struct && style2 != Substyle.Struct + Preprocessor)
                     {
                         continue;
                     }
@@ -2452,7 +2472,12 @@ namespace PaintDotNet.Effects
                     int style2 = this.GetStyleAt(typePos);
                     if (style2 != Style.Cpp.Word && style2 != Style.Cpp.Word + Preprocessor &&
                         style2 != Style.Cpp.Word2 && style2 != Style.Cpp.Word2 + Preprocessor &&
-                        style2 != Style.Cpp.Identifier && style2 != Style.Cpp.Identifier + Preprocessor)
+                        style2 != Substyle.Enum && style2 != Substyle.Enum + Preprocessor &&
+                        style2 != Substyle.Interface && style2 != Substyle.Interface + Preprocessor &&
+                        style2 != Substyle.Struct && style2 != Substyle.Struct + Preprocessor &&
+                        style2 != Style.Cpp.Identifier && style2 != Style.Cpp.Identifier + Preprocessor &&
+                        style2 != Substyle.Method && style2 != Substyle.Method + Preprocessor &&
+                        style2 != Substyle.ParamAndVar && style2 != Substyle.ParamAndVar + Preprocessor)
                     {
                         continue;
                     }
@@ -2901,7 +2926,12 @@ namespace PaintDotNet.Effects
             int style = this.GetStyleAt(position - 1);
             if (style != Style.Cpp.Word && style != Style.Cpp.Word + Preprocessor &&
                 style != Style.Cpp.Word2 && style != Style.Cpp.Word2 + Preprocessor &&
+                style != Substyle.Enum && style != Substyle.Enum + Preprocessor &&
+                style != Substyle.Interface && style != Substyle.Interface + Preprocessor &&
+                style != Substyle.Struct && style != Substyle.Struct + Preprocessor &&
                 style != Style.Cpp.Identifier && style != Style.Cpp.Identifier + Preprocessor &&
+                style != Substyle.Method && style != Substyle.Method + Preprocessor &&
+                style != Substyle.ParamAndVar && style != Substyle.ParamAndVar + Preprocessor &&
                 style != Style.Cpp.Operator && style != Style.Cpp.Operator + Preprocessor)
             {
                 return;
@@ -2973,7 +3003,10 @@ namespace PaintDotNet.Effects
         {
             int style = this.GetStyleAt(this.WordStartPosition(position));
             if (style != Style.Cpp.Word && style != Style.Cpp.Word + Preprocessor &&
-                style != Style.Cpp.Word2 && style != Style.Cpp.Word2 + Preprocessor)
+                style != Style.Cpp.Word2 && style != Style.Cpp.Word2 + Preprocessor &&
+                style != Substyle.Enum && style != Substyle.Enum + Preprocessor &&
+                style != Substyle.Interface && style != Substyle.Interface + Preprocessor &&
+                style != Substyle.Struct && style != Substyle.Struct + Preprocessor)
             {
                 return;
             }
@@ -3003,6 +3036,9 @@ namespace PaintDotNet.Effects
         {
             int style = this.GetStyleAt(position - 1);
             if (style != Style.Cpp.Word2 && style != Style.Cpp.Word2 + Preprocessor &&
+                style != Substyle.Enum && style != Substyle.Enum + Preprocessor &&
+                style != Substyle.Interface && style != Substyle.Interface + Preprocessor &&
+                style != Substyle.Struct && style != Substyle.Struct + Preprocessor &&
                 style != Style.Cpp.Operator && style != Style.Cpp.Operator + Preprocessor)
             {
                 return;
@@ -4235,13 +4271,7 @@ namespace PaintDotNet.Effects
         private new int GetStyleAt(int position)
         {
             int style = base.GetStyleAt(position);
-            if (style >= 0)
-            {
-                return style;
-            }
-
-            int substyle = Substyle.SubstyleCorrection(style);
-            return this.GetStyleFromSubstyle(substyle);
+            return (style >= 0) ? style : Substyle.SubstyleCorrection(style);
         }
 
         private void AdjustLineNumbersWidth()
