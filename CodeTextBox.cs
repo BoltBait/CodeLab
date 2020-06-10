@@ -253,6 +253,7 @@ namespace PaintDotNet.Effects
                 this.FreeSubstyles();
                 int substyleStart = this.AllocateSubstyles(Style.Cpp.Identifier, value ? Substyle.NeededStyles : 1);
                 Substyle.SetStyles(substyleStart);
+                UpdateSyntaxHighlighting();
             }
         }
 
