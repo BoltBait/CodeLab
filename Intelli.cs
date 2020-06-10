@@ -248,6 +248,23 @@ namespace PaintDotNet.Effects
                         }
                     }
 
+                    if (type.IsEnum)
+                    {
+                        enums.Add(name);
+                    }
+                    else if (type.IsValueType)
+                    {
+                        structs.Add(name);
+                    }
+                    else if (type.IsClass)
+                    {
+                        classes.Add(name);
+                    }
+                    else if (type.IsInterface)
+                    {
+                        interfaces.Add(name);
+                    }
+
                     if (type.IsNested || type.IsObsolete())
                     {
                         continue;
@@ -266,23 +283,6 @@ namespace PaintDotNet.Effects
                     )
                     {
                         AutoCompleteTypes.Add(type.Name, type);
-                    }
-
-                    if (type.IsEnum)
-                    {
-                        enums.Add(name);
-                    }
-                    else if (type.IsValueType)
-                    {
-                        structs.Add(name);
-                    }
-                    else if (type.IsClass)
-                    {
-                        classes.Add(name);
-                    }
-                    else if (type.IsInterface)
-                    {
-                        interfaces.Add(name);
                     }
                 }
             }
