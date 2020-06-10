@@ -50,6 +50,7 @@ namespace PaintDotNet.Effects
         private readonly Dictionary<Guid, ScintillaNET.Document> docCollection = new Dictionary<Guid, ScintillaNET.Document>();
         private readonly Dictionary<Guid, DocMeta> docMetaCollection = new Dictionary<Guid, DocMeta>();
         private const int Preprocessor = 64;
+        private const BindingFlags userScriptBindingFlags = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly;
 
         private enum DelayedOperation
         {
@@ -663,7 +664,7 @@ namespace PaintDotNet.Effects
                 {
                     if (this.useExtendedColors)
                     {
-                        ParseMethods();
+                        ColorizeMethods();
                     }
                     ParseVariables(this.CurrentPosition);
                 };
@@ -1111,7 +1112,7 @@ namespace PaintDotNet.Effects
                 if (openParenPos != InvalidPosition)
                 {
                     string methodName = this.GetWordFromPosition(openParenPos);
-                    IEnumerable<MethodInfo> methods = Intelli.UserScript.GetMethods(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly)
+                    IEnumerable<MethodInfo> methods = Intelli.UserScript.GetMethods(userScriptBindingFlags)
                         .Where(m => !m.IsVirtual && m.Name.Equals(methodName, StringComparison.Ordinal));
 
                     if (methods.Any())
@@ -1159,7 +1160,14 @@ namespace PaintDotNet.Effects
                 while (this.SearchInTarget(word) != InvalidPosition)
                 {
                     int varPos = this.TargetEnd;
-                    this.SetTargetRange(this.TargetEnd, rangeEnd);
+
+                    if (!localOnly && IsInClassRoot(varPos))
+                    {
+                        this.SetTargetRange(varPos, rangeEnd);
+                        continue;
+                    }
+
+                    this.SetTargetRange(varPos, rangeEnd);
 
                     if (type.IsGenericType)
                     {
@@ -1256,32 +1264,35 @@ namespace PaintDotNet.Effects
                     }
                 }
             }
-
-            if (!localOnly)
-            {
-                this.SetIdentifiers(Substyle.ParamAndVar, Intelli.Variables.Keys.Join(" "));
-            }
         }
 
-        internal void ParseMethods()
+        internal void ColorizeMethods()
         {
             ParseVariables(0, false);
 
-            HashSet<string> methods = new HashSet<string>();
+            HashSet<string> methodNames = new HashSet<string>();
             int pos = 0;
             while (pos < this.TextLength)
             {
                 if (this.GetStyleAt(pos) == Style.Cpp.Identifier &&
                     this.GetIntelliType(pos) == IntelliType.Method)
                 {
-                    methods.Add(this.GetWordFromPosition(pos));
+                    methodNames.Add(this.GetWordFromPosition(pos));
                 }
 
                 int endPos = this.WordEndPosition(pos);
                 pos = (endPos > pos) ? endPos : pos + 1;
             }
 
-            this.SetIdentifiers(Substyle.Method, methods.Join(" "));
+            this.SetIdentifiers(Substyle.Method, methodNames.Join(" "));
+
+            IEnumerable<string> paramNames = Intelli.UserScript.GetMethods(userScriptBindingFlags)
+                .Where(m => !m.IsVirtual)
+                .SelectMany(m => m.GetParameters())
+                .Select(p => p.Name)
+                .Distinct();
+
+            this.SetIdentifiers(Substyle.ParamAndVar, paramNames.Concat(Intelli.Variables.Keys).Join(" "));
         }
 
         private IntelliType GetIntelliType(int position)
@@ -1468,7 +1479,7 @@ namespace PaintDotNet.Effects
 
                             if (t != null)
                             {
-                                MemberInfo member = Intelli.UserScript.GetMember(word, BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly)[0];
+                                MemberInfo member = Intelli.UserScript.GetMember(word, userScriptBindingFlags)[0];
                                 string returnType = member.GetReturnType()?.GetDisplayName();
 
                                 if (returnType?.Length > 0 && t.GetDisplayName() == returnType)
@@ -1611,7 +1622,7 @@ namespace PaintDotNet.Effects
                     if (declaringType == Intelli.UserScript)
                     {
                         string member = this.GetWordFromPosition(position);
-                        MemberInfo[] members = declaringType.GetMember(member, BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly);
+                        MemberInfo[] members = declaringType.GetMember(member, userScriptBindingFlags);
                         length = members.Length;
                         if (length == 0)
                         {

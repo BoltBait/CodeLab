@@ -310,7 +310,7 @@ namespace PaintDotNet.Effects
                 }
             }
 
-            UserScript = typeof(object);
+            UserScript = typeof(CodeLabRegular); // Placeholder effect Type until it's replaced when the UserScript is actually compiled
         }
     }
 
