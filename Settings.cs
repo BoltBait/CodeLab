@@ -165,6 +165,11 @@ namespace PaintDotNet.Effects
             get => GetRegValue("CaretLineFrame", false);
             set => SetRegValue("CaretLineFrame", value);
         }
+        public static bool ExtendedColors
+        {
+            get => GetRegValue("ExtendedColors", false);
+            set => SetRegValue("ExtendedColors", value);
+        }
 
         private static void OpenRegKey()
         {

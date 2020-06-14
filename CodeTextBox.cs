@@ -50,6 +50,7 @@ namespace PaintDotNet.Effects
         private readonly Dictionary<Guid, ScintillaNET.Document> docCollection = new Dictionary<Guid, ScintillaNET.Document>();
         private readonly Dictionary<Guid, DocMeta> docMetaCollection = new Dictionary<Guid, DocMeta>();
         private const int Preprocessor = 64;
+        private const BindingFlags userScriptBindingFlags = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly;
 
         private enum DelayedOperation
         {
@@ -68,9 +69,9 @@ namespace PaintDotNet.Effects
         private bool mapScroll = false;
         private bool Replacing = false;
         private int maxLineNumberCharLength = 0;
-        private int indexForPurpleWords = -1;
         private int disableIntelliTipPos = InvalidPosition;
         private DelayedOperation delayedOperation = DelayedOperation.None;
+        private bool useExtendedColors = false;
         #endregion
 
         #region Properties
@@ -237,6 +238,22 @@ namespace PaintDotNet.Effects
                         SetCaretLineLightColor();
                         break;
                 }
+            }
+        }
+
+        internal bool UseExtendedColors
+        {
+            get
+            {
+                return this.useExtendedColors;
+            }
+            set
+            {
+                this.useExtendedColors = value;
+                this.FreeSubstyles();
+                int substyleStart = this.AllocateSubstyles(Style.Cpp.Identifier, value ? Substyle.NeededStyles : 1);
+                Substyle.SetStyles(substyleStart);
+                UpdateSyntaxHighlighting();
             }
         }
 
@@ -434,10 +451,20 @@ namespace PaintDotNet.Effects
                 this.Styles[Style.Cpp.Regex + i].BackColor = backColor;
                 this.Styles[Style.Cpp.EscapeSequence + i].ForeColor = Color.FromArgb(255, 214, 143);
                 this.Styles[Style.Cpp.EscapeSequence + i].BackColor = backColor;
-                if (indexForPurpleWords > 0)
+                if (Substyle.AreSet)
                 {
-                    this.Styles[indexForPurpleWords + i].ForeColor = Color.FromArgb(216, 160, 223);
-                    this.Styles[indexForPurpleWords + i].BackColor = backColor;
+                    this.Styles[Substyle.Keyword + i].ForeColor = Color.FromArgb(216, 160, 223);
+                    this.Styles[Substyle.Keyword + i].BackColor = Color.FromArgb(30, 30, 30);
+                    this.Styles[Substyle.Method + i].ForeColor = Color.FromArgb(220, 220, 170);
+                    this.Styles[Substyle.Method + i].BackColor = Color.FromArgb(30, 30, 30);
+                    this.Styles[Substyle.ParamAndVar + i].ForeColor = Color.FromArgb(156, 220, 254);
+                    this.Styles[Substyle.ParamAndVar + i].BackColor = Color.FromArgb(30, 30, 30);
+                    this.Styles[Substyle.Struct + i].ForeColor = Color.FromArgb(134, 198, 145);
+                    this.Styles[Substyle.Struct + i].BackColor = Color.FromArgb(30, 30, 30);
+                    this.Styles[Substyle.Enum + i].ForeColor = Color.FromArgb(184, 215, 163);
+                    this.Styles[Substyle.Enum + i].BackColor = Color.FromArgb(30, 30, 30);
+                    this.Styles[Substyle.Interface + i].ForeColor = Color.FromArgb(184, 215, 163);
+                    this.Styles[Substyle.Interface + i].BackColor = Color.FromArgb(30, 30, 30);
                 }
             }
         }
@@ -482,10 +509,20 @@ namespace PaintDotNet.Effects
                 this.Styles[Style.Cpp.Regex + i].BackColor = backColor;
                 this.Styles[Style.Cpp.EscapeSequence + i].ForeColor = Color.FromArgb(183, 118, 251);
                 this.Styles[Style.Cpp.EscapeSequence + i].BackColor = backColor;
-                if (indexForPurpleWords > 0)
+                if (Substyle.AreSet)
                 {
-                    this.Styles[indexForPurpleWords + i].ForeColor = Color.FromArgb(143, 8, 196);
-                    this.Styles[indexForPurpleWords + i].BackColor = backColor;
+                    this.Styles[Substyle.Keyword + i].ForeColor = Color.FromArgb(143, 8, 196);
+                    this.Styles[Substyle.Keyword + i].BackColor = Color.White;
+                    this.Styles[Substyle.Method + i].ForeColor = Color.FromArgb(116, 83, 31);
+                    this.Styles[Substyle.Method + i].BackColor = Color.White;
+                    this.Styles[Substyle.ParamAndVar + i].ForeColor = Color.FromArgb(31, 55, 127);
+                    this.Styles[Substyle.ParamAndVar + i].BackColor = Color.White;
+                    this.Styles[Substyle.Struct + i].ForeColor = Color.FromArgb(43, 145, 175);
+                    this.Styles[Substyle.Struct + i].BackColor = Color.White;
+                    this.Styles[Substyle.Enum + i].ForeColor = Color.FromArgb(43, 145, 175);
+                    this.Styles[Substyle.Enum + i].BackColor = Color.White;
+                    this.Styles[Substyle.Interface + i].ForeColor = Color.FromArgb(43, 145, 175);
+                    this.Styles[Substyle.Interface + i].BackColor = Color.White;
                 }
             }
         }
@@ -624,7 +661,14 @@ namespace PaintDotNet.Effects
             if (!this.DesignMode)
             {
                 timer.Interval = 1000;
-                timer.Tick += (sender, e) => ParseLocalVariables(this.CurrentPosition);
+                timer.Tick += (sender, e) =>
+                {
+                    if (this.useExtendedColors)
+                    {
+                        ColorizeMethods();
+                    }
+                    ParseVariables(this.CurrentPosition);
+                };
                 timer.Start();
             }
 
@@ -722,7 +766,8 @@ namespace PaintDotNet.Effects
             this.Indicators[Indicator.ObjectHighlightDef].Alpha = 204;
             this.Indicators[Indicator.ObjectHighlightDef].OutlineAlpha = 255;
 
-            indexForPurpleWords = this.AllocateSubstyles(Style.Cpp.Identifier, 1);
+            int substyleStart = this.AllocateSubstyles(Style.Cpp.Identifier, 1);
+            Substyle.SetStyles(substyleStart);
 
             // Set the keywords for Syntax Highlighting
             UpdateSyntaxHighlighting();
@@ -1034,7 +1079,7 @@ namespace PaintDotNet.Effects
             return true;
         }
 
-        private void ParseLocalVariables(int position)
+        private void ParseVariables(int position, bool localOnly = true)
         {
             Intelli.Parameters.Clear();
             Intelli.Variables.Clear();
@@ -1046,43 +1091,50 @@ namespace PaintDotNet.Effects
                 return;
             }
 
-            Tuple<int, int> methodBounds = GetMethodBounds(position);
-            if (methodBounds.Item1 == InvalidPosition || methodBounds.Item2 == InvalidPosition)
-            {
-                return;
-            }
+            int rangeStart = 0;
+            int rangeEnd = this.TextLength;
 
-            int closeParenPos = methodBounds.Item1 - 1;
-            while (closeParenPos > InvalidPosition && this.GetCharAt(closeParenPos) != ')')
+            if (localOnly)
             {
-                closeParenPos--;
-            }
-
-            int openParenPos = this.BraceMatch(closeParenPos);
-            if (openParenPos != InvalidPosition)
-            {
-                string methodName = this.GetWordFromPosition(openParenPos);
-                IEnumerable<MethodInfo> methods = Intelli.UserScript.GetMethods(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly)
-                    .Where(m => !m.IsVirtual && m.Name.Equals(methodName, StringComparison.Ordinal));
-
-                if (methods.Any())
+                Tuple<int, int> methodBounds = GetMethodBounds(position);
+                if (methodBounds.Item1 == InvalidPosition || methodBounds.Item2 == InvalidPosition)
                 {
-                    MethodInfo methodInfo = GetOverload(methods, openParenPos);
+                    return;
+                }
 
-                    foreach (ParameterInfo parameter in methodInfo.GetParameters())
+                // Gather parameters of method
+                int closeParenPos = methodBounds.Item1 - 1;
+                while (closeParenPos > InvalidPosition && this.GetCharAt(closeParenPos) != ')')
+                {
+                    closeParenPos--;
+                }
+
+                int openParenPos = this.BraceMatch(closeParenPos);
+                if (openParenPos != InvalidPosition)
+                {
+                    string methodName = this.GetWordFromPosition(openParenPos);
+                    IEnumerable<MethodInfo> methods = Intelli.UserScript.GetMethods(userScriptBindingFlags)
+                        .Where(m => !m.IsVirtual && m.Name.Equals(methodName, StringComparison.Ordinal));
+
+                    if (methods.Any())
                     {
-                        if (!Intelli.Parameters.ContainsKey(parameter.Name))
+                        MethodInfo methodInfo = GetOverload(methods, openParenPos);
+
+                        foreach (ParameterInfo parameter in methodInfo.GetParameters())
                         {
-                            Intelli.Parameters.Add(parameter.Name, parameter.ParameterType);
+                            if (!Intelli.Parameters.ContainsKey(parameter.Name))
+                            {
+                                Intelli.Parameters.Add(parameter.Name, parameter.ParameterType);
+                            }
                         }
                     }
                 }
+
+                rangeStart = methodBounds.Item1 + 1;
+                rangeEnd = methodBounds.Item2 - 1;
             }
 
-            int methodStart = methodBounds.Item1 + 1;
-            int methodEnd = methodBounds.Item2 - 1;
-
-            string bodyText = this.GetTextRange(methodStart, methodEnd - methodStart);
+            string bodyText = this.GetTextRange(rangeStart, rangeEnd - rangeStart);
             IEnumerable<string> bodyWords = bodyText.Split(new char[] { ' ', '(', '{', '<', '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries).Distinct();
 
             this.SearchFlags = SearchFlags.MatchCase | SearchFlags.WholeWord;
@@ -1105,11 +1157,18 @@ namespace PaintDotNet.Effects
                     continue;
                 }
 
-                this.SetTargetRange(methodStart, methodEnd);
+                this.SetTargetRange(rangeStart, rangeEnd);
                 while (this.SearchInTarget(word) != InvalidPosition)
                 {
                     int varPos = this.TargetEnd;
-                    this.SetTargetRange(this.TargetEnd, methodEnd);
+
+                    if (!localOnly && IsInClassRoot(varPos))
+                    {
+                        this.SetTargetRange(varPos, rangeEnd);
+                        continue;
+                    }
+
+                    this.SetTargetRange(varPos, rangeEnd);
 
                     if (type.IsGenericType)
                     {
@@ -1126,7 +1185,7 @@ namespace PaintDotNet.Effects
                         string args = GetGenericArgs(varPos);
                         type = type.MakeGenericType(args);
 
-                        while (this.GetCharAt(varPos - 1) != '>' && varPos <= methodEnd)
+                        while (this.GetCharAt(varPos - 1) != '>' && varPos <= rangeEnd)
                         {
                             varPos++;
                         }
@@ -1139,14 +1198,14 @@ namespace PaintDotNet.Effects
                     }
 
                     // Skip over white space
-                    while (char.IsWhiteSpace(this.GetCharAt(varPos)) && varPos <= methodEnd)
+                    while (char.IsWhiteSpace(this.GetCharAt(varPos)) && varPos <= rangeEnd)
                     {
                         varPos++;
                     }
 
                     // find the semi-colon
                     int semiColonPos = varPos;
-                    while (this.GetCharAt(semiColonPos) != ';' && semiColonPos <= methodEnd)
+                    while (this.GetCharAt(semiColonPos) != ';' && semiColonPos <= rangeEnd)
                     {
                         semiColonPos++;
                     }
@@ -1163,7 +1222,7 @@ namespace PaintDotNet.Effects
 
                     for (int i = 0; i < varCount; i++)
                     {
-                        while (char.IsWhiteSpace(this.GetCharAt(varPos)) && varPos <= methodEnd)
+                        while (char.IsWhiteSpace(this.GetCharAt(varPos)) && varPos <= rangeEnd)
                         {
                             varPos++;
                         }
@@ -1176,7 +1235,8 @@ namespace PaintDotNet.Effects
                         }
 
                         int style = this.GetStyleAt(thisVarPos);
-                        if (style != Style.Cpp.Identifier && style != Style.Cpp.Identifier + Preprocessor)
+                        if (style != Style.Cpp.Identifier && style != Style.Cpp.Identifier + Preprocessor &&
+                            style != Substyle.ParamAndVar && style != Substyle.ParamAndVar + Preprocessor)
                         {
                             continue;
                         }
@@ -1195,31 +1255,48 @@ namespace PaintDotNet.Effects
                             continue;
                         }
 
-                        if (!Intelli.VarPos.ContainsKey(varName))
-                        {
-                            Intelli.VarPos.Add(varName, thisVarPos);
-                        }
-                        else
-                        {
-                            Intelli.VarPos[varName] = thisVarPos;
-                        }
+                        Intelli.VarPos[varName] = thisVarPos;
 
-                        if (Intelli.Parameters.ContainsKey(varName))
+                        if (localOnly && Intelli.Parameters.ContainsKey(varName))
                         {
                             continue;
                         }
 
-                        if (!Intelli.Variables.ContainsKey(varName))
-                        {
-                            Intelli.Variables.Add(varName, type);
-                        }
-                        else
-                        {
-                            Intelli.Variables[varName] = type;
-                        }
+                        Intelli.Variables[varName] = type;
                     }
                 }
             }
+        }
+
+        internal void ColorizeMethods()
+        {
+            ParseVariables(0, false);
+
+            HashSet<string> methodNames = new HashSet<string>();
+            int pos = 0;
+            while (pos < this.TextLength)
+            {
+                int style = this.GetStyleAt(pos);
+                if ((style == Style.Cpp.Identifier || style == Style.Cpp.Identifier + Preprocessor ||
+                    style == Substyle.Method || style == Substyle.Method + Preprocessor) &&
+                    this.GetIntelliType(pos) == IntelliType.Method)
+                {
+                    methodNames.Add(this.GetWordFromPosition(pos));
+                }
+
+                int endPos = this.WordEndPosition(pos);
+                pos = (endPos > pos) ? endPos : pos + 1;
+            }
+
+            this.SetIdentifiers(Substyle.Method, methodNames.Join(" "));
+
+            IEnumerable<string> paramNames = Intelli.UserScript.GetMethods(userScriptBindingFlags)
+                .Where(m => !m.IsVirtual)
+                .SelectMany(m => m.GetParameters())
+                .Select(p => p.Name)
+                .Distinct();
+
+            this.SetIdentifiers(Substyle.ParamAndVar, paramNames.Concat(Intelli.Variables.Keys).Join(" "));
         }
 
         private IntelliType GetIntelliType(int position)
@@ -1227,7 +1304,12 @@ namespace PaintDotNet.Effects
             int style = this.GetStyleAt(position);
             if (style != Style.Cpp.Word && style != Style.Cpp.Word + Preprocessor &&
                 style != Style.Cpp.Word2 && style != Style.Cpp.Word2 + Preprocessor &&
-                style != Style.Cpp.Identifier && style != Style.Cpp.Identifier + Preprocessor)
+                style != Substyle.Enum && style != Substyle.Enum + Preprocessor &&
+                style != Substyle.Interface && style != Substyle.Interface + Preprocessor &&
+                style != Substyle.Struct && style != Substyle.Struct + Preprocessor &&
+                style != Style.Cpp.Identifier && style != Style.Cpp.Identifier + Preprocessor &&
+                style != Substyle.Method && style != Substyle.Method + Preprocessor &&
+                style != Substyle.ParamAndVar && style != Substyle.ParamAndVar + Preprocessor)
             {
                 return IntelliType.None;
             }
@@ -1290,7 +1372,8 @@ namespace PaintDotNet.Effects
             this.IndicatorClearRange(0, this.TextLength);
 
             int position = this.WordStartPosition(this.CurrentPosition);
-            ParseLocalVariables(position);
+            ParseVariables(position);
+
             IntelliType currentType = GetIntelliType(position);
             if (currentType == IntelliType.None)
             {
@@ -1360,8 +1443,7 @@ namespace PaintDotNet.Effects
                         }
 
                         int style = this.GetStyleAt(typePos);
-                        if (style == Style.Cpp.Word || style == Style.Cpp.Word + Preprocessor ||
-                            style == Style.Cpp.Word2 || style == Style.Cpp.Word2 + Preprocessor)
+                        if (style == Style.Cpp.Word || style == Style.Cpp.Word + Preprocessor)
                         {
                             string foundType = this.GetWordFromPosition(typePos);
 
@@ -1387,7 +1469,12 @@ namespace PaintDotNet.Effects
                         int style = this.GetStyleAt(typePos);
                         if (style == Style.Cpp.Word || style == Style.Cpp.Word + Preprocessor ||
                             style == Style.Cpp.Word2 || style == Style.Cpp.Word2 + Preprocessor ||
-                            style == Style.Cpp.Identifier || style == Style.Cpp.Identifier + Preprocessor)
+                            style == Substyle.Enum || style == Substyle.Enum + Preprocessor &&
+                            style == Substyle.Interface || style == Substyle.Interface + Preprocessor ||
+                            style == Substyle.Struct || style == Substyle.Struct + Preprocessor ||
+                            style == Style.Cpp.Identifier || style == Style.Cpp.Identifier + Preprocessor ||
+                            style == Substyle.Method || style == Substyle.Method + Preprocessor ||
+                            style == Substyle.ParamAndVar || style == Substyle.ParamAndVar + Preprocessor)
                         {
                             string foundType = this.GetWordFromPosition(typePos);
                             Type t = null;
@@ -1406,7 +1493,7 @@ namespace PaintDotNet.Effects
 
                             if (t != null)
                             {
-                                MemberInfo member = Intelli.UserScript.GetMember(word, BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly)[0];
+                                MemberInfo member = Intelli.UserScript.GetMember(word, userScriptBindingFlags)[0];
                                 string returnType = member.GetReturnType()?.GetDisplayName();
 
                                 if (returnType?.Length > 0 && t.GetDisplayName() == returnType)
@@ -1461,7 +1548,7 @@ namespace PaintDotNet.Effects
                 return string.Empty;
             }
 
-            ParseLocalVariables(position);
+            ParseVariables(position);
 
             Type type;
             if (Intelli.Variables.ContainsKey(lastWords))
@@ -1549,7 +1636,7 @@ namespace PaintDotNet.Effects
                     if (declaringType == Intelli.UserScript)
                     {
                         string member = this.GetWordFromPosition(position);
-                        MemberInfo[] members = declaringType.GetMember(member, BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly);
+                        MemberInfo[] members = declaringType.GetMember(member, userScriptBindingFlags);
                         length = members.Length;
                         if (length == 0)
                         {
@@ -1925,7 +2012,12 @@ namespace PaintDotNet.Effects
             int style = this.GetStyleAt(position);
             if (style != Style.Cpp.Word && style != Style.Cpp.Word + Preprocessor &&
                 style != Style.Cpp.Word2 && style != Style.Cpp.Word2 + Preprocessor &&
-                style != Style.Cpp.Identifier && style != Style.Cpp.Identifier + Preprocessor)
+                style != Substyle.Enum && style != Substyle.Enum + Preprocessor &&
+                style != Substyle.Interface && style != Substyle.Interface + Preprocessor &&
+                style != Substyle.Struct && style != Substyle.Struct + Preprocessor &&
+                style != Style.Cpp.Identifier && style != Style.Cpp.Identifier + Preprocessor &&
+                style != Substyle.Method && style != Substyle.Method + Preprocessor &&
+                style != Substyle.ParamAndVar && style != Substyle.ParamAndVar + Preprocessor)
             {
                 return null;
             }
@@ -2280,7 +2372,10 @@ namespace PaintDotNet.Effects
 
                     int style2 = this.GetStyleAt(typePos);
                     if (style2 != Style.Cpp.Word && style2 != Style.Cpp.Word + Preprocessor &&
-                        style2 != Style.Cpp.Word2 && style2 != Style.Cpp.Word2 + Preprocessor)
+                        style2 != Style.Cpp.Word2 && style2 != Style.Cpp.Word2 + Preprocessor &&
+                        style2 != Substyle.Enum && style2 != Substyle.Enum + Preprocessor &&
+                        style2 != Substyle.Interface && style2 != Substyle.Interface + Preprocessor &&
+                        style2 != Substyle.Struct && style2 != Substyle.Struct + Preprocessor)
                     {
                         continue;
                     }
@@ -2378,7 +2473,12 @@ namespace PaintDotNet.Effects
                     int style2 = this.GetStyleAt(typePos);
                     if (style2 != Style.Cpp.Word && style2 != Style.Cpp.Word + Preprocessor &&
                         style2 != Style.Cpp.Word2 && style2 != Style.Cpp.Word2 + Preprocessor &&
-                        style2 != Style.Cpp.Identifier && style2 != Style.Cpp.Identifier + Preprocessor)
+                        style2 != Substyle.Enum && style2 != Substyle.Enum + Preprocessor &&
+                        style2 != Substyle.Interface && style2 != Substyle.Interface + Preprocessor &&
+                        style2 != Substyle.Struct && style2 != Substyle.Struct + Preprocessor &&
+                        style2 != Style.Cpp.Identifier && style2 != Style.Cpp.Identifier + Preprocessor &&
+                        style2 != Substyle.Method && style2 != Substyle.Method + Preprocessor &&
+                        style2 != Substyle.ParamAndVar && style2 != Substyle.ParamAndVar + Preprocessor)
                     {
                         continue;
                     }
@@ -2827,7 +2927,12 @@ namespace PaintDotNet.Effects
             int style = this.GetStyleAt(position - 1);
             if (style != Style.Cpp.Word && style != Style.Cpp.Word + Preprocessor &&
                 style != Style.Cpp.Word2 && style != Style.Cpp.Word2 + Preprocessor &&
+                style != Substyle.Enum && style != Substyle.Enum + Preprocessor &&
+                style != Substyle.Interface && style != Substyle.Interface + Preprocessor &&
+                style != Substyle.Struct && style != Substyle.Struct + Preprocessor &&
                 style != Style.Cpp.Identifier && style != Style.Cpp.Identifier + Preprocessor &&
+                style != Substyle.Method && style != Substyle.Method + Preprocessor &&
+                style != Substyle.ParamAndVar && style != Substyle.ParamAndVar + Preprocessor &&
                 style != Style.Cpp.Operator && style != Style.Cpp.Operator + Preprocessor)
             {
                 return;
@@ -2899,7 +3004,10 @@ namespace PaintDotNet.Effects
         {
             int style = this.GetStyleAt(this.WordStartPosition(position));
             if (style != Style.Cpp.Word && style != Style.Cpp.Word + Preprocessor &&
-                style != Style.Cpp.Word2 && style != Style.Cpp.Word2 + Preprocessor)
+                style != Style.Cpp.Word2 && style != Style.Cpp.Word2 + Preprocessor &&
+                style != Substyle.Enum && style != Substyle.Enum + Preprocessor &&
+                style != Substyle.Interface && style != Substyle.Interface + Preprocessor &&
+                style != Substyle.Struct && style != Substyle.Struct + Preprocessor)
             {
                 return;
             }
@@ -2929,6 +3037,9 @@ namespace PaintDotNet.Effects
         {
             int style = this.GetStyleAt(position - 1);
             if (style != Style.Cpp.Word2 && style != Style.Cpp.Word2 + Preprocessor &&
+                style != Substyle.Enum && style != Substyle.Enum + Preprocessor &&
+                style != Substyle.Interface && style != Substyle.Interface + Preprocessor &&
+                style != Substyle.Struct && style != Substyle.Struct + Preprocessor &&
                 style != Style.Cpp.Operator && style != Style.Cpp.Operator + Preprocessor)
             {
                 return;
@@ -3741,12 +3852,73 @@ namespace PaintDotNet.Effects
                 return;
             }
 
-            this.SetKeywords(1, string.Join(" ", Intelli.AllTypes.Keys) + " " + string.Join(" ", Intelli.UserDefinedTypes.Keys));
             this.SetKeywords(0, "abstract as base bool byte char checked class const decimal delegate double enum event explicit extern "
                 + "false fixed float get implicit in int interface internal is lock long namespace new null object operator out override "
                 + "params partial private protected public readonly ref sbyte sealed set short sizeof stackalloc static string struct "
                 + "this true typeof uint unchecked unsafe ulong ushort using var virtual void volatile where");
-            this.SetIdentifiers(indexForPurpleWords, "break case catch continue default do else finally for foreach goto if return throw try switch while");
+
+            this.SetIdentifiers(Substyle.Keyword, "break case catch continue default do else finally for foreach goto if in return throw try switch while");
+
+            if (!this.useExtendedColors)
+            {
+                this.SetKeywords(1, Intelli.ClassList + " " + Intelli.StructList + " " + Intelli.EnumList + " " + Intelli.InterfaceList + " " + Intelli.UserDefinedTypes.Keys);
+            }
+            else
+            {
+                string classWords = Intelli.ClassList;
+                string structWords = Intelli.StructList;
+                string enumWords = Intelli.EnumList;
+                string interfaceWords = Intelli.InterfaceList;
+
+                if (Intelli.UserDefinedTypes.Count > 0)
+                {
+                    HashSet<string> userEnums = new HashSet<string>();
+                    HashSet<string> userInterfaces = new HashSet<string>();
+                    HashSet<string> userStructs = new HashSet<string>();
+                    HashSet<string> userClasses = new HashSet<string>();
+                    foreach (KeyValuePair<string, Type> kvp in Intelli.UserDefinedTypes)
+                    {
+                        if (kvp.Value.IsEnum)
+                        {
+                            userEnums.Add(kvp.Key);
+                        }
+                        else if (kvp.Value.IsValueType)
+                        {
+                            userStructs.Add(kvp.Key);
+                        }
+                        else if (kvp.Value.IsClass)
+                        {
+                            userClasses.Add(kvp.Key);
+                        }
+                        else if (kvp.Value.IsInterface)
+                        {
+                            userInterfaces.Add(kvp.Key);
+                        }
+                    }
+
+                    if (userClasses.Count > 0)
+                    {
+                        classWords += " " + userClasses.Join(" ");
+                    }
+                    if (userStructs.Count > 0)
+                    {
+                        structWords += " " + userStructs.Join(" ");
+                    }
+                    if (userEnums.Count > 0)
+                    {
+                        enumWords += " " + userEnums.Join(" ");
+                    }
+                    if (userInterfaces.Count > 0)
+                    {
+                        interfaceWords += " " + userInterfaces.Join(" ");
+                    }
+                }
+
+                this.SetKeywords(1, classWords);
+                this.SetIdentifiers(Substyle.Struct, structWords);
+                this.SetIdentifiers(Substyle.Enum, enumWords);
+                this.SetIdentifiers(Substyle.Interface, interfaceWords);
+            }
         }
 
         internal void FormatDocument()
@@ -3935,7 +4107,7 @@ namespace PaintDotNet.Effects
             // it will be automatically removed during the next ParseVariables();
             if (RenameInfo.IntelliType == IntelliType.Variable)
             {
-                ParseLocalVariables(this.CurrentPosition);
+                ParseVariables(this.CurrentPosition);
                 if (!Intelli.Variables.ContainsKey(RenameInfo.Identifier))
                 {
                     Intelli.Variables.Add(RenameInfo.Identifier, Intelli.Variables[newName]);
@@ -3964,7 +4136,7 @@ namespace PaintDotNet.Effects
 
             if (RenameInfo.IntelliType == IntelliType.Variable)
             {
-                ParseLocalVariables(this.CurrentPosition);
+                ParseVariables(this.CurrentPosition);
             }
 
             HighlightWordUsage();
@@ -4089,6 +4261,12 @@ namespace PaintDotNet.Effects
             }
 
             return indent;
+        }
+
+        private new int GetStyleAt(int position)
+        {
+            int style = base.GetStyleAt(position);
+            return (style >= 0) ? style : Substyle.SubstyleCorrection(style);
         }
 
         private void AdjustLineNumbersWidth()
@@ -4238,7 +4416,7 @@ namespace PaintDotNet.Effects
                 case ProjectType.FileType:
                 case ProjectType.Reference:
                     this.Lexer = Lexer.Cpp;
-                    indexForPurpleWords = this.AllocateSubstyles(Style.Cpp.Identifier, 1);
+                    this.AllocateSubstyles(Style.Cpp.Identifier, Substyle.NeededStyles);
                     this.UpdateSyntaxHighlighting();
 
                     this.SetProperty("fold", "1");
@@ -4509,6 +4687,45 @@ namespace PaintDotNet.Effects
         {
             internal const int Marker = 3;
             internal const uint Mask = (1 << 3);
+        }
+
+        private static class Substyle
+        {
+            internal const int NeededStyles = 6;
+            internal static int Enum => enums;
+            internal static int Method => methods;
+            internal static int Struct => structs;
+            internal static int Keyword => keywords;
+            internal static int Interface => interfaces;
+            internal static int ParamAndVar => paramsAndVars;
+            internal static bool AreSet => areSet;
+
+            private static int enums = -1;
+            private static int methods = -1;
+            private static int structs = -1;
+            private static int keywords = -1;
+            private static int interfaces = -1;
+            private static int paramsAndVars = -1;
+            private static bool areSet = false;
+            private static int correction = 0;
+
+            internal static void SetStyles(int startIndex)
+            {
+                keywords = startIndex;
+                methods = startIndex + 1;
+                structs = startIndex + 2;
+                enums = startIndex + 3;
+                interfaces = startIndex + 4;
+                paramsAndVars = startIndex + 5;
+
+                correction = startIndex * 2;
+                areSet = true;
+            }
+
+            internal static int SubstyleCorrection(int style)
+            {
+                return style + correction;
+            }
         }
         #endregion
 

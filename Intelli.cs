@@ -39,6 +39,10 @@ namespace PaintDotNet.Effects
         internal static IEnumerable<string> Keywords { get; }
         internal static IEnumerable<Assembly> ReferenceAssemblies { get; }
         internal static Type UserScript { get; set; }
+        internal static string ClassList { get; }
+        internal static string EnumList { get; }
+        internal static string StructList { get; }
+        internal static string InterfaceList { get; }
 
         internal const string UserScriptFullName = "PaintDotNet.Effects.UserScript";
         private static readonly IEnumerable<MethodInfo> extMethods;
@@ -193,6 +197,28 @@ namespace PaintDotNet.Effects
 
             AutoCompleteTypes = new Dictionary<string, Type>(AllTypes);
 
+            HashSet<string> enums = new HashSet<string>();
+            HashSet<string> interfaces = new HashSet<string>();
+            HashSet<string> structs = new HashSet<string>()
+            {
+                "IntSliderControl",
+                "CheckboxControl",
+                "ColorWheelControl",
+                "AngleControl", 
+                "PanSliderControl", 
+                "DoubleSliderControl",
+                "ListBoxControl",
+                "RadioButtonControl",
+                "ReseedButtonControl"
+            };
+            HashSet<string> classes = new HashSet<string>()
+            {
+                "TextboxControl",
+                "FilenameControl",
+                "RollControl",
+                "MultiLineTextboxControl"
+            };
+
             List<MethodInfo> extMethodsList = new List<MethodInfo>();
 
             string[] namespaceWhiteList =
@@ -222,6 +248,23 @@ namespace PaintDotNet.Effects
                         }
                     }
 
+                    if (type.IsEnum)
+                    {
+                        enums.Add(name);
+                    }
+                    else if (type.IsValueType)
+                    {
+                        structs.Add(name);
+                    }
+                    else if (type.IsClass)
+                    {
+                        classes.Add(name);
+                    }
+                    else if (type.IsInterface)
+                    {
+                        interfaces.Add(name);
+                    }
+
                     if (type.IsNested || type.IsObsolete())
                     {
                         continue;
@@ -245,6 +288,10 @@ namespace PaintDotNet.Effects
             }
 
             extMethods = extMethodsList;
+            ClassList = classes.Join(" ");
+            EnumList = enums.Join(" ");
+            StructList = structs.Join(" ");
+            InterfaceList = interfaces.Join(" ");
 
             XamlAutoCompleteTypes = new Dictionary<string, Type>();
             foreach (Type type in Assembly.GetAssembly(typeof(System.Windows.Media.Geometry)).GetExportedTypes())
@@ -263,7 +310,7 @@ namespace PaintDotNet.Effects
                 }
             }
 
-            UserScript = typeof(object);
+            UserScript = typeof(CodeLabRegular); // Placeholder effect Type until it's replaced when the UserScript is actually compiled
         }
     }
 
