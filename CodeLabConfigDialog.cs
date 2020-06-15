@@ -100,7 +100,8 @@ namespace PaintDotNet.Effects
 
         void LoadSettingsFromRegistry()
         {
-            txtCode.WrapMode = Settings.WordWrap ? WrapMode.Whitespace : WrapMode.None;
+            bool useWordWrap = (this.tabStrip1.SelectedTabProjType == ProjectType.None) ? Settings.WordWrapPlainText : Settings.WordWrap;
+            txtCode.WrapMode = useWordWrap ? WrapMode.Whitespace : WrapMode.None;
             txtCode.TabWidth = Settings.IndentSpaces;
             txtCode.CaretLineFrameEnabled = Settings.CaretLineFrame;
             txtCode.UseExtendedColors = Settings.ExtendedColors;
@@ -1602,29 +1603,6 @@ namespace PaintDotNet.Effects
             txtCode.Focus();
         }
 
-        private void wordWrapToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            bool inverseValue = txtCode.WrapMode == WrapMode.None;
-            EnableWordWrap(inverseValue);
-
-            if (tabStrip1.SelectedTabProjType == ProjectType.None)
-            {
-                Settings.WordWrapPlainText = inverseValue;
-            }
-            else
-            {
-                Settings.WordWrap = inverseValue;
-            }
-
-            txtCode.Focus();
-        }
-
-        private void EnableWordWrap(bool enable)
-        {
-            txtCode.WrapMode = enable ? WrapMode.Whitespace : WrapMode.None;
-            txtCode.WrapVisualFlags = enable ? WrapVisualFlags.Start : WrapVisualFlags.None;
-        }
-
         private void opacity50MenuItem_Click(object sender, EventArgs e)
         {
             this.Opacity = 0.50;
@@ -2050,7 +2028,8 @@ namespace PaintDotNet.Effects
             ProjectType projectType = tabStrip1.SelectedTabProjType;
             UpdateWindowTitle();
             txtCode.SwitchToDocument(tabStrip1.SelectedTabGuid);
-            EnableWordWrap(projectType == ProjectType.None ? Settings.WordWrapPlainText : Settings.WordWrap);
+            bool useWordWrap = (projectType == ProjectType.None) ? Settings.WordWrapPlainText : Settings.WordWrap;
+            txtCode.WrapMode = useWordWrap ? WrapMode.Whitespace : WrapMode.None;
             UpdateToolBarButtons();
             DisableButtonsForRef(projectType == ProjectType.Reference);
 
@@ -2072,7 +2051,8 @@ namespace PaintDotNet.Effects
             ProjectType projectType = tabStrip1.SelectedTabProjType;
 
             txtCode.CreateNewDocument(tabStrip1.SelectedTabGuid, projectType);
-            EnableWordWrap(projectType == ProjectType.None ? Settings.WordWrapPlainText : Settings.WordWrap);
+            bool useWordWrap = (projectType == ProjectType.None) ? Settings.WordWrapPlainText : Settings.WordWrap;
+            txtCode.WrapMode = useWordWrap ? WrapMode.Whitespace : WrapMode.None;
             UpdateWindowTitle();
             UpdateToolBarButtons();
             DisableButtonsForRef(projectType == ProjectType.Reference);
