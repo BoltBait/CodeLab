@@ -250,10 +250,12 @@ namespace PaintDotNet.Effects
             set
             {
                 this.useExtendedColors = value;
-                this.FreeSubstyles();
-                int substyleStart = this.AllocateSubstyles(Style.Cpp.Identifier, value ? Substyle.NeededStyles : 1);
-                Substyle.SetStyles(substyleStart);
-                UpdateSyntaxHighlighting();
+
+                if (this.Lexer == Lexer.Cpp)
+                {
+                    UpdateSubstyleAllocations();
+                    UpdateSyntaxHighlighting();
+                }
             }
         }
 
@@ -451,21 +453,19 @@ namespace PaintDotNet.Effects
                 this.Styles[Style.Cpp.Regex + i].BackColor = backColor;
                 this.Styles[Style.Cpp.EscapeSequence + i].ForeColor = Color.FromArgb(255, 214, 143);
                 this.Styles[Style.Cpp.EscapeSequence + i].BackColor = backColor;
-                if (Substyle.AreSet)
-                {
-                    this.Styles[Substyle.Keyword + i].ForeColor = Color.FromArgb(216, 160, 223);
-                    this.Styles[Substyle.Keyword + i].BackColor = Color.FromArgb(30, 30, 30);
-                    this.Styles[Substyle.Method + i].ForeColor = Color.FromArgb(220, 220, 170);
-                    this.Styles[Substyle.Method + i].BackColor = Color.FromArgb(30, 30, 30);
-                    this.Styles[Substyle.ParamAndVar + i].ForeColor = Color.FromArgb(156, 220, 254);
-                    this.Styles[Substyle.ParamAndVar + i].BackColor = Color.FromArgb(30, 30, 30);
-                    this.Styles[Substyle.Struct + i].ForeColor = Color.FromArgb(134, 198, 145);
-                    this.Styles[Substyle.Struct + i].BackColor = Color.FromArgb(30, 30, 30);
-                    this.Styles[Substyle.Enum + i].ForeColor = Color.FromArgb(184, 215, 163);
-                    this.Styles[Substyle.Enum + i].BackColor = Color.FromArgb(30, 30, 30);
-                    this.Styles[Substyle.Interface + i].ForeColor = Color.FromArgb(184, 215, 163);
-                    this.Styles[Substyle.Interface + i].BackColor = Color.FromArgb(30, 30, 30);
-                }
+
+                this.Styles[Substyle.Keyword + i].ForeColor = Color.FromArgb(216, 160, 223);
+                this.Styles[Substyle.Keyword + i].BackColor = Color.FromArgb(30, 30, 30);
+                this.Styles[Substyle.Method + i].ForeColor = Color.FromArgb(220, 220, 170);
+                this.Styles[Substyle.Method + i].BackColor = Color.FromArgb(30, 30, 30);
+                this.Styles[Substyle.ParamAndVar + i].ForeColor = Color.FromArgb(156, 220, 254);
+                this.Styles[Substyle.ParamAndVar + i].BackColor = Color.FromArgb(30, 30, 30);
+                this.Styles[Substyle.Struct + i].ForeColor = Color.FromArgb(134, 198, 145);
+                this.Styles[Substyle.Struct + i].BackColor = Color.FromArgb(30, 30, 30);
+                this.Styles[Substyle.Enum + i].ForeColor = Color.FromArgb(184, 215, 163);
+                this.Styles[Substyle.Enum + i].BackColor = Color.FromArgb(30, 30, 30);
+                this.Styles[Substyle.Interface + i].ForeColor = Color.FromArgb(184, 215, 163);
+                this.Styles[Substyle.Interface + i].BackColor = Color.FromArgb(30, 30, 30);
             }
         }
 
@@ -509,21 +509,19 @@ namespace PaintDotNet.Effects
                 this.Styles[Style.Cpp.Regex + i].BackColor = backColor;
                 this.Styles[Style.Cpp.EscapeSequence + i].ForeColor = Color.FromArgb(183, 118, 251);
                 this.Styles[Style.Cpp.EscapeSequence + i].BackColor = backColor;
-                if (Substyle.AreSet)
-                {
-                    this.Styles[Substyle.Keyword + i].ForeColor = Color.FromArgb(143, 8, 196);
-                    this.Styles[Substyle.Keyword + i].BackColor = Color.White;
-                    this.Styles[Substyle.Method + i].ForeColor = Color.FromArgb(116, 83, 31);
-                    this.Styles[Substyle.Method + i].BackColor = Color.White;
-                    this.Styles[Substyle.ParamAndVar + i].ForeColor = Color.FromArgb(31, 55, 127);
-                    this.Styles[Substyle.ParamAndVar + i].BackColor = Color.White;
-                    this.Styles[Substyle.Struct + i].ForeColor = Color.FromArgb(43, 145, 175);
-                    this.Styles[Substyle.Struct + i].BackColor = Color.White;
-                    this.Styles[Substyle.Enum + i].ForeColor = Color.FromArgb(43, 145, 175);
-                    this.Styles[Substyle.Enum + i].BackColor = Color.White;
-                    this.Styles[Substyle.Interface + i].ForeColor = Color.FromArgb(43, 145, 175);
-                    this.Styles[Substyle.Interface + i].BackColor = Color.White;
-                }
+
+                this.Styles[Substyle.Keyword + i].ForeColor = Color.FromArgb(143, 8, 196);
+                this.Styles[Substyle.Keyword + i].BackColor = Color.White;
+                this.Styles[Substyle.Method + i].ForeColor = Color.FromArgb(116, 83, 31);
+                this.Styles[Substyle.Method + i].BackColor = Color.White;
+                this.Styles[Substyle.ParamAndVar + i].ForeColor = Color.FromArgb(31, 55, 127);
+                this.Styles[Substyle.ParamAndVar + i].BackColor = Color.White;
+                this.Styles[Substyle.Struct + i].ForeColor = Color.FromArgb(43, 145, 175);
+                this.Styles[Substyle.Struct + i].BackColor = Color.White;
+                this.Styles[Substyle.Enum + i].ForeColor = Color.FromArgb(43, 145, 175);
+                this.Styles[Substyle.Enum + i].BackColor = Color.White;
+                this.Styles[Substyle.Interface + i].ForeColor = Color.FromArgb(43, 145, 175);
+                this.Styles[Substyle.Interface + i].BackColor = Color.White;
             }
         }
 
@@ -729,13 +727,18 @@ namespace PaintDotNet.Effects
             this.renameVarMenuItem.Click += RenameButton_Click;
 
             #region ScintillaNET Initializers
+            this.Lexer = Lexer.Cpp;
+
+            int substyleStart = this.AllocateSubstyles(Style.Cpp.Identifier, Substyle.NormStyleCount);
+            Substyle.SetStyles(substyleStart);
+
+            // Set the keywords for Syntax Highlighting
+            UpdateSyntaxHighlighting();
+
             this.StyleResetDefault();
             this.Theme = Theme.Light;
             this.Styles[Style.Default].Font = "Consolas";
             this.Styles[Style.Default].Size = 10;
-            //this.StyleClearAll();
-
-            this.Lexer = Lexer.Cpp;
 
             // Set the styles for Ctrl+F Find
             this.Indicators[Indicator.Find].Style = IndicatorStyle.StraightBox;
@@ -765,12 +768,6 @@ namespace PaintDotNet.Effects
             this.Indicators[Indicator.ObjectHighlightDef].Under = true;
             this.Indicators[Indicator.ObjectHighlightDef].Alpha = 204;
             this.Indicators[Indicator.ObjectHighlightDef].OutlineAlpha = 255;
-
-            int substyleStart = this.AllocateSubstyles(Style.Cpp.Identifier, 1);
-            Substyle.SetStyles(substyleStart);
-
-            // Set the keywords for Syntax Highlighting
-            UpdateSyntaxHighlighting();
 
             // Vertical indent guides
             this.IndentationGuides = IndentView.None;
@@ -4303,6 +4300,16 @@ namespace PaintDotNet.Effects
                 this.Margins[LeftMargin.CodeFolding].Width = this.Lines[0].Height;
             }
         }
+
+        private void UpdateSubstyleAllocations()
+        {
+            int correctCount = this.useExtendedColors ? Substyle.ExtStyleCount : Substyle.NormStyleCount;
+            if (this.GetSubstylesLength(Style.Cpp.Identifier) != correctCount)
+            {
+                this.FreeSubstyles();
+                this.AllocateSubstyles(Style.Cpp.Identifier, correctCount);
+            }
+        }
         #endregion
 
         #region Editor ToolTip Functions
@@ -4416,7 +4423,7 @@ namespace PaintDotNet.Effects
                 case ProjectType.FileType:
                 case ProjectType.Reference:
                     this.Lexer = Lexer.Cpp;
-                    this.AllocateSubstyles(Style.Cpp.Identifier, Substyle.NeededStyles);
+                    this.AllocateSubstyles(Style.Cpp.Identifier, this.useExtendedColors ? Substyle.ExtStyleCount : Substyle.NormStyleCount);
                     this.UpdateSyntaxHighlighting();
 
                     this.SetProperty("fold", "1");
@@ -4482,6 +4489,8 @@ namespace PaintDotNet.Effects
             switch (this.Lexer)
             {
                 case Lexer.Cpp:
+                    UpdateSubstyleAllocations();
+
                     switch (this.theme)
                     {
                         case Theme.Light:
@@ -4691,14 +4700,15 @@ namespace PaintDotNet.Effects
 
         private static class Substyle
         {
-            internal const int NeededStyles = 6;
+            internal const int NormStyleCount = 1;
+            internal const int ExtStyleCount = 6;
+
             internal static int Enum => enums;
             internal static int Method => methods;
             internal static int Struct => structs;
             internal static int Keyword => keywords;
             internal static int Interface => interfaces;
             internal static int ParamAndVar => paramsAndVars;
-            internal static bool AreSet => areSet;
 
             private static int enums = -1;
             private static int methods = -1;
@@ -4706,7 +4716,6 @@ namespace PaintDotNet.Effects
             private static int keywords = -1;
             private static int interfaces = -1;
             private static int paramsAndVars = -1;
-            private static bool areSet = false;
             private static int correction = 0;
 
             internal static void SetStyles(int startIndex)
@@ -4719,7 +4728,6 @@ namespace PaintDotNet.Effects
                 paramsAndVars = startIndex + 5;
 
                 correction = startIndex * 2;
-                areSet = true;
             }
 
             internal static int SubstyleCorrection(int style)
