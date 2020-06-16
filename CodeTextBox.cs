@@ -661,11 +661,14 @@ namespace PaintDotNet.Effects
                 timer.Interval = 1000;
                 timer.Tick += (sender, e) =>
                 {
-                    if (this.useExtendedColors)
+                    if (this.Lexer == Lexer.Cpp)
                     {
-                        ColorizeMethods();
+                        if (this.useExtendedColors)
+                        {
+                            ColorizeMethods();
+                        }
+                        ParseVariables(this.CurrentPosition);
                     }
-                    ParseVariables(this.CurrentPosition);
                 };
                 timer.Start();
             }
