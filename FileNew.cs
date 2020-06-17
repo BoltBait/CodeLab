@@ -30,6 +30,9 @@ namespace PaintDotNet.Effects
         // The following effects are handled differently as they only have DST surface and not a SRC surface:
         private static readonly IReadOnlyCollection<string> renderedEffects = new string[] { "Clipboard", "Clouds", "Julia", "Mandelbrot" };
 
+        // The following effects are handled differently as they CAN render to the same surface as the SRC surface:
+        private static readonly IReadOnlyCollection<string> sameDstEffects = new string[] { "Hue/Saturation", "Brightness/Contrast" };
+
         internal FileNew(string EffectFlag)
         {
             InitializeComponent();
@@ -2173,12 +2176,15 @@ namespace PaintDotNet.Effects
         {
             if (categoryBox.Text == "Effect")
             {
-                if (!renderedEffects.Contains(effectBox.Text))
+                if (!renderedEffects.Contains(effectBox.Text)) // Rendered effects only have DST and no SRC
                 {
-                    if (sourceBox.Text == destinationBox.Text)
+                    if (!sameDstEffects.Contains(effectBox.Text)) // Some effects CAN render to the same surface as the source
                     {
-                        FlexibleMessageBox.Show("Effects can not render to the same canvas they use as the source.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        return false;
+                        if (sourceBox.Text == destinationBox.Text)
+                        {
+                            FlexibleMessageBox.Show("Effects can not render to the same canvas they use as the source.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return false;
+                        }
                     }
                 }
             }
