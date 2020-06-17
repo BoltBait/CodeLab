@@ -1663,6 +1663,11 @@ namespace PaintDotNet.Effects
             LaunchUrl("https://www.boltbait.com/pdn/codelab/history/#v" + CodeLab.Version);
         }
 
+        private void discussToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            LaunchUrl("https://forums.getpaint.net/forum/17-plugin");
+        }
+
         private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             using (SettingsForm sf = new SettingsForm())

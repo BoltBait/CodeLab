@@ -149,6 +149,7 @@
             this.ClearOutput = new System.Windows.Forms.Button();
             this.ShowOutput = new System.Windows.Forms.CheckBox();
             this.tabStrip1 = new PaintDotNet.Effects.TabStrip();
+            this.discussToolStripMenuItem = new PaintDotNet.Effects.ScaledToolStripMenuItem();
             this.errorListMenu.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -883,6 +884,7 @@
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.helpTopicsToolStripMenuItem,
             this.changesInThisVersionToolStripMenuItem,
+            this.discussToolStripMenuItem,
             this.settingsToolStripMenuItem,
             this.aboutToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
@@ -893,7 +895,7 @@
             // 
             this.helpTopicsToolStripMenuItem.ImageName = "HelpTopics";
             this.helpTopicsToolStripMenuItem.Name = "helpTopicsToolStripMenuItem";
-            this.helpTopicsToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
+            this.helpTopicsToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
             this.helpTopicsToolStripMenuItem.Text = "&Help topics...";
             this.helpTopicsToolStripMenuItem.Click += new System.EventHandler(this.helpTopicsToolStripMenuItem_Click);
             // 
@@ -901,7 +903,7 @@
             // 
             this.changesInThisVersionToolStripMenuItem.ImageName = "Newspaper";
             this.changesInThisVersionToolStripMenuItem.Name = "changesInThisVersionToolStripMenuItem";
-            this.changesInThisVersionToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
+            this.changesInThisVersionToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
             this.changesInThisVersionToolStripMenuItem.Text = "&Changes in this version...";
             this.changesInThisVersionToolStripMenuItem.Click += new System.EventHandler(this.changesInThisVersionToolStripMenuItem_Click);
             // 
@@ -909,7 +911,7 @@
             // 
             this.settingsToolStripMenuItem.ImageName = "Settings";
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
+            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
             this.settingsToolStripMenuItem.Text = "CodeLab &Settings...";
             this.settingsToolStripMenuItem.Click += new System.EventHandler(this.settingsToolStripMenuItem_Click);
             // 
@@ -917,7 +919,7 @@
             // 
             this.aboutToolStripMenuItem.ImageName = "About";
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
             this.aboutToolStripMenuItem.Text = "&About...";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
@@ -1305,6 +1307,14 @@
             this.tabStrip1.TabClosingAndDirty += new System.EventHandler<System.ComponentModel.CancelEventArgs>(this.tabStrip1_TabClosingAndDirty);
             this.tabStrip1.TabClosed += new System.EventHandler<PaintDotNet.Effects.TabClosedEventArgs>(this.tabStrip1_TabClosed);
             // 
+            // discussToolStripMenuItem
+            // 
+            this.discussToolStripMenuItem.ImageName = "Forum";
+            this.discussToolStripMenuItem.Name = "discussToolStripMenuItem";
+            this.discussToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
+            this.discussToolStripMenuItem.Text = "Discuss Plugin Development...";
+            this.discussToolStripMenuItem.Click += new System.EventHandler(this.discussToolStripMenuItem_Click);
+            // 
             // CodeLabConfigDialog
             // 
             this.AllowDrop = true;
@@ -1466,5 +1476,6 @@
         private ScaledToolStripMenuItem settingsToolStripMenuItem;
         private ScaledToolStripButton settingsButton;
         private ScaledToolStripMenuItem ignoreWarningMenuItem;
+        private ScaledToolStripMenuItem discussToolStripMenuItem;
     }
 }
