@@ -4646,6 +4646,12 @@ namespace PaintDotNet.Effects
 
             this.DocumentMeta = this.docMetaCollection[guid];
 
+            if (!this.spellCheckEnabled)
+            {
+                this.IndicatorCurrent = Indicator.Spelling;
+                this.IndicatorClearRange(0, this.TextLength);
+            }
+
             switch (this.Lexer)
             {
                 case Lexer.Cpp:
