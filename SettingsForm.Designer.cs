@@ -43,6 +43,7 @@
             this.label8 = new System.Windows.Forms.Label();
             this.warningLevelCombobox = new System.Windows.Forms.ComboBox();
             this.uiPanel = new System.Windows.Forms.Panel();
+            this.extendedColorsCheckBox = new System.Windows.Forms.CheckBox();
             this.caretLineFrameCheckBox = new System.Windows.Forms.CheckBox();
             this.indentSpacesLabel = new System.Windows.Forms.Label();
             this.indentSpacesComboBox = new System.Windows.Forms.ComboBox();
@@ -66,10 +67,20 @@
             this.settingsList = new System.Windows.Forms.ListBox();
             this.snippetPanel = new PaintDotNet.Effects.SnippetManager();
             this.imageList = new System.Windows.Forms.ImageList(this.components);
-            this.extendedColorsCheckBox = new System.Windows.Forms.CheckBox();
+            this.spellPanel = new System.Windows.Forms.Panel();
+            this.addLangsButton = new System.Windows.Forms.Button();
+            this.enableSpellcheckCheckBox = new System.Windows.Forms.CheckBox();
+            this.addWordsToIgnoreLabel = new System.Windows.Forms.Label();
+            this.wordsToIgnoreLabel = new System.Windows.Forms.Label();
+            this.wordsToIgnoreListBox = new System.Windows.Forms.ListBox();
+            this.removeIgnoreWordButton = new System.Windows.Forms.Button();
+            this.label11 = new System.Windows.Forms.Label();
+            this.spellcheckOptionsLabel = new System.Windows.Forms.Label();
+            this.spellLangComboBox = new System.Windows.Forms.ComboBox();
             this.updatesPanel.SuspendLayout();
             this.compilerPanel.SuspendLayout();
             this.uiPanel.SuspendLayout();
+            this.spellPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // closeButton
@@ -246,6 +257,17 @@
             this.uiPanel.Size = new System.Drawing.Size(476, 405);
             this.uiPanel.TabIndex = 1;
             // 
+            // extendedColorsCheckBox
+            // 
+            this.extendedColorsCheckBox.AutoSize = true;
+            this.extendedColorsCheckBox.Location = new System.Drawing.Point(32, 378);
+            this.extendedColorsCheckBox.Name = "extendedColorsCheckBox";
+            this.extendedColorsCheckBox.Size = new System.Drawing.Size(192, 19);
+            this.extendedColorsCheckBox.TabIndex = 19;
+            this.extendedColorsCheckBox.Text = "Extended Colors (Experimental)";
+            this.extendedColorsCheckBox.UseVisualStyleBackColor = true;
+            this.extendedColorsCheckBox.CheckedChanged += new System.EventHandler(this.extendedColorsCheckBox_CheckedChanged);
+            // 
             // caretLineFrameCheckBox
             // 
             this.caretLineFrameCheckBox.AutoSize = true;
@@ -285,7 +307,7 @@
             this.toolbarCheckbox.AutoSize = true;
             this.toolbarCheckbox.Location = new System.Drawing.Point(32, 28);
             this.toolbarCheckbox.Name = "toolbarCheckbox";
-            this.toolbarCheckbox.Size = new System.Drawing.Size(67, 19);
+            this.toolbarCheckbox.Size = new System.Drawing.Size(65, 19);
             this.toolbarCheckbox.TabIndex = 1;
             this.toolbarCheckbox.Text = "Toolbar";
             this.toolbarCheckbox.UseVisualStyleBackColor = true;
@@ -296,7 +318,7 @@
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(228, 354);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(191, 15);
+            this.label5.Size = new System.Drawing.Size(190, 15);
             this.label5.TabIndex = 18;
             this.label5.Text = "\"Auto\" matches Paint.NET\'s theme";
             // 
@@ -325,7 +347,7 @@
             this.wordWrapTextFilesCheckbox.AutoSize = true;
             this.wordWrapTextFilesCheckbox.Location = new System.Drawing.Point(237, 80);
             this.wordWrapTextFilesCheckbox.Name = "wordWrapTextFilesCheckbox";
-            this.wordWrapTextFilesCheckbox.Size = new System.Drawing.Size(149, 19);
+            this.wordWrapTextFilesCheckbox.Size = new System.Drawing.Size(150, 19);
             this.wordWrapTextFilesCheckbox.TabIndex = 6;
             this.wordWrapTextFilesCheckbox.Text = "Word wrap text files  ‹‒\'";
             this.wordWrapTextFilesCheckbox.UseVisualStyleBackColor = true;
@@ -483,6 +505,7 @@
             this.settingsList.Items.AddRange(new object[] {
             "User Interface",
             "Snippets",
+            "Spellcheck",
             "Compiler",
             "Updates"});
             this.settingsList.Location = new System.Drawing.Point(12, 12);
@@ -506,16 +529,112 @@
             this.imageList.ImageSize = new System.Drawing.Size(24, 24);
             this.imageList.TransparentColor = System.Drawing.Color.Transparent;
             // 
-            // extendedColorsCheckBox
+            // spellPanel
             // 
-            this.extendedColorsCheckBox.AutoSize = true;
-            this.extendedColorsCheckBox.Location = new System.Drawing.Point(32, 378);
-            this.extendedColorsCheckBox.Name = "extendedColorsCheckBox";
-            this.extendedColorsCheckBox.Size = new System.Drawing.Size(190, 19);
-            this.extendedColorsCheckBox.TabIndex = 19;
-            this.extendedColorsCheckBox.Text = "Extended Colors (Experimental)";
-            this.extendedColorsCheckBox.UseVisualStyleBackColor = true;
-            this.extendedColorsCheckBox.CheckedChanged += new System.EventHandler(this.extendedColorsCheckBox_CheckedChanged);
+            this.spellPanel.Controls.Add(this.addLangsButton);
+            this.spellPanel.Controls.Add(this.enableSpellcheckCheckBox);
+            this.spellPanel.Controls.Add(this.addWordsToIgnoreLabel);
+            this.spellPanel.Controls.Add(this.wordsToIgnoreLabel);
+            this.spellPanel.Controls.Add(this.wordsToIgnoreListBox);
+            this.spellPanel.Controls.Add(this.removeIgnoreWordButton);
+            this.spellPanel.Controls.Add(this.label11);
+            this.spellPanel.Controls.Add(this.spellcheckOptionsLabel);
+            this.spellPanel.Controls.Add(this.spellLangComboBox);
+            this.spellPanel.Location = new System.Drawing.Point(202, 12);
+            this.spellPanel.Name = "spellPanel";
+            this.spellPanel.Size = new System.Drawing.Size(476, 405);
+            this.spellPanel.TabIndex = 8;
+            // 
+            // addLangsButton
+            // 
+            this.addLangsButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.addLangsButton.Location = new System.Drawing.Point(129, 111);
+            this.addLangsButton.Name = "addLangsButton";
+            this.addLangsButton.Size = new System.Drawing.Size(99, 25);
+            this.addLangsButton.TabIndex = 9;
+            this.addLangsButton.Text = "Add Languages";
+            this.addLangsButton.UseVisualStyleBackColor = true;
+            this.addLangsButton.Click += new System.EventHandler(this.addLangsButton_Click);
+            // 
+            // enableSpellcheckCheckBox
+            // 
+            this.enableSpellcheckCheckBox.AutoSize = true;
+            this.enableSpellcheckCheckBox.Location = new System.Drawing.Point(38, 52);
+            this.enableSpellcheckCheckBox.Name = "enableSpellcheckCheckBox";
+            this.enableSpellcheckCheckBox.Size = new System.Drawing.Size(120, 19);
+            this.enableSpellcheckCheckBox.TabIndex = 8;
+            this.enableSpellcheckCheckBox.Text = "Enable Spellcheck";
+            this.enableSpellcheckCheckBox.UseVisualStyleBackColor = true;
+            this.enableSpellcheckCheckBox.CheckedChanged += new System.EventHandler(this.enableSpellcheckCheckBox_CheckedChanged);
+            // 
+            // addWordsToIgnoreLabel
+            // 
+            this.addWordsToIgnoreLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.addWordsToIgnoreLabel.Location = new System.Drawing.Point(151, 208);
+            this.addWordsToIgnoreLabel.Name = "addWordsToIgnoreLabel";
+            this.addWordsToIgnoreLabel.Size = new System.Drawing.Size(313, 75);
+            this.addWordsToIgnoreLabel.TabIndex = 7;
+            this.addWordsToIgnoreLabel.Text = "Ignored Words can be added\r\nvia the Light Bulb menu.";
+            // 
+            // wordsToIgnoreLabel
+            // 
+            this.wordsToIgnoreLabel.AutoSize = true;
+            this.wordsToIgnoreLabel.Location = new System.Drawing.Point(35, 155);
+            this.wordsToIgnoreLabel.Name = "wordsToIgnoreLabel";
+            this.wordsToIgnoreLabel.Size = new System.Drawing.Size(95, 15);
+            this.wordsToIgnoreLabel.TabIndex = 3;
+            this.wordsToIgnoreLabel.Text = "Words to ignore:";
+            // 
+            // wordsToIgnoreListBox
+            // 
+            this.wordsToIgnoreListBox.FormattingEnabled = true;
+            this.wordsToIgnoreListBox.ItemHeight = 15;
+            this.wordsToIgnoreListBox.Location = new System.Drawing.Point(48, 180);
+            this.wordsToIgnoreListBox.Name = "wordsToIgnoreListBox";
+            this.wordsToIgnoreListBox.Size = new System.Drawing.Size(100, 139);
+            this.wordsToIgnoreListBox.TabIndex = 4;
+            // 
+            // removeIgnoreWordButton
+            // 
+            this.removeIgnoreWordButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.removeIgnoreWordButton.Location = new System.Drawing.Point(154, 180);
+            this.removeIgnoreWordButton.Name = "removeIgnoreWordButton";
+            this.removeIgnoreWordButton.Size = new System.Drawing.Size(96, 24);
+            this.removeIgnoreWordButton.TabIndex = 5;
+            this.removeIgnoreWordButton.Text = "Remove Word";
+            this.removeIgnoreWordButton.UseVisualStyleBackColor = true;
+            this.removeIgnoreWordButton.Click += new System.EventHandler(this.removeIgnoreWordButton_Click);
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(35, 88);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(62, 15);
+            this.label11.TabIndex = 1;
+            this.label11.Text = "Language:";
+            // 
+            // spellcheckOptionsLabel
+            // 
+            this.spellcheckOptionsLabel.AutoSize = true;
+            this.spellcheckOptionsLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.spellcheckOptionsLabel.Location = new System.Drawing.Point(14, 17);
+            this.spellcheckOptionsLabel.Name = "spellcheckOptionsLabel";
+            this.spellcheckOptionsLabel.Size = new System.Drawing.Size(114, 15);
+            this.spellcheckOptionsLabel.TabIndex = 0;
+            this.spellcheckOptionsLabel.Text = "Spellcheck options:";
+            // 
+            // spellLangComboBox
+            // 
+            this.spellLangComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.spellLangComboBox.FormattingEnabled = true;
+            this.spellLangComboBox.Location = new System.Drawing.Point(48, 112);
+            this.spellLangComboBox.Name = "spellLangComboBox";
+            this.spellLangComboBox.Size = new System.Drawing.Size(75, 23);
+            this.spellLangComboBox.TabIndex = 2;
+            this.spellLangComboBox.SelectedIndexChanged += new System.EventHandler(this.spellLangComboBox_SelectedIndexChanged);
             // 
             // SettingsForm
             // 
@@ -523,8 +642,9 @@
             this.CancelButton = this.closeButton;
             this.ClientSize = new System.Drawing.Size(691, 468);
             this.Controls.Add(this.uiPanel);
-            this.Controls.Add(this.compilerPanel);
             this.Controls.Add(this.snippetPanel);
+            this.Controls.Add(this.spellPanel);
+            this.Controls.Add(this.compilerPanel);
             this.Controls.Add(this.updatesPanel);
             this.Controls.Add(this.settingsList);
             this.Controls.Add(this.closeButton);
@@ -537,6 +657,8 @@
             this.compilerPanel.PerformLayout();
             this.uiPanel.ResumeLayout(false);
             this.uiPanel.PerformLayout();
+            this.spellPanel.ResumeLayout(false);
+            this.spellPanel.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -580,5 +702,15 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.CheckBox caretLineFrameCheckBox;
         private System.Windows.Forms.CheckBox extendedColorsCheckBox;
+        private System.Windows.Forms.Panel spellPanel;
+        private System.Windows.Forms.CheckBox enableSpellcheckCheckBox;
+        private System.Windows.Forms.Label addWordsToIgnoreLabel;
+        private System.Windows.Forms.Label wordsToIgnoreLabel;
+        private System.Windows.Forms.ListBox wordsToIgnoreListBox;
+        private System.Windows.Forms.Button removeIgnoreWordButton;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label spellcheckOptionsLabel;
+        private System.Windows.Forms.ComboBox spellLangComboBox;
+        private System.Windows.Forms.Button addLangsButton;
     }
 }

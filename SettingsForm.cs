@@ -11,7 +11,6 @@ namespace PaintDotNet.Effects
         bool Initializing;
         public SettingsForm()
         {
-            Initializing = true;
             InitializeComponent();
             // PDN Theme
             foreach (Control control in this.Controls.OfType<Control>()
@@ -30,6 +29,7 @@ namespace PaintDotNet.Effects
             {
                 UIUtil.GetImage("UI"),
                 UIUtil.GetImage("Snippet"),
+                UIUtil.GetImage("Spelling"),
                 UIUtil.GetImage("Compiler"),
                 UIUtil.GetImage("Updates")
             });
@@ -37,8 +37,11 @@ namespace PaintDotNet.Effects
             settingsList.ItemHeight = UIUtil.Scale(32);
             linkLabel1.LinkColor = this.ForeColor;
             settingsList.SelectedIndex = 0;
+
+            Initializing = true;
+
+            // User Interface page
             toolbarCheckbox.Checked = Settings.ToolBar;
-            checkForUpdates.Checked = Settings.CheckForUpdates;
             lineNumbersCheckbox.Checked = Settings.LineNumbers;
             bookMarksCheckbox.Checked = Settings.Bookmarks;
             codeFoldingCheckbox.Checked = Settings.CodeFolding;
@@ -59,12 +62,48 @@ namespace PaintDotNet.Effects
             fontCombobox.SelectedIndex = fontCombobox.FindString(Settings.FontFamily);
             themeCombobox.Text = Settings.EditorTheme.ToString();
             extendedColorsCheckBox.Checked = Settings.ExtendedColors;
+
+            // Spellcheck page
+            if (PlatformSpellCheck.SpellChecker.IsPlatformSupported())
+            {
+                enableSpellcheckCheckBox.Checked = Settings.Spellcheck;
+                spellLangComboBox.Items.AddRange(PlatformSpellCheck.SpellChecker.SupportedLanguages.ToArray());
+                int langIndex = spellLangComboBox.FindString(Settings.SpellingLang);
+                spellLangComboBox.SelectedIndex = langIndex > -1 ? langIndex : 0;
+                wordsToIgnoreListBox.Items.AddRange(Settings.SpellingWordsToIgnore
+                    .Distinct()
+                    .OrderBy(s => s, StringComparer.OrdinalIgnoreCase)
+                    .ToArray());
+
+#if !FASTDEBUG
+                // Environment.OSVersion.Version returns the wrong value in FASTBUG.
+                if (Environment.OSVersion.Version < new Version(10, 0))
+                {
+                    addLangsButton.Enabled = false;
+                    addLangsButton.Visible = false;
+                }
+#endif
+            }
+            else
+            {
+                spellPanel.Enabled = false;
+            }
+
+            // Compiler page
             warningLevelCombobox.SelectedIndex = Settings.WarningLevel;
-            warningsToIgnoreList.Items.AddRange(Settings.WarningsToIgnore.ToArray());
+            warningsToIgnoreList.Items.AddRange(Settings.WarningsToIgnore
+                .Distinct()
+                .OrderBy(s => s, StringComparer.OrdinalIgnoreCase)
+                .ToArray());
+
             if (warningsToIgnoreList.Items.Count > 0)
             {
                 warningsToIgnoreList.SelectedIndex = 0;
             }
+
+            // Updates page
+            checkForUpdates.Checked = Settings.CheckForUpdates;
+
             Initializing = false;
         }
 
@@ -98,6 +137,7 @@ namespace PaintDotNet.Effects
                 updatesPanel.Visible = false;
                 snippetPanel.Visible = false;
                 uiPanel.Visible = true;
+                spellPanel.Visible = false;
                 compilerPanel.Visible = false;
             }
             else if (item == "Snippets")
@@ -105,6 +145,7 @@ namespace PaintDotNet.Effects
                 updatesPanel.Visible = false;
                 snippetPanel.Visible = true;
                 uiPanel.Visible = false;
+                spellPanel.Visible = false;
                 compilerPanel.Visible = false;
             }
             else if (item == "Updates")
@@ -112,6 +153,7 @@ namespace PaintDotNet.Effects
                 updatesPanel.Visible = true;
                 snippetPanel.Visible = false;
                 uiPanel.Visible = false;
+                spellPanel.Visible = false;
                 compilerPanel.Visible = false;
             }
             else if (item == "Compiler")
@@ -119,7 +161,16 @@ namespace PaintDotNet.Effects
                 updatesPanel.Visible = false;
                 snippetPanel.Visible = false;
                 uiPanel.Visible = false;
+                spellPanel.Visible = false;
                 compilerPanel.Visible = true;
+            }
+            else if (item == "Spellcheck")
+            {
+                updatesPanel.Visible = false;
+                snippetPanel.Visible = false;
+                uiPanel.Visible = false;
+                spellPanel.Visible = true;
+                compilerPanel.Visible = false;
             }
         }
         #endregion
@@ -243,6 +294,34 @@ namespace PaintDotNet.Effects
                 "▪ JetBrains Mono\n    https://www.jetbrains.com/lp/mono/ \n\n" +
                 "Once downloaded and installed on your system, you may choose these fonts from the menu.",
                 "Help With Fonts", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+        #endregion
+
+        #region Spellcheck Page
+        private void addLangsButton_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start("ms-settings:regionlanguage");
+        }
+
+        private void enableSpellcheckCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (Initializing) return;
+            Settings.Spellcheck = enableSpellcheckCheckBox.Checked;
+        }
+
+        private void spellLangComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (Initializing) return;
+            Settings.SpellingLang = spellLangComboBox.Text;
+        }
+
+        private void removeIgnoreWordButton_Click(object sender, EventArgs e)
+        {
+            if (wordsToIgnoreListBox.SelectedIndex > -1)
+            {
+                wordsToIgnoreListBox.Items.RemoveAt(wordsToIgnoreListBox.SelectedIndex);
+                Settings.SpellingWordsToIgnore = wordsToIgnoreListBox.Items.OfType<string>();
+            }
         }
         #endregion
 

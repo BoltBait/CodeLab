@@ -98,7 +98,7 @@ namespace PaintDotNet.Effects
 #endif
         }
 
-        void LoadSettingsFromRegistry()
+        private void LoadSettingsFromRegistry()
         {
             bool useWordWrap = (this.tabStrip1.SelectedTabProjType == ProjectType.None) ? Settings.WordWrapPlainText : Settings.WordWrap;
             txtCode.WrapMode = useWordWrap ? WrapMode.Whitespace : WrapMode.None;
@@ -161,6 +161,8 @@ namespace PaintDotNet.Effects
             OutputTextBox.Font = new Font(editorFont, OutputTextBox.Font.Size);
             errorList.Font = new Font(editorFont, errorList.Font.Size);
             txtCode.UpdateMarginWidths();
+
+            txtCode.SpellcheckEnabled = Settings.Spellcheck;
 
             ScriptBuilder.SetWarningLevel(Settings.WarningLevel);
             ScriptBuilder.SetWarningsToIgnore(Settings.WarningsToIgnore);

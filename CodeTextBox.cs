@@ -22,6 +22,7 @@
 // Implemented in CodeLab and customized by Jason Wendt.
 /////////////////////////////////////////////////////////////////////////////////
 
+using PlatformSpellCheck;
 using ScintillaNET;
 using System;
 using System.Collections.Generic;
@@ -46,17 +47,19 @@ namespace PaintDotNet.Effects
         private readonly List<int> matchLines = new List<int>();
         private readonly ToolStrip lightBulbMenu = new ToolStrip();
         private readonly ScaledToolStripDropDownButton bulbIcon = new ScaledToolStripDropDownButton();
-        private readonly ToolStripMenuItem renameVarMenuItem = new ToolStripMenuItem();
         private readonly Dictionary<Guid, ScintillaNET.Document> docCollection = new Dictionary<Guid, ScintillaNET.Document>();
         private readonly Dictionary<Guid, DocMeta> docMetaCollection = new Dictionary<Guid, DocMeta>();
         private const int Preprocessor = 64;
         private const BindingFlags userScriptBindingFlags = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly;
+        private SpellChecker spellChecker;
 
+        [Flags]
         private enum DelayedOperation
         {
-            None,
-            UpdateIndicatorBar,
-            ScrollCaret
+            None = 0,
+            UpdateIndicatorBar = 1,
+            ScrollCaret = 2,
+            CheckSpelling = 4
         }
 
         #region Variables for different states
@@ -72,6 +75,7 @@ namespace PaintDotNet.Effects
         private int disableIntelliTipPos = InvalidPosition;
         private DelayedOperation delayedOperation = DelayedOperation.None;
         private bool useExtendedColors = false;
+        private bool spellCheckEnabled = false;
         #endregion
 
         #region Properties
@@ -259,6 +263,40 @@ namespace PaintDotNet.Effects
             }
         }
 
+        internal bool SpellcheckEnabled
+        {
+            get
+            {
+                return this.spellCheckEnabled;
+            }
+            set
+            {
+                bool enable = value && SpellChecker.IsPlatformSupported() && SpellChecker.IsLanguageSupported(Settings.SpellingLang);
+                this.spellCheckEnabled = enable;
+
+                if (enable)
+                {
+                    spellChecker?.Dispose();
+                    spellChecker = new SpellChecker(Settings.SpellingLang);
+                    foreach (string word in Settings.SpellingWordsToIgnore)
+                    {
+                        spellChecker.Ignore(word);
+                    }
+
+                    if (this.Lexer == Lexer.Cpp || this.Lexer == Lexer.Null)
+                    {
+                        SpellCheck();
+                    }
+                }
+                else
+                {
+                    this.IndicatorCurrent = Indicator.Spelling;
+                    this.IndicatorClearRange(0, this.TextLength);
+                }
+
+            }
+        }
+
         [Category(nameof(CategoryAttribute.Appearance))]
         [RefreshProperties(RefreshProperties.All)]
         [DefaultValue(Theme.Light)]
@@ -324,6 +362,9 @@ namespace PaintDotNet.Effects
                         this.Indicators[Indicator.Error].ForeColor = Color.FromArgb(252, 62, 54);
                         this.Indicators[Indicator.Warning].ForeColor = Color.FromArgb(149, 219, 125);
 
+                        // Spelling
+                        this.Indicators[Indicator.Spelling].ForeColor = Color.Magenta;
+
                         // Selection
                         this.SetSelectionBackColor(true, Color.FromArgb(38, 79, 120));
 
@@ -386,10 +427,13 @@ namespace PaintDotNet.Effects
 
                         // Find
                         this.Indicators[Indicator.Find].ForeColor = Color.FromArgb(246, 185, 77);
-                        this.Indicators[Indicator.Warning].ForeColor = Color.Green;
 
                         // Error
                         this.Indicators[Indicator.Error].ForeColor = Color.Red;
+                        this.Indicators[Indicator.Warning].ForeColor = Color.Green;
+
+                        // Spelling
+                        this.Indicators[Indicator.Spelling].ForeColor = Color.Magenta;
 
                         // Selection
                         this.SetSelectionBackColor(true, Color.FromArgb(173, 214, 255));
@@ -716,18 +760,10 @@ namespace PaintDotNet.Effects
             // 
             this.bulbIcon.AutoToolTip = false;
             this.bulbIcon.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            this.bulbIcon.DropDownItems.Add(this.renameVarMenuItem);
             this.bulbIcon.ImageName = "Bulb";
             this.bulbIcon.Name = "bulbIcon";
             this.bulbIcon.Size = new Size(29, 22);
             this.bulbIcon.Text = "Bulb Icon";
-            // 
-            // renameVarMenuItem
-            // 
-            this.renameVarMenuItem.Name = "renameVarMenuItem";
-            this.renameVarMenuItem.Size = new Size(152, 22);
-            this.renameVarMenuItem.Text = "Rename";
-            this.renameVarMenuItem.Click += RenameButton_Click;
 
             #region ScintillaNET Initializers
             this.Lexer = Lexer.Cpp;
@@ -752,6 +788,9 @@ namespace PaintDotNet.Effects
             // Set the styles for Errors underlines
             this.Indicators[Indicator.Error].Style = IndicatorStyle.Squiggle;
             this.Indicators[Indicator.Warning].Style = IndicatorStyle.Squiggle;
+
+            // Set the styles for Errors underlines
+            this.Indicators[Indicator.Spelling].Style = IndicatorStyle.Squiggle;
 
             // Set the styles for focused Object
             this.Indicators[Indicator.ObjectHighlight].Style = IndicatorStyle.StraightBox;
@@ -2203,7 +2242,7 @@ namespace PaintDotNet.Effects
             if (this.SearchInTarget(wordToFind) != InvalidPosition)
             {
                 this.SetSel(this.TargetStart, this.TargetEnd);
-                this.delayedOperation = DelayedOperation.ScrollCaret;
+                this.delayedOperation |= DelayedOperation.ScrollCaret;
             }
 
             this.EmptyUndoBuffer();
@@ -2913,6 +2952,11 @@ namespace PaintDotNet.Effects
                 iBox.Visible = false;
             }
 
+            if (lightBulbMenu.Visible)
+            {
+                lightBulbMenu.Hide();
+            }
+
             if (intelliTip.Visible)
             {
                 intelliTip.Hide(this);
@@ -3293,7 +3337,12 @@ namespace PaintDotNet.Effects
         {
             base.OnUpdateUI(e);
 
-            if (e.Change.HasFlag(UpdateChange.HScroll))
+            bool hScroll = e.Change.HasFlag(UpdateChange.HScroll);
+            bool vScroll = e.Change.HasFlag(UpdateChange.VScroll);
+            bool content = e.Change.HasFlag(UpdateChange.Content);
+            bool selection = e.Change.HasFlag(UpdateChange.Selection);
+
+            if (hScroll)
             {
                 if (iBox.Visible)
                 {
@@ -3312,14 +3361,9 @@ namespace PaintDotNet.Effects
 
                     iBox.Location = newLocation;
                 }
-
-                if (lightBulbMenu.Visible)
-                {
-                    lightBulbMenu.Hide();
-                }
             }
 
-            if (e.Change.HasFlag(UpdateChange.VScroll))
+            if (vScroll)
             {
                 if (iBox.Visible)
                 {
@@ -3331,11 +3375,6 @@ namespace PaintDotNet.Effects
                     };
                 }
 
-                if (lightBulbMenu.Visible)
-                {
-                    lightBulbMenu.Hide();
-                }
-
                 if (!mapScroll)
                 {
                     indicatorBar.Value = this.FirstVisibleLine;
@@ -3344,9 +3383,20 @@ namespace PaintDotNet.Effects
                 {
                     mapScroll = false;
                 }
+
+                EnqueueSpellCheck();
             }
 
-            if (e.Change.HasFlag(UpdateChange.Content))
+            if (hScroll || vScroll || selection)
+            {
+                if (lightBulbMenu.Visible)
+                {
+                    bulbIcon.HideDropDown();
+                    lightBulbMenu.Hide();
+                }
+            }
+
+            if (content)
             {
                 if (MapEnabled)
                 {
@@ -3355,7 +3405,7 @@ namespace PaintDotNet.Effects
                 }
             }
 
-            if (e.Change.HasFlag(UpdateChange.Selection))
+            if (selection)
             {
                 if (this.CurrentLine != previousLine)
                 {
@@ -3370,13 +3420,13 @@ namespace PaintDotNet.Effects
                             int indent = GetIndentFromPrevLine(this.CurrentLine);
                             this.Selections[0].CaretVirtualSpace = indent;
                             this.Selections[0].AnchorVirtualSpace = indent;
-                            if (e.Change.HasFlag(UpdateChange.Content))
+                            if (content)
                             {
                                 // Only with Enter/Return
                                 this.ChooseCaretX();
                             }
                         }
-                        else if (e.Change.HasFlag(UpdateChange.Content) && this.CurrentLine - previousLine == 1)
+                        else if (content && this.CurrentLine - previousLine == 1)
                         {
                             // Enter/Return with characters to right of caret
                             int indent = GetIndentFromPrevLine(this.CurrentLine);
@@ -3414,7 +3464,7 @@ namespace PaintDotNet.Effects
                 }
             }
 
-            if (e.Change.HasFlag(UpdateChange.Selection) || e.Change.HasFlag(UpdateChange.Content))
+            if (content || selection)
             {
                 if (intelliTip.Visible)
                 {
@@ -3681,13 +3731,19 @@ namespace PaintDotNet.Effects
                 return;
             }
 
-            if (this.delayedOperation == DelayedOperation.UpdateIndicatorBar)
+            if (this.delayedOperation.HasFlag(DelayedOperation.UpdateIndicatorBar))
             {
                 UpdateIndicatorBar();
             }
-            else if (this.delayedOperation == DelayedOperation.ScrollCaret)
+            
+            if (this.delayedOperation.HasFlag(DelayedOperation.ScrollCaret))
             {
                 this.ScrollCaret();
+            }
+            
+            if (this.delayedOperation.HasFlag(DelayedOperation.CheckSpelling))
+            {
+                SpellCheck();
             }
 
             this.delayedOperation = DelayedOperation.None;
@@ -3710,6 +3766,8 @@ namespace PaintDotNet.Effects
                 Find(findPanel.Term, findPanel.Flags);
                 this.SetTargetRange(oldRange.Item1, oldRange.Item2);
             }
+
+            EnqueueSpellCheck();
 
             AdjustRenaming();
 
@@ -3750,7 +3808,7 @@ namespace PaintDotNet.Effects
                 iBox.Visible = false;
             }
 
-            this.delayedOperation = DelayedOperation.UpdateIndicatorBar;
+            this.delayedOperation |= DelayedOperation.UpdateIndicatorBar;
         }
 
         protected override void OnLostFocus(EventArgs e)
@@ -4320,8 +4378,9 @@ namespace PaintDotNet.Effects
         {
             base.OnDwellStart(e);
 
-            if (this.Lexer == Lexer.Null || intelliTip.Visible ||
-                e.Position == disableIntelliTipPos || e.Position == disableIntelliTipPos + 1)
+            if (intelliTip.Visible ||
+                e.Position == disableIntelliTipPos ||
+                e.Position == disableIntelliTipPos + 1)
             {
                 return;
             }
@@ -4331,53 +4390,110 @@ namespace PaintDotNet.Effects
                 lightBulbMenu.Hide();
             }
 
-            dwellWordPos = this.WordStartPosition(e.Position);
-
-            string tooltipText = null;
-
-            // If there's an error here, we'll show that instead
-            if (ScriptBuilder.Errors.Count > 0)
+            if (this.Lexer != Lexer.Null)
             {
-                int wordStartPos = this.WordStartPosition(e.Position);
-                int wordEndPos = this.WordEndPosition(e.Position);
-                foreach (Error error in ScriptBuilder.Errors)
+                dwellWordPos = this.WordStartPosition(e.Position);
+
+                string tooltipText = null;
+
+                // If there's an error here, we'll show that instead
+                if ((this.IsIndicatorOn(Indicator.Error, e.Position) || this.IsIndicatorOn(Indicator.Warning, e.Position)) &&
+                    ScriptBuilder.Errors.Count > 0)
                 {
-                    int errorPos = this.Lines[error.Line - 1].Position + error.Column;
-                    if (errorPos == wordStartPos || errorPos == wordEndPos)
+                    int wordStartPos = this.WordStartPosition(e.Position);
+                    int wordEndPos = this.WordEndPosition(e.Position);
+                    foreach (Error error in ScriptBuilder.Errors)
                     {
-                        tooltipText = error.ErrorText.InsertLineBreaks(100);
-                        break;
+                        int errorPos = this.Lines[error.Line - 1].Position + error.Column;
+                        if (errorPos == wordStartPos || errorPos == wordEndPos)
+                        {
+                            tooltipText = error.ErrorText.InsertLineBreaks(100);
+                            break;
+                        }
                     }
                 }
-            }
 
-            if (tooltipText == null)
-            {
-                switch (this.Lexer)
+                if (tooltipText == null)
                 {
-                    case Lexer.Cpp:
-                        tooltipText = this.GetIntelliTipCSharp(e.Position);
-                        break;
-                    case Lexer.Xml:
-                        tooltipText = this.GetIntelliTipXaml(e.Position);
-                        break;
-                    default:
-                        tooltipText = string.Empty;
-                        break;
+                    switch (this.Lexer)
+                    {
+                        case Lexer.Cpp:
+                            tooltipText = this.GetIntelliTipCSharp(e.Position);
+                            break;
+                        case Lexer.Xml:
+                            tooltipText = this.GetIntelliTipXaml(e.Position);
+                            break;
+                        default:
+                            tooltipText = string.Empty;
+                            break;
+                    }
+                }
+
+                if (tooltipText.Length > 0)
+                {
+                    int y = this.PointYFromPosition(e.Position) + this.Lines[this.CurrentLine].Height;
+                    intelliTip.Show(tooltipText, this, e.X, y);
                 }
             }
 
-            if (tooltipText.Length > 0)
-            {
-                int y = this.PointYFromPosition(e.Position) + this.Lines[this.CurrentLine].Height;
-                intelliTip.Show(tooltipText, this, e.X, y);
-            }
-
+            bool showLightBulb = false;
             if (this.IsIndicatorOn(Indicator.Rename, e.Position))
             {
-                renameVarMenuItem.Text = $"Rename '{RenameInfo.Identifier}' to '{this.GetWordFromPosition(e.Position)}'";
-                lightBulbMenu.Location = new Point(this.PointXFromPosition(e.Position) - lightBulbMenu.Width - 10,
-                                                   this.PointYFromPosition(e.Position) + this.Lines[this.CurrentLine].Height);
+                bulbIcon.DropDownItems.Clear();
+
+                string rename = $"Rename '{RenameInfo.Identifier}' to '{this.GetWordFromPosition(e.Position)}'";
+                bulbIcon.DropDownItems.Add(new ToolStripMenuItem(rename, null, RenameButton_Click));
+
+                showLightBulb = true;
+            }
+            else if (spellCheckEnabled && this.IsIndicatorOn(Indicator.Spelling, e.Position))
+            {
+                string misspelledWord = this.GetWordFromPosition(e.Position);
+
+                ToolStripMenuItem[] suggestedWords = spellChecker.Suggestions(misspelledWord)
+                    .Select(word => new ToolStripMenuItem(word, null, (sender, eventArgs) =>
+                        {
+                            lightBulbMenu.Hide();
+                            if (sender is ToolStripMenuItem menuItem)
+                            {
+                                int startPos = this.WordStartPosition(e.Position);
+                                int endPos = this.WordEndPosition(e.Position);
+                                this.SetTargetRange(startPos, endPos);
+                                this.ReplaceTarget(menuItem.Text);
+                            }
+                        }))
+                    .ToArray();
+
+                ToolStripMenuItem ignoreWord = new ToolStripMenuItem("Ignore Word", null, (sender, eventArgs) =>
+                    {
+                        spellChecker.Ignore(misspelledWord);
+                        EnqueueSpellCheck();
+                        lightBulbMenu.Hide();
+                        Settings.SpellingWordsToIgnore = Settings.SpellingWordsToIgnore.Append(misspelledWord); ;
+                    });
+
+                bulbIcon.DropDownItems.Clear();
+
+                if (suggestedWords.Length > 0)
+                {
+                    bulbIcon.DropDownItems.AddRange(suggestedWords);
+                    bulbIcon.DropDownItems.Add(new ToolStripSeparator());
+                    bulbIcon.DropDownItems.Add(ignoreWord);
+                }
+                else
+                {
+                    bulbIcon.DropDownItems.Add(ignoreWord);
+                }
+
+                showLightBulb = true;
+            }
+
+            if (showLightBulb)
+            {
+                lightBulbMenu.Location = new Point(
+                    this.PointXFromPosition(e.Position) - lightBulbMenu.Width - 10,
+                    this.PointYFromPosition(e.Position) + this.Lines[this.CurrentLine].Height);
+
                 lightBulbMenu.Show();
             }
         }
@@ -4634,6 +4750,68 @@ namespace PaintDotNet.Effects
         }
         #endregion
 
+        #region Spellcheck
+        private void SpellCheck()
+        {
+            int firstLine = this.DocLineFromVisible(this.FirstVisibleLine);
+            int lastLine = this.DocLineFromVisible(this.FirstVisibleLine + this.LinesOnScreen);
+
+            int startPos = this.Lines[firstLine].Position;
+            int length = this.Lines[lastLine].EndPosition - startPos;
+
+            string textRange = this.GetTextRange(startPos, length);
+            if (textRange.Length == 0)
+            {
+                return;
+            }
+
+            SpellingError[] spellingErrors = spellChecker.Check(textRange).ToArray();
+            bool isCSharp = this.Lexer == Lexer.Cpp;
+
+            this.IndicatorCurrent = Indicator.Spelling;
+            this.IndicatorClearRange(startPos, length);
+
+            foreach (SpellingError spellingError in spellingErrors)
+            {
+                int errorPos = startPos + (int)spellingError.StartIndex;
+                int errorLength = (int)spellingError.Length;
+
+                if (isCSharp)
+                {
+                    int style = this.GetStyleAt(errorPos);
+
+                    bool isComment =
+                        style == Style.Cpp.Comment || style == Style.Cpp.Comment + Preprocessor ||
+                        style == Style.Cpp.CommentLine || style == Style.Cpp.CommentLine + Preprocessor;
+
+                    if (isComment && this.GetTextRange(errorPos, errorLength).Contains('.'))
+                    {
+                        continue;
+                    }
+
+                    bool isString =
+                        style == Style.Cpp.String || style == Style.Cpp.String + Preprocessor ||
+                        style == Style.Cpp.Verbatim || style == Style.Cpp.Verbatim + Preprocessor;
+
+                    if (!isComment && !isString)
+                    {
+                        continue;
+                    }
+                }
+
+                this.IndicatorFillRange(errorPos, errorLength);
+            }
+        }
+
+        private void EnqueueSpellCheck()
+        {
+            if (spellCheckEnabled && (this.Lexer == Lexer.Cpp || this.Lexer == Lexer.Null))
+            {
+                delayedOperation |= DelayedOperation.CheckSpelling;
+            }
+        }
+        #endregion
+
         #region Errors
         internal void ClearErrors()
         {
@@ -4685,6 +4863,7 @@ namespace PaintDotNet.Effects
             internal const int ObjectHighlightDef = 10;
             internal const int Rename = 11;
             internal const int Find = 12;
+            internal const int Spelling = 14;
         }
 
         private static class LeftMargin

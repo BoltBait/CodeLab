@@ -165,10 +165,29 @@ namespace PaintDotNet.Effects
             get => GetRegValue("CaretLineFrame", false);
             set => SetRegValue("CaretLineFrame", value);
         }
-        public static bool ExtendedColors
+
+        internal static bool ExtendedColors
         {
             get => GetRegValue("ExtendedColors", false);
             set => SetRegValue("ExtendedColors", value);
+        }
+
+        internal static bool Spellcheck
+        {
+            get => GetRegValue("Spellcheck", false);
+            set => SetRegValue("Spellcheck", value);
+        }
+
+        internal static string SpellingLang
+        {
+            get => GetRegValue("SpellingLang", CultureInfo.CurrentUICulture.Name);
+            set => SetRegValue("SpellingLang", value);
+        }
+
+        internal static IEnumerable<string> SpellingWordsToIgnore
+        {
+            get => GetRegValue("SpellingWordsToIgnore", "Desc").Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
+            set => SetRegValue("SpellingWordsToIgnore", value.Join("|"));
         }
 
         private static void OpenRegKey()
