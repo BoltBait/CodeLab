@@ -3433,11 +3433,21 @@ namespace PaintDotNet.Effects
 
                             if (lineText.Trim().Equals("}"))
                             {
-                                indent -= this.TabWidth;
-                            }
+                                this.BeginUndoAction();
 
-                            this.Lines[this.CurrentLine].Indentation = indent;
-                            this.SetEmptySelection(this.Lines[this.CurrentLine].Position + indent);
+                                this.ExecuteCmd(Command.NewLine);
+                                this.Lines[this.CurrentLine].Indentation = indent - this.TabWidth;
+                                this.ExecuteCmd(Command.LineUp);
+                                this.Selections[0].CaretVirtualSpace = indent;
+                                this.Selections[0].AnchorVirtualSpace = indent;
+
+                                this.EndUndoAction();
+                            }
+                            else
+                            {
+                                this.Lines[this.CurrentLine].Indentation = indent;
+                                this.SetEmptySelection(this.Lines[this.CurrentLine].Position + indent);
+                            }
                         }
                     }
                     else
