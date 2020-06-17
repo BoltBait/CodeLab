@@ -651,42 +651,45 @@ namespace PaintDotNet.Effects
             filterMatches = true;
             this.Items.AddRange(matches.ToArray());
 
-            if (this.Items.Contains(LastUsedMember))
+
+            if (stringFilter.Length == 0)
             {
-                this.SelectedItem = LastUsedMember;
-            }
-            else if (this.Items.Contains(LastUsedNonMember))
-            {
-                this.SelectedItem = LastUsedNonMember;
-            }
-            else
-            {
-                for (int i = 0; i < this.Items.Count; i++)
+                if (this.Items.Contains(LastUsedMember))
                 {
-                    if (this.Items[i].ToString().StartsWith(stringFilter, StringComparison.Ordinal))
-                    {
-                        this.SelectedIndex = i;
-                        break;
-                    }
+                    this.SelectedItem = LastUsedMember;
+                }
+                else if (this.Items.Contains(LastUsedNonMember))
+                {
+                    this.SelectedItem = LastUsedNonMember;
                 }
 
-                if (this.SelectedIndex == -1)
-                {
-                    for (int i = 0; i < this.Items.Count; i++)
-                    {
-                        if (this.Items[i].ToString().StartsWith(stringFilter, StringComparison.OrdinalIgnoreCase))
-                        {
-                            this.SelectedIndex = i;
-                            break;
-                        }
-                    }
+                return;
+            }
 
-                    if (this.SelectedIndex == -1)
+            int indexToSelect = this.FindStringExact(stringFilter, true);
+            if (indexToSelect == -1)
+            {
+                if (this.Items.Contains(LastUsedMember))
+                {
+                    indexToSelect = this.FindStringExact(LastUsedMember.ToString(), false);
+                }
+                else if (this.Items.Contains(LastUsedNonMember))
+                {
+                    indexToSelect = this.FindStringExact(LastUsedNonMember.ToString(), false);
+                }
+
+                if (indexToSelect == -1)
+                {
+                    indexToSelect = this.FindString(stringFilter, true);
+                    if (indexToSelect == -1)
                     {
-                        this.SelectedIndex = 0;
+                        indexToSelect = 0;
                     }
                 }
             }
+
+            this.SelectedIndex = indexToSelect;
+            this.TopIndex = indexToSelect;
         }
 
         protected override void OnDrawItem(DrawItemEventArgs e)
@@ -762,27 +765,18 @@ namespace PaintDotNet.Effects
 
         internal void FindAndSelect(string itemName)
         {
-            for (int i = 0; i < this.Items.Count; i++)
+            int itemIndex = this.FindStringExact(itemName, true);
+            if (itemIndex == -1)
             {
-                if (this.Items[i] is IntelliBoxItem intelliItem &&
-                    intelliItem.Text.Equals(itemName, StringComparison.OrdinalIgnoreCase))
+                itemIndex = this.FindString(itemName, true);
+                if (itemIndex == -1)
                 {
-                    this.SelectedIndex = i;
-                    this.TopIndex = i;
                     return;
                 }
             }
 
-            for (int i = 0; i < this.Items.Count; i++)
-            {
-                if (this.Items[i] is IntelliBoxItem intelliItem &&
-                    intelliItem.Text.StartsWith(itemName, StringComparison.OrdinalIgnoreCase))
-                {
-                    this.SelectedIndex = i;
-                    this.TopIndex = i;
-                    return;
-                }
-            }
+            this.SelectedIndex = itemIndex;
+            this.TopIndex = itemIndex;
         }
 
         private class IntelliBoxItem : IComparable<IntelliBoxItem>, IEquatable<IntelliBoxItem>

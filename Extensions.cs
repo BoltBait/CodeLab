@@ -21,6 +21,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
+using System.Windows.Forms;
 
 namespace PaintDotNet.Effects
 {
@@ -630,5 +631,37 @@ namespace PaintDotNet.Effects
         }
 
         private static readonly PluralizationService pluralization = PluralizationService.CreateService(new CultureInfo("en-US"));
+
+        internal static int FindStringExact(this ListBox listBox, string s, bool preferCaseMatch)
+        {
+            if (preferCaseMatch)
+            {
+                for (int i = 0; i < listBox.Items.Count; i++)
+                {
+                    if (listBox.Items[i].ToString().Equals(s, StringComparison.Ordinal))
+                    {
+                        return i;
+                    }
+                }
+            }
+
+            return listBox.FindStringExact(s);
+        }
+
+        internal static int FindString(this ListBox listBox, string s, bool preferCaseMatch)
+        {
+            if (preferCaseMatch)
+            {
+                for (int i = 0; i < listBox.Items.Count; i++)
+                {
+                    if (listBox.Items[i].ToString().StartsWith(s, StringComparison.Ordinal))
+                    {
+                        return i;
+                    }
+                }
+            }
+
+            return listBox.FindString(s);
+        }
     }
 }
