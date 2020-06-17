@@ -344,40 +344,13 @@ namespace PaintDotNet.Effects
 
             string typeName = Regex.Replace(type.Name, @"`\d", string.Empty);
 
-            string fullNameSuggest = typeName.FirstCharToLower();
-            if (plural)
-            {
-                fullNameSuggest = fullNameSuggest.MakePlural();
-            }
-            unFilteredItems.Add(new IntelliBoxItem(fullNameSuggest, fullNameSuggest, "(Suggested name)", IntelliType.Variable));
-
-            string[] splitCamelCase = Regex.Split(typeName, "(?<!^)(?=[A-Z])");
-            for (int i = splitCamelCase.Length - 1; i > 0; i--)
-            {
-                StringBuilder subtractEnd = new StringBuilder(i);
-                for (int j = 0; j < i; j++)
-                {
-                    subtractEnd.Append(splitCamelCase[j]);
-                }
-                string subtractedEndSuggest = subtractEnd.ToString().FirstCharToLower();
-                if (plural)
-                {
-                    subtractedEndSuggest = subtractedEndSuggest.MakePlural();
-                }
-                unFilteredItems.Add(new IntelliBoxItem(subtractedEndSuggest, subtractedEndSuggest, "(Suggested name)", IntelliType.Variable));
-
-                StringBuilder subtractStart = new StringBuilder(i);
-                for (int j = splitCamelCase.Length - i; j < splitCamelCase.Length; j++)
-                {
-                    subtractStart.Append(splitCamelCase[j]);
-                }
-                string subtractedStartSuggest = subtractStart.ToString().FirstCharToLower();
-                if (plural)
-                {
-                    subtractedStartSuggest = subtractedStartSuggest.MakePlural();
-                }
-                unFilteredItems.Add(new IntelliBoxItem(subtractedStartSuggest, subtractedStartSuggest, "(Suggested name)", IntelliType.Variable));
-            }
+            unFilteredItems.AddRange(SplitCamelCase(typeName)
+                .Select(str =>
+                    {
+                        string suggestion = plural ? str.MakePlural() : str;
+                        return new IntelliBoxItem(suggestion, suggestion, "(Suggested name)", IntelliType.Variable);
+                    })
+                );
 
             this.Items.AddRange(unFilteredItems.ToArray());
             this.SelectedIndex = 0;
@@ -599,6 +572,32 @@ namespace PaintDotNet.Effects
             }
 
             unFilteredItems.Add(new IntelliBoxItem(name, code, toolTip, icon));
+        }
+
+        private static IEnumerable<string> SplitCamelCase(string str)
+        {
+            List<string> results = new List<string>();
+            results.Add(str.FirstCharToLower());
+
+            string[] splitCamelCase = Regex.Split(str, "(?<!^)(?=[A-Z])");
+            for (int i = splitCamelCase.Length - 1; i > 0; i--)
+            {
+                StringBuilder subtractEnd = new StringBuilder(i);
+                for (int j = 0; j < i; j++)
+                {
+                    subtractEnd.Append(splitCamelCase[j]);
+                }
+                results.Add(subtractEnd.ToString().FirstCharToLower());
+
+                StringBuilder subtractStart = new StringBuilder(i);
+                for (int j = splitCamelCase.Length - i; j < splitCamelCase.Length; j++)
+                {
+                    subtractStart.Append(splitCamelCase[j]);
+                }
+                results.Add(subtractStart.ToString().FirstCharToLower());
+            }
+
+            return results;
         }
 
         internal void Filter(string contains)
