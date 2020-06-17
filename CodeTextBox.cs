@@ -3653,7 +3653,38 @@ namespace PaintDotNet.Effects
                     }
                     else
                     {
-                        NonMemberIntelliBox(this.CurrentPosition - 1);
+                        bool procedeWithBox = true;
+
+                        // Test for when declaring multiple variables in series.
+                        // Ex: double a, b;
+                        int testPos = this.CurrentPosition - 2;
+                        while (char.IsWhiteSpace(this.GetCharAt(testPos)) && testPos > InvalidPosition)
+                        {
+                            testPos--;
+                        }
+                        if (this.GetCharAt(testPos).Equals(','))
+                        {
+                            while (testPos > InvalidPosition)
+                            {
+                                testPos--;
+
+                                char c = this.GetCharAt(testPos);
+                                if (c.Equals('(') || c.Equals('['))
+                                {
+                                    break;
+                                }
+                                else if (c.Equals(';') || c.Equals('{') || c.Equals(')'))
+                                {
+                                    procedeWithBox = false;
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (procedeWithBox)
+                        {
+                            NonMemberIntelliBox(this.CurrentPosition - 1);
+                        }
                     }
                 }
                 else if (e.Char == ' ')
