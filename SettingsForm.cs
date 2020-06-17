@@ -86,7 +86,7 @@ namespace PaintDotNet.Effects
             }
             else
             {
-                spellPanel.Enabled = false;
+                panelSpelling.Enabled = false;
             }
 
             // Compiler page
@@ -134,43 +134,43 @@ namespace PaintDotNet.Effects
             string item = settingsList.SelectedItem.ToString();
             if (item == "User Interface")
             {
-                updatesPanel.Visible = false;
-                snippetPanel.Visible = false;
-                uiPanel.Visible = true;
-                spellPanel.Visible = false;
-                compilerPanel.Visible = false;
+                panelUpdates.Visible = false;
+                panelSnippet.Visible = false;
+                panelUI.Visible = true;
+                panelSpelling.Visible = false;
+                panelCompiler.Visible = false;
             }
             else if (item == "Snippets")
             {
-                updatesPanel.Visible = false;
-                snippetPanel.Visible = true;
-                uiPanel.Visible = false;
-                spellPanel.Visible = false;
-                compilerPanel.Visible = false;
+                panelUpdates.Visible = false;
+                panelSnippet.Visible = true;
+                panelUI.Visible = false;
+                panelSpelling.Visible = false;
+                panelCompiler.Visible = false;
             }
             else if (item == "Updates")
             {
-                updatesPanel.Visible = true;
-                snippetPanel.Visible = false;
-                uiPanel.Visible = false;
-                spellPanel.Visible = false;
-                compilerPanel.Visible = false;
+                panelUpdates.Visible = true;
+                panelSnippet.Visible = false;
+                panelUI.Visible = false;
+                panelSpelling.Visible = false;
+                panelCompiler.Visible = false;
             }
             else if (item == "Compiler")
             {
-                updatesPanel.Visible = false;
-                snippetPanel.Visible = false;
-                uiPanel.Visible = false;
-                spellPanel.Visible = false;
-                compilerPanel.Visible = true;
+                panelUpdates.Visible = false;
+                panelSnippet.Visible = false;
+                panelUI.Visible = false;
+                panelSpelling.Visible = false;
+                panelCompiler.Visible = true;
             }
             else if (item == "Spellcheck")
             {
-                updatesPanel.Visible = false;
-                snippetPanel.Visible = false;
-                uiPanel.Visible = false;
-                spellPanel.Visible = true;
-                compilerPanel.Visible = false;
+                panelUpdates.Visible = false;
+                panelSnippet.Visible = false;
+                panelUI.Visible = false;
+                panelSpelling.Visible = true;
+                panelCompiler.Visible = false;
             }
         }
         #endregion

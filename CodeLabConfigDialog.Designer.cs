@@ -910,7 +910,7 @@
             this.settingsToolStripMenuItem.ImageName = "Settings";
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
             this.settingsToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
-            this.settingsToolStripMenuItem.Text = "CodeLab &Settings";
+            this.settingsToolStripMenuItem.Text = "CodeLab &Settings...";
             this.settingsToolStripMenuItem.Click += new System.EventHandler(this.settingsToolStripMenuItem_Click);
             // 
             // aboutToolStripMenuItem
@@ -1213,10 +1213,12 @@
             this.txtCode.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtCode.AutoCMaxHeight = 9;
             this.txtCode.AutomaticFold = ((ScintillaNET.AutomaticFold)((ScintillaNET.AutomaticFold.Show | ScintillaNET.AutomaticFold.Change)));
             this.txtCode.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtCode.CaretLineBackColor = System.Drawing.Color.GhostWhite;
             this.txtCode.CaretLineVisible = true;
+            this.txtCode.CaretLineVisibleAlways = true;
             this.txtCode.ContextMenuStrip = this.contextMenuStrip1;
             this.txtCode.EdgeColor = System.Drawing.Color.PowderBlue;
             this.txtCode.IdleStyling = ScintillaNET.IdleStyling.All;
