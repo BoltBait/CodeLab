@@ -37,10 +37,10 @@ namespace PaintDotNet.Effects
 
             return new Error(
                 ErrorType.CSharp,
-                span.Start.Line - ScriptBuilder.LineOffset + 1,
-                span.Start.Character - ScriptBuilder.ColumnOffset + 1,
-                span.End.Line - ScriptBuilder.LineOffset + 1,
-                span.End.Character - ScriptBuilder.ColumnOffset + 1,
+                span.Start.Line - ScriptBuilder.LineOffset,
+                span.Start.Character - ScriptBuilder.ColumnOffset,
+                span.End.Line - ScriptBuilder.LineOffset,
+                span.End.Character - ScriptBuilder.ColumnOffset,
                 diagnostic.Id,
                 diagnostic.GetMessage(),
                 diagnostic.Severity == DiagnosticSeverity.Warning);
@@ -78,7 +78,7 @@ namespace PaintDotNet.Effects
             switch (this.errorType)
             {
                 case ErrorType.CSharp:
-                    return $"{(this.IsWarning ? "Warning" : "Error")} at line {this.StartLine}: {this.ErrorText} ({this.ErrorNumber})";
+                    return $"{(this.IsWarning ? "Warning" : "Error")} at line {this.StartLine + 1}: {this.ErrorText} ({this.ErrorNumber})";
                 case ErrorType.Xaml:
                     return this.ErrorText;
                 case ErrorType.Internal:

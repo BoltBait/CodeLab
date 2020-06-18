@@ -425,9 +425,9 @@ namespace PaintDotNet.Effects
                     {
                         errorList.AddError(error);
 
-                        if (error.StartLine > 0)
+                        if (error.StartLine >= 0)
                         {
-                            txtCode.AddError(error.StartLine - 1, error.StartColumn, error.EndLine - 1, error.EndColumn, error.IsWarning);
+                            txtCode.AddError(error.StartLine, error.StartColumn, error.EndLine, error.EndColumn, error.IsWarning);
                         }
                     }
 
@@ -763,10 +763,10 @@ namespace PaintDotNet.Effects
             }
 
             Error error = errorList.SelectedError;
-            if (error.StartLine > 0)
+            if (error.StartLine >= 0)
             {
-                txtCode.SetEmptySelection(txtCode.Lines[error.StartLine - 1].Position + error.StartColumn);
-                txtCode.Lines[error.StartLine - 1].EnsureVisible();
+                txtCode.SetEmptySelection(txtCode.Lines[error.StartLine].Position + error.StartColumn);
+                txtCode.Lines[error.StartLine].EnsureVisible();
                 txtCode.ScrollCaret();    // Make error visible by scrolling to it
                 txtCode.Focus();
             }

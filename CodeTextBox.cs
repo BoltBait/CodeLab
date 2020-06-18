@@ -4450,12 +4450,12 @@ namespace PaintDotNet.Effects
 
                         foreach (Error error in ScriptBuilder.Errors)
                         {
-                            if (error.StartLine <= 0)
+                            if (error.StartLine < 0)
                             {
                                 continue;
                             }
 
-                            var (errorPosition, errorLength) = GetErrorPosition(error.StartLine - 1, error.StartColumn, error.EndLine - 1, error.EndColumn);
+                            var (errorPosition, errorLength) = GetErrorPosition(error.StartLine, error.StartColumn, error.EndLine, error.EndColumn);
                             if (errorPosition == indicatorPosition && errorLength == indicatorLength)
                             {
                                 tooltipText = error.ErrorText.InsertLineBreaks(100);
