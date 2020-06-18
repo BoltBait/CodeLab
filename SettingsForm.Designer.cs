@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             this.closeButton = new System.Windows.Forms.Button();
             this.panelUpdates = new System.Windows.Forms.Panel();
             this.checkNowButton = new System.Windows.Forms.Button();
@@ -66,7 +65,6 @@
             this.lineNumbersCheckbox = new System.Windows.Forms.CheckBox();
             this.settingsList = new System.Windows.Forms.ListBox();
             this.panelSnippet = new PaintDotNet.Effects.SnippetManager();
-            this.imageList = new System.Windows.Forms.ImageList(this.components);
             this.panelSpelling = new System.Windows.Forms.Panel();
             this.addLangsButton = new System.Windows.Forms.Button();
             this.enableSpellcheckCheckBox = new System.Windows.Forms.CheckBox();
@@ -523,12 +521,6 @@
             this.panelSnippet.Size = new System.Drawing.Size(476, 405);
             this.panelSnippet.TabIndex = 1;
             // 
-            // imageList
-            // 
-            this.imageList.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
-            this.imageList.ImageSize = new System.Drawing.Size(24, 24);
-            this.imageList.TransparentColor = System.Drawing.Color.Transparent;
-            // 
             // panelSpelling
             // 
             this.panelSpelling.Controls.Add(this.addLangsButton);
@@ -700,7 +692,6 @@
         private System.Windows.Forms.Label warningToIgnoreLabel;
         private System.Windows.Forms.ListBox warningsToIgnoreList;
         private System.Windows.Forms.Button lookupWarningButton;
-        private System.Windows.Forms.ImageList imageList;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.CheckBox caretLineFrameCheckBox;
         private System.Windows.Forms.CheckBox extendedColorsCheckBox;

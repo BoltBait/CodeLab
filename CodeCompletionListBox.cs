@@ -30,9 +30,10 @@ namespace PaintDotNet.Effects
 {
     internal sealed class IntelliBox : ListBox
     {
-        private readonly ImageList imageList = new ImageList();
         private bool mouseOver;
         private bool filterMatches;
+        private readonly Size iconSize;
+        private readonly IReadOnlyList<Image> itemIcons;
         private readonly IntelliTip itemToolTip = new IntelliTip();
         private readonly List<IntelliBoxItem> unFilteredItems = new List<IntelliBoxItem>();
         private IntelliBoxItem LastUsedMember = IntelliBoxItem.Empty;
@@ -44,7 +45,7 @@ namespace PaintDotNet.Effects
         internal string AutoCompleteCode => SelectedItem.ToString();
         internal bool MouseOver => mouseOver;
         internal bool Matches => filterMatches;
-        internal int IconWidth => imageList.ImageSize.Width + 2;
+        internal int IconWidth => iconSize.Width + 2;
         internal bool ExtraSpace => (intelliBoxContents != IntelliBoxContents.NonMembers && intelliBoxContents != IntelliBoxContents.Constructors);
 
         internal IntelliBox()
@@ -56,9 +57,8 @@ namespace PaintDotNet.Effects
             this.BorderStyle = BorderStyle.FixedSingle;
             this.Cursor = Cursors.Default;
 
-            imageList.ImageSize = UIUtil.ScaleSize(16, 16);
-            imageList.ColorDepth = ColorDepth.Depth32Bit;
-            imageList.Images.AddRange(new Image[]
+            iconSize = UIUtil.ScaleSize(16, 16);
+            itemIcons = new Image[]
             {
                 UIUtil.GetImage("Method"),
                 UIUtil.GetImage("Property"),
@@ -77,7 +77,7 @@ namespace PaintDotNet.Effects
                 UIUtil.GetImage("Var"), // Use the Variable icon for Parameter
                 UIUtil.GetImage("Interface"),
                 UIUtil.EmptyImage
-            });
+            };
         }
 
         protected override void OnLocationChanged(EventArgs e)
@@ -704,9 +704,11 @@ namespace PaintDotNet.Effects
             if (Items[e.Index] is IntelliBoxItem item)
             {
                 using (SolidBrush iconBg = new SolidBrush(this.BackColor))
-                    e.Graphics.FillRectangle(iconBg, e.Bounds.Left, e.Bounds.Top, imageList.ImageSize.Width + 1, imageList.ImageSize.Height);
-                imageList.Draw(e.Graphics, e.Bounds.Left, e.Bounds.Top, item.ImageIndex);
-                TextRenderer.DrawText(e.Graphics, item.Text, e.Font, new Point(e.Bounds.Left + imageList.ImageSize.Width, e.Bounds.Top), e.ForeColor);
+                {
+                    e.Graphics.FillRectangle(iconBg, e.Bounds.Left, e.Bounds.Top, iconSize.Width + 1, iconSize.Height);
+                }
+                e.Graphics.DrawImage(itemIcons[item.ImageIndex], e.Bounds.Left, e.Bounds.Top, iconSize.Width, iconSize.Height);
+                TextRenderer.DrawText(e.Graphics, item.Text, e.Font, new Point(e.Bounds.Left + iconSize.Width, e.Bounds.Top), e.ForeColor);
             }
             else
             {

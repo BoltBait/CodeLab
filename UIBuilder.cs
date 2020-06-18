@@ -51,6 +51,8 @@ namespace PaintDotNet.Effects
                 }
             }
 
+            ControlListView.Font = new Font(Settings.FontFamily, ControlListView.Font.SizeInPoints);
+
             // Populate the ControlType dropdown based on allowed ElementTypes
             List<ControlTypeItem> controlTypes = new List<ControlTypeItem>();
             foreach (ElementType elementType in Enum.GetValues(typeof(ElementType)))
@@ -80,8 +82,7 @@ namespace PaintDotNet.Effects
 
             UpdateEnabledFields();
 
-            SizeF dpi = new SizeF(this.AutoScaleDimensions.Width / 96f, this.AutoScaleDimensions.Height / 96f);
-            imgList.ImageSize = new Size((int)Math.Round(16 * dpi.Width), (int)Math.Round(16 * dpi.Height));
+            imgList.ImageSize = UIUtil.ScaleSize(16, 16);
             imgList.Images.AddRange(new Image[]
             {
                 UIUtil.GetImage("00int"),
@@ -101,8 +102,6 @@ namespace PaintDotNet.Effects
                 UIUtil.GetImage("14FilenameControl"),
                 UIUtil.GetImage("15Uri")
             });
-
-            ControlListView.SmallImageList = imgList;
 
             DefaultColorComboBox.DropDownWidth = DefaultColorComboBox.Width * 2;
             DefaultColorComboBox.Items.Add("None");

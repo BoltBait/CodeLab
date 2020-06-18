@@ -247,13 +247,13 @@ namespace PaintDotNet.Effects
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.ControlListView.AutoArrange = false;
-            this.ControlListView.Font = new System.Drawing.Font("Courier New", 9F);
             this.ControlListView.HideSelection = false;
             this.ControlListView.Location = new System.Drawing.Point(13, 29);
             this.ControlListView.MultiSelect = false;
             this.ControlListView.Name = "ControlListView";
             this.ControlListView.ShowGroups = false;
             this.ControlListView.Size = new System.Drawing.Size(391, 211);
+            this.ControlListView.SmallImageList = this.imgList;
             this.ControlListView.TabIndex = 0;
             this.ControlListView.UseCompatibleStateImageBehavior = false;
             this.ControlListView.View = System.Windows.Forms.View.List;

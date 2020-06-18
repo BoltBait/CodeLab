@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -8,7 +9,9 @@ namespace PaintDotNet.Effects
     public partial class SettingsForm : ChildFormBase
     {
         #region Initialize
-        bool Initializing;
+        private readonly bool Initializing;
+        private readonly IReadOnlyList<Image> pageIcons;
+
         public SettingsForm()
         {
             InitializeComponent();
@@ -24,15 +27,14 @@ namespace PaintDotNet.Effects
                 }
             }
 
-            imageList.ImageSize = UIUtil.ScaleSize(24, 24);
-            imageList.Images.AddRange(new Image[]
+            pageIcons = new Image[]
             {
                 UIUtil.GetImage("UI"),
                 UIUtil.GetImage("Snippet"),
                 UIUtil.GetImage("Spelling"),
                 UIUtil.GetImage("Compiler"),
                 UIUtil.GetImage("Updates")
-            });
+            };
 
             settingsList.ItemHeight = UIUtil.Scale(32);
             linkLabel1.LinkColor = this.ForeColor;
@@ -52,7 +54,7 @@ namespace PaintDotNet.Effects
             showWhiteSpaceCheckbox.Checked = Settings.WhiteSpace;
             indentSpacesComboBox.SelectedIndex = Settings.IndentSpaces == 4 ? 1 : 0;
             largeFontCheckbox.Checked = Settings.LargeFonts;
-            for(int i=0; i<fontCombobox.Items.Count; i++)
+            for (int i = 0; i < fontCombobox.Items.Count; i++)
             {
                 if (!UIUtil.IsFontInstalled(fontCombobox.Items[i].ToString()))
                 {
@@ -114,10 +116,10 @@ namespace PaintDotNet.Effects
                 return;
             }
 
-            e.DrawBackground(); 
+            e.DrawBackground();
 
-            Point iconLocation = new Point(e.Bounds.X + UIUtil.Scale(4), e.Bounds.Y + UIUtil.Scale(4));
-            imageList.Draw(e.Graphics, iconLocation, e.Index);
+            Rectangle iconRect = new Rectangle(e.Bounds.X + UIUtil.Scale(4), e.Bounds.Y + UIUtil.Scale(4), UIUtil.Scale(24), UIUtil.Scale(24));
+            e.Graphics.DrawImage(pageIcons[e.Index], iconRect);
 
             string itemName = settingsList.Items[e.Index].ToString();
             Rectangle textBounds = new Rectangle(e.Bounds.X + e.Bounds.Height, e.Bounds.Y, e.Bounds.Width - e.Bounds.Height, e.Bounds.Height);
