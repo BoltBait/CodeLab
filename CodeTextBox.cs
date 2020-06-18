@@ -4830,9 +4830,8 @@ namespace PaintDotNet.Effects
 
         private void SetupSpellingLightBulb(int position)
         {
-            ScintillaNET.Indicator indicator = new ScintillaNET.Indicator(this, Indicator.Spelling);
-            int indicatorStart = indicator.Start(position);
-            int indicatorLength = indicator.End(position) - indicatorStart;
+            int indicatorStart = this.Indicators[Indicator.Spelling].Start(position);
+            int indicatorLength = this.Indicators[Indicator.Spelling].End(position) - indicatorStart;
 
             RecommendedAction recommendedAction = RecommendedAction.None;
             if (this.Lexer == Lexer.Null)
