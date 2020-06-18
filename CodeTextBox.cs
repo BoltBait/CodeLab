@@ -4489,42 +4489,7 @@ namespace PaintDotNet.Effects
             }
             else if (spellCheckEnabled && this.IsIndicatorOn(Indicator.Spelling, e.Position))
             {
-                string misspelledWord = this.GetWordFromPosition(e.Position);
-
-                ToolStripMenuItem[] suggestedWords = spellChecker.Suggestions(misspelledWord)
-                    .Select(word => new ToolStripMenuItem(word, null, (sender, eventArgs) =>
-                        {
-                            lightBulbMenu.Hide();
-                            if (sender is ToolStripMenuItem menuItem)
-                            {
-                                int startPos = this.WordStartPosition(e.Position);
-                                int endPos = this.WordEndPosition(e.Position);
-                                this.SetTargetRange(startPos, endPos);
-                                this.ReplaceTarget(menuItem.Text);
-                            }
-                        }))
-                    .ToArray();
-
-                ToolStripMenuItem ignoreWord = new ToolStripMenuItem("Ignore Word", null, (sender, eventArgs) =>
-                    {
-                        spellChecker.Ignore(misspelledWord);
-                        EnqueueSpellCheck();
-                        lightBulbMenu.Hide();
-                        Settings.SpellingWordsToIgnore = Settings.SpellingWordsToIgnore.Append(misspelledWord); ;
-                    });
-
-                bulbIcon.DropDownItems.Clear();
-
-                if (suggestedWords.Length > 0)
-                {
-                    bulbIcon.DropDownItems.AddRange(suggestedWords);
-                    bulbIcon.DropDownItems.Add(new ToolStripSeparator());
-                    bulbIcon.DropDownItems.Add(ignoreWord);
-                }
-                else
-                {
-                    bulbIcon.DropDownItems.Add(ignoreWord);
-                }
+                SetupSpellingLightBulb(e.Position);
 
                 showLightBulb = true;
             }
@@ -4825,6 +4790,11 @@ namespace PaintDotNet.Effects
 
                 if (isCSharp)
                 {
+                    if (spellingError.RecommendedAction == RecommendedAction.Delete)
+                    {
+                        continue;
+                    }
+
                     int style = this.GetStyleAt(errorPos);
 
                     bool isComment =
@@ -4855,6 +4825,67 @@ namespace PaintDotNet.Effects
             if (spellCheckEnabled && (this.Lexer == Lexer.Cpp || this.Lexer == Lexer.Null))
             {
                 delayedOperation |= DelayedOperation.CheckSpelling;
+            }
+        }
+
+        private void SetupSpellingLightBulb(int position)
+        {
+            ScintillaNET.Indicator indicator = new ScintillaNET.Indicator(this, Indicator.Spelling);
+            int indicatorStart = indicator.Start(position);
+            int indicatorLength = indicator.End(position) - indicatorStart;
+
+            RecommendedAction recommendedAction = RecommendedAction.None;
+            if (this.Lexer == Lexer.Null)
+            {
+                Line line = this.Lines[this.LineFromPosition(position)];
+                recommendedAction = spellChecker.Check(line.Text)
+                    .FirstOrDefault(error => line.Position + (int)error.StartIndex == indicatorStart && (int)error.Length == indicatorLength)
+                    .RecommendedAction;
+            }
+
+            string misspelledWord = this.GetTextRange(indicatorStart, indicatorLength);
+
+            bulbIcon.DropDownItems.Clear();
+
+            if (recommendedAction == RecommendedAction.Delete)
+            {
+                ToolStripMenuItem deleteWord = new ToolStripMenuItem($"Delete '{misspelledWord}'", null, (sender, eventArgs) =>
+                {
+                    lightBulbMenu.Hide();
+                    this.DeleteRange(indicatorStart - 1, indicatorLength + 1);
+                });
+
+                bulbIcon.DropDownItems.Add(deleteWord);
+            }
+            else
+            {
+                ToolStripMenuItem[] suggestedWords = spellChecker.Suggestions(misspelledWord)
+                    .Select(word => new ToolStripMenuItem(word, null, (sender, eventArgs) =>
+                    {
+                        lightBulbMenu.Hide();
+                        this.SetTargetRange(indicatorStart, indicatorStart + indicatorLength);
+                        this.ReplaceTarget(word);
+                    }))
+                    .ToArray();
+
+                ToolStripMenuItem ignoreWord = new ToolStripMenuItem($"Ignore '{misspelledWord}'", null, (sender, eventArgs) =>
+                {
+                    spellChecker.Ignore(misspelledWord);
+                    EnqueueSpellCheck();
+                    lightBulbMenu.Hide();
+                    Settings.SpellingWordsToIgnore = Settings.SpellingWordsToIgnore.Append(misspelledWord);
+                });
+
+                if (suggestedWords.Length > 0)
+                {
+                    bulbIcon.DropDownItems.AddRange(suggestedWords);
+                    bulbIcon.DropDownItems.Add(new ToolStripSeparator());
+                    bulbIcon.DropDownItems.Add(ignoreWord);
+                }
+                else
+                {
+                    bulbIcon.DropDownItems.Add(ignoreWord);
+                }
             }
         }
         #endregion
