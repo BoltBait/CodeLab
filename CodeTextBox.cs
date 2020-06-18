@@ -937,11 +937,7 @@ namespace PaintDotNet.Effects
             {
                 char c = strippedText[posIndex - 1];
 
-                if (char.IsWhiteSpace(c))
-                {
-                    // no-op
-                }
-                else if (!(char.IsLetterOrDigit(c) || c == '_' || c == '.'))
+                if (!(char.IsLetterOrDigit(c) || c == '_' || c == '.'))
                 {
                     return strippedText.Substring(posIndex);
                 }
@@ -964,11 +960,7 @@ namespace PaintDotNet.Effects
             {
                 char c = this.GetCharAt(tokenPos - 1);
 
-                if (char.IsWhiteSpace(c))
-                {
-                    // no-op
-                }
-                else if (c == ')' || c == '>')
+                if (c == ')' || c == '>')
                 {
                     tokenPos = this.BraceMatch(tokenPos - 1) + 1;
                 }
@@ -2094,7 +2086,7 @@ namespace PaintDotNet.Effects
         private MemberInfo GetMember(int position, out int length)
         {
             length = 0;
-            string lastWords = GetLastWords(position).StripWhitespace();
+            string lastWords = GetLastWords(position);
             string[] tokens = lastWords.Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
             if (tokens.Length == 0)
             {
