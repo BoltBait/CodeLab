@@ -421,13 +421,13 @@ namespace PaintDotNet.Effects
                         return;
                     }
 
-                    foreach (Error err in ScriptBuilder.Errors)
+                    foreach (Error error in ScriptBuilder.Errors)
                     {
-                        errorList.AddError(err);
+                        errorList.AddError(error);
 
-                        if (err.Line > 0)
+                        if (error.StartLine > 0)
                         {
-                            txtCode.AddError(err.Line - 1, err.Column, err.IsWarning);
+                            txtCode.AddError(error.StartLine - 1, error.StartColumn, error.EndLine - 1, error.EndColumn, error.IsWarning);
                         }
                     }
 
@@ -440,11 +440,6 @@ namespace PaintDotNet.Effects
                     }
 
                     errorList.AddError(ShapeBuilder.Error);
-
-                    if (ShapeBuilder.Error.Line > 0)
-                    {
-                        txtCode.AddError(ShapeBuilder.Error.Line - 1, ShapeBuilder.Error.Column, ShapeBuilder.Error.IsWarning);
-                    }
 
                     break;
             }
@@ -768,10 +763,10 @@ namespace PaintDotNet.Effects
             }
 
             Error error = errorList.SelectedError;
-            if (error.Line > 0)
+            if (error.StartLine > 0)
             {
-                txtCode.SetEmptySelection(txtCode.Lines[error.Line - 1].Position + error.Column);
-                txtCode.Lines[error.Line - 1].EnsureVisible();
+                txtCode.SetEmptySelection(txtCode.Lines[error.StartLine - 1].Position + error.StartColumn);
+                txtCode.Lines[error.StartLine - 1].EnsureVisible();
                 txtCode.ScrollCaret();    // Make error visible by scrolling to it
                 txtCode.Focus();
             }

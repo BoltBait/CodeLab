@@ -4437,19 +4437,30 @@ namespace PaintDotNet.Effects
 
                 string tooltipText = null;
 
-                // If there's an error here, we'll show that instead
-                if ((this.IsIndicatorOn(Indicator.Error, e.Position) || this.IsIndicatorOn(Indicator.Warning, e.Position)) &&
-                    ScriptBuilder.Errors.Count > 0)
+                if (this.Lexer == Lexer.Cpp)
                 {
-                    int wordStartPos = this.WordStartPosition(e.Position);
-                    int wordEndPos = this.WordEndPosition(e.Position);
-                    foreach (Error error in ScriptBuilder.Errors)
+                    // If there's an error here, we'll show that instead
+                    bool isError = this.IsIndicatorOn(Indicator.Error, e.Position);
+                    bool isWarning = this.IsIndicatorOn(Indicator.Warning, e.Position);
+                    if (isError || isWarning)
                     {
-                        int errorPos = this.Lines[error.Line - 1].Position + error.Column;
-                        if (errorPos == wordStartPos || errorPos == wordEndPos)
+                        int indicator = isError ? Indicator.Error : Indicator.Warning;
+                        int indicatorPosition = this.Indicators[indicator].Start(e.Position);
+                        int indicatorLength = this.Indicators[indicator].End(e.Position) - indicatorPosition;
+
+                        foreach (Error error in ScriptBuilder.Errors)
                         {
-                            tooltipText = error.ErrorText.InsertLineBreaks(100);
-                            break;
+                            if (error.StartLine <= 0)
+                            {
+                                continue;
+                            }
+
+                            var (errorPosition, errorLength) = GetErrorPosition(error.StartLine - 1, error.StartColumn, error.EndLine - 1, error.EndColumn);
+                            if (errorPosition == indicatorPosition && errorLength == indicatorLength)
+                            {
+                                tooltipText = error.ErrorText.InsertLineBreaks(100);
+                                break;
+                            }
                         }
                     }
                 }
@@ -4903,30 +4914,48 @@ namespace PaintDotNet.Effects
             this.IndicatorClearRange(0, this.TextLength);
         }
 
-        internal void AddError(int line, int column, bool isWarning)
+        internal void AddError(int startLine, int startColumn, int endLine, int endColumn, bool isWarning)
         {
             if (isWarning)
             {
-                warningLines.Add(line);
+                warningLines.Add(startLine);
             }
             else
             {
-                errorLines.Add(line);
+                errorLines.Add(startLine);
             }
 
-            int errPosition = this.WordStartPosition(this.Lines[line].Position + column);
-            int errorLength = this.GetWordFromPosition(errPosition).Length;
-
-            // if error is at the end of the line (missing semi-colon), or is a stray '.'
-            if (errorLength == 0 || errPosition == this.Lines[line].EndPosition - 2)
-            {
-                errPosition--;
-                errorLength = 1;
-            }
+            var (position, length) = GetErrorPosition(startLine, startColumn, endLine, endColumn);
 
             // Underline the error
             this.IndicatorCurrent = isWarning ? Indicator.Warning : Indicator.Error;
-            this.IndicatorFillRange(errPosition, errorLength);
+            this.IndicatorFillRange(position, length);
+        }
+
+        private Tuple<int, int> GetErrorPosition(int startLine, int startColumn, int endLine, int endColumn)
+        {
+            int errorPosition;
+            int errorLength;
+
+            if (endLine < 0 || endColumn < 0)
+            {
+                errorPosition = this.WordStartPosition(this.Lines[startLine].Position + startColumn);
+                errorLength = this.GetWordFromPosition(errorPosition).Length;
+            }
+            else
+            {
+                errorPosition = this.Lines[startLine].Position + startColumn;
+                errorLength = this.Lines[endLine].Position + endColumn - errorPosition;
+            }
+
+            // if error is at the end of the line (missing semi-colon), or is a stray '.'
+            if (errorLength == 0 || errorPosition == this.Lines[startLine].EndPosition - 2)
+            {
+                errorPosition--;
+                errorLength = 1;
+            }
+
+            return new Tuple<int, int>(errorPosition, errorLength);
         }
         #endregion
 

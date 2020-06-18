@@ -22,8 +22,10 @@ namespace PaintDotNet.Effects
     {
         private readonly ErrorType errorType;
 
-        internal int Line { get; }
-        internal int Column { get; }
+        internal int StartLine { get; }
+        internal int StartColumn { get; }
+        internal int EndLine { get; }
+        internal int EndColumn { get; }
         internal string ErrorNumber { get; }
         internal string ErrorText { get; }
         internal bool IsWarning { get; }
@@ -31,12 +33,14 @@ namespace PaintDotNet.Effects
 
         internal static Error NewCodeError(Diagnostic diagnostic)
         {
-            LinePosition linePosition = diagnostic.Location.GetLineSpan().StartLinePosition;
+            LinePositionSpan span = diagnostic.Location.GetLineSpan().Span;
 
             return new Error(
                 ErrorType.CSharp,
-                linePosition.Line - ScriptBuilder.LineOffset + 1,
-                linePosition.Character - ScriptBuilder.ColumnOffset + 1,
+                span.Start.Line - ScriptBuilder.LineOffset + 1,
+                span.Start.Character - ScriptBuilder.ColumnOffset + 1,
+                span.End.Line - ScriptBuilder.LineOffset + 1,
+                span.End.Character - ScriptBuilder.ColumnOffset + 1,
                 diagnostic.Id,
                 diagnostic.GetMessage(),
                 diagnostic.Severity == DiagnosticSeverity.Warning);
@@ -44,24 +48,26 @@ namespace PaintDotNet.Effects
 
         internal static Error NewShapeError(int line, int column, string errorText)
         {
-            return new Error(ErrorType.Xaml, line, column, string.Empty, errorText, false);
+            return new Error(ErrorType.Xaml, line, column, -1, -1, string.Empty, errorText, false);
         }
 
         internal static Error NewInternalError(string internalError)
         {
-            return new Error(ErrorType.Internal, 0, 0, string.Empty, internalError, false);
+            return new Error(ErrorType.Internal, 0, 0, -1, -1, string.Empty, internalError, false);
         }
 
         internal static Error NewExceptionError(Exception exception)
         {
-            return new Error(ErrorType.Exception, 0, 0, string.Empty, exception.ToString(), false);
+            return new Error(ErrorType.Exception, 0, 0, -1, -1, string.Empty, exception.ToString(), false);
         }
 
-        private Error(ErrorType errorType, int line, int column, string errorNumber, string errorText, bool isWarning)
+        private Error(ErrorType errorType, int startLine, int startColumn, int endLine, int endColumn, string errorNumber, string errorText, bool isWarning)
         {
             this.errorType = errorType;
-            this.Line = line;
-            this.Column = column;
+            this.StartLine = startLine;
+            this.StartColumn = startColumn;
+            this.EndLine = endLine;
+            this.EndColumn = endColumn;
             this.ErrorNumber = errorNumber;
             this.ErrorText = errorText;
             this.IsWarning = isWarning;
@@ -72,7 +78,7 @@ namespace PaintDotNet.Effects
             switch (this.errorType)
             {
                 case ErrorType.CSharp:
-                    return $"{(this.IsWarning ? "Warning" : "Error")} at line {this.Line}: {this.ErrorText} ({this.ErrorNumber})";
+                    return $"{(this.IsWarning ? "Warning" : "Error")} at line {this.StartLine}: {this.ErrorText} ({this.ErrorNumber})";
                 case ErrorType.Xaml:
                     return this.ErrorText;
                 case ErrorType.Internal:
@@ -86,7 +92,7 @@ namespace PaintDotNet.Effects
 
         public int CompareTo(Error other)
         {
-            return this.Line.CompareTo(other.Line);
+            return this.StartLine.CompareTo(other.StartLine);
         }
 
         private enum ErrorType
