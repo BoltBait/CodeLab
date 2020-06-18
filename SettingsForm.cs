@@ -77,14 +77,11 @@ namespace PaintDotNet.Effects
                     .OrderBy(s => s, StringComparer.OrdinalIgnoreCase)
                     .ToArray());
 
-#if !FASTDEBUG
-                // Environment.OSVersion.Version returns the wrong value in FASTBUG.
                 if (Environment.OSVersion.Version < new Version(10, 0))
                 {
                     addLangsButton.Enabled = false;
                     addLangsButton.Visible = false;
                 }
-#endif
             }
             else
             {

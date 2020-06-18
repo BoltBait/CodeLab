@@ -50,6 +50,7 @@
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <ApplicationManifest>FastDebug\app.manifest</ApplicationManifest>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject />
@@ -144,7 +145,7 @@
     <Compile Include="NewShape.Designer.cs">
       <DependentUpon>NewShape.cs</DependentUpon>
     </Compile>
-    <Compile Include="Program.cs" />
+    <Compile Include="FastDebug\Program.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -492,6 +493,8 @@
     <EmbeddedResource Include="Icons\WRK2AUX.png" />
     <EmbeddedResource Include="Icons\WRK2DST.png" />
     <EmbeddedResource Include="Icons\RotateZoom.png" />
+    <None Include="FastDebug\App.config" />
+    <None Include="FastDebug\app.manifest" />
     <None Include="Resources\Shape2.png" />
     <None Include="Resources\Shape1.png" />
     <None Include="Resources\Shape0.png" />
@@ -553,7 +556,10 @@
   </ItemGroup>
   <PropertyGroup>
     <PostBuildEvent>
-if $(ConfigurationName)==FastDebug goto end
+if $(ConfigurationName)==FastDebug (
+    copy "C:\Program Files\paint.net\System.Buffers.dll" $(TargetDir)
+    goto end
+)
 if not exist "$(TargetDir)Desktop\" mkdir "$(TargetDir)Desktop\"
 set deps="$(TargetDir)ScintillaNET.dll" "$(TargetDir)Microsoft.CodeAnalysis.CSharp.dll" "$(TargetDir)Microsoft.CodeAnalysis.dll" "$(TargetDir)System.Collections.Immutable.dll" "$(TargetDir)System.Reflection.Metadata.dll" "$(TargetDir)System.Threading.Tasks.Extensions.dll" "$(TargetDir)PlatformSpellCheck.dll"
 if $(ConfigurationName)==Release (
