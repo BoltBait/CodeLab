@@ -69,7 +69,18 @@ namespace PaintDotNet.Effects
             {
                 if (docElement.HasChildNodes)
                 {
-                    string outerXml = docElement.FirstChild.OuterXml;
+                    XmlNode firstChild = docElement.FirstChild;
+                    while (firstChild.NodeType != XmlNodeType.Element)
+                    {
+                        firstChild = firstChild.NextSibling;
+                        if (firstChild == null)
+                        {
+                            error = invalidShapeError;
+                            return false;
+                        }
+                    }
+
+                    string outerXml = firstChild.OuterXml;
                     int xmlnsStartIndex = outerXml.IndexOf(" xmlns=");
                     int xmlnsEndIndex = outerXml.IndexOf(">");
 
@@ -148,7 +159,18 @@ namespace PaintDotNet.Effects
             {
                 if (docElement.HasChildNodes)
                 {
-                    string outerXml = docElement.FirstChild.OuterXml;
+                    XmlNode firstChild = docElement.FirstChild;
+                    while (firstChild.NodeType != XmlNodeType.Element)
+                    {
+                        firstChild = firstChild.NextSibling;
+                        if (firstChild == null)
+                        {
+                            error = invalidShapeError;
+                            return false;
+                        }
+                    }
+
+                    string outerXml = firstChild.OuterXml;
                     int xmlnsStartIndex = outerXml.IndexOf(" xmlns=");
                     int xmlnsEndIndex = outerXml.IndexOf(">");
 
