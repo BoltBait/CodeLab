@@ -2233,7 +2233,7 @@ namespace PaintDotNet.Effects
             this.ReadOnly = true;
 
             this.TargetWholeDocument();
-            this.SearchFlags = SearchFlags.MatchCase | SearchFlags.WholeWord | SearchFlags.WordStart;
+            this.SearchFlags = SearchFlags.MatchCase | SearchFlags.WholeWord;
             string wordToFind = memberInfo.Name;
 
             if (this.SearchInTarget(wordToFind) != InvalidPosition)
