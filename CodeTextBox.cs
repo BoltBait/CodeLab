@@ -59,7 +59,7 @@ namespace PaintDotNet.Effects
             None = 0,
             UpdateIndicatorBar = 1,
             ScrollCaret = 2,
-            CheckSpelling = 4
+            Spellcheck = 4
         }
 
         #region Variables for different states
@@ -3779,7 +3779,7 @@ namespace PaintDotNet.Effects
                 this.ScrollCaret();
             }
             
-            if (this.delayedOperation.HasFlag(DelayedOperation.CheckSpelling))
+            if (this.delayedOperation.HasFlag(DelayedOperation.Spellcheck))
             {
                 SpellCheck();
             }
@@ -4851,7 +4851,7 @@ namespace PaintDotNet.Effects
         {
             if (spellCheckEnabled)
             {
-                delayedOperation |= DelayedOperation.CheckSpelling;
+                delayedOperation |= DelayedOperation.Spellcheck;
             }
         }
 
