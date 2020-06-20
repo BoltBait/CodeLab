@@ -283,10 +283,7 @@ namespace PaintDotNet.Effects
                         spellChecker.Ignore(word);
                     }
 
-                    if (this.Lexer == Lexer.Cpp || this.Lexer == Lexer.Null)
-                    {
-                        SpellCheck();
-                    }
+                    SpellCheck();
                 }
                 else
                 {
@@ -4790,6 +4787,7 @@ namespace PaintDotNet.Effects
 
             SpellingError[] spellingErrors = spellChecker.Check(textRange).ToArray();
             bool isCSharp = this.Lexer == Lexer.Cpp;
+            bool isXaml = this.Lexer == Lexer.Xml;
 
             this.IndicatorCurrent = Indicator.Spelling;
             this.IndicatorClearRange(startPos, length);
@@ -4799,7 +4797,7 @@ namespace PaintDotNet.Effects
                 int errorPos = startPos + (int)spellingError.StartIndex;
                 int errorLength = (int)spellingError.Length;
 
-                if (isCSharp)
+                if (isCSharp || isXaml)
                 {
                     if (spellingError.RecommendedAction == RecommendedAction.Delete)
                     {
@@ -4808,22 +4806,40 @@ namespace PaintDotNet.Effects
 
                     int style = this.GetStyleAt(errorPos);
 
-                    bool isComment =
-                        style == Style.Cpp.Comment || style == Style.Cpp.Comment + Preprocessor ||
-                        style == Style.Cpp.CommentLine || style == Style.Cpp.CommentLine + Preprocessor;
-
-                    if (isComment && this.GetTextRange(errorPos, errorLength).Contains('.'))
+                    bool isComment;
+                    if (isCSharp)
                     {
-                        continue;
+                        isComment =
+                            style == Style.Cpp.Comment || style == Style.Cpp.Comment + Preprocessor ||
+                            style == Style.Cpp.CommentLine || style == Style.Cpp.CommentLine + Preprocessor;
+                    }
+                    else
+                    {
+                        isComment = style == Style.Xml.Comment || style == Style.Xml.XcComment;
                     }
 
-                    bool isString =
-                        style == Style.Cpp.String || style == Style.Cpp.String + Preprocessor ||
-                        style == Style.Cpp.Verbatim || style == Style.Cpp.Verbatim + Preprocessor;
-
-                    if (!isComment && !isString)
+                    if (isComment)
                     {
-                        continue;
+                        if (this.GetTextRange(errorPos, errorLength).Contains('.'))
+                        {
+                            continue;
+                        }
+                    }
+                    else
+                    {
+                        if (isXaml)
+                        {
+                            continue;
+                        }
+
+                        bool isString =
+                            style == Style.Cpp.String || style == Style.Cpp.String + Preprocessor ||
+                            style == Style.Cpp.Verbatim || style == Style.Cpp.Verbatim + Preprocessor;
+
+                        if (!isString)
+                        {
+                            continue;
+                        }
                     }
                 }
 
@@ -4833,7 +4849,7 @@ namespace PaintDotNet.Effects
 
         private void EnqueueSpellCheck()
         {
-            if (spellCheckEnabled && (this.Lexer == Lexer.Cpp || this.Lexer == Lexer.Null))
+            if (spellCheckEnabled)
             {
                 delayedOperation |= DelayedOperation.CheckSpelling;
             }
