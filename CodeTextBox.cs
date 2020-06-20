@@ -612,8 +612,15 @@ namespace PaintDotNet.Effects
             this.Styles[Style.Xml.Question].BackColor = backColor;
             this.Styles[Style.Xml.Value].ForeColor = Color.Crimson;
             this.Styles[Style.Xml.Value].BackColor = backColor;
-            this.Styles[Style.Xml.XcComment].ForeColor = Color.Aquamarine;
+            this.Styles[Style.Xml.XcComment].ForeColor = Color.FromArgb(87, 166, 74);
             this.Styles[Style.Xml.XcComment].BackColor = backColor;
+
+            const int SgmlTag = 21;
+            const int SgmlError = 26;
+            this.Styles[SgmlTag].ForeColor = Color.FromArgb(86, 156, 214);
+            this.Styles[SgmlTag].BackColor = backColor;
+            this.Styles[SgmlError].ForeColor = Color.White;
+            this.Styles[SgmlError].BackColor = backColor;
         }
 
         private void SetXMLLightStyles()
@@ -662,8 +669,15 @@ namespace PaintDotNet.Effects
             this.Styles[Style.Xml.Question].BackColor = backColor;
             this.Styles[Style.Xml.Value].ForeColor = Color.Crimson;
             this.Styles[Style.Xml.Value].BackColor = backColor;
-            this.Styles[Style.Xml.XcComment].ForeColor = Color.Aquamarine;
+            this.Styles[Style.Xml.XcComment].ForeColor = Color.Green;
             this.Styles[Style.Xml.XcComment].BackColor = backColor;
+
+            const int SgmlTag = 21;
+            const int SgmlError = 26;
+            this.Styles[SgmlTag].ForeColor = Color.FromArgb(163, 21, 21);
+            this.Styles[SgmlTag].BackColor = backColor;
+            this.Styles[SgmlError].ForeColor = Color.Black;
+            this.Styles[SgmlError].BackColor = backColor;
         }
 
         private void SetCaretLineDarkColor()
