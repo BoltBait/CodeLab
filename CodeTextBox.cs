@@ -4846,8 +4846,26 @@ namespace PaintDotNet.Effects
 
                     if (isComment)
                     {
-                        if (this.GetTextRange(errorPos, errorLength).Contains('.'))
+                        string commentText = this.GetTextRange(errorPos, errorLength);
+
+                        if (commentText.Contains('.'))
                         {
+                            continue;
+                        }
+
+                        if (commentText.Contains('|'))
+                        {
+                            SpellingError[] commentsErrors = spellChecker.Check(commentText.Replace('|', ' ')).ToArray();
+                            foreach (SpellingError commentError in commentsErrors)
+                            {
+                                if (commentError.RecommendedAction == RecommendedAction.Delete)
+                                {
+                                    continue;
+                                }
+
+                                this.IndicatorFillRange(errorPos + (int)commentError.StartIndex, (int)commentError.Length);
+                            }
+
                             continue;
                         }
                     }
