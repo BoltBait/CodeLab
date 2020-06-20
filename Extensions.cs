@@ -94,6 +94,11 @@ namespace PaintDotNet.Effects
             return str.Length > 0 && (str.StartsWith("http://", StringComparison.OrdinalIgnoreCase) || str.StartsWith("https://", StringComparison.OrdinalIgnoreCase));
         }
 
+        public static string StripWhitespace(this string str)
+        {
+            return Regex.Replace(str, @"\s+", string.Empty);
+        }
+
         internal static string StripComments(this string str)
         {
             const string blockComments = @"/\*(.*?)\*/";

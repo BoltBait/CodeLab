@@ -929,18 +929,31 @@ namespace PaintDotNet.Effects
             string strippedText = this.GetTextRange(0, wordEndPos).StripParens().StripAngleBrackets().StripSquareBrackets();
 
             int posIndex = strippedText.Length;
+            bool isWhiteSpaceAllowed = false;
 
             while (posIndex > 0)
             {
                 char c = strippedText[posIndex - 1];
 
-                if (!(char.IsLetterOrDigit(c) || c == '_' || c == '.'))
+                if (isWhiteSpaceAllowed && char.IsWhiteSpace(c))
+                {
+                    // no-op
+                }
+                else if (!(char.IsLetterOrDigit(c) || c == '_' || c == '.'))
                 {
                     return strippedText.Substring(posIndex);
                 }
                 else if (posIndex - 1 == 0)
                 {
                     return strippedText.Substring(posIndex - 1);
+                }
+                else if (c == '.')
+                {
+                    isWhiteSpaceAllowed = true;
+                }
+                else
+                {
+                    isWhiteSpaceAllowed = false;
                 }
 
                 posIndex--;
@@ -953,17 +966,25 @@ namespace PaintDotNet.Effects
         {
             List<int> tokenPositions = new List<int>();
             int tokenPos = position;
+            bool isWhiteSpaceAllowed = false;
+
             while (tokenPos > 0)
             {
                 char c = this.GetCharAt(tokenPos - 1);
 
-                if (c == ')' || c == '>')
+                if (isWhiteSpaceAllowed && char.IsWhiteSpace(c))
+                {
+                    // no-op
+                }
+                else if (c == ')' || c == '>')
                 {
                     tokenPos = this.BraceMatch(tokenPos - 1) + 1;
+                    isWhiteSpaceAllowed = false;
                 }
                 else if (c == '.')
                 {
                     tokenPositions.Add(tokenPos);
+                    isWhiteSpaceAllowed = true;
                 }
                 else if (!(char.IsLetterOrDigit(c) || c == '_'))
                 {
@@ -973,6 +994,11 @@ namespace PaintDotNet.Effects
                 else if (tokenPos - 1 == 0)
                 {
                     tokenPositions.Add(tokenPos - 1);
+                    break;
+                }
+                else
+                {
+                    isWhiteSpaceAllowed = false;
                 }
 
                 tokenPos--;
@@ -2083,7 +2109,7 @@ namespace PaintDotNet.Effects
         private MemberInfo GetMember(int position, out int length)
         {
             length = 0;
-            string lastWords = GetLastWords(position);
+            string lastWords = GetLastWords(position).StripWhitespace();
             string[] tokens = lastWords.Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
             if (tokens.Length == 0)
             {
