@@ -1415,6 +1415,11 @@
             <see cref="P:ScintillaNET.Indicator.Alpha" /> and <see cref="P:ScintillaNET.Indicator.OutlineAlpha" />.
             </summary>
         </member>
+        <member name="F:ScintillaNET.IndicatorStyle.SquigglePixmap">
+            <summary>
+            A version of INDIC_SQUIGGLE that draws using a pixmap instead of as a series of line segments.
+            </summary>
+        </member>
         <member name="F:ScintillaNET.IndicatorStyle.CompositionThick">
             <summary>
             A 2-pixel thick underline with 1 pixel insets on either side.

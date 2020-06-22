@@ -797,11 +797,11 @@ namespace PaintDotNet.Effects
             this.Indicators[Indicator.Find].Alpha = 204;
 
             // Set the styles for Errors underlines
-            this.Indicators[Indicator.Error].Style = IndicatorStyle.Squiggle;
-            this.Indicators[Indicator.Warning].Style = IndicatorStyle.Squiggle;
+            this.Indicators[Indicator.Error].Style = IndicatorStyle.SquigglePixmap;
+            this.Indicators[Indicator.Warning].Style = IndicatorStyle.SquigglePixmap;
 
             // Set the styles for Errors underlines
-            this.Indicators[Indicator.Spelling].Style = IndicatorStyle.Squiggle;
+            this.Indicators[Indicator.Spelling].Style = IndicatorStyle.SquigglePixmap;
 
             // Set the styles for focused Object
             this.Indicators[Indicator.ObjectHighlight].Style = IndicatorStyle.StraightBox;
