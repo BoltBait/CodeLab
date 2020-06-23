@@ -345,8 +345,12 @@ namespace PaintDotNet.Effects
 
             if (!ScriptBuilder.BuiltFileType.SupportsConfiguration)
             {
-                FlexibleMessageBox.Show("There are no UI controls!\r\n\r\nFor testing/debugging purposes, the Save Configuration dialog will\r\nstill display here in CodeLab, but it will not display in Paint.NET.",
-                    "Preview Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                const string noControls = "There are no UI controls!\r\n\r\n" +
+                    "Be aware that FileTypes with no controls will not display a Save Configuration dialog in Paint.NET.\r\n\r\n" +
+                    "However, a Save Configuration dialog will still display here in CodeLab for testing/debugging purposes.\r\n" +
+                    "It contains an image preview, which can provide visual feedback if the FileType is working correctly.";
+
+                FlexibleMessageBox.Show(noControls, "Preview Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
 
             using (SaveConfigDialog saveDialog = new SaveConfigDialog(ScriptBuilder.BuiltFileType, EnvironmentParameters.SourceSurface))
