@@ -343,11 +343,11 @@ namespace PaintDotNet.Effects
                 return;
             }
 
-            //if (!ScriptBuilder.BuiltFileType.SupportsConfiguration)
-            //{
-            //    FlexibleMessageBox.Show("There are no UI controls, so the Preview can't be displayed.", "Preview Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            //    return;
-            //}
+            if (!ScriptBuilder.BuiltFileType.SupportsConfiguration)
+            {
+                FlexibleMessageBox.Show("There are no UI controls, so the Preview can't be displayed.", "Preview Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
 
             using (SaveConfigDialog saveDialog = new SaveConfigDialog(ScriptBuilder.BuiltFileType, EnvironmentParameters.SourceSurface))
             {
