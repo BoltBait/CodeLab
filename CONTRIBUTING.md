@@ -2,30 +2,18 @@
 
 #### Before You Begin
 
-- Install Paint.NET version 4.2
+- Install the latest version of [Paint.NET](https://www.getpaint.net/). Make sure you use the classic installer. Installing Paint.NET from the Microsoft Store will not work for CodeLab development.
 
-- Install Visual Studio 2019 Community Edition (C# options)
+- Install [Visual Studio 2019](https://visualstudio.microsoft.com/vs/) (C# options). The free Community Edition works fine.
 
-- Visit the following page and install ILMerge:
+#### Debugging CodeLab
 
-> https://www.microsoft.com/en-us/download/details.aspx?id=17630
-
-#### Add ScintillaNET NuGet Package
-
-- Open the project in Visual Studio
-
-- Click the menu: Tools > NuGet Package Manager > Manage NuGet Packages for Solution...
-
-- Search for "scintillaNET":
-
-> ![Image of NuGet Package Manager](/CONTRIBUTING.png)
-
-- Select the signed package and click the Install button to install it.
+While developing CodeLab, it is recommended to use the `FastDebug` configuration. This skips the ILMerge operation, and allows CodeLab to run outside of Paint.NET.
 
 #### Build the Release Version of CodeLab
 
-- Click the menu: Build > Rebuild Solution
+1. Click the menu: Build > Rebuild Solution
 
-- If the build fails, you'll need to debug that first.
+1. If the build fails, you'll need to debug that first.
 
-- If the build succeeds, a window will open and you'll see CodeLab.dll and Install_CodeLab.bat
+1. If the build succeeds, a window will open and you'll see `CodeLab.dll` and `Install_CodeLab.bat`
