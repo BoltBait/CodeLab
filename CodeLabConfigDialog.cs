@@ -35,6 +35,7 @@ namespace PaintDotNet.Effects
         private string FullScriptPath = "";
         private EffectConfigToken previewToken = null;
         private string effectFlag = null;
+        private const string showErrorList = "Show Error List";
 
         private string EffectFlag
         {
@@ -402,7 +403,7 @@ namespace PaintDotNet.Effects
                 catch (Exception ex)
                 {
                     errorList.AddError(Error.NewExceptionError(ex));
-                    ShowErrors.Text = $"Show Errors List ({errorList.ErrorCount})";
+                    ShowErrors.Text = $"{showErrorList} ({errorList.ErrorCount})";
                     ShowErrors.ForeColor = Color.Red;
                 }
 
@@ -453,7 +454,7 @@ namespace PaintDotNet.Effects
             int errorCount = errorList.ErrorCount;
             if (errorCount > 0)
             {
-                ShowErrors.Text = $"Show Errors List ({errorCount})";
+                ShowErrors.Text = $"{showErrorList} ({errorCount})";
                 ShowErrors.ForeColor = Color.Red;
             }
         }
@@ -463,7 +464,7 @@ namespace PaintDotNet.Effects
             errorList.ClearErrors();
             toolTips.SetToolTip(errorList, "");
 
-            ShowErrors.Text = "Show Errors List";
+            ShowErrors.Text = showErrorList;
             ShowErrors.ForeColor = this.ForeColor;
         }
 
@@ -790,7 +791,7 @@ namespace PaintDotNet.Effects
                 sect.LastExceptions.Clear();
 
                 errorList.AddError(exc);
-                ShowErrors.Text = $"Show Errors List ({errorList.ErrorCount})";
+                ShowErrors.Text = $"{showErrorList} ({errorList.ErrorCount})";
                 ShowErrors.ForeColor = Color.Red;
             }
 
@@ -928,7 +929,7 @@ namespace PaintDotNet.Effects
             errorList.BackColor = PdnTheme.BackColor;
             OutputTextBox.ForeColor = PdnTheme.ForeColor;
             OutputTextBox.BackColor = PdnTheme.BackColor;
-            ShowErrors.ForeColor = (ShowErrors.Text == "Show Errors List") ? this.ForeColor : Color.Red;
+            ShowErrors.ForeColor = (ShowErrors.Text == showErrorList) ? this.ForeColor : Color.Red;
         }
 
         private void LaunchUrl(string url)
@@ -1234,7 +1235,7 @@ namespace PaintDotNet.Effects
             else
             {
                 DisplayErrors();
-                string error = (ScriptBuilder.Exception != null) ? ScriptBuilder.Exception.InsertLineBreaks(100) : "Please check for build errors in the Errors List.";
+                string error = (ScriptBuilder.Exception != null) ? ScriptBuilder.Exception.InsertLineBreaks(100) : "Please check for build errors in the Error List.";
                 FlexibleMessageBox.Show("I'm sorry, I was not able to build the DLL.\r\n\r\n" + error, "Build Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }

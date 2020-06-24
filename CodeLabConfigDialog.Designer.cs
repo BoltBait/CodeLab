@@ -821,7 +821,7 @@
             this.viewErrorsToolStripMenuItem.Name = "viewErrorsToolStripMenuItem";
             this.viewErrorsToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.E)));
             this.viewErrorsToolStripMenuItem.Size = new System.Drawing.Size(214, 22);
-            this.viewErrorsToolStripMenuItem.Text = "&Errors List";
+            this.viewErrorsToolStripMenuItem.Text = "&Error List";
             this.viewErrorsToolStripMenuItem.Click += new System.EventHandler(this.viewErrorsToolStripMenuItem_Click);
             // 
             // viewDebugToolStripMenuItem
@@ -1247,9 +1247,9 @@
             this.ShowErrors.AutoSize = true;
             this.ShowErrors.Location = new System.Drawing.Point(12, 474);
             this.ShowErrors.Name = "ShowErrors";
-            this.ShowErrors.Size = new System.Drawing.Size(102, 17);
+            this.ShowErrors.Size = new System.Drawing.Size(97, 17);
             this.ShowErrors.TabIndex = 15;
-            this.ShowErrors.Text = "Show Errors List";
+            this.ShowErrors.Text = "Show Error List";
             this.ShowErrors.UseVisualStyleBackColor = true;
             this.ShowErrors.Click += new System.EventHandler(this.ShowErrors_Click);
             // 
