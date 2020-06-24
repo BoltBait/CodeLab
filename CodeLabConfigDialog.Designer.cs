@@ -161,7 +161,7 @@
             this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.btnOK.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.btnOK.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnOK.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnOK.Location = new System.Drawing.Point(631, 469);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(64, 24);
@@ -1245,7 +1245,7 @@
             // 
             this.ShowErrors.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.ShowErrors.AutoSize = true;
-            this.ShowErrors.Location = new System.Drawing.Point(12, 474);
+            this.ShowErrors.Location = new System.Drawing.Point(12, 472);
             this.ShowErrors.Name = "ShowErrors";
             this.ShowErrors.Size = new System.Drawing.Size(97, 17);
             this.ShowErrors.TabIndex = 15;
@@ -1274,7 +1274,7 @@
             this.ClearOutput.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.ClearOutput.Enabled = false;
             this.ClearOutput.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.ClearOutput.Location = new System.Drawing.Point(269, 470);
+            this.ClearOutput.Location = new System.Drawing.Point(280, 470);
             this.ClearOutput.Name = "ClearOutput";
             this.ClearOutput.Size = new System.Drawing.Size(45, 23);
             this.ClearOutput.TabIndex = 18;
@@ -1286,7 +1286,7 @@
             // 
             this.ShowOutput.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.ShowOutput.AutoSize = true;
-            this.ShowOutput.Location = new System.Drawing.Point(140, 474);
+            this.ShowOutput.Location = new System.Drawing.Point(140, 472);
             this.ShowOutput.Name = "ShowOutput";
             this.ShowOutput.Size = new System.Drawing.Size(123, 17);
             this.ShowOutput.TabIndex = 19;
@@ -1339,7 +1339,7 @@
             this.Location = new System.Drawing.Point(0, 0);
             this.MainMenuStrip = this.menuStrip1;
             this.MaximizeBox = true;
-            this.MinimumSize = new System.Drawing.Size(550, 325);
+            this.MinimumSize = new System.Drawing.Size(560, 325);
             this.Name = "CodeLabConfigDialog";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
             this.Text = "CodeLab";

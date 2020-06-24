@@ -834,6 +834,8 @@ namespace PaintDotNet.Effects
             base.OnFormClosing(e);
         }
 
+        protected override bool UseSystemMenuFontInInitializeComponent => true;
+
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
             switch (keyData)
