@@ -271,9 +271,9 @@
             this.caretLineFrameCheckBox.AutoSize = true;
             this.caretLineFrameCheckBox.Location = new System.Drawing.Point(237, 105);
             this.caretLineFrameCheckBox.Name = "caretLineFrameCheckBox";
-            this.caretLineFrameCheckBox.Size = new System.Drawing.Size(115, 19);
+            this.caretLineFrameCheckBox.Size = new System.Drawing.Size(122, 19);
             this.caretLineFrameCheckBox.TabIndex = 8;
-            this.caretLineFrameCheckBox.Text = "Caret Line Frame";
+            this.caretLineFrameCheckBox.Text = "Current line frame";
             this.caretLineFrameCheckBox.UseVisualStyleBackColor = true;
             this.caretLineFrameCheckBox.CheckedChanged += new System.EventHandler(this.caretLineFrameCheckBox_CheckedChanged);
             // 
