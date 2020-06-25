@@ -646,13 +646,13 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.CancelButton = this.closeButton;
             this.ClientSize = new System.Drawing.Size(691, 468);
-            this.Controls.Add(this.panelCompiler);
             this.Controls.Add(this.settingsList);
             this.Controls.Add(this.closeButton);
             this.Controls.Add(this.panelUI);
             this.Controls.Add(this.panelSnippet);
             this.Controls.Add(this.panelSpelling);
             this.Controls.Add(this.panelUpdates);
+            this.Controls.Add(this.panelCompiler);
             this.IconName = "Settings";
             this.Name = "SettingsForm";
             this.Text = "CodeLab Settings";

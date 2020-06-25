@@ -120,9 +120,9 @@
   <data name="label7.Text" xml:space="preserve">
     <value>Warning Level Meanings:
 0 - Turns off all warning messages.
-1 - Displays severe warning messages only.
-2 - Also displays less-severe warnings.
-3 - Also displays very minor warnings. (Unused variables.)
+1 - Displays severe warning messages only. (Obsolete code)
+2 - Also displays less-severe warnings. (Unreachable code)
+3 - Also displays very minor warnings. (Unused variables)
 4 - Also displays informational messages.</value>
   </data>
 </root>
