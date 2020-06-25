@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SettingsForm));
             this.closeButton = new System.Windows.Forms.Button();
             this.panelUpdates = new System.Windows.Forms.Panel();
             this.checkNowButton = new System.Windows.Forms.Button();
@@ -75,6 +76,7 @@
             this.label11 = new System.Windows.Forms.Label();
             this.spellcheckOptionsLabel = new System.Windows.Forms.Label();
             this.spellLangComboBox = new System.Windows.Forms.ComboBox();
+            this.label7 = new System.Windows.Forms.Label();
             this.panelUpdates.SuspendLayout();
             this.panelCompiler.SuspendLayout();
             this.panelUI.SuspendLayout();
@@ -126,6 +128,7 @@
             // 
             // panelCompiler
             // 
+            this.panelCompiler.Controls.Add(this.label7);
             this.panelCompiler.Controls.Add(this.label6);
             this.panelCompiler.Controls.Add(this.lookupWarningButton);
             this.panelCompiler.Controls.Add(this.warningToIgnoreLabel);
@@ -144,7 +147,7 @@
             this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.label6.Location = new System.Drawing.Point(133, 203);
+            this.label6.Location = new System.Drawing.Point(133, 247);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(313, 75);
             this.label6.TabIndex = 7;
@@ -155,7 +158,7 @@
             // lookupWarningButton
             // 
             this.lookupWarningButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.lookupWarningButton.Location = new System.Drawing.Point(133, 167);
+            this.lookupWarningButton.Location = new System.Drawing.Point(133, 211);
             this.lookupWarningButton.Name = "lookupWarningButton";
             this.lookupWarningButton.Size = new System.Drawing.Size(108, 25);
             this.lookupWarningButton.TabIndex = 6;
@@ -166,7 +169,7 @@
             // warningToIgnoreLabel
             // 
             this.warningToIgnoreLabel.AutoSize = true;
-            this.warningToIgnoreLabel.Location = new System.Drawing.Point(35, 111);
+            this.warningToIgnoreLabel.Location = new System.Drawing.Point(35, 155);
             this.warningToIgnoreLabel.Name = "warningToIgnoreLabel";
             this.warningToIgnoreLabel.Size = new System.Drawing.Size(111, 15);
             this.warningToIgnoreLabel.TabIndex = 3;
@@ -176,7 +179,7 @@
             // 
             this.warningsToIgnoreList.FormattingEnabled = true;
             this.warningsToIgnoreList.ItemHeight = 15;
-            this.warningsToIgnoreList.Location = new System.Drawing.Point(48, 136);
+            this.warningsToIgnoreList.Location = new System.Drawing.Point(48, 180);
             this.warningsToIgnoreList.Name = "warningsToIgnoreList";
             this.warningsToIgnoreList.Size = new System.Drawing.Size(75, 139);
             this.warningsToIgnoreList.TabIndex = 4;
@@ -184,7 +187,7 @@
             // removeWarningButton
             // 
             this.removeWarningButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.removeWarningButton.Location = new System.Drawing.Point(133, 136);
+            this.removeWarningButton.Location = new System.Drawing.Point(133, 180);
             this.removeWarningButton.Name = "removeWarningButton";
             this.removeWarningButton.Size = new System.Drawing.Size(108, 25);
             this.removeWarningButton.TabIndex = 5;
@@ -630,6 +633,14 @@
             this.spellLangComboBox.TabIndex = 3;
             this.spellLangComboBox.SelectedIndexChanged += new System.EventHandler(this.spellLangComboBox_SelectedIndexChanged);
             // 
+            // label7
+            // 
+            this.label7.Location = new System.Drawing.Point(141, 44);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(323, 99);
+            this.label7.TabIndex = 8;
+            this.label7.Text = resources.GetString("label7.Text");
+            // 
             // SettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -640,8 +651,8 @@
             this.Controls.Add(this.panelUI);
             this.Controls.Add(this.panelSnippet);
             this.Controls.Add(this.panelSpelling);
-            this.Controls.Add(this.panelCompiler);
             this.Controls.Add(this.panelUpdates);
+            this.Controls.Add(this.panelCompiler);
             this.IconName = "Settings";
             this.Name = "SettingsForm";
             this.Text = "CodeLab Settings";
@@ -705,5 +716,6 @@
         private System.Windows.Forms.Label spellcheckOptionsLabel;
         private System.Windows.Forms.ComboBox spellLangComboBox;
         private System.Windows.Forms.Button addLangsButton;
+        private System.Windows.Forms.Label label7;
     }
 }
