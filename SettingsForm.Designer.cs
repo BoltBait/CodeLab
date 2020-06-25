@@ -34,6 +34,7 @@
             this.checkNowButton = new System.Windows.Forms.Button();
             this.checkForUpdates = new System.Windows.Forms.CheckBox();
             this.panelCompiler = new System.Windows.Forms.Panel();
+            this.label7 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.lookupWarningButton = new System.Windows.Forms.Button();
             this.warningToIgnoreLabel = new System.Windows.Forms.Label();
@@ -76,7 +77,6 @@
             this.label11 = new System.Windows.Forms.Label();
             this.spellcheckOptionsLabel = new System.Windows.Forms.Label();
             this.spellLangComboBox = new System.Windows.Forms.ComboBox();
-            this.label7 = new System.Windows.Forms.Label();
             this.panelUpdates.SuspendLayout();
             this.panelCompiler.SuspendLayout();
             this.panelUI.SuspendLayout();
@@ -141,6 +141,14 @@
             this.panelCompiler.Name = "panelCompiler";
             this.panelCompiler.Size = new System.Drawing.Size(476, 405);
             this.panelCompiler.TabIndex = 0;
+            // 
+            // label7
+            // 
+            this.label7.Location = new System.Drawing.Point(141, 44);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(323, 99);
+            this.label7.TabIndex = 8;
+            this.label7.Text = resources.GetString("label7.Text");
             // 
             // label6
             // 
@@ -633,26 +641,18 @@
             this.spellLangComboBox.TabIndex = 3;
             this.spellLangComboBox.SelectedIndexChanged += new System.EventHandler(this.spellLangComboBox_SelectedIndexChanged);
             // 
-            // label7
-            // 
-            this.label7.Location = new System.Drawing.Point(141, 44);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(323, 99);
-            this.label7.TabIndex = 8;
-            this.label7.Text = resources.GetString("label7.Text");
-            // 
             // SettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.CancelButton = this.closeButton;
             this.ClientSize = new System.Drawing.Size(691, 468);
+            this.Controls.Add(this.panelCompiler);
             this.Controls.Add(this.settingsList);
             this.Controls.Add(this.closeButton);
             this.Controls.Add(this.panelUI);
             this.Controls.Add(this.panelSnippet);
             this.Controls.Add(this.panelSpelling);
             this.Controls.Add(this.panelUpdates);
-            this.Controls.Add(this.panelCompiler);
             this.IconName = "Settings";
             this.Name = "SettingsForm";
             this.Text = "CodeLab Settings";

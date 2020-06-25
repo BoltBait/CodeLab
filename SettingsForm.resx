@@ -121,8 +121,8 @@
     <value>Warning Level Meanings:
 0 - Turns off all warning messages.
 1 - Displays severe warning messages only.
-2 - Also displays less-severe warnings. (Unused variables.)
-3 - Also displays very minor warnings.
+2 - Also displays less-severe warnings.
+3 - Also displays very minor warnings. (Unused variables.)
 4 - Also displays informational messages.</value>
   </data>
 </root>
