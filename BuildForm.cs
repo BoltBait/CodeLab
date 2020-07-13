@@ -439,10 +439,13 @@ namespace PaintDotNet.Effects
             // Make sure the icon is 16 x 16
             if ((newicon.Width != 16) || (newicon.Height != 16))
             {
-                MenuIcon.Image = null;
-                IconPath = "";
-                FlexibleMessageBox.Show("PNG file must be 16 x 16 pixels", "Improper File Selected");
-                return;
+                if ((newicon.Width != 32) || (newicon.Height != 32))
+                {
+                    MenuIcon.Image = null;
+                    IconPath = "";
+                    FlexibleMessageBox.Show("PNG file must be 16 x 16 pixels", "Improper File Selected");
+                    return;
+                }
             }
 
             // Load the icon to the message box
