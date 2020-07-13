@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Markup;
@@ -6,6 +7,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Xml;
+using System.Xml.Linq;
 
 namespace PaintDotNet.Effects
 {
@@ -37,195 +39,128 @@ namespace PaintDotNet.Effects
         {
             Shape?.Dispose();
             Shape = null;
-            error = null;
 
-            if (string.IsNullOrWhiteSpace(shapeCode))
+            Geometry geometry = GeometryFromRawString(shapeCode);
+            if (geometry == null)
             {
                 return false;
             }
 
-            XmlDocument xDoc = TryLoadXml(shapeCode);
-            if (xDoc == null)
-            {
-                return false;
-            }
-
-            XmlElement docElement = xDoc.DocumentElement;
-
-            if (docElement.Name == "Page")
-            {
-                XmlNodeList paths = docElement.GetElementsByTagName("Path");
-                if (paths.Count > 0)
-                {
-                    Path path = TryParsePath(paths[0].OuterXml);
-                    if (path != null)
-                    {
-                        RenderPath(path);
-                        return true;
-                    }
-                }
-            }
-            else if (docElement.Name == "ps:SimpleGeometryShape")
-            {
-                if (docElement.HasChildNodes)
-                {
-                    XmlNode firstChild = docElement.FirstChild;
-                    while (firstChild.NodeType != XmlNodeType.Element)
-                    {
-                        firstChild = firstChild.NextSibling;
-                        if (firstChild == null)
-                        {
-                            error = invalidShapeError;
-                            return false;
-                        }
-                    }
-
-                    string outerXml = firstChild.OuterXml;
-                    int xmlnsStartIndex = outerXml.IndexOf(" xmlns=");
-                    int xmlnsEndIndex = outerXml.IndexOf(">");
-
-                    if (xmlnsStartIndex == -1 || xmlnsEndIndex == -1)
-                    {
-                        return false;
-                    }
-
-                    string pageCode = "<Page xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\" xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\">"
-                        + outerXml.Substring(0, xmlnsStartIndex) + outerXml.Substring(xmlnsEndIndex)
-                        + "</Page>";
-
-                    Page page = TryParsePage(pageCode);
-                    if (page?.Content is Geometry geometry)
-                    {
-                        RenderGeometry(geometry);
-                        return true;
-                    }
-                }
-                else if (docElement.HasAttributes && docElement.HasAttribute("Geometry"))
-                {
-                    string geometryCode = docElement.Attributes.GetNamedItem("Geometry").InnerText;
-                    if (string.IsNullOrWhiteSpace(geometryCode))
-                    {
-                        return false;
-                    }
-
-                    StreamGeometry geometry = TryParseStreamGeometry(geometryCode);
-                    if (geometry != null)
-                    {
-                        RenderGeometry(geometry);
-                        return true;
-                    }
-                }
-            }
-
-            return false;
+            RenderGeometry(geometry);
+            return true;
         }
 
         internal static bool TryParseShapeCode(string shapeCode)
         {
+            Geometry geometry = GeometryFromRawString(shapeCode);
+
+            return geometry != null;
+        }
+
+        private static Geometry GeometryFromRawString(string shapeCode)
+        {
             error = null;
 
             if (string.IsNullOrWhiteSpace(shapeCode))
             {
                 error = invalidShapeError;
-                return false;
+                return null;
             }
 
-            XmlDocument xDoc = TryLoadXml(shapeCode);
+            XDocument xDoc = TryParseXDocument(shapeCode);
             if (xDoc == null)
             {
-                return false;
+                return null;
             }
 
-            XmlElement docElement = xDoc.DocumentElement;
+            XElement docElement = xDoc.Root;
 
-            if (docElement.Name == "Page")
+            if (docElement.Name.LocalName != "SimpleGeometryShape" || !docElement.HasAttributes)
             {
-                XmlNodeList paths = docElement.GetElementsByTagName("Path");
-                if (paths.Count > 0)
-                {
-                    Path path = TryParsePath(paths[0].OuterXml);
-                    if (path != null)
-                    {
-                        //RenderPath(path);
-                        return true;
-                    }
-                }
-                else
-                {
-                    error = Error.NewShapeError(0, 0, "Can not find the Path tag.");
-                }
+                error = invalidShapeError;
+                return null;
             }
-            else if (docElement.Name == "ps:SimpleGeometryShape")
+
+            XAttribute nameAttribute = docElement.Attribute(XName.Get("DisplayName", string.Empty));
+            if (nameAttribute == null)
             {
-                if (docElement.HasChildNodes)
+                error = Error.NewShapeError(0, 0, "Can not find the DisplayName attribute.");
+            }
+            else if (string.IsNullOrWhiteSpace(nameAttribute.Value))
+            {
+                IXmlLineInfo lineInfo = nameAttribute;
+                error = Error.NewShapeError(lineInfo.LineNumber, 0, "The DisplayName attribute is empty.");
+            }
+
+            if (docElement.HasElements)
+            {
+                XElement firstElement = docElement.Elements().First();
+
+                if (firstElement.ElementsAfterSelf().Any())
                 {
-                    XmlNode firstChild = docElement.FirstChild;
-                    while (firstChild.NodeType != XmlNodeType.Element)
-                    {
-                        firstChild = firstChild.NextSibling;
-                        if (firstChild == null)
-                        {
-                            error = invalidShapeError;
-                            return false;
-                        }
-                    }
-
-                    string outerXml = firstChild.OuterXml;
-                    int xmlnsStartIndex = outerXml.IndexOf(" xmlns=");
-                    int xmlnsEndIndex = outerXml.IndexOf(">");
-
-                    if (xmlnsStartIndex == -1 || xmlnsEndIndex == -1)
-                    {
-                        error = invalidShapeError;
-                        return false;
-                    }
-
-                    string pageCode = "<Page xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\" xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\">"
-                        + outerXml.Substring(0, xmlnsStartIndex) + outerXml.Substring(xmlnsEndIndex)
-                        + "</Page>";
-
-                    Page page = TryParsePage(pageCode);
-                    if (page?.Content is Geometry geometry)
-                    {
-                        //RenderGeometry(geometry);
-                        return true;
-                    }
+                    IXmlLineInfo lineInfo = firstElement.ElementsAfterSelf().First();
+                    error = Error.NewShapeError(lineInfo.LineNumber, 0, "There can only be one child element of SimpleGeometryShape.");
+                    return null;
                 }
-                else if (docElement.HasAttributes && docElement.HasAttribute("Geometry"))
+
+                if (!Intelli.XamlAutoCompleteTypes.TryGetValue(firstElement.Name.LocalName, out Type type) ||
+                    !type.IsSubclassOf(typeof(Geometry)))
                 {
-                    string geometryCode = docElement.Attributes.GetNamedItem("Geometry").InnerText;
-                    if (string.IsNullOrWhiteSpace(geometryCode))
-                    {
-                        error = Error.NewShapeError(0, 0, "The Geometry attribute is empty.");
-                        return false;
-                    }
+                    IXmlLineInfo lineInfo = firstElement;
+                    error = Error.NewShapeError(lineInfo.LineNumber, 0, "The child element of SimpleGeometryShape must be a Geometry-derived class.");
+                    return null;
+                }
 
-                    StreamGeometry geometry = TryParseStreamGeometry(geometryCode);
-                    if (geometry != null)
-                    {
-                        //RenderGeometry(geometry);
-                        return true;
-                    }
-                }
-                else
+                string xElementText = firstElement.ToString();
+                int xmlnsStartIndex = xElementText.IndexOf(" xmlns=");
+                int xmlnsEndIndex = xElementText.IndexOf(">");
+
+                if (xmlnsStartIndex == -1 || xmlnsEndIndex == -1 || xmlnsEndIndex < xmlnsStartIndex)
                 {
-                    error = Error.NewShapeError(0, 0, "Can not find the Geometry attribute.");
+                    error = invalidShapeError;
+                    return null;
                 }
+
+                const string xamlNs = " xmlns =\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\" xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\"";
+
+                IXmlLineInfo offsetPos = firstElement;
+                string whiteSpace = new string('\n', offsetPos.LineNumber - 1) + new string(' ', offsetPos.LinePosition - 2);
+
+                string geometryText = xElementText
+                    .Remove(xmlnsStartIndex, xmlnsEndIndex - xmlnsStartIndex)
+                    .Insert(xmlnsStartIndex, xamlNs)
+                    .Insert(0, whiteSpace);
+
+                return TryParseGeometry(geometryText);
             }
             else
             {
-                error = invalidShapeError;
-            }
+                XAttribute geometryAttribute = docElement.Attribute(XName.Get("Geometry", string.Empty));
+                if (geometryAttribute == null)
+                {
+                    error = Error.NewShapeError(0, 0, "Can not find the Geometry attribute.");
+                    return null;
+                }
 
-            return false;
+                string geometryText = geometryAttribute.Value;
+                if (string.IsNullOrWhiteSpace(geometryText))
+                {
+                    IXmlLineInfo lineInfo = geometryAttribute;
+                    error = Error.NewShapeError(lineInfo.LineNumber, 0, "The Geometry attribute is empty.");
+                    return null;
+                }
+
+                return TryParseStreamGeometry(geometryText);
+            }
         }
 
-        private static XmlDocument TryLoadXml(string xml)
+        private static XDocument TryParseXDocument(string xDocumentText)
         {
-            XmlDocument xmlDoc = new XmlDocument();
+            XDocument xDocument = null;
+
             try
             {
-                xmlDoc.LoadXml(xml);
+                xDocument = XDocument.Parse(xDocumentText, LoadOptions.SetLineInfo | LoadOptions.PreserveWhitespace);
             }
             catch (XmlException ex)
             {
@@ -233,59 +168,45 @@ namespace PaintDotNet.Effects
                 return null;
             }
 
-            return xmlDoc;
+            return xDocument;
         }
 
-        private static Page TryParsePage(string shape)
+        private static Geometry TryParseGeometry(string geometryText)
         {
-            Page page = null;
+            Geometry geometry = null;
 
             try
             {
-                page = (Page)XamlReader.Parse(shape);
+                geometry = (Geometry)XamlReader.Parse(geometryText);
             }
             catch (XamlParseException ex)
             {
                 error = Error.NewShapeError(ex.LineNumber, ex.LinePosition, ex.Message);
             }
 
-            return page;
+            return geometry;
         }
 
-        private static Path TryParsePath(string shape)
+        private static StreamGeometry TryParseStreamGeometry(string streamGeometryText)
         {
-            Path path = null;
+            StreamGeometry streamGeometry = null;
 
             try
             {
-                path = (Path)XamlReader.Parse(shape);
-            }
-            catch (XamlParseException ex)
-            {
-                error = Error.NewShapeError(ex.LineNumber, ex.LinePosition, ex.Message);
-            }
-
-            return path;
-        }
-
-        private static StreamGeometry TryParseStreamGeometry(string streamGeometry)
-        {
-            StreamGeometry geometry = null;
-
-            try
-            {
-                geometry = (StreamGeometry)Geometry.Parse(streamGeometry);
+                streamGeometry = (StreamGeometry)Geometry.Parse(streamGeometryText);
             }
             catch (FormatException ex)
             {
                 error = Error.NewShapeError(0, 0, ex.Message);
             }
 
-            return geometry;
+            return streamGeometry;
         }
 
         private static void RenderGeometry(Geometry geometry)
         {
+            const int padding = 5;
+
             Path path = new Path
             {
                 Data = geometry,
@@ -293,19 +214,12 @@ namespace PaintDotNet.Effects
                 VerticalAlignment = VerticalAlignment.Center,
                 Stroke = strokeBrush,
                 Fill = fillBrush,
-                StrokeThickness = strokeThickness
+                StrokeThickness = strokeThickness,
+                Stretch = Stretch.Uniform,
+                Width = selection.Width - padding * 2,
+                Height = selection.Height - padding * 2,
+                Margin = new Thickness(padding)
             };
-
-            RenderPath(path);
-        }
-
-        private static void RenderPath(Path path)
-        {
-            const int padding = 5;
-            path.Stretch = Stretch.Uniform;
-            path.Width = selection.Width - padding * 2;
-            path.Height = selection.Height - padding * 2;
-            path.Margin = new Thickness(padding);
 
             Canvas canvas = new Canvas
             {
