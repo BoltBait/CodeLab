@@ -48,7 +48,7 @@ namespace PaintDotNet.Effects
 
         internal static Error NewShapeError(int line, int column, string errorText)
         {
-            return new Error(ErrorType.Xaml, line, column, -1, -1, string.Empty, errorText, false);
+            return new Error(ErrorType.Xaml, line - 1, column - 1, -1, -1, string.Empty, errorText, false);
         }
 
         internal static Error NewInternalError(string internalError)
