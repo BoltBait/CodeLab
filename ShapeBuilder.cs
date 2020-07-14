@@ -19,7 +19,6 @@ namespace PaintDotNet.Effects
         private static SolidColorBrush fillBrush;
         private static double strokeThickness;
 
-        private static readonly Error invalidShapeError = Error.NewShapeError(0, 0, "Shape code is invalid or otherwise unrecognized.");
         private static Error error;
 
         internal static Error Error => error;
@@ -63,7 +62,7 @@ namespace PaintDotNet.Effects
 
             if (string.IsNullOrWhiteSpace(shapeCode))
             {
-                error = invalidShapeError;
+                error = Error.NewShapeError(0, 0, "Shape code is invalid or otherwise unrecognized.");
                 return null;
             }
 
@@ -75,16 +74,25 @@ namespace PaintDotNet.Effects
 
             XElement docElement = xDoc.Root;
 
-            if (docElement.Name.LocalName != "SimpleGeometryShape" || !docElement.HasAttributes)
+            if (docElement.Name.LocalName != "SimpleGeometryShape")
             {
-                error = invalidShapeError;
+                IXmlLineInfo lineInfo = docElement;
+                error = Error.NewShapeError(lineInfo.LineNumber, 0, "The root element must be SimpleGeometryShape.");
+                return null;
+            }
+
+            if (!docElement.HasAttributes)
+            {
+                IXmlLineInfo lineInfo = docElement;
+                error = Error.NewShapeError(lineInfo.LineNumber, 0, "The SimpleGeometryShape element is missing attributes.");
                 return null;
             }
 
             XAttribute nameAttribute = docElement.Attribute(XName.Get("DisplayName", string.Empty));
             if (nameAttribute == null)
             {
-                error = Error.NewShapeError(0, 0, "Can not find the DisplayName attribute.");
+                IXmlLineInfo lineInfo = docElement;
+                error = Error.NewShapeError(lineInfo.LineNumber, 0, "The DisplayName attribute is missing.");
             }
             else if (string.IsNullOrWhiteSpace(nameAttribute.Value))
             {
@@ -92,8 +100,17 @@ namespace PaintDotNet.Effects
                 error = Error.NewShapeError(lineInfo.LineNumber, 0, "The DisplayName attribute is empty.");
             }
 
+            XAttribute geometryAttribute = docElement.Attribute(XName.Get("Geometry", string.Empty));
+
             if (docElement.HasElements)
             {
+                if (geometryAttribute != null)
+                {
+                    IXmlLineInfo lineInfo = geometryAttribute;
+                    error = Error.NewShapeError(lineInfo.LineNumber, 0, "Can not contain both Geometry attribute and child elements.");
+                    return null;
+                }
+
                 XElement firstElement = docElement.Elements().First();
 
                 if (firstElement.ElementsAfterSelf().Any())
@@ -115,9 +132,14 @@ namespace PaintDotNet.Effects
                 int xmlnsStartIndex = xElementText.IndexOf(" xmlns=");
                 int xmlnsEndIndex = xElementText.IndexOf(">");
 
-                if (xmlnsStartIndex == -1 || xmlnsEndIndex == -1 || xmlnsEndIndex < xmlnsStartIndex)
+                if (firstElement.IsEmpty)
                 {
-                    error = invalidShapeError;
+                    xmlnsEndIndex--;
+                }
+
+                if (xmlnsStartIndex < 0 || xmlnsEndIndex < 0 || xmlnsEndIndex < xmlnsStartIndex)
+                {
+                    error = Error.NewShapeError(0, 0, "Shape code is invalid or otherwise unrecognized.");
                     return null;
                 }
 
@@ -135,7 +157,6 @@ namespace PaintDotNet.Effects
             }
             else
             {
-                XAttribute geometryAttribute = docElement.Attribute(XName.Get("Geometry", string.Empty));
                 if (geometryAttribute == null)
                 {
                     error = Error.NewShapeError(0, 0, "Can not find the Geometry attribute.");
