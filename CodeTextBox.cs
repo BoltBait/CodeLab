@@ -2264,6 +2264,11 @@ namespace PaintDotNet.Effects
                     break;
             }
 
+            if (type.IsConstructedGenericType)
+            {
+                type = type.GetGenericTypeDefinition();
+            }
+
             string defRef = DefinitionGenerator.Generate(type);
             string name = type.GetDisplayNameWithExclusion(type);
 
