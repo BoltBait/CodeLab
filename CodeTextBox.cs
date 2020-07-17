@@ -1169,6 +1169,7 @@ namespace PaintDotNet.Effects
 
             int rangeStart = 0;
             int rangeEnd = this.TextLength;
+            IEnumerable<MethodInfo> methods = Intelli.UserScript.GetMethods(userScriptBindingFlags);
 
             if (localOnly)
             {
@@ -1189,25 +1190,28 @@ namespace PaintDotNet.Effects
                 if (openParenPos != InvalidPosition)
                 {
                     string methodName = this.GetWordFromPosition(openParenPos);
-                    IEnumerable<MethodInfo> methods = Intelli.UserScript.GetMethods(userScriptBindingFlags)
+                    IEnumerable<MethodInfo> methodMatches = methods
                         .Where(m => !m.IsVirtual && m.Name.Equals(methodName, StringComparison.Ordinal));
 
-                    if (methods.Any())
-                    {
-                        MethodInfo methodInfo = GetOverload(methods, openParenPos);
-
-                        foreach (ParameterInfo parameter in methodInfo.GetParameters())
-                        {
-                            if (!Intelli.Parameters.ContainsKey(parameter.Name))
-                            {
-                                Intelli.Parameters.Add(parameter.Name, parameter.ParameterType);
-                            }
-                        }
-                    }
+                    methods = methodMatches.Any()
+                        ? new[] { GetOverload(methodMatches, openParenPos) }
+                        : Array.Empty<MethodInfo>();
+                }
+                else
+                {
+                    methods = Array.Empty<MethodInfo>();
                 }
 
                 rangeStart = methodBounds.Item1 + 1;
                 rangeEnd = methodBounds.Item2 - 1;
+            }
+
+            foreach (ParameterInfo parameter in methods.SelectMany(method => method.GetParameters()))
+            {
+                if (!Intelli.Parameters.ContainsKey(parameter.Name))
+                {
+                    Intelli.Parameters.Add(parameter.Name, parameter.ParameterType);
+                }
             }
 
             string bodyText = this.GetTextRange(rangeStart, rangeEnd - rangeStart);
