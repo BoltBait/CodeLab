@@ -77,6 +77,7 @@ namespace PaintDotNet.Effects
             opacity75MenuItem.Checked = false;
             opacity90MenuItem.Checked = false;
             opacity100MenuItem.Checked = true;
+            transparencyToolStripMenuItem.Enabled = EnableOpacity;
 
             ResetScript();
             BuildAsync();
