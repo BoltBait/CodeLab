@@ -4728,7 +4728,7 @@ namespace PaintDotNet.Effects
                 return;
             }
 
-            Dictionary<int, int> visibleLine = new Dictionary<int, int>();
+            List<int> visibleLine = new List<int>();
 
             bool wordWrapDisabled = this.WrapMode == WrapMode.None;
             bool allLinesVisible = this.Lines.AllLinesVisible;
@@ -4736,7 +4736,7 @@ namespace PaintDotNet.Effects
             int count = 0;
             for (int i = 0; i < this.Lines.Count; i++)
             {
-                visibleLine.Add(i, count);
+                visibleLine.Add(count);
 
                 if (allLinesVisible || this.Lines[i].Visible)
                 {
