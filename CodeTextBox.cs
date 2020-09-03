@@ -2621,7 +2621,15 @@ namespace PaintDotNet.Effects
         {
             if (!iBox.Visible)
             {
-                if (e.KeyCode == Keys.Escape)
+                if (e.KeyCode == Keys.F12)
+                {
+                    GoToDefinition(false);
+                }
+                else if (this.ReadOnly)
+                {
+                    // no-op
+                }
+                else if (e.KeyCode == Keys.Escape)
                 {
                     // Clear indicator for variable renaming
                     ClearRenaming();
@@ -2721,10 +2729,6 @@ namespace PaintDotNet.Effects
                         }
                     }
                 }
-                else if (e.KeyCode == Keys.F12)
-                {
-                    GoToDefinition(false);
-                }
                 else if (e.Alt && e.KeyCode == Keys.Up)
                 {
                     this.ExecuteCmd(Command.MoveSelectedLinesUp);
@@ -2733,6 +2737,10 @@ namespace PaintDotNet.Effects
                 {
                     this.ExecuteCmd(Command.MoveSelectedLinesDown);
                 }
+            }
+            else if (this.ReadOnly)
+            {
+                // no-op
             }
             else if (e.Alt && e.KeyCode == Keys.L)
             {
@@ -3602,7 +3610,11 @@ namespace PaintDotNet.Effects
 
         protected override void OnCharAdded(CharAddedEventArgs e)
         {
-            if (iBox.Visible)
+            if (this.ReadOnly)
+            {
+                // no-op
+            }
+            else if (iBox.Visible)
             {
                 string word = this.GetWordFromPosition(this.CurrentPosition);
                 if (this.Lexer == Lexer.Xml && e.Char == '/' && this.GetCharAt(this.CurrentPosition - 2) == '<')
