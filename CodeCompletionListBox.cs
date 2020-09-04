@@ -661,6 +661,10 @@ namespace PaintDotNet.Effects
                 {
                     this.SelectedItem = LastUsedNonMember;
                 }
+                else
+                {
+                    this.SelectedIndex = 0;
+                }
 
                 return;
             }
