@@ -53,6 +53,220 @@
     <Reference Include="ScintillaNET">
       <HintPath>References\ScintillaNET.dll</HintPath>
     </Reference>
+    <Reference Include="System">
+      <Name>System</Name>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Data">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Data.Entity.Design" />
+    <Reference Include="System.Drawing">
+      <Name>System.Drawing</Name>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.IO.Compression">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.IO.Compression.FileSystem">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Extensions">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Windows.Forms">
+      <Name>System.Windows.Forms</Name>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xaml">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xml">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="WindowsBase">
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BuildFileTypeDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BuildFileTypeDialog.Designer.cs">
+      <DependentUpon>BuildFileTypeDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="BuildForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BuildForm.Designer.cs">
+      <DependentUpon>BuildForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ChildFormBase.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DefinitionGenerator.cs" />
+    <Compile Include="DocumentParser.cs" />
+    <Compile Include="Error.cs" />
+    <Compile Include="ErrorBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Freshness.cs" />
+    <Compile Include="IntelliTip.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="MessageBox.cs" />
+    <Compile Include="NewShape.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NewShape.Designer.cs">
+      <DependentUpon>NewShape.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FastDebug\Program.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="SaveConfigDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ScaledToolStripControls.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ScriptBuilder.cs" />
+    <Compile Include="ScriptWriter.cs" />
+    <Compile Include="Settings.cs" />
+    <Compile Include="SettingsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SettingsForm.Designer.cs">
+      <DependentUpon>SettingsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ShapeBuilder.cs" />
+    <Compile Include="SnippetManager.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SnippetManager.Designer.cs">
+      <DependentUpon>SnippetManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SolutionGenerator.cs" />
+    <Compile Include="TabStrip.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="TabStrip.Designer.cs">
+      <DependentUpon>TabStrip.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Theming.cs" />
+    <Compile Include="CodeLab.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CodeLabConfigDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CodeLabConfigDialog.Designer.cs">
+      <DependentUpon>CodeLabConfigDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CodeLabConfigToken.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CodeTextBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ColorWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ColorWindow.Designer.cs">
+      <DependentUpon>ColorWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CodeCompletionListBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Extensions.cs" />
+    <Compile Include="FileNew.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FileNew.Designer.cs">
+      <DependentUpon>FileNew.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Intelli.cs" />
+    <Compile Include="PdnColor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="PdnColor.designer.cs">
+      <DependentUpon>PdnColor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UIBuilder.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UIBuilder.Designer.cs">
+      <DependentUpon>UIBuilder.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FindAndReplace.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="FindAndReplace.Designer.cs">
+      <DependentUpon>FindAndReplace.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UIUtil.cs" />
+    <Compile Include="ViewSrc.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ViewSrc.Designer.cs">
+      <DependentUpon>ViewSrc.cs</DependentUpon>
+    </Compile>
+    <Compile Include="IndicatorBar.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <EmbeddedResource Include="BuildFileTypeDialog.resx">
+      <DependentUpon>BuildFileTypeDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CodeLabConfigDialog.resx">
+      <DependentUpon>CodeLabConfigDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="BuildForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>BuildForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ColorWindow.resx">
+      <DependentUpon>ColorWindow.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NewShape.resx">
+      <DependentUpon>NewShape.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PdnColor.resx">
+      <DependentUpon>PdnColor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SettingsForm.resx">
+      <DependentUpon>SettingsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SnippetManager.resx">
+      <DependentUpon>SnippetManager.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TabStrip.resx">
+      <DependentUpon>TabStrip.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UIBuilder.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>UIBuilder.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FindAndReplace.resx">
+      <DependentUpon>FindAndReplace.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ViewSrc.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>ViewSrc.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FileNew.resx">
+      <DependentUpon>FileNew.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Compile Update="ErrorBox.cs" />

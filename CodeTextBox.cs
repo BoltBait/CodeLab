@@ -22,6 +22,7 @@
 // Implemented in CodeLab and customized by Jason Wendt.
 /////////////////////////////////////////////////////////////////////////////////
 
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using PlatformSpellCheck;
 using ScintillaNET;
 using System;
@@ -30,7 +31,6 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Reflection;
-using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace PaintDotNet.Effects
@@ -1164,7 +1164,7 @@ namespace PaintDotNet.Effects
             return true;
         }
 
-        private void ParseVariables(int position, bool localOnly = true)
+        private void ParseVariables(int position)
         {
             Intelli.Parameters.Clear();
             Intelli.Variables.Clear();
@@ -1176,216 +1176,58 @@ namespace PaintDotNet.Effects
                 return;
             }
 
-            int rangeStart = 0;
-            int rangeEnd = this.TextLength;
-            IEnumerable<MethodInfo> methods = Intelli.UserScript.GetMethods(userScriptBindingFlags);
+            int adjustedCaretPosition = position + DocumentParser.PosOffset;
 
-            if (localOnly)
+            BaseMethodDeclarationSyntax currentMethod = DocumentParser.GetCurrentMethod(this.Text, adjustedCaretPosition);
+            if (currentMethod == null)
             {
-                Tuple<int, int> methodBounds = GetMethodBounds(position);
-                if (methodBounds.Item1 == InvalidPosition || methodBounds.Item2 == InvalidPosition)
-                {
-                    return;
-                }
-
-                // Gather parameters of method
-                int closeParenPos = methodBounds.Item1 - 1;
-                while (closeParenPos > InvalidPosition && this.GetCharAt(closeParenPos) != ')')
-                {
-                    closeParenPos--;
-                }
-
-                int openParenPos = this.BraceMatch(closeParenPos);
-                if (openParenPos != InvalidPosition)
-                {
-                    string methodName = this.GetWordFromPosition(openParenPos);
-                    IEnumerable<MethodInfo> methodMatches = methods
-                        .Where(m => !m.IsVirtual && m.Name.Equals(methodName, StringComparison.Ordinal));
-
-                    methods = methodMatches.Any()
-                        ? new[] { GetOverload(methodMatches, openParenPos) }
-                        : Array.Empty<MethodInfo>();
-                }
-                else
-                {
-                    methods = Array.Empty<MethodInfo>();
-                }
-
-                rangeStart = methodBounds.Item1 + 1;
-                rangeEnd = methodBounds.Item2 - 1;
+                return;
             }
 
-            foreach (ParameterInfo parameter in methods.SelectMany(method => method.GetParameters()))
+            foreach (VariableDeclarationSyntax varDeclaration in currentMethod.VarsForPosition(adjustedCaretPosition))
             {
-                if (!Intelli.Parameters.ContainsKey(parameter.Name))
-                {
-                    Intelli.Parameters.Add(parameter.Name, parameter.ParameterType);
-                }
-            }
-
-            string bodyText = this.GetTextRange(rangeStart, rangeEnd - rangeStart);
-            IEnumerable<string> bodyWords = bodyText.Split(new char[] { ' ', '(', '{', '<', '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries).Distinct();
-
-            this.SearchFlags = SearchFlags.MatchCase | SearchFlags.WholeWord;
-            foreach (string word in bodyWords)
-            {
-                bool isArray = word.EndsWith("[]", StringComparison.Ordinal);
-                string typeStr = isArray ? word.Replace("[]", string.Empty) : word;
-
-                Type type;
-                if (Intelli.AllTypes.ContainsKey(typeStr))
-                {
-                    type = isArray ? Intelli.AllTypes[typeStr].MakeArrayType() : Intelli.AllTypes[typeStr];
-                }
-                else if (Intelli.UserDefinedTypes.ContainsKey(typeStr))
-                {
-                    type = isArray ? Intelli.UserDefinedTypes[typeStr].MakeArrayType() : Intelli.UserDefinedTypes[typeStr];
-                }
-                else
+                Type typeValue = varDeclaration.Type.BuildType();
+                if (typeValue == null)
                 {
                     continue;
                 }
 
-                this.SetTargetRange(rangeStart, rangeEnd);
-                while (this.SearchInTarget(word) != InvalidPosition)
+                foreach (VariableDeclaratorSyntax var in varDeclaration.Variables)
                 {
-                    int varPos = this.TargetEnd;
-
-                    if (!localOnly && IsInClassRoot(varPos))
+                    if (var.Identifier.Span.Start < adjustedCaretPosition)
                     {
-                        this.SetTargetRange(varPos, rangeEnd);
-                        continue;
-                    }
+                        string nameKey = var.Identifier.Text;
 
-                    this.SetTargetRange(varPos, rangeEnd);
-
-                    if (type.IsGenericType)
-                    {
-                        if (this.GetCharAt(varPos) != '<')
-                        {
-                            continue;
-                        }
-
-                        if (type.IsConstructedGenericType)
-                        {
-                            type = type.GetGenericTypeDefinition();
-                        }
-
-                        string args = GetGenericArgs(varPos);
-                        type = type.MakeGenericType(args);
-
-                        while (this.GetCharAt(varPos - 1) != '>' && varPos <= rangeEnd)
-                        {
-                            varPos++;
-                        }
-                    }
-
-                    // Ensure there's at least one space after the type
-                    if (!char.IsWhiteSpace(this.GetCharAt(varPos)))
-                    {
-                        continue;
-                    }
-
-                    // Skip over white space
-                    while (char.IsWhiteSpace(this.GetCharAt(varPos)) && varPos <= rangeEnd)
-                    {
-                        varPos++;
-                    }
-
-                    // find the semi-colon
-                    int semiColonPos = varPos;
-                    while (this.GetCharAt(semiColonPos) != ';' && semiColonPos <= rangeEnd)
-                    {
-                        semiColonPos++;
-                    }
-
-                    string varRange = this.GetTextRange(varPos, semiColonPos - varPos);
-                    string[] possibleVars = varRange.StripBraces().StripParens().Split(new char[] { ',' });
-                    MatchCollection braceMatches = Regex.Matches(varRange, @"\{(?:\{[^{}]*\}|[^{}])*\}");
-
-                    int varCount = possibleVars.Length;
-                    if (braceMatches.Count > 0 && possibleVars.Length != braceMatches.Count)
-                    {
-                        varCount = 1;
-                    }
-
-                    for (int i = 0; i < varCount; i++)
-                    {
-                        while (char.IsWhiteSpace(this.GetCharAt(varPos)) && varPos <= rangeEnd)
-                        {
-                            varPos++;
-                        }
-
-                        int thisVarPos = varPos;
-                        if (varCount > 1)
-                        {
-                            int braceLength = (braceMatches.Count > i) ? braceMatches[i].Groups[0].Length : 0;
-                            varPos += possibleVars[i].Length + braceLength + 1;
-                        }
-
-                        int style = this.GetStyleAt(thisVarPos);
-                        if (style != Style.Cpp.Identifier && style != Style.Cpp.Identifier + Preprocessor &&
-                            style != Substyle.ParamAndVar && style != Substyle.ParamAndVar + Preprocessor)
-                        {
-                            continue;
-                        }
-
-                        string varName = this.GetWordFromPosition(thisVarPos);
-
-                        // Ensure the variable doesn't contain illegal characters
-                        if (!varName.IsCSharpIndentifier())
-                        {
-                            continue;
-                        }
-
-                        if (Intelli.AllTypes.ContainsKey(varName) || Intelli.Keywords.Contains(varName) || Intelli.Snippets.ContainsKey(varName) ||
-                            Intelli.UserDefinedTypes.ContainsKey(varName) || Intelli.UserScript.Contains(varName, false))
-                        {
-                            continue;
-                        }
-
-                        Intelli.VarPos[varName] = thisVarPos;
-
-                        if (localOnly && Intelli.Parameters.ContainsKey(varName))
-                        {
-                            continue;
-                        }
-
-                        Intelli.Variables[varName] = type;
+                        Intelli.VarPos[nameKey] = var.Identifier.Span.Start - DocumentParser.PosOffset;
+                        Intelli.Variables[nameKey] = typeValue;
                     }
                 }
+            }
+
+            foreach (ParameterSyntax parameter in currentMethod.MethodParameters())
+            {
+                Type typeValue = parameter.Type.BuildType();
+                if (typeValue == null)
+                {
+                    continue;
+                }
+
+                string nameKey = parameter.Identifier.Text;
+
+                Intelli.VarPos[nameKey] = parameter.Identifier.Span.Start - DocumentParser.PosOffset;
+                Intelli.Parameters.Add(nameKey, typeValue);
             }
         }
 
         internal void ColorizeMethods()
         {
-            ParseVariables(0, false);
-
-            HashSet<string> methodNames = new HashSet<string>();
-            int pos = 0;
-            while (pos < this.TextLength)
-            {
-                int style = this.GetStyleAt(pos);
-                if ((style == Style.Cpp.Identifier || style == Style.Cpp.Identifier + Preprocessor ||
-                    style == Substyle.Method || style == Substyle.Method + Preprocessor) &&
-                    this.GetIntelliType(pos) == IntelliType.Method)
-                {
-                    methodNames.Add(this.GetWordFromPosition(pos));
-                }
-
-                int endPos = this.WordEndPosition(pos);
-                pos = (endPos > pos) ? endPos : pos + 1;
-            }
-
-            IEnumerable<string> paramNames = Intelli.UserScript.GetMethods(userScriptBindingFlags)
-                .Where(m => !m.IsVirtual)
-                .SelectMany(m => m.GetParameters())
-                .Select(p => p.Name)
-                .Distinct();
+            ClassDeclarationSyntax rootClassNode = DocumentParser.GetRootClassNode(this.Text);
+            IEnumerable<string> methodNames = rootClassNode.MethodNames();
+            IEnumerable<string> varsAndParams = rootClassNode.VariableAndParameterNames();
 
             this.updatingStyles = true;
             this.SetIdentifiers(Substyle.Method, methodNames.Join(" "));
-            this.SetIdentifiers(Substyle.ParamAndVar, paramNames.Concat(Intelli.Variables.Keys).Join(" "));
+            this.SetIdentifiers(Substyle.ParamAndVar, varsAndParams.Join(" "));
         }
 
         private IntelliType GetIntelliType(int position)
