@@ -76,6 +76,7 @@ namespace PaintDotNet.Effects
         private DelayedOperation delayedOperation = DelayedOperation.None;
         private bool useExtendedColors = false;
         private bool spellCheckEnabled = false;
+        private bool updatingStyles = false;
         #endregion
 
         #region Properties
@@ -1368,14 +1369,14 @@ namespace PaintDotNet.Effects
                 pos = (endPos > pos) ? endPos : pos + 1;
             }
 
-            this.SetIdentifiers(Substyle.Method, methodNames.Join(" "));
-
             IEnumerable<string> paramNames = Intelli.UserScript.GetMethods(userScriptBindingFlags)
                 .Where(m => !m.IsVirtual)
                 .SelectMany(m => m.GetParameters())
                 .Select(p => p.Name)
                 .Distinct();
 
+            this.updatingStyles = true;
+            this.SetIdentifiers(Substyle.Method, methodNames.Join(" "));
             this.SetIdentifiers(Substyle.ParamAndVar, paramNames.Concat(Intelli.Variables.Keys).Join(" "));
         }
 
@@ -3396,6 +3397,9 @@ namespace PaintDotNet.Effects
             bool content = e.Change.HasFlag(UpdateChange.Content);
             bool selection = e.Change.HasFlag(UpdateChange.Selection);
 
+            bool styles = this.updatingStyles;
+            this.updatingStyles = false;
+
             if (hScroll)
             {
                 if (iBox.Visible)
@@ -3530,7 +3534,7 @@ namespace PaintDotNet.Effects
 
             if (content || selection)
             {
-                if (intelliTip.Visible)
+                if (intelliTip.Visible && !styles)
                 {
                     intelliTip.Hide(this);
                     disableIntelliTipPos = InvalidPosition;
@@ -4008,6 +4012,8 @@ namespace PaintDotNet.Effects
             {
                 return;
             }
+
+            this.updatingStyles = true;
 
             this.SetKeywords(0, "abstract as base bool byte char checked class const decimal delegate double enum event explicit extern "
                 + "false fixed float get implicit in int interface internal is lock long namespace new null object operator out override "
