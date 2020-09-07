@@ -76,6 +76,7 @@ namespace PaintDotNet.Effects
                 UIUtil.GetImage("Method"), // Use the Method icon for Constructor
                 UIUtil.GetImage("Var"), // Use the Variable icon for Parameter
                 UIUtil.GetImage("Interface"),
+                UIUtil.GetImage("Delegate"),
                 UIUtil.EmptyImage
             };
         }
@@ -545,6 +546,11 @@ namespace PaintDotNet.Effects
             {
                 baseType = "struct";
                 icon = IntelliType.Struct;
+            }
+            else if (type.IsDelegate())
+            {
+                baseType = "delegate";
+                icon = IntelliType.Delegate;
             }
             else if (type.IsClass)
             {

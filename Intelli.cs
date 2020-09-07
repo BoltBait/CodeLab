@@ -332,6 +332,7 @@ namespace PaintDotNet.Effects
         Constructor,
         Parameter,
         Interface,
+        Delegate,
         None
     }
 }

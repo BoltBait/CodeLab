@@ -345,6 +345,7 @@
     <EmbeddedResource Include="Icons\Property.png" />
     <EmbeddedResource Include="Icons\Snippet.png" />
     <EmbeddedResource Include="Icons\Interface.png" />
+    <EmbeddedResource Include="Icons\Delegate.32.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Icons\Class.32.png" />
@@ -360,6 +361,7 @@
     <EmbeddedResource Include="Icons\Struct.32.png" />
     <EmbeddedResource Include="Icons\Var.32.png" />
     <EmbeddedResource Include="Icons\Interface.32.png" />
+    <EmbeddedResource Include="Icons\Delegate.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Icons\CodeLab.png" />

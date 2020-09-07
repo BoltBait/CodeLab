@@ -41,7 +41,7 @@ namespace PaintDotNet.Effects
             indent = 1;
             string spaces = GetIndent(indent);
 
-            if (typeof(Delegate).IsAssignableFrom(type))
+            if (type.IsDelegate())
             {
                 MethodInfo method = type.GetMethod("Invoke");
                 defRef.AppendLine(spaces + "public delegate " + method.ReturnType.GetDisplayName() + " " + type.GetDisplayNameWithExclusion(type) + "(" + method.Params() + ");");
@@ -346,7 +346,7 @@ namespace PaintDotNet.Effects
                     continue;
                 }
 
-                if (typeof(Delegate).IsAssignableFrom(nestedType))
+                if (nestedType.IsDelegate())
                 {
                     MethodInfo method = nestedType.GetMethod("Invoke");
                     defRef.AppendLine(GetIndent(indent) + "public delegate " + method.ReturnType.GetDisplayName() + " " + nestedType.GetDisplayNameWithExclusion(nestedType) + "(" + method.Params() + ");");

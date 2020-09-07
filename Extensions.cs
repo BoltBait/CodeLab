@@ -520,6 +520,11 @@ namespace PaintDotNet.Effects
             return member.IsDefined(typeof(ObsoleteAttribute), false);
         }
 
+        internal static bool IsDelegate(this Type type)
+        {
+            return typeof(Delegate).IsAssignableFrom(type);
+        }
+
         internal static string GetObjectType(this Type type)
         {
             if (type.IsEnum)
@@ -529,6 +534,10 @@ namespace PaintDotNet.Effects
             if (type.IsValueType)
             {
                 return "struct";
+            }
+            if (type.IsDelegate())
+            {
+                return "delegate";
             }
             if (type.IsClass)
             {

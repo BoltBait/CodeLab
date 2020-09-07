@@ -2809,6 +2809,12 @@ namespace PaintDotNet.Effects
                 e.Handled = true;
                 iBox.Filter(IntelliType.Interface);
             }
+            else if (e.Alt && e.KeyCode == Keys.D)
+            {
+                e.SuppressKeyPress = true;
+                e.Handled = true;
+                iBox.Filter(IntelliType.Delegate);
+            }
             else if (e.KeyCode == Keys.OemPeriod)
             {
                 if (iBox.Matches)
