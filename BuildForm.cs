@@ -279,6 +279,8 @@ namespace PaintDotNet.Effects
             }
             else
             {
+                radioButtonNone.Text = "None - Plugin has no User Interface";
+
                 radioButtonURL.Enabled = false;
                 radioButtonPlain.Enabled = false;
                 radioButtonRich.Enabled = false;
