@@ -1149,7 +1149,7 @@ namespace PaintDotNet.Effects
         internal static string FullSourceCode(string SourceCode, string FileName, bool isAdjustment, string submenuname, string menuname, string iconpath, string SupportURL, EffectFlags effectFlags, EffectRenderingSchedule renderingSchedule, string Author, int MajorVersion, int MinorVersion, string Description, string KeyWords, string WindowTitleStr, HelpType HelpType, string HelpText)
         {
             UIElement[] UserControls = UIElement.ProcessUIControls(SourceCode, ProjectType.Effect);
-            bool hasPreRender = Regex.IsMatch(SourceCode, @"void PreRender\(Surface dst, Surface src\)(\s)*{(.|\s)*}", RegexOptions.Singleline);
+            bool hasPreRender = Regex.IsMatch(SourceCode, @"void\s+PreRender\s*\(\s*Surface\s+dst\s*,\s*Surface\s+src\s*\)\s*{(.|\s)*}", RegexOptions.Singleline);
 
             string sUsingPart = UsingPartCode(ProjectType.Effect);
             string sAssemblyInfoPart = AssemblyInfoPart(FileName, menuname, Author, MajorVersion, MinorVersion, Description, KeyWords);
