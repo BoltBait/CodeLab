@@ -14,6 +14,10 @@
 // Latest distribution: https://www.BoltBait.com/pdn/codelab
 /////////////////////////////////////////////////////////////////////////////////
 
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Text;
 using PaintDotNet.AppModel;
 using ScintillaNET;
 using System;
@@ -70,7 +74,238 @@ namespace PaintDotNet.Effects
             this.ShowInTaskbar = true;
 #else
             this.UseAppThemeColors = true;
+
+            this.Width = 1000;
+            this.Height = 800;
+
+            const int devSidebarWidth = 250;
+
+            txtCode.Width -= devSidebarWidth;
+            errorList.Width -= devSidebarWidth;
+            OutputTextBox.Width -= devSidebarWidth;
+
+            TextBox devDebug = new TextBox
+            {
+                Multiline = true,
+                Top = txtCode.Top,
+                Left = txtCode.Right,
+                Width = devSidebarWidth,
+                Height = errorList.Bottom - txtCode.Top ,
+                Anchor = AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Bottom,
+                ReadOnly = true,
+                WordWrap = false,
+                ScrollBars = ScrollBars.Both,
+                ForeColor = this.ForeColor,
+                BackColor = this.BackColor,
+                BorderStyle = BorderStyle.FixedSingle,
+                Font = new Font(Settings.FontFamily, 8)
+            };
+
+            PictureBox shapePreviewBox = null;
+
+            ShapeBuilder.SetEnviromentParams(devSidebarWidth, devSidebarWidth, 0, 0, devSidebarWidth, devSidebarWidth, ColorBgra.Black, ColorBgra.White, 2);
+
+            txtCode.UpdateUI += (sender, e) =>
+            {
+                if (e.Change.HasFlag(UpdateChange.Selection))
+                {
+                    devDebug.Clear();
+
+                    devDebug.AppendText($"Position: {txtCode.CurrentPosition}\r\n");
+                    //develDebug.AppendText($"Style: {txtCode.GetStyleAt(txtCode.CurrentPosition)}\r\n");
+                }
+
+                if (txtCode.Lexer == Lexer.Cpp && !this.txtCode.ReadOnly && e.Change.HasFlag(UpdateChange.Selection))
+                {
+                    CSharpParseOptions parseOptions = CSharpParseOptions.Default.WithLanguageVersion(LanguageVersion.CSharp7_3);
+
+                    const string prepend = "class UserScript\r\n{\r\n";
+                    string classCode = prepend + txtCode.Text + "\r\n}";
+                    int caretPos = txtCode.CurrentPosition + prepend.Length;
+
+                    SyntaxTree userCodeSyntaxTree = CSharpSyntaxTree.ParseText(classCode, options: ShowOutput.Checked ? parseOptions.WithPreprocessorSymbols("DEBUG") : parseOptions);
+
+                    IEnumerable<Diagnostic> diags = userCodeSyntaxTree.GetDiagnostics();
+                    if (diags.Any())
+                    {
+                        devDebug.AppendText("SyntaxTree Errors:\r\n");
+
+                        foreach (Diagnostic diag in diags)
+                        {
+                            devDebug.AppendText($"{diag.GetMessage()}\r\n");
+                        }
+
+                        devDebug.AppendText("\r\n");
+                    }
+
+
+                    SyntaxNode rootNode = userCodeSyntaxTree.GetRoot();
+
+                    TypeDeclarationSyntax currentTypeNode = rootNode.GetCurrentNode<TypeDeclarationSyntax>(caretPos);
+
+                    if (currentTypeNode == null)
+                    {
+                        return;
+                    }
+
+                    devDebug.AppendText("\r\n");
+                    devDebug.AppendText($"Type: {currentTypeNode.Identifier}\r\n");
+
+                    IEnumerable<MemberDeclarationSyntax> memberNodes = currentTypeNode.Members;
+
+                    IEnumerable<FieldDeclarationSyntax> fieldNodes = memberNodes.OfType<FieldDeclarationSyntax>();
+                    IEnumerable<EventDeclarationSyntax> eventNodes = memberNodes.OfType<EventDeclarationSyntax>();
+                    IEnumerable<MethodDeclarationSyntax> methodNodes = memberNodes.OfType<MethodDeclarationSyntax>();
+                    IEnumerable<PropertyDeclarationSyntax> propertyNodes = memberNodes.OfType<PropertyDeclarationSyntax>();
+
+                    IEnumerable<TypeDeclarationSyntax> nestedTypeNodes = memberNodes.OfType<TypeDeclarationSyntax>();
+
+                    if (nestedTypeNodes.Any())
+                    {
+                        devDebug.AppendText("\r\n");
+                        devDebug.AppendText("NestedTypes:\r\n");
+
+                        foreach (TypeDeclarationSyntax nestedTypeNode in nestedTypeNodes)
+                        {
+                            devDebug.AppendText($"{nestedTypeNode.Identifier}\r\n");
+                        }
+                    }
+
+                    if (fieldNodes.Any())
+                    {
+                        devDebug.AppendText("\r\n");
+                        devDebug.AppendText("Fields:\r\n");
+
+                        foreach (FieldDeclarationSyntax fieldNode in fieldNodes)
+                        {
+                            string type = fieldNode.Declaration.Type.ToString();
+                            foreach (VariableDeclaratorSyntax var in fieldNode.Declaration.Variables)
+                            {
+                                devDebug.AppendText($"{type} {var.Identifier}\r\n");
+                            }
+                        }
+                    }
+
+                    if (eventNodes.Any())
+                    {
+                        devDebug.AppendText("\r\n");
+                        devDebug.AppendText("Events:\r\n");
+
+                        foreach (EventDeclarationSyntax eventNode in eventNodes)
+                        {
+                            devDebug.AppendText($"{eventNode.Identifier}\r\n");
+                        }
+                    }
+
+                    if (methodNodes.Any())
+                    {
+                        devDebug.AppendText("\r\n");
+                        devDebug.AppendText("Methods:\r\n");
+
+                        foreach (MethodDeclarationSyntax methodNode in methodNodes)
+                        {
+                            devDebug.AppendText($"{methodNode.ReturnType} {methodNode.Identifier}{methodNode.ParameterList}\r\n");
+                        }
+                    }
+
+                    if (propertyNodes.Any())
+                    {
+                        devDebug.AppendText("\r\n");
+                        devDebug.AppendText("Properties:\r\n");
+
+                        foreach (PropertyDeclarationSyntax propertyNode in propertyNodes)
+                        {
+                            devDebug.AppendText($"{propertyNode.Type} {propertyNode.Identifier}\r\n");
+                        }
+                    }
+
+                    BaseMethodDeclarationSyntax parentMethod = currentTypeNode.GetCurrentNode<BaseMethodDeclarationSyntax>(caretPos);
+
+                    if (parentMethod == null)
+                    {
+                        return;
+                    }
+
+                    SeparatedSyntaxList<ParameterSyntax> parameters = parentMethod.ParameterList.Parameters;
+                    
+                    if (parameters.Count > 0)
+                    {
+                        devDebug.AppendText("\r\n");
+                        devDebug.AppendText("Parameters:\r\n");
+
+                        foreach (ParameterSyntax parameter in parameters)
+                        {
+                            devDebug.AppendText($"{parameter}\r\n");
+                        }
+                    }
+
+
+                    IEnumerable<VariableDeclarationSyntax> localVars = parentMethod.VarsForPosition(caretPos);
+
+                    devDebug.AppendText("\r\n");
+                    devDebug.AppendText("Variables:\r\n");
+
+                    foreach (VariableDeclarationSyntax varDeclaration in localVars)
+                    {
+                        string type = varDeclaration.Type.ToString();
+                        foreach (VariableDeclaratorSyntax var in varDeclaration.Variables)
+                        {
+                            if (var.Identifier.Span.End < caretPos)
+                            {
+                                devDebug.AppendText($"{type} {var.Identifier}\r\n");
+                            }
+                        }
+                    }
+
+                    //devDebug.AppendText("\r\n");
+                    //devDebug.AppendText($"Token: {currentNodeOrToken}\r\n");
+                    //devDebug.AppendText($"Token Kind: {currentNodeOrToken.Kind()}\r\n");
+                    //devDebug.AppendText($"Node: {currentNode}\r\n");
+                    //devDebug.AppendText($"Node Kind: {currentNode.Kind()}\r\n");
+                    //devDebug.AppendText("\r\n");
+                }
+
+                if (txtCode.Lexer == Lexer.Xml && e.Change.HasFlag(UpdateChange.Content))
+                {
+                    if (ShapeBuilder.RenderShape(txtCode.Text))
+                    {
+                        if (shapePreviewBox == null)
+                        {
+                            Bitmap checkerboard = new Bitmap(devSidebarWidth, devSidebarWidth);
+                            using (Graphics g = Graphics.FromImage(checkerboard))
+                            using (System.Drawing.Drawing2D.HatchBrush hb = new System.Drawing.Drawing2D.HatchBrush(System.Drawing.Drawing2D.HatchStyle.LargeCheckerBoard, Color.LightGray, Color.White))
+                            {
+                                g.FillRectangle(hb, g.VisibleClipBounds);
+                            }
+
+                            shapePreviewBox = new PictureBox
+                            {
+                                Width = devSidebarWidth,
+                                Height = devSidebarWidth,
+                                Left = txtCode.Right,
+                                Top = errorList.Bottom - devSidebarWidth,
+                                Anchor = AnchorStyles.Bottom | AnchorStyles.Right,
+                                BackgroundImage = checkerboard
+                            };
+
+                            this.Controls.Add(shapePreviewBox);
+
+                            devDebug.Height -= devSidebarWidth;
+                        }
+
+                        using (Surface surface = Surface.CopyFromBitmap(ShapeBuilder.Shape))
+                        {
+                            shapePreviewBox.Image?.Dispose();
+                            shapePreviewBox.Image = new Bitmap(surface.CreateAliasedBitmap());
+                        }
+                    }
+                }
+            };
+
+            this.Controls.Add(devDebug);
 #endif
+
+
             PdnTheme.InitialColors(this.ForeColor, this.BackColor);
             LoadSettingsFromRegistry();
 

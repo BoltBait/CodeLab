@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing.Printing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -34,7 +30,6 @@ namespace PaintDotNet.Effects
                 .OfType<MemberAccessExpressionSyntax>()
                 .Select(expression => expression.Name.Identifier.Text);
 
-
             return definedMethods.Concat(referencedMethods).Distinct();
         }
 
@@ -46,17 +41,19 @@ namespace PaintDotNet.Effects
 
             IEnumerable<string> variables = methods
                 .SelectMany(method => method.DescendantNodes())
-                .OfType<StatementSyntax>()
-                .SelectMany(statement => statement.ChildNodes())
-                .OfType<VariableDeclarationSyntax>()
-                .SelectMany(variable => variable.Variables)
+                .OfType<VariableDeclaratorSyntax>()
+                .Select(variable => variable.Identifier.Text);
+
+            IEnumerable<string> variables2 = methods
+                .SelectMany(method => method.DescendantNodes())
+                .OfType<SingleVariableDesignationSyntax>()
                 .Select(variable => variable.Identifier.Text);
 
             IEnumerable<string> parameters = methods
                 .SelectMany(method => method.ParameterList.Parameters)
                 .Select(parameter => parameter.Identifier.Text);
 
-            return variables.Concat(parameters).Distinct();
+            return variables.Concat(variables2).Concat(parameters).Distinct();
         }
 
         internal static IEnumerable<ParameterSyntax> MethodParameters(this BaseMethodDeclarationSyntax methodNode)
@@ -68,22 +65,65 @@ namespace PaintDotNet.Effects
         {
             SyntaxNode currentNode = methodNode.GetCurrentNode(position);
 
-            IEnumerable<SyntaxNode> ancestorNodes = currentNode.AncestorsAndSelf().OfType<BlockSyntax>();
-            IEnumerable<SyntaxNode> ancestorsNodesInMember = ancestorNodes.Intersect(methodNode.DescendantNodes());
+            IEnumerable<BlockSyntax> ancestorNodes = currentNode.AncestorsAndSelf().OfType<BlockSyntax>();
+            IEnumerable<BlockSyntax> ancestorsNodesInMember = ancestorNodes.Intersect(methodNode.DescendantNodes().OfType<BlockSyntax>());
 
             if (!ancestorsNodesInMember.Any())
             {
                 return Array.Empty<VariableDeclarationSyntax>();
             }
 
-            IEnumerable<ForStatementSyntax> forStatementsInCurrentNode = ancestorNodes.First().ChildNodes().OfType<ForStatementSyntax>().Where(statement => !statement.Span.Contains(position));
+            BlockSyntax firstBlockSyntax = ancestorsNodesInMember.First();
 
-            return ancestorsNodesInMember
+            IEnumerable<VariableDeclarationSyntax> othersInCurrentNode = firstBlockSyntax
+                .ChildNodes()
+                .OfType<StatementSyntax>()
+                .Where(statement => statement.Span.Contains(position))
+                .SelectMany(statement => statement.DescendantNodes())
+                .OfType<VariableDeclarationSyntax>();
+
+            IEnumerable<VariableDeclarationSyntax> locals = ancestorsNodesInMember
+                .SelectMany(blockNode => blockNode.ChildNodes())
+                .OfType<LocalDeclarationStatementSyntax>()
+                .SelectMany(localStatement => localStatement.DescendantNodes())
+                .OfType<VariableDeclarationSyntax>();
+
+            //IEnumerable<SyntaxNode> firstBlockDescendants = firstBlockSyntax.DescendantNodes();
+            //ancestorsNodesInMember = ancestorsNodesInMember.Skip(1);
+
+            //return ancestorsNodesInMember
+            //    .SelectMany(node => node.ChildNodes())
+            //    .OfType<StatementSyntax>()
+            //    .Except(forStatementsInCurrentNode)
+            //    .SelectMany(statement => statement.DescendantNodes())
+            //    .OfType<VariableDeclarationSyntax>()
+            //    .Distinct();
+
+
+            var goo = currentNode
+                .AncestorsAndSelf()
+                .Intersect(methodNode.DescendantNodes())
                 .SelectMany(node => node.ChildNodes())
-                .Except(forStatementsInCurrentNode)
                 .OfType<StatementSyntax>()
                 .SelectMany(statement => statement.ChildNodes())
                 .OfType<VariableDeclarationSyntax>();
+
+            //var foo = ancestorsNodesInMember
+            //    .SelectMany(blockNode => blockNode.ChildNodes())
+            //    .Where(statement => statement.Span.Contains(position));
+
+            //var bar = foo.OfType<StatementSyntax>();
+            //var buzz = bar.SelectMany(statement => statement.DescendantNodes());
+            //var fizz = buzz.Intersect(currentNode.AncestorsAndSelf());
+            //var fizz  =   buzz.Where(statement => statement.Span.Contains(position)).Except(ancestorsNodesInMember);
+            //.Except(firstBlockDescendants);
+            //var goo = fizz.OfType<VariableDeclarationSyntax>()
+            //          .Except(locals);
+            //.Distinct();
+
+
+            return goo.Concat(locals);
+            //return goo.Concat(localsInCurrentNode).Concat(othersInCurrentNode);
         }
 
         internal static ClassDeclarationSyntax GetRootClassNode(string userCode)
@@ -107,26 +147,26 @@ namespace PaintDotNet.Effects
             where T : CSharpSyntaxNode
         {
             SyntaxNode currentNode = parentNode;
-            T methodNode = null;
+            T returnedNode = null;
 
             while (true)
             {
                 SyntaxNodeOrToken child = currentNode.ChildThatContainsPosition(position);
 
-                if (!child.IsNode)
+                if (!child.Span.Contains(position) || !child.IsNode)
                 {
                     break;
                 }
 
                 currentNode = child.AsNode();
 
-                if (currentNode is T methodDeclaration)
+                if (currentNode is T tSyntaxNode)
                 {
-                    methodNode = methodDeclaration;
+                    returnedNode = tSyntaxNode;
                 }
             }
 
-            return methodNode;
+            return returnedNode;
         }
 
         internal static SyntaxNode GetCurrentNode(this SyntaxNode parentNode, int position)

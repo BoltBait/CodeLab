@@ -22,6 +22,7 @@
 // Implemented in CodeLab and customized by Jason Wendt.
 /////////////////////////////////////////////////////////////////////////////////
 
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using PlatformSpellCheck;
 using ScintillaNET;
@@ -1714,16 +1715,20 @@ namespace PaintDotNet.Effects
         {
             T defaultOverload = mi.First();
 
+            int adjustedCaretPosition = position + DocumentParser.PosOffset;
+            InvocationExpressionSyntax documentMethod = DocumentParser.GetRootClassNode(this.Text).GetCurrentNode<InvocationExpressionSyntax>(adjustedCaretPosition);
+            if (documentMethod == null)
+            {
+                return defaultOverload;
+            }
+
             bool isExplicitGeneric = false;
             string genericArgs = null;
-            int paramStart = this.WordEndPosition(position);
-            char openBrace = this.GetCharAt(paramStart);
-            if (openBrace == '<')
+
+            if (documentMethod.Expression is MemberAccessExpressionSyntax memberAccessSyntax && memberAccessSyntax.Name is GenericNameSyntax genericNameSyntax)
             {
                 isExplicitGeneric = true;
-                genericArgs = GetGenericArgs(position);
-                paramStart = this.BraceMatch(paramStart) + 1;
-                openBrace = this.GetCharAt(paramStart);
+                genericArgs = genericNameSyntax.TypeArgumentList.Arguments.ToString();
             }
 
             if (isExplicitGeneric && defaultOverload is MethodInfo defaultMethod && defaultMethod.IsGenericMethodDefinition)
@@ -1731,47 +1736,21 @@ namespace PaintDotNet.Effects
                 defaultOverload = defaultMethod.MakeGenericMethod(genericArgs) as T;
             }
 
-            int miCount = mi.Count();
+            int overloadCount = mi.Count();
 
-            if (miCount == 1 && !(defaultOverload is MethodInfo onlyMethod && onlyMethod.IsGenericMethodDefinition))
+            if (overloadCount == 1 && !(defaultOverload is MethodInfo onlyMethod && onlyMethod.IsGenericMethodDefinition))
             {
                 return defaultOverload;
             }
 
-            if (openBrace != '(')
+            SeparatedSyntaxList<ArgumentSyntax> paramArgs = documentMethod.ArgumentList.Arguments;
+
+            List<Type> paramTypes = new List<Type>();
+            foreach (ArgumentSyntax paramArg in paramArgs)
             {
-                return defaultOverload;
-            }
+                string paramName = paramArg.Expression.ToString();
 
-            int paramEnd = this.BraceMatch(paramStart);
-            if (paramEnd == InvalidPosition)
-            {
-                return defaultOverload;
-            }
-            paramStart++;
-
-            string[] paramWords = this.GetTextRange(paramStart, paramEnd - paramStart).Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-
-            Tuple<int, int> oldRange = new Tuple<int, int>(this.TargetStart, this.TargetEnd);
-            this.SearchFlags = SearchFlags.MatchCase;
-            this.SetTargetRange(paramStart, paramEnd);
-            List<Type> paramTypes = new List<Type>(paramWords.Length);
-            foreach (string paramName in paramWords)
-            {
-                int paramPos = InvalidPosition;
-                if (this.SearchInTarget(paramName) != InvalidPosition)
-                {
-                    paramPos = this.TargetEnd;
-                    this.SetTargetRange(this.TargetEnd, paramEnd);
-                }
-
-                if (paramPos == InvalidPosition)
-                {
-                    this.SetTargetRange(oldRange.Item1, oldRange.Item2);
-                    return defaultOverload;
-                }
-
-                Type paramType = GetReturnType(paramPos);
+                Type paramType = GetReturnType(paramArg.Span.End - DocumentParser.PosOffset);
                 if (paramType == null)
                 {
                     this.SetTargetRange(oldRange.Item1, oldRange.Item2);
@@ -1785,9 +1764,8 @@ namespace PaintDotNet.Effects
 
                 paramTypes.Add(paramType);
             }
-            this.SetTargetRange(oldRange.Item1, oldRange.Item2);
 
-            for (int i = 0; i < miCount; i++)
+            for (int i = 0; i < overloadCount; i++)
             {
                 T method = mi.ElementAt(i);
                 if (method.IsGenericMethod)
