@@ -305,6 +305,158 @@ namespace PaintDotNet.Effects
                 this.closingTabIndex = tab.Index;
             }
         }
+
+        private sealed class Tab : ScaledToolStripButton
+        {
+            internal int Index { get; set; }
+            internal Guid Guid { get; }
+            internal ProjectType ProjectType { get; }
+            internal bool IsDirty { get; set; }
+            internal string Title { get; set; }
+            internal string Path { get; set; }
+            internal Rectangle CloseRect => closeRect;
+
+            private Rectangle closeRect = Rectangle.Empty;
+            private bool closeRectHiLite = false;
+
+            /// <summary>
+            /// Do NOT USE. For Initial Tab only.
+            /// </summary>
+            public Tab()
+                : this("Untitled", string.Empty, ProjectType.Effect)
+            {
+                this.Guid = Guid.Empty;
+            }
+
+            internal Tab(string title, string path, ProjectType projectType)
+            {
+                this.ImageAlign = ContentAlignment.MiddleLeft;
+                this.Margin = new Padding(0, 5, 3, 0);
+                this.AutoToolTip = false;
+
+                switch (projectType)
+                {
+                    case ProjectType.Effect:
+                        string imagePath = System.IO.Path.ChangeExtension(path, ".png");
+                        if (File.Exists(imagePath))
+                        {
+                            this.Image = UIUtil.GetBitmapFromFile(imagePath);
+                        }
+                        else
+                        {
+                            this.ImageName = "Untitled";
+                        }
+                        break;
+                    case ProjectType.FileType:
+                        this.ImageName = "Save";
+                        break;
+                    case ProjectType.Reference:
+                        this.ImageName = "Book";
+                        break;
+                    case ProjectType.Shape:
+                        this.ImageName = "Shape";
+                        break;
+                    case ProjectType.None:
+                    default:
+                        this.ImageName = "PlainText";
+                        break;
+                }
+
+                this.Text = title;
+                this.ToolTipText = path.IsNullOrEmpty() ? title : path;
+                this.Guid = Guid.NewGuid();
+                this.ProjectType = projectType;
+                this.IsDirty = false;
+                this.Title = title;
+                this.Path = path;
+
+                closeRect = Rectangle.Empty;
+            }
+
+            protected override void OnTextChanged(EventArgs e)
+            {
+                base.OnTextChanged(e);
+
+                UpdateCloseRect();
+            }
+
+            private void UpdateCloseRect()
+            {
+                int size = this.Height / 2;
+                int padding = this.Height / 4;
+                closeRect = new Rectangle
+                {
+                    X = this.Width - closeRect.Width - padding,
+                    Y = padding,
+                    Width = size,
+                    Height = size
+                };
+            }
+
+            protected override void OnLayout(LayoutEventArgs e)
+            {
+                base.OnLayout(e);
+
+                if (this.Padding.Right != this.Height)
+                {
+                    this.Padding = new Padding(0, 0, this.Height, 0);
+                }
+            }
+
+            protected override void OnPaint(PaintEventArgs e)
+            {
+                base.OnPaint(e);
+
+                if (this.Parent.Items.Count <= 1)
+                {
+                    return;
+                }
+
+                if (!e.ClipRectangle.Contains(closeRect) || closeRect.IsEmpty)
+                {
+                    UpdateCloseRect();
+                }
+
+                e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
+                e.Graphics.FillRectangle(closeRectHiLite ? Brushes.DarkRed : Brushes.Crimson, closeRect);
+                e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+                using (Pen whitePen = new Pen(Color.White, 1.6f))
+                {
+                    e.Graphics.DrawLine(whitePen, closeRect.Left + 2, closeRect.Top + 2, closeRect.Right - 3, closeRect.Bottom - 3);
+                    e.Graphics.DrawLine(whitePen, closeRect.Left + 2, closeRect.Bottom - 3, closeRect.Right - 3, closeRect.Top + 2);
+                }
+            }
+
+            protected override void OnMouseMove(MouseEventArgs mea)
+            {
+                if (closeRect.Contains(mea.Location))
+                {
+                    if (!closeRectHiLite)
+                    {
+                        closeRectHiLite = true;
+                        this.Invalidate();
+                    }
+                }
+                else if (closeRectHiLite)
+                {
+                    closeRectHiLite = false;
+                    this.Invalidate();
+                }
+
+                base.OnMouseMove(mea);
+            }
+
+            protected override void OnMouseLeave(EventArgs e)
+            {
+                if (closeRectHiLite)
+                {
+                    closeRectHiLite = false;
+                    this.Invalidate();
+                }
+
+                base.OnMouseLeave(e);
+            }
+        }
     }
 
     public class TabClosedEventArgs : EventArgs
@@ -326,158 +478,6 @@ namespace PaintDotNet.Effects
         {
             this.Name = name;
             this.Path = path;
-        }
-    }
-
-    public sealed class Tab : ScaledToolStripButton
-    {
-        internal int Index { get; set; }
-        internal Guid Guid { get; }
-        internal ProjectType ProjectType { get; }
-        internal bool IsDirty { get; set; }
-        internal string Title { get; set; }
-        internal string Path { get; set; }
-        internal Rectangle CloseRect => closeRect;
-
-        private Rectangle closeRect = Rectangle.Empty;
-        private bool closeRectHiLite = false;
-
-        /// <summary>
-        /// Do NOT USE. For Initial Tab only.
-        /// </summary>
-        public Tab()
-            : this("Untitled", string.Empty, ProjectType.Effect)
-        {
-            this.Guid = Guid.Empty;
-        }
-
-        internal Tab(string title, string path, ProjectType projectType)
-        {
-            this.ImageAlign = ContentAlignment.MiddleLeft;
-            this.Margin = new Padding(0, 5, 3, 0);
-            this.AutoToolTip = false;
-
-            switch (projectType)
-            {
-                case ProjectType.Effect:
-                    string imagePath = System.IO.Path.ChangeExtension(path, ".png");
-                    if (File.Exists(imagePath))
-                    {
-                        this.Image = UIUtil.GetBitmapFromFile(imagePath);
-                    }
-                    else
-                    {
-                        this.ImageName = "Untitled";
-                    }
-                    break;
-                case ProjectType.FileType:
-                    this.ImageName = "Save";
-                    break;
-                case ProjectType.Reference:
-                    this.ImageName = "Book";
-                    break;
-                case ProjectType.Shape:
-                    this.ImageName = "Shape";
-                    break;
-                case ProjectType.None:
-                default:
-                    this.ImageName = "PlainText";
-                    break;
-            }
-
-            this.Text = title;
-            this.ToolTipText = path.IsNullOrEmpty() ? title : path;
-            this.Guid = Guid.NewGuid();
-            this.ProjectType = projectType;
-            this.IsDirty = false;
-            this.Title = title;
-            this.Path = path;
-
-            closeRect = Rectangle.Empty;
-        }
-
-        protected override void OnTextChanged(EventArgs e)
-        {
-            base.OnTextChanged(e);
-
-            UpdateCloseRect();
-        }
-
-        private void UpdateCloseRect()
-        {
-            int size = this.Height / 2;
-            int padding = this.Height / 4;
-            closeRect = new Rectangle
-            {
-                X = this.Width - closeRect.Width - padding,
-                Y = padding,
-                Width = size,
-                Height = size
-            };
-        }
-
-        protected override void OnLayout(LayoutEventArgs e)
-        {
-            base.OnLayout(e);
-
-            if (this.Padding.Right != this.Height)
-            {
-                this.Padding = new Padding(0, 0, this.Height, 0);
-            }
-        }
-
-        protected override void OnPaint(PaintEventArgs e)
-        {
-            base.OnPaint(e);
-
-            if (this.Parent.Items.Count <= 1)
-            {
-                return;
-            }
-
-            if (!e.ClipRectangle.Contains(closeRect) || closeRect.IsEmpty)
-            {
-                UpdateCloseRect();
-            }
-
-            e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
-            e.Graphics.FillRectangle(closeRectHiLite ? Brushes.DarkRed : Brushes.Crimson, closeRect);
-            e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-            using (Pen whitePen = new Pen(Color.White, 1.6f))
-            {
-                e.Graphics.DrawLine(whitePen, closeRect.Left + 2, closeRect.Top + 2, closeRect.Right - 3, closeRect.Bottom - 3);
-                e.Graphics.DrawLine(whitePen, closeRect.Left + 2, closeRect.Bottom - 3, closeRect.Right - 3, closeRect.Top + 2);
-            }
-        }
-
-        protected override void OnMouseMove(MouseEventArgs mea)
-        {
-            if (closeRect.Contains(mea.Location))
-            {
-                if (!closeRectHiLite)
-                {
-                    closeRectHiLite = true;
-                    this.Invalidate();
-                }
-            }
-            else if (closeRectHiLite)
-            {
-                closeRectHiLite = false;
-                this.Invalidate();
-            }
-
-            base.OnMouseMove(mea);
-        }
-
-        protected override void OnMouseLeave(EventArgs e)
-        {
-            if (closeRectHiLite)
-            {
-                closeRectHiLite = false;
-                this.Invalidate();
-            }
-
-            base.OnMouseLeave(e);
         }
     }
 }

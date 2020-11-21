@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.untitledTab = new PaintDotNet.Effects.Tab();
+            this.untitledTab = new PaintDotNet.Effects.TabStrip.Tab();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -57,7 +57,8 @@
             this.untitledTab.ImageName = "Untitled";
             this.untitledTab.Margin = new System.Windows.Forms.Padding(0, 5, 3, 0);
             this.untitledTab.Name = "untitledTab";
-            this.untitledTab.Size = new System.Drawing.Size(94, 20);
+            this.untitledTab.Padding = new System.Windows.Forms.Padding(0, 0, 20, 0);
+            this.untitledTab.Size = new System.Drawing.Size(89, 20);
             this.untitledTab.Text = "Untitled";
             this.untitledTab.ToolTipText = "Untitled";
             this.untitledTab.Click += new System.EventHandler(this.Tab_Click);
@@ -82,6 +83,6 @@
         #endregion
 
         private System.Windows.Forms.ToolStrip toolStrip1;
-        private Effects.Tab untitledTab;
+        private Effects.TabStrip.Tab untitledTab;
     }
 }
