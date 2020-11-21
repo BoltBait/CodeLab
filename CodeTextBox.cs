@@ -1915,12 +1915,14 @@ namespace PaintDotNet.Effects
 
                 if (paramPos == InvalidPosition)
                 {
+                    this.SetTargetRange(oldRange.Item1, oldRange.Item2);
                     return defaultOverload;
                 }
 
                 Type paramType = GetReturnType(paramPos);
                 if (paramType == null)
                 {
+                    this.SetTargetRange(oldRange.Item1, oldRange.Item2);
                     return defaultOverload;
                 }
 
