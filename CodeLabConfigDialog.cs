@@ -524,7 +524,7 @@ namespace PaintDotNet.Effects
                     break;
             }
 
-            if (tabStrip1.SelectedTabGuid == Guid.Empty && tabStrip1.SelectedTabProjType == projType && txtCode.IsVirgin)
+            if (tabStrip1.SelectedTabIsInitial && tabStrip1.SelectedTabProjType == projType && txtCode.IsVirgin)
             {
                 UpdateTabProperties();
             }
@@ -964,7 +964,7 @@ namespace PaintDotNet.Effects
                 FileName = "Untitled";
                 FullScriptPath = "";
 
-                if (tabStrip1.SelectedTabGuid == Guid.Empty && tabStrip1.SelectedTabProjType == ProjectType.Effect && txtCode.IsVirgin)
+                if (tabStrip1.SelectedTabIsInitial && tabStrip1.SelectedTabProjType == ProjectType.Effect && txtCode.IsVirgin)
                 {
                     UpdateTabProperties();
                 }

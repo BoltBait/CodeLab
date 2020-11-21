@@ -113,6 +113,11 @@ namespace PaintDotNet.Effects
                 activeTab.Text = value ? activeTab.Title + "*" : activeTab.Title;
             }
         }
+
+        internal bool SelectedTabIsInitial
+        {
+            get => activeTab.Guid == Guid.Empty;
+        }
         #endregion
 
         #region Event Handlers
