@@ -3918,7 +3918,7 @@ namespace PaintDotNet.Effects
 
         protected override void OnBeforeDelete(BeforeModificationEventArgs e)
         {
-            if (this.Lexer == Lexer.Cpp && e.Source == ModificationSource.User && e.Text.Trim().Length > 0 && !Replacing)
+            if (this.Lexer == Lexer.Cpp && e.Source == ModificationSource.User && e.Text.Trim().Length > 0)
             {
                 SetUpRenaming(e.Position);
             }
@@ -3928,7 +3928,7 @@ namespace PaintDotNet.Effects
 
         protected override void OnBeforeInsert(BeforeModificationEventArgs e)
         {
-            if (this.Lexer == Lexer.Cpp && e.Source == ModificationSource.User && e.Text.Trim().Length > 0 && !Replacing)
+            if (this.Lexer == Lexer.Cpp && e.Source == ModificationSource.User && e.Text.Trim().Length > 0)
             {
                 SetUpRenaming(e.Position);
             }
@@ -4228,6 +4228,11 @@ namespace PaintDotNet.Effects
         #region Renaming
         private void SetUpRenaming(int position)
         {
+            if (this.Replacing || iBox.Visible)
+            {
+                return;
+            }
+
             int wordStartPos = this.WordStartPosition(position);
             IntelliType intelliType = GetIntelliType(wordStartPos);
             if (IsIndicatorOn(Indicator.Rename, wordStartPos) ||
