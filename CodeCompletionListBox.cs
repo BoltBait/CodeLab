@@ -678,11 +678,11 @@ namespace PaintDotNet.Effects
             int indexToSelect = this.FindStringExact(stringFilter, true);
             if (indexToSelect == -1)
             {
-                if (this.Items.Contains(LastUsedMember))
+                if (this.Items.Contains(LastUsedMember) && LastUsedMember.ToString().StartsWith(stringFilter, StringComparison.Ordinal))
                 {
                     indexToSelect = this.FindStringExact(LastUsedMember.ToString(), false);
                 }
-                else if (this.Items.Contains(LastUsedNonMember))
+                else if (this.Items.Contains(LastUsedNonMember) && LastUsedNonMember.ToString().StartsWith(stringFilter, StringComparison.Ordinal))
                 {
                     indexToSelect = this.FindStringExact(LastUsedNonMember.ToString(), false);
                 }
