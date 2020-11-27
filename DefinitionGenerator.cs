@@ -133,9 +133,12 @@ namespace PaintDotNet.Effects
                 defRef.AppendLine();
             }
 
+            bool hasDeconstructor = false;
             MethodInfo finalizer = type.GetMethod("Finalize", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly);
             if (finalizer != null)
             {
+                hasDeconstructor = true;
+
                 defRef.AppendLine(spaces + "~" + type.Name + "()");
                 defRef.AppendLine();
             }
@@ -222,7 +225,8 @@ namespace PaintDotNet.Effects
             foreach (MethodInfo method in methods)
             {
                 if (method.IsNotVisible() || method.IsObsolete() ||
-                    (method.IsSpecialName && !method.Name.StartsWith("op_", StringComparison.Ordinal)))
+                    (method.IsSpecialName && !method.Name.StartsWith("op_", StringComparison.Ordinal)) ||
+                    (hasDeconstructor && method.Name.Equals("Finalize", StringComparison.Ordinal)))
                 {
                     continue;
                 }
