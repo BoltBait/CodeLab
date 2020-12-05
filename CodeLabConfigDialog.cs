@@ -1691,6 +1691,12 @@ namespace PaintDotNet.Effects
         #region Context menu Event functions
         private void contextMenuStrip1_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            if (txtCode.SuppressContextMenu)
+            {
+                e.Cancel = true;
+                return;
+            }
+
             bool hasText = txtCode.TextLength > 0;
             bool isTextSelected = hasText && txtCode.SelectedText.Length > 0;
             bool cSharp = tabStrip1.SelectedTabProjType == ProjectType.Effect || tabStrip1.SelectedTabProjType == ProjectType.FileType;

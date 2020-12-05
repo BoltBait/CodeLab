@@ -79,6 +79,7 @@ namespace PaintDotNet.Effects
         private bool updatingStyles = false;
         private bool autoCloseBrace = false;
         private int autoCloseBracePos = InvalidPosition;
+        private bool suppressContextMenu = true;
         #endregion
 
         #region Properties
@@ -295,6 +296,11 @@ namespace PaintDotNet.Effects
                 }
 
             }
+        }
+
+        internal bool SuppressContextMenu
+        {
+            get => this.suppressContextMenu;
         }
 
         [Category(nameof(CategoryAttribute.Appearance))]
@@ -3038,7 +3044,16 @@ namespace PaintDotNet.Effects
                 disableIntelliTipPos = this.CharPositionFromPointClose(e.X, e.Y);
             }
 
+            this.suppressContextMenu = e.Button != MouseButtons.Right;
+
             base.OnMouseDown(e);
+        }
+
+        protected override void OnMouseUp(MouseEventArgs e)
+        {
+            this.suppressContextMenu = true;
+
+            base.OnMouseUp(e);
         }
 
         private void MemberIntelliBox(int position)

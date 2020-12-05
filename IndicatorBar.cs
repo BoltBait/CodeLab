@@ -399,6 +399,11 @@ namespace PaintDotNet.Effects
         {
             base.OnMouseDown(e);
 
+            if (e.Button != MouseButtons.Left)
+            {
+                return;
+            }
+
             if (upButtonRect.Contains(e.Location))
             {
                 upButtonClick = true;
