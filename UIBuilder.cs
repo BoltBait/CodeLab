@@ -1502,7 +1502,7 @@ namespace PaintDotNet.Effects
             }
             else
             {
-                Match m1 = Regex.Match(rawComment, @"\s*\[\s*(?<minimum>\-?\d+.*\d*)\s*\,\s*(?<maximum>\-?\d+.*\d*)\s*\](?<label>.*)");
+                Match m1 = Regex.Match(rawComment, @"\s*\[\s*(?<minimum>\-?\d+.*\d*)\s*\,\s*(?<maximum>\-?\d+[^]]*\d*)\s*\](?<label>.*)");
                 if (m1.Success)
                 {
                     MinimumStr = m1.Groups["minimum"].Value;
