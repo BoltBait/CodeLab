@@ -30,8 +30,8 @@ using System.Threading;
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]
 [assembly: AssemblyVersion(PaintDotNet.Effects.CodeLab.Version + ".*")]
-// The next line is for the ScintillaNET text editor control.  This way you don't have to use the "copy attributes" option in IL Merge.
-[assembly: Guid("f8ac48e7-9378-482d-8c7f-92c8408dd4f2")]
+// The ScintillaNET text editor requires the assembly to have a Guid.
+[assembly: Guid("b908a26a-45e2-4d24-9681-e6f2020e68a8")]
 
 namespace PaintDotNet.Effects
 {
