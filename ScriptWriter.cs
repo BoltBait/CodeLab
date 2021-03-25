@@ -316,6 +316,9 @@ namespace PaintDotNet.Effects
                     case "blurs":
                         EffectPart += "SubmenuNames.Blurs;\r\n";
                         break;
+                    case "color":
+                        EffectPart += "SubmenuNames.Color;\r\n"; // added in PdN 4.2.16
+                        break;
                     case "distort":
                         EffectPart += "SubmenuNames.Distort;\r\n";
                         break;
