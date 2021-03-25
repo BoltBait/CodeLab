@@ -1289,7 +1289,7 @@ namespace PaintDotNet.Effects
 
         private void CopySelection()
         {
-            txtCode.Copy();
+            txtCode.Copy(CopyFormat.Text | CopyFormat.Rtf);
         }
 
         private void PasteSelection()
