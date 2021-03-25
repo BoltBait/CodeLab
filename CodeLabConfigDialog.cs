@@ -1289,7 +1289,16 @@ namespace PaintDotNet.Effects
 
         private void CopySelection()
         {
+            Theme currentTheme = txtCode.Theme;
+            if (currentTheme != Theme.Light)
+            {
+                txtCode.Theme = Theme.Light;
+            }
             txtCode.Copy(CopyFormat.Text | CopyFormat.Rtf);
+            if (currentTheme != Theme.Light)
+            {
+                txtCode.Theme = currentTheme;
+            }
         }
 
         private void PasteSelection()
