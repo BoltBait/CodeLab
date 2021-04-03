@@ -837,6 +837,11 @@ namespace PaintDotNet.Effects
 
         protected override bool UseSystemMenuFontInInitializeComponent => true;
 
+        protected override void OnHelpRequested(HelpEventArgs hevent)
+        {
+            // no-op
+        }
+
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
             switch (keyData)
@@ -866,12 +871,6 @@ namespace PaintDotNet.Effects
                 // Reset idle timer
                 tmrCompile.Enabled = false;
                 tmrCompile.Enabled = true;
-            }
-            if (e.KeyCode == Keys.F1)
-            {
-                helpTopicsToolStripMenuItem_Click(sender, EventArgs.Empty);
-                e.Handled = true;
-                e.SuppressKeyPress = true;
             }
             if (e.KeyCode == Keys.F6)
             {
