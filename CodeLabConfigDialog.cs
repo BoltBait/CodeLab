@@ -713,12 +713,9 @@ namespace PaintDotNet.Effects
         {
             if (errorList.SelectedIndex > -1)
             {
-                Error error = errorList.SelectedError;
-                string url = error.IsWarning
-                    ? "https://docs.microsoft.com/dotnet/csharp/misc/"
-                    : "https://docs.microsoft.com/dotnet/csharp/language-reference/compiler-messages/";
+                string url = $"https://msdn.microsoft.com/query/roslyn.query?appId=roslyn&k=k({errorList.SelectedError.ErrorNumber})";
 
-                LaunchUrl(url + error.ErrorNumber);
+                LaunchUrl(url);
             }
         }
 
