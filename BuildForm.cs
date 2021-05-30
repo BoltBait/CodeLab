@@ -623,7 +623,7 @@ namespace PaintDotNet.Effects
             {
                 if (HelpURL.Text.IsWebAddress())
                 {
-                    Process.Start(HelpURL.Text);
+                    UIUtil.LaunchUrl(HelpURL.Text);
                 }
                 else
                 {
@@ -681,7 +681,7 @@ namespace PaintDotNet.Effects
                     rtb_HelpBox.ReadOnly = true;
                     rtb_HelpBox.LinkClicked += (obj, args) =>
                     {
-                        Process.Start(args.LinkText);
+                        UIUtil.LaunchUrl(args.LinkText);
                         btn_HelpBoxOKButton.Focus();
                     };
 

@@ -39,7 +39,7 @@ namespace PaintDotNet.Effects
 
                 if (FlexibleMessageBox.Show("An update to CodeLab is available.\n\nWould you like to download CodeLab v" + updateVER + "?\n\n(This will not close your current CodeLab session.)", "CodeLab Updater", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
                 {
-                    LaunchUrl(updateURL);
+                    UIUtil.LaunchUrl(updateURL);
                 }
             }
         }
@@ -110,17 +110,12 @@ namespace PaintDotNet.Effects
                         case UpdateStatus.UpdateAvailable:
                             if (FlexibleMessageBox.Show("An update to CodeLab is available.\n\nWould you like to download CodeLab v" + updateVER + "?\n\n(This will not close your current CodeLab session.)", "CodeLab Updater", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
                             {
-                                LaunchUrl(updateURL);
+                                UIUtil.LaunchUrl(updateURL);
                             }
                             break;
                     }
                 }
             };
-        }
-
-        private static void LaunchUrl(string url)
-        {
-            System.Diagnostics.Process.Start(url);
         }
 
         private enum UpdateStatus

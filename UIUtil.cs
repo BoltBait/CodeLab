@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -99,6 +100,11 @@ namespace PaintDotNet.Effects
             names.Sort();
 
             return names.ToArray();
+        }
+
+        internal static void LaunchUrl(string url)
+        {
+            Process.Start(url);
         }
     }
 }

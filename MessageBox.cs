@@ -8,7 +8,6 @@
  *  Bug fixes and enhancements ©2019 by BoltBait
  */
 using System;
-using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
@@ -805,7 +804,7 @@ namespace PaintDotNet.Effects
                 try
                 {
                     Cursor.Current = Cursors.WaitCursor;
-                    Process.Start(e.LinkText);
+                    UIUtil.LaunchUrl(e.LinkText);
                 }
                 catch (Exception)
                 {

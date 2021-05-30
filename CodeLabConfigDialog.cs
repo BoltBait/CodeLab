@@ -934,7 +934,7 @@ namespace PaintDotNet.Effects
         private void LaunchUrl(string url)
         {
 #if FASTDEBUG
-            System.Diagnostics.Process.Start(url);
+            UIUtil.LaunchUrl(url);
 #else
             this.Services.GetService<IShellService>().LaunchUrl(null, url);
 #endif

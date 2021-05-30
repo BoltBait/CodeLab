@@ -345,7 +345,7 @@ namespace PaintDotNet.Effects
             if (warningsToIgnoreList.SelectedIndex > -1)
             {
                 string url = $"https://msdn.microsoft.com/query/roslyn.query?appId=roslyn&k=k({warningsToIgnoreList.SelectedItem})";
-                System.Diagnostics.Process.Start(url);
+                UIUtil.LaunchUrl(url);
             }
         }
         #endregion
