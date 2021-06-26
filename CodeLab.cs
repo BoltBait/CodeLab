@@ -25,7 +25,7 @@ using System.Threading;
 [assembly: AssemblyConfiguration("C#|development|plugin|build|builder|code|coding|script|scripting")]
 [assembly: AssemblyCompany("BoltBait")]
 [assembly: AssemblyProduct("CodeLab")]
-[assembly: AssemblyCopyright("Copyright ©2020 BoltBait")]
+[assembly: AssemblyCopyright("Copyright ©2021 BoltBait")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]
@@ -46,7 +46,7 @@ namespace PaintDotNet.Effects
 
     public abstract class CodeLab : Effect
     {
-        internal const string Version = "6.0";
+        internal const string Version = "6.1";
 
         private static Image StaticImage => UIUtil.GetImage("CodeLab");
 
