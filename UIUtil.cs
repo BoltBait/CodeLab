@@ -104,7 +104,12 @@ namespace PaintDotNet.Effects
 
         internal static void LaunchUrl(string url)
         {
-            Process.Start(url);
+            ProcessStartInfo startInfo = new ProcessStartInfo
+            {
+                FileName = url,
+                UseShellExecute = true
+            };
+            Process.Start(startInfo);
         }
     }
 }

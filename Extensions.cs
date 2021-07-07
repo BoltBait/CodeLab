@@ -12,10 +12,10 @@
 // Latest distribution: https://www.BoltBait.com/pdn/codelab
 /////////////////////////////////////////////////////////////////////////////////
 
+using PluralizeService.Core;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data.Entity.Design.PluralizationServices;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
@@ -188,7 +188,7 @@ namespace PaintDotNet.Effects
 
         internal static string MakePlural(this string str)
         {
-            return pluralization.Pluralize(str);
+            return PluralizationProvider.Pluralize(str);
         }
 
         internal static bool Contains(this string source, string value, StringComparison comparisonType)
@@ -643,8 +643,6 @@ namespace PaintDotNet.Effects
 
             return argTypes.ToArray();
         }
-
-        private static readonly PluralizationService pluralization = PluralizationService.CreateService(new CultureInfo("en-US"));
 
         internal static int FindStringExact(this ListBox listBox, string s, bool preferCaseMatch)
         {

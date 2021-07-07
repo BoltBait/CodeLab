@@ -915,8 +915,13 @@ namespace PaintDotNet.Effects
                     {
                         WarningLabel.Visible = true;
                         Application.DoEvents();
-                        string sysFolder = Environment.GetFolderPath(Environment.SpecialFolder.System);
-                        Process p = Process.Start("wordpad.exe", "\"" + sfd.FileName + "\"");
+                        ProcessStartInfo processInfo = new ProcessStartInfo()
+                        {
+                            Arguments = "\"" + sfd.FileName + "\"",
+                            FileName = "wordpad.exe",
+                            UseShellExecute = true
+                        };
+                        Process p = Process.Start(processInfo);
                         p.WaitForInputIdle();
                         p.WaitForExit();
                         WarningLabel.Visible = false;

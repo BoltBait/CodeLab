@@ -299,7 +299,7 @@ namespace PaintDotNet.Effects
         #region Spellcheck Page
         private void addLangsButton_Click(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start("ms-settings:regionlanguage");
+            UIUtil.LaunchUrl("ms-settings:regionlanguage");
         }
 
         private void enableSpellcheckCheckBox_CheckedChanged(object sender, EventArgs e)

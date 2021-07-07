@@ -2614,7 +2614,7 @@ namespace PaintDotNet.Effects
 
         private static void OpenMsDocs(string fullName)
         {
-            UIUtil.LaunchUrl($"https://docs.microsoft.com/dotnet/api/{fullName}?view=netframework-4.7");
+            UIUtil.LaunchUrl($"https://docs.microsoft.com/dotnet/api/{fullName}?view=net-5.0");
         }
 
         protected override void OnMouseWheel(MouseEventArgs e)

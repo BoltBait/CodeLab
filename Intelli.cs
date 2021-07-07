@@ -13,14 +13,16 @@
 // Latest distribution: https://www.BoltBait.com/pdn/codelab
 /////////////////////////////////////////////////////////////////////////////////
 
+using Microsoft.Win32;
 using PaintDotNet.PropertySystem;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text.Json;
 using System.Text.RegularExpressions;
-using System.Web.Script.Serialization;
 using System.Windows.Forms;
 
 namespace PaintDotNet.Effects
@@ -126,19 +128,44 @@ namespace PaintDotNet.Effects
 
             ReferenceAssemblies = new Assembly[]
             {
-                typeof(int).Assembly,           // mscorlib.dll
+                typeof(Registry).Assembly,      // Microsoft.Win32.Registry.dll
                 typeof(Property).Assembly,      // PaintDotNet.Base.dll
                 typeof(ColorBgra).Assembly,     // PaintDotNet.Core.dll
                 typeof(Document).Assembly,      // PaintDotNet.Data.dll
                 typeof(Effect).Assembly,        // PaintDotNet.Effects.dll
-                typeof(Uri).Assembly,           // System.dll
-                typeof(Enumerable).Assembly,    // System.Core.dll
-                typeof(Size).Assembly,          // System.Drawing.dll
+                typeof(System.IO.Compression.CompressionLevel).Assembly, // System.IO.Compression.dll
+                typeof(Graphics).Assembly,      // System.Drawing.Common.dll
+                typeof(Size).Assembly,          // System.Drawing.Primitives.dll
+                typeof(Enumerable).Assembly,    // System.Linq.dll
+                typeof(Regex).Assembly,         // System.Text.RegularExpressions.dll
+                typeof(int).Assembly,           // System.Private.CoreLib.dll
                 typeof(Control).Assembly,       // System.Windows.Forms.dll
+                Assembly.LoadFrom(Path.Combine( // mscorlib.dll
+                    Path.GetDirectoryName(typeof(int).Assembly.Location),
+                    "mscorlib.dll")),
+                Assembly.LoadFrom(Path.Combine( // System.Runtime.dll
+                    Path.GetDirectoryName(typeof(int).Assembly.Location),
+                    "System.Runtime.dll")),
+                Assembly.LoadFrom(Path.Combine( // System.Drawing.dll
+                    Path.GetDirectoryName(typeof(int).Assembly.Location),
+                    "System.Drawing.dll"))
             };
 
-            JavaScriptSerializer ser = new JavaScriptSerializer();
-            Snippets = ser.Deserialize<Dictionary<string, string>>(Settings.Snippets) ??
+            Dictionary<string, string> userSnippets = null;
+            string userSnippetsJson = Settings.Snippets;
+
+            if (userSnippetsJson.Length > 0)
+            {
+                try
+                {
+                    userSnippets = JsonSerializer.Deserialize<Dictionary<string, string>>(userSnippetsJson);
+                }
+                catch
+                {
+                }
+            }
+
+            Snippets = userSnippets ??
                 new Dictionary<string, string>()
                 {
                     { "if", "if (true$)\r\n{\r\n    \r\n}" },

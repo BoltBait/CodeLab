@@ -4,8 +4,8 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Text.RegularExpressions;
-using System.Web.Script.Serialization;
 using System.Windows.Forms;
 using ScintillaNET;
 
@@ -162,8 +162,7 @@ namespace PaintDotNet.Effects
 
         private void SaveSnippets()
         {
-            JavaScriptSerializer ser = new JavaScriptSerializer();
-            Settings.Snippets = ser.Serialize(Intelli.Snippets);
+            Settings.Snippets = JsonSerializer.Serialize(Intelli.Snippets);
         }
 
         private void DeleteButton_Click(object sender, EventArgs e)
@@ -315,11 +314,10 @@ namespace PaintDotNet.Effects
                 return;
             }
 
-            JavaScriptSerializer ser = new JavaScriptSerializer();
             Dictionary<string, string> importedSnippets;
             try
             {
-                importedSnippets = ser.Deserialize<Dictionary<string, string>>(json);
+                importedSnippets = JsonSerializer.Deserialize<Dictionary<string, string>>(json);
             }
             catch
             {
@@ -354,7 +352,7 @@ namespace PaintDotNet.Effects
             FlexibleMessageBox.Show($"Imported {importCount} of {importedSnippets.Count} {(importedSnippets.Count == 1 ? "Snippet" : "Snippets")}.", "Import Report", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        private string ExportJson()
+        private static string ExportJson()
         {
             if (Intelli.Snippets.Count == 0)
             {
@@ -362,11 +360,10 @@ namespace PaintDotNet.Effects
                 return null;
             }
 
-            JavaScriptSerializer ser = new JavaScriptSerializer();
             string json = null;
             try
             {
-                json = ser.Serialize(Intelli.Snippets);
+                json = JsonSerializer.Serialize(Intelli.Snippets);
             }
             catch
             {
