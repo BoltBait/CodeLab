@@ -915,15 +915,7 @@ namespace PaintDotNet.Effects
                     {
                         WarningLabel.Visible = true;
                         Application.DoEvents();
-                        ProcessStartInfo processInfo = new ProcessStartInfo()
-                        {
-                            Arguments = "\"" + sfd.FileName + "\"",
-                            FileName = "wordpad.exe",
-                            UseShellExecute = true
-                        };
-                        Process p = Process.Start(processInfo);
-                        p.WaitForInputIdle();
-                        p.WaitForExit();
+                        ProcessUtil.Exec("wordpad.exe", new[] { sfd.FileName });
                         WarningLabel.Visible = false;
                         RichHelpContent.Rtf = File.ReadAllText(sfd.FileName);
                     }
