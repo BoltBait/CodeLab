@@ -1,10 +1,12 @@
-﻿using System;
+﻿using PaintDotNet.AppModel;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Windows.Forms;
 
 namespace PaintDotNet.Effects
 {
@@ -13,6 +15,12 @@ namespace PaintDotNet.Effects
         private static readonly bool hiDpi = UIScaleFactor.Current.Scale > 1;
         private static readonly Assembly assembly = Assembly.GetExecutingAssembly();
         internal static readonly Image EmptyImage = new Bitmap(16, 16);
+        private static IShellService iShellService;
+
+        internal static void SetIShellService(IShellService shellService)
+        {
+            iShellService = shellService;
+        }
 
         internal static Image GetImage(string resName)
         {
@@ -102,14 +110,21 @@ namespace PaintDotNet.Effects
             return names.ToArray();
         }
 
-        internal static void LaunchUrl(string url)
+        internal static void LaunchUrl(IWin32Window owner, string url)
         {
-            ProcessStartInfo startInfo = new ProcessStartInfo
+            if (iShellService != null)
             {
-                FileName = url,
-                UseShellExecute = true
-            };
-            Process.Start(startInfo);
+                iShellService.LaunchUrl(owner, url);
+            }
+            else
+            {
+                ProcessStartInfo startInfo = new ProcessStartInfo
+                {
+                    FileName = url,
+                    UseShellExecute = true
+                };
+                Process.Start(startInfo);
+            }
         }
     }
 }

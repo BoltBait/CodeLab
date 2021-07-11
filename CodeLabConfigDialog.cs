@@ -97,6 +97,8 @@ namespace PaintDotNet.Effects
             ColorBgra fillColor = EnvironmentParameters.SecondaryColor;
             double strokeThickness = EnvironmentParameters.BrushWidth;
             ShapeBuilder.SetEnviromentParams(srcSize.Width, srcSize.Height, selection.X, selection.Y, selection.Width, selection.Height, strokeColor, fillColor, strokeThickness);
+
+            UIUtil.SetIShellService(this.Services.GetService<IShellService>());
 #endif
         }
 
@@ -933,11 +935,7 @@ namespace PaintDotNet.Effects
 
         private void LaunchUrl(string url)
         {
-#if FASTDEBUG
-            UIUtil.LaunchUrl(url);
-#else
-            this.Services.GetService<IShellService>().LaunchUrl(null, url);
-#endif
+            UIUtil.LaunchUrl(this, url);
         }
         #endregion
 
