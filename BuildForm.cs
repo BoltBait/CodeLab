@@ -1169,7 +1169,16 @@ namespace PaintDotNet.Effects
                 if (fbd.ShowDialog() == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
                 {
                     string SourceCode = ScriptWriter.FullSourceCode(FullScriptText, FileName, isAdjustment, SubMenuName.Text, MenuName.Text, IconPath, URL, EffectFlags, RenderingSchedule, Author, MajorVer, MinorVer, Description, KeyWords, WindowTitle, HelpType, HelpStr);
-                    Solution.Generate(fbd.SelectedPath, FileName, SourceCode, IconPath, resourcePath);
+                    string slnFilePath = Solution.Generate(fbd.SelectedPath, FileName, SourceCode, IconPath, resourcePath);
+
+                    if (slnFilePath != null)
+                    {
+                        bool success = File.Exists(slnFilePath) && UIUtil.LaunchFolderAndSelectFile(this, slnFilePath);
+                        if (!success)
+                        {
+                            FlexibleMessageBox.Show("Could not navigate to the generated Solution file.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
 
                     Settings.LastSlnDirectory = fbd.SelectedPath;
                 }

@@ -23,7 +23,7 @@ namespace PaintDotNet.Effects
 {
     internal static class Solution
     {
-        internal static bool Generate(string slnPath, string name, string effectSource, string iconPath, string resourcePath)
+        internal static string Generate(string slnPath, string name, string effectSource, string iconPath, string resourcePath)
         {
             string effectName = Regex.Replace(name, @"[^\w]", "");
             string projectName = effectName + "Effect";
@@ -195,19 +195,10 @@ namespace PaintDotNet.Effects
             catch (Exception ex)
             {
                 FlexibleMessageBox.Show("Solution generated failed.\r\n\r\n" + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;
+                return null;
             }
 
-            try
-            {
-                Process.Start("explorer.exe", "/select," + Path.Combine(slnPath, projectName + ".sln"));
-            }
-            catch
-            {
-                FlexibleMessageBox.Show("Could not navigate to the generated Solution file.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-
-            return true;
+            return Path.Combine(slnPath, projectName + ".sln");
         }
     }
 }

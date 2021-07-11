@@ -126,5 +126,17 @@ namespace PaintDotNet.Effects
                 Process.Start(startInfo);
             }
         }
+
+        internal static bool LaunchFolderAndSelectFile(IWin32Window owner, string filePath)
+        {
+            if (iShellService != null)
+            {
+                return iShellService.LaunchFolderAndSelectFile(owner, filePath);
+            }
+            else
+            {
+                return ProcessUtil.TryExec("explorer.exe", new[] { "/select," + filePath }) != 0;
+            }
+        }
     }
 }
