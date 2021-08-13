@@ -132,9 +132,9 @@ namespace PaintDotNet.Effects
 
             ReferenceAssemblies = AppDomain.CurrentDomain
                 .GetAssemblies()
-                .Where(a => a.Location.Contains("Microsoft.NETCore.App", StringComparison.OrdinalIgnoreCase) ||
-                            a.Location.Contains("Microsoft.WindowsDesktop.App", StringComparison.OrdinalIgnoreCase))
-                .Concat(pdnAssemblies);
+                .Where(a => !a.IsCollectible && // exclude assemblies that were loaded into separate contexts; i.e. Plugins
+                             a.GetCustomAttribute<AssemblyCompanyAttribute>().Company == "Microsoft Corporation") // and then exclude any non-Microsoft assemblies; including all dotPDN ones
+                .Concat(pdnAssemblies); // add back the four PDN assemblies we actually want
 
             Dictionary<string, string> userSnippets = null;
             string userSnippetsJson = Settings.Snippets;
