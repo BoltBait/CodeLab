@@ -18,6 +18,7 @@ using System;
 using System.Drawing;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using System.Threading;
 
 [assembly: AssemblyTitle("CodeLab plugin for Paint.NET")]
@@ -29,6 +30,7 @@ using System.Threading;
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]
+[assembly: SupportedOSPlatform("Windows")]
 [assembly: AssemblyVersion(PaintDotNet.Effects.CodeLab.Version)]
 // The ScintillaNET text editor requires the assembly to have a Guid.
 [assembly: Guid("b908a26a-45e2-4d24-9681-e6f2020e68a8")]
