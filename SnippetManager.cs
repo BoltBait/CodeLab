@@ -360,16 +360,21 @@ namespace PaintDotNet.Effects
                 return null;
             }
 
+            JsonSerializerOptions options = new JsonSerializerOptions
+            {
+                WriteIndented = true
+            };
+
             string json = null;
             try
             {
-                json = JsonSerializer.Serialize(Intelli.Snippets);
+                json = JsonSerializer.Serialize(Intelli.Snippets, options);
             }
             catch
             {
             }
 
-            return FormatJson(json);
+            return json;
         }
 
         private static bool IsValidSnippetName(string value)
@@ -396,77 +401,6 @@ namespace PaintDotNet.Effects
             }
 
             return true;
-        }
-
-        // Based on https://stackoverflow.com/a/6237866
-        private static string FormatJson(string str)
-        {
-            str = Regex.Unescape(str).Replace("\r", "\\r").Replace("\n", "\\n");
-
-            const string INDENT_STRING = "    ";
-            int indent = 0;
-            bool quoted = false;
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < str.Length; i++)
-            {
-                char ch = str[i];
-                switch (ch)
-                {
-                    case '{':
-                    case '[':
-                        sb.Append(ch);
-                        if (!quoted)
-                        {
-                            sb.AppendLine();
-                            Enumerable.Range(0, ++indent).ForEach(_ => sb.Append(INDENT_STRING));
-                        }
-                        break;
-                    case '}':
-                    case ']':
-                        if (!quoted)
-                        {
-                            sb.AppendLine();
-                            Enumerable.Range(0, --indent).ForEach(_ => sb.Append(INDENT_STRING));
-                        }
-                        sb.Append(ch);
-                        break;
-                    case '"':
-                        sb.Append(ch);
-                        bool escaped = false;
-                        int index = i;
-                        while (index > 0 && str[--index] == '\\')
-                        {
-                            escaped = !escaped;
-                        }
-
-                        if (!escaped)
-                        {
-                            quoted = !quoted;
-                        }
-
-                        break;
-                    case ',':
-                        sb.Append(ch);
-                        if (!quoted)
-                        {
-                            sb.AppendLine();
-                            Enumerable.Range(0, indent).ForEach(_ => sb.Append(INDENT_STRING));
-                        }
-                        break;
-                    case ':':
-                        sb.Append(ch);
-                        if (!quoted)
-                        {
-                            sb.Append(" ");
-                        }
-
-                        break;
-                    default:
-                        sb.Append(ch);
-                        break;
-                }
-            }
-            return sb.ToString();
         }
     }
 }
