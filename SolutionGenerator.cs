@@ -32,6 +32,7 @@ namespace PaintDotNet.Effects
             string projGuid = "{" + Guid.NewGuid().ToString() + "}";
             string pdnPath = Application.StartupPath;
             string projPath = Path.Combine(slnPath, projectName);
+            string propPath = Path.Combine(projPath, "Properties");
             bool iconExists = File.Exists(iconPath);
             string samplePath = Path.ChangeExtension(resourcePath, ".sample.png");
             bool sampleExists = File.Exists(samplePath);
@@ -42,8 +43,8 @@ namespace PaintDotNet.Effects
             StringBuilder slnFile = new StringBuilder();
             slnFile.AppendLine();
             slnFile.AppendLine("Microsoft Visual Studio Solution File, Format Version 12.00");
-            slnFile.AppendLine("# Visual Studio 15");
-            slnFile.AppendLine("VisualStudioVersion = 15.0.28010.0");
+            slnFile.AppendLine("# Visual Studio 16");
+            slnFile.AppendLine("VisualStudioVersion = 16.0.31515.178");
             slnFile.AppendLine("MinimumVisualStudioVersion = 10.0.40219.1");
             slnFile.AppendLine($"Project(\"{projGroupGuid}\") = \"{projectName}\", \"{projectName}\\{projectName}.csproj\", \"{projGuid}\"");
             slnFile.AppendLine("EndProject");
@@ -68,66 +69,17 @@ namespace PaintDotNet.Effects
 
             // Two space indent
             StringBuilder csprojFile = new StringBuilder();
-            csprojFile.AppendLine("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
-            csprojFile.AppendLine("<Project ToolsVersion=\"15.0\" xmlns=\"http://schemas.microsoft.com/developer/msbuild/2003\">");
-            csprojFile.AppendLine("  <Import Project=\"$(MSBuildExtensionsPath)\\$(MSBuildToolsVersion)\\Microsoft.Common.props\" Condition=\"Exists('$(MSBuildExtensionsPath)\\$(MSBuildToolsVersion)\\Microsoft.Common.props')\" />");
+            csprojFile.AppendLine("<Project Sdk=\"Microsoft.NET.Sdk\">");
+            csprojFile.AppendLine();
             csprojFile.AppendLine("  <PropertyGroup>");
-            csprojFile.AppendLine("    <Configuration Condition=\" '$(Configuration)' == '' \">Debug</Configuration>");
-            csprojFile.AppendLine("    <Platform Condition=\" '$(Platform)' == '' \">AnyCPU</Platform>");
-            csprojFile.AppendLine($"    <ProjectGuid>{projGuid}</ProjectGuid>");
-            csprojFile.AppendLine("    <OutputType>Library</OutputType>");
-            csprojFile.AppendLine("    <AppDesignerFolder>Properties</AppDesignerFolder>");
+            csprojFile.AppendLine("    <TargetFramework>net5.0-windows</TargetFramework>");
+            csprojFile.AppendLine("    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>");
+            csprojFile.AppendLine("    <UseWindowsForms>true</UseWindowsForms>");
+            csprojFile.AppendLine("    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>");
             csprojFile.AppendLine($"    <RootNamespace>{projectName}</RootNamespace>");
             csprojFile.AppendLine($"    <AssemblyName>{effectName}</AssemblyName>");
-            csprojFile.AppendLine("    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>");
-            csprojFile.AppendLine("    <FileAlignment>512</FileAlignment>");
             csprojFile.AppendLine("  </PropertyGroup>");
-            csprojFile.AppendLine("  <PropertyGroup Condition=\" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' \">");
-            csprojFile.AppendLine("    <DebugSymbols>true</DebugSymbols>");
-            csprojFile.AppendLine("    <DebugType>full</DebugType>");
-            csprojFile.AppendLine("    <Optimize>false</Optimize>");
-            csprojFile.AppendLine("    <OutputPath>bin\\Debug\\</OutputPath>");
-            csprojFile.AppendLine("    <DefineConstants>DEBUG;TRACE</DefineConstants>");
-            csprojFile.AppendLine("    <ErrorReport>prompt</ErrorReport>");
-            csprojFile.AppendLine("    <WarningLevel>4</WarningLevel>");
-            csprojFile.AppendLine("    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>");
-            csprojFile.AppendLine("  </PropertyGroup>");
-            csprojFile.AppendLine("  <PropertyGroup Condition=\" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' \">");
-            csprojFile.AppendLine("    <DebugType>pdbonly</DebugType>");
-            csprojFile.AppendLine("    <Optimize>true</Optimize>");
-            csprojFile.AppendLine("    <OutputPath>bin\\Release\\</OutputPath>");
-            csprojFile.AppendLine("    <DefineConstants>TRACE</DefineConstants>");
-            csprojFile.AppendLine("    <ErrorReport>prompt</ErrorReport>");
-            csprojFile.AppendLine("    <WarningLevel>4</WarningLevel>");
-            csprojFile.AppendLine("    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>");
-            csprojFile.AppendLine("  </PropertyGroup>");
-            csprojFile.AppendLine("  <ItemGroup>");
-            csprojFile.AppendLine("    <Reference Include=\"PaintDotNet.Base\">");
-            csprojFile.AppendLine($"      <HintPath>{Path.Combine(pdnPath, "PaintDotNet.Base.dll")}</HintPath>");
-            csprojFile.AppendLine("    </Reference>");
-            csprojFile.AppendLine("    <Reference Include=\"PaintDotNet.Core\">");
-            csprojFile.AppendLine($"      <HintPath>{Path.Combine(pdnPath, "PaintDotNet.Core.dll")}</HintPath>");
-            csprojFile.AppendLine("    </Reference>");
-            csprojFile.AppendLine("    <Reference Include=\"PaintDotNet.Data\">");
-            csprojFile.AppendLine($"      <HintPath>{Path.Combine(pdnPath, "PaintDotNet.Data.dll")}</HintPath>");
-            csprojFile.AppendLine("    </Reference>");
-            csprojFile.AppendLine("    <Reference Include=\"PaintDotNet.Effects\">");
-            csprojFile.AppendLine($"      <HintPath>{Path.Combine(pdnPath, "PaintDotNet.Effects.dll")}</HintPath>");
-            csprojFile.AppendLine("    </Reference>");
-            csprojFile.AppendLine("    <Reference Include=\"System\" />");
-            csprojFile.AppendLine("    <Reference Include=\"System.Core\" />");
-            csprojFile.AppendLine("    <Reference Include=\"System.Drawing\" />");
-            csprojFile.AppendLine("    <Reference Include=\"System.Windows.Forms\" />");
-            csprojFile.AppendLine("    <Reference Include=\"System.Xml.Linq\" />");
-            csprojFile.AppendLine("    <Reference Include=\"System.Data.DataSetExtensions\" />");
-            csprojFile.AppendLine("    <Reference Include=\"Microsoft.CSharp\" />");
-            csprojFile.AppendLine("    <Reference Include=\"System.Data\" />");
-            csprojFile.AppendLine("    <Reference Include=\"System.Net.Http\" />");
-            csprojFile.AppendLine("    <Reference Include=\"System.Xml\" />");
-            csprojFile.AppendLine("  </ItemGroup>");
-            csprojFile.AppendLine("  <ItemGroup>");
-            csprojFile.AppendLine($"    <Compile Include=\"{effectName}.cs\" />");
-            csprojFile.AppendLine("  </ItemGroup>");
+            csprojFile.AppendLine();
             if (iconExists || sampleExists || rtfExists)
             {
                 csprojFile.AppendLine("  <ItemGroup>");
@@ -144,27 +96,39 @@ namespace PaintDotNet.Effects
                     csprojFile.AppendLine($"    <EmbeddedResource Include=\"{effectName}.rtz\" />");
                 }
                 csprojFile.AppendLine("  </ItemGroup>");
+                csprojFile.AppendLine();
             }
             csprojFile.AppendLine("  <ItemGroup>");
-            csprojFile.AppendLine("    <Folder Include=\"Properties\\\" />");
+            csprojFile.AppendLine("    <Reference Include=\"PaintDotNet.Base\">");
+            csprojFile.AppendLine($"      <HintPath>{Path.Combine(pdnPath, "PaintDotNet.Base.dll")}</HintPath>");
+            csprojFile.AppendLine("    </Reference>");
+            csprojFile.AppendLine("    <Reference Include=\"PaintDotNet.Core\">");
+            csprojFile.AppendLine($"      <HintPath>{Path.Combine(pdnPath, "PaintDotNet.Core.dll")}</HintPath>");
+            csprojFile.AppendLine("    </Reference>");
+            csprojFile.AppendLine("    <Reference Include=\"PaintDotNet.Data\">");
+            csprojFile.AppendLine($"      <HintPath>{Path.Combine(pdnPath, "PaintDotNet.Data.dll")}</HintPath>");
+            csprojFile.AppendLine("    </Reference>");
+            csprojFile.AppendLine("    <Reference Include=\"PaintDotNet.Effects\">");
+            csprojFile.AppendLine($"      <HintPath>{Path.Combine(pdnPath, "PaintDotNet.Effects.dll")}</HintPath>");
+            csprojFile.AppendLine("    </Reference>");
             csprojFile.AppendLine("  </ItemGroup>");
-            csprojFile.AppendLine("  <Import Project=\"$(MSBuildToolsPath)\\Microsoft.CSharp.targets\" />");
-            csprojFile.AppendLine("  <PropertyGroup>");
-            csprojFile.AppendLine($"    <PostBuildEvent>cmd /c explorer \"$(TargetDir)\" \r\nexit 0</PostBuildEvent>");
-            csprojFile.AppendLine("  </PropertyGroup>");
+            csprojFile.AppendLine();
+            csprojFile.AppendLine("  <Target Name=\"PostBuild\" AfterTargets=\"PostBuildEvent\">");
+            csprojFile.AppendLine("    <Exec Command=\"cmd /c explorer &quot;$(TargetDir)&quot;&#xD;&#xA;exit 0\" />");
+            csprojFile.AppendLine("  </Target>");
             csprojFile.Append("</Project>"); // no end-of-line at the end of this file
 
             // Two space indent
-            StringBuilder csprojUserFile = new StringBuilder();
-            csprojUserFile.AppendLine("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
-            csprojUserFile.AppendLine("<Project ToolsVersion=\"15.0\" xmlns=\"http://schemas.microsoft.com/developer/msbuild/2003\">");
-            csprojUserFile.AppendLine("  <PropertyGroup Condition=\"'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'\">");
-            csprojUserFile.AppendLine("    <StartAction>Program</StartAction>");
-            csprojUserFile.AppendLine($"    <StartProgram>{Path.Combine(pdnPath, "PaintDotNet.exe")}</StartProgram>");
-            csprojUserFile.AppendLine($"    <StartWorkingDirectory>{pdnPath}\\</StartWorkingDirectory>");
-            csprojUserFile.AppendLine("  </PropertyGroup>");
-            csprojUserFile.Append("</Project>"); // no end-of-line at the end of this file
-
+            StringBuilder launchSettingsFile = new StringBuilder();
+            launchSettingsFile.AppendLine("{");
+            launchSettingsFile.AppendLine("  \"profiles\": {");
+            launchSettingsFile.AppendLine("    \"" + projectName + "\": {");
+            launchSettingsFile.AppendLine("      \"commandName\": \"Executable\",");
+            launchSettingsFile.AppendLine($"      \"executablePath\": \"{Path.Combine(pdnPath, "PaintDotNet.exe").Replace(@"\", @"\\")}\",");
+            launchSettingsFile.AppendLine($"      \"workingDirectory\": \"{pdnPath.Replace(@"\", @"\\")}\"");
+            launchSettingsFile.AppendLine("    }");
+            launchSettingsFile.AppendLine("  }");
+            launchSettingsFile.Append("}"); // no end-of-line at the end of this file
 
             try
             {
@@ -176,7 +140,6 @@ namespace PaintDotNet.Effects
                 }
 
                 File.WriteAllText(Path.Combine(projPath, projectName + ".csproj"), csprojFile.ToString());
-                File.WriteAllText(Path.Combine(projPath, projectName + ".csproj.user"), csprojUserFile.ToString());
                 File.WriteAllText(Path.Combine(projPath, effectName + ".cs"), effectSource);
 
                 if (iconExists)
@@ -191,6 +154,13 @@ namespace PaintDotNet.Effects
                 {
                     File.Copy(rtfPath, Path.Combine(projPath, Path.GetFileName(rtfPath)), true);
                 }
+
+                if (!Directory.Exists(propPath))
+                {
+                    Directory.CreateDirectory(propPath);
+                }
+
+                File.WriteAllText(Path.Combine(propPath, "launchSettings.json"), launchSettingsFile.ToString());
             }
             catch (Exception ex)
             {
