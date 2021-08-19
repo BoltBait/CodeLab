@@ -20,7 +20,6 @@ using System.Text.RegularExpressions;
 using System.Runtime.InteropServices;
 using System.IO.Compression;
 using System.Text;
-using System.Diagnostics;
 
 namespace PaintDotNet.Effects
 {
@@ -623,7 +622,7 @@ namespace PaintDotNet.Effects
             {
                 if (HelpURL.Text.IsWebAddress())
                 {
-                    UIUtil.LaunchUrl(HelpURL.Text);
+                    UIUtil.LaunchUrl(this, HelpURL.Text);
                 }
                 else
                 {
@@ -681,7 +680,7 @@ namespace PaintDotNet.Effects
                     rtb_HelpBox.ReadOnly = true;
                     rtb_HelpBox.LinkClicked += (obj, args) =>
                     {
-                        UIUtil.LaunchUrl(args.LinkText);
+                        UIUtil.LaunchUrl(this, args.LinkText);
                         btn_HelpBoxOKButton.Focus();
                     };
 
@@ -915,10 +914,7 @@ namespace PaintDotNet.Effects
                     {
                         WarningLabel.Visible = true;
                         Application.DoEvents();
-                        string sysFolder = Environment.GetFolderPath(Environment.SpecialFolder.System);
-                        Process p = Process.Start("wordpad.exe", "\"" + sfd.FileName + "\"");
-                        p.WaitForInputIdle();
-                        p.WaitForExit();
+                        ProcessUtil.Exec("wordpad.exe", new[] { sfd.FileName });
                         WarningLabel.Visible = false;
                         RichHelpContent.Rtf = File.ReadAllText(sfd.FileName);
                     }
@@ -1172,7 +1168,16 @@ namespace PaintDotNet.Effects
                 if (fbd.ShowDialog() == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
                 {
                     string SourceCode = ScriptWriter.FullSourceCode(FullScriptText, FileName, isAdjustment, SubMenuName.Text, MenuName.Text, IconPath, URL, EffectFlags, RenderingSchedule, Author, MajorVer, MinorVer, Description, KeyWords, WindowTitle, HelpType, HelpStr);
-                    Solution.Generate(fbd.SelectedPath, FileName, SourceCode, IconPath, resourcePath);
+                    string slnFilePath = Solution.Generate(fbd.SelectedPath, FileName, SourceCode, IconPath, resourcePath);
+
+                    if (slnFilePath != null)
+                    {
+                        bool success = File.Exists(slnFilePath) && UIUtil.LaunchFolderAndSelectFile(this, slnFilePath);
+                        if (!success)
+                        {
+                            FlexibleMessageBox.Show("Could not navigate to the generated Solution file.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
 
                     Settings.LastSlnDirectory = fbd.SelectedPath;
                 }

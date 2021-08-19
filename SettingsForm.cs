@@ -299,7 +299,7 @@ namespace PaintDotNet.Effects
         #region Spellcheck Page
         private void addLangsButton_Click(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start("ms-settings:regionlanguage");
+            UIUtil.LaunchUrl(this, "ms-settings:regionlanguage");
         }
 
         private void enableSpellcheckCheckBox_CheckedChanged(object sender, EventArgs e)
@@ -345,7 +345,7 @@ namespace PaintDotNet.Effects
             if (warningsToIgnoreList.SelectedIndex > -1)
             {
                 string url = $"https://msdn.microsoft.com/query/roslyn.query?appId=roslyn&k=k({warningsToIgnoreList.SelectedItem})";
-                UIUtil.LaunchUrl(url);
+                UIUtil.LaunchUrl(this, url);
             }
         }
         #endregion

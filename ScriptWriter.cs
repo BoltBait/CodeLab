@@ -90,6 +90,7 @@ namespace PaintDotNet.Effects
             + "using System.Text;\r\n"
             + "using System.Text.RegularExpressions;\r\n"
             + "using System.Runtime.InteropServices;\r\n"
+            + "using System.Runtime.Versioning;\r\n"
             + "using Registry = Microsoft.Win32.Registry;\r\n"
             + "using RegistryKey = Microsoft.Win32.RegistryKey;\r\n"
             + "using PaintDotNet;\r\n"
@@ -181,7 +182,8 @@ namespace PaintDotNet.Effects
             AssemblyInfoPart += "[assembly: AssemblyTrademark(\"\")]\r\n";
             AssemblyInfoPart += "[assembly: AssemblyCulture(\"\")]\r\n";
             AssemblyInfoPart += "[assembly: ComVisible(false)]\r\n";
-            AssemblyInfoPart += "[assembly: AssemblyVersion(\"" + MajorVersion.ToString() + "." + MinorVersion.ToString() + ".*\")]\r\n";
+            AssemblyInfoPart += "[assembly: AssemblyVersion(\"" + MajorVersion.ToString() + "." + MinorVersion.ToString() + ".0.0\")]\r\n";
+            AssemblyInfoPart += "[assembly: SupportedOSPlatform(\"Windows\")]\r\n";
             AssemblyInfoPart += "\r\n";
             return AssemblyInfoPart;
         }

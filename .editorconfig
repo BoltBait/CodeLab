@@ -1,3 +1,6 @@
 ﻿# CSharp code style settings:
 [*.cs]
 csharp_prefer_braces = true:warning
+
+# IDE0090: Use 'new(...)'
+dotnet_diagnostic.IDE0090.severity = none

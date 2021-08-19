@@ -1253,24 +1253,6 @@
             <param name="scintilla">The <see cref="T:ScintillaNET.Scintilla" /> control that created this indicator.</param>
             <param name="index">The index of this style within the <see cref="T:ScintillaNET.IndicatorCollection" /> that created it.</param>
         </member>
-        <member name="T:ScintillaNET.IndicatorReleaseEventArgs">
-            <summary>
-            Provides data for the <see cref="E:ScintillaNET.Scintilla.IndicatorRelease" /> event.
-            </summary>
-        </member>
-        <member name="P:ScintillaNET.IndicatorReleaseEventArgs.Position">
-            <summary>
-            Gets the zero-based document position of the text clicked.
-            </summary>
-            <returns>The zero-based character position within the document of the clicked text.</returns>
-        </member>
-        <member name="M:ScintillaNET.IndicatorReleaseEventArgs.#ctor(ScintillaNET.Scintilla,System.Int32)">
-            <summary>
-            Initializes a new instance of the <see cref="T:ScintillaNET.IndicatorReleaseEventArgs" /> class.
-            </summary>
-            <param name="scintilla">The <see cref="T:ScintillaNET.Scintilla" /> control that generated this event.</param>
-            <param name="bytePosition">The zero-based byte position of the clicked text.</param>
-        </member>
         <member name="T:ScintillaNET.IndicatorClickEventArgs">
             <summary>
             Provides data for the <see cref="E:ScintillaNET.Scintilla.IndicatorClick" /> event.
@@ -1341,6 +1323,24 @@
             and will use that instead of the value specified in the <see cref="P:ScintillaNET.Indicator.ForeColor" /> property. This allows
             an indicator to display more than one color.
             </summary>
+        </member>
+        <member name="T:ScintillaNET.IndicatorReleaseEventArgs">
+            <summary>
+            Provides data for the <see cref="E:ScintillaNET.Scintilla.IndicatorRelease" /> event.
+            </summary>
+        </member>
+        <member name="P:ScintillaNET.IndicatorReleaseEventArgs.Position">
+            <summary>
+            Gets the zero-based document position of the text clicked.
+            </summary>
+            <returns>The zero-based character position within the document of the clicked text.</returns>
+        </member>
+        <member name="M:ScintillaNET.IndicatorReleaseEventArgs.#ctor(ScintillaNET.Scintilla,System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ScintillaNET.IndicatorReleaseEventArgs" /> class.
+            </summary>
+            <param name="scintilla">The <see cref="T:ScintillaNET.Scintilla" /> control that generated this event.</param>
+            <param name="bytePosition">The zero-based byte position of the clicked text.</param>
         </member>
         <member name="T:ScintillaNET.IndicatorStyle">
             <summary>
@@ -2888,102 +2888,6 @@
         <member name="F:ScintillaNET.PropertyType.String">
             <summary>
             A string property.
-            </summary>
-        </member>
-        <member name="T:ScintillaNET.ScintillaReader">
-            <summary>
-            Implements a TextReader that reads from a Scintilla control.
-            </summary>
-        </member>
-        <member name="F:ScintillaNET.ScintillaReader.DefaultBufferSize">
-            <summary>
-            Arbitrarily chosen default buffer size
-            </summary>
-        </member>
-        <member name="P:ScintillaNET.ScintillaReader.BufferRemaining">
-            <summary>
-            Returns the number of buffered characters left to be read.
-            </summary>
-        </member>
-        <member name="P:ScintillaNET.ScintillaReader.UnbufferedRemaining">
-            <summary>
-            Returns the number of unbuffered characters left to be read.
-            </summary>
-        </member>
-        <member name="P:ScintillaNET.ScintillaReader.TotalRemaining">
-            <summary>
-            Returns the total number of characters left to be read.
-            </summary>
-        </member>
-        <member name="M:ScintillaNET.ScintillaReader.#ctor(ScintillaNET.Scintilla)">
-            <summary>
-            Initializes a new instance of the ScintillaReader class that reads all text from the specified Scintilla control.
-            </summary>
-            <param name="scintilla">The Scintilla control from which to read.</param>
-        </member>
-        <member name="M:ScintillaNET.ScintillaReader.#ctor(ScintillaNET.Scintilla,System.Int32)">
-            <summary>
-            Initializes a new instance of the ScintillaReader class that reads all text from the specified Scintilla control.
-            </summary>
-            <param name="scintilla">The Scintilla control from which to read.</param>
-            <param name="bufferSize">The number of characters to buffer at a time.</param>
-        </member>
-        <member name="M:ScintillaNET.ScintillaReader.#ctor(ScintillaNET.Scintilla,System.Int32,System.Int32)">
-            <summary>
-            Initializes a new instance of the ScintillaReader class that reads a subsection from the specified Scintilla control.
-            </summary>
-            <param name="scintilla">The Scintilla control from which to read.</param>
-            <param name="start">The index of the first character to read.</param>
-            <param name="end">The index just past the last character to read.</param>
-        </member>
-        <member name="M:ScintillaNET.ScintillaReader.#ctor(ScintillaNET.Scintilla,System.Int32,System.Int32,System.Int32)">
-            <summary>
-            Initializes a new instance of the ScintillaReader class that reads a subsection from the specified Scintilla control.
-            </summary>
-            <param name="scintilla">The Scintilla control from which to read.</param>
-            <param name="start">The index of the first character to read.</param>
-            <param name="end">The index just past the last character to read.</param>
-            <param name="bufferSize">The number of characters to buffer at a time.</param>
-        </member>
-        <member name="M:ScintillaNET.ScintillaReader.Peek">
-            <summary>
-            Returns the next character to be read from the reader without actually removing it from the stream. Returns -1 if no characters are available.
-            </summary>
-            <returns>The next character from the input stream, or -1 if no more characters are available.</returns>
-        </member>
-        <member name="M:ScintillaNET.ScintillaReader.Read">
-            <summary>
-            Removes a character from the stream and returns it. Returns -1 if no characters are available.
-            </summary>
-            <returns>The next character from the input stream, or -1 if no more characters are available.</returns>
-        </member>
-        <member name="M:ScintillaNET.ScintillaReader.Read(System.Char[],System.Int32,System.Int32)">
-            <summary>
-             Reads a maximum of count characters from the current stream and writes the data to buffer, beginning at index.
-            </summary>
-            <param name="buffer">The buffer to receive the characters.</param>
-            <param name="index">The position in buffer at which to begin writing.</param>
-            <param name="count">The maximum number of characters to read.</param>
-            <returns>The actual number of characters that have been read. The number will be less than or equal to count.</returns>
-            <exception cref="T:System.ArgumentNullException">buffer is null.</exception>
-            <exception cref="T:System.ArgumentException">The buffer length minus index is less than count.</exception>
-            <exception cref="T:System.ArgumentException">index or count is negative.</exception>
-        </member>
-        <member name="M:ScintillaNET.ScintillaReader.ReadBlock(System.Char[],System.Int32,System.Int32)">
-            <summary>
-             Reads a maximum of count characters from the current stream and writes the data to buffer, beginning at index.
-            </summary>
-            <param name="buffer">The buffer to receive the characters.</param>
-            <param name="index">The position in buffer at which to begin writing.</param>
-            <param name="count">The maximum number of characters to read.</param>
-            <returns>The actual number of characters that have been read. The number will be less than or equal to count.</returns>
-            <exception cref="T:System.ArgumentNullException">buffer is null.</exception>
-            <exception cref="T:System.ArgumentOutOfRangeException">The buffer length minus index is less than count.</exception>
-            <exception cref="T:System.ArgumentOutOfRangeException">index or count is negative.</exception>
-        </member>
-        <member name="M:ScintillaNET.ScintillaReader.BufferNextRegion">
-            <summary>
-            Fills the buffer with the next section of text.
             </summary>
         </member>
         <member name="T:ScintillaNET.Scintilla">
@@ -5415,6 +5319,102 @@
         <member name="M:ScintillaNET.Scintilla.#ctor">
             <summary>
             Initializes a new instance of the <see cref="T:ScintillaNET.Scintilla" /> class.
+            </summary>
+        </member>
+        <member name="T:ScintillaNET.ScintillaReader">
+            <summary>
+            Implements a TextReader that reads from a Scintilla control.
+            </summary>
+        </member>
+        <member name="F:ScintillaNET.ScintillaReader.DefaultBufferSize">
+            <summary>
+            Arbitrarily chosen default buffer size
+            </summary>
+        </member>
+        <member name="P:ScintillaNET.ScintillaReader.BufferRemaining">
+            <summary>
+            Returns the number of buffered characters left to be read.
+            </summary>
+        </member>
+        <member name="P:ScintillaNET.ScintillaReader.UnbufferedRemaining">
+            <summary>
+            Returns the number of unbuffered characters left to be read.
+            </summary>
+        </member>
+        <member name="P:ScintillaNET.ScintillaReader.TotalRemaining">
+            <summary>
+            Returns the total number of characters left to be read.
+            </summary>
+        </member>
+        <member name="M:ScintillaNET.ScintillaReader.#ctor(ScintillaNET.Scintilla)">
+            <summary>
+            Initializes a new instance of the ScintillaReader class that reads all text from the specified Scintilla control.
+            </summary>
+            <param name="scintilla">The Scintilla control from which to read.</param>
+        </member>
+        <member name="M:ScintillaNET.ScintillaReader.#ctor(ScintillaNET.Scintilla,System.Int32)">
+            <summary>
+            Initializes a new instance of the ScintillaReader class that reads all text from the specified Scintilla control.
+            </summary>
+            <param name="scintilla">The Scintilla control from which to read.</param>
+            <param name="bufferSize">The number of characters to buffer at a time.</param>
+        </member>
+        <member name="M:ScintillaNET.ScintillaReader.#ctor(ScintillaNET.Scintilla,System.Int32,System.Int32)">
+            <summary>
+            Initializes a new instance of the ScintillaReader class that reads a subsection from the specified Scintilla control.
+            </summary>
+            <param name="scintilla">The Scintilla control from which to read.</param>
+            <param name="start">The index of the first character to read.</param>
+            <param name="end">The index just past the last character to read.</param>
+        </member>
+        <member name="M:ScintillaNET.ScintillaReader.#ctor(ScintillaNET.Scintilla,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Initializes a new instance of the ScintillaReader class that reads a subsection from the specified Scintilla control.
+            </summary>
+            <param name="scintilla">The Scintilla control from which to read.</param>
+            <param name="start">The index of the first character to read.</param>
+            <param name="end">The index just past the last character to read.</param>
+            <param name="bufferSize">The number of characters to buffer at a time.</param>
+        </member>
+        <member name="M:ScintillaNET.ScintillaReader.Peek">
+            <summary>
+            Returns the next character to be read from the reader without actually removing it from the stream. Returns -1 if no characters are available.
+            </summary>
+            <returns>The next character from the input stream, or -1 if no more characters are available.</returns>
+        </member>
+        <member name="M:ScintillaNET.ScintillaReader.Read">
+            <summary>
+            Removes a character from the stream and returns it. Returns -1 if no characters are available.
+            </summary>
+            <returns>The next character from the input stream, or -1 if no more characters are available.</returns>
+        </member>
+        <member name="M:ScintillaNET.ScintillaReader.Read(System.Char[],System.Int32,System.Int32)">
+            <summary>
+             Reads a maximum of count characters from the current stream and writes the data to buffer, beginning at index.
+            </summary>
+            <param name="buffer">The buffer to receive the characters.</param>
+            <param name="index">The position in buffer at which to begin writing.</param>
+            <param name="count">The maximum number of characters to read.</param>
+            <returns>The actual number of characters that have been read. The number will be less than or equal to count.</returns>
+            <exception cref="T:System.ArgumentNullException">buffer is null.</exception>
+            <exception cref="T:System.ArgumentException">The buffer length minus index is less than count.</exception>
+            <exception cref="T:System.ArgumentException">index or count is negative.</exception>
+        </member>
+        <member name="M:ScintillaNET.ScintillaReader.ReadBlock(System.Char[],System.Int32,System.Int32)">
+            <summary>
+             Reads a maximum of count characters from the current stream and writes the data to buffer, beginning at index.
+            </summary>
+            <param name="buffer">The buffer to receive the characters.</param>
+            <param name="index">The position in buffer at which to begin writing.</param>
+            <param name="count">The maximum number of characters to read.</param>
+            <returns>The actual number of characters that have been read. The number will be less than or equal to count.</returns>
+            <exception cref="T:System.ArgumentNullException">buffer is null.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">The buffer length minus index is less than count.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">index or count is negative.</exception>
+        </member>
+        <member name="M:ScintillaNET.ScintillaReader.BufferNextRegion">
+            <summary>
+            Fills the buffer with the next section of text.
             </summary>
         </member>
         <member name="T:ScintillaNET.SearchFlags">

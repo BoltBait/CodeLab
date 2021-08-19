@@ -18,15 +18,15 @@ namespace PaintDotNet.Effects
 
         private void IntelliTip_Popup(object sender, PopupEventArgs e)
         {
-            e.ToolTipSize = TextRenderer.MeasureText(this.GetToolTip(e.AssociatedControl), SystemFonts.MessageBoxFont, Size.Empty, TextFormatFlags.VerticalCenter | TextFormatFlags.NoPadding) + new Size(11, 14);
+            e.ToolTipSize = TextRenderer.MeasureText(this.GetToolTip(e.AssociatedControl), SystemFonts.MessageBoxFont, Size.Empty, TextFormatFlags.VerticalCenter | TextFormatFlags.LeftAndRightPadding) + new Size(10, 14);
         }
 
         private void IntelliTip_Draw(object sender, DrawToolTipEventArgs e)
         {
             e.DrawBackground();
             e.DrawBorder();
-            Rectangle bounds = Rectangle.FromLTRB(e.Bounds.Left + 8, e.Bounds.Top + 7, e.Bounds.Right - 8, e.Bounds.Bottom - 7);
-            TextRenderer.DrawText(e.Graphics, e.ToolTipText, SystemFonts.MessageBoxFont, bounds, this.ForeColor, TextFormatFlags.VerticalCenter | TextFormatFlags.NoPadding);
+            Rectangle bounds = Rectangle.FromLTRB(e.Bounds.Left + 6, e.Bounds.Top, e.Bounds.Right - 6, e.Bounds.Bottom);
+            TextRenderer.DrawText(e.Graphics, e.ToolTipText, SystemFonts.MessageBoxFont, bounds, this.ForeColor, TextFormatFlags.VerticalCenter | TextFormatFlags.LeftAndRightPadding);
         }
 
         internal void UpdateTheme(Color foreColor, Color backColor)

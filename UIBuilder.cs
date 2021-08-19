@@ -1004,7 +1004,7 @@ namespace PaintDotNet.Effects
                 using (PdnRegion selection = new PdnRegion(emptySurface.Bounds))
                 using (EffectEnvironmentParameters enviroParams = new EffectEnvironmentParameters(ColorBgra.Black, Color.White, 0, Document.DefaultResolution, selection, emptySurface))
                 {
-                    emptySurface.Clear(ColorBgra.White);
+                    emptySurface.Fill(ColorBgra.White);
                     ScriptBuilder.BuiltEffect.EnvironmentParameters = enviroParams;
                     ScriptBuilder.BuiltEffect.CreateConfigDialog().ShowDialog();
                 }

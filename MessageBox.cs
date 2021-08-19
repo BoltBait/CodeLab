@@ -804,7 +804,7 @@ namespace PaintDotNet.Effects
                 try
                 {
                     Cursor.Current = Cursors.WaitCursor;
-                    UIUtil.LaunchUrl(e.LinkText);
+                    UIUtil.LaunchUrl(this, e.LinkText);
                 }
                 catch (Exception)
                 {

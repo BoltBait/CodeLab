@@ -2612,9 +2612,9 @@ namespace PaintDotNet.Effects
             return true;
         }
 
-        private static void OpenMsDocs(string fullName)
+        private void OpenMsDocs(string fullName)
         {
-            UIUtil.LaunchUrl($"https://docs.microsoft.com/dotnet/api/{fullName}?view=netframework-4.7");
+            UIUtil.LaunchUrl(this, $"https://docs.microsoft.com/dotnet/api/{fullName}?view=net-5.0");
         }
 
         protected override void OnMouseWheel(MouseEventArgs e)
