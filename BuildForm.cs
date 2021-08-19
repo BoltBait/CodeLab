@@ -20,7 +20,6 @@ using System.Text.RegularExpressions;
 using System.Runtime.InteropServices;
 using System.IO.Compression;
 using System.Text;
-using System.Diagnostics;
 
 namespace PaintDotNet.Effects
 {
