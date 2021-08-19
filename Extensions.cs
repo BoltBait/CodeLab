@@ -553,13 +553,11 @@ namespace PaintDotNet.Effects
 
         private static string GetAliasName(this Type type)
         {
-            string typeName = type.Name;
-            if (typeName.EndsWith("&", StringComparison.Ordinal))
-            {
-                typeName = typeName.TrimEnd('&');
-            }
+            string modifier = type.IsByRef ? "ref " : string.Empty;
+            string typeName = type.IsByRef ? type.Name.TrimEnd('&') : type.Name;
+            string typeAlias = Intelli.TypeAliases.TryGetValue(typeName, out string alias) ? alias : typeName;
 
-            return Intelli.TypeAliases.TryGetValue(typeName, out string alias) ? alias : typeName;
+            return modifier + typeAlias;
         }
 
         internal static Type MakeGenericType(this Type type, string args)
