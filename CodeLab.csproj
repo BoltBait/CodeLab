@@ -349,4 +349,7 @@
     <ApplicationIcon />
     <ApplicationManifest>FastDebug\app.manifest</ApplicationManifest>
   </PropertyGroup>
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="if not $(ConfigurationName)==FastDebug (&#xD;&#xA;  if not exist &quot;C:\Program Files\paint.net\Effects\CodeLab\&quot; mkdir &quot;C:\Program Files\paint.net\Effects\CodeLab\&quot;&#xD;&#xA;&#xD;&#xA;  copy &quot;$(TargetPath)&quot; &quot;C:\Program Files\paint.net\Effects\CodeLab\&quot;&#xD;&#xA;  copy &quot;$(TargetDir)Microsoft.CodeAnalysis.CSharp.dll&quot; &quot;C:\Program Files\paint.net\Effects\CodeLab\&quot;&#xD;&#xA;  copy &quot;$(TargetDir)Microsoft.CodeAnalysis.dll&quot; &quot;C:\Program Files\paint.net\Effects\CodeLab\&quot;&#xD;&#xA;  copy &quot;$(TargetDir)PlatformSpellCheck.dll&quot; &quot;C:\Program Files\paint.net\Effects\CodeLab\&quot;&#xD;&#xA;  copy &quot;$(TargetDir)PluralizeService.Core.dll&quot; &quot;C:\Program Files\paint.net\Effects\CodeLab\&quot;&#xD;&#xA;  copy &quot;$(TargetDir)ScintillaNET.dll&quot; &quot;C:\Program Files\paint.net\Effects\CodeLab\&quot;&#xD;&#xA;)" />
+  </Target>
 </Project>
