@@ -431,7 +431,7 @@ namespace PaintDotNet.Effects
 
         internal static string BuildParamString(this ParameterInfo parameter)
         {
-            string modifier = parameter.IsOut ? "out " : parameter.ParameterType.IsByRef ? "ref " : parameter.IsDefined(typeof(ParamArrayAttribute), false) ? "params " : string.Empty;
+            string modifier = parameter.IsOut ? "out " : parameter.IsDefined(typeof(ParamArrayAttribute), false) ? "params " : string.Empty;
             string defaultValue = parameter.HasDefaultValue ? " = " + parameter.DefaultValue.ObjectToString() : string.Empty;
             return $"{modifier}{parameter.ParameterType.GetDisplayName()} {parameter.Name}{defaultValue}";
         }
