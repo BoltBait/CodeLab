@@ -1352,7 +1352,7 @@ namespace PaintDotNet.Effects
                                 if (ecolor == "User selected")
                                 {
                                     rendercode = "    // Fill the " + dstsurface + " surface with a user selected color" + cr;
-                                    rendercode += "    " + dstsurface + ".Clear(rect,Amount" + elnum.ToString() + ");" + cr;
+                                    rendercode += "    " + dstsurface + ".Fill(rect, Amount" + elnum.ToString() + ");" + cr;
                                     SimpleLoopSource = dstsurface;
                                 }
                                 else
@@ -1366,7 +1366,7 @@ namespace PaintDotNet.Effects
                                     {
                                         ecolor = "ColorBgra." + ecolor;
                                     }
-                                    rendercode += "    " + dstsurface + ".Clear(rect," + ecolor + ");" + cr;
+                                    rendercode += "    " + dstsurface + ".Fill(rect, " + ecolor + ");" + cr;
                                     SimpleLoopSource = dstsurface;
                                 }
                             }
@@ -1376,7 +1376,7 @@ namespace PaintDotNet.Effects
                                 if (ecolor == "User selected")
                                 {
                                     code += "    // Fill the " + dstsurface + " surface with a user selected color" + cr;
-                                    code += "    " + dstsurface + ".Clear(Amount" + elnum.ToString() + ");" + cr;
+                                    code += "    " + dstsurface + ".Fill(Amount" + elnum.ToString() + ");" + cr;
                                 }
                                 else
                                 {
@@ -1389,7 +1389,7 @@ namespace PaintDotNet.Effects
                                     {
                                         ecolor = "ColorBgra." + ecolor;
                                     }
-                                    code += "    " + dstsurface + ".Clear(" + ecolor + ");" + cr;
+                                    code += "    " + dstsurface + ".Fill(" + ecolor + ");" + cr;
                                 }
                             }
                             break;
