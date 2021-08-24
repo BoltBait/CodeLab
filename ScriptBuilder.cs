@@ -483,8 +483,11 @@ namespace PaintDotNet.Effects
                     return null;
                 }
 
+                ScriptAssemblyLoadContext loadContext = new ScriptAssemblyLoadContext(null, true);
                 ms.Seek(0, SeekOrigin.Begin);
-                return Assembly.Load(ms.ToArray());
+                Assembly assembly = loadContext.LoadFromStream(ms);
+                loadContext.NotifyAssemblyLoaded(assembly);
+                return assembly;
             }
         }
 
