@@ -23,6 +23,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Loader;
 using System.Text.RegularExpressions;
 
 namespace PaintDotNet.Effects
@@ -483,8 +484,10 @@ namespace PaintDotNet.Effects
                     return null;
                 }
 
+                AssemblyLoadContext loadContext = new AssemblyLoadContext(null, true);
                 ms.Seek(0, SeekOrigin.Begin);
-                return Assembly.Load(ms.ToArray());
+                Assembly assembly = loadContext.LoadFromStream(ms);
+                return assembly;
             }
         }
 
