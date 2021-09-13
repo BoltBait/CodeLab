@@ -133,7 +133,7 @@ namespace PaintDotNet.Effects
             ReferenceAssemblies = AppDomain.CurrentDomain
                 .GetAssemblies()
                 .Where(a => !a.IsCollectible && // exclude assemblies that were loaded into separate contexts; i.e. Plugins
-                             a.GetCustomAttribute<AssemblyCompanyAttribute>().Company == "Microsoft Corporation") // and then exclude any non-Microsoft assemblies; including all dotPDN ones
+                             a.GetCustomAttribute<AssemblyCompanyAttribute>()?.Company == "Microsoft Corporation") // and then exclude any non-Microsoft assemblies; including all dotPDN ones
                 .Concat(pdnAssemblies); // add back the four PDN assemblies we actually want
 
             Dictionary<string, string> userSnippets = null;
