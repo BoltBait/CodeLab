@@ -2637,6 +2637,10 @@ namespace PaintDotNet.Effects
                 {
                     GoToDefinition(false);
                 }
+                else if (e.KeyCode == Keys.F1)
+                {
+                    GoToDefinition(true);
+                }
                 else if (this.ReadOnly)
                 {
                     // no-op

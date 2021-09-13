@@ -445,6 +445,7 @@
             // 
             this.LookUpDefMenuItem.ImageName = "Docs";
             this.LookUpDefMenuItem.Name = "LookUpDefMenuItem";
+            this.LookUpDefMenuItem.ShortcutKeyDisplayString = "F1";
             this.LookUpDefMenuItem.Size = new System.Drawing.Size(234, 22);
             this.LookUpDefMenuItem.Text = "Look Up Definition";
             this.LookUpDefMenuItem.Click += new System.EventHandler(this.LookUpDefMenuItem_Click);
@@ -895,7 +896,6 @@
             // 
             this.helpTopicsToolStripMenuItem.ImageName = "HelpTopics";
             this.helpTopicsToolStripMenuItem.Name = "helpTopicsToolStripMenuItem";
-            this.helpTopicsToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F1;
             this.helpTopicsToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
             this.helpTopicsToolStripMenuItem.Text = "&Help topics...";
             this.helpTopicsToolStripMenuItem.Click += new System.EventHandler(this.helpTopicsToolStripMenuItem_Click);
