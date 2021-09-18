@@ -191,24 +191,9 @@ namespace PaintDotNet.Effects
             return PluralizationProvider.Pluralize(str);
         }
 
-        internal static bool Contains(this string source, string value, StringComparison comparisonType)
-        {
-            return source?.IndexOf(value, comparisonType) >= 0;
-        }
-
         internal static int CountLines(this string str)
         {
-            int count = 0;
-
-            foreach (char c in str)
-            {
-                if (c == '\n')
-                {
-                    ++count;
-                }
-            }
-
-            return count;
+            return str.Count(c => c == '\n');
         }
 
         internal static void ForEach<T>(this IEnumerable<T> ie, Action<T> action)
@@ -620,7 +605,7 @@ namespace PaintDotNet.Effects
                 return Array.Empty<Type>();
             }
 
-            string[] argArray = types.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] argArray = types.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
             if (argArray.Length == 0)
             {
                 return Array.Empty<Type>();
@@ -629,7 +614,7 @@ namespace PaintDotNet.Effects
             List<Type> argTypes = new List<Type>();
             foreach (string arg in argArray)
             {
-                if (Intelli.AllTypes.TryGetValue(arg.Trim(), out Type t))
+                if (Intelli.AllTypes.TryGetValue(arg, out Type t))
                 {
                     argTypes.Add(t);
                 }

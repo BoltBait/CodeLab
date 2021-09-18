@@ -4,3 +4,9 @@ csharp_prefer_braces = true:warning
 
 # IDE0090: Use 'new(...)'
 dotnet_diagnostic.IDE0090.severity = none
+
+# IDE1006: Naming Styles
+dotnet_diagnostic.IDE1006.severity = none
+
+# RCS1096: Convert 'HasFlag' call to bitwise operation (or vice versa).
+dotnet_diagnostic.RCS1096.severity = none

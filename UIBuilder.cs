@@ -198,7 +198,7 @@ namespace PaintDotNet.Effects
             toolTip1.SetToolTip(this.OptionsText, "Separate options with the vertical bar character (|)");
 
             // setup UI based on selected control type
-            if (!(ControlType.SelectedItem is ControlTypeItem item))
+            if (ControlType.SelectedItem is not ControlTypeItem item)
             {
                 return;
             }
@@ -1306,12 +1306,11 @@ namespace PaintDotNet.Effects
             }
 
             // process those UI controls
-            string[] SrcLines = UIControlsText.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] SrcLines = UIControlsText.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
             List<UIElement> UserControls = new List<UIElement>();
-            foreach (string s in SrcLines)
+            foreach (string Line in SrcLines)
             {
-                string Line = s.Trim();
-                if (Line.Length == 0 || Line.StartsWith("//", StringComparison.Ordinal))
+                if (Line.StartsWith("//", StringComparison.Ordinal))
                 {
                     continue;
                 }

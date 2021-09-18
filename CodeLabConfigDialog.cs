@@ -1907,7 +1907,7 @@ namespace PaintDotNet.Effects
         #endregion
 
         #region Recent Items functions
-        private void AddToRecents(string filePath)
+        private static void AddToRecents(string filePath)
         {
             string recents = Settings.RecentDocs;
 
