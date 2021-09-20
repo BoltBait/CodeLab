@@ -1319,7 +1319,7 @@ namespace PaintDotNet.Effects
             return  ""
                 + "        {\r\n"
                 + "            __listener = new TextWriterTraceListener(__debugWriter);\r\n"
-                + "            Debug.Listeners.Add(__listener);\r\n"
+                + "            Trace.Listeners.Add(__listener);\r\n"
                 + "        }\r\n"
                 + "\r\n"
                 + "        public StringWriter __debugWriter = new StringWriter();\r\n"
