@@ -22,11 +22,11 @@ namespace PaintDotNet.Effects
             iShellService = shellService;
         }
 
-        internal static Image GetImage(string resName)
+        internal static Image GetImage(string resName, string directory = "Icons")
         {
             string resource = hiDpi ?
-                $"PaintDotNet.Effects.Icons.{resName}.32.png" :
-                $"PaintDotNet.Effects.Icons.{resName}.png";
+                $"PaintDotNet.Effects.{directory}.{resName}.32.png" :
+                $"PaintDotNet.Effects.{directory}.{resName}.png";
 
             using (Stream imageStream = assembly.GetManifestResourceStream(resource))
             {
@@ -38,7 +38,7 @@ namespace PaintDotNet.Effects
 
             if (hiDpi)
             {
-                resource = $"PaintDotNet.Effects.Icons.{resName}.png";
+                resource = $"PaintDotNet.Effects.{directory}.{resName}.png";
 
                 using (Stream imageStream = assembly.GetManifestResourceStream(resource))
                 {
