@@ -216,6 +216,11 @@ namespace PaintDotNet.Effects
 
         internal static string GetGenericName(this Type type)
         {
+            if (type.IsValueType && type.IsConstructedGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
+            {
+                return Nullable.GetUnderlyingType(type).GetDisplayName();
+            }
+
             string typeName = Regex.Replace(type.Name, @"`\d", string.Empty);
 
             List<string> argList = new List<string>();
@@ -344,6 +349,12 @@ namespace PaintDotNet.Effects
                 return "'" + c.ToLiteral() + "'";
             }
 
+            if (obj is Enum)
+            {
+                Type enumType = obj.GetType();
+                return enumType.Name + "." + obj.ToString();
+            }
+
             return obj.ToString();
         }
 
@@ -416,14 +427,25 @@ namespace PaintDotNet.Effects
 
         internal static string BuildParamString(this ParameterInfo parameter)
         {
-            string modifier = parameter.IsOut ? "out " : parameter.IsDefined(typeof(ParamArrayAttribute), false) ? "params " : string.Empty;
-            string defaultValue = parameter.HasDefaultValue ? " = " + parameter.DefaultValue.ObjectToString() : string.Empty;
-            return $"{modifier}{parameter.ParameterType.GetDisplayName()} {parameter.Name}{defaultValue}";
+            string modifier = parameter.IsOut ? "out " : parameter.ParameterType.IsByRef ? "ref " : parameter.IsDefined(typeof(ParamArrayAttribute), false) ? "params " : string.Empty;
+            string defaultValue = parameter.HasDefaultValue ? parameter.GetDefaultValue() : string.Empty;
+            string nullable = parameter.IsNullable() ? "?" : string.Empty;
+            return $"{modifier}{parameter.ParameterType.GetDisplayName()}{nullable} {parameter.Name}{defaultValue}";
         }
 
         internal static bool IsOrHasExtension(this MemberInfo member)
         {
             return member.IsDefined(typeof(ExtensionAttribute), false);
+        }
+
+        private static string GetDefaultValue(this ParameterInfo parameter)
+        {
+            if (parameter.ParameterType.IsValueType && parameter.RawDefaultValue is null)
+            {
+                return " = default";
+            }
+
+            return " = " + parameter.DefaultValue.ObjectToString();
         }
 
         internal static Type ExtendingType(this MethodInfo method)
@@ -538,11 +560,8 @@ namespace PaintDotNet.Effects
 
         private static string GetAliasName(this Type type)
         {
-            string modifier = type.IsByRef ? "ref " : string.Empty;
             string typeName = type.IsByRef ? type.Name.TrimEnd('&') : type.Name;
-            string typeAlias = Intelli.TypeAliases.TryGetValue(typeName, out string alias) ? alias : typeName;
-
-            return modifier + typeAlias;
+            return Intelli.TypeAliases.TryGetValue(typeName, out string alias) ? alias : typeName;
         }
 
         internal static Type MakeGenericType(this Type type, string args)
@@ -657,6 +676,82 @@ namespace PaintDotNet.Effects
             }
 
             return listBox.FindString(s);
+        }
+
+        internal static bool IsNullable(this MethodInfo method)
+        {
+            return IsNullableImpl(method.ReturnType, method.DeclaringType, method.CustomAttributes);
+        }
+
+        internal static bool IsNullable(this PropertyInfo property)
+        {
+            return IsNullableImpl(property.PropertyType, property.DeclaringType, property.CustomAttributes);
+        }
+
+        internal static bool IsNullable(this FieldInfo field)
+        {
+            return IsNullableImpl(field.FieldType, field.DeclaringType, field.CustomAttributes);
+        }
+
+        internal static bool IsNullable(this ParameterInfo parameter)
+        {
+            return IsNullableImpl(parameter.ParameterType, parameter.IsOut ? null : parameter.Member, parameter.CustomAttributes);
+        }
+
+        // Based on findings from Stack Overflow; with a few modifications
+        // https://stackoverflow.com/questions/58453972/how-to-use-net-reflection-to-check-for-nullable-reference-type#58454489
+        // This can be removed when we switch to .NET 6
+        // https://devblogs.microsoft.com/dotnet/announcing-net-6-preview-7/#libraries-reflection-apis-for-nullability-information
+        private static bool IsNullableImpl(Type memberType, MemberInfo declaringType, IEnumerable<CustomAttributeData> customAttributes)
+        {
+            if (memberType.IsValueType)
+            {
+                return Nullable.GetUnderlyingType(memberType) != null;
+            }
+
+            CustomAttributeData nullableWhen = customAttributes
+                .FirstOrDefault(x => x.AttributeType.FullName == "System.Diagnostics.CodeAnalysis.NotNullWhenAttribute");
+
+            if (nullableWhen != null)
+            {
+                return true;
+            }
+
+            CustomAttributeData nullable = customAttributes
+                .FirstOrDefault(x => x.AttributeType.FullName == "System.Runtime.CompilerServices.NullableAttribute");
+
+            if (nullable != null && nullable.ConstructorArguments.Count == 1)
+            {
+                var attributeArgument = nullable.ConstructorArguments[0];
+                if (attributeArgument.ArgumentType == typeof(byte[]))
+                {
+                    var args = (IReadOnlyList<CustomAttributeTypedArgument>)attributeArgument.Value!;
+                    if (args.Count > 0 && args[0].ArgumentType == typeof(byte))
+                    {
+                        return (byte)args[0].Value! == 2;
+                    }
+                }
+                else if (attributeArgument.ArgumentType == typeof(byte))
+                {
+                    return (byte)attributeArgument.Value! == 2;
+                }
+            }
+
+            for (MemberInfo type = declaringType; type != null; type = type.DeclaringType)
+            {
+                CustomAttributeData context = type.CustomAttributes
+                    .FirstOrDefault(x => x.AttributeType.FullName == "System.Runtime.CompilerServices.NullableContextAttribute");
+
+                if (context != null &&
+                    context.ConstructorArguments.Count == 1 &&
+                    context.ConstructorArguments[0].ArgumentType == typeof(byte))
+                {
+                    return (byte)context.ConstructorArguments[0].Value! == 2;
+                }
+            }
+
+            // Couldn't find a suitable attribute
+            return false;
         }
     }
 }

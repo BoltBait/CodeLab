@@ -1763,9 +1763,10 @@ namespace PaintDotNet.Effects
                     }
 
                     returnType = method.ReturnType.GetDisplayName();
+                    string byRef = method.ReturnType.IsByRef ? "ref " : string.Empty;
                     string overloads = (length > 1) ? $" (+ {length - 1} overloads)" : string.Empty;
 
-                    return $"{returnType} - {precedingType}.{method.Name}{genericArgs}({method.Params()}){overloads}{genericContraints}\n{ext}{method.MemberType}";
+                    return $"{byRef}{returnType} - {precedingType}.{method.Name}{genericArgs}({method.Params()}){overloads}{genericContraints}\n{ext}{method.MemberType}";
                 case MemberTypes.Field:
                     FieldInfo field = (FieldInfo)memberInfo;
                     returnType = field.FieldType.GetDisplayName();
