@@ -55,36 +55,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Update="ErrorBox.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Update="IntelliTip.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Update="ScaledToolStripControls.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Update="SnippetManager.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="TabStrip.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="CodeTextBox.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Update="CodeCompletionListBox.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Update="PdnColor.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="FindAndReplace.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="IndicatorBar.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Update="ErrorBox.cs" />
+    <Compile Update="IntelliTip.cs" />
+    <Compile Update="ScaledToolStripControls.cs" />
+    <Compile Update="SnippetManager.cs" />
+    <Compile Update="TabStrip.cs" />
+    <Compile Update="CodeTextBox.cs" />
+    <Compile Update="CodeCompletionListBox.cs" />
+    <Compile Update="PdnColor.cs" />
+    <Compile Update="FindAndReplace.cs" />
+    <Compile Update="IndicatorBar.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Icons\00int.png" />
@@ -254,7 +234,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="ILRepack" Version="2.0.18" />
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.7.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.11.0" />
     <PackageReference Include="PlatformSpellCheck" Version="1.1.0" />
     <PackageReference Include="PluralizeService.Core" Version="1.2.21147.2" />
   </ItemGroup>
