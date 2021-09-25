@@ -1,4 +1,6 @@
 ﻿using PaintDotNet.AppModel;
+using PaintDotNet.Direct2D1;
+using PaintDotNet.Drawing;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -71,9 +73,13 @@ namespace PaintDotNet.Effects
 
         internal static Icon CreateIcon(string resName)
         {
-            Bitmap resBmp = GetImage(resName) as Bitmap;
-            IntPtr hIcon = resBmp.GetHicon();
-            return Icon.FromHandle(hIcon);
+            using (Image resImage = GetImage(resName))
+            using (Surface surface = Surface.CopyFromGdipImage(resImage, false))
+            using (Bitmap resBmp = surface.CreateAliasedGdipBitmap(AlphaMode.Premultiplied))
+            {
+                IntPtr hIcon = resBmp.GetHicon();
+                return Icon.FromHandle(hIcon);
+            }
         }
 
         internal static int Scale(int value)
