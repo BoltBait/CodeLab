@@ -1220,12 +1220,12 @@ namespace PaintDotNet.Effects
         internal static string FileTypePart2(UIElement[] userControls)
         {
             string fileTypePart2 = "";
-            fileTypePart2 += "        protected override bool IsReflexive(PropertyBasedSaveConfigToken token)\r\n";
-            fileTypePart2 += "        {\r\n";
-            fileTypePart2 += "            return false;\r\n";
-            fileTypePart2 += "        }\r\n";
-            fileTypePart2 += "\r\n";
-            fileTypePart2 += "\r\n";
+            //fileTypePart2 += "        protected override bool IsReflexive(PropertyBasedSaveConfigToken token)\r\n";
+            //fileTypePart2 += "        {\r\n";
+            //fileTypePart2 += "            return false;\r\n";
+            //fileTypePart2 += "        }\r\n";
+            //fileTypePart2 += "\r\n";
+            //fileTypePart2 += "\r\n";
             fileTypePart2 += "        protected override void OnSaveT(Document input, Stream output, PropertyBasedSaveConfigToken token, Surface scratchSurface, ProgressEventHandler progressCallback)\r\n";
             fileTypePart2 += "        {\r\n";
 
