@@ -68,6 +68,8 @@ namespace PaintDotNet.Effects
 #if FASTDEBUG
             this.Icon = UIUtil.CreateIcon("CodeLab");
             this.ShowInTaskbar = true;
+#else
+            this.UseAppThemeColors = true;
 #endif
             PdnTheme.InitialColors(this.ForeColor, this.BackColor);
             LoadSettingsFromRegistry();
