@@ -1513,15 +1513,15 @@ namespace PaintDotNet.Effects
                 code += "        if (IsCancelRequested) return;" + cr;
                 if (AdvancedStyle.Checked)
                 {
-                    code += "        ColorBgra* srcPtr = src.GetPointAddressUnchecked(rect.Left, y);" + cr;
-                    code += "        ColorBgra* dstPtr = dst.GetPointAddressUnchecked(rect.Left, y);" + cr;
+                    code += "        ColorBgra* srcPtr = src.GetPointPointerUnchecked(rect.Left, y);" + cr;
+                    code += "        ColorBgra* dstPtr = dst.GetPointPointerUnchecked(rect.Left, y);" + cr;
                     if (workSurfaceNeeded)
                     {
-                        code += "        ColorBgra* wrkPtr = wrk.GetPointAddressUnchecked(rect.Left, y);" + cr;
+                        code += "        ColorBgra* wrkPtr = wrk.GetPointPointerUnchecked(rect.Left, y);" + cr;
                     }
                     if (auxSurfaceNeeded)
                     {
-                        code += "        ColorBgra* auxPtr = aux.GetPointAddressUnchecked(rect.Left, y);" + cr;
+                        code += "        ColorBgra* auxPtr = aux.GetPointPointerUnchecked(rect.Left, y);" + cr;
                     }
                 }
                 code += "        // Step through each pixel on the current row of the rectangle" + cr;
