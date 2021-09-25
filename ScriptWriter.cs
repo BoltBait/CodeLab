@@ -98,7 +98,8 @@ namespace PaintDotNet.Effects
             + "using PaintDotNet.Clipboard;\r\n"
             + "using PaintDotNet.IndirectUI;\r\n"
             + "using PaintDotNet.Collections;\r\n"
-            + "using PaintDotNet.PropertySystem;\r\n";
+            + "using PaintDotNet.PropertySystem;\r\n"
+            + "using PaintDotNet.Rendering;\r\n";
 
             if (projectType == ProjectType.Effect)
             {

@@ -1019,7 +1019,8 @@ namespace PaintDotNet.Effects
                 "    using (RenderArgs args = new RenderArgs(scratchSurface))\r\n" +
                 "    {\r\n" +
                 "        // Render a flattened view of the Document to the scratch surface.\r\n" +
-                "        input.Render(args, true);\r\n" +
+                "        scratchSurface.Clear();\r\n" +
+                "        input.CreateRenderer().Render(scratchSurface);\r\n" +
                 "    }\r\n" +
                 "\r\n" +
                 "    if (Amount1)\r\n" +
