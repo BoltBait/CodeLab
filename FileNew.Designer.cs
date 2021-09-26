@@ -94,7 +94,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.label1.Location = new System.Drawing.Point(21, 13);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(66, 15);
@@ -105,7 +105,7 @@
             // 
             this.BasicStyle.AutoSize = true;
             this.BasicStyle.Checked = true;
-            this.BasicStyle.Location = new System.Drawing.Point(40, 35);
+            this.BasicStyle.Location = new System.Drawing.Point(41, 35);
             this.BasicStyle.Name = "BasicStyle";
             this.BasicStyle.Size = new System.Drawing.Size(52, 19);
             this.BasicStyle.TabIndex = 3;
@@ -116,17 +116,18 @@
             // AdvancedStyle
             // 
             this.AdvancedStyle.AutoSize = true;
-            this.AdvancedStyle.Location = new System.Drawing.Point(40, 58);
+            this.AdvancedStyle.Location = new System.Drawing.Point(41, 58);
             this.AdvancedStyle.Name = "AdvancedStyle";
             this.AdvancedStyle.Size = new System.Drawing.Size(170, 19);
             this.AdvancedStyle.TabIndex = 4;
             this.AdvancedStyle.Text = "Advanced (unsafe pointers)";
             this.AdvancedStyle.UseVisualStyleBackColor = true;
+            this.AdvancedStyle.CheckedChanged += new System.EventHandler(this.AdvancedStyle_CheckedChanged);
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.label2.Location = new System.Drawing.Point(21, 115);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(214, 15);
@@ -178,7 +179,7 @@
             this.DoIt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.DoIt.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.DoIt.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.DoIt.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.DoIt.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.DoIt.Location = new System.Drawing.Point(563, 471);
             this.DoIt.Name = "DoIt";
             this.DoIt.Size = new System.Drawing.Size(115, 24);
@@ -190,7 +191,7 @@
             // textBox1
             // 
             this.textBox1.AutoSize = true;
-            this.textBox1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBox1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.textBox1.Location = new System.Drawing.Point(21, 244);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(85, 15);
@@ -210,7 +211,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.label4.Location = new System.Drawing.Point(298, 13);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(179, 15);
@@ -303,7 +304,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.label3.Location = new System.Drawing.Point(21, 352);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(95, 15);
@@ -313,7 +314,7 @@
             // flowList
             // 
             this.flowList.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-            this.flowList.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.flowList.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.flowList.FormattingEnabled = true;
             this.flowList.IntegralHeight = false;
             this.flowList.ItemHeight = 64;
@@ -327,7 +328,7 @@
             // 
             // Delete
             // 
-            this.Delete.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Delete.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.Delete.ForeColor = System.Drawing.Color.Red;
             this.Delete.Location = new System.Drawing.Point(736, 106);
             this.Delete.Name = "Delete";
