@@ -1,5 +1,4 @@
 ﻿using PaintDotNet.AppModel;
-using PaintDotNet.Direct2D1;
 using PaintDotNet.Drawing;
 using System;
 using System.Collections.Generic;
@@ -75,7 +74,7 @@ namespace PaintDotNet.Effects
         {
             using (Image resImage = GetImage(resName))
             using (Surface surface = Surface.CopyFromGdipImage(resImage, false))
-            using (Bitmap resBmp = surface.CreateAliasedGdipBitmap(AlphaMode.Premultiplied))
+            using (Bitmap resBmp = surface.CreateAliasedGdipBitmap(BitmapAlphaMode.Premultiplied))
             {
                 IntPtr hIcon = resBmp.GetHicon();
                 return Icon.FromHandle(hIcon);
