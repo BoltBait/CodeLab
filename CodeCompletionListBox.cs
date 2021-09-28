@@ -336,8 +336,8 @@ namespace PaintDotNet.Effects
             this.intelliBoxContents = IntelliBoxContents.Suggestions;
 
             bool plural = false;
-            Type iEnumType = type.GetInterface("IEnumerable`1");
-            if (iEnumType != null && !iEnumType.IsGenericTypeDefinition)
+            Type iEnumType = type.GetInterface("IEnumerable`1") ?? ((type.IsInterface && type.Name.Equals("IEnumerable`1", StringComparison.Ordinal)) ? type : null);
+            if (iEnumType != null && iEnumType.IsConstructedGenericType && iEnumType.GenericTypeArguments.Length == 1)
             {
                 plural = true;
                 type = iEnumType.GenericTypeArguments[0];
