@@ -807,13 +807,14 @@ namespace PaintDotNet.Effects
             {
                 if (colorName == "None" || colorName == "PrimaryColor" || colorName == "SecondaryColor")
                 {
-                    e.Graphics.DrawString(colorName, font, SystemBrushes.ControlText, e.Bounds);
+                    e.Graphics.DrawString(Regex.Replace(colorName, "(\\B[A-Z])", " $1"), font, SystemBrushes.ControlText, e.Bounds);
                 }
                 else
                 {
                     solidBrush.Color = Color.FromName(colorName);
-                    e.Graphics.FillRectangle(solidBrush, new Rectangle(e.Bounds.X + 1, e.Bounds.Y + 1, e.Bounds.Height - 2, e.Bounds.Height - 2));
-                    e.Graphics.DrawString(colorName, font, SystemBrushes.ControlText, new Rectangle(e.Bounds.X + e.Bounds.Height, e.Bounds.Y + 1, e.Bounds.Width - e.Bounds.Height, e.Bounds.Height));
+                    e.Graphics.DrawRectangle(Pens.Black, new Rectangle(e.Bounds.X + 1, e.Bounds.Y + 1, e.Bounds.Height - 2, e.Bounds.Height - 2));
+                    e.Graphics.FillRectangle(solidBrush, new Rectangle(e.Bounds.X + 2, e.Bounds.Y + 2, e.Bounds.Height - 3, e.Bounds.Height - 3));
+                    e.Graphics.DrawString(Regex.Replace(colorName, "(\\B[A-Z])", " $1"), font, SystemBrushes.ControlText, new Rectangle(e.Bounds.X + e.Bounds.Height, e.Bounds.Y + 1, e.Bounds.Width - e.Bounds.Height, e.Bounds.Height));
                 }
             }
             e.DrawFocusRectangle();
