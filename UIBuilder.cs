@@ -807,13 +807,13 @@ namespace PaintDotNet.Effects
             {
                 if (colorName == "None" || colorName == "PrimaryColor" || colorName == "SecondaryColor")
                 {
-                    e.Graphics.DrawString(colorName, font, solidBrush, e.Bounds);
+                    e.Graphics.DrawString(colorName, font, SystemBrushes.ControlText, e.Bounds);
                 }
                 else
                 {
                     solidBrush.Color = Color.FromName(colorName);
                     e.Graphics.FillRectangle(solidBrush, new Rectangle(e.Bounds.X + 1, e.Bounds.Y + 1, e.Bounds.Height - 2, e.Bounds.Height - 2));
-                    e.Graphics.DrawString(colorName, font, solidBrush, new Rectangle(e.Bounds.X + e.Bounds.Height, e.Bounds.Y + 1, e.Bounds.Width - e.Bounds.Height, e.Bounds.Height));
+                    e.Graphics.DrawString(colorName, font, SystemBrushes.ControlText, new Rectangle(e.Bounds.X + e.Bounds.Height, e.Bounds.Y + 1, e.Bounds.Width - e.Bounds.Height, e.Bounds.Height));
                 }
             }
             e.DrawFocusRectangle();
