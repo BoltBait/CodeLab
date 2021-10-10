@@ -129,8 +129,8 @@ namespace PaintDotNet.Effects
                 }
 
                 string xElementText = firstElement.ToString();
-                int xmlnsStartIndex = xElementText.IndexOf(" xmlns=");
-                int xmlnsEndIndex = xElementText.IndexOf(">");
+                int xmlnsStartIndex = xElementText.IndexOf(" xmlns=", StringComparison.Ordinal);
+                int xmlnsEndIndex = xElementText.IndexOf(">", StringComparison.Ordinal);
 
                 if (firstElement.IsEmpty)
                 {

@@ -49,7 +49,7 @@ namespace PaintDotNet.Effects
                 if (this.Effect != null)
                 {
                     string name = this.Effect.Name;
-                    int dashIndex = name.IndexOf('-');
+                    int dashIndex = name.IndexOf('-', StringComparison.Ordinal);
                     this.effectFlag = dashIndex > 0 ?
                         " (" + name.Substring(dashIndex + 2) + ")" :
                         string.Empty;
