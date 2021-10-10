@@ -178,12 +178,12 @@ namespace PaintDotNet.Effects
             get
             {
                 float scale = posTrackRect.Height / (float)maximum;
-                return (int)Math.Round((posSliderRect.Y - posTrackRect.Top) / scale);
+                return (int)MathF.Round((posSliderRect.Y - posTrackRect.Top) / scale);
             }
             set
             {
                 float scale = posTrackRect.Height / (float)maximum;
-                posSliderRect.Y = posTrackRect.Top + (int)Math.Round(value * scale);
+                posSliderRect.Y = posTrackRect.Top + (int)MathF.Round(value * scale);
                 if (posSliderRect.Top < posTrackRect.Top)
                 {
                     posSliderRect.Y = posTrackRect.Top;
@@ -544,13 +544,13 @@ namespace PaintDotNet.Effects
             ScrollEventType scrollType;
             if (upButtonClick && upButtonHover)
             {
-                delta = -(int)Math.Round(posTrackRect.Height / (float)maximum);
+                delta = -(int)MathF.Round(posTrackRect.Height / (float)maximum);
 
                 scrollType = ScrollEventType.SmallDecrement;
             }
             else if (downButtonClick && downButtonHover)
             {
-                delta = (int)Math.Round(posTrackRect.Height / (float)maximum);
+                delta = (int)MathF.Round(posTrackRect.Height / (float)maximum);
                 scrollType = ScrollEventType.SmallIncrement;
             }
             else if (posTrackClick && posTrackHover)

@@ -566,7 +566,7 @@ namespace PaintDotNet.Effects
                             break;
                         case StyleTypes.Baseline:
                             RichHelpContent.SelectionCharOffset = RichHelpContent.SelectionFont.Height / 3 * NewBaselineDirection;
-                            RichHelpContent.SelectionFont = new Font(RichHelpContent.SelectionFont.Name, Math.Max(RichHelpContent.SelectionFont.Size * 0.75f, SizeToApply), RichHelpContent.SelectionFont.Style);
+                            RichHelpContent.SelectionFont = new Font(RichHelpContent.SelectionFont.Name, MathF.Max(RichHelpContent.SelectionFont.Size * 0.75f, SizeToApply), RichHelpContent.SelectionFont.Style);
                             break;
                         default:
                             break;
