@@ -98,7 +98,8 @@ namespace PaintDotNet.Effects
             + "using PaintDotNet.Clipboard;\r\n"
             + "using PaintDotNet.IndirectUI;\r\n"
             + "using PaintDotNet.Collections;\r\n"
-            + "using PaintDotNet.PropertySystem;\r\n";
+            + "using PaintDotNet.PropertySystem;\r\n"
+            + "using PaintDotNet.Rendering;\r\n";
 
             if (projectType == ProjectType.Effect)
             {
@@ -1220,12 +1221,12 @@ namespace PaintDotNet.Effects
         internal static string FileTypePart2(UIElement[] userControls)
         {
             string fileTypePart2 = "";
-            fileTypePart2 += "        protected override bool IsReflexive(PropertyBasedSaveConfigToken token)\r\n";
-            fileTypePart2 += "        {\r\n";
-            fileTypePart2 += "            return false;\r\n";
-            fileTypePart2 += "        }\r\n";
-            fileTypePart2 += "\r\n";
-            fileTypePart2 += "\r\n";
+            //fileTypePart2 += "        protected override bool IsReflexive(PropertyBasedSaveConfigToken token)\r\n";
+            //fileTypePart2 += "        {\r\n";
+            //fileTypePart2 += "            return false;\r\n";
+            //fileTypePart2 += "        }\r\n";
+            //fileTypePart2 += "\r\n";
+            //fileTypePart2 += "\r\n";
             fileTypePart2 += "        protected override void OnSaveT(Document input, Stream output, PropertyBasedSaveConfigToken token, Surface scratchSurface, ProgressEventHandler progressCallback)\r\n";
             fileTypePart2 += "        {\r\n";
 
@@ -1319,7 +1320,7 @@ namespace PaintDotNet.Effects
             return  ""
                 + "        {\r\n"
                 + "            __listener = new TextWriterTraceListener(__debugWriter);\r\n"
-                + "            Debug.Listeners.Add(__listener);\r\n"
+                + "            Trace.Listeners.Add(__listener);\r\n"
                 + "        }\r\n"
                 + "\r\n"
                 + "        public StringWriter __debugWriter = new StringWriter();\r\n"

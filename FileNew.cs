@@ -1513,15 +1513,15 @@ namespace PaintDotNet.Effects
                 code += "        if (IsCancelRequested) return;" + cr;
                 if (AdvancedStyle.Checked)
                 {
-                    code += "        ColorBgra* srcPtr = src.GetPointAddressUnchecked(rect.Left, y);" + cr;
-                    code += "        ColorBgra* dstPtr = dst.GetPointAddressUnchecked(rect.Left, y);" + cr;
+                    code += "        ColorBgra* srcPtr = src.GetPointPointerUnchecked(rect.Left, y);" + cr;
+                    code += "        ColorBgra* dstPtr = dst.GetPointPointerUnchecked(rect.Left, y);" + cr;
                     if (workSurfaceNeeded)
                     {
-                        code += "        ColorBgra* wrkPtr = wrk.GetPointAddressUnchecked(rect.Left, y);" + cr;
+                        code += "        ColorBgra* wrkPtr = wrk.GetPointPointerUnchecked(rect.Left, y);" + cr;
                     }
                     if (auxSurfaceNeeded)
                     {
-                        code += "        ColorBgra* auxPtr = aux.GetPointAddressUnchecked(rect.Left, y);" + cr;
+                        code += "        ColorBgra* auxPtr = aux.GetPointPointerUnchecked(rect.Left, y);" + cr;
                     }
                 }
                 code += "        // Step through each pixel on the current row of the rectangle" + cr;
@@ -2187,6 +2187,17 @@ namespace PaintDotNet.Effects
                 flowList.Items.RemoveAt(CurrentItem);
                 flowList.Items.Insert(CurrentItem, element);
                 flowList.SelectedIndex = CurrentItem;
+            }
+        }
+
+        private void AdvancedStyle_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!AdvancedStyle.Checked) return;
+            int buttonPressed = (int)FlexibleMessageBox.Show("Using 'unsafe' pointers is an advanced technique that should only be used\r\nif you are confident that you know what you're doing. Should you decide to\r\nuse them, be careful! If an invalid coordinate is passed in, a bad pointer\r\nwill be returned which can cause lots of problems including an immediate\r\ncrash of Paint.NET, data corruption, and/or non-deterministic behavior\r\nlater on.\r\n\r\nIf they are so dangerous, why offer the option?  Well, using unsafe\r\npointers could vastly improve the performance of an effect if the user\r\nknows what he/she is doing.\r\n\r\nFor example, when you use code like \"CurrentPixel = src[x, y];\" which\r\nis included in the default CodeLab script, Paint.NET takes time to check\r\nto be sure that the \"x\" coordinate is contained within the bounds of\r\nthe canvas.  It also does the same check for \"y\" before finally returning\r\nthe pixel at that address.  By using pointers, as in the advanced script\r\n\"CurrentPixel = *srcPtr;\" Paint.NET doesn't spend any time verifying\r\nthat the pixel you're requesting is located on the canvas. It simply\r\ngives you what's at that memory location directly. It is up to the\r\nscript writer to be sure that our loops and our pointers remain valid.\r\nSo, for our 800x600 src canvas, dst canvas, and aux canvas that saves\r\n2,880,000 boundary checks--\"if statements\" (x and y, 2 variables, times\r\n3 surfaces times 480,000 pixels).", "Unsafe Warning", new string[] { "I know what I'm doing!", "Return to Safety" }, MessageBoxIcon.Warning);
+            if (buttonPressed == 2)
+            {
+                // Return to safety
+                BasicStyle.Checked = true;
             }
         }
     }

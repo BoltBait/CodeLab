@@ -239,9 +239,9 @@ namespace PaintDotNet.Effects
         {
             if (Initializing) return;
             string SelectedFont = fontCombobox.Text;
-            if (SelectedFont.EndsWith("*"))
+            if (SelectedFont.EndsWith("*", StringComparison.Ordinal))
             {
-                SelectedFont = SelectedFont.Substring(0, SelectedFont.Length - 1);
+                SelectedFont = SelectedFont[0..^1];
                 FlexibleMessageBox.Show(SelectedFont + " is not installed on your system.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             Settings.FontFamily = SelectedFont;

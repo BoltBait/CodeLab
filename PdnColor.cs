@@ -728,7 +728,7 @@ namespace PaintDotNet.Effects
 
         private void DrawMarker()
         {
-            if (this.markerBmp == null || this.Image.Size != this.ClientSize)
+            if (this.markerBmp == null || this.markerBmp.Size != this.ClientSize)
             {
                 this.markerBmp = new Bitmap(this.ClientSize.Width, this.ClientSize.Height);
             }

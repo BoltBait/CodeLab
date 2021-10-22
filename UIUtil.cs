@@ -1,4 +1,5 @@
 ﻿using PaintDotNet.AppModel;
+using PaintDotNet.Drawing;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -22,11 +23,11 @@ namespace PaintDotNet.Effects
             iShellService = shellService;
         }
 
-        internal static Image GetImage(string resName)
+        internal static Image GetImage(string resName, string directory = "Icons")
         {
             string resource = hiDpi ?
-                $"PaintDotNet.Effects.Icons.{resName}.32.png" :
-                $"PaintDotNet.Effects.Icons.{resName}.png";
+                $"PaintDotNet.Effects.{directory}.{resName}.32.png" :
+                $"PaintDotNet.Effects.{directory}.{resName}.png";
 
             using (Stream imageStream = assembly.GetManifestResourceStream(resource))
             {
@@ -38,7 +39,7 @@ namespace PaintDotNet.Effects
 
             if (hiDpi)
             {
-                resource = $"PaintDotNet.Effects.Icons.{resName}.png";
+                resource = $"PaintDotNet.Effects.{directory}.{resName}.png";
 
                 using (Stream imageStream = assembly.GetManifestResourceStream(resource))
                 {
@@ -71,9 +72,13 @@ namespace PaintDotNet.Effects
 
         internal static Icon CreateIcon(string resName)
         {
-            Bitmap resBmp = GetImage(resName) as Bitmap;
-            IntPtr hIcon = resBmp.GetHicon();
-            return Icon.FromHandle(hIcon);
+            using (Image resImage = GetImage(resName))
+            using (Surface surface = Surface.CopyFromGdipImage(resImage, false))
+            using (Bitmap resBmp = surface.CreateAliasedGdipBitmap(BitmapAlphaMode.Premultiplied))
+            {
+                IntPtr hIcon = resBmp.GetHicon();
+                return Icon.FromHandle(hIcon);
+            }
         }
 
         internal static int Scale(int value)

@@ -273,7 +273,9 @@ namespace PaintDotNet.Effects
                 }
                 else
                 {
-                    name = returnType + " " + name;
+                    string refReturn = method.ReturnType.IsByRef ? "ref " : string.Empty;
+                    string nullable = method.IsNullable() ? "?" : string.Empty;
+                    name = refReturn + returnType + nullable + " " + name;
                 }
 
                 string genericArgs = string.Empty;
@@ -467,13 +469,20 @@ namespace PaintDotNet.Effects
 
             IEnumerable<Type> directInterfaces = type.GetDirectBaseInterfaces().Where(i => i.IsVisibleInterface());
             IEnumerable<Type> inheritedInterfaces = directInterfaces.SelectMany(i => i.GetInterfaces());
-            IEnumerable<Type> allInheritance = directInterfaces.Concat(inheritedInterfaces).Distinct();
+
+            IEnumerable<string> allInheritance = directInterfaces.Concat(inheritedInterfaces)
+                .Distinct()
+                .Select(i => i.GetDisplayName())
+                .OrderBy(s => s);
+
             if (type.IsClass && type != typeof(object) && type.BaseType != typeof(object))
             {
-                allInheritance = allInheritance.Prepend(type.BaseType);
+                allInheritance = allInheritance.Prepend(type.BaseType.GetDisplayName());
             }
 
-            return allInheritance.Any() ? " : " + allInheritance.Select(i => i.GetDisplayName()).Join(", ") : string.Empty;
+            return allInheritance.Any()
+                ? " : " + allInheritance.Join(", ")
+                : string.Empty;
         }
 
         private static bool IsVisibleInterface(this Type type)

@@ -10,6 +10,8 @@ namespace PaintDotNet.Effects
         internal NewShape()
         {
             InitializeComponent();
+
+            samplePicture.BackgroundImage = UIUtil.GetImage("Shape0", "Resources");
         }
 
         private void okButton_Click(object sender, EventArgs e)
@@ -119,15 +121,15 @@ namespace PaintDotNet.Effects
         {
             if (sgRadioButton.Checked)
             {
-                samplePicture.BackgroundImage = Properties.Resources.Shape0;
+                samplePicture.BackgroundImage = UIUtil.GetImage("Shape0", "Resources");
             }
             else if (pgRadioButton.Checked)
             {
-                samplePicture.BackgroundImage = Properties.Resources.Shape1;
+                samplePicture.BackgroundImage = UIUtil.GetImage("Shape1", "Resources");
             }
             else
             {
-                samplePicture.BackgroundImage = Properties.Resources.Shape2;
+                samplePicture.BackgroundImage = UIUtil.GetImage("Shape2", "Resources");
             }
         }
     }

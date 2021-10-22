@@ -294,7 +294,6 @@ namespace PaintDotNet.Effects
                     this.IndicatorCurrent = Indicator.Spelling;
                     this.IndicatorClearRange(0, this.TextLength);
                 }
-
             }
         }
 
@@ -1119,7 +1118,7 @@ namespace PaintDotNet.Effects
         {
             if (openPos >= closePos)
             {
-                throw new ArgumentException();
+                throw new ArgumentException(nameof(openPos) + " is greater or equal to " + nameof(closePos));
             }
 
             this.SetTargetRange(closePos, this.TextLength);
@@ -1559,7 +1558,7 @@ namespace PaintDotNet.Effects
                         int style = this.GetStyleAt(typePos);
                         if (style == Style.Cpp.Word || style == Style.Cpp.Word + Preprocessor ||
                             style == Style.Cpp.Word2 || style == Style.Cpp.Word2 + Preprocessor ||
-                            style == Substyle.Enum || style == Substyle.Enum + Preprocessor &&
+                            style == Substyle.Enum || style == Substyle.Enum + Preprocessor ||
                             style == Substyle.Interface || style == Substyle.Interface + Preprocessor ||
                             style == Substyle.Struct || style == Substyle.Struct + Preprocessor ||
                             style == Style.Cpp.Identifier || style == Style.Cpp.Identifier + Preprocessor ||
@@ -1764,9 +1763,10 @@ namespace PaintDotNet.Effects
                     }
 
                     returnType = method.ReturnType.GetDisplayName();
+                    string byRef = method.ReturnType.IsByRef ? "ref " : string.Empty;
                     string overloads = (length > 1) ? $" (+ {length - 1} overloads)" : string.Empty;
 
-                    return $"{returnType} - {precedingType}.{method.Name}{genericArgs}({method.Params()}){overloads}{genericContraints}\n{ext}{method.MemberType}";
+                    return $"{byRef}{returnType} - {precedingType}.{method.Name}{genericArgs}({method.Params()}){overloads}{genericContraints}\n{ext}{method.MemberType}";
                 case MemberTypes.Field:
                     FieldInfo field = (FieldInfo)memberInfo;
                     returnType = field.FieldType.GetDisplayName();
@@ -1889,7 +1889,9 @@ namespace PaintDotNet.Effects
                 defaultOverload = defaultMethod.MakeGenericMethod(genericArgs) as T;
             }
 
-            if (mi.Count() == 1 && !(defaultOverload is MethodInfo onlyMethod && onlyMethod.IsGenericMethodDefinition))
+            int miCount = mi.Count();
+
+            if (miCount == 1 && !(defaultOverload is MethodInfo onlyMethod && onlyMethod.IsGenericMethodDefinition))
             {
                 return defaultOverload;
             }
@@ -1906,16 +1908,15 @@ namespace PaintDotNet.Effects
             }
             paramStart++;
 
-            string[] paramWords = this.GetTextRange(paramStart, paramEnd - paramStart).Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] paramWords = this.GetTextRange(paramStart, paramEnd - paramStart).Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
 
             Tuple<int, int> oldRange = new Tuple<int, int>(this.TargetStart, this.TargetEnd);
             this.SearchFlags = SearchFlags.MatchCase;
             this.SetTargetRange(paramStart, paramEnd);
             List<Type> paramTypes = new List<Type>(paramWords.Length);
-            for (int i = 0; i < paramWords.Length; i++)
+            foreach (string paramName in paramWords)
             {
                 int paramPos = InvalidPosition;
-                string paramName = paramWords[i].Trim();
                 if (this.SearchInTarget(paramName) != InvalidPosition)
                 {
                     paramPos = this.TargetEnd;
@@ -1944,7 +1945,7 @@ namespace PaintDotNet.Effects
             }
             this.SetTargetRange(oldRange.Item1, oldRange.Item2);
 
-            for (int i = 0; i < mi.Count(); i++)
+            for (int i = 0; i < miCount; i++)
             {
                 T method = mi.ElementAt(i);
                 if (method.IsGenericMethod)
@@ -2636,6 +2637,10 @@ namespace PaintDotNet.Effects
                 if (e.KeyCode == Keys.F12)
                 {
                     GoToDefinition(false);
+                }
+                else if (e.KeyCode == Keys.F1)
+                {
+                    GoToDefinition(true);
                 }
                 else if (this.ReadOnly)
                 {
@@ -3893,12 +3898,12 @@ namespace PaintDotNet.Effects
             {
                 UpdateIndicatorBar();
             }
-            
+
             if (this.delayedOperation.HasFlag(DelayedOperation.ScrollCaret))
             {
                 this.ScrollCaret();
             }
-            
+
             if (this.delayedOperation.HasFlag(DelayedOperation.Spellcheck))
             {
                 SpellCheck();
@@ -5070,7 +5075,7 @@ namespace PaintDotNet.Effects
             // Clear underlines from the previous time
             this.IndicatorCurrent = Indicator.Error;
             this.IndicatorClearRange(0, this.TextLength);
-            
+
             this.IndicatorCurrent = Indicator.Warning;
             this.IndicatorClearRange(0, this.TextLength);
         }

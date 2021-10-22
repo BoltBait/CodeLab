@@ -37,7 +37,8 @@ namespace PaintDotNet.Effects
         private static readonly Regex preRenderRegex = new Regex(@"void\s+PreRender\s*\(\s*Surface\s+dst\s*,\s*Surface\s+src\s*\)\s*{(.|\s)*}", RegexOptions.Singleline);
 
         private static readonly IEnumerable<MetadataReference> references = Intelli.ReferenceAssemblies.Select(a => MetadataReference.CreateFromFile(a.Location));
-        private static readonly CSharpParseOptions parseOptions = CSharpParseOptions.Default.WithLanguageVersion(LanguageVersion.CSharp7_3);
+        private static readonly CSharpParseOptions parseOptions = CSharpParseOptions.Default
+            .WithLanguageVersion(LanguageVersion.CSharp9); // https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/configure-language-version
         private static CSharpCompilationOptions compilationOptions = new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary, allowUnsafe: true, optimizationLevel: OptimizationLevel.Release);
         private static IEnumerable<string> warningsToIgnore = Array.Empty<string>();
 
@@ -274,17 +275,16 @@ namespace PaintDotNet.Effects
 
             try
             {
+                string santizedProjectName = Regex.Replace(projectName, @"[^\w]", ""); // Remove non-alpha characters from namespace
+
                 // Calculate output path
                 string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
-                string dllPath = Path.Combine(desktopPath, projectName);
+                string dllPath = Path.Combine(desktopPath, santizedProjectName);
                 dllPath = Path.ChangeExtension(dllPath, ".dll");
 
-                string assemblyName = Path.GetFileName(dllPath);
                 IEnumerable<SyntaxTree> syntaxTree = new[] { CSharpSyntaxTree.ParseText(sourceCode, options: parseOptions) };
 
-                CSharpCompilation compilation = CSharpCompilation.Create(assemblyName, syntaxTree, references, compilationOptions);
-
-                string santizedProjectName = Regex.Replace(projectName, @"[^\w]", ""); // Remove non-alpha characters from namespace
+                CSharpCompilation compilation = CSharpCompilation.Create(santizedProjectName, syntaxTree, references, compilationOptions);
 
                 IEnumerable<ResourceDescription> resourceDescriptions = resources.Select(res => new ResourceDescription(
                     santizedProjectName + "Effect." + Path.GetFileName(res),

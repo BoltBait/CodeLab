@@ -133,8 +133,10 @@ namespace PaintDotNet.Effects
             ReferenceAssemblies = AppDomain.CurrentDomain
                 .GetAssemblies()
                 .Where(a => !a.IsCollectible && // exclude assemblies that were loaded into separate contexts; i.e. Plugins
-                             a.GetCustomAttribute<AssemblyCompanyAttribute>().Company == "Microsoft Corporation") // and then exclude any non-Microsoft assemblies; including all dotPDN ones
-                .Concat(pdnAssemblies); // add back the four PDN assemblies we actually want
+                             a.GetCustomAttribute<AssemblyCompanyAttribute>()?.Company == "Microsoft Corporation") // and then exclude any non-Microsoft assemblies; including all dotPDN ones
+                .Concat(pdnAssemblies) // add back the four PDN assemblies we actually want
+                .Append(typeof(System.Diagnostics.TextWriterTraceListener).Assembly)
+                .Distinct();
 
             Dictionary<string, string> userSnippets = null;
             string userSnippetsJson = Settings.Snippets;
@@ -216,8 +218,8 @@ namespace PaintDotNet.Effects
                 "IntSliderControl",
                 "CheckboxControl",
                 "ColorWheelControl",
-                "AngleControl", 
-                "PanSliderControl", 
+                "AngleControl",
+                "PanSliderControl",
                 "DoubleSliderControl",
                 "ListBoxControl",
                 "RadioButtonControl",

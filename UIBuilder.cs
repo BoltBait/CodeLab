@@ -198,7 +198,7 @@ namespace PaintDotNet.Effects
             toolTip1.SetToolTip(this.OptionsText, "Separate options with the vertical bar character (|)");
 
             // setup UI based on selected control type
-            if (!(ControlType.SelectedItem is ControlTypeItem item))
+            if (ControlType.SelectedItem is not ControlTypeItem item)
             {
                 return;
             }
@@ -807,13 +807,14 @@ namespace PaintDotNet.Effects
             {
                 if (colorName == "None" || colorName == "PrimaryColor" || colorName == "SecondaryColor")
                 {
-                    e.Graphics.DrawString(colorName, font, solidBrush, e.Bounds);
+                    e.Graphics.DrawString(Regex.Replace(colorName, "(\\B[A-Z])", " $1"), font, solidBrush, e.Bounds);
                 }
                 else
                 {
+                    e.Graphics.DrawString(Regex.Replace(colorName, "(\\B[A-Z])", " $1"), font, solidBrush, new Rectangle(e.Bounds.X + e.Bounds.Height, e.Bounds.Y + 1, e.Bounds.Width - e.Bounds.Height, e.Bounds.Height));
                     solidBrush.Color = Color.FromName(colorName);
-                    e.Graphics.FillRectangle(solidBrush, new Rectangle(e.Bounds.X + 1, e.Bounds.Y + 1, e.Bounds.Height - 2, e.Bounds.Height - 2));
-                    e.Graphics.DrawString(colorName, font, solidBrush, new Rectangle(e.Bounds.X + e.Bounds.Height, e.Bounds.Y + 1, e.Bounds.Width - e.Bounds.Height, e.Bounds.Height));
+                    e.Graphics.DrawRectangle(Pens.Black, new Rectangle(e.Bounds.X + 1, e.Bounds.Y + 1, e.Bounds.Height - 2, e.Bounds.Height - 2));
+                    e.Graphics.FillRectangle(solidBrush, new Rectangle(e.Bounds.X + 2, e.Bounds.Y + 2, e.Bounds.Height - 3, e.Bounds.Height - 3));
                 }
             }
             e.DrawFocusRectangle();
@@ -1306,12 +1307,11 @@ namespace PaintDotNet.Effects
             }
 
             // process those UI controls
-            string[] SrcLines = UIControlsText.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] SrcLines = UIControlsText.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
             List<UIElement> UserControls = new List<UIElement>();
-            foreach (string s in SrcLines)
+            foreach (string Line in SrcLines)
             {
-                string Line = s.Trim();
-                if (Line.Length == 0 || Line.StartsWith("//", StringComparison.Ordinal))
+                if (Line.StartsWith("//", StringComparison.Ordinal))
                 {
                     continue;
                 }

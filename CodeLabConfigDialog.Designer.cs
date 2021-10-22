@@ -114,6 +114,7 @@
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpTopicsToolStripMenuItem = new PaintDotNet.Effects.ScaledToolStripMenuItem();
             this.changesInThisVersionToolStripMenuItem = new PaintDotNet.Effects.ScaledToolStripMenuItem();
+            this.discussToolStripMenuItem = new PaintDotNet.Effects.ScaledToolStripMenuItem();
             this.settingsToolStripMenuItem = new PaintDotNet.Effects.ScaledToolStripMenuItem();
             this.aboutToolStripMenuItem = new PaintDotNet.Effects.ScaledToolStripMenuItem();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
@@ -149,7 +150,6 @@
             this.ClearOutput = new System.Windows.Forms.Button();
             this.ShowOutput = new System.Windows.Forms.CheckBox();
             this.tabStrip1 = new PaintDotNet.Effects.TabStrip();
-            this.discussToolStripMenuItem = new PaintDotNet.Effects.ScaledToolStripMenuItem();
             this.errorListMenu.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -161,7 +161,7 @@
             this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.btnOK.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.btnOK.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnOK.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.btnOK.Location = new System.Drawing.Point(631, 469);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(64, 24);
@@ -201,7 +201,7 @@
             this.errorList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.errorList.ContextMenuStrip = this.errorListMenu;
-            this.errorList.Font = new System.Drawing.Font("Courier New", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.errorList.Font = new System.Drawing.Font("Courier New", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.errorList.IntegralHeight = false;
             this.errorList.ItemHeight = 14;
             this.errorList.Location = new System.Drawing.Point(-1, 373);
@@ -445,6 +445,7 @@
             // 
             this.LookUpDefMenuItem.ImageName = "Docs";
             this.LookUpDefMenuItem.Name = "LookUpDefMenuItem";
+            this.LookUpDefMenuItem.ShortcutKeyDisplayString = "F1";
             this.LookUpDefMenuItem.Size = new System.Drawing.Size(234, 22);
             this.LookUpDefMenuItem.Text = "Look Up Definition";
             this.LookUpDefMenuItem.Click += new System.EventHandler(this.LookUpDefMenuItem_Click);
@@ -895,7 +896,6 @@
             // 
             this.helpTopicsToolStripMenuItem.ImageName = "HelpTopics";
             this.helpTopicsToolStripMenuItem.Name = "helpTopicsToolStripMenuItem";
-            this.helpTopicsToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F1;
             this.helpTopicsToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
             this.helpTopicsToolStripMenuItem.Text = "&Help topics...";
             this.helpTopicsToolStripMenuItem.Click += new System.EventHandler(this.helpTopicsToolStripMenuItem_Click);
@@ -907,6 +907,14 @@
             this.changesInThisVersionToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
             this.changesInThisVersionToolStripMenuItem.Text = "&Changes in this version...";
             this.changesInThisVersionToolStripMenuItem.Click += new System.EventHandler(this.changesInThisVersionToolStripMenuItem_Click);
+            // 
+            // discussToolStripMenuItem
+            // 
+            this.discussToolStripMenuItem.ImageName = "Forum";
+            this.discussToolStripMenuItem.Name = "discussToolStripMenuItem";
+            this.discussToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
+            this.discussToolStripMenuItem.Text = "Discuss Plugin Development...";
+            this.discussToolStripMenuItem.Click += new System.EventHandler(this.discussToolStripMenuItem_Click);
             // 
             // settingsToolStripMenuItem
             // 
@@ -1248,7 +1256,7 @@
             this.ShowErrors.AutoSize = true;
             this.ShowErrors.Location = new System.Drawing.Point(12, 472);
             this.ShowErrors.Name = "ShowErrors";
-            this.ShowErrors.Size = new System.Drawing.Size(97, 17);
+            this.ShowErrors.Size = new System.Drawing.Size(104, 19);
             this.ShowErrors.TabIndex = 15;
             this.ShowErrors.Text = "Show Error List";
             this.ShowErrors.UseVisualStyleBackColor = true;
@@ -1259,7 +1267,7 @@
             this.OutputTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.OutputTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.OutputTextBox.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.OutputTextBox.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.OutputTextBox.Location = new System.Drawing.Point(-1, 373);
             this.OutputTextBox.Multiline = true;
             this.OutputTextBox.Name = "OutputTextBox";
@@ -1289,7 +1297,7 @@
             this.ShowOutput.AutoSize = true;
             this.ShowOutput.Location = new System.Drawing.Point(140, 472);
             this.ShowOutput.Name = "ShowOutput";
-            this.ShowOutput.Size = new System.Drawing.Size(123, 17);
+            this.ShowOutput.Size = new System.Drawing.Size(134, 19);
             this.ShowOutput.TabIndex = 19;
             this.ShowOutput.Text = "Show Debug Output";
             this.ShowOutput.UseVisualStyleBackColor = true;
@@ -1307,14 +1315,6 @@
             this.tabStrip1.NewTabCreated += new System.EventHandler(this.tabStrip1_NewTabCreated);
             this.tabStrip1.TabClosingAndDirty += new System.EventHandler<System.ComponentModel.CancelEventArgs>(this.tabStrip1_TabClosingAndDirty);
             this.tabStrip1.TabClosed += new System.EventHandler<PaintDotNet.Effects.TabClosedEventArgs>(this.tabStrip1_TabClosed);
-            // 
-            // discussToolStripMenuItem
-            // 
-            this.discussToolStripMenuItem.ImageName = "Forum";
-            this.discussToolStripMenuItem.Name = "discussToolStripMenuItem";
-            this.discussToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
-            this.discussToolStripMenuItem.Text = "Discuss Plugin Development...";
-            this.discussToolStripMenuItem.Click += new System.EventHandler(this.discussToolStripMenuItem_Click);
             // 
             // CodeLabConfigDialog
             // 
@@ -1337,14 +1337,12 @@
             this.Controls.Add(this.errorList);
             this.ForeColor = System.Drawing.Color.Black;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
-            this.Location = new System.Drawing.Point(0, 0);
             this.MainMenuStrip = this.menuStrip1;
             this.MaximizeBox = true;
             this.MinimumSize = new System.Drawing.Size(560, 325);
             this.Name = "CodeLabConfigDialog";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
             this.Text = "CodeLab";
-            this.UseAppThemeColors = true;
             this.errorListMenu.ResumeLayout(false);
             this.contextMenuStrip1.ResumeLayout(false);
             this.menuStrip1.ResumeLayout(false);

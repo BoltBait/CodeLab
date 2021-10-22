@@ -68,6 +68,8 @@ namespace PaintDotNet.Effects
 #if FASTDEBUG
             this.Icon = UIUtil.CreateIcon("CodeLab");
             this.ShowInTaskbar = true;
+#else
+            this.UseAppThemeColors = true;
 #endif
             PdnTheme.InitialColors(this.ForeColor, this.BackColor);
             LoadSettingsFromRegistry();
@@ -1017,7 +1019,8 @@ namespace PaintDotNet.Effects
                 "    using (RenderArgs args = new RenderArgs(scratchSurface))\r\n" +
                 "    {\r\n" +
                 "        // Render a flattened view of the Document to the scratch surface.\r\n" +
-                "        input.Render(args, true);\r\n" +
+                "        scratchSurface.Clear();\r\n" +
+                "        input.CreateRenderer().Render(scratchSurface);\r\n" +
                 "    }\r\n" +
                 "\r\n" +
                 "    if (Amount1)\r\n" +
@@ -1686,7 +1689,7 @@ namespace PaintDotNet.Effects
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FlexibleMessageBox.Show(WindowTitle + "\nCopyright ©2006-2021, All Rights Reserved.\n\nTom Jackson:\tInitial Code, Compile to DLL\n\nDavid Issel:\tEffect UI Creation, Effect Icons, Effect Help\n\t\tSystem, File New Complex Pixel Flow Code\n\t\tGeneration, CodeLab Updater, Settings\n\t\tScreen, Bug Fixes), Tutorials and Installer.\n\nJason Wendt:\tMigration to ScintillaNET editor control and\n\t\tthe C# 7.3 Compiler (\"Roslyn\"), Intelligent\n\t\tAssistance (including code completion, tips,\n\t\tsnippets, and variable name suggestions),\n\t\tDebug Output, Dark Theme, HiDPI icons,\n\t\tLive Effect Preview, Spellcheck, Filetype\n\t\tplugin creation, and Shape editing.\n\nJörg Reichert:\tFlexibleMessageBox", "About CodeLab", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            FlexibleMessageBox.Show(WindowTitle + "\nCopyright ©2006-2021, All Rights Reserved.\n\nTom Jackson:\tConcept, Initial Code, Compile to DLL\n\nDavid Issel:\tEffect UI Creation, Effect Icons, Effect Help\n\t\tSystem, File New Complex Pixel Flow Code\n\t\tGeneration, CodeLab Updater, Settings\n\t\tScreen, Bug Fixes), Tutorials and Installer.\n\nJason Wendt:\tMigration to ScintillaNET editor control,\n\t\t.NET 5.0, and the C# 9.0 \"Roslyn\" Compiler.\n\t\tIntelligent Assistance (including code\n\t\tcompletion, tips, snippets, and variable\n\t\tname suggestions), Debug Output, Dark\n\t\tTheme, HiDPI icons, Live Effect Preview,\n\t\tSpellcheck, Filetype plugin creation, and\n\t\tShape editing.\n\nJörg Reichert:\tFlexibleMessageBox", "About CodeLab", MessageBoxButtons.OK, MessageBoxIcon.Information);
             txtCode.Focus();
         }
         #endregion
@@ -1907,7 +1910,7 @@ namespace PaintDotNet.Effects
         #endregion
 
         #region Recent Items functions
-        private void AddToRecents(string filePath)
+        private static void AddToRecents(string filePath)
         {
             string recents = Settings.RecentDocs;
 

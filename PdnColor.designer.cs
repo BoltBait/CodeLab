@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PdnColor));
             this.colorWheelBox = new System.Windows.Forms.PictureBox();
             this.headerPanel3 = new System.Windows.Forms.Panel();
             this.headerPanel2 = new System.Windows.Forms.Panel();
@@ -118,7 +117,7 @@
             this.opacityLabel.AutoSize = true;
             this.opacityLabel.Location = new System.Drawing.Point(230, 233);
             this.opacityLabel.Name = "opacityLabel";
-            this.opacityLabel.Size = new System.Drawing.Size(79, 13);
+            this.opacityLabel.Size = new System.Drawing.Size(90, 15);
             this.opacityLabel.TabIndex = 36;
             this.opacityLabel.Text = "Opacity - Alpha";
             // 
@@ -127,7 +126,7 @@
             this.sLabel.AutoSize = true;
             this.sLabel.Location = new System.Drawing.Point(230, 174);
             this.sLabel.Name = "sLabel";
-            this.sLabel.Size = new System.Drawing.Size(17, 13);
+            this.sLabel.Size = new System.Drawing.Size(16, 15);
             this.sLabel.TabIndex = 31;
             this.sLabel.Text = "S:";
             // 
@@ -136,7 +135,7 @@
             this.hlabel.AutoSize = true;
             this.hlabel.Location = new System.Drawing.Point(230, 150);
             this.hlabel.Name = "hlabel";
-            this.hlabel.Size = new System.Drawing.Size(18, 13);
+            this.hlabel.Size = new System.Drawing.Size(19, 15);
             this.hlabel.TabIndex = 32;
             this.hlabel.Text = "H:";
             // 
@@ -145,7 +144,7 @@
             this.hexLabel.AutoSize = true;
             this.hexLabel.Location = new System.Drawing.Point(230, 101);
             this.hexLabel.Name = "hexLabel";
-            this.hexLabel.Size = new System.Drawing.Size(29, 13);
+            this.hexLabel.Size = new System.Drawing.Size(31, 15);
             this.hexLabel.TabIndex = 30;
             this.hexLabel.Text = "Hex:";
             // 
@@ -154,7 +153,7 @@
             this.vLabel.AutoSize = true;
             this.vLabel.Location = new System.Drawing.Point(230, 198);
             this.vLabel.Name = "vLabel";
-            this.vLabel.Size = new System.Drawing.Size(17, 13);
+            this.vLabel.Size = new System.Drawing.Size(17, 15);
             this.vLabel.TabIndex = 30;
             this.vLabel.Text = "V:";
             // 
@@ -163,7 +162,7 @@
             this.bLabel.AutoSize = true;
             this.bLabel.Location = new System.Drawing.Point(230, 78);
             this.bLabel.Name = "bLabel";
-            this.bLabel.Size = new System.Drawing.Size(17, 13);
+            this.bLabel.Size = new System.Drawing.Size(17, 15);
             this.bLabel.TabIndex = 30;
             this.bLabel.Text = "B:";
             // 
@@ -172,7 +171,7 @@
             this.gLabel.AutoSize = true;
             this.gLabel.Location = new System.Drawing.Point(230, 52);
             this.gLabel.Name = "gLabel";
-            this.gLabel.Size = new System.Drawing.Size(18, 13);
+            this.gLabel.Size = new System.Drawing.Size(18, 15);
             this.gLabel.TabIndex = 31;
             this.gLabel.Text = "G:";
             // 
@@ -181,7 +180,7 @@
             this.rLabel.AutoSize = true;
             this.rLabel.Location = new System.Drawing.Point(230, 28);
             this.rLabel.Name = "rLabel";
-            this.rLabel.Size = new System.Drawing.Size(18, 13);
+            this.rLabel.Size = new System.Drawing.Size(17, 15);
             this.rLabel.TabIndex = 32;
             this.rLabel.Text = "R:";
             // 
@@ -195,7 +194,7 @@
             0,
             0});
             this.alphaBox.Name = "alphaBox";
-            this.alphaBox.Size = new System.Drawing.Size(49, 20);
+            this.alphaBox.Size = new System.Drawing.Size(49, 23);
             this.alphaBox.TabIndex = 8;
             this.alphaBox.Tag = "0";
             this.alphaBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
@@ -213,7 +212,7 @@
             0,
             0});
             this.blueBox.Name = "blueBox";
-            this.blueBox.Size = new System.Drawing.Size(49, 20);
+            this.blueBox.Size = new System.Drawing.Size(49, 23);
             this.blueBox.TabIndex = 3;
             this.blueBox.Tag = "0";
             this.blueBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
@@ -231,7 +230,7 @@
             0,
             0});
             this.greenBox.Name = "greenBox";
-            this.greenBox.Size = new System.Drawing.Size(49, 20);
+            this.greenBox.Size = new System.Drawing.Size(49, 23);
             this.greenBox.TabIndex = 2;
             this.greenBox.Tag = "0";
             this.greenBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
@@ -249,7 +248,7 @@
             0,
             0});
             this.redBox.Name = "redBox";
-            this.redBox.Size = new System.Drawing.Size(49, 20);
+            this.redBox.Size = new System.Drawing.Size(49, 23);
             this.redBox.TabIndex = 1;
             this.redBox.Tag = "0";
             this.redBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
@@ -261,7 +260,7 @@
             // 
             this.hexBox.Location = new System.Drawing.Point(322, 98);
             this.hexBox.Name = "hexBox";
-            this.hexBox.Size = new System.Drawing.Size(60, 20);
+            this.hexBox.Size = new System.Drawing.Size(60, 23);
             this.hexBox.TabIndex = 4;
             this.hexBox.Text = "FFFFFFFF";
             this.hexBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
@@ -284,7 +283,7 @@
             0,
             0});
             this.hueBox.Name = "hueBox";
-            this.hueBox.Size = new System.Drawing.Size(49, 20);
+            this.hueBox.Size = new System.Drawing.Size(49, 23);
             this.hueBox.TabIndex = 5;
             this.hueBox.Tag = "0";
             this.hueBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
@@ -303,7 +302,7 @@
             65536});
             this.satBox.Location = new System.Drawing.Point(333, 172);
             this.satBox.Name = "satBox";
-            this.satBox.Size = new System.Drawing.Size(49, 20);
+            this.satBox.Size = new System.Drawing.Size(49, 23);
             this.satBox.TabIndex = 6;
             this.satBox.Tag = "0";
             this.satBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
@@ -322,7 +321,7 @@
             65536});
             this.valBox.Location = new System.Drawing.Point(333, 196);
             this.valBox.Name = "valBox";
-            this.valBox.Size = new System.Drawing.Size(49, 20);
+            this.valBox.Size = new System.Drawing.Size(49, 23);
             this.valBox.TabIndex = 7;
             this.valBox.Tag = "0";
             this.valBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
@@ -335,7 +334,7 @@
             this.RGBlabel.AutoSize = true;
             this.RGBlabel.Location = new System.Drawing.Point(230, 4);
             this.RGBlabel.Name = "RGBlabel";
-            this.RGBlabel.Size = new System.Drawing.Size(30, 13);
+            this.RGBlabel.Size = new System.Drawing.Size(29, 15);
             this.RGBlabel.TabIndex = 0;
             this.RGBlabel.Text = "RGB";
             // 
@@ -344,7 +343,7 @@
             this.hsvLabel.AutoSize = true;
             this.hsvLabel.Location = new System.Drawing.Point(230, 132);
             this.hsvLabel.Name = "hsvLabel";
-            this.hsvLabel.Size = new System.Drawing.Size(29, 13);
+            this.hsvLabel.Size = new System.Drawing.Size(29, 15);
             this.hsvLabel.TabIndex = 35;
             this.hsvLabel.Text = "HSV";
             // 
@@ -353,7 +352,6 @@
             this.vColorSlider.Colors = new System.Drawing.Color[] {
         System.Drawing.Color.White,
         System.Drawing.Color.Black};
-            this.vColorSlider.Image = ((System.Drawing.Image)(resources.GetObject("vColorSlider.Image")));
             this.vColorSlider.Location = new System.Drawing.Point(254, 199);
             this.vColorSlider.MaxValue = 100;
             this.vColorSlider.Name = "vColorSlider";
@@ -368,7 +366,6 @@
             this.sColorSlider.Colors = new System.Drawing.Color[] {
         System.Drawing.Color.White,
         System.Drawing.Color.Black};
-            this.sColorSlider.Image = ((System.Drawing.Image)(resources.GetObject("sColorSlider.Image")));
             this.sColorSlider.Location = new System.Drawing.Point(254, 175);
             this.sColorSlider.MaxValue = 100;
             this.sColorSlider.Name = "sColorSlider";
@@ -383,7 +380,6 @@
             this.hColorSlider.Colors = new System.Drawing.Color[] {
         System.Drawing.Color.White,
         System.Drawing.Color.Black};
-            this.hColorSlider.Image = ((System.Drawing.Image)(resources.GetObject("hColorSlider.Image")));
             this.hColorSlider.Location = new System.Drawing.Point(254, 151);
             this.hColorSlider.MaxValue = 360;
             this.hColorSlider.Name = "hColorSlider";
@@ -398,7 +394,6 @@
             this.bColorSlider.Colors = new System.Drawing.Color[] {
         System.Drawing.Color.White,
         System.Drawing.Color.Black};
-            this.bColorSlider.Image = ((System.Drawing.Image)(resources.GetObject("bColorSlider.Image")));
             this.bColorSlider.Location = new System.Drawing.Point(254, 77);
             this.bColorSlider.MaxValue = 255;
             this.bColorSlider.Name = "bColorSlider";
@@ -413,7 +408,6 @@
             this.gColorSlider.Colors = new System.Drawing.Color[] {
         System.Drawing.Color.White,
         System.Drawing.Color.Black};
-            this.gColorSlider.Image = ((System.Drawing.Image)(resources.GetObject("gColorSlider.Image")));
             this.gColorSlider.Location = new System.Drawing.Point(254, 53);
             this.gColorSlider.MaxValue = 255;
             this.gColorSlider.Name = "gColorSlider";
@@ -428,7 +422,6 @@
             this.rColorSlider.Colors = new System.Drawing.Color[] {
         System.Drawing.Color.White,
         System.Drawing.Color.Black};
-            this.rColorSlider.Image = ((System.Drawing.Image)(resources.GetObject("rColorSlider.Image")));
             this.rColorSlider.Location = new System.Drawing.Point(254, 29);
             this.rColorSlider.MaxValue = 255;
             this.rColorSlider.Name = "rColorSlider";
@@ -443,7 +436,6 @@
             this.aColorSlider.Colors = new System.Drawing.Color[] {
         System.Drawing.Color.White,
         System.Drawing.Color.Black};
-            this.aColorSlider.Image = ((System.Drawing.Image)(resources.GetObject("aColorSlider.Image")));
             this.aColorSlider.Location = new System.Drawing.Point(254, 252);
             this.aColorSlider.MaxValue = 255;
             this.aColorSlider.Name = "aColorSlider";
