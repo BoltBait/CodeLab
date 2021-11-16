@@ -722,11 +722,18 @@ namespace PaintDotNet.Effects
                 memoryStream.Write(gZipBuffer, 4, gZipBuffer.Length - 4);
 
                 var buffer = new byte[dataLength];
+                Span<byte> spanOfBuffer = buffer;
 
                 memoryStream.Position = 0;
                 using (var gZipStream = new GZipStream(memoryStream, CompressionMode.Decompress))
                 {
-                    gZipStream.Read(buffer, 0, buffer.Length);
+                    int totalRead = 0;
+                    while (totalRead < spanOfBuffer.Length)
+                    {
+                        int bytesRead = gZipStream.Read(spanOfBuffer.Slice(totalRead));
+                        if (bytesRead == 0) break;
+                        totalRead += bytesRead;
+                    }
                 }
 
                 return Encoding.UTF8.GetString(buffer);
