@@ -183,7 +183,8 @@ namespace PaintDotNet.Effects
             AssemblyInfoPart += "[assembly: AssemblyTrademark(\"\")]\r\n";
             AssemblyInfoPart += "[assembly: AssemblyCulture(\"\")]\r\n";
             AssemblyInfoPart += "[assembly: ComVisible(false)]\r\n";
-            AssemblyInfoPart += "[assembly: AssemblyVersion(\"" + MajorVersion.ToString() + "." + MinorVersion.ToString() + ".0.0\")]\r\n";
+            AssemblyInfoPart += "[assembly: AssemblyVersion(\"" + MajorVersion.ToString() + "." + MinorVersion.ToString() + ".*\")]\r\n";
+            AssemblyInfoPart += "[assembly: AssemblyMetadata(\"BuiltByCodeLab\", \"Version=" + CodeLab.VersionFull + "\")]\r\n";
             AssemblyInfoPart += "[assembly: SupportedOSPlatform(\"Windows\")]\r\n";
             AssemblyInfoPart += "\r\n";
             return AssemblyInfoPart;
