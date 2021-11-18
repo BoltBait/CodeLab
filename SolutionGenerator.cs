@@ -77,6 +77,7 @@ namespace PaintDotNet.Effects
             csprojFile.AppendLine("    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>");
             csprojFile.AppendLine($"    <RootNamespace>{projectName}</RootNamespace>");
             csprojFile.AppendLine($"    <AssemblyName>{effectName}</AssemblyName>");
+            csprojFile.AppendLine("    <Deterministic>false</Deterministic>");
             csprojFile.AppendLine("  </PropertyGroup>");
             csprojFile.AppendLine();
             if (iconExists || sampleExists || rtfExists)
