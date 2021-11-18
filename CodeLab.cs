@@ -1,9 +1,9 @@
 /////////////////////////////////////////////////////////////////////////////////
 // CodeLab for Paint.NET
-// Copyright ©2006 Rick Brewster, Tom Jackson. All Rights Reserved.
-// Portions Copyright ©2007-2020 BoltBait. All Rights Reserved.
-// Portions Copyright ©2016-2020 Jason Wendt. All Rights Reserved.
-// Portions Copyright ©Microsoft Corporation. All Rights Reserved.
+// Copyright ï¿½2006 Rick Brewster, Tom Jackson. All Rights Reserved.
+// Portions Copyright ï¿½2007-2020 BoltBait. All Rights Reserved.
+// Portions Copyright ï¿½2016-2020 Jason Wendt. All Rights Reserved.
+// Portions Copyright ï¿½Microsoft Corporation. All Rights Reserved.
 //
 // THE CODELAB DEVELOPERS MAKE NO WARRANTY OF ANY KIND REGARDING THE CODE. THEY
 // SPECIFICALLY DISCLAIM ANY WARRANTY OF FITNESS FOR ANY PARTICULAR PURPOSE OR
@@ -26,7 +26,7 @@ using System.Threading;
 [assembly: AssemblyConfiguration("C#|development|plugin|build|builder|code|coding|script|scripting")]
 [assembly: AssemblyCompany("BoltBait")]
 [assembly: AssemblyProduct("CodeLab")]
-[assembly: AssemblyCopyright("Copyright ©2021 BoltBait")]
+[assembly: AssemblyCopyright("Copyright ï¿½2021 BoltBait")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]

@@ -47,7 +47,7 @@ namespace PaintDotNet.Effects
             }
             set
             {
-                if (value.Contains("\r") || value.Contains("\n") || value.Contains("\t"))
+                if (value.Contains('\r', StringComparison.Ordinal) || value.Contains('\n', StringComparison.Ordinal) || value.Contains('\t', StringComparison.Ordinal))
                 {
                     value = value.Replace("\t", "\\t").Replace("\n", "\\n").Replace("\r", "\\r");
                     EscChars.Checked = true;

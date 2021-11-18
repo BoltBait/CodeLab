@@ -1188,7 +1188,7 @@ namespace PaintDotNet.Effects
             {
                 // Make sure it looks like options (should contain at least one | character.
                 // Although not TECHNICALLY required... let's make it required anyway.
-                if (!newOptions.Contains("|"))
+                if (!newOptions.Contains('|', StringComparison.Ordinal))
                 {
                     error = true;
                 }
@@ -1645,7 +1645,7 @@ namespace PaintDotNet.Effects
             }
             else if (TypeStr == "byte")
             {
-                if (!LabelStr.Contains("|") || (MaximumStr == "255"))
+                if (!LabelStr.Contains('|', StringComparison.Ordinal) || (MaximumStr == "255"))
                 {
                     elementType = ElementType.ReseedButton;
                 }
@@ -1770,7 +1770,7 @@ namespace PaintDotNet.Effects
 
             string id = m.Groups["identifier"].Value;
 
-            int pipeIndex = LabelStr.IndexOf('|');
+            int pipeIndex = LabelStr.IndexOf('|', StringComparison.Ordinal);
             string name = (pipeIndex > -1) ? LabelStr.Substring(0, pipeIndex) : LabelStr;
             string options = (pipeIndex > -1) ? LabelStr.Substring(pipeIndex + 1) : string.Empty;
             string typeEnum = mTEnum.Success ? mTEnum.Groups["TEnum"].Value : null;

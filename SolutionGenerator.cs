@@ -71,12 +71,13 @@ namespace PaintDotNet.Effects
             csprojFile.AppendLine("<Project Sdk=\"Microsoft.NET.Sdk\">");
             csprojFile.AppendLine();
             csprojFile.AppendLine("  <PropertyGroup>");
-            csprojFile.AppendLine("    <TargetFramework>net5.0-windows</TargetFramework>");
+            csprojFile.AppendLine("    <TargetFramework>net6.0-windows</TargetFramework>");
             csprojFile.AppendLine("    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>");
             csprojFile.AppendLine("    <UseWindowsForms>true</UseWindowsForms>");
             csprojFile.AppendLine("    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>");
             csprojFile.AppendLine($"    <RootNamespace>{projectName}</RootNamespace>");
             csprojFile.AppendLine($"    <AssemblyName>{effectName}</AssemblyName>");
+            csprojFile.AppendLine("    <Deterministic>false</Deterministic>");
             csprojFile.AppendLine("  </PropertyGroup>");
             csprojFile.AppendLine();
             if (iconExists || sampleExists || rtfExists)
