@@ -54,16 +54,13 @@ namespace PaintDotNet.Effects
             ControlListView.Font = new Font(Settings.FontFamily, ControlListView.Font.SizeInPoints);
 
             // Populate the ControlType dropdown based on allowed ElementTypes
-            List<ControlTypeItem> controlTypes = new List<ControlTypeItem>();
-            foreach (ElementType elementType in Enum.GetValues(typeof(ElementType)))
-            {
-                if (UIElement.IsControlAllowed(elementType, projectType))
-                {
-                    controlTypes.Add(new ControlTypeItem(elementType));
-                }
-            }
+            ControlTypeItem[] controlTypes = Enum.GetValues<ElementType>()
+                .Where(et => UIElement.IsControlAllowed(et, projectType))
+                .Select(et => new ControlTypeItem(et))
+                .ToArray();
+
             this.ControlType.Items.Clear();
-            this.ControlType.Items.AddRange(controlTypes.ToArray());
+            this.ControlType.Items.AddRange(controlTypes);
 
             if (ControlType.ItemHeight < 18)
             {

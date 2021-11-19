@@ -72,16 +72,16 @@ namespace PaintDotNet.Effects
                 {
                     Settings.LatestUpdateCheck = DateTime.Now;
 
-                    foreach (string line in e.Result.Split('\n'))
+                    foreach (string line in e.Result.Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
                     {
-                        string[] data = line.Split(';');
-                        if (data.Length >= 2 && data[0].Trim() == ThisApplication.Trim())
+                        string[] data = line.Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                        if (data.Length >= 2 && data[0] == ThisApplication)
                         {
-                            if (data[1].Trim() != ThisVersion.Trim())
+                            if (data[1] != ThisVersion)
                             {
                                 updateStatus = UpdateStatus.UpdateAvailable;
-                                updateVER = data[1].Trim();
-                                updateURL = data[2].Trim();
+                                updateVER = data[1];
+                                updateURL = data[2];
                             }
                             else
                             {

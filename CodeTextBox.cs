@@ -699,7 +699,7 @@ namespace PaintDotNet.Effects
         {
             this.CaretLineBackColor = CaretLineFrameEnabled
                 ? Color.FromArgb(234, 234, 242)
-                : Color.GhostWhite; ;
+                : Color.GhostWhite;
         }
         #endregion
 
@@ -2615,7 +2615,7 @@ namespace PaintDotNet.Effects
 
         private void OpenMsDocs(string fullName)
         {
-            UIUtil.LaunchUrl(this, $"https://docs.microsoft.com/dotnet/api/{fullName}?view=net-5.0");
+            UIUtil.LaunchUrl(this, $"https://docs.microsoft.com/dotnet/api/{fullName}?view=net-6.0");
         }
 
         protected override void OnMouseWheel(MouseEventArgs e)

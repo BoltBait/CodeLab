@@ -700,8 +700,9 @@ namespace PaintDotNet.Effects
 
         // Based on findings from Stack Overflow; with a few modifications
         // https://stackoverflow.com/questions/58453972/how-to-use-net-reflection-to-check-for-nullable-reference-type#58454489
-        // This can be removed when we switch to .NET 6
+        // .NET 6 added APIs for retrieving Nullability, but they return incorrect values in some cases. Plus no Nullability API for MethodInfo!?
         // https://devblogs.microsoft.com/dotnet/announcing-net-6-preview-7/#libraries-reflection-apis-for-nullability-information
+        // Once the new Nullability APIs are in working order, we can remove this custom implementation.
         private static bool IsNullableImpl(Type memberType, MemberInfo declaringType, IEnumerable<CustomAttributeData> customAttributes)
         {
             if (memberType.IsValueType)
