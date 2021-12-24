@@ -149,7 +149,8 @@ namespace PaintDotNet.Effects
             // exclude assemblies that were loaded into separate contexts; i.e. Plugins
             IEnumerable<Assembly> assemblies = AppDomain.CurrentDomain
                 .GetAssemblies()
-                .Where(a => !a.IsCollectible);
+                .Where(a => !a.IsCollectible)
+                .ToImmutableArray();
 
             // Cherry pick certain dotPDN assemblies
             IEnumerable<Assembly> pdnAssemblies = assemblies
