@@ -102,6 +102,9 @@ namespace PaintDotNet.Effects
             csprojFile.AppendLine("    <Reference Include=\"PaintDotNet.Base\">");
             csprojFile.AppendLine($"      <HintPath>{Path.Combine(pdnPath, "PaintDotNet.Base.dll")}</HintPath>");
             csprojFile.AppendLine("    </Reference>");
+            csprojFile.AppendLine("    <Reference Include=\"PaintDotNet.ComponentModel\">");
+            csprojFile.AppendLine($"      <HintPath>{Path.Combine(pdnPath, "PaintDotNet.ComponentModel.dll")}</HintPath>");
+            csprojFile.AppendLine("    </Reference>");
             csprojFile.AppendLine("    <Reference Include=\"PaintDotNet.Core\">");
             csprojFile.AppendLine($"      <HintPath>{Path.Combine(pdnPath, "PaintDotNet.Core.dll")}</HintPath>");
             csprojFile.AppendLine("    </Reference>");
@@ -110,6 +113,15 @@ namespace PaintDotNet.Effects
             csprojFile.AppendLine("    </Reference>");
             csprojFile.AppendLine("    <Reference Include=\"PaintDotNet.Effects\">");
             csprojFile.AppendLine($"      <HintPath>{Path.Combine(pdnPath, "PaintDotNet.Effects.dll")}</HintPath>");
+            csprojFile.AppendLine("    </Reference>");
+            csprojFile.AppendLine("    <Reference Include=\"PaintDotNet.Fundamentals\">");
+            csprojFile.AppendLine($"      <HintPath>{Path.Combine(pdnPath, "PaintDotNet.Fundamentals.dll")}</HintPath>");
+            csprojFile.AppendLine("    </Reference>");
+            csprojFile.AppendLine("    <Reference Include=\"PaintDotNet.Primitives\">");
+            csprojFile.AppendLine($"      <HintPath>{Path.Combine(pdnPath, "PaintDotNet.Primitives.dll")}</HintPath>");
+            csprojFile.AppendLine("    </Reference>");
+            csprojFile.AppendLine("    <Reference Include=\"PaintDotNet.PropertySystem\">");
+            csprojFile.AppendLine($"      <HintPath>{Path.Combine(pdnPath, "PaintDotNet.PropertySystem.dll")}</HintPath>");
             csprojFile.AppendLine("    </Reference>");
             csprojFile.AppendLine("  </ItemGroup>");
             csprojFile.AppendLine();

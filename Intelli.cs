@@ -13,9 +13,10 @@
 // Latest distribution: https://www.BoltBait.com/pdn/codelab
 /////////////////////////////////////////////////////////////////////////////////
 
-using PaintDotNet.PropertySystem;
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.Json;
@@ -127,21 +128,38 @@ namespace PaintDotNet.Effects
                 "with", "#endif", "#endregion"
             };
 
-            IEnumerable<Assembly> pdnAssemblies = new Assembly[]
+            IEnumerable<string> pdnDllNames = new string[]
             {
-                typeof(Property).Assembly,      // PaintDotNet.Base.dll
-                typeof(ColorBgra).Assembly,     // PaintDotNet.Core.dll
-                typeof(Document).Assembly,      // PaintDotNet.Data.dll
-                typeof(Effect).Assembly,        // PaintDotNet.Effects.dll
+                "PaintDotNet.Base.dll",
+                "PaintDotNet.ComponentModel.dll",
+                "PaintDotNet.Core.dll",
+                "PaintDotNet.Data.dll",
+                "PaintDotNet.Effects.dll",
+                "PaintDotNet.Fundamentals.dll",
+                "PaintDotNet.Primitives.dll",
+                "PaintDotNet.PropertySystem.dll"
             };
 
-            ReferenceAssemblies = AppDomain.CurrentDomain
+            // exclude assemblies that were loaded into separate contexts; i.e. Plugins
+            IEnumerable<Assembly> assemblies = AppDomain.CurrentDomain
                 .GetAssemblies()
-                .Where(a => !a.IsCollectible && // exclude assemblies that were loaded into separate contexts; i.e. Plugins
-                             a.GetCustomAttribute<AssemblyCompanyAttribute>()?.Company == "Microsoft Corporation") // and then exclude any non-Microsoft assemblies; including all dotPDN ones
-                .Concat(pdnAssemblies) // add back the four PDN assemblies we actually want
+                .Where(a => !a.IsCollectible)
+                .ToImmutableArray();
+
+            // Cherry pick certain dotPDN assemblies
+            IEnumerable<Assembly> pdnAssemblies = assemblies
+                .Where(a => a.GetCustomAttribute<AssemblyCompanyAttribute>()?.Company == "dotPDN LLC" &&
+                            pdnDllNames.Contains(Path.GetFileName(a.Location), StringComparer.OrdinalIgnoreCase));
+
+            // Cherry pick Microsoft assemblies
+            IEnumerable<Assembly> msAssemblies = assemblies
+                .Where(a => a.GetCustomAttribute<AssemblyCompanyAttribute>()?.Company == "Microsoft Corporation");
+
+            ReferenceAssemblies = msAssemblies
+                .Concat(pdnAssemblies)
                 .Append(typeof(System.Diagnostics.TextWriterTraceListener).Assembly)
-                .Distinct();
+                .Distinct()
+                .ToImmutableArray();
 
             Dictionary<string, string> userSnippets = null;
             string userSnippetsJson = Settings.Snippets;
