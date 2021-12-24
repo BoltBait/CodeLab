@@ -1753,7 +1753,6 @@ namespace PaintDotNet.Effects
                 Type paramType = GetReturnType(paramArg.Span.End - DocumentParser.PosOffset);
                 if (paramType == null)
                 {
-                    this.SetTargetRange(oldRange.Item1, oldRange.Item2);
                     return defaultOverload;
                 }
 
