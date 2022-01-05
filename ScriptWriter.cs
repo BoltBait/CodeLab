@@ -594,7 +594,14 @@ namespace PaintDotNet.Effects
                         break;
                     case ElementType.FontFamily:
                         PropertyPart += "            FontFamily[] " + propertyName + "FontFamilies = new InstalledFontCollection().Families;\r\n";
-                        PropertyPart += "            props.Add(new StaticListChoiceProperty(PropertyNames." + propertyName + ", " + propertyName + "FontFamilies, 0, false));\r\n";
+                        PropertyPart += "            int index;\r\n";
+                        PropertyPart += "            FontFamily defaultFontFamily = " + u.StrDefault + ";\r\n";
+                        PropertyPart += "            index = Array.FindIndex("+ propertyName + "FontFamilies, ff => ff.Name.Equals(defaultFontFamily.Name));\r\n";
+                        PropertyPart += "            if (index < 0)\r\n";
+                        PropertyPart += "            {\r\n";
+                        PropertyPart += "                index = 0;\r\n";
+                        PropertyPart += "            }\r\n";
+                        PropertyPart += "            props.Add(new StaticListChoiceProperty(PropertyNames." + propertyName + ", " + propertyName + "FontFamilies, index, false));\r\n";
                         break;
                     case ElementType.ReseedButton:
                         PropertyPart += "            props.Add(new Int32Property(PropertyNames." + propertyName + ", 0, 0, 255));\r\n";
