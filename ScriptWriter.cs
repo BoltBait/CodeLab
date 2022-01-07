@@ -487,6 +487,12 @@ namespace PaintDotNet.Effects
                 PropertyPart += "\r\n";
             }
 
+            if (UserControls.Any(u => u.ElementType == ElementType.FontFamily))
+            {
+                PropertyPart += "            FontFamily[] installedFontFamilies = new InstalledFontCollection().Families;\r\n";
+                PropertyPart += "\r\n";
+            }
+
             PropertyPart += "            List<Property> props = new List<Property>();\r\n";
             PropertyPart += "\r\n";
 
@@ -593,17 +599,12 @@ namespace PaintDotNet.Effects
                         PropertyPart += "            props.Add(new StaticListChoiceProperty(PropertyNames." + propertyName + ", blendModesArray, defaultBlendModeIndex, false));\r\n";
                         break;
                     case ElementType.FontFamily:
-                        PropertyPart += "            FontFamily[] " + propertyName + "FontFamilies = new InstalledFontCollection().Families;\r\n";
-                        PropertyPart += "            int " + propertyName + "DefaultValueIndex;\r\n";
-                        PropertyPart += "            using(FontFamily dff = " + u.StrDefault + ")\r\n";
-                        PropertyPart += "            {\r\n";
-                        PropertyPart += "                " + propertyName + "DefaultValueIndex = Array.FindIndex(" + propertyName + "FontFamilies, ff => dff?.Name.Equals(ff.Name, StringComparison.Ordinal) ?? false);\r\n";
-                        PropertyPart += "            }\r\n";
+                        PropertyPart += "            int " + propertyName + "DefaultValueIndex = Array.FindIndex(installedFontFamilies, ff => ff.Name.Equals(\"" + u.StrDefault + "\", StringComparison.OrdinalIgnoreCase));\r\n";
                         PropertyPart += "            if (" + propertyName + "DefaultValueIndex < 0)\r\n";
                         PropertyPart += "            {\r\n";
                         PropertyPart += "                " + propertyName + "DefaultValueIndex = 0;\r\n";
                         PropertyPart += "            }\r\n";
-                        PropertyPart += "            props.Add(new StaticListChoiceProperty(PropertyNames." + propertyName + ", " + propertyName + "FontFamilies, "+ propertyName + "DefaultValueIndex, false));\r\n";
+                        PropertyPart += "            props.Add(new StaticListChoiceProperty(PropertyNames." + propertyName + ", installedFontFamilies, " + propertyName + "DefaultValueIndex, false));\r\n";
                         break;
                     case ElementType.ReseedButton:
                         PropertyPart += "            props.Add(new Int32Property(PropertyNames." + propertyName + ", 0, 0, 255));\r\n";

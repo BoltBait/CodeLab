@@ -399,7 +399,7 @@ namespace PaintDotNet.Effects
                     ControlMin.Enabled = false;
                     ControlMax.Text = "0";
                     ControlMin.Text = "0";
-                    ControlDef.Text = "0";
+                    ControlDef.Text = "Arial";
                     StyleLabel.Enabled = false;
                     ControlStyle.Enabled = false;
                     ControlStyle.SelectedIndex = 0;
@@ -736,7 +736,7 @@ namespace PaintDotNet.Effects
                     ControlStyle.SelectedIndex = 0;
                     ControlMin.Text = CurrentElement.Min.ToString();
                     ControlMax.Text = CurrentElement.Max.ToString();
-                    ControlDef.Text = CurrentElement.Default.ToString();
+                    ControlDef.Text = CurrentElement.StrDefault.ToString();
                     break;
                 case ElementType.RadioButtons:
                     ControlStyle.SelectedIndex = 0;
@@ -1722,6 +1722,19 @@ namespace PaintDotNet.Effects
                     style = 0;
                 }
             }
+            else if (elementType == ElementType.FontFamily)
+            {
+                Match mFont = Regex.Match(DefaultStr, @"\bnew\s+FontFamily\s*\(\s*""(?<fontName>.*?)""\s*\)");
+                if (mFont.Success)
+                {
+                    string foundFontName = mFont.Groups["fontName"].Value.Trim();
+                    defaultValue = (foundFontName.Length > 0) ? foundFontName : "Arial";
+                }
+                else
+                {
+                    defaultValue = "Arial";
+                }
+            }
             else if (elementType == ElementType.Uri)
             {
                 Match muri = Regex.Match(DefaultStr, @"""(?<uri>.*?[^\\])""");
@@ -1754,10 +1767,6 @@ namespace PaintDotNet.Effects
                 defaultValue = x.ToString("F3", CultureInfo.InvariantCulture) + ", " + y.ToString("F3", CultureInfo.InvariantCulture);
             }
             else if (mTEnum.Success && (elementType == ElementType.DropDown || elementType == ElementType.RadioButtons))
-            {
-                defaultValue = DefaultStr;
-            }
-            else if (elementType == ElementType.FontFamily)
             {
                 defaultValue = DefaultStr;
             }
@@ -1869,7 +1878,7 @@ namespace PaintDotNet.Effects
                     SourceCode += " = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Normal); // ";
                     break;
                 case ElementType.FontFamily:
-                    SourceCode += " = new FontFamily(\"Arial\"); // ";
+                    SourceCode += " = new FontFamily(\"" + StrDefault + "\"); // ";
                     break;
                 case ElementType.ReseedButton:
                     SourceCode += " = 0; // ";
