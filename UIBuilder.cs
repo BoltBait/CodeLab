@@ -1444,6 +1444,7 @@ namespace PaintDotNet.Effects
                     break;
                 case ElementType.FontFamily:
                     Description = eName + EnabledDescription;
+                    StrDefault = eDefault;
                     break;
                 case ElementType.ReseedButton:
                     Max = 255;
@@ -1753,6 +1754,10 @@ namespace PaintDotNet.Effects
                 defaultValue = x.ToString("F3", CultureInfo.InvariantCulture) + ", " + y.ToString("F3", CultureInfo.InvariantCulture);
             }
             else if (mTEnum.Success && (elementType == ElementType.DropDown || elementType == ElementType.RadioButtons))
+            {
+                defaultValue = DefaultStr;
+            }
+            else if (elementType == ElementType.FontFamily)
             {
                 defaultValue = DefaultStr;
             }
