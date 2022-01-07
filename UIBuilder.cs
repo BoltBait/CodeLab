@@ -1936,13 +1936,11 @@ namespace PaintDotNet.Effects
         {
             int BarLoc = Name.IndexOf("|", StringComparison.Ordinal);
             if (BarLoc == -1) return null;
-            string Options = Name.Substring(BarLoc + 1);
-            string[] filetypes = Options.Split('|');
-            for (int i=0; i < filetypes.Length ; i++)
-            {
-                filetypes[i] = "\"" + filetypes[i] + "\"";
-            }
-            return filetypes.Join(",");
+
+            return Name.Substring(BarLoc + 1)
+                .Split('|', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                .Select(ft => "\"" + ft + "\"")
+                .Join(", ");
         }
     }
 
