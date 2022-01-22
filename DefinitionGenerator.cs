@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -467,13 +468,11 @@ namespace PaintDotNet.Effects
                 return (baseType != typeof(int)) ? " : " + baseType.GetDisplayName() : string.Empty;
             }
 
-            IEnumerable<Type> directInterfaces = type.GetDirectBaseInterfaces().Where(i => i.IsVisibleInterface());
-            IEnumerable<Type> inheritedInterfaces = directInterfaces.SelectMany(i => i.GetInterfaces());
-
-            IEnumerable<string> allInheritance = directInterfaces.Concat(inheritedInterfaces)
+            IEnumerable<string> allInheritance = type.GetDirectBaseInterfaces()
+                .SelectMany(i => i.GetInterfaces().Prepend(i))
                 .Distinct()
-                .Select(i => i.GetDisplayName())
-                .OrderBy(s => s);
+                .Where(i => i.IsVisibleInterface())
+                .Select(i => i.GetDisplayName());
 
             if (type.IsClass && type != typeof(object) && type.BaseType != typeof(object))
             {
@@ -487,6 +486,11 @@ namespace PaintDotNet.Effects
 
         private static bool IsVisibleInterface(this Type type)
         {
+            if (type.IsDefined(typeof(RequiresPreviewFeaturesAttribute), false))
+            {
+                return false;
+            }
+
             if (type.IsPublic)
             {
                 return true;
