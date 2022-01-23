@@ -1912,23 +1912,15 @@ namespace PaintDotNet.Effects
         #region Recent Items functions
         private static void AddToRecents(string filePath)
         {
-            string recents = Settings.RecentDocs;
+            string[] paths = Settings.RecentDocs
+                .Split('|', StringSplitOptions.RemoveEmptyEntries)
+                .Prepend(filePath)
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToArray();
 
-            if (recents.Length == 0)
-            {
-                recents = filePath;
-            }
-            else
-            {
-                recents = filePath + "|" + recents;
+            int length = Math.Min(8, paths.Length);
 
-                string[] paths = recents.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries).Distinct().ToArray();
-
-                int length = Math.Min(8, paths.Length);
-                recents = string.Join("|", paths, 0, length);
-            }
-
-            Settings.RecentDocs = recents;
+            Settings.RecentDocs = string.Join("|", paths, 0, length);
         }
 
         private void openRecentToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
