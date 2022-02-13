@@ -152,6 +152,11 @@ namespace PaintDotNet.Effects
             return new string(str.Where(c => char.IsUpper(c)).ToArray());
         }
 
+        internal static string SplitCamel(this string str)
+        {
+            return Regex.Replace(str, "(\\B[A-Z])", " $1");
+        }
+
         internal static string FirstCharToUpper(this string str)
         {
             if (string.IsNullOrEmpty(str) || !char.IsLetter(str[0]))

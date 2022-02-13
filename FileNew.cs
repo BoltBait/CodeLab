@@ -2125,9 +2125,13 @@ namespace PaintDotNet.Effects
                 }
                 else
                 {
+                    e.Graphics.DrawString(colorName.SplitCamel(), font, solidBrush, new Rectangle(e.Bounds.X + e.Bounds.Height, e.Bounds.Y + 1, e.Bounds.Width - e.Bounds.Height, e.Bounds.Height));
+
                     solidBrush.Color = Color.FromName(colorName);
-                    e.Graphics.FillRectangle(solidBrush, new Rectangle(e.Bounds.X + 1, e.Bounds.Y + 1, e.Bounds.Height - 2, e.Bounds.Height - 2));
-                    e.Graphics.DrawString(colorName, font, solidBrush, new Rectangle(e.Bounds.X + e.Bounds.Height, e.Bounds.Y + 1, e.Bounds.Width - e.Bounds.Height, e.Bounds.Height));
+                    Rectangle colorRect = new Rectangle(e.Bounds.X + 1, e.Bounds.Y + 1, e.Bounds.Height - 3, e.Bounds.Height - 3);
+
+                    e.Graphics.FillRectangle(solidBrush, colorRect);
+                    e.Graphics.DrawRectangle(Pens.Black, colorRect);
                 }
             }
             e.DrawFocusRectangle();
