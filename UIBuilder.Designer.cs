@@ -49,7 +49,7 @@ namespace PaintDotNet.Effects
             this.PreviewButton = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.controlTabPage = new System.Windows.Forms.TabPage();
-            this.ControlType = new System.Windows.Forms.ComboBox();
+            this.ControlType = new PaintDotNet.Effects.ControlTypeComboBox();
             this.labelIdent = new System.Windows.Forms.Label();
             this.MinimumLabel = new System.Windows.Forms.Label();
             this.DefaultLabel = new System.Windows.Forms.Label();
@@ -335,7 +335,6 @@ namespace PaintDotNet.Effects
             this.ControlType.Name = "ControlType";
             this.ControlType.Size = new System.Drawing.Size(158, 24);
             this.ControlType.TabIndex = 5;
-            this.ControlType.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.ControlType_DrawItem);
             this.ControlType.SelectedIndexChanged += new System.EventHandler(this.ControlType_SelectedIndexChanged);
             // 
             // labelIdent
@@ -582,7 +581,7 @@ namespace PaintDotNet.Effects
         private System.Windows.Forms.Button PreviewButton;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage controlTabPage;
-        private System.Windows.Forms.ComboBox ControlType;
+        private PaintDotNet.Effects.ControlTypeComboBox ControlType;
         private System.Windows.Forms.Label labelIdent;
         private System.Windows.Forms.Label MinimumLabel;
         private System.Windows.Forms.TextBox ControlID;

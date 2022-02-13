@@ -35,6 +35,26 @@ namespace PaintDotNet.Effects
         private readonly HashSet<string> IDList = new HashSet<string>();
         private string currentID;
 
+        internal static Image[] ControlIcons = new Image[]
+        {
+            UIUtil.GetImage("00int"),
+            UIUtil.GetImage("01CheckBox"),
+            UIUtil.GetImage("02ColorWheel"),
+            UIUtil.GetImage("03AngleChooser"),
+            UIUtil.GetImage("04PanSlider"),
+            UIUtil.GetImage("05TextBox"),
+            UIUtil.GetImage("06DoubleSlider"),
+            UIUtil.GetImage("07DropDown"),
+            UIUtil.GetImage("08BlendOps"),
+            UIUtil.GetImage("09Fonts"),
+            UIUtil.GetImage("10RadioButton"),
+            UIUtil.GetImage("11ReseedButton"),
+            UIUtil.GetImage("12MultiTextBox"),
+            UIUtil.GetImage("13RollControl"),
+            UIUtil.GetImage("14FilenameControl"),
+            UIUtil.GetImage("15Uri")
+        };
+
         internal UIBuilder(string UserScriptText, ProjectType projectType, ColorBgra PrimaryColor)
         {
             InitializeComponent();
@@ -54,13 +74,7 @@ namespace PaintDotNet.Effects
             ControlListView.Font = new Font(Settings.FontFamily, ControlListView.Font.SizeInPoints);
 
             // Populate the ControlType dropdown based on allowed ElementTypes
-            ControlTypeItem[] controlTypes = Enum.GetValues<ElementType>()
-                .Where(et => UIElement.IsControlAllowed(et, projectType))
-                .Select(et => new ControlTypeItem(et))
-                .ToArray();
-
-            this.ControlType.Items.Clear();
-            this.ControlType.Items.AddRange(controlTypes);
+            this.ControlType.ProjectType = projectType;
 
             if (ControlType.ItemHeight < 18)
             {
@@ -80,25 +94,7 @@ namespace PaintDotNet.Effects
             UpdateEnabledFields();
 
             imgList.ImageSize = UIUtil.ScaleSize(16, 16);
-            imgList.Images.AddRange(new Image[]
-            {
-                UIUtil.GetImage("00int"),
-                UIUtil.GetImage("01CheckBox"),
-                UIUtil.GetImage("02ColorWheel"),
-                UIUtil.GetImage("03AngleChooser"),
-                UIUtil.GetImage("04PanSlider"),
-                UIUtil.GetImage("05TextBox"),
-                UIUtil.GetImage("06DoubleSlider"),
-                UIUtil.GetImage("07DropDown"),
-                UIUtil.GetImage("08BlendOps"),
-                UIUtil.GetImage("09Fonts"),
-                UIUtil.GetImage("10RadioButton"),
-                UIUtil.GetImage("11ReseedButton"),
-                UIUtil.GetImage("12MultiTextBox"),
-                UIUtil.GetImage("13RollControl"),
-                UIUtil.GetImage("14FilenameControl"),
-                UIUtil.GetImage("15Uri")
-            });
+            imgList.Images.AddRange(ControlIcons);
 
             DefaultColorComboBox.DropDownWidth = DefaultColorComboBox.Width * 2;
             DefaultColorComboBox.Items.Add("None");
@@ -171,7 +167,7 @@ namespace PaintDotNet.Effects
 
         private void Add_Click(object sender, EventArgs e)
         {
-            ElementType elementType = (ControlType.SelectedItem is ControlTypeItem item) ? item.ElementType : ElementType.IntSlider;
+            ElementType elementType = ControlType.SelectedElementType;
             string defaultStr = (elementType == ElementType.ColorWheel) ? DefaultColorComboBox.SelectedItem.ToString() : ControlDef.Text;
             if (elementType == ElementType.Uri) defaultStr = OptionsText.Text.Trim();
             string identifier = ControlID.Text.Trim();
@@ -195,12 +191,7 @@ namespace PaintDotNet.Effects
             toolTip1.SetToolTip(this.OptionsText, "Separate options with the vertical bar character (|)");
 
             // setup UI based on selected control type
-            if (ControlType.SelectedItem is not ControlTypeItem item)
-            {
-                return;
-            }
-
-            switch (item.ElementType)
+            switch (ControlType.SelectedElementType)
             {
                 case ElementType.IntSlider:
                     OptionsLabel.Visible = false;
@@ -571,7 +562,7 @@ namespace PaintDotNet.Effects
         {
             int CurrentItem = (ControlListView.SelectedItems.Count > 0) ? ControlListView.SelectedItems[0].Index : -1;
 
-            ElementType elementType = (ControlType.SelectedItem is ControlTypeItem item) ? item.ElementType : ElementType.IntSlider;
+            ElementType elementType = ControlType.SelectedElementType;
             string defaultStr = (elementType == ElementType.ColorWheel) ? DefaultColorComboBox.SelectedItem.ToString() : ControlDef.Text;
             if (elementType == ElementType.Uri) defaultStr = OptionsText.Text.Trim();
             string identifier = !string.IsNullOrWhiteSpace(ControlID.Text) ? ControlID.Text.Trim() : "Amount" + (MasterList.Count + 1);
@@ -665,7 +656,7 @@ namespace PaintDotNet.Effects
 
             int BarLoc;
 
-            ControlType.SelectedIndex = FindControlTypeIndex(CurrentElement.ElementType);
+            ControlType.SelectedElementType = CurrentElement.ElementType;
 
             switch (CurrentElement.ElementType)
             {
@@ -820,27 +811,6 @@ namespace PaintDotNet.Effects
             e.DrawFocusRectangle();
         }
 
-        private void ControlType_DrawItem(object sender, DrawItemEventArgs e)
-        {
-            if (e.Index == -1)
-            {
-                return;
-            }
-
-            e.DrawBackground();
-            if (this.ControlType.Items[e.Index] is ControlTypeItem item)
-            {
-                e.Graphics.DrawImage(ControlListView.SmallImageList.Images[(int)item.ElementType], e.Bounds.X + 2, e.Bounds.Y + 1, e.Bounds.Height, e.Bounds.Height - 2);
-                Rectangle textBounds = Rectangle.FromLTRB(e.Bounds.Left + ControlListView.SmallImageList.ImageSize.Width + 4, e.Bounds.Top + 1, e.Bounds.Right, e.Bounds.Bottom - 1);
-                TextRenderer.DrawText(e.Graphics, item.ToString(), e.Font, textBounds, e.ForeColor, TextFormatFlags.VerticalCenter);
-            }
-            else
-            {
-                TextRenderer.DrawText(e.Graphics, this.ControlType.Items[e.Index].ToString(), e.Font, new Point(e.Bounds.Left, e.Bounds.Top), e.ForeColor);
-            }
-            e.DrawFocusRectangle();
-        }
-
         private void rbEnabled_CheckedChanged(object sender, EventArgs e)
         {
             UpdateEnabledFields();
@@ -918,7 +888,7 @@ namespace PaintDotNet.Effects
         private void ControlStyle_SelectedIndexChanged(object sender, EventArgs e)
         {
             dirty = true;
-            if (ControlType.SelectedItem is ControlTypeItem item && item.ElementType == ElementType.ColorWheel)
+            if (ControlType.SelectedElementType == ElementType.ColorWheel)
             {
                 if (ControlStyle.SelectedIndex == 0 || ControlStyle.SelectedIndex == 2)
                 {
@@ -1053,9 +1023,9 @@ namespace PaintDotNet.Effects
             if (!double.TryParse(ControlMin.Text, out dMin)) dMin = 0;
             if (!double.TryParse(ControlDef.Text, out dDef)) dDef = 0;
 
-            if (ControlType.SelectedItem is ControlTypeItem item &&
-                item.ElementType != ElementType.AngleChooser &&
-                item.ElementType != ElementType.DoubleSlider)
+            ElementType elementType = ControlType.SelectedElementType;
+            if (elementType != ElementType.AngleChooser &&
+                elementType != ElementType.DoubleSlider)
             {
                 dMax = Math.Truncate(dMax);
                 ControlMax.Text = dMax.ToString();
@@ -1089,9 +1059,9 @@ namespace PaintDotNet.Effects
             if (!double.TryParse(ControlMin.Text, out dMin)) dMin = 0;
             if (!double.TryParse(ControlDef.Text, out dDef)) dDef = 0;
 
-            if (ControlType.SelectedItem is ControlTypeItem item &&
-                item.ElementType != ElementType.AngleChooser &&
-                item.ElementType != ElementType.DoubleSlider)
+            ElementType elementType = ControlType.SelectedElementType;
+            if (elementType != ElementType.AngleChooser &&
+                elementType != ElementType.DoubleSlider)
             {
                 dMax = Math.Truncate(dMax);
                 ControlMax.Text = dMax.ToString();
@@ -1125,9 +1095,9 @@ namespace PaintDotNet.Effects
             if (!double.TryParse(ControlMin.Text, out dMin)) dMin = 0;
             if (!double.TryParse(ControlDef.Text, out dDef)) dDef = 0;
 
-            if (ControlType.SelectedItem is ControlTypeItem item &&
-                item.ElementType != ElementType.AngleChooser &&
-                item.ElementType != ElementType.DoubleSlider)
+            ElementType elementType = ControlType.SelectedElementType;
+            if (elementType != ElementType.AngleChooser &&
+                elementType != ElementType.DoubleSlider)
             {
                 dMax = Math.Truncate(dMax);
                 ControlMax.Text = dMax.ToString();
@@ -1165,7 +1135,7 @@ namespace PaintDotNet.Effects
             dirty = true;
             string newOptions = OptionsText.Text.Trim().ToLowerInvariant();
             bool error = false;
-            if (ControlType.SelectedItem is ControlTypeItem item && item.ElementType == ElementType.Uri)
+            if (ControlType.SelectedElementType == ElementType.Uri)
             {
                 // Make sure the URL is valid.
                 if (!newOptions.IsWebAddress())
@@ -1196,18 +1166,79 @@ namespace PaintDotNet.Effects
             OptionsText.ForeColor = error ? Color.Black : Color.Black;
             OptionsText.BackColor = error ? Color.FromArgb(246, 97, 81) : Color.White;
         }
+    }
 
-        private int FindControlTypeIndex(ElementType elementType)
+    public class ControlTypeComboBox : ComboBox
+    {
+        private ProjectType projectType = ProjectType.Effect;
+
+        internal ProjectType ProjectType
         {
-            for (int i = 0; i < ControlType.Items.Count; i++)
+            get
             {
-                if (this.ControlType.Items[i] is ControlTypeItem controlTypeItem && controlTypeItem.ElementType == elementType)
+                return projectType;
+            }
+            set
+            {
+                projectType = value;
+
+                 ControlTypeItem[] controlTypes = Enum.GetValues<ElementType>()
+                    .Where(et => UIElement.IsControlAllowed(et, projectType))
+                    .Select(et => new ControlTypeItem(et))
+                    .ToArray();
+
+                this.Items.Clear();
+                this.Items.AddRange(controlTypes);
+            }
+        }
+
+        internal ElementType SelectedElementType
+        {
+            get
+            {
+                return this.SelectedItem is ControlTypeItem item
+                    ? item.ElementType
+                    : ElementType.IntSlider;
+            }
+            set
+            {
+                int index = -1;
+
+                for (int i = 0; i < this.Items.Count; i++)
                 {
-                    return i;
+                    if (this.Items[i] is ControlTypeItem item && item.ElementType == value)
+                    {
+                        index = i;
+                        break;
+                    }
                 }
+
+                this.SelectedIndex = index;
+            }
+        }
+
+        protected override void OnDrawItem(DrawItemEventArgs e)
+        {
+            if (e.Index == -1)
+            {
+                return;
             }
 
-            return -1;
+            e.DrawBackground();
+            if (this.Items[e.Index] is ControlTypeItem item)
+            {
+                int iconSize = UIUtil.Scale(16);
+                e.Graphics.DrawImage(UIBuilder.ControlIcons[(int)item.ElementType], e.Bounds.X + 2, e.Bounds.Y + 1, iconSize, iconSize);
+                Rectangle textBounds = Rectangle.FromLTRB(e.Bounds.Left + iconSize + 4, e.Bounds.Top + 1, e.Bounds.Right, e.Bounds.Bottom - 1);
+                TextRenderer.DrawText(e.Graphics, item.ToString(), e.Font, textBounds, e.ForeColor, TextFormatFlags.VerticalCenter);
+            }
+            else
+            {
+                TextRenderer.DrawText(e.Graphics, this.Items[e.Index].ToString(), e.Font, e.Bounds.Location, e.ForeColor);
+            }
+            e.DrawFocusRectangle();
+
+            base.OnDrawItem(e);
         }
 
         private class ControlTypeItem : IComparable<ControlTypeItem>
