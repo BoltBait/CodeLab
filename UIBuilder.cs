@@ -52,7 +52,8 @@ namespace PaintDotNet.Effects
             UIUtil.GetImage("12MultiTextBox"),
             UIUtil.GetImage("13RollControl"),
             UIUtil.GetImage("14FilenameControl"),
-            UIUtil.GetImage("15Uri")
+            UIUtil.GetImage("15Uri"),
+            UIUtil.GetImage("14FilenameControl")
         };
 
         internal UIBuilder(string UserScriptText, ProjectType projectType, ColorBgra PrimaryColor)
@@ -336,7 +337,9 @@ namespace PaintDotNet.Effects
                     break;
                 case ElementType.DropDown:
                     OptionsLabel.Visible = true;
+                    OptionsLabel.Enabled = true;
                     OptionsText.Visible = true;
+                    OptionsText.Enabled = true;
                     DefaultColorComboBox.Visible = false;
                     ControlMin.Visible = false;
                     ControlMax.Visible = false;
@@ -397,7 +400,9 @@ namespace PaintDotNet.Effects
                     break;
                 case ElementType.RadioButtons:
                     OptionsLabel.Visible = true;
+                    OptionsLabel.Enabled = true;
                     OptionsText.Visible = true;
+                    OptionsText.Enabled = true;
                     DefaultColorComboBox.Visible = false;
                     ControlMin.Visible = false;
                     ControlMax.Visible = false;
@@ -478,7 +483,9 @@ namespace PaintDotNet.Effects
                     break;
                 case ElementType.Filename:
                     OptionsLabel.Visible = true;
+                    OptionsLabel.Enabled = true;
                     OptionsText.Visible = true;
+                    OptionsText.Enabled = true;
                     DefaultColorComboBox.Visible = false;
                     ControlMin.Visible = false;
                     ControlMax.Visible = false;
@@ -499,7 +506,9 @@ namespace PaintDotNet.Effects
                     break;
                 case ElementType.Uri:
                     OptionsLabel.Visible = true;
+                    OptionsLabel.Enabled = true;
                     OptionsText.Visible = true;
+                    OptionsText.Enabled = true;
                     DefaultColorComboBox.Visible = false;
                     ControlMin.Visible = false;
                     ControlMax.Visible = false;
@@ -519,6 +528,29 @@ namespace PaintDotNet.Effects
                     OptionsText.Text = "https://www.GetPaint.net";
                     OptionsLabel.Text = "URL:";
                     toolTip1.SetToolTip(this.OptionsText, "URL must begin with 'http://' or 'https://' to be valid.");
+                    break;
+                case ElementType.Folder:
+                    OptionsLabel.Visible = true;
+                    OptionsLabel.Enabled = false;
+                    OptionsText.Visible = true;
+                    OptionsText.Enabled = false;
+                    OptionsText.Text = string.Empty;
+                    DefaultColorComboBox.Visible = false;
+                    ControlMin.Visible = false;
+                    ControlMax.Visible = false;
+                    ControlDef.Visible = false;
+                    MinimumLabel.Visible = false;
+                    MaximumLabel.Visible = false;
+                    DefaultLabel.Visible = false;
+                    ControlDef.Enabled = false;
+                    ControlMax.Enabled = false;
+                    ControlMin.Enabled = false;
+                    ControlMax.Text = "255";
+                    ControlMin.Text = "0";
+                    ControlDef.Text = "0";
+                    StyleLabel.Enabled = false;
+                    ControlStyle.Enabled = false;
+                    ControlStyle.SelectedIndex = 0;
                     break;
             }
         }
@@ -771,6 +803,13 @@ namespace PaintDotNet.Effects
                     ControlMax.Text = CurrentElement.Max.ToString();
                     ControlDef.Text = CurrentElement.Default.ToString();
                     OptionsText.Text = CurrentElement.StrDefault;
+                    break;
+                case ElementType.Folder:
+                    ControlStyle.SelectedIndex = 0;
+                    ControlMin.Text = CurrentElement.Min.ToString();
+                    ControlMax.Text = CurrentElement.Max.ToString();
+                    ControlDef.Text = CurrentElement.Default.ToString();
+                    ControlName.Text = CurrentElement.ToShortName();
                     break;
                 default:
                     break;
@@ -1133,6 +1172,12 @@ namespace PaintDotNet.Effects
         private void OptionsText_TextChanged(object sender, EventArgs e)
         {
             dirty = true;
+
+            if (!OptionsText.Enabled)
+            {
+                return;
+            }
+
             string newOptions = OptionsText.Text.Trim().ToLowerInvariant();
             bool error = false;
             if (ControlType.SelectedElementType == ElementType.Uri)
@@ -1300,7 +1345,8 @@ namespace PaintDotNet.Effects
             "MultiLineTextboxControl",  // 12
             "RollControl",              // 13
             "FilenameControl",          // 14
-            "Uri"                       // 15
+            "Uri",                      // 15
+            "FolderControl"             // 16
         };
 
         internal static UIElement[] ProcessUIControls(string SourceCode, ProjectType projectType)
@@ -1505,6 +1551,9 @@ namespace PaintDotNet.Effects
                     StrDefault = eDefault;
                     Description = eName + " (Web Link)" + EnabledDescription;
                     break;
+                case ElementType.Folder:
+                    Description = eName + EnabledDescription;
+                    break;
             }
         }
 
@@ -1657,6 +1706,10 @@ namespace PaintDotNet.Effects
             else if (TypeStr == "Uri")
             {
                 elementType = ElementType.Uri;
+            }
+            else if (TypeStr == "FolderControl")
+            {
+                elementType = ElementType.Folder;
             }
             #region Detections for legacy scripts
             else if (TypeStr == "bool")
@@ -1927,6 +1980,9 @@ namespace PaintDotNet.Effects
                 case ElementType.Uri:
                     SourceCode += " = new Uri(\"" + StrDefault + "\"); // ";
                     break;
+                case ElementType.Folder:
+                    SourceCode += " = @\"\"; // ";
+                    break;
             }
 
             if (EnabledWhen)
@@ -2011,7 +2067,9 @@ namespace PaintDotNet.Effects
         [Description("Filename Control")]
         Filename,
         [Description("Web Link")]
-        Uri
+        Uri,
+        [Description("Folder Control")]
+        Folder
     }
 
     internal enum SliderStyle

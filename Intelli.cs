@@ -201,6 +201,7 @@ namespace PaintDotNet.Effects
                 { "PanSliderControl", typeof(Pair<double, double>) },
                 { "TextboxControl", typeof(string) },
                 { "FilenameControl", typeof(string) },
+                { "FolderControl", typeof(string) },
                 { "DoubleSliderControl", typeof(double) },
                 { "RollControl", typeof(Tuple<double, double, double>) },
                 { "ListBoxControl", typeof(byte) },
@@ -229,6 +230,7 @@ namespace PaintDotNet.Effects
             {
                 "TextboxControl",
                 "FilenameControl",
+                "FolderControl",
                 "RollControl",
                 "MultiLineTextboxControl"
             };
