@@ -83,6 +83,7 @@
     <EmbeddedResource Include="Icons\13RollControl.png" />
     <EmbeddedResource Include="Icons\14FilenameControl.png" />
     <EmbeddedResource Include="Icons\15Uri.png" />
+    <EmbeddedResource Include="Icons\16FolderControl.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Icons\00int.32.png" />
@@ -101,6 +102,7 @@
     <EmbeddedResource Include="Icons\13RollControl.32.png" />
     <EmbeddedResource Include="Icons\14FilenameControl.32.png" />
     <EmbeddedResource Include="Icons\15Uri.32.png" />
+    <EmbeddedResource Include="Icons\16FolderControl.32.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Icons\Keyword.png" />

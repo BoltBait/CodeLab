@@ -108,6 +108,7 @@ namespace PaintDotNet.Effects
                 + "using ColorWheelControl = PaintDotNet.ColorBgra;\r\n"
                 + "using AngleControl = System.Double;\r\n"
                 + "using PanSliderControl = PaintDotNet.Pair<double,double>;\r\n"
+                + "using FolderControl = System.String;\r\n"
                 + "using FilenameControl = System.String;\r\n"
                 + "using ReseedButtonControl = System.Byte;\r\n"
                 + "using RollControl = System.Tuple<double, double, double>;\r\n";
@@ -613,6 +614,7 @@ namespace PaintDotNet.Effects
                         PropertyPart += "            props.Add(new DoubleVector3Property(PropertyNames." + propertyName + ", Tuple.Create<double, double, double>(0.0, 0.0, 0.0), Tuple.Create<double, double, double>(-180.0, -180.0, 0.0), Tuple.Create<double, double, double>(180.0, 180.0, 90.0)));\r\n";
                         break;
                     case ElementType.Filename:
+                    case ElementType.Folder:
                         PropertyPart += "            props.Add(new StringProperty(PropertyNames." + propertyName + ", \"\"));\r\n";
                         break;
                     case ElementType.Uri:
@@ -665,6 +667,7 @@ namespace PaintDotNet.Effects
                             PropertyPart += "            propRules.Add(new ReadOnlyBoundToValueRule<Pair<double, double>, DoubleVectorProperty>(PropertyNames." + targetPropName + ", PropertyNames." + sourcePropName + ", Pair.Create(0d,0d), " + inverse + "));\r\n";
                             break;
                         case ElementType.Filename:
+                        case ElementType.Folder:
                         case ElementType.Textbox:
                         case ElementType.MultiLineTextbox:
                             PropertyPart += "            propRules.Add(new ReadOnlyBoundToValueRule<string, StringProperty>(PropertyNames." + targetPropName + ", PropertyNames." + sourcePropName + ", new[] { \"\" }, " + inverse + "));\r\n";
@@ -893,6 +896,9 @@ namespace PaintDotNet.Effects
                         break;
                     case ElementType.Uri:
                         PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.Description, \"" + u.Name + "\");\r\n";
+                        break;
+                    case ElementType.Folder:
+                        PropertyPart += "            configUI.SetPropertyControlType(PropertyNames." + propertyName + ", PropertyControlType.FolderChooser);\r\n";
                         break;
                 }
             }
@@ -1296,6 +1302,7 @@ namespace PaintDotNet.Effects
                         tokenValues += "            " + u.Identifier + " = token.GetProperty<DoubleVectorProperty>(PropertyNames." + propertyName + ").Value;\r\n";
                         break;
                     case ElementType.Filename:
+                    case ElementType.Folder:
                     case ElementType.Textbox:
                     case ElementType.MultiLineTextbox:
                         tokenValues += "            " + u.Identifier + " = token.GetProperty<StringProperty>(PropertyNames." + propertyName + ").Value;\r\n";
