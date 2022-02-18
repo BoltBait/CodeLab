@@ -1175,6 +1175,8 @@ namespace PaintDotNet.Effects
 
             if (!OptionsText.Enabled)
             {
+                OptionsText.ForeColor = Color.Black;
+                OptionsText.BackColor = Color.White;
                 return;
             }
 
