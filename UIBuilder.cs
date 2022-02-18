@@ -53,7 +53,7 @@ namespace PaintDotNet.Effects
             UIUtil.GetImage("13RollControl"),
             UIUtil.GetImage("14FilenameControl"),
             UIUtil.GetImage("15Uri"),
-            UIUtil.GetImage("14FilenameControl")
+            UIUtil.GetImage("16FolderControl")
         };
 
         internal UIBuilder(string UserScriptText, ProjectType projectType, ColorBgra PrimaryColor)
