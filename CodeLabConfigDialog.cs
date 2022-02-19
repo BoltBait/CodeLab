@@ -923,6 +923,7 @@ namespace PaintDotNet.Effects
             ForeColor = PdnTheme.ForeColor;
             BackColor = PdnTheme.BackColor;
             txtCode.Theme = PdnTheme.Theme;
+            txtCode.EnableUxThemeDarkMode(PdnTheme.Theme == Theme.Dark);
             toolStrip1.Renderer = PdnTheme.Renderer;
             tabStrip1.Renderer = PdnTheme.TabRenderer;
             menuStrip1.Renderer = PdnTheme.Renderer;

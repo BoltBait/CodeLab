@@ -975,6 +975,7 @@ namespace PaintDotNet.Effects
             this.filterToolTip.UpdateTheme(toolTipFore, toolTipBack);
             this.listBox.ForeColor = PdnTheme.ForeColor;
             this.listBox.BackColor = PdnTheme.BackColor;
+            this.listBox.EnableUxThemeDarkMode(PdnTheme.Theme == Theme.Dark);
         }
 
         internal void SaveUsedItem()

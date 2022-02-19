@@ -31,6 +31,7 @@ namespace PaintDotNet.Effects
             this.SnippetList.Items.AddRange(Intelli.Snippets.Keys.ToArray());
             this.SnippetList.Height = this.SnippetBody.Height; // HiDPI Fix
             this.SnippetBody.Theme = PdnTheme.Theme;
+            this.SnippetBody.EnableUxThemeDarkMode(PdnTheme.Theme == Theme.Dark);
             this.SnippetBody.LineNumbersEnabled = Settings.LineNumbers;
             this.SnippetBody.WrapMode = Settings.WordWrap ? WrapMode.Whitespace : WrapMode.None;
 

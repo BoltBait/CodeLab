@@ -8,6 +8,7 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace PaintDotNet.Effects
@@ -143,6 +144,23 @@ namespace PaintDotNet.Effects
             {
                 return ProcessUtil.TryExec("explorer.exe", new[] { "/select," + filePath }) != 0;
             }
+        }
+
+        [DllImport("uxtheme.dll", SetLastError = true, ExactSpelling = true, CharSet = CharSet.Unicode)]
+        private static extern int SetWindowTheme(IntPtr hWnd, string pszSubAppName, string pszSubIdList);
+
+        /// <summary>
+        /// Use to set dark scroll bars
+        /// </summary>
+        internal static void EnableUxThemeDarkMode(this Control control, bool enable)
+        {
+            if (!OperatingSystem.IsWindowsVersionAtLeast(10, 0, 17763))
+            {
+                return;
+            }
+
+            string themeName = enable ? "DarkMode_Explorer" : null;
+            SetWindowTheme(control.Handle, themeName, null);
         }
 
         #region Copied from internal WinForms Code
