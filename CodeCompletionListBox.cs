@@ -225,7 +225,15 @@ namespace PaintDotNet.Effects
         {
             if (sender is FilterButton filterButton)
             {
-                this.filterToolTip.Show(filterButton.ToolTipText, this, filterButton.Bounds.Left, this.Height);
+                Cursor currentCursor = Cursor.Current;
+                if (currentCursor is not null)
+                {
+                    Point cursorLocation = Cursor.Position;
+                    cursorLocation.X += currentCursor.HotSpot.X + 2;
+                    cursorLocation.Y += Cursor.Size.Height - currentCursor.HotSpot.Y;
+
+                    this.filterToolTip.Show(filterButton.ToolTipText, this, PointToClient(cursorLocation));
+                }
             }
         }
 

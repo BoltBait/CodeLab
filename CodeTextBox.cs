@@ -4643,6 +4643,17 @@ namespace PaintDotNet.Effects
                 }
             }
         }
+
+        protected override void OnMouseLeave(EventArgs e)
+        {
+            base.OnMouseLeave(e);
+
+            if (intelliTip.Visible)
+            {
+                intelliTip.Hide(this);
+                disableIntelliTipPos = InvalidPosition;
+            }
+        }
         #endregion
 
         #region Document Tabs functions
