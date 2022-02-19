@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -143,5 +144,99 @@ namespace PaintDotNet.Effects
                 return ProcessUtil.TryExec("explorer.exe", new[] { "/select," + filePath }) != 0;
             }
         }
+
+        #region Copied from internal WinForms Code
+        internal static Image CreateDisabledImage(Image normalImage)
+        {
+            ArgumentNullException.ThrowIfNull(normalImage);
+
+            ImageAttributes imgAttrib = new ImageAttributes();
+
+            imgAttrib.ClearColorKey();
+            imgAttrib.SetColorMatrix(DisabledImageColorMatrix);
+
+            Size size = normalImage.Size;
+            Bitmap disabledBitmap = new Bitmap(size.Width, size.Height);
+            using (Graphics graphics = Graphics.FromImage(disabledBitmap))
+            {
+                graphics.DrawImage(normalImage,
+                                   new Rectangle(0, 0, size.Width, size.Height),
+                                   0, 0, size.Width, size.Height,
+                                   GraphicsUnit.Pixel,
+                                   imgAttrib);
+            }
+
+            return disabledBitmap;
+        }
+
+        private static ColorMatrix s_disabledImageColorMatrix;
+
+        private static ColorMatrix DisabledImageColorMatrix
+        {
+            get
+            {
+                if (s_disabledImageColorMatrix is null)
+                {
+                    // this is the result of a GreyScale matrix multiplied by a transparency matrix of .5
+
+                    float[][] greyscale = new float[5][];
+                    greyscale[0] = new float[5] { 0.2125f, 0.2125f, 0.2125f, 0, 0 };
+                    greyscale[1] = new float[5] { 0.2577f, 0.2577f, 0.2577f, 0, 0 };
+                    greyscale[2] = new float[5] { 0.0361f, 0.0361f, 0.0361f, 0, 0 };
+                    greyscale[3] = new float[5] { 0, 0, 0, 1, 0 };
+                    greyscale[4] = new float[5] { 0.38f, 0.38f, 0.38f, 0, 1 };
+
+                    float[][] transparency = new float[5][];
+                    transparency[0] = new float[5] { 1, 0, 0, 0, 0 };
+                    transparency[1] = new float[5] { 0, 1, 0, 0, 0 };
+                    transparency[2] = new float[5] { 0, 0, 1, 0, 0 };
+                    transparency[3] = new float[5] { 0, 0, 0, .7F, 0 };
+                    transparency[4] = new float[5] { 0, 0, 0, 0, 0 };
+
+                    s_disabledImageColorMatrix = MultiplyColorMatrix(transparency, greyscale);
+                }
+
+                return s_disabledImageColorMatrix;
+            }
+        }
+
+        /// <summary>
+        ///  Multiply two 5x5 color matrices.
+        /// </summary>
+        private static ColorMatrix MultiplyColorMatrix(float[][] matrix1, float[][] matrix2)
+        {
+            const int Size = 5;
+
+            // Build up an empty 5x5 array for results.
+            float[][] result = new float[Size][];
+            for (int row = 0; row < Size; row++)
+            {
+                result[row] = new float[Size];
+            }
+
+            float[] column = new float[Size];
+            for (int j = 0; j < Size; j++)
+            {
+                for (int k = 0; k < Size; k++)
+                {
+                    column[k] = matrix1[k][j];
+                }
+
+                for (int i = 0; i < Size; i++)
+                {
+                    float[] row = matrix2[i];
+                    float s = 0;
+                    for (int k = 0; k < Size; k++)
+                    {
+                        s += row[k] * column[k];
+                    }
+
+                    result[i][j] = s;
+                }
+            }
+
+            return new ColorMatrix(result);
+        }
+        #endregion
     }
 }

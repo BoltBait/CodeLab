@@ -28,88 +28,213 @@ using System.Windows.Forms;
 
 namespace PaintDotNet.Effects
 {
-    internal sealed class IntelliBox : ListBox
+    internal sealed class IntelliBox : UserControl
     {
-        private bool mouseOver;
+        private bool listBoxMouseOver;
+        private bool toolstripMouseOver;
         private bool filterMatches;
-        private readonly Size iconSize;
-        private readonly IReadOnlyList<Image> itemIcons;
         private readonly IntelliTip itemToolTip = new IntelliTip();
+        private readonly IntelliTip filterToolTip = new IntelliTip();
         private readonly List<IntelliBoxItem> unFilteredItems = new List<IntelliBoxItem>();
         private IntelliBoxItem LastUsedMember = IntelliBoxItem.Empty;
         private IntelliBoxItem LastUsedNonMember = IntelliBoxItem.Empty;
         private IntelliBoxContents intelliBoxContents;
         private string stringFilter = string.Empty;
-        private IntelliType intelliTypeFilter = IntelliType.None;
+        private readonly ICollection<IntelliType> enumFilters = new List<IntelliType>();
+        private readonly ListBox listBox = new ListBox();
+        private readonly ToolStrip toolStrip = new ToolStrip();
+        private const int visibleItems = 9;
 
-        internal string AutoCompleteCode => SelectedItem.ToString();
-        internal bool MouseOver => mouseOver;
+        internal string AutoCompleteCode => listBox.SelectedIndex >= 0 ? listBox.SelectedItem.ToString() : string.Empty;
+        internal bool MouseOver => listBoxMouseOver || toolstripMouseOver;
         internal bool Matches => filterMatches;
-        internal int IconWidth => iconSize.Width + 2;
+        internal int IconWidth => IconSize.Width + 2;
         internal bool ExtraSpace => (intelliBoxContents != IntelliBoxContents.NonMembers && intelliBoxContents != IntelliBoxContents.Constructors);
+        internal bool IsEmpty => this.listBox.Items.Count == 0;
+
+        private static readonly Size IconSize = UIUtil.ScaleSize(16, 16);
+        private static readonly IReadOnlyList<Image> ItemIcons = new Image[]
+        {
+            UIUtil.GetImage("Method"),
+            UIUtil.GetImage("Property"),
+            UIUtil.GetImage("Event"),
+            UIUtil.GetImage("Field"),
+            UIUtil.GetImage("Keyword"),
+            UIUtil.GetImage("Type"),
+            UIUtil.GetImage("Var"),
+            UIUtil.GetImage("Class"),
+            UIUtil.GetImage("Struct"),
+            UIUtil.GetImage("Enum"),
+            UIUtil.GetImage("Const"),
+            UIUtil.GetImage("EnumItem"),
+            UIUtil.GetImage("Snippet"),
+            UIUtil.GetImage("Method"), // Use the Method icon for Constructor
+            UIUtil.GetImage("Var"), // Use the Variable icon for Parameter
+            UIUtil.GetImage("Interface"),
+            UIUtil.GetImage("Delegate"),
+            UIUtil.EmptyImage
+        };
 
         internal IntelliBox()
         {
-            // Set owner draw mode
-            this.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            this.DrawMode = DrawMode.OwnerDrawFixed;
-            this.ItemHeight = UIUtil.Scale(16);
-            this.BorderStyle = BorderStyle.FixedSingle;
-            this.Cursor = Cursors.Default;
+            FilterButton[] filterButtons = Enum.GetValues<IntelliType>()
+                .Where(i => i != IntelliType.None && i != IntelliType.Type && i != IntelliType.Parameter)
+                .Select(i =>
+                {
+                    FilterButton filterButton = new FilterButton(i);
+                    filterButton.Click += FilterButton_Click;
+                    filterButton.MouseHover += FilterButton_MouseHover;
+                    filterButton.MouseLeave += FilterButton_MouseLeave;
 
-            iconSize = UIUtil.ScaleSize(16, 16);
-            itemIcons = new Image[]
+                    return filterButton;
+                })
+                .ToArray();
+
+            toolStrip.Items.AddRange(filterButtons);
+            toolStrip.Dock = DockStyle.Bottom;
+            toolStrip.GripStyle = ToolStripGripStyle.Hidden;
+            toolStrip.ShowItemToolTips = false;
+            toolStrip.MouseEnter += ToolStrip_MouseEnter;
+            toolStrip.MouseLeave += ToolStrip_MouseLeave;
+
+            listBox.Dock = DockStyle.Fill;
+            listBox.DrawMode = DrawMode.OwnerDrawFixed;
+            listBox.ItemHeight = UIUtil.Scale(16);
+            listBox.BorderStyle = BorderStyle.None;
+            listBox.DrawItem += ListBox_DrawItem;
+            listBox.SelectedIndexChanged += ListBox_SelectedIndexChanged;
+            listBox.DoubleClick += ListBox_DoubleClick;
+            listBox.Click += ListBox_Click;
+            listBox.MouseEnter += ListBox_MouseEnter;
+            listBox.MouseLeave += ListBox_MouseLeave;
+
+            this.Controls.Add(listBox);
+            this.Controls.Add(toolStrip);
+            this.Cursor = Cursors.Default;
+            this.BorderStyle = BorderStyle.FixedSingle;
+        }
+
+        internal void SelectFirst()
+        {
+            if (this.listBox.Items.Count > 0)
             {
-                UIUtil.GetImage("Method"),
-                UIUtil.GetImage("Property"),
-                UIUtil.GetImage("Event"),
-                UIUtil.GetImage("Field"),
-                UIUtil.GetImage("Keyword"),
-                UIUtil.GetImage("Type"),
-                UIUtil.GetImage("Var"),
-                UIUtil.GetImage("Class"),
-                UIUtil.GetImage("Struct"),
-                UIUtil.GetImage("Enum"),
-                UIUtil.GetImage("Const"),
-                UIUtil.GetImage("EnumItem"),
-                UIUtil.GetImage("Snippet"),
-                UIUtil.GetImage("Method"), // Use the Method icon for Constructor
-                UIUtil.GetImage("Var"), // Use the Variable icon for Parameter
-                UIUtil.GetImage("Interface"),
-                UIUtil.GetImage("Delegate"),
-                UIUtil.EmptyImage
-            };
+                this.listBox.SelectedIndex = 0;
+            }
+        }
+
+        internal void SelectLast()
+        {
+            if (this.listBox.Items.Count > 0)
+            {
+                this.listBox.SelectedIndex = this.listBox.Items.Count - 1;
+            }
+        }
+
+        internal void SelectNext()
+        {
+            if (this.listBox.Items.Count > 0 && this.listBox.SelectedIndex < this.listBox.Items.Count - 1)
+            {
+                this.listBox.SelectedIndex++;
+            }
+        }
+
+        internal void SelectPrev()
+        {
+            if (this.listBox.SelectedIndex > 0)
+            {
+                this.listBox.SelectedIndex--;
+            }
+        }
+
+        internal void PageDown()
+        {
+            if (this.listBox.SelectedIndex < this.listBox.Items.Count - visibleItems)
+            {
+                this.listBox.SelectedIndex += visibleItems;
+            }
+            else if (this.listBox.Items.Count > 0)
+            {
+                this.listBox.SelectedIndex = this.listBox.Items.Count - 1;
+            }
+        }
+
+        internal void PageUp()
+        {
+            if (this.listBox.SelectedIndex > visibleItems)
+            {
+                this.listBox.SelectedIndex -= visibleItems;
+            }
+            else if (this.listBox.Items.Count > 0)
+            {
+                this.listBox.SelectedIndex = 0;
+            }
+        }
+
+        internal void ScrollItems(int delta)
+        {
+            if (this.listBoxMouseOver && this.listBox.Items.Count > 0)
+            {
+                int newTopIndex = this.listBox.TopIndex - Math.Sign(delta) * SystemInformation.MouseWheelScrollLines;
+                this.listBox.TopIndex = newTopIndex.Clamp(0, this.listBox.Items.Count - 1);
+            }
         }
 
         protected override void OnLocationChanged(EventArgs e)
         {
-            itemToolTip.Hide(this);
+            this.itemToolTip.Hide(this);
 
             base.OnLocationChanged(e);
         }
 
-        protected override void OnMouseEnter(EventArgs e)
+        private void ListBox_MouseEnter(object sender, EventArgs e)
         {
-            mouseOver = true;
-            base.OnMouseEnter(e);
+            this.listBoxMouseOver = true;
         }
 
-        protected override void OnMouseLeave(EventArgs e)
+        private void ToolStrip_MouseLeave(object sender, EventArgs e)
         {
-            mouseOver = false;
-            base.OnMouseLeave(e);
+            this.toolstripMouseOver = false;
         }
 
-        protected override void OnDoubleClick(EventArgs e)
+        private void ListBox_MouseLeave(object sender, EventArgs e)
+        {
+            this.listBoxMouseOver = false;
+        }
+
+        private void ToolStrip_MouseEnter(object sender, EventArgs e)
+        {
+            this.toolstripMouseOver = true;
+        }
+
+        private void ListBox_DoubleClick(object sender, EventArgs e)
         {
             ((CodeTextBox)Parent).ConfirmIntelliBox();
-            base.OnDoubleClick(e);
         }
 
-        protected override void OnClick(EventArgs e)
+        private void ListBox_Click(object sender, EventArgs e)
         {
             Parent.Focus();
-            base.OnClick(e);
+        }
+
+        private void FilterButton_MouseLeave(object sender, EventArgs e)
+        {
+            this.filterToolTip.Hide(this);
+        }
+
+        private void FilterButton_MouseHover(object sender, EventArgs e)
+        {
+            if (sender is FilterButton filterButton)
+            {
+                this.filterToolTip.Show(filterButton.ToolTipText, this, filterButton.Bounds.Left, this.Height);
+            }
+        }
+
+        private void FilterButton_Click(object sender, EventArgs e)
+        {
+            if (sender is FilterButton filterButton)
+            {
+                Filter(filterButton.IntelliType);
+            }
         }
 
         /// <summary>
@@ -189,16 +314,19 @@ namespace PaintDotNet.Effects
             }
 
             unFilteredItems.Sort();
-            this.Items.AddRange(unFilteredItems.ToArray());
+            this.listBox.Items.AddRange(unFilteredItems.ToArray());
 
-            if (this.Items.Contains(this.LastUsedMember))
+            if (this.listBox.Items.Contains(this.LastUsedMember))
             {
-                this.SelectedItem = this.LastUsedMember;
+                this.listBox.SelectedItem = this.LastUsedMember;
             }
-            else if (this.Items.Count > 0)
+            else if (this.listBox.Items.Count > 0)
             {
-                this.SelectedIndex = 0;
+                this.listBox.SelectedIndex = 0;
             }
+
+            IReadOnlyCollection<IntelliType> matchingTypes = unFilteredItems.Select(item => item.IntelliType).Distinct().ToArray();
+            SetFilterButtonVisibility(matchingTypes);
         }
 
         /// <summary>
@@ -300,6 +428,9 @@ namespace PaintDotNet.Effects
                 }
             }
 
+            IReadOnlyCollection<IntelliType> matchingTypes = unFilteredItems.Select(item => item.IntelliType).Distinct().ToArray();
+            SetFilterButtonVisibility(matchingTypes);
+
             unFilteredItems.Sort();
             Filter(startChar.ToString().Trim());
         }
@@ -323,18 +454,19 @@ namespace PaintDotNet.Effects
                 unFilteredItems.Add(new IntelliBoxItem(toolTip, string.Empty, toolTip + "\nConstructor", IntelliType.Constructor));
             }
 
-            this.Items.AddRange(unFilteredItems.ToArray());
+            this.listBox.Items.AddRange(unFilteredItems.ToArray());
             if (unFilteredItems.Count > 0)
             {
-                this.SelectedIndex = 0;
+                this.listBox.SelectedIndex = 0;
             }
+
+            SetFilterButtonVisibility(Array.Empty<IntelliType>());
         }
 
         internal void PopulateSuggestions(Type type)
         {
             Clear();
             this.intelliBoxContents = IntelliBoxContents.Suggestions;
-
             bool plural = false;
             Type iEnumType = type.GetInterface("IEnumerable`1") ?? ((type.IsInterface && type.Name.Equals("IEnumerable`1", StringComparison.Ordinal)) ? type : null);
             if (iEnumType != null && iEnumType.IsConstructedGenericType && iEnumType.GenericTypeArguments.Length == 1)
@@ -345,7 +477,7 @@ namespace PaintDotNet.Effects
 
             string typeName = Regex.Replace(type.Name, @"`\d", string.Empty);
 
-            unFilteredItems.AddRange(SplitCamelCase(typeName)
+            unFilteredItems.AddRange(GenerateSuggestedNames(typeName)
                 .Select(str =>
                     {
                         string suggestion = plural ? str.MakePlural() : str;
@@ -353,8 +485,10 @@ namespace PaintDotNet.Effects
                     })
                 );
 
-            this.Items.AddRange(unFilteredItems.ToArray());
-            this.SelectedIndex = 0;
+            this.listBox.Items.AddRange(unFilteredItems.ToArray());
+            this.listBox.SelectedIndex = 0;
+
+            SetFilterButtonVisibility(Array.Empty<IntelliType>());
         }
 
         internal void PopulateXamlTags()
@@ -369,16 +503,18 @@ namespace PaintDotNet.Effects
             }
 
             unFilteredItems.Sort();
-            this.Items.AddRange(unFilteredItems.ToArray());
+            this.listBox.Items.AddRange(unFilteredItems.ToArray());
 
-            if (this.Items.Contains(this.LastUsedNonMember))
+            if (this.listBox.Items.Contains(this.LastUsedNonMember))
             {
-                this.SelectedItem = this.LastUsedNonMember;
+                this.listBox.SelectedItem = this.LastUsedNonMember;
             }
-            else if (this.Items.Count > 0)
+            else if (this.listBox.Items.Count > 0)
             {
-                this.SelectedIndex = 0;
+                this.listBox.SelectedIndex = 0;
             }
+
+            SetFilterButtonVisibility(Array.Empty<IntelliType>());
         }
 
         internal void PopulateXamlAttributes(Type tagType)
@@ -411,24 +547,26 @@ namespace PaintDotNet.Effects
                 unFilteredItems.Add(new IntelliBoxItem("/> Close Tag", "/>", "/> Close Tag", IntelliType.None));
             }
 
-            this.Items.AddRange(unFilteredItems.ToArray());
+            this.listBox.Items.AddRange(unFilteredItems.ToArray());
 
-            if (this.Items.Contains(this.LastUsedMember))
+            if (this.listBox.Items.Contains(this.LastUsedMember))
             {
-                this.SelectedItem = this.LastUsedMember;
+                this.listBox.SelectedItem = this.LastUsedMember;
             }
-            else if (this.Items.Count > 0)
+            else if (this.listBox.Items.Count > 0)
             {
-                this.SelectedIndex = 0;
+                this.listBox.SelectedIndex = 0;
             }
+
+            SetFilterButtonVisibility(Array.Empty<IntelliType>());
         }
 
         private void Clear()
         {
-            this.Items.Clear();
+            this.listBox.Items.Clear();
             this.unFilteredItems.Clear();
             this.stringFilter = string.Empty;
-            this.intelliTypeFilter = IntelliType.None;
+            this.enumFilters.Clear();
         }
 
         private void AddMethod(MethodInfo methodInfo, bool isExtension)
@@ -581,7 +719,7 @@ namespace PaintDotNet.Effects
             unFilteredItems.Add(new IntelliBoxItem(name, code, toolTip, icon));
         }
 
-        private static IEnumerable<string> SplitCamelCase(string str)
+        private static IEnumerable<string> GenerateSuggestedNames(string str)
         {
             List<string> results = new List<string>();
             results.Add(str.FirstCharToLower());
@@ -614,9 +752,41 @@ namespace PaintDotNet.Effects
             Filter();
         }
 
-        internal void Filter(IntelliType intelliTypes)
+        internal void Filter(IntelliType intelliType)
         {
-            intelliTypeFilter = (intelliTypes == intelliTypeFilter) ? IntelliType.None : intelliTypes;
+            IEnumerable<FilterButton> filterbuttons = this.toolStrip.Items.OfType<FilterButton>();
+            FilterButton filterButton = filterbuttons.Where(b => b.Visible && b.IntelliType == intelliType).FirstOrDefault();
+
+            if (filterButton is null)
+            {
+                return;
+            }
+
+            filterButton.Checked = !filterButton.Checked;
+
+            IEnumerable<IntelliType> matchingTypes = listBox.Items.OfType<IntelliBoxItem>().Select(i => i.IntelliType).Distinct().ToArray();
+            if (filterbuttons.Any(x => x.Checked))
+            {
+                IEnumerable<IntelliType> checkedTypes = filterbuttons.Where(x => x.Checked).Select(x => x.IntelliType).Intersect(matchingTypes);
+                SetFilterButtonAppearance(checkedTypes);
+            }
+            else
+            {
+                SetFilterButtonAppearance(matchingTypes);
+            }
+
+            if (intelliType == IntelliType.None)
+            {
+                enumFilters.Clear();
+            }
+            else if (enumFilters.Contains(intelliType))
+            {
+                enumFilters.Remove(intelliType);
+            }
+            else
+            {
+                enumFilters.Add(intelliType);
+            }
 
             Filter();
         }
@@ -626,7 +796,7 @@ namespace PaintDotNet.Effects
             List<IntelliBoxItem> matches = new List<IntelliBoxItem>();
             foreach (IntelliBoxItem item in unFilteredItems)
             {
-                if (intelliTypeFilter != IntelliType.None && item.ImageIndex != (int)intelliTypeFilter)
+                if (enumFilters.Count > 0 && !enumFilters.Contains(item.IntelliType))
                 {
                     continue;
                 }
@@ -640,57 +810,60 @@ namespace PaintDotNet.Effects
                 matches.Add(item);
             }
 
-            if (intelliTypeFilter == IntelliType.None && matches.Count == 0)
+            IEnumerable<IntelliType> matchingTypes = matches.Select(item => item.IntelliType).Distinct().ToArray();
+            SetFilterButtonAppearance(matchingTypes);
+
+            if (enumFilters.Count == 0 && matches.Count == 0)
             {
                 filterMatches = false;
                 return;
             }
 
-            this.Items.Clear();
+            this.listBox.Items.Clear();
 
             if (matches.Count == 0)
             {
+                itemToolTip.Hide(this);
                 filterMatches = false;
                 return;
             }
 
             filterMatches = true;
-            this.Items.AddRange(matches.ToArray());
-
+            this.listBox.Items.AddRange(matches.ToArray());
 
             if (stringFilter.Length == 0)
             {
-                if (this.Items.Contains(LastUsedMember))
+                if (this.listBox.Items.Contains(LastUsedMember))
                 {
-                    this.SelectedItem = LastUsedMember;
+                    this.listBox.SelectedItem = LastUsedMember;
                 }
-                else if (this.Items.Contains(LastUsedNonMember))
+                else if (this.listBox.Items.Contains(LastUsedNonMember))
                 {
-                    this.SelectedItem = LastUsedNonMember;
+                    this.listBox.SelectedItem = LastUsedNonMember;
                 }
                 else
                 {
-                    this.SelectedIndex = 0;
+                    this.listBox.SelectedIndex = 0;
                 }
 
                 return;
             }
 
-            int indexToSelect = this.FindStringExact(stringFilter, true);
+            int indexToSelect = this.listBox.FindStringExact(stringFilter, true);
             if (indexToSelect == -1)
             {
-                if (this.Items.Contains(LastUsedMember) && LastUsedMember.ToString().StartsWith(stringFilter, StringComparison.Ordinal))
+                if (this.listBox.Items.Contains(LastUsedMember) && LastUsedMember.ToString().StartsWith(stringFilter, StringComparison.Ordinal))
                 {
-                    indexToSelect = this.FindStringExact(LastUsedMember.ToString(), false);
+                    indexToSelect = this.listBox.FindStringExact(LastUsedMember.ToString(), false);
                 }
-                else if (this.Items.Contains(LastUsedNonMember) && LastUsedNonMember.ToString().StartsWith(stringFilter, StringComparison.Ordinal))
+                else if (this.listBox.Items.Contains(LastUsedNonMember) && LastUsedNonMember.ToString().StartsWith(stringFilter, StringComparison.Ordinal))
                 {
-                    indexToSelect = this.FindStringExact(LastUsedNonMember.ToString(), false);
+                    indexToSelect = this.listBox.FindStringExact(LastUsedNonMember.ToString(), false);
                 }
 
                 if (indexToSelect == -1)
                 {
-                    indexToSelect = this.FindString(stringFilter, true);
+                    indexToSelect = this.listBox.FindString(stringFilter, true);
                     if (indexToSelect == -1)
                     {
                         indexToSelect = 0;
@@ -698,11 +871,11 @@ namespace PaintDotNet.Effects
                 }
             }
 
-            this.SelectedIndex = indexToSelect;
-            this.TopIndex = indexToSelect;
+            this.listBox.SelectedIndex = indexToSelect;
+            this.listBox.TopIndex = indexToSelect;
         }
 
-        protected override void OnDrawItem(DrawItemEventArgs e)
+        private void ListBox_DrawItem(object sender, DrawItemEventArgs e)
         {
             if (e.Index == -1)
             {
@@ -712,30 +885,27 @@ namespace PaintDotNet.Effects
             e.DrawBackground();
             e.DrawFocusRectangle();
 
-            if (Items[e.Index] is IntelliBoxItem item)
+            if (this.listBox.Items[e.Index] is IntelliBoxItem item)
             {
                 using (SolidBrush iconBg = new SolidBrush(this.BackColor))
                 {
-                    e.Graphics.FillRectangle(iconBg, e.Bounds.Left, e.Bounds.Top, iconSize.Width + 1, iconSize.Height);
+                    e.Graphics.FillRectangle(iconBg, e.Bounds.Left, e.Bounds.Top, IconSize.Width + 1, IconSize.Height);
                 }
-                e.Graphics.DrawImage(itemIcons[item.ImageIndex], e.Bounds.Left, e.Bounds.Top, iconSize.Width, iconSize.Height);
-                TextRenderer.DrawText(e.Graphics, item.Text, e.Font, new Point(e.Bounds.Left + iconSize.Width, e.Bounds.Top), e.ForeColor);
+                e.Graphics.DrawImage(ItemIcons[item.ImageIndex], e.Bounds.Left, e.Bounds.Top, IconSize.Width, IconSize.Height);
+                TextRenderer.DrawText(e.Graphics, item.Text, e.Font, new Point(e.Bounds.Left + IconSize.Width, e.Bounds.Top), e.ForeColor);
             }
             else
             {
-                TextRenderer.DrawText(e.Graphics, Items[e.Index].ToString(), e.Font, new Point(e.Bounds.Left, e.Bounds.Top), e.ForeColor);
+                TextRenderer.DrawText(e.Graphics, this.listBox.Items[e.Index].ToString(), e.Font, new Point(e.Bounds.Left, e.Bounds.Top), e.ForeColor);
             }
-
-            base.OnDrawItem(e);
         }
 
-        protected override void OnSelectedIndexChanged(EventArgs e)
+        private void ListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (this.Visible && this.SelectedItem is IntelliBoxItem item)
+            if (this.listBox.Visible && this.listBox.SelectedItem is IntelliBoxItem item)
             {
                 itemToolTip.Show(item.ToolTip, this, this.Width, 0);
             }
-            base.OnSelectedIndexChanged(e);
         }
 
         protected override void OnVisibleChanged(EventArgs e)
@@ -744,31 +914,71 @@ namespace PaintDotNet.Effects
             {
                 itemToolTip.Hide(this);
             }
-            else if (this.SelectedItem is IntelliBoxItem item)
+            else if (this.listBox.SelectedItem is IntelliBoxItem item)
             {
                 itemToolTip.Show(item.ToolTip, this, this.Width, 0);
             }
+            else
+            {
+                itemToolTip.Hide(this);
+            }
 
             base.OnVisibleChanged(e);
+        }
+
+        private void SetFilterButtonVisibility(IReadOnlyCollection<IntelliType> intelliTypes)
+        {
+            if (intelliTypes.Count > 0)
+            {
+                this.toolStrip.Visible = true;
+
+                foreach (FilterButton filterButton in this.toolStrip.Items)
+                {
+                    filterButton.Checked = false;
+                    filterButton.Active = true;
+                    filterButton.Visible = intelliTypes.Contains(filterButton.IntelliType);
+                }
+
+                int totalItemWidth = (this.toolStrip.Items[0].Width + this.toolStrip.Items[0].Margin.Left) * intelliTypes.Count;
+                int newWidth = Math.Max(UIUtil.Scale(300), totalItemWidth);
+                this.ClientSize = new Size(newWidth, toolStrip.Height + listBox.ItemHeight * visibleItems);
+            }
+            else
+            {
+                this.toolStrip.Visible = false;
+                this.ClientSize = new Size(UIUtil.Scale(300), listBox.ItemHeight * visibleItems);
+            }
+        }
+
+        private void SetFilterButtonAppearance(IEnumerable<IntelliType> intelliTypes)
+        {
+            foreach (FilterButton filterButton in this.toolStrip.Items)
+            {
+                filterButton.Active = intelliTypes.Contains(filterButton.IntelliType);
+            }
         }
 
         internal void UpdateTheme(Color toolTipFore, Color toolTipBack)
         {
             this.ForeColor = PdnTheme.ForeColor;
             this.BackColor = PdnTheme.BackColor;
-            itemToolTip.UpdateTheme(toolTipFore, toolTipBack);
+            this.toolStrip.Renderer = PdnTheme.Renderer;
+            this.itemToolTip.UpdateTheme(toolTipFore, toolTipBack);
+            this.filterToolTip.UpdateTheme(toolTipFore, toolTipBack);
+            this.listBox.ForeColor = PdnTheme.ForeColor;
+            this.listBox.BackColor = PdnTheme.BackColor;
         }
 
         internal void SaveUsedItem()
         {
-            if (this.SelectedItem is IntelliBoxItem item)
+            if (this.listBox.SelectedItem is IntelliBoxItem item)
             {
                 if (this.intelliBoxContents == IntelliBoxContents.Members || this.intelliBoxContents == IntelliBoxContents.XamlAttributes)
                 {
                     this.LastUsedMember = item;
                 }
                 else if ((this.intelliBoxContents == IntelliBoxContents.NonMembers || this.intelliBoxContents == IntelliBoxContents.XamlTags) &&
-                    item.ImageIndex != (int)IntelliType.Keyword && item.ImageIndex != (int)IntelliType.Snippet)
+                    item.IntelliType != IntelliType.Keyword && item.IntelliType != IntelliType.Snippet)
                 {
                     this.LastUsedNonMember = item;
                 }
@@ -777,18 +987,18 @@ namespace PaintDotNet.Effects
 
         internal void FindAndSelect(string itemName)
         {
-            int itemIndex = this.FindStringExact(itemName, true);
+            int itemIndex = this.listBox.FindStringExact(itemName, true);
             if (itemIndex == -1)
             {
-                itemIndex = this.FindString(itemName, true);
+                itemIndex = this.listBox.FindString(itemName, true);
                 if (itemIndex == -1)
                 {
                     return;
                 }
             }
 
-            this.SelectedIndex = itemIndex;
-            this.TopIndex = itemIndex;
+            this.listBox.SelectedIndex = itemIndex;
+            this.listBox.TopIndex = itemIndex;
         }
 
         private class IntelliBoxItem : IComparable<IntelliBoxItem>, IEquatable<IntelliBoxItem>
@@ -821,6 +1031,7 @@ namespace PaintDotNet.Effects
             internal string Code { get; }
             internal string ToolTip { get; }
             internal int ImageIndex { get; }
+            internal IntelliType IntelliType { get; }
 
             internal IntelliBoxItem(string text, string code, string toolTip, IntelliType intelliType)
             {
@@ -828,11 +1039,67 @@ namespace PaintDotNet.Effects
                 this.Code = code;
                 this.ToolTip = toolTip;
                 this.ImageIndex = (int)intelliType;
+                this.IntelliType = intelliType;
             }
 
             public override string ToString()
             {
                 return Code;
+            }
+        }
+
+        private sealed class FilterButton : ScaledToolStripButton
+        {
+            private bool active = true;
+
+            internal IntelliType IntelliType { get; }
+
+            internal bool Active
+            {
+                get
+                {
+                    return this.active;
+                }
+                set
+                {
+                    if (value != this.active)
+                    {
+                        this.active = value;
+                        this.Image = value
+                            ? ItemIcons[(int)this.IntelliType]
+                            : UIUtil.CreateDisabledImage(ItemIcons[(int)this.IntelliType]);
+                    }
+                }
+            }
+
+            internal FilterButton(IntelliType intelliType)
+            {
+                this.IntelliType = intelliType;
+                this.Image = ItemIcons[(int)this.IntelliType];
+                this.ToolTipText = $"Show only {intelliType.ToString().MakePlural()}{GetHotKey(intelliType)}";
+                this.Margin = new Padding(UIUtil.Scale(2));
+            }
+
+            private static string GetHotKey(IntelliType intelliType)
+            {
+                
+                return intelliType switch
+                {
+                    IntelliType.Method => " (Alt+M)",
+                    IntelliType.Property => " (Alt+P)",
+                    IntelliType.Event => " (Alt+V)",
+                    IntelliType.Field => " (Alt+F)",
+                    IntelliType.Keyword => " (Alt+K)",
+                    IntelliType.Variable => " (Alt+L)",
+                    IntelliType.Class => " (Alt+C)",
+                    IntelliType.Struct => " (Alt+S)",
+                    IntelliType.Enum => " (Alt+E)",
+                    IntelliType.Constant => " (Alt+O)",
+                    IntelliType.Snippet => " (Alt+T)",
+                    IntelliType.Interface => " (Alt+I)",
+                    IntelliType.Delegate => " (Alt+D)",
+                    _ => string.Empty,
+                };
             }
         }
 

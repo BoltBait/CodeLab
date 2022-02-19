@@ -749,7 +749,6 @@ namespace PaintDotNet.Effects
             this.lightBulbMenu.SuspendLayout();
             this.SuspendLayout();
 
-            iBox.Size = new Size(300, 100);
             iBox.Visible = false;
 
             findPanel.Visible = false;
@@ -2623,8 +2622,7 @@ namespace PaintDotNet.Effects
             if (iBox.Visible && iBox.MouseOver && e is HandledMouseEventArgs args)
             {
                 args.Handled = true;
-                int newTopIndex = iBox.TopIndex - Math.Sign(e.Delta) * SystemInformation.MouseWheelScrollLines;
-                iBox.TopIndex = newTopIndex.Clamp(0, iBox.Items.Count - 1);
+                iBox.ScrollItems(e.Delta);
             }
 
             base.OnMouseWheel(e);
@@ -2841,6 +2839,12 @@ namespace PaintDotNet.Effects
                 e.Handled = true;
                 iBox.Filter(IntelliType.Delegate);
             }
+            else if (e.Alt && e.KeyCode == Keys.V)
+            {
+                e.SuppressKeyPress = true;
+                e.Handled = true;
+                iBox.Filter(IntelliType.Event);
+            }
             else if (e.KeyCode == Keys.OemPeriod)
             {
                 if (iBox.Matches)
@@ -2929,61 +2933,41 @@ namespace PaintDotNet.Effects
             }
             else if (e.KeyCode == Keys.Up)
             {
-                if (iBox.SelectedIndex > 0)
-                {
-                    iBox.SelectedIndex--;
-                }
+                iBox.SelectPrev();
 
                 e.Handled = true;
                 this.Focus();
             }
             else if (e.KeyCode == Keys.Down)
             {
-                if (iBox.SelectedIndex < iBox.Items.Count - 1)
-                {
-                    iBox.SelectedIndex++;
-                }
+                iBox.SelectNext();
 
                 e.Handled = true;
                 this.Focus();
             }
             else if (e.KeyCode == Keys.PageDown)
             {
-                if (iBox.SelectedIndex < iBox.Items.Count - 10)
-                {
-                    iBox.SelectedIndex += 10;
-                }
-                else
-                {
-                    iBox.SelectedIndex = iBox.Items.Count - 1;
-                }
+                iBox.PageDown();
 
                 e.Handled = true;
                 this.Focus();
             }
             else if (e.KeyCode == Keys.PageUp)
             {
-                if (iBox.SelectedIndex > 10)
-                {
-                    iBox.SelectedIndex -= 10;
-                }
-                else
-                {
-                    iBox.SelectedIndex = 0;
-                }
+                iBox.PageUp();
 
                 e.Handled = true;
                 this.Focus();
             }
             else if (e.KeyCode == Keys.End)
             {
-                iBox.SelectedIndex = iBox.Items.Count - 1;
+                iBox.SelectLast();
                 e.Handled = true;
                 this.Focus();
             }
             else if (e.KeyCode == Keys.Home)
             {
-                iBox.SelectedIndex = 0;
+                iBox.SelectFirst();
                 e.Handled = true;
                 this.Focus();
             }
@@ -3231,7 +3215,7 @@ namespace PaintDotNet.Effects
 
         private void ShowIntelliBox(int position)
         {
-            if (iBox.Items.Count <= 0)
+            if (iBox.IsEmpty)
             {
                 return; // For some reason, the box is empty... don't bother showing it.
             }
