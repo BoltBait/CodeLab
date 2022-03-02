@@ -10,6 +10,7 @@
 using System;
 using System.Drawing;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -558,26 +559,34 @@ namespace PaintDotNet.Effects
             /// <param name="icon">The MessageBoxIcon.</param>
             private static void SetDialogIcon(FlexibleMessageBoxForm flexibleMessageBoxForm, MessageBoxIcon icon)
             {
-                switch (icon)
+                if (icon != MessageBoxIcon.None)
                 {
-                    case MessageBoxIcon.Information:
-                        flexibleMessageBoxForm.pictureBoxForIcon.Image = SystemIcons.Information.ToBitmap();
-                        break;
-                    case MessageBoxIcon.Warning:
-                        flexibleMessageBoxForm.pictureBoxForIcon.Image = SystemIcons.Warning.ToBitmap();
-                        break;
-                    case MessageBoxIcon.Error:
-                        flexibleMessageBoxForm.pictureBoxForIcon.Image = SystemIcons.Error.ToBitmap();
-                        break;
-                    case MessageBoxIcon.Question:
-                        flexibleMessageBoxForm.pictureBoxForIcon.Image = SystemIcons.Question.ToBitmap();
-                        break;
-                    default:
-                        //When no icon is used: Correct placement and width of rich text box.
-                        flexibleMessageBoxForm.pictureBoxForIcon.Visible = false;
-                        flexibleMessageBoxForm.richTextBoxMessage.Left -= flexibleMessageBoxForm.pictureBoxForIcon.Width;
-                        flexibleMessageBoxForm.richTextBoxMessage.Width += flexibleMessageBoxForm.pictureBoxForIcon.Width;
-                        break;
+                    flexibleMessageBoxForm.pictureBoxForIcon.Image = GetMessageBoxIcon(icon);
+                }
+                else
+                {
+                    //When no icon is used: Correct placement and width of rich text box.
+                    flexibleMessageBoxForm.pictureBoxForIcon.Visible = false;
+                    flexibleMessageBoxForm.richTextBoxMessage.Left -= flexibleMessageBoxForm.pictureBoxForIcon.Width;
+                    flexibleMessageBoxForm.richTextBoxMessage.Width += flexibleMessageBoxForm.pictureBoxForIcon.Width;
+                }
+            }
+
+            private static Bitmap GetMessageBoxIcon(MessageBoxIcon messageBoxIcon)
+            {
+                int iconIndex = messageBoxIcon switch
+                {
+                    MessageBoxIcon.Information => 76,
+                    MessageBoxIcon.Warning => 79,
+                    MessageBoxIcon.Error => 93,
+                    MessageBoxIcon.Question => 94
+                };
+
+                string imageresPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "imageres.dll");
+
+                using (Icon icon = UIUtil.ExtractIcon(imageresPath, iconIndex, true))
+                {
+                    return icon?.ToBitmap();
                 }
             }
 
