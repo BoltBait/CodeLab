@@ -365,6 +365,7 @@ namespace PaintDotNet.Effects
                 this.MinimumSize = new System.Drawing.Size(276, 140);
                 this.Name = "FlexibleMessageBoxForm";
                 this.ShowIcon = false;
+                this.ShowInTaskbar = false;
                 this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Auto;
                 this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
                 this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
@@ -886,7 +887,6 @@ namespace PaintDotNet.Effects
             {
                 //Create a new instance of the FlexibleMessageBox form
                 var flexibleMessageBoxForm = new FlexibleMessageBoxForm();
-                flexibleMessageBoxForm.ShowInTaskbar = false;
 
                 //Bind the caption and the message text
                 flexibleMessageBoxForm.CaptionText = caption;
@@ -918,7 +918,6 @@ namespace PaintDotNet.Effects
             {
                 //Create a new instance of the FlexibleMessageBox form
                 var flexibleMessageBoxForm = new FlexibleMessageBoxForm();
-                flexibleMessageBoxForm.ShowInTaskbar = false;
 
                 //Bind the caption and the message text
                 flexibleMessageBoxForm.CaptionText = caption;
