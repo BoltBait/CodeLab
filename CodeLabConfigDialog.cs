@@ -94,7 +94,7 @@ namespace PaintDotNet.Effects
             ShapeBuilder.SetEnviromentParams(100, 100, 0, 0, 100, 100, ColorBgra.Black, ColorBgra.White, 2);
 #else
             Size srcSize = EnvironmentParameters.SourceSurface.Size;
-            Rectangle selection = EnvironmentParameters.SelectionBounds;
+            Rectangle selection = EnvironmentParameters.Selection.RenderBoundsInt32;
             ColorBgra strokeColor = EnvironmentParameters.PrimaryColor;
             ColorBgra fillColor = EnvironmentParameters.SecondaryColor;
             double strokeThickness = EnvironmentParameters.BrushWidth;
@@ -1247,7 +1247,7 @@ namespace PaintDotNet.Effects
         private void UIDesigner()
         {
             // User Interface Designer
-            UIBuilder myUIBuilderForm = new UIBuilder(txtCode.Text, tabStrip1.SelectedTabProjType, ColorBgra.Black);  // This should be the current Primary color
+            UIBuilder myUIBuilderForm = new UIBuilder(txtCode.Text, tabStrip1.SelectedTabProjType, EnvironmentParameters);  // This should be the current Primary color
             if (myUIBuilderForm.ShowDialog() == DialogResult.OK)
             {
                 // update generated code

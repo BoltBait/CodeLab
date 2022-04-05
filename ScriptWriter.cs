@@ -42,7 +42,7 @@ namespace PaintDotNet.Effects
             + "void Render(Surface dst, Surface src, Rectangle rect)\r\n"
             + "{\r\n"
             + "    // Delete any of these lines you don't need\r\n"
-            + "    Rectangle selection = EnvironmentParameters.SelectionBounds;\r\n"
+            + "    Rectangle selection = EnvironmentParameters.Selection.RenderBoundsInt32;\r\n"
             + "    int centerX = ((selection.Right - selection.Left) / 2) + selection.Left;\r\n"
             + "    int centerY = ((selection.Bottom - selection.Top) / 2) + selection.Top;\r\n"
             + "    ColorBgra primaryColor = EnvironmentParameters.PrimaryColor;\r\n"
@@ -723,7 +723,7 @@ namespace PaintDotNet.Effects
 
             if (UserControls.Any(u => u.ElementType == ElementType.PanSlider))
             {
-                PropertyPart += "            Rectangle selection = EnvironmentParameters.SelectionBounds;\r\n";
+                PropertyPart += "            Rectangle selection = EnvironmentParameters.Selection.RenderBoundsInt32;\r\n";
                 PropertyPart += "            ImageResource imageResource = ImageResource.FromImage(EnvironmentParameters.SourceSurface.CreateAliasedBitmap(selection));\r\n";
                 PropertyPart += "\r\n";
             }

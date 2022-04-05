@@ -136,8 +136,11 @@ namespace PaintDotNet.Effects
                 "PaintDotNet.Data.dll",
                 "PaintDotNet.Effects.dll",
                 "PaintDotNet.Fundamentals.dll",
+                "PaintDotNet.ObjectModel.dll",
                 "PaintDotNet.Primitives.dll",
-                "PaintDotNet.PropertySystem.dll"
+                "PaintDotNet.PropertySystem.dll",
+                "PaintDotNet.Windows.dll",
+                "PaintDotNet.Windows.Core.dll"
             };
 
             // exclude assemblies that were loaded into separate contexts; i.e. Plugins
