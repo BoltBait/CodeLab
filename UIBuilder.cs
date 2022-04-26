@@ -1952,7 +1952,7 @@ namespace PaintDotNet.Effects
                     }
                     break;
                 case ElementType.PanSlider:
-                    SourceCode += " = Pair.Create(" + StrDefault + "); // ";
+                    SourceCode += " = new Vector2Double(" + StrDefault + "); // ";
                     break;
                 case ElementType.Textbox:
                 case ElementType.MultiLineTextbox:
@@ -1974,7 +1974,7 @@ namespace PaintDotNet.Effects
                     SourceCode += " = 0; // ";
                     break;
                 case ElementType.RollBall:
-                    SourceCode += " = Tuple.Create<double, double, double>(0.0 , 0.0 , 0.0)";
+                    SourceCode += " = new Vector3Double(0.0 , 0.0 , 0.0)";
                     SourceCode += "; // ";
                     break;
                 case ElementType.Filename:

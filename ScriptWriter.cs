@@ -107,11 +107,11 @@ namespace PaintDotNet.Effects
                 + "using PaintDotNet.Effects;\r\n"
                 + "using ColorWheelControl = PaintDotNet.ColorBgra;\r\n"
                 + "using AngleControl = System.Double;\r\n"
-                + "using PanSliderControl = PaintDotNet.Pair<double,double>;\r\n"
+                + "using PanSliderControl = PaintDotNet.Rendering.Vector2Double;\r\n"
                 + "using FolderControl = System.String;\r\n"
                 + "using FilenameControl = System.String;\r\n"
                 + "using ReseedButtonControl = System.Byte;\r\n"
-                + "using RollControl = System.Tuple<double, double, double>;\r\n";
+                + "using RollControl = PaintDotNet.Rendering.Vector3Double;\r\n";
             }
 
             namespaces += ""
@@ -574,7 +574,7 @@ namespace PaintDotNet.Effects
                         PropertyPart += "            props.Add(new DoubleProperty(PropertyNames." + propertyName + ", " + u.dDefault.ToString(CultureInfo.InvariantCulture) + ", " + u.dMin.ToString(CultureInfo.InvariantCulture) + ", " + u.dMax.ToString(CultureInfo.InvariantCulture) + "));\r\n";
                         break;
                     case ElementType.PanSlider:
-                        PropertyPart += "            props.Add(new DoubleVectorProperty(PropertyNames." + propertyName + ", Pair.Create(" + u.StrDefault + "), Pair.Create(-1.0, -1.0), Pair.Create(+1.0, +1.0)));\r\n";
+                        PropertyPart += "            props.Add(new DoubleVectorProperty(PropertyNames." + propertyName + ", new Vector2Double(" + u.StrDefault + "), new Vector2Double(-1.0, -1.0), new Vector2Double(+1.0, +1.0)));\r\n";
                         break;
                     case ElementType.Textbox:
                     case ElementType.MultiLineTextbox:
@@ -611,7 +611,7 @@ namespace PaintDotNet.Effects
                         PropertyPart += "            props.Add(new Int32Property(PropertyNames." + propertyName + ", 0, 0, 255));\r\n";
                         break;
                     case ElementType.RollBall:
-                        PropertyPart += "            props.Add(new DoubleVector3Property(PropertyNames." + propertyName + ", Tuple.Create<double, double, double>(0.0, 0.0, 0.0), Tuple.Create<double, double, double>(-180.0, -180.0, 0.0), Tuple.Create<double, double, double>(180.0, 180.0, 90.0)));\r\n";
+                        PropertyPart += "            props.Add(new DoubleVector3Property(PropertyNames." + propertyName + ", new Vector3Double(0.0, 0.0, 0.0), new Vector3Double(-180.0, -180.0, 0.0), new Vector3Double(180.0, 180.0, 90.0)));\r\n";
                         break;
                     case ElementType.Filename:
                     case ElementType.Folder:
@@ -664,7 +664,7 @@ namespace PaintDotNet.Effects
                             PropertyPart += "            propRules.Add(new ReadOnlyBoundToValueRule<double, DoubleProperty>(PropertyNames." + targetPropName + ", PropertyNames." + sourcePropName + ", new[] { 0d }, " + inverse + "));\r\n";
                             break;
                         case ElementType.PanSlider:
-                            PropertyPart += "            propRules.Add(new ReadOnlyBoundToValueRule<Pair<double, double>, DoubleVectorProperty>(PropertyNames." + targetPropName + ", PropertyNames." + sourcePropName + ", Pair.Create(0d,0d), " + inverse + "));\r\n";
+                            PropertyPart += "            propRules.Add(new ReadOnlyBoundToValueRule<Vector2Double, DoubleVectorProperty>(PropertyNames." + targetPropName + ", PropertyNames." + sourcePropName + ", new Vector2Double(0d,0d), " + inverse + "));\r\n";
                             break;
                         case ElementType.Filename:
                         case ElementType.Folder:
@@ -681,7 +681,7 @@ namespace PaintDotNet.Effects
                             PropertyPart += "            propRules.Add(new ReadOnlyBoundToValueRule<object, StaticListChoiceProperty>(PropertyNames." + targetPropName + ", PropertyNames." + sourcePropName + ", " + sourceEnumName + ", " + inverse + "));\r\n";
                             break;
                         case ElementType.RollBall:
-                            PropertyPart += "            propRules.Add(new ReadOnlyBoundToValueRule<Tuple<double, double, double>, DoubleVector3Property>(PropertyNames." + targetPropName + ", PropertyNames." + sourcePropName + ", Tuple.Create(0d,0d,0d), " + inverse + "));\r\n";
+                            PropertyPart += "            propRules.Add(new ReadOnlyBoundToValueRule<Vector3Double, DoubleVector3Property>(PropertyNames." + targetPropName + ", PropertyNames." + sourcePropName + ", new Vector3Double(0d,0d,0d), " + inverse + "));\r\n";
                             break;
                         //BinaryPixelOp
                         //FontFamily

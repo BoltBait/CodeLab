@@ -13,6 +13,7 @@
 // Latest distribution: https://www.BoltBait.com/pdn/codelab
 /////////////////////////////////////////////////////////////////////////////////
 
+using PaintDotNet.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -225,12 +226,12 @@ namespace PaintDotNet.Effects
                 { "CheckboxControl", typeof(bool) },
                 { "ColorWheelControl", typeof(ColorBgra) },
                 { "AngleControl", typeof(double) },
-                { "PanSliderControl", typeof(Pair<double, double>) },
+                { "PanSliderControl", typeof(Vector2Double) },
                 { "TextboxControl", typeof(string) },
                 { "FilenameControl", typeof(string) },
                 { "FolderControl", typeof(string) },
                 { "DoubleSliderControl", typeof(double) },
-                { "RollControl", typeof(Tuple<double, double, double>) },
+                { "RollControl", typeof(Vector3Double) },
                 { "ListBoxControl", typeof(byte) },
                 { "RadioButtonControl", typeof(byte) },
                 { "ReseedButtonControl", typeof(byte) },
