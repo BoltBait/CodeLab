@@ -135,6 +135,7 @@ namespace PaintDotNet.Effects
                 "PaintDotNet.Core.dll",
                 "PaintDotNet.Data.dll",
                 "PaintDotNet.Effects.dll",
+                "PaintDotNet.Effects.Core.dll",
                 "PaintDotNet.Fundamentals.dll",
                 "PaintDotNet.ObjectModel.dll",
                 "PaintDotNet.Primitives.dll",

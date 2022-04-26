@@ -53,6 +53,9 @@
     <Reference Include="PaintDotNet.Effects">
       <HintPath>..\paint.net\PaintDotNet\bin\Release\PaintDotNet.Effects.dll</HintPath>
     </Reference>
+    <Reference Include="PaintDotNet.Effects.Core">
+      <HintPath>..\paint.net\PaintDotNet\bin\Release\PaintDotNet.Effects.Core.dll</HintPath>
+    </Reference>
     <Reference Include="PaintDotNet.Fundamentals">
       <HintPath>..\paint.net\PaintDotNet\bin\Release\PaintDotNet.Fundamentals.dll</HintPath>
     </Reference>
