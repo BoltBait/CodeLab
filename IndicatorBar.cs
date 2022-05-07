@@ -348,7 +348,7 @@ namespace PaintDotNet.Effects
                 posTrackHover = false;
             }
 
-            if (posSliderClick)
+            if (posSliderClick && posTrackRect.Contains(0, e.Y))
             {
                 posSliderRect.Y -= posClicked - e.Y;
 
