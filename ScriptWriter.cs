@@ -1160,8 +1160,7 @@ namespace PaintDotNet.Effects
 
         internal static string UserEnteredPart(string SourceCode)
         {
-            SourceCode = Regex.Replace(SourceCode, @"\bRadioButtonControl<(?<TEnum>\S+)>\s+", match => match.Groups["TEnum"].Value + " ");
-            SourceCode = Regex.Replace(SourceCode, @"\bListBoxControl<(?<TEnum>\S+)>\s+", match => match.Groups["TEnum"].Value + " ");
+            SourceCode = Regex.Replace(SourceCode, @"\b(?:RadioButtonControl|ListBoxControl)<(?<TEnum>\S+)>\s+", match => match.Groups["TEnum"].Value + " ");
 
             string UserEnteredPart = "";
             UserEnteredPart += "        #region User Entered Code\r\n        ";
