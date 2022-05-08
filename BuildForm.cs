@@ -125,12 +125,12 @@ namespace PaintDotNet.Effects
                 WindowTitleText.Enabled = false;
             }
 
-            // Preload version checking for period
-            Match vsn = Regex.Match(ScriptText, @"//[\s-[\r\n]]*Version[\s-[\r\n]]*:[\s-[\r\n]]*(?<majorversionlabel>\d+)\.(?<minorversionlabel>\d+)(?=\r?\n|$)", RegexOptions.IgnoreCase);
+            // Preload version checking for Major.Minor (period or comma)
+            Match vsn = Regex.Match(ScriptText, @"//[\s-[\r\n]]*Version[\s-[\r\n]]*:[\s-[\r\n]]*(?<majorversionlabel>\d+)[\.\,](?<minorversionlabel>\d+)(?=\r?\n|$)", RegexOptions.IgnoreCase);
             if (!vsn.Success)
             {
-                // Preload version checking for comma
-                vsn = Regex.Match(ScriptText, @"//[\s-[\r\n]]*Version[\s-[\r\n]]*:[\s-[\r\n]]*(?<majorversionlabel>\d+)\,(?<minorversionlabel>\d+)(?=\r?\n|$)", RegexOptions.IgnoreCase);
+                // Preload version checking for just Major
+                vsn = Regex.Match(ScriptText, @"//[\s-[\r\n]]*Version[\s-[\r\n]]*:[\s-[\r\n]]*(?<majorversionlabel>\d+)(?=\r?\n|$)", RegexOptions.IgnoreCase);
             }
             if (vsn.Success)
             {
