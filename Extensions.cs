@@ -466,7 +466,7 @@ namespace PaintDotNet.Effects
 
         private static bool IsAssignableFromAsIEnumerable(this Type type1, Type type)
         {
-            if (!type1.Name.Equals("IEnumerable`1", StringComparison.OrdinalIgnoreCase))
+            if (!type1.IsInterface || !type1.Name.Equals("IEnumerable`1", StringComparison.OrdinalIgnoreCase))
             {
                 return false;
             }
@@ -474,7 +474,15 @@ namespace PaintDotNet.Effects
             Type iEnumType = type.GetInterface("IEnumerable`1");
             if (iEnumType == null)
             {
-                return false;
+                if (type.IsInterface && type.IsConstructedGenericType && type.Name.Equals("IEnumerable`1", StringComparison.OrdinalIgnoreCase))
+                {
+                    iEnumType = type;
+                }
+
+                if (iEnumType == null)
+                {
+                    return false;
+                }
             }
 
             Type[] args = type1.GenericTypeArguments;
