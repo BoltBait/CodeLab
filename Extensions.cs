@@ -458,10 +458,22 @@ namespace PaintDotNet.Effects
             return method.GetParameters()[0].ParameterType;
         }
 
-        internal static bool Extends(this MethodInfo method, Type type)
+        internal static MethodInfo Extends(this MethodInfo method, Type type)
         {
             Type extType = method.ExtendingType();
-            return extType.IsAssignableFrom(type) || extType.IsAssignableFromAsIEnumerable(type);
+            if (extType.IsAssignableFrom(type))
+            {
+                return method;
+            }
+
+            if (extType.IsAssignableFromAsIEnumerable(type))
+            {
+                return (method.GetGenericArguments().Length == 1)
+                    ? method.MakeGenericMethod(type.GenericTypeArguments[0])
+                    : method;
+            }
+
+            return null;
         }
 
         private static bool IsAssignableFromAsIEnumerable(this Type type1, Type type)

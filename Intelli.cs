@@ -47,12 +47,17 @@ namespace PaintDotNet.Effects
 
         internal static IEnumerable<MethodInfo> GetExtensionMethod(this Type extendedType, string methodName)
         {
-            return extMethods.Where(method => method.Name == methodName && method.Extends(extendedType));
+            return extMethods
+                .Where(method => method.Name == methodName)
+                .Select(method => method.Extends(extendedType))
+                .Where(method => method != null);
         }
 
         internal static IEnumerable<MethodInfo> GetExtensionMethods(this Type extendedType)
         {
-            return extMethods.Where(method => method.Extends(extendedType));
+            return extMethods
+                .Select(method => method.Extends(extendedType))
+                .Where(method => method != null);
         }
 
         internal static bool IsEnum(string enumName)
