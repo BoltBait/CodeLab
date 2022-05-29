@@ -4,7 +4,7 @@ using System.Windows.Forms;
 
 namespace PaintDotNet.Effects
 {
-    public class ChildFormBase : Form
+    public class ChildFormBase : PdnBaseForm
     {
         private string iconName = string.Empty;
 
