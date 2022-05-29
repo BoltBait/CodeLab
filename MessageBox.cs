@@ -222,7 +222,7 @@ namespace PaintDotNet.Effects
         /// The form to show the customized message box.
         /// It is defined as an internal class to keep the public interface of the FlexibleMessageBox clean.
         /// </summary>
-        private class FlexibleMessageBoxForm : Form
+        private class FlexibleMessageBoxForm : PdnBaseForm
         {
             #region Form-Designer generated code
 
