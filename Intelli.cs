@@ -38,6 +38,7 @@ namespace PaintDotNet.Effects
         internal static Dictionary<string, string> TypeAliases { get; }
         internal static IEnumerable<string> Keywords { get; }
         internal static IEnumerable<Assembly> ReferenceAssemblies { get; }
+        internal static IEnumerable<string> PdnAssemblyNames { get; }
         internal static Type UserScript { get; set; }
         internal static string ClassList { get; }
         internal static string EnumList { get; }
@@ -129,20 +130,20 @@ namespace PaintDotNet.Effects
                 "with", "#endif", "#endregion"
             };
 
-            IEnumerable<string> pdnDllNames = new string[]
+            PdnAssemblyNames = new string[]
             {
-                "PaintDotNet.Base.dll",
-                "PaintDotNet.ComponentModel.dll",
-                "PaintDotNet.Core.dll",
-                "PaintDotNet.Data.dll",
-                "PaintDotNet.Effects.dll",
-                "PaintDotNet.Effects.Core.dll",
-                "PaintDotNet.Fundamentals.dll",
-                "PaintDotNet.ObjectModel.dll",
-                "PaintDotNet.Primitives.dll",
-                "PaintDotNet.PropertySystem.dll",
-                "PaintDotNet.Windows.dll",
-                "PaintDotNet.Windows.Core.dll"
+                "PaintDotNet.Base",
+                "PaintDotNet.ComponentModel",
+                "PaintDotNet.Core",
+                "PaintDotNet.Data",
+                "PaintDotNet.Effects",
+                "PaintDotNet.Effects.Core",
+                "PaintDotNet.Fundamentals",
+                "PaintDotNet.ObjectModel",
+                "PaintDotNet.Primitives",
+                "PaintDotNet.PropertySystem",
+                "PaintDotNet.Windows",
+                "PaintDotNet.Windows.Core"
             };
 
             // exclude assemblies that were loaded into separate contexts; i.e. Plugins
@@ -153,7 +154,7 @@ namespace PaintDotNet.Effects
             // Cherry pick certain dotPDN assemblies
             IEnumerable<Assembly> pdnAssemblies = assemblies
                 .Where(a => a.GetCustomAttribute<AssemblyCompanyAttribute>()?.Company == "dotPDN LLC" &&
-                            pdnDllNames.Contains(Path.GetFileName(a.Location), StringComparer.OrdinalIgnoreCase));
+                            PdnAssemblyNames.Contains(a.GetName().Name, StringComparer.OrdinalIgnoreCase));
 
             // Cherry pick Microsoft assemblies
             IEnumerable<Assembly> msAssemblies = assemblies

@@ -99,36 +99,12 @@ namespace PaintDotNet.Effects
                 csprojFile.AppendLine();
             }
             csprojFile.AppendLine("  <ItemGroup>");
-            csprojFile.AppendLine("    <Reference Include=\"PaintDotNet.Base\">");
-            csprojFile.AppendLine($"      <HintPath>{Path.Combine(pdnPath, "PaintDotNet.Base.dll")}</HintPath>");
-            csprojFile.AppendLine("    </Reference>");
-            csprojFile.AppendLine("    <Reference Include=\"PaintDotNet.ComponentModel\">");
-            csprojFile.AppendLine($"      <HintPath>{Path.Combine(pdnPath, "PaintDotNet.ComponentModel.dll")}</HintPath>");
-            csprojFile.AppendLine("    </Reference>");
-            csprojFile.AppendLine("    <Reference Include=\"PaintDotNet.Core\">");
-            csprojFile.AppendLine($"      <HintPath>{Path.Combine(pdnPath, "PaintDotNet.Core.dll")}</HintPath>");
-            csprojFile.AppendLine("    </Reference>");
-            csprojFile.AppendLine("    <Reference Include=\"PaintDotNet.Data\">");
-            csprojFile.AppendLine($"      <HintPath>{Path.Combine(pdnPath, "PaintDotNet.Data.dll")}</HintPath>");
-            csprojFile.AppendLine("    </Reference>");
-            csprojFile.AppendLine("    <Reference Include=\"PaintDotNet.Effects\">");
-            csprojFile.AppendLine($"      <HintPath>{Path.Combine(pdnPath, "PaintDotNet.Effects.dll")}</HintPath>");
-            csprojFile.AppendLine("    </Reference>");
-            csprojFile.AppendLine("    <Reference Include=\"PaintDotNet.Effects.Core\">");
-            csprojFile.AppendLine($"      <HintPath>{Path.Combine(pdnPath, "PaintDotNet.Effects.Core.dll")}</HintPath>");
-            csprojFile.AppendLine("    </Reference>");
-            csprojFile.AppendLine("    <Reference Include=\"PaintDotNet.Fundamentals\">");
-            csprojFile.AppendLine($"      <HintPath>{Path.Combine(pdnPath, "PaintDotNet.Fundamentals.dll")}</HintPath>");
-            csprojFile.AppendLine("    </Reference>");
-            csprojFile.AppendLine("    <Reference Include=\"PaintDotNet.ObjectModel\">");
-            csprojFile.AppendLine($"      <HintPath>{Path.Combine(pdnPath, "PaintDotNet.ObjectModel.dll")}</HintPath>");
-            csprojFile.AppendLine("    </Reference>");
-            csprojFile.AppendLine("    <Reference Include=\"PaintDotNet.Primitives\">");
-            csprojFile.AppendLine($"      <HintPath>{Path.Combine(pdnPath, "PaintDotNet.Primitives.dll")}</HintPath>");
-            csprojFile.AppendLine("    </Reference>");
-            csprojFile.AppendLine("    <Reference Include=\"PaintDotNet.PropertySystem\">");
-            csprojFile.AppendLine($"      <HintPath>{Path.Combine(pdnPath, "PaintDotNet.PropertySystem.dll")}</HintPath>");
-            csprojFile.AppendLine("    </Reference>");
+            foreach (string assemblyName in Intelli.PdnAssemblyNames)
+            {
+                csprojFile.AppendLine($"    <Reference Include=\"{assemblyName}\">");
+                csprojFile.AppendLine($"      <HintPath>{Path.Combine(pdnPath, $"{assemblyName}.dll")}</HintPath>");
+                csprojFile.AppendLine("    </Reference>");
+            }
             csprojFile.AppendLine("  </ItemGroup>");
             csprojFile.AppendLine();
             csprojFile.AppendLine("  <Target Name=\"PostBuild\" AfterTargets=\"PostBuildEvent\">");
