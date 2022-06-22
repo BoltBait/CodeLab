@@ -114,8 +114,14 @@ namespace PaintDotNet.Effects
             csprojFile.AppendLine("    <Reference Include=\"PaintDotNet.Effects\">");
             csprojFile.AppendLine($"      <HintPath>{Path.Combine(pdnPath, "PaintDotNet.Effects.dll")}</HintPath>");
             csprojFile.AppendLine("    </Reference>");
+            csprojFile.AppendLine("    <Reference Include=\"PaintDotNet.Effects.Core\">");
+            csprojFile.AppendLine($"      <HintPath>{Path.Combine(pdnPath, "PaintDotNet.Effects.Core.dll")}</HintPath>");
+            csprojFile.AppendLine("    </Reference>");
             csprojFile.AppendLine("    <Reference Include=\"PaintDotNet.Fundamentals\">");
             csprojFile.AppendLine($"      <HintPath>{Path.Combine(pdnPath, "PaintDotNet.Fundamentals.dll")}</HintPath>");
+            csprojFile.AppendLine("    </Reference>");
+            csprojFile.AppendLine("    <Reference Include=\"PaintDotNet.ObjectModel\">");
+            csprojFile.AppendLine($"      <HintPath>{Path.Combine(pdnPath, "PaintDotNet.ObjectModel.dll")}</HintPath>");
             csprojFile.AppendLine("    </Reference>");
             csprojFile.AppendLine("    <Reference Include=\"PaintDotNet.Primitives\">");
             csprojFile.AppendLine($"      <HintPath>{Path.Combine(pdnPath, "PaintDotNet.Primitives.dll")}</HintPath>");

@@ -1974,7 +1974,7 @@ namespace PaintDotNet.Effects
                     SourceCode += " = 0; // ";
                     break;
                 case ElementType.RollBall:
-                    SourceCode += " = new Vector3Double(0.0 , 0.0 , 0.0)";
+                    SourceCode += " = new Vector3Double(0.0, 0.0, 0.0)";
                     SourceCode += "; // ";
                     break;
                 case ElementType.Filename:
