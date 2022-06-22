@@ -42,8 +42,8 @@ namespace PaintDotNet.Effects
             StringBuilder slnFile = new StringBuilder();
             slnFile.AppendLine();
             slnFile.AppendLine("Microsoft Visual Studio Solution File, Format Version 12.00");
-            slnFile.AppendLine("# Visual Studio 16");
-            slnFile.AppendLine("VisualStudioVersion = 16.0.31515.178");
+            slnFile.AppendLine("# Visual Studio 17");
+            slnFile.AppendLine("VisualStudioVersion = 17.2.32602.215");
             slnFile.AppendLine("MinimumVisualStudioVersion = 10.0.40219.1");
             slnFile.AppendLine($"Project(\"{projGroupGuid}\") = \"{projectName}\", \"{projectName}\\{projectName}.csproj\", \"{projGuid}\"");
             slnFile.AppendLine("EndProject");
