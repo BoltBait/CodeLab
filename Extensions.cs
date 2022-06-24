@@ -705,7 +705,7 @@ namespace PaintDotNet.Effects
 
         internal static bool IsNullable(this MethodInfo method)
         {
-            return IsNullableImpl(method.ReturnType, method.DeclaringType, method.CustomAttributes);
+            return IsNullable(method.ReturnParameter);
         }
 
         internal static bool IsNullable(this PropertyInfo property)
