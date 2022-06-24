@@ -580,6 +580,7 @@ namespace PaintDotNet.Effects
         private void AddMethod(MethodInfo methodInfo, bool isExtension)
         {
             string returnType = methodInfo.ReturnType.GetDisplayName();
+            string nullable = methodInfo.IsNullable() ? "?" : string.Empty;
             string byRef = methodInfo.ReturnType.IsByRef ? "ref " : string.Empty;
             string methodParameters = $"({methodInfo.Params()})";
             string genericArgs = string.Empty;
@@ -601,7 +602,7 @@ namespace PaintDotNet.Effects
                 }
             }
 
-            string toolTip = $"{byRef}{returnType} - {methodInfo.Name}{genericArgs}{methodParameters}{genericContraints}\n{ext}{methodInfo.MemberType}";
+            string toolTip = $"{byRef}{returnType}{nullable} - {methodInfo.Name}{genericArgs}{methodParameters}{genericContraints}\n{ext}{methodInfo.MemberType}";
             unFilteredItems.Add(new IntelliBoxItem(methodInfo.Name + genericArgs + methodParameters, methodInfo.Name, toolTip, IntelliType.Method));
         }
 
