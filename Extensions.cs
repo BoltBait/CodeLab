@@ -211,6 +211,15 @@ namespace PaintDotNet.Effects
 
         internal static string GetDisplayName(this Type type)
         {
+            if (type.IsArray && type.HasElementType)
+            {
+                Type elementType = type.GetElementType();
+                if (elementType.IsGenericType)
+                {
+                    return elementType.GetGenericName() + "[]";
+                }
+            }
+
             return (type.IsGenericType) ? type.GetGenericName() : type.GetAliasName();
         }
 
