@@ -248,6 +248,12 @@ namespace PaintDotNet.Effects
             }
         }
 
+        internal bool DisableAutoComplete
+        {
+            get;
+            set;
+        }
+
         internal bool UseExtendedColors
         {
             get
@@ -3715,7 +3721,10 @@ namespace PaintDotNet.Effects
                 }
                 else if (e.Char == '.')
                 {
-                    MemberIntelliBox(this.CurrentPosition - 1);
+                    if (!this.DisableAutoComplete)
+                    {
+                        MemberIntelliBox(this.CurrentPosition - 1);
+                    }
                 }
                 else if (e.Char == '(')
                 {
@@ -3725,7 +3734,10 @@ namespace PaintDotNet.Effects
                         this.autoBraceOpenPos = this.CurrentPosition - 1;
                     }
 
-                    ConstructorIntelliBox(this.CurrentPosition - 1);
+                    if (!this.DisableAutoComplete)
+                    {
+                        ConstructorIntelliBox(this.CurrentPosition - 1);
+                    }
                 }
                 else if (e.Char == '[')
                 {
@@ -3751,6 +3763,10 @@ namespace PaintDotNet.Effects
                         this.InsertText(this.CurrentPosition, ">");
                         this.autoBraceOpenPos = this.CurrentPosition - 1;
                     }
+                }
+                else if (this.DisableAutoComplete)
+                {
+                    // no-op
                 }
                 else if (char.IsLetter(e.Char.ToChar()) || e.Char.Equals('#'))
                 {
@@ -3827,7 +3843,11 @@ namespace PaintDotNet.Effects
             }
             else if (this.Lexer == Lexer.Xml)
             {
-                if (e.Char == '<')
+                if (this.DisableAutoComplete)
+                {
+                    // no-op
+                }
+                else if (e.Char == '<')
                 {
                     XamlTagIntelliBox(this.CurrentPosition - 1);
                 }

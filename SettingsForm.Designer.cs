@@ -44,6 +44,7 @@
             this.label8 = new System.Windows.Forms.Label();
             this.warningLevelCombobox = new System.Windows.Forms.ComboBox();
             this.panelUI = new System.Windows.Forms.Panel();
+            this.disableAutoCompCheckBox = new System.Windows.Forms.CheckBox();
             this.extendedColorsCheckBox = new System.Windows.Forms.CheckBox();
             this.caretLineFrameCheckBox = new System.Windows.Forms.CheckBox();
             this.indentSpacesLabel = new System.Windows.Forms.Label();
@@ -215,7 +216,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.label8.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.label8.Location = new System.Drawing.Point(14, 17);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(120, 15);
@@ -240,6 +241,7 @@
             // 
             // panelUI
             // 
+            this.panelUI.Controls.Add(this.disableAutoCompCheckBox);
             this.panelUI.Controls.Add(this.extendedColorsCheckBox);
             this.panelUI.Controls.Add(this.caretLineFrameCheckBox);
             this.panelUI.Controls.Add(this.indentSpacesLabel);
@@ -266,6 +268,17 @@
             this.panelUI.Size = new System.Drawing.Size(476, 405);
             this.panelUI.TabIndex = 1;
             // 
+            // disableAutoCompCheckBox
+            // 
+            this.disableAutoCompCheckBox.AutoSize = true;
+            this.disableAutoCompCheckBox.Location = new System.Drawing.Point(32, 131);
+            this.disableAutoCompCheckBox.Name = "disableAutoCompCheckBox";
+            this.disableAutoCompCheckBox.Size = new System.Drawing.Size(148, 19);
+            this.disableAutoCompCheckBox.TabIndex = 20;
+            this.disableAutoCompCheckBox.Text = "Disable Auto Complete";
+            this.disableAutoCompCheckBox.UseVisualStyleBackColor = true;
+            this.disableAutoCompCheckBox.CheckedChanged += new System.EventHandler(this.disableAutoCompCheckBox_CheckedChanged);
+            // 
             // extendedColorsCheckBox
             // 
             this.extendedColorsCheckBox.AutoSize = true;
@@ -291,8 +304,8 @@
             // indentSpacesLabel
             // 
             this.indentSpacesLabel.AutoSize = true;
-            this.indentSpacesLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            this.indentSpacesLabel.Location = new System.Drawing.Point(13, 145);
+            this.indentSpacesLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.indentSpacesLabel.Location = new System.Drawing.Point(13, 160);
             this.indentSpacesLabel.Name = "indentSpacesLabel";
             this.indentSpacesLabel.Size = new System.Drawing.Size(88, 15);
             this.indentSpacesLabel.TabIndex = 9;
@@ -305,7 +318,7 @@
             this.indentSpacesComboBox.Items.AddRange(new object[] {
             "2",
             "4"});
-            this.indentSpacesComboBox.Location = new System.Drawing.Point(32, 171);
+            this.indentSpacesComboBox.Location = new System.Drawing.Point(32, 186);
             this.indentSpacesComboBox.Name = "indentSpacesComboBox";
             this.indentSpacesComboBox.Size = new System.Drawing.Size(50, 23);
             this.indentSpacesComboBox.TabIndex = 10;
@@ -334,7 +347,7 @@
             // linkLabel1
             // 
             this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Location = new System.Drawing.Point(234, 291);
+            this.linkLabel1.Location = new System.Drawing.Point(234, 301);
             this.linkLabel1.Name = "linkLabel1";
             this.linkLabel1.Size = new System.Drawing.Size(88, 15);
             this.linkLabel1.TabIndex = 15;
@@ -345,7 +358,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(225, 265);
+            this.label4.Location = new System.Drawing.Point(225, 275);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(177, 15);
             this.label4.TabIndex = 13;
@@ -379,7 +392,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.label3.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.label3.Location = new System.Drawing.Point(13, 330);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(49, 15);
@@ -389,7 +402,7 @@
             // largeFontCheckbox
             // 
             this.largeFontCheckbox.AutoSize = true;
-            this.largeFontCheckbox.Location = new System.Drawing.Point(32, 290);
+            this.largeFontCheckbox.Location = new System.Drawing.Point(32, 300);
             this.largeFontCheckbox.Name = "largeFontCheckbox";
             this.largeFontCheckbox.Size = new System.Drawing.Size(85, 19);
             this.largeFontCheckbox.TabIndex = 14;
@@ -410,7 +423,7 @@
             "Hack",
             "JetBrains Mono",
             "Verdana"});
-            this.fontCombobox.Location = new System.Drawing.Point(32, 260);
+            this.fontCombobox.Location = new System.Drawing.Point(32, 270);
             this.fontCombobox.Name = "fontCombobox";
             this.fontCombobox.Size = new System.Drawing.Size(166, 23);
             this.fontCombobox.TabIndex = 12;
@@ -419,8 +432,8 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            this.label2.Location = new System.Drawing.Point(13, 241);
+            this.label2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.label2.Location = new System.Drawing.Point(13, 251);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(40, 15);
             this.label2.TabIndex = 11;
@@ -429,7 +442,7 @@
             // showWhiteSpaceCheckbox
             // 
             this.showWhiteSpaceCheckbox.AutoSize = true;
-            this.showWhiteSpaceCheckbox.Location = new System.Drawing.Point(32, 201);
+            this.showWhiteSpaceCheckbox.Location = new System.Drawing.Point(32, 216);
             this.showWhiteSpaceCheckbox.Name = "showWhiteSpaceCheckbox";
             this.showWhiteSpaceCheckbox.Size = new System.Drawing.Size(129, 19);
             this.showWhiteSpaceCheckbox.TabIndex = 11;
@@ -440,7 +453,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.label1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.label1.Location = new System.Drawing.Point(13, 4);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(116, 15);
@@ -507,7 +520,7 @@
             this.settingsList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.settingsList.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-            this.settingsList.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.settingsList.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.settingsList.FormattingEnabled = true;
             this.settingsList.IntegralHeight = false;
             this.settingsList.ItemHeight = 32;
@@ -526,7 +539,7 @@
             // 
             // panelSnippet
             // 
-            this.panelSnippet.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.panelSnippet.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.panelSnippet.Location = new System.Drawing.Point(202, 12);
             this.panelSnippet.Name = "panelSnippet";
             this.panelSnippet.Size = new System.Drawing.Size(476, 405);
@@ -624,7 +637,7 @@
             // spellcheckOptionsLabel
             // 
             this.spellcheckOptionsLabel.AutoSize = true;
-            this.spellcheckOptionsLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.spellcheckOptionsLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.spellcheckOptionsLabel.Location = new System.Drawing.Point(14, 17);
             this.spellcheckOptionsLabel.Name = "spellcheckOptionsLabel";
             this.spellcheckOptionsLabel.Size = new System.Drawing.Size(114, 15);
@@ -717,5 +730,6 @@
         private System.Windows.Forms.ComboBox spellLangComboBox;
         private System.Windows.Forms.Button addLangsButton;
         private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.CheckBox disableAutoCompCheckBox;
     }
 }

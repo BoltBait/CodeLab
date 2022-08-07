@@ -51,6 +51,7 @@ namespace PaintDotNet.Effects
             wordWrapCheckbox.Checked = Settings.WordWrap;
             wordWrapTextFilesCheckbox.Checked = Settings.WordWrapPlainText;
             caretLineFrameCheckBox.Checked = Settings.CaretLineFrame;
+            disableAutoCompCheckBox.Checked = Settings.DisableAutoComplete;
             showWhiteSpaceCheckbox.Checked = Settings.WhiteSpace;
             indentSpacesComboBox.SelectedIndex = Settings.IndentSpaces == 4 ? 1 : 0;
             largeFontCheckbox.Checked = Settings.LargeFonts;
@@ -277,6 +278,12 @@ namespace PaintDotNet.Effects
         {
             if (Initializing) return;
             Settings.CaretLineFrame = caretLineFrameCheckBox.Checked;
+        }
+
+        private void disableAutoCompCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (Initializing) return;
+            Settings.DisableAutoComplete = disableAutoCompCheckBox.Checked;
         }
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

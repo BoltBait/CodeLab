@@ -29,6 +29,12 @@ namespace PaintDotNet.Effects
             set => SetRegValue("CodeFolding", value);
         }
 
+        internal static bool DisableAutoComplete
+        {
+            get => GetRegValue("DisableAutoComplete", false);
+            set => SetRegValue("DisableAutoComplete", value);
+        }
+
         internal static Theme EditorTheme
         {
             get => GetRegValue("EditorTheme", Theme.Auto);
