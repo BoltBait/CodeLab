@@ -77,8 +77,7 @@ namespace PaintDotNet.Effects
         private bool useExtendedColors = false;
         private bool spellCheckEnabled = false;
         private bool updatingStyles = false;
-        private bool autoCloseBrace = false;
-        private int autoCloseBracePos = InvalidPosition;
+        private int autoBraceOpenPos = InvalidPosition;
         private bool suppressContextMenu = true;
         #endregion
 
@@ -2754,7 +2753,9 @@ namespace PaintDotNet.Effects
                 }
                 else if (e.KeyCode == Keys.Back)
                 {
-                    if (this.autoCloseBrace && this.CurrentPosition == this.autoCloseBracePos)
+                    if (this.autoBraceOpenPos != InvalidPosition &&
+                        this.CurrentPosition == this.autoBraceOpenPos + 1 &&
+                        this.BraceMatch(this.autoBraceOpenPos) - 1 == this.autoBraceOpenPos)
                     {
                         e.SuppressKeyPress = true;
                         e.Handled = true;
@@ -3573,10 +3574,12 @@ namespace PaintDotNet.Effects
 
                 int caretPos = this.CurrentPosition;
 
-                if (this.autoCloseBrace && this.autoCloseBracePos != caretPos)
+                if (this.autoBraceOpenPos != InvalidPosition)
                 {
-                    this.autoCloseBrace = false;
-                    this.autoCloseBracePos = InvalidPosition;
+                    if (caretPos <= this.autoBraceOpenPos || caretPos > this.BraceMatch(this.autoBraceOpenPos))
+                    {
+                        this.autoBraceOpenPos = InvalidPosition;
+                    }
                 }
 
                 // Has the caret changed position?
@@ -3676,8 +3679,7 @@ namespace PaintDotNet.Effects
             {
                 if (e.Char == '}')
                 {
-                    if (this.autoCloseBrace &&
-                        base.GetCharAt(this.CurrentPosition - 2) == '{' &&
+                    if (this.autoBraceOpenPos != InvalidPosition &&
                         base.GetCharAt(this.CurrentPosition) == '}')
                     {
                         this.DeleteRange(this.CurrentPosition, 1);
@@ -3689,8 +3691,7 @@ namespace PaintDotNet.Effects
                 }
                 else if (e.Char == ')')
                 {
-                    if (this.autoCloseBrace &&
-                        base.GetCharAt(this.CurrentPosition - 2) == '(' &&
+                    if (this.autoBraceOpenPos != InvalidPosition &&
                         base.GetCharAt(this.CurrentPosition) == ')')
                     {
                         this.DeleteRange(this.CurrentPosition, 1);
@@ -3698,8 +3699,7 @@ namespace PaintDotNet.Effects
                 }
                 else if (e.Char == ']')
                 {
-                    if (this.autoCloseBrace &&
-                        base.GetCharAt(this.CurrentPosition - 2) == '[' &&
+                    if (this.autoBraceOpenPos != InvalidPosition &&
                         base.GetCharAt(this.CurrentPosition) == ']')
                     {
                         this.DeleteRange(this.CurrentPosition, 1);
@@ -3707,8 +3707,7 @@ namespace PaintDotNet.Effects
                 }
                 else if (e.Char == '>')
                 {
-                    if (this.autoCloseBrace &&
-                        base.GetCharAt(this.CurrentPosition - 2) == '<' &&
+                    if (this.autoBraceOpenPos != InvalidPosition &&
                         base.GetCharAt(this.CurrentPosition) == '>')
                     {
                         this.DeleteRange(this.CurrentPosition, 1);
@@ -3723,8 +3722,7 @@ namespace PaintDotNet.Effects
                     if (IsRightOfCaretEmpty(this.CurrentPosition))
                     {
                         this.InsertText(this.CurrentPosition, ")");
-                        this.autoCloseBrace = true;
-                        this.autoCloseBracePos = this.CurrentPosition;
+                        this.autoBraceOpenPos = this.CurrentPosition - 1;
                     }
 
                     ConstructorIntelliBox(this.CurrentPosition - 1);
@@ -3734,8 +3732,7 @@ namespace PaintDotNet.Effects
                     if (IsRightOfCaretEmpty(this.CurrentPosition))
                     {
                         this.InsertText(this.CurrentPosition, "]");
-                        this.autoCloseBrace = true;
-                        this.autoCloseBracePos = this.CurrentPosition;
+                        this.autoBraceOpenPos = this.CurrentPosition - 1;
                     }
                 }
                 else if (e.Char == '{')
@@ -3743,8 +3740,7 @@ namespace PaintDotNet.Effects
                     if (IsRightOfCaretEmpty(this.CurrentPosition))
                     {
                         this.InsertText(this.CurrentPosition, "}");
-                        this.autoCloseBrace = true;
-                        this.autoCloseBracePos = this.CurrentPosition;
+                        this.autoBraceOpenPos = this.CurrentPosition - 1;
                     }
                 }
                 else if (e.Char == '<')
@@ -3753,8 +3749,7 @@ namespace PaintDotNet.Effects
                         GetReturnType(this.CurrentPosition - 1)?.IsGenericType == true)
                     {
                         this.InsertText(this.CurrentPosition, ">");
-                        this.autoCloseBrace = true;
-                        this.autoCloseBracePos = this.CurrentPosition;
+                        this.autoBraceOpenPos = this.CurrentPosition - 1;
                     }
                 }
                 else if (char.IsLetter(e.Char.ToChar()) || e.Char.Equals('#'))
