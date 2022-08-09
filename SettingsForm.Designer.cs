@@ -78,6 +78,7 @@
             this.label11 = new System.Windows.Forms.Label();
             this.spellcheckOptionsLabel = new System.Windows.Forms.Label();
             this.spellLangComboBox = new System.Windows.Forms.ComboBox();
+            this.label10 = new System.Windows.Forms.Label();
             this.panelUpdates.SuspendLayout();
             this.panelCompiler.SuspendLayout();
             this.panelUI.SuspendLayout();
@@ -241,6 +242,7 @@
             // 
             // panelUI
             // 
+            this.panelUI.Controls.Add(this.label10);
             this.panelUI.Controls.Add(this.disableAutoCompCheckBox);
             this.panelUI.Controls.Add(this.extendedColorsCheckBox);
             this.panelUI.Controls.Add(this.caretLineFrameCheckBox);
@@ -273,9 +275,9 @@
             this.disableAutoCompCheckBox.AutoSize = true;
             this.disableAutoCompCheckBox.Location = new System.Drawing.Point(32, 131);
             this.disableAutoCompCheckBox.Name = "disableAutoCompCheckBox";
-            this.disableAutoCompCheckBox.Size = new System.Drawing.Size(148, 19);
+            this.disableAutoCompCheckBox.Size = new System.Drawing.Size(160, 19);
             this.disableAutoCompCheckBox.TabIndex = 20;
-            this.disableAutoCompCheckBox.Text = "Disable Auto Complete";
+            this.disableAutoCompCheckBox.Text = "Disable Auto Complete...";
             this.disableAutoCompCheckBox.UseVisualStyleBackColor = true;
             this.disableAutoCompCheckBox.CheckedChanged += new System.EventHandler(this.disableAutoCompCheckBox_CheckedChanged);
             // 
@@ -654,6 +656,15 @@
             this.spellLangComboBox.TabIndex = 3;
             this.spellLangComboBox.SelectedIndexChanged += new System.EventHandler(this.spellLangComboBox_SelectedIndexChanged);
             // 
+            // label10
+            // 
+            this.label10.Location = new System.Drawing.Point(225, 132);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(239, 51);
+            this.label10.TabIndex = 21;
+            this.label10.Text = "When disabled, you can still trigger the\r\nautocomplete window to open after\r\nty" +
+    "ping period by pressing Ctrl-J";
+            // 
             // SettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -731,5 +742,6 @@
         private System.Windows.Forms.Button addLangsButton;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.CheckBox disableAutoCompCheckBox;
+        private System.Windows.Forms.Label label10;
     }
 }
