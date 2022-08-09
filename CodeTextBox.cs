@@ -3001,26 +3001,14 @@ namespace PaintDotNet.Effects
 
         protected override void OnKeyPress(KeyPressEventArgs e)
         {
-            if (!iBox.Visible)
-            {
-                base.OnKeyPress(e);
-                return;
-            }
-
-            if (e.KeyChar == ')' || e.KeyChar == '[' || e.KeyChar == ']' || e.KeyChar == '{' || e.KeyChar == '}')
+            if (iBox.Visible &&
+                iBox.Matches &&
+                IntelliBox.IsConfirmationChar(e.KeyChar))
             {
                 ConfirmIntelliBox();
-                base.OnKeyPress(e);
-                return;
             }
 
-            if (e.KeyChar == '(')
-            {
-                ConfirmIntelliBox();
-                base.OnKeyPress(e);
-                this.InsertText(this.CurrentPosition, ")");
-                return;
-            }
+            base.OnKeyPress(e);
         }
 
         protected override void OnMouseDown(MouseEventArgs e)

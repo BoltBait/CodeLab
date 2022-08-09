@@ -74,6 +74,12 @@ namespace PaintDotNet.Effects
             UIUtil.GetImage("Delegate"),
             UIUtil.EmptyImage
         };
+        private static readonly IEnumerable<char> confirmationChars = new[]
+        {
+            '{', '}', '(', ')', '[', ']', '<', '>',
+            '!', '@', '#', '%', '^', '&', '|', '~',
+            '*', '/', '+', '-', '?', ',', '\\'
+        };
 
         internal IntelliBox()
         {
@@ -1009,6 +1015,11 @@ namespace PaintDotNet.Effects
 
             this.listBox.SelectedIndex = itemIndex;
             this.listBox.TopIndex = itemIndex;
+        }
+
+        internal static bool IsConfirmationChar(char c)
+        {
+            return confirmationChars.Contains(c);
         }
 
         private class IntelliBoxItem : IComparable<IntelliBoxItem>, IEquatable<IntelliBoxItem>
