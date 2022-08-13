@@ -3001,11 +3001,16 @@ namespace PaintDotNet.Effects
 
         protected override void OnKeyPress(KeyPressEventArgs e)
         {
-            if (iBox.Visible &&
-                iBox.Matches &&
-                IntelliBox.IsConfirmationChar(e.KeyChar))
+            if (iBox.Visible && IntelliBox.IsConfirmationChar(e.KeyChar))
             {
-                ConfirmIntelliBox();
+                if (iBox.Matches)
+                {
+                    ConfirmIntelliBox();
+                }
+                else
+                {
+                    iBox.Visible = false;
+                }
             }
 
             base.OnKeyPress(e);
