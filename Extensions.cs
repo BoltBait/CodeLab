@@ -712,6 +712,15 @@ namespace PaintDotNet.Effects
             return listBox.FindString(s);
         }
 
+        internal static void InvalidateSelectedIndex(this ListBox listBox)
+        {
+            int selectedIndex = listBox.SelectedIndex;
+            if (selectedIndex > -1)
+            {
+                listBox.Invalidate(listBox.GetItemRectangle(selectedIndex));
+            }
+        }
+
         internal static bool IsNullable(this MethodInfo method)
         {
             return IsNullable(method.ReturnParameter);

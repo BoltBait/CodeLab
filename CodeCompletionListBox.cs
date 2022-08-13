@@ -32,7 +32,7 @@ namespace PaintDotNet.Effects
     {
         private bool listBoxMouseOver;
         private bool toolstripMouseOver;
-        private bool filterMatches;
+        private bool drawSelectionOutline;
         private readonly IntelliTip itemToolTip = new IntelliTip();
         private readonly IntelliTip filterToolTip = new IntelliTip();
         private readonly List<IntelliBoxItem> unFilteredItems = new List<IntelliBoxItem>();
@@ -47,7 +47,7 @@ namespace PaintDotNet.Effects
 
         internal string AutoCompleteCode => listBox.SelectedIndex >= 0 ? listBox.SelectedItem.ToString() : string.Empty;
         internal bool MouseOver => listBoxMouseOver || toolstripMouseOver;
-        internal bool Matches => filterMatches;
+        internal bool AutoComplete => !drawSelectionOutline;
         internal int IconWidth => IconSize.Width + 2;
         internal bool ExtraSpace => (intelliBoxContents != IntelliBoxContents.NonMembers && intelliBoxContents != IntelliBoxContents.Constructors);
         internal bool IsEmpty => this.listBox.Items.Count == 0;
@@ -830,7 +830,8 @@ namespace PaintDotNet.Effects
 
             if (enumFilters.Count == 0 && matches.Count == 0)
             {
-                filterMatches = false;
+                drawSelectionOutline = true;
+                listBox.InvalidateSelectedIndex();
                 return;
             }
 
@@ -839,11 +840,11 @@ namespace PaintDotNet.Effects
             if (matches.Count == 0)
             {
                 itemToolTip.Hide(this);
-                filterMatches = false;
+                drawSelectionOutline = true;
                 return;
             }
 
-            filterMatches = true;
+            drawSelectionOutline = false;
             this.listBox.Items.AddRange(matches.ToArray());
 
             if (stringFilter.Length == 0)
@@ -897,26 +898,44 @@ namespace PaintDotNet.Effects
                 return;
             }
 
-            e.DrawBackground();
-            e.DrawFocusRectangle();
-
-            if (this.listBox.Items[e.Index] is IntelliBoxItem item)
+            if (this.listBox.Items[e.Index] is not IntelliBoxItem item)
             {
+                e.DrawBackground();
+                TextRenderer.DrawText(e.Graphics, this.listBox.Items[e.Index].ToString(), e.Font, e.Bounds, e.ForeColor, TextFormatFlags.Default);
+                return;
+            }
+
+            Rectangle textRect = Rectangle.FromLTRB(e.Bounds.Left + IconSize.Width + 1, e.Bounds.Top, e.Bounds.Right - 1, e.Bounds.Bottom - 1);
+            bool outline = e.State == DrawItemState.Selected && this.drawSelectionOutline;
+
+            if (!outline)
+            {
+                e.DrawBackground();
                 using (SolidBrush iconBg = new SolidBrush(this.BackColor))
                 {
                     e.Graphics.FillRectangle(iconBg, e.Bounds.Left, e.Bounds.Top, IconSize.Width + 1, IconSize.Height);
                 }
-                e.Graphics.DrawImage(ItemIcons[item.ImageIndex], e.Bounds.Left, e.Bounds.Top, IconSize.Width, IconSize.Height);
-                TextRenderer.DrawText(e.Graphics, item.Text, e.Font, new Point(e.Bounds.Left + IconSize.Width, e.Bounds.Top), e.ForeColor);
             }
-            else
+
+            e.Graphics.DrawImage(ItemIcons[item.ImageIndex], e.Bounds.Left, e.Bounds.Top, IconSize.Width, IconSize.Height);
+
+            Color textColor = outline ? listBox.ForeColor : e.ForeColor;
+            TextRenderer.DrawText(e.Graphics, item.Text, e.Font, textRect, textColor, TextFormatFlags.EndEllipsis);
+
+            if (outline)
             {
-                TextRenderer.DrawText(e.Graphics, this.listBox.Items[e.Index].ToString(), e.Font, new Point(e.Bounds.Left, e.Bounds.Top), e.ForeColor);
+                e.Graphics.DrawRectangle(SystemPens.Highlight, textRect);
             }
         }
 
         private void ListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (this.drawSelectionOutline)
+            {
+                this.drawSelectionOutline = false;
+                this.listBox.InvalidateSelectedIndex();
+            }
+
             if (this.listBox.Visible && this.listBox.SelectedItem is IntelliBoxItem item)
             {
                 itemToolTip.Show(item.ToolTip, this, this.Width, 0);

@@ -2854,7 +2854,7 @@ namespace PaintDotNet.Effects
             }
             else if (e.KeyCode == Keys.OemPeriod)
             {
-                if (iBox.Matches)
+                if (iBox.AutoComplete)
                 {
                     e.Handled = true;
                     ConfirmIntelliBox();
@@ -2866,7 +2866,7 @@ namespace PaintDotNet.Effects
             }
             else if (e.KeyCode == Keys.OemSemicolon)
             {
-                if (iBox.Matches)
+                if (iBox.AutoComplete)
                 {
                     e.Handled = true;
                     ConfirmIntelliBox();
@@ -2878,7 +2878,7 @@ namespace PaintDotNet.Effects
             }
             else if (e.KeyCode == Keys.Oemcomma)
             {
-                if (iBox.Matches)
+                if (iBox.AutoComplete)
                 {
                     e.Handled = true;
                     ConfirmIntelliBox();
@@ -2896,7 +2896,7 @@ namespace PaintDotNet.Effects
             }
             else if (e.KeyCode == Keys.Space)
             {
-                if (iBox.Matches)
+                if (iBox.AutoComplete)
                 {
                     ConfirmIntelliBox();
                 }
@@ -2980,7 +2980,7 @@ namespace PaintDotNet.Effects
             }
             else if (e.KeyCode == Keys.Return)
             {
-                if (iBox.Matches)
+                if (iBox.AutoComplete)
                 {
                     e.SuppressKeyPress = true;
                     e.Handled = true;
@@ -3003,7 +3003,7 @@ namespace PaintDotNet.Effects
         {
             if (iBox.Visible && IntelliBox.IsConfirmationChar(e.KeyChar))
             {
-                if (iBox.Matches)
+                if (iBox.AutoComplete)
                 {
                     ConfirmIntelliBox();
                 }
