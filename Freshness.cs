@@ -14,6 +14,8 @@
 
 using System;
 using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace PaintDotNet.Effects
@@ -30,6 +32,7 @@ namespace PaintDotNet.Effects
         private static string updateURL;
         private static string updateVER;
         private static bool needToShowNotification = false;
+        private static readonly HttpClient httpClient = new HttpClient();
 
         internal static void DisplayUpdateNotification()
         {
@@ -44,7 +47,7 @@ namespace PaintDotNet.Effects
             }
         }
 
-        internal static void GoCheckForUpdates(bool silentMode, bool force)
+        internal static async Task GoCheckForUpdates(bool silentMode, bool force)
         {
             updateURL = string.Empty;
             updateVER = string.Empty;
@@ -59,63 +62,70 @@ namespace PaintDotNet.Effects
                 }
             }
 
+            UpdateStatus updateStatus = UpdateStatus.Unknown;
+
+            HttpResponseMessage response = null;
             Random r = new Random(); // defeat any cache by appending a random number to the URL
 
-            WebClient web = new WebClient();
-            web.DownloadStringAsync(new Uri(WebUpdateFile + "?r=" + r.Next(int.MaxValue).ToString()));
-
-            web.DownloadStringCompleted += (sender, e) =>
+            try
             {
-                UpdateStatus updateStatus = UpdateStatus.Unknown;
+                response = await httpClient.GetAsync($"{WebUpdateFile}?r={r.Next(int.MaxValue)}");
+            }
+            catch
+            {
+            }
 
-                if (!e.Cancelled && e.Error == null)
+            if (response != null && response.IsSuccessStatusCode)
+            {
+                Settings.LatestUpdateCheck = DateTime.Now;
+
+                string content = await response.Content.ReadAsStringAsync();
+
+                foreach (string line in content.Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
                 {
-                    Settings.LatestUpdateCheck = DateTime.Now;
-
-                    foreach (string line in e.Result.Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+                    string[] data = line.Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                    if (data.Length >= 2 && data[0] == ThisApplication)
                     {
-                        string[] data = line.Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-                        if (data.Length >= 2 && data[0] == ThisApplication)
+                        if (data[1] != ThisVersion)
                         {
-                            if (data[1] != ThisVersion)
-                            {
-                                updateStatus = UpdateStatus.UpdateAvailable;
-                                updateVER = data[1];
-                                updateURL = data[2];
-                            }
-                            else
-                            {
-                                updateStatus = UpdateStatus.UpToDate;
-                            }
-
-                            break;
+                            updateStatus = UpdateStatus.UpdateAvailable;
+                            updateVER = data[1];
+                            updateURL = data[2];
                         }
-                    }
-                }
+                        else
+                        {
+                            updateStatus = UpdateStatus.UpToDate;
+                        }
 
-                if (silentMode)
-                {
-                    needToShowNotification = updateStatus == UpdateStatus.UpdateAvailable;
-                }
-                else
-                {
-                    switch (updateStatus)
-                    {
-                        case UpdateStatus.Unknown:
-                            FlexibleMessageBox.Show("I'm not sure if you are up-to-date.\n\nI was not able to reach the update website.\n\nTry again later.", "CodeLab Updater", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                            break;
-                        case UpdateStatus.UpToDate:
-                            FlexibleMessageBox.Show("You are up-to-date!", "CodeLab Updater", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                            break;
-                        case UpdateStatus.UpdateAvailable:
-                            if (FlexibleMessageBox.Show("An update to CodeLab is available.\n\nWould you like to download CodeLab v" + updateVER + "?\n\n(This will not close your current CodeLab session.)", "CodeLab Updater", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
-                            {
-                                UIUtil.LaunchUrl(null, updateURL);
-                            }
-                            break;
+                        break;
                     }
                 }
-            };
+            }
+
+            response?.Dispose();
+
+            if (silentMode)
+            {
+                needToShowNotification = updateStatus == UpdateStatus.UpdateAvailable;
+            }
+            else
+            {
+                switch (updateStatus)
+                {
+                    case UpdateStatus.Unknown:
+                        FlexibleMessageBox.Show("I'm not sure if you are up-to-date.\n\nI was not able to reach the update website.\n\nTry again later.", "CodeLab Updater", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        break;
+                    case UpdateStatus.UpToDate:
+                        FlexibleMessageBox.Show("You are up-to-date!", "CodeLab Updater", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        break;
+                    case UpdateStatus.UpdateAvailable:
+                        if (FlexibleMessageBox.Show("An update to CodeLab is available.\n\nWould you like to download CodeLab v" + updateVER + "?\n\n(This will not close your current CodeLab session.)", "CodeLab Updater", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
+                        {
+                            UIUtil.LaunchUrl(null, updateURL);
+                        }
+                        break;
+                }
+            }
         }
 
         private enum UpdateStatus
