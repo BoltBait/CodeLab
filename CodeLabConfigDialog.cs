@@ -432,11 +432,12 @@ namespace PaintDotNet.Effects
                         return;
                     }
 
+                    int lineCount = txtCode.Lines.Count;
                     foreach (Error error in ScriptBuilder.Errors)
                     {
                         errorList.AddError(error);
 
-                        if (error.StartLine >= 0)
+                        if (error.StartLine >= 0 && error.StartLine < lineCount)
                         {
                             txtCode.AddError(error.StartLine, error.StartColumn, error.EndLine, error.EndColumn, error.IsWarning);
                         }
