@@ -124,7 +124,15 @@ namespace PaintDotNet.Effects
         {
             if (this.listBox.Items.Count > 0)
             {
-                this.listBox.SelectedIndex = 0;
+                if (this.drawSelectionOutline && this.listBox.SelectedIndex > -1)
+                {
+                    this.drawSelectionOutline = false;
+                    this.listBox.InvalidateSelectedIndex();
+                }
+                else
+                {
+                    this.listBox.SelectedIndex = 0;
+                }
             }
         }
 
@@ -132,47 +140,87 @@ namespace PaintDotNet.Effects
         {
             if (this.listBox.Items.Count > 0)
             {
-                this.listBox.SelectedIndex = this.listBox.Items.Count - 1;
+                if (this.drawSelectionOutline && this.listBox.SelectedIndex > -1)
+                {
+                    this.drawSelectionOutline = false;
+                    this.listBox.InvalidateSelectedIndex();
+                }
+                else
+                {
+                    this.listBox.SelectedIndex = this.listBox.Items.Count - 1;
+                }
             }
         }
 
         internal void SelectNext()
         {
-            if (this.listBox.Items.Count > 0 && this.listBox.SelectedIndex < this.listBox.Items.Count - 1)
+            if (this.listBox.Items.Count > 0)
             {
-                this.listBox.SelectedIndex++;
+                if (this.drawSelectionOutline && this.listBox.SelectedIndex > -1)
+                {
+                    this.drawSelectionOutline = false;
+                    this.listBox.InvalidateSelectedIndex();
+                }
+                else if (this.listBox.SelectedIndex < this.listBox.Items.Count - 1)
+                {
+                    this.listBox.SelectedIndex++;
+                }
             }
         }
 
         internal void SelectPrev()
         {
-            if (this.listBox.SelectedIndex > 0)
+            if (this.listBox.Items.Count > 0)
             {
-                this.listBox.SelectedIndex--;
+                if (this.drawSelectionOutline && this.listBox.SelectedIndex > -1)
+                {
+                    this.drawSelectionOutline = false;
+                    this.listBox.InvalidateSelectedIndex();
+                }
+                else if (this.listBox.SelectedIndex > 0)
+                {
+                    this.listBox.SelectedIndex--;
+                }
             }
         }
 
         internal void PageDown()
         {
-            if (this.listBox.SelectedIndex < this.listBox.Items.Count - visibleItems)
+            if (this.listBox.Items.Count > 0)
             {
-                this.listBox.SelectedIndex += visibleItems;
-            }
-            else if (this.listBox.Items.Count > 0)
-            {
-                this.listBox.SelectedIndex = this.listBox.Items.Count - 1;
+                if (this.drawSelectionOutline && this.listBox.SelectedIndex > -1)
+                {
+                    this.drawSelectionOutline = false;
+                    this.listBox.InvalidateSelectedIndex();
+                }
+                else if (this.listBox.SelectedIndex < this.listBox.Items.Count - visibleItems)
+                {
+                    this.listBox.SelectedIndex += visibleItems;
+                }
+                else
+                {
+                    this.listBox.SelectedIndex = this.listBox.Items.Count - 1;
+                }
             }
         }
 
         internal void PageUp()
         {
-            if (this.listBox.SelectedIndex > visibleItems)
+            if (this.listBox.Items.Count > 0)
             {
-                this.listBox.SelectedIndex -= visibleItems;
-            }
-            else if (this.listBox.Items.Count > 0)
-            {
-                this.listBox.SelectedIndex = 0;
+                if (this.drawSelectionOutline && this.listBox.SelectedIndex > -1)
+                {
+                    this.drawSelectionOutline = false;
+                    this.listBox.InvalidateSelectedIndex();
+                }
+                else if (this.listBox.SelectedIndex > visibleItems)
+                {
+                    this.listBox.SelectedIndex -= visibleItems;
+                }
+                else
+                {
+                    this.listBox.SelectedIndex = 0;
+                }
             }
         }
 
