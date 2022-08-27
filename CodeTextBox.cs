@@ -734,6 +734,7 @@ namespace PaintDotNet.Effects
                         if (this.useExtendedColors)
                         {
                             ColorizeMethods();
+                            ColorizeBraces();
                         }
                         ParseVariables(this.CurrentPosition);
                     }
@@ -833,6 +834,18 @@ namespace PaintDotNet.Effects
             this.Indicators[Indicator.ObjectHighlightDef].Under = true;
             this.Indicators[Indicator.ObjectHighlightDef].Alpha = 204;
             this.Indicators[Indicator.ObjectHighlightDef].OutlineAlpha = 255;
+
+            // Rainbow Braces
+            this.Indicators[Indicator.BraceColor0].Style = IndicatorStyle.TextFore;
+            this.Indicators[Indicator.BraceColor0].ForeColor = Color.HotPink;
+            this.Indicators[Indicator.BraceColor1].Style = IndicatorStyle.TextFore;
+            this.Indicators[Indicator.BraceColor1].ForeColor = Color.Orchid;
+            this.Indicators[Indicator.BraceColor2].Style = IndicatorStyle.TextFore;
+            this.Indicators[Indicator.BraceColor2].ForeColor = Color.Cyan;
+            this.Indicators[Indicator.BraceColor3].Style = IndicatorStyle.TextFore;
+            this.Indicators[Indicator.BraceColor3].ForeColor = Color.Gold;
+            this.Indicators[Indicator.BraceColor4].Style = IndicatorStyle.TextFore;
+            this.Indicators[Indicator.BraceColor4].ForeColor = Color.Lime;
 
             // Vertical indent guides
             this.IndentationGuides = IndentView.None;
@@ -1390,6 +1403,75 @@ namespace PaintDotNet.Effects
             this.updatingStyles = true;
             this.SetIdentifiers(Substyle.Method, methodNames.Join(" "));
             this.SetIdentifiers(Substyle.ParamAndVar, paramNames.Concat(Intelli.Variables.Keys).Join(" "));
+        }
+
+        private void ColorizeBraces()
+        {
+            if (this.Lexer != Lexer.Cpp)
+            {
+                return;
+            }
+
+            for (int i = Indicator.BraceColor0; i <= Indicator.BraceColor4; i++)
+            {
+                this.IndicatorCurrent = GetRainbowIndicator(i);
+                this.IndicatorClearRange(0, this.TextLength);
+            }
+
+            int braceLevel = -1;
+
+            for (int pos = 0; pos < this.TextLength; pos++)
+            {
+                int style = this.GetStyleAt(pos);
+                if (style != Style.Cpp.Operator && style != Style.Cpp.Operator + Preprocessor)
+                {
+                    continue;
+                }
+
+                char c = this.GetCharAt(pos);
+                if (c.IsBrace(false))
+                {
+                    if (braceLevel >= 0)
+                    {
+                        braceLevel--;
+                    }
+
+                    continue;
+                }
+
+                if (!c.IsBrace(true))
+                {
+                    continue;
+                }
+
+                int bracePos2 = this.BraceMatch(pos);
+                if (bracePos2 == InvalidPosition)
+                {
+                    continue;
+                }
+
+                braceLevel++;
+
+                int rainbowIndicator = GetRainbowIndicator(braceLevel);
+                if (rainbowIndicator == -1)
+                {
+                    continue;
+                }
+
+                this.IndicatorCurrent = rainbowIndicator;
+                this.IndicatorFillRange(pos, 1);
+                this.IndicatorFillRange(bracePos2, 1);
+            }
+        }
+
+        private static int GetRainbowIndicator(int braceLevel)
+        {
+            if (braceLevel < 0)
+            {
+                return -1;
+            }
+
+            return (braceLevel % 5) + Indicator.BraceColor0;
         }
 
         private IntelliType GetIntelliType(int position)
@@ -5139,6 +5221,13 @@ namespace PaintDotNet.Effects
             internal const int Rename = 11;
             internal const int Find = 12;
             internal const int Spelling = 14;
+
+            // Rainbow Braces
+            internal const int BraceColor0 = 15;
+            internal const int BraceColor1 = 16;
+            internal const int BraceColor2 = 17;
+            internal const int BraceColor3 = 18;
+            internal const int BraceColor4 = 19;
         }
 
         private static class LeftMargin
