@@ -4150,9 +4150,9 @@ namespace PaintDotNet.Effects
             this.updatingStyles = true;
 
             this.SetKeywords(0, "abstract as base bool byte char checked class const decimal delegate double enum event explicit extern "
-                + "false fixed float get implicit in int interface internal is lock long namespace new null object operator out override "
+                + "false fixed float get implicit in int interface internal is lock long namespace new not null object operator out override "
                 + "params partial private protected public readonly ref sbyte sealed set short sizeof stackalloc static string struct "
-                + "this true typeof uint unchecked unsafe ulong ushort using var virtual void volatile where");
+                + "this true typeof uint unchecked unsafe ulong ushort using var virtual void volatile where with");
 
             this.SetIdentifiers(Substyle.Keyword, "break case catch continue default do else finally for foreach goto if in return throw try switch while");
 
