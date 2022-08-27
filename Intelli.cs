@@ -138,6 +138,7 @@ namespace PaintDotNet.Effects
                 "PaintDotNet.Data",
                 "PaintDotNet.Effects",
                 "PaintDotNet.Effects.Core",
+                "PaintDotNet.Effects.Legacy",
                 "PaintDotNet.Fundamentals",
                 "PaintDotNet.ObjectModel",
                 "PaintDotNet.Primitives",
