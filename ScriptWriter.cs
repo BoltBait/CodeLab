@@ -47,7 +47,7 @@ namespace PaintDotNet.Effects
             + "    int centerY = ((selection.Bottom - selection.Top) / 2) + selection.Top;\r\n"
             + "    ColorBgra primaryColor = EnvironmentParameters.PrimaryColor;\r\n"
             + "    ColorBgra secondaryColor = EnvironmentParameters.SecondaryColor;\r\n"
-            + "    int brushWidth = (int)EnvironmentParameters.BrushWidth;\r\n"
+            + "    int brushWidth = (int)EnvironmentParameters.BrushSize;\r\n"
             + "\r\n"
             + "    ColorBgra currentPixel;\r\n"
             + "    for (int y = rect.Top; y < rect.Bottom; y++)\r\n"

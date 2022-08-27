@@ -1455,7 +1455,7 @@ namespace PaintDotNet.Effects
             if (PenWidthCode.Checked)
             {
                 code += "    // Delete the next line if you don't need the brush width" + cr;
-                code += "    int BrushWidth = (int)EnvironmentParameters.BrushWidth;" + cr;
+                code += "    int BrushWidth = (int)EnvironmentParameters.BrushSize;" + cr;
                 code += cr;
             }
 

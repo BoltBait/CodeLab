@@ -84,7 +84,7 @@ namespace PaintDotNet.Effects
                 Rectangle selection = EnvironmentParameters.Selection.RenderBoundsInt32;
                 ColorBgra strokeColor = EnvironmentParameters.PrimaryColor;
                 ColorBgra fillColor = EnvironmentParameters.SecondaryColor;
-                double strokeThickness = EnvironmentParameters.BrushWidth;
+                double strokeThickness = EnvironmentParameters.BrushSize;
 
                 Thread t = new Thread(() =>
                 {
