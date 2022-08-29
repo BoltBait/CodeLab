@@ -16,6 +16,7 @@ using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace PaintDotNet.Effects
@@ -41,18 +42,9 @@ namespace PaintDotNet.Effects
 
         internal bool AnyDirtyTabs
         {
-            get
-            {
-                foreach (ToolStripItem item in this.toolStrip1.Items)
-                {
-                    if (item is Tab tab && tab.IsDirty)
-                    {
-                        return true;
-                    }
-                }
-
-                return false;
-            }
+            get => this.toolStrip1.Items
+                .OfType<Tab>()
+                .Any(tab => tab.IsDirty);
         }
 
         internal ToolStripRenderer Renderer

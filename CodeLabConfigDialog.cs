@@ -843,6 +843,7 @@ namespace PaintDotNet.Effects
         protected override void OnHelpRequested(HelpEventArgs hevent)
         {
             // no-op
+            // Prevents PDN Docs from opening when pressing F1
         }
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
@@ -1933,7 +1934,7 @@ namespace PaintDotNet.Effects
             string recents = Settings.RecentDocs;
 
             List<ToolStripItem> recentsList = new List<ToolStripItem>();
-            string[] paths = recents.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] paths = recents.Split('|', StringSplitOptions.RemoveEmptyEntries);
             int count = 1;
             foreach (string itemPath in paths)
             {

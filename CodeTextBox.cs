@@ -1374,7 +1374,7 @@ namespace PaintDotNet.Effects
             }
         }
 
-        internal void ColorizeMethods()
+        private void ColorizeMethods()
         {
             ParseVariables(0, false);
 
@@ -2226,8 +2226,8 @@ namespace PaintDotNet.Effects
         private MemberInfo GetMember(int position, out int length)
         {
             length = 0;
-            string lastWords = GetLastWords(position).StripWhitespace();
-            string[] tokens = lastWords.Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
+            string lastWords = GetLastWords(position);
+            string[] tokens = lastWords.Split('.', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
             if (tokens.Length == 0)
             {
                 return null;

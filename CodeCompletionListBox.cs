@@ -818,7 +818,7 @@ namespace PaintDotNet.Effects
         internal void Filter(IntelliType intelliType)
         {
             IEnumerable<FilterButton> filterbuttons = this.toolStrip.Items.OfType<FilterButton>();
-            FilterButton filterButton = filterbuttons.Where(b => b.Visible && b.IntelliType == intelliType).FirstOrDefault();
+            FilterButton filterButton = filterbuttons.FirstOrDefault(b => b.Visible && b.IntelliType == intelliType);
 
             if (filterButton is null)
             {
@@ -1170,7 +1170,6 @@ namespace PaintDotNet.Effects
 
             private static string GetHotKey(IntelliType intelliType)
             {
-                
                 return intelliType switch
                 {
                     IntelliType.Method => " (Alt+M)",

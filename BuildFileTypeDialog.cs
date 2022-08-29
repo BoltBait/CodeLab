@@ -187,8 +187,8 @@ namespace PaintDotNet.Effects
             this.Description = this.descriptionBox.Text;
             this.Major = (int)this.majorBox.Value;
             this.Minor = (int)this.minorBox.Value;
-            this.LoadExt = "\"" + this.loadExtBox.Text.Split('|', ',', ';').Select(ext => ext.Trim()).Join("\", \"") + "\"";
-            this.SaveExt = "\"" + this.saveExtBox.Text.Split('|', ',', ';').Select(ext => ext.Trim()).Join("\", \"") + "\"";
+            this.LoadExt = "\"" + this.loadExtBox.Text.Split(new[] { '|', ',', ';' }, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Join("\", \"") + "\"";
+            this.SaveExt = "\"" + this.saveExtBox.Text.Split(new[] { '|', ',', ';' }, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Join("\", \"") + "\"";
             this.Layers = this.layersCheckBox.Checked;
         }
     }
