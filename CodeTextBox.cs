@@ -3130,7 +3130,13 @@ namespace PaintDotNet.Effects
 
         private void MemberIntelliBox(int position)
         {
-            int style = this.GetStyleAt(position - 1);
+            int prevCharPos = position - 1;
+            while (char.IsWhiteSpace(this.GetCharAt(prevCharPos)) && prevCharPos > 0)
+            {
+                prevCharPos--;
+            }
+
+            int style = this.GetStyleAt(prevCharPos);
             if (style != Style.Cpp.Word && style != Style.Cpp.Word + Preprocessor &&
                 style != Style.Cpp.Word2 && style != Style.Cpp.Word2 + Preprocessor &&
                 style != Substyle.Enum && style != Substyle.Enum + Preprocessor &&
@@ -3144,14 +3150,14 @@ namespace PaintDotNet.Effects
                 return;
             }
 
-            Type type = GetReturnType(position);
+            Type type = GetReturnType(prevCharPos + 1);
 
             if (type == null || type == typeof(void))
             {
                 return;
             }
 
-            bool isStatic = GetIntelliType(position - 1) == IntelliType.Type;
+            bool isStatic = GetIntelliType(prevCharPos) == IntelliType.Type;
 
             iBox.PopulateMembers(type, isStatic);
 
