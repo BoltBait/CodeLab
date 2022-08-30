@@ -734,7 +734,6 @@ namespace PaintDotNet.Effects
                         if (this.useExtendedColors)
                         {
                             ColorizeMethods();
-                            ColorizeBraces();
                         }
                         ParseVariables(this.CurrentPosition);
                     }
@@ -3574,6 +3573,8 @@ namespace PaintDotNet.Effects
                     indicatorBar.Maximum = CountUILines();
                     indicatorBar.Value = this.FirstVisibleLine;
                 }
+
+                ColorizeBraces();
             }
 
             if (selection)
