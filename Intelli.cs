@@ -269,23 +269,6 @@ namespace PaintDotNet.Effects
                         }
                     }
 
-                    if (type.IsEnum)
-                    {
-                        enums.Add(name);
-                    }
-                    else if (type.IsValueType)
-                    {
-                        structs.Add(name);
-                    }
-                    else if (type.IsClass)
-                    {
-                        classes.Add(name);
-                    }
-                    else if (type.IsInterface)
-                    {
-                        interfaces.Add(name);
-                    }
-
                     if (type.IsNested || type.IsObsolete())
                     {
                         continue;
@@ -309,6 +292,30 @@ namespace PaintDotNet.Effects
             }
 
             extMethods = extMethodsList;
+
+            foreach (KeyValuePair<string, Type> kvp in AllTypes)
+            {
+                Type type = kvp.Value;
+                string name = kvp.Key;
+
+                if (type.IsEnum)
+                {
+                    enums.Add(name);
+                }
+                else if (type.IsValueType)
+                {
+                    structs.Add(name);
+                }
+                else if (type.IsClass)
+                {
+                    classes.Add(name);
+                }
+                else if (type.IsInterface)
+                {
+                    interfaces.Add(name);
+                }
+            }
+
             ClassList = classes.Join(" ");
             EnumList = enums.Join(" ");
             StructList = structs.Join(" ");
