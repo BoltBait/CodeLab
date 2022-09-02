@@ -33,6 +33,7 @@ namespace PaintDotNet.Effects
         private bool listBoxMouseOver;
         private bool toolstripMouseOver;
         private bool drawSelectionOutline;
+        private bool isStaticColorType;
         private readonly IntelliTip itemToolTip = new IntelliTip();
         private readonly IntelliTip filterToolTip = new IntelliTip();
         private readonly List<IntelliBoxItem> unFilteredItems = new List<IntelliBoxItem>();
@@ -305,6 +306,7 @@ namespace PaintDotNet.Effects
         internal void PopulateMembers(Type type, bool isStatic)
         {
             Clear();
+            this.isStaticColorType = isStatic && (type == typeof(ColorBgra) || type == typeof(Color));
             this.intelliBoxContents = IntelliBoxContents.Members;
 
             BindingFlags bindingFlags = isStatic ?
@@ -629,6 +631,7 @@ namespace PaintDotNet.Effects
             this.unFilteredItems.Clear();
             this.stringFilter = string.Empty;
             this.enumFilters.Clear();
+            this.isStaticColorType = false;
         }
 
         private void AddMethod(MethodInfo methodInfo, bool isExtension)
@@ -969,6 +972,30 @@ namespace PaintDotNet.Effects
 
             Color textColor = outline ? listBox.ForeColor : e.ForeColor;
             TextRenderer.DrawText(e.Graphics, item.Text, e.Font, textRect, textColor, TextFormatFlags.EndEllipsis);
+
+            if (isStaticColorType &&
+                item.IntelliType == IntelliType.Property &&
+                Enum.TryParse(item.Text, false, out KnownColor knownColor))
+            {
+                const int padding = 2;
+                int swatchHeight = e.Bounds.Height - 4;
+
+                Rectangle rect = Rectangle.FromLTRB(
+                    e.Bounds.Right - swatchHeight - padding,
+                    e.Bounds.Top + padding,
+                    e.Bounds.Right - padding - 1,
+                    e.Bounds.Bottom - padding - 1);
+
+                Rectangle innerRect = Rectangle.FromLTRB(
+                    rect.Left + 1,
+                    rect.Top + 1,
+                    rect.Right,
+                    rect.Bottom);
+
+                using SolidBrush brush = new SolidBrush(Color.FromKnownColor(knownColor));
+                e.Graphics.FillRectangle(brush, innerRect);
+                e.Graphics.DrawRectangle(Pens.Black, rect);
+            }
 
             if (outline)
             {
