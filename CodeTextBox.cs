@@ -1703,17 +1703,24 @@ namespace PaintDotNet.Effects
                 style == Style.Cpp.Verbatim || style == Style.Cpp.Verbatim + Preprocessor)
             {
                 Type stringType = typeof(string);
-                return $"{stringType.GetObjectType()} - {stringType.Namespace}.{stringType.Name}";
+                string summary = stringType.GetDocCommentForToolTip();
+                return $"{stringType.GetObjectType()} - {stringType.Namespace}.{stringType.Name}{summary}";
             }
             if (style == Style.Cpp.Character || style == Style.Cpp.Character + Preprocessor)
             {
                 Type charType = typeof(char);
-                return $"{charType.GetObjectType()} - {charType.Namespace}.{charType.Name}";
+                string summary = charType.GetDocCommentForToolTip();
+                return $"{charType.GetObjectType()} - {charType.Namespace}.{charType.Name}{summary}";
             }
             if (style == Style.Cpp.Number || style == Style.Cpp.Number + Preprocessor)
             {
                 Type numType = GetNumberType(position);
-                return (numType != null) ? $"{numType.GetObjectType()} - {numType.Namespace}.{numType.Name}" : string.Empty;
+                if (numType == null)
+                {
+                    return string.Empty;
+                }
+                string summary = numType.GetDocCommentForToolTip();
+                return $"{numType.GetObjectType()} - {numType.Namespace}.{numType.Name}{summary}";
             }
 
             string lastWords = GetLastWords(position);
@@ -1757,7 +1764,8 @@ namespace PaintDotNet.Effects
                         if (type.IsValueType && this.GetCharAt(parenPos + 1).Equals(')'))
                         {
                             string overloads = (ctors.Length > 0) ? $" (+ {ctors.Length} overloads)" : string.Empty;
-                            return $"{type.Name}.{type.Name}(){overloads}\nConstructor";
+                            string summary = type.GetDocCommentForToolTip();
+                            return $"{type.Name}.{type.Name}(){overloads}\nConstructor{summary}";
                         }
 
                         if (ctors.Length > 0)
@@ -1766,7 +1774,8 @@ namespace PaintDotNet.Effects
                             string overloads1 = (otherOverloads > 0) ? $" (+ {otherOverloads} overloads)" : string.Empty;
 
                             ConstructorInfo constructor = GetOverload(ctors, position);
-                            return $"{constructor.DeclaringType.Name}.{type.Name}({constructor.Params()}){overloads1}\nConstructor";
+                            string summary = constructor.GetDocCommentForToolTip();
+                            return $"{constructor.DeclaringType.Name}.{type.Name}({constructor.Params()}){overloads1}\nConstructor{summary}";
                         }
                     }
                 }
@@ -1774,8 +1783,9 @@ namespace PaintDotNet.Effects
                 string typeName = type.GetObjectType();
 
                 string name = (type.IsGenericType) ? type.GetGenericName() : type.Name;
+                string typeSummary = type.GetDocCommentForToolTip();
 
-                return $"{typeName} - {type.Namespace}.{name}";
+                return $"{typeName} - {type.Namespace}.{name}{typeSummary}";
             }
 
             if (Intelli.UserDefinedTypes.ContainsKey(lastWords))
@@ -1784,8 +1794,9 @@ namespace PaintDotNet.Effects
                 string typeName = type.GetObjectType();
 
                 string name = (type.IsGenericType) ? type.GetGenericName() : type.Name;
+                string summary = type.GetDocCommentForToolTip();
 
-                return $"{typeName} - {type.DeclaringType.Name}.{name}";
+                return $"{typeName} - {type.DeclaringType.Name}.{name}{summary}";
             }
 
             MemberInfo memberInfo = GetMember(position, out int length);
@@ -1804,8 +1815,9 @@ namespace PaintDotNet.Effects
                     PropertyInfo property = (PropertyInfo)memberInfo;
                     returnType = property.PropertyType.GetDisplayName();
                     string getSet = property.GetterSetter();
+                    string propSummary = property.GetDocCommentForToolTip();
 
-                    return $"{returnType} - {precedingType}.{property.Name}{getSet}\n{property.MemberType}";
+                    return $"{returnType} - {precedingType}.{property.Name}{getSet}\n{property.MemberType}{propSummary}";
                 case MemberTypes.Method:
                     if (declaringType == Intelli.UserScript)
                     {
@@ -1850,8 +1862,9 @@ namespace PaintDotNet.Effects
                     returnType = method.ReturnType.GetDisplayName();
                     string byRef = method.ReturnType.IsByRef ? "ref " : string.Empty;
                     string overloads = (length > 1) ? $" (+ {length - 1} overloads)" : string.Empty;
+                    string methodSummary = method.GetDocCommentForToolTip();
 
-                    return $"{byRef}{returnType} - {precedingType}.{method.Name}{genericArgs}({method.Params()}){overloads}{genericContraints}\n{ext}{method.MemberType}";
+                    return $"{byRef}{returnType} - {precedingType}.{method.Name}{genericArgs}({method.Params()}){overloads}{genericContraints}\n{ext}{method.MemberType}{methodSummary}";
                 case MemberTypes.Field:
                     FieldInfo field = (FieldInfo)memberInfo;
                     returnType = field.FieldType.GetDisplayName();
@@ -1880,19 +1893,23 @@ namespace PaintDotNet.Effects
                         fieldValue = (value?.Length > 0) ? $" ( {value} )" : string.Empty;
                     }
 
-                    return $"{returnType} - {precedingType}.{field.Name}{fieldValue}\n{fieldTypeName}";
+                    string fieldSummary = field.GetDocCommentForToolTip();
+
+                    return $"{returnType} - {precedingType}.{field.Name}{fieldValue}\n{fieldTypeName}{fieldSummary}";
                 case MemberTypes.Event:
                     EventInfo eventInfo = (EventInfo)memberInfo;
                     returnType = eventInfo.EventHandlerType.GetDisplayName();
+                    string eventSummary = eventInfo.GetDocCommentForToolTip();
 
-                    return $"{returnType} - {precedingType}.{eventInfo.Name}\n{eventInfo.MemberType}";
+                    return $"{returnType} - {precedingType}.{eventInfo.Name}\n{eventInfo.MemberType}{eventSummary}";
                 case MemberTypes.NestedType:
                     type = (Type)memberInfo;
                     string typeName = type.GetObjectType();
 
                     string name = (type.IsGenericType) ? type.GetGenericName() : type.Name;
+                    string nestedSummary = type.GetDocCommentForToolTip();
 
-                    return $"{typeName} - {type.Namespace}.{precedingType}.{name}\nNested Type";
+                    return $"{typeName} - {type.Namespace}.{precedingType}.{name}\nNested Type{nestedSummary}";
             }
 
             return string.Empty;

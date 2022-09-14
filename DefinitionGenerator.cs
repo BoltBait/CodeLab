@@ -42,6 +42,9 @@ namespace PaintDotNet.Effects
             indent = 1;
             string spaces = GetIndent(indent);
 
+            string summary = type.GetDocSummaryForDef(spaces);
+            defRef.Append(summary);
+
             if (type.IsDelegate())
             {
                 MethodInfo method = type.GetMethod("Invoke");
@@ -92,6 +95,9 @@ namespace PaintDotNet.Effects
                     continue;
                 }
 
+                string summary = field.GetDocSummaryForDef(spaces);
+                defRef.Append(summary);
+
                 string access = isInterface ? string.Empty : field.GetAccessModifiers();
 
                 if (field.FieldType.IsEnum)
@@ -122,6 +128,9 @@ namespace PaintDotNet.Effects
                     continue;
                 }
 
+                string summary = ctor.GetDocSummaryForDef(spaces);
+                defRef.Append(summary);
+
                 areCtors = true;
 
                 string access = isInterface ? string.Empty : ctor.GetAccessModifiers();
@@ -140,6 +149,8 @@ namespace PaintDotNet.Effects
             {
                 hasDeconstructor = true;
 
+                string summary = finalizer.GetDocSummaryForDef(spaces);
+                defRef.Append(summary);
                 defRef.AppendLine(spaces + "~" + type.Name + "()");
                 defRef.AppendLine();
             }
@@ -159,17 +170,18 @@ namespace PaintDotNet.Effects
                     continue;
                 }
 
+                string summary = property.GetDocSummaryForDef(spaces);
                 string access = isInterface ? string.Empty : propMethod.GetAccessModifiers();
                 string modifier = isInterface ? string.Empty : propMethod.GetModifiers();
 
                 ParameterInfo[] indexParams = property.GetIndexParameters();
                 if (indexParams.Length > 0)
                 {
-                    indexerProp.Add(spaces + access + modifier + property.PropertyType.GetDisplayNameWithExclusion(type) + " this[" + indexParams.Select(p => p.BuildParamString()).Join(", ") + "]" + property.GetterSetter());
+                    indexerProp.Add(summary + spaces + access + modifier + property.PropertyType.GetDisplayNameWithExclusion(type) + " this[" + indexParams.Select(p => p.BuildParamString()).Join(", ") + "]" + property.GetterSetter());
                 }
                 else
                 {
-                    regularProp.Add(spaces + access + modifier + property.PropertyType.GetDisplayNameWithExclusion(type) + " " + property.Name + property.GetterSetter());
+                    regularProp.Add(summary + spaces + access + modifier + property.PropertyType.GetDisplayNameWithExclusion(type) + " " + property.Name + property.GetterSetter());
                 }
             }
 
@@ -204,6 +216,9 @@ namespace PaintDotNet.Effects
                 }
 
                 areEvents = true;
+
+                string summary = eventInfo.GetDocSummaryForDef(spaces);
+                defRef.Append(summary);
 
                 string access = isInterface ? string.Empty : eventMethod.GetAccessModifiers();
                 string modifier = isInterface ? string.Empty : eventMethod.GetModifiers();
@@ -297,10 +312,11 @@ namespace PaintDotNet.Effects
                     }
                 }
 
+                string summary = method.GetDocSummaryForDef(spaces);
                 string modifier = isInterface ? string.Empty : method.GetModifiers();
                 string access = isInterface ? string.Empty : method.GetAccessModifiers();
 
-                string methodDef = spaces + access + modifier + name + genericArgs + "(" + method.Params(false) + ")" + genericContraints + ";";
+                string methodDef = summary + spaces + access + modifier + name + genericArgs + "(" + method.Params(false) + ")" + genericContraints + ";";
 
                 if (isImExOperator)
                 {
@@ -352,6 +368,9 @@ namespace PaintDotNet.Effects
                 {
                     continue;
                 }
+
+                string summary = nestedType.GetDocSummaryForDef(spaces);
+                defRef.Append(summary);
 
                 if (nestedType.IsDelegate())
                 {
