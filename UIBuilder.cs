@@ -89,8 +89,10 @@ namespace PaintDotNet.Effects
 
             enabledWhenField.DropDownWidth = enabledWhenField.Width * 2;
             enabledWhenField.SelectedIndex = 0;
+            enabledWhenField.Top = rbEnabled.Top; // HiDPI fix
 
             enabledWhenCondition.SelectedIndex = 0;
+            enabledWhenCondition.Top = rbEnabled.Top; // HiDPI fix
 
             UpdateEnabledFields();
 
