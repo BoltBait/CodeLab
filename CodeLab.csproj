@@ -50,12 +50,6 @@
     <Reference Include="PaintDotNet.Data">
       <HintPath>C:\Program Files\paint.net\PaintDotNet.Data.dll</HintPath>
     </Reference>
-    <Reference Include="PaintDotNet.Effects">
-      <HintPath>C:\Program Files\paint.net\PaintDotNet.Effects.dll</HintPath>
-    </Reference>
-    <Reference Include="PaintDotNet.Effects.Core">
-      <HintPath>C:\Program Files\paint.net\PaintDotNet.Effects.Core.dll</HintPath>
-    </Reference>
     <Reference Include="PaintDotNet.Effects.Core">
       <HintPath>C:\Program Files\paint.net\PaintDotNet.Effects.Core.dll</HintPath>
     </Reference>
