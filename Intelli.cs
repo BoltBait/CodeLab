@@ -268,8 +268,8 @@ namespace PaintDotNet.Effects
 
             string[] namespaceWhiteList =
             {
-                "Microsoft.Win32", "PaintDotNet", "PaintDotNet.AppModel", "PaintDotNet.Effects", "System",
-                "System.Collections.Generic", "System.Diagnostics", "System.Drawing", "System.Drawing.Drawing2D",
+                "Microsoft.Win32", "PaintDotNet", "PaintDotNet.AppModel", "PaintDotNet.Effects", "PaintDotNet.Imaging",
+                "System", "System.Collections.Generic", "System.Diagnostics", "System.Drawing", "System.Drawing.Drawing2D",
                 "System.Drawing.Text", "System.IO", "System.IO.Compression", "System.Text.RegularExpressions"
             };
 
