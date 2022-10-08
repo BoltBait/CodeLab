@@ -1433,7 +1433,7 @@ namespace PaintDotNet.Effects
             if (CenterCode.Checked)
             {
                 code += "    // Delete these 3 lines if you don't need to know the center point of the current selection" + cr;
-                code += "    Rectangle selection = EnvironmentParameters.Selection.RenderBoundsInt32;" + cr;
+                code += "    RectInt32 selection = EnvironmentParameters.Selection.RenderBounds;" + cr;
                 code += "    int CenterX = ((selection.Right - selection.Left) / 2) + selection.Left;" + cr;
                 code += "    int CenterY = ((selection.Bottom - selection.Top) / 2) + selection.Top;" + cr;
                 code += cr;
@@ -1455,7 +1455,7 @@ namespace PaintDotNet.Effects
             if (PenWidthCode.Checked)
             {
                 code += "    // Delete the next line if you don't need the brush width" + cr;
-                code += "    int BrushWidth = (int)EnvironmentParameters.BrushSize;" + cr;
+                code += "    int BrushWidth = (int)EnvironmentParameters.BrushWidth;" + cr;
                 code += cr;
             }
 

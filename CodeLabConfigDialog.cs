@@ -15,6 +15,7 @@
 /////////////////////////////////////////////////////////////////////////////////
 
 using PaintDotNet.AppModel;
+using PaintDotNet.Rendering;
 using ScintillaNET;
 using System;
 using System.Collections.Generic;
@@ -94,10 +95,10 @@ namespace PaintDotNet.Effects
             ShapeBuilder.SetEnviromentParams(100, 100, 0, 0, 100, 100, ColorBgra.Black, ColorBgra.White, 2);
 #else
             Size srcSize = EnvironmentParameters.SourceSurface.Size;
-            Rectangle selection = EnvironmentParameters.Selection.RenderBoundsInt32;
+            RectInt32 selection = EnvironmentParameters.Selection.RenderBounds;
             ColorBgra strokeColor = EnvironmentParameters.PrimaryColor;
             ColorBgra fillColor = EnvironmentParameters.SecondaryColor;
-            double strokeThickness = EnvironmentParameters.BrushSize;
+            double strokeThickness = EnvironmentParameters.BrushWidth;
             ShapeBuilder.SetEnviromentParams(srcSize.Width, srcSize.Height, selection.X, selection.Y, selection.Width, selection.Height, strokeColor, fillColor, strokeThickness);
 
             UIUtil.SetIShellService(this.Services.GetService<IShellService>());

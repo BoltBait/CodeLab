@@ -14,6 +14,7 @@
 // Latest distribution: https://www.BoltBait.com/pdn/codelab
 /////////////////////////////////////////////////////////////////////////////////
 
+using PaintDotNet.Rendering;
 using System;
 using System.Drawing;
 using System.Reflection;
@@ -81,10 +82,10 @@ namespace PaintDotNet.Effects
             if (projectType == ProjectType.Shape)
             {
                 Size srcSize = EnvironmentParameters.SourceSurface.Size;
-                Rectangle selection = EnvironmentParameters.Selection.RenderBoundsInt32;
+                RectInt32 selection = EnvironmentParameters.Selection.RenderBounds;
                 ColorBgra strokeColor = EnvironmentParameters.PrimaryColor;
                 ColorBgra fillColor = EnvironmentParameters.SecondaryColor;
-                double strokeThickness = EnvironmentParameters.BrushSize;
+                double strokeThickness = EnvironmentParameters.BrushWidth;
 
                 Thread t = new Thread(() =>
                 {

@@ -42,12 +42,12 @@ namespace PaintDotNet.Effects
             + "void Render(Surface dst, Surface src, Rectangle rect)\r\n"
             + "{\r\n"
             + "    // Delete any of these lines you don't need\r\n"
-            + "    Rectangle selection = EnvironmentParameters.Selection.RenderBoundsInt32;\r\n"
+            + "    RectInt32 selection = EnvironmentParameters.Selection.RenderBounds;\r\n"
             + "    int centerX = ((selection.Right - selection.Left) / 2) + selection.Left;\r\n"
             + "    int centerY = ((selection.Bottom - selection.Top) / 2) + selection.Top;\r\n"
             + "    ColorBgra primaryColor = EnvironmentParameters.PrimaryColor;\r\n"
             + "    ColorBgra secondaryColor = EnvironmentParameters.SecondaryColor;\r\n"
-            + "    int brushWidth = (int)EnvironmentParameters.BrushSize;\r\n"
+            + "    int brushWidth = (int)EnvironmentParameters.BrushWidth;\r\n"
             + "\r\n"
             + "    ColorBgra currentPixel;\r\n"
             + "    for (int y = rect.Top; y < rect.Bottom; y++)\r\n"
@@ -147,7 +147,7 @@ namespace PaintDotNet.Effects
             + "    }\r\n"
             + "\r\n"
             + "    public UserScript()\r\n"
-            + "        : base(\"UserScript\", null, string.Empty, new EffectOptions())\r\n";
+            + "        : base(\"UserScript\", string.Empty, new EffectOptions())\r\n";
         internal const string append_code = ""
             + "    }\r\n"
             + "}\r\n";
@@ -723,7 +723,7 @@ namespace PaintDotNet.Effects
 
             if (UserControls.Any(u => u.ElementType == ElementType.PanSlider))
             {
-                PropertyPart += "            Rectangle selection = EnvironmentParameters.Selection.RenderBoundsInt32;\r\n";
+                PropertyPart += "            RectInt32 selection = EnvironmentParameters.Selection.RenderBounds;\r\n";
                 PropertyPart += "            ImageResource imageResource = ImageResource.FromImage(EnvironmentParameters.SourceSurface.CreateAliasedBitmap(selection));\r\n";
                 PropertyPart += "\r\n";
             }
