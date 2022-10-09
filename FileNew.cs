@@ -1433,7 +1433,7 @@ namespace PaintDotNet.Effects
             if (CenterCode.Checked)
             {
                 code += "    // Delete these 3 lines if you don't need to know the center point of the current selection" + cr;
-                code += "    RectInt32 selection = EnvironmentParameters.Selection.RenderBounds;" + cr;
+                code += "    Rectangle selection = EnvironmentParameters.SelectionBounds;" + cr;
                 code += "    int CenterX = ((selection.Right - selection.Left) / 2) + selection.Left;" + cr;
                 code += "    int CenterY = ((selection.Bottom - selection.Top) / 2) + selection.Top;" + cr;
                 code += cr;

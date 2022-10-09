@@ -82,7 +82,7 @@ namespace PaintDotNet.Effects
             if (projectType == ProjectType.Shape)
             {
                 Size srcSize = EnvironmentParameters.SourceSurface.Size;
-                RectInt32 selection = EnvironmentParameters.Selection.RenderBounds;
+                Rectangle selection = EnvironmentParameters.SelectionBounds;
                 ColorBgra strokeColor = EnvironmentParameters.PrimaryColor;
                 ColorBgra fillColor = EnvironmentParameters.SecondaryColor;
                 double strokeThickness = EnvironmentParameters.BrushWidth;

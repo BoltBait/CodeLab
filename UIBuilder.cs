@@ -1013,7 +1013,7 @@ namespace PaintDotNet.Effects
             else
             {
                 using (Surface emptySurface = new Surface(this.environmentParameters.SourceSurface.Size))
-                using (EffectEnvironmentParameters enviroParams = new EffectEnvironmentParameters(ColorBgra.Black, ColorBgra.White, 0, Document.DefaultResolution, this.environmentParameters.Selection, emptySurface))
+                using (EffectEnvironmentParameters enviroParams = environmentParameters.CloneWithDifferentSourceSurface(emptySurface))
                 {
                     emptySurface.Fill(ColorBgra.White);
                     ScriptBuilder.BuiltEffect.EnvironmentParameters = enviroParams;

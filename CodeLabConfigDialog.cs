@@ -95,7 +95,7 @@ namespace PaintDotNet.Effects
             ShapeBuilder.SetEnviromentParams(100, 100, 0, 0, 100, 100, ColorBgra.Black, ColorBgra.White, 2);
 #else
             Size srcSize = EnvironmentParameters.SourceSurface.Size;
-            RectInt32 selection = EnvironmentParameters.Selection.RenderBounds;
+            Rectangle selection = EnvironmentParameters.SelectionBounds;
             ColorBgra strokeColor = EnvironmentParameters.PrimaryColor;
             ColorBgra fillColor = EnvironmentParameters.SecondaryColor;
             double strokeThickness = EnvironmentParameters.BrushWidth;
