@@ -1247,7 +1247,7 @@ namespace PaintDotNet.Effects
         private void UIDesigner()
         {
             // User Interface Designer
-            UIBuilder myUIBuilderForm = new UIBuilder(txtCode.Text, tabStrip1.SelectedTabProjType, EnvironmentParameters);  // This should be the current Primary color
+            using UIBuilder myUIBuilderForm = new UIBuilder(txtCode.Text, tabStrip1.SelectedTabProjType, EnvironmentParameters);
             if (myUIBuilderForm.ShowDialog() == DialogResult.OK)
             {
                 // update generated code
