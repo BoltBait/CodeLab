@@ -39,16 +39,37 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="PaintDotNet.Base">
-      <HintPath>..\..\..\..\..\..\Program Files\Paint.NET\PaintDotNet.Base.dll</HintPath>
+      <HintPath>C:\Program Files\paint.net\PaintDotNet.Base.dll</HintPath>
+    </Reference>
+    <Reference Include="PaintDotNet.ComponentModel">
+      <HintPath>C:\Program Files\paint.net\PaintDotNet.ComponentModel.dll</HintPath>
     </Reference>
     <Reference Include="PaintDotNet.Core">
-      <HintPath>..\..\..\..\..\..\Program Files\Paint.NET\PaintDotNet.Core.dll</HintPath>
+      <HintPath>C:\Program Files\paint.net\PaintDotNet.Core.dll</HintPath>
     </Reference>
     <Reference Include="PaintDotNet.Data">
-      <HintPath>..\..\..\..\..\..\Program Files\Paint.NET\PaintDotNet.Data.dll</HintPath>
+      <HintPath>C:\Program Files\paint.net\PaintDotNet.Data.dll</HintPath>
     </Reference>
-    <Reference Include="PaintDotNet.Effects">
-      <HintPath>..\..\..\..\..\..\Program Files\Paint.NET\PaintDotNet.Effects.dll</HintPath>
+    <Reference Include="PaintDotNet.Effects.Core">
+      <HintPath>C:\Program Files\paint.net\PaintDotNet.Effects.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="PaintDotNet.Fundamentals">
+      <HintPath>C:\Program Files\paint.net\PaintDotNet.Fundamentals.dll</HintPath>
+    </Reference>
+    <Reference Include="PaintDotNet.ObjectModel">
+      <HintPath>C:\Program Files\paint.net\PaintDotNet.ObjectModel.dll</HintPath>
+    </Reference>
+    <Reference Include="PaintDotNet.Primitives">
+      <HintPath>C:\Program Files\paint.net\PaintDotNet.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="PaintDotNet.PropertySystem">
+      <HintPath>C:\Program Files\paint.net\PaintDotNet.PropertySystem.dll</HintPath>
+    </Reference>
+    <Reference Include="PaintDotNet.Windows">
+      <HintPath>C:\Program Files\paint.net\PaintDotNet.Windows.dll</HintPath>
+    </Reference>
+    <Reference Include="PaintDotNet.Windows.Core">
+      <HintPath>C:\Program Files\paint.net\PaintDotNet.Windows.Core.dll</HintPath>
     </Reference>
     <Reference Include="ScintillaNET">
       <HintPath>References\ScintillaNET.dll</HintPath>

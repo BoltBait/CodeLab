@@ -42,8 +42,8 @@ namespace PaintDotNet.Effects
             StringBuilder slnFile = new StringBuilder();
             slnFile.AppendLine();
             slnFile.AppendLine("Microsoft Visual Studio Solution File, Format Version 12.00");
-            slnFile.AppendLine("# Visual Studio 16");
-            slnFile.AppendLine("VisualStudioVersion = 16.0.31515.178");
+            slnFile.AppendLine("# Visual Studio 17");
+            slnFile.AppendLine("VisualStudioVersion = 17.2.32602.215");
             slnFile.AppendLine("MinimumVisualStudioVersion = 10.0.40219.1");
             slnFile.AppendLine($"Project(\"{projGroupGuid}\") = \"{projectName}\", \"{projectName}\\{projectName}.csproj\", \"{projGuid}\"");
             slnFile.AppendLine("EndProject");
@@ -99,18 +99,12 @@ namespace PaintDotNet.Effects
                 csprojFile.AppendLine();
             }
             csprojFile.AppendLine("  <ItemGroup>");
-            csprojFile.AppendLine("    <Reference Include=\"PaintDotNet.Base\">");
-            csprojFile.AppendLine($"      <HintPath>{Path.Combine(pdnPath, "PaintDotNet.Base.dll")}</HintPath>");
-            csprojFile.AppendLine("    </Reference>");
-            csprojFile.AppendLine("    <Reference Include=\"PaintDotNet.Core\">");
-            csprojFile.AppendLine($"      <HintPath>{Path.Combine(pdnPath, "PaintDotNet.Core.dll")}</HintPath>");
-            csprojFile.AppendLine("    </Reference>");
-            csprojFile.AppendLine("    <Reference Include=\"PaintDotNet.Data\">");
-            csprojFile.AppendLine($"      <HintPath>{Path.Combine(pdnPath, "PaintDotNet.Data.dll")}</HintPath>");
-            csprojFile.AppendLine("    </Reference>");
-            csprojFile.AppendLine("    <Reference Include=\"PaintDotNet.Effects\">");
-            csprojFile.AppendLine($"      <HintPath>{Path.Combine(pdnPath, "PaintDotNet.Effects.dll")}</HintPath>");
-            csprojFile.AppendLine("    </Reference>");
+            foreach (string assemblyName in Intelli.PdnAssemblyNames)
+            {
+                csprojFile.AppendLine($"    <Reference Include=\"{assemblyName}\">");
+                csprojFile.AppendLine($"      <HintPath>{Path.Combine(pdnPath, $"{assemblyName}.dll")}</HintPath>");
+                csprojFile.AppendLine("    </Reference>");
+            }
             csprojFile.AppendLine("  </ItemGroup>");
             csprojFile.AppendLine();
             csprojFile.AppendLine("  <Target Name=\"PostBuild\" AfterTargets=\"PostBuildEvent\">");

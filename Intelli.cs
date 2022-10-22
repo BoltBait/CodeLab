@@ -13,9 +13,10 @@
 // Latest distribution: https://www.BoltBait.com/pdn/codelab
 /////////////////////////////////////////////////////////////////////////////////
 
-using PaintDotNet.PropertySystem;
+using PaintDotNet.Rendering;
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
 using System.Text.Json;
@@ -36,6 +37,7 @@ namespace PaintDotNet.Effects
         internal static Dictionary<string, string> TypeAliases { get; }
         internal static IEnumerable<string> Keywords { get; }
         internal static IEnumerable<Assembly> ReferenceAssemblies { get; }
+        internal static IEnumerable<string> PdnAssemblyNames { get; }
         internal static Type UserScript { get; set; }
         internal static string ClassList { get; }
         internal static string EnumList { get; }
@@ -127,21 +129,42 @@ namespace PaintDotNet.Effects
                 "with", "#endif", "#endregion"
             };
 
-            IEnumerable<Assembly> pdnAssemblies = new Assembly[]
+            PdnAssemblyNames = new string[]
             {
-                typeof(Property).Assembly,      // PaintDotNet.Base.dll
-                typeof(ColorBgra).Assembly,     // PaintDotNet.Core.dll
-                typeof(Document).Assembly,      // PaintDotNet.Data.dll
-                typeof(Effect).Assembly,        // PaintDotNet.Effects.dll
+                "PaintDotNet.Base",
+                "PaintDotNet.ComponentModel",
+                "PaintDotNet.Core",
+                "PaintDotNet.Data",
+                "PaintDotNet.Effects",
+                "PaintDotNet.Effects.Core",
+                "PaintDotNet.Effects.Legacy",
+                "PaintDotNet.Fundamentals",
+                "PaintDotNet.ObjectModel",
+                "PaintDotNet.Primitives",
+                "PaintDotNet.PropertySystem",
+                "PaintDotNet.Windows",
+                "PaintDotNet.Windows.Core"
             };
 
-            ReferenceAssemblies = AppDomain.CurrentDomain
+            // exclude assemblies that were loaded into separate contexts; i.e. Plugins
+            IEnumerable<Assembly> assemblies = AppDomain.CurrentDomain
                 .GetAssemblies()
-                .Where(a => !a.IsCollectible && // exclude assemblies that were loaded into separate contexts; i.e. Plugins
-                             a.GetCustomAttribute<AssemblyCompanyAttribute>()?.Company == "Microsoft Corporation") // and then exclude any non-Microsoft assemblies; including all dotPDN ones
-                .Concat(pdnAssemblies) // add back the four PDN assemblies we actually want
+                .Where(a => !a.IsCollectible);
+
+            // Cherry pick certain dotPDN assemblies
+            IEnumerable<Assembly> pdnAssemblies = assemblies
+                .Where(a => a.GetCustomAttribute<AssemblyCompanyAttribute>()?.Company == "dotPDN LLC" &&
+                            PdnAssemblyNames.Contains(a.GetName().Name, StringComparer.OrdinalIgnoreCase));
+
+            // Cherry pick Microsoft assemblies
+            IEnumerable<Assembly> msAssemblies = assemblies
+                .Where(a => a.GetCustomAttribute<AssemblyCompanyAttribute>()?.Company == "Microsoft Corporation");
+
+            ReferenceAssemblies = msAssemblies
+                .Concat(pdnAssemblies)
                 .Append(typeof(System.Diagnostics.TextWriterTraceListener).Assembly)
-                .Distinct();
+                .Distinct()
+                .ToImmutableArray();
 
             Dictionary<string, string> userSnippets = null;
             string userSnippetsJson = Settings.Snippets;
@@ -203,12 +226,12 @@ namespace PaintDotNet.Effects
                 { "CheckboxControl", typeof(bool) },
                 { "ColorWheelControl", typeof(ColorBgra) },
                 { "AngleControl", typeof(double) },
-                { "PanSliderControl", typeof(Pair<double, double>) },
+                { "PanSliderControl", typeof(Vector2Double) },
                 { "TextboxControl", typeof(string) },
                 { "FilenameControl", typeof(string) },
                 { "FolderControl", typeof(string) },
                 { "DoubleSliderControl", typeof(double) },
-                { "RollControl", typeof(Tuple<double, double, double>) },
+                { "RollControl", typeof(Vector3Double) },
                 { "ListBoxControl", typeof(byte) },
                 { "RadioButtonControl", typeof(byte) },
                 { "ReseedButtonControl", typeof(byte) },
@@ -244,8 +267,8 @@ namespace PaintDotNet.Effects
 
             string[] namespaceWhiteList =
             {
-                "Microsoft.Win32", "PaintDotNet", "PaintDotNet.AppModel", "PaintDotNet.Effects", "System",
-                "System.Collections.Generic", "System.Diagnostics", "System.Drawing", "System.Drawing.Drawing2D",
+                "Microsoft.Win32", "PaintDotNet", "PaintDotNet.AppModel", "PaintDotNet.Effects", "PaintDotNet.Imaging",
+                "System", "System.Collections.Generic", "System.Diagnostics", "System.Drawing", "System.Drawing.Drawing2D",
                 "System.Drawing.Text", "System.IO", "System.IO.Compression", "System.Text.RegularExpressions"
             };
 

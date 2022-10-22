@@ -28,7 +28,7 @@ namespace PaintDotNet.Effects
     internal partial class UIBuilder : ChildFormBase
     {
         internal string UIControlsText;
-        private ColorBgra PC;
+        private readonly EffectEnvironmentParameters environmentParameters;
         private readonly ProjectType projectType;
         private bool dirty = false;
         private readonly List<UIElement> MasterList = new List<UIElement>();
@@ -56,7 +56,7 @@ namespace PaintDotNet.Effects
             UIUtil.GetImage("16FolderControl")
         };
 
-        internal UIBuilder(string UserScriptText, ProjectType projectType, ColorBgra PrimaryColor)
+        internal UIBuilder(string UserScriptText, ProjectType projectType, EffectEnvironmentParameters environmentParameters)
         {
             InitializeComponent();
 
@@ -113,7 +113,7 @@ namespace PaintDotNet.Effects
             }
             refreshListView(0);
             dirty = false;
-            PC = PrimaryColor;
+            this.environmentParameters = environmentParameters;
             this.projectType = projectType;
         }
 
@@ -1012,9 +1012,8 @@ namespace PaintDotNet.Effects
             }
             else
             {
-                using (Surface emptySurface = new Surface(400, 300))
-                using (PdnRegion selection = new PdnRegion(emptySurface.Bounds))
-                using (EffectEnvironmentParameters enviroParams = new EffectEnvironmentParameters(ColorBgra.Black, Color.White, 0, Document.DefaultResolution, selection, emptySurface))
+                using (Surface emptySurface = new Surface(this.environmentParameters.SourceSurface.Size))
+                using (EffectEnvironmentParameters enviroParams = environmentParameters.CloneWithDifferentSourceSurface(emptySurface))
                 {
                     emptySurface.Fill(ColorBgra.White);
                     ScriptBuilder.BuiltEffect.EnvironmentParameters = enviroParams;
@@ -1953,7 +1952,7 @@ namespace PaintDotNet.Effects
                     }
                     break;
                 case ElementType.PanSlider:
-                    SourceCode += " = Pair.Create(" + StrDefault + "); // ";
+                    SourceCode += " = new Vector2Double(" + StrDefault + "); // ";
                     break;
                 case ElementType.Textbox:
                 case ElementType.MultiLineTextbox:
@@ -1975,7 +1974,7 @@ namespace PaintDotNet.Effects
                     SourceCode += " = 0; // ";
                     break;
                 case ElementType.RollBall:
-                    SourceCode += " = Tuple.Create<double, double, double>(0.0 , 0.0 , 0.0)";
+                    SourceCode += " = new Vector3Double(0.0, 0.0, 0.0)";
                     SourceCode += "; // ";
                     break;
                 case ElementType.Filename:

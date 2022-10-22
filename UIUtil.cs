@@ -154,11 +154,6 @@ namespace PaintDotNet.Effects
         /// </summary>
         internal static void EnableUxThemeDarkMode(this Control control, bool enable)
         {
-            if (!OperatingSystem.IsWindowsVersionAtLeast(10, 0, 17763))
-            {
-                return;
-            }
-
             string themeName = enable ? "DarkMode_Explorer" : null;
             SetWindowTheme(control.Handle, themeName, null);
         }

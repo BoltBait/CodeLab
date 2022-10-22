@@ -545,7 +545,7 @@ namespace PaintDotNet.Effects
             {
                 code += "AngleControl Amount" + controlCount.ToString() + " = 2; // [-180,180] " + effect + " Angle" + cr;
                 controlCount++;
-                code += "PanSliderControl Amount" + controlCount.ToString() + " = Pair.Create(0.000,0.000); // " + effect + " Center" + cr;
+                code += "PanSliderControl Amount" + controlCount.ToString() + " = new Vector2Double(0.000,0.000); // " + effect + " Center" + cr;
                 controlCount++;
                 code += "IntSliderControl Amount" + controlCount.ToString() + " = 2; // [1,5] " + effect + " Quality" + cr;
                 controlCount++;
@@ -566,14 +566,14 @@ namespace PaintDotNet.Effects
             {
                 code += "IntSliderControl Amount" + controlCount.ToString() + " = 10; // [0,100] " + effect + " Zoom Amount" + cr;
                 controlCount++;
-                code += "PanSliderControl Amount" + controlCount.ToString() + " = Pair.Create(0.000,0.000); // " + effect + " Center" + cr;
+                code += "PanSliderControl Amount" + controlCount.ToString() + " = new Vector2Double(0.000,0.000); // " + effect + " Center" + cr;
                 controlCount++;
             }
             else if (effect.Contains("Bulge"))
             {
                 code += "IntSliderControl Amount" + controlCount.ToString() + " = 45; // [-200,100] " + effect + " Bulge" + cr;
                 controlCount++;
-                code += "PanSliderControl Amount" + controlCount.ToString() + " = Pair.Create(0.000,0.000); // " + effect + " Center" + cr;
+                code += "PanSliderControl Amount" + controlCount.ToString() + " = new Vector2Double(0.000,0.000); // " + effect + " Center" + cr;
                 controlCount++;
             }
             else if (effect.Contains("Crystalize"))
@@ -609,7 +609,7 @@ namespace PaintDotNet.Effects
             {
                 code += "DoubleSliderControl Amount" + controlCount.ToString() + " = 3; // [0,200] " + effect + " Amount" + cr;
                 controlCount++;
-                code += "PanSliderControl Amount" + controlCount.ToString() + " = Pair.Create(0.000,0.000); // " + effect + " Offset" + cr;
+                code += "PanSliderControl Amount" + controlCount.ToString() + " = new Vector2Double(0.000,0.000); // " + effect + " Offset" + cr;
                 controlCount++;
                 code += "ListBoxControl Amount" + controlCount.ToString() + " = 2; // Edge Behavior|Clamp|Reflect|Wrap" + cr;
                 controlCount++;
@@ -633,7 +633,7 @@ namespace PaintDotNet.Effects
                 controlCount++;
                 code += "DoubleSliderControl Amount" + controlCount.ToString() + " = 1; // [0.01,2] " + effect + " Size" + cr;
                 controlCount++;
-                code += "PanSliderControl Amount" + controlCount.ToString() + " = Pair.Create(0.000,0.000); // " + effect + " Center" + cr;
+                code += "PanSliderControl Amount" + controlCount.ToString() + " = new Vector2Double(0.000,0.000); // " + effect + " Center" + cr;
                 controlCount++;
                 code += "IntSliderControl Amount" + controlCount.ToString() + " = 2; // [1,5] " + effect + " Quality" + cr;
                 controlCount++;
@@ -658,7 +658,7 @@ namespace PaintDotNet.Effects
             }
             else if (effect.Contains("Vignette"))
             {
-                code += "PanSliderControl Amount" + controlCount.ToString() + " = Pair.Create(0.000,0.000); // " + effect + " Center" + cr;
+                code += "PanSliderControl Amount" + controlCount.ToString() + " = new Vector2Double(0.000,0.000); // " + effect + " Center" + cr;
                 controlCount++;
                 code += "DoubleSliderControl Amount" + controlCount.ToString() + " = 0.5; // [0.1,4] " + effect + " Radius" + cr;
                 controlCount++;
@@ -667,9 +667,9 @@ namespace PaintDotNet.Effects
             }
             else if (effect.Contains("Rotate Zoom"))
             {
-                code += "RollControl Amount" + controlCount.ToString() + " = Tuple.Create<double, double, double>(0.0,0.0,0.0); // " + effect + " Roll / Rotate" + cr;
+                code += "RollControl Amount" + controlCount.ToString() + " = new Vector3Double(0.0,0.0,0.0); // " + effect + " Roll / Rotate" + cr;
                 controlCount++;
-                code += "PanSliderControl Amount" + controlCount.ToString() + " = Pair.Create(0.0,0.0); // " + effect + " Pan" + cr;
+                code += "PanSliderControl Amount" + controlCount.ToString() + " = new Vector2Double(0.0,0.0); // " + effect + " Pan" + cr;
                 controlCount++;
                 code += "DoubleSliderControl Amount" + controlCount.ToString() + " = 1; // [0.6,16.0] " + effect + " Zoom" + cr;
                 controlCount++;

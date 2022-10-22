@@ -67,27 +67,14 @@ namespace PaintDotNet.Effects
             extendedColorsCheckBox.Checked = Settings.ExtendedColors;
 
             // Spellcheck page
-            if (PlatformSpellCheck.SpellChecker.IsPlatformSupported())
-            {
-                enableSpellcheckCheckBox.Checked = Settings.Spellcheck;
-                spellLangComboBox.Items.AddRange(PlatformSpellCheck.SpellChecker.SupportedLanguages.ToArray());
-                int langIndex = spellLangComboBox.FindString(Settings.SpellingLang);
-                spellLangComboBox.SelectedIndex = langIndex > -1 ? langIndex : 0;
-                wordsToIgnoreListBox.Items.AddRange(Settings.SpellingWordsToIgnore
-                    .Distinct()
-                    .OrderBy(s => s, StringComparer.OrdinalIgnoreCase)
-                    .ToArray());
-
-                if (Environment.OSVersion.Version < new Version(10, 0))
-                {
-                    addLangsButton.Enabled = false;
-                    addLangsButton.Visible = false;
-                }
-            }
-            else
-            {
-                panelSpelling.Enabled = false;
-            }
+            enableSpellcheckCheckBox.Checked = Settings.Spellcheck;
+            spellLangComboBox.Items.AddRange(PlatformSpellCheck.SpellChecker.SupportedLanguages.ToArray());
+            int langIndex = spellLangComboBox.FindString(Settings.SpellingLang);
+            spellLangComboBox.SelectedIndex = langIndex > -1 ? langIndex : 0;
+            wordsToIgnoreListBox.Items.AddRange(Settings.SpellingWordsToIgnore
+                .Distinct()
+                .OrderBy(s => s, StringComparer.OrdinalIgnoreCase)
+                .ToArray());
 
             // Compiler page
             warningLevelCombobox.SelectedIndex = Settings.WarningLevel;
