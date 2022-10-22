@@ -14,7 +14,6 @@
 // Latest distribution: https://www.BoltBait.com/pdn/codelab
 /////////////////////////////////////////////////////////////////////////////////
 
-using PaintDotNet.Rendering;
 using System;
 using System.Drawing;
 using System.Reflection;
