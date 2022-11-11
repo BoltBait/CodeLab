@@ -38,7 +38,7 @@ namespace PaintDotNet.Effects
 
         private static readonly IEnumerable<MetadataReference> references = Intelli.ReferenceAssemblies.Select(a => MetadataReference.CreateFromFile(a.Location));
         private static readonly CSharpParseOptions parseOptions = CSharpParseOptions.Default
-            .WithLanguageVersion(LanguageVersion.CSharp10); // https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/configure-language-version
+            .WithLanguageVersion(LanguageVersion.CSharp11); // https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/configure-language-version
         private static CSharpCompilationOptions compilationOptions = new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary, allowUnsafe: true, optimizationLevel: OptimizationLevel.Release, deterministic: false);
         private static IEnumerable<string> warningsToIgnore = Array.Empty<string>();
 

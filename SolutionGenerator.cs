@@ -43,7 +43,7 @@ namespace PaintDotNet.Effects
             slnFile.AppendLine();
             slnFile.AppendLine("Microsoft Visual Studio Solution File, Format Version 12.00");
             slnFile.AppendLine("# Visual Studio 17");
-            slnFile.AppendLine("VisualStudioVersion = 17.2.32602.215");
+            slnFile.AppendLine("VisualStudioVersion = 17.4.33103.184");
             slnFile.AppendLine("MinimumVisualStudioVersion = 10.0.40219.1");
             slnFile.AppendLine($"Project(\"{projGroupGuid}\") = \"{projectName}\", \"{projectName}\\{projectName}.csproj\", \"{projGuid}\"");
             slnFile.AppendLine("EndProject");
@@ -71,7 +71,7 @@ namespace PaintDotNet.Effects
             csprojFile.AppendLine("<Project Sdk=\"Microsoft.NET.Sdk\">");
             csprojFile.AppendLine();
             csprojFile.AppendLine("  <PropertyGroup>");
-            csprojFile.AppendLine("    <TargetFramework>net6.0-windows</TargetFramework>");
+            csprojFile.AppendLine("    <TargetFramework>net7.0-windows</TargetFramework>");
             csprojFile.AppendLine("    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>");
             csprojFile.AppendLine("    <UseWindowsForms>true</UseWindowsForms>");
             csprojFile.AppendLine("    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>");
