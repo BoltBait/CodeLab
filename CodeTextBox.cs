@@ -1860,11 +1860,12 @@ namespace PaintDotNet.Effects
                     }
 
                     returnType = method.ReturnType.GetDisplayName();
+                    string nullable = method.IsNullable() ? "?" : string.Empty;
                     string byRef = method.ReturnType.IsByRef ? "ref " : string.Empty;
                     string overloads = (length > 1) ? $" (+ {length - 1} overloads)" : string.Empty;
                     string methodSummary = method.GetDocCommentForToolTip();
 
-                    return $"{byRef}{returnType} - {precedingType}.{method.Name}{genericArgs}({method.Params()}){overloads}{genericContraints}\n{ext}{method.MemberType}{methodSummary}";
+                    return $"{byRef}{returnType}{nullable} - {precedingType}.{method.Name}{genericArgs}({method.Params()}){overloads}{genericContraints}\n{ext}{method.MemberType}{methodSummary}";
                 case MemberTypes.Field:
                     FieldInfo field = (FieldInfo)memberInfo;
                     returnType = field.FieldType.GetDisplayName();
