@@ -718,79 +718,32 @@ namespace PaintDotNet.Effects
 
         internal static bool IsNullable(this MethodInfo method)
         {
-            return IsNullable(method.ReturnParameter);
+            return nullabilityInfo
+                .Create(method.ReturnParameter)
+                .ReadState == NullabilityState.Nullable;
         }
 
         internal static bool IsNullable(this PropertyInfo property)
         {
-            return IsNullableImpl(property.PropertyType, property.DeclaringType, property.CustomAttributes);
+            return nullabilityInfo
+                .Create(property)
+                .ReadState == NullabilityState.Nullable;
         }
 
         internal static bool IsNullable(this FieldInfo field)
         {
-            return IsNullableImpl(field.FieldType, field.DeclaringType, field.CustomAttributes);
+            return nullabilityInfo
+                .Create(field)
+                .ReadState == NullabilityState.Nullable;
         }
 
         internal static bool IsNullable(this ParameterInfo parameter)
         {
-            return IsNullableImpl(parameter.ParameterType, parameter.IsOut ? null : parameter.Member, parameter.CustomAttributes);
+            return nullabilityInfo
+                .Create(parameter)
+                .ReadState == NullabilityState.Nullable;
         }
 
-        // Based on findings from Stack Overflow; with a few modifications
-        // https://stackoverflow.com/questions/58453972/how-to-use-net-reflection-to-check-for-nullable-reference-type#58454489
-        // .NET 6 added APIs for retrieving Nullability, but they return incorrect values in some cases. Plus no Nullability API for MethodInfo!?
-        // https://devblogs.microsoft.com/dotnet/announcing-net-6-preview-7/#libraries-reflection-apis-for-nullability-information
-        // Once the new Nullability APIs are in working order, we can remove this custom implementation.
-        private static bool IsNullableImpl(Type memberType, MemberInfo declaringType, IEnumerable<CustomAttributeData> customAttributes)
-        {
-            if (memberType.IsValueType)
-            {
-                return Nullable.GetUnderlyingType(memberType) != null;
-            }
-
-            CustomAttributeData nullableWhen = customAttributes
-                .FirstOrDefault(x => x.AttributeType.FullName == "System.Diagnostics.CodeAnalysis.NotNullWhenAttribute");
-
-            if (nullableWhen != null)
-            {
-                return true;
-            }
-
-            CustomAttributeData nullable = customAttributes
-                .FirstOrDefault(x => x.AttributeType.FullName == "System.Runtime.CompilerServices.NullableAttribute");
-
-            if (nullable != null && nullable.ConstructorArguments.Count == 1)
-            {
-                var attributeArgument = nullable.ConstructorArguments[0];
-                if (attributeArgument.ArgumentType == typeof(byte[]))
-                {
-                    var args = (IReadOnlyList<CustomAttributeTypedArgument>)attributeArgument.Value!;
-                    if (args.Count > 0 && args[0].ArgumentType == typeof(byte))
-                    {
-                        return (byte)args[0].Value! == 2;
-                    }
-                }
-                else if (attributeArgument.ArgumentType == typeof(byte))
-                {
-                    return (byte)attributeArgument.Value! == 2;
-                }
-            }
-
-            for (MemberInfo type = declaringType; type != null; type = type.DeclaringType)
-            {
-                CustomAttributeData context = type.CustomAttributes
-                    .FirstOrDefault(x => x.AttributeType.FullName == "System.Runtime.CompilerServices.NullableContextAttribute");
-
-                if (context != null &&
-                    context.ConstructorArguments.Count == 1 &&
-                    context.ConstructorArguments[0].ArgumentType == typeof(byte))
-                {
-                    return (byte)context.ConstructorArguments[0].Value! == 2;
-                }
-            }
-
-            // Couldn't find a suitable attribute
-            return false;
-        }
+        private static readonly NullabilityInfoContext nullabilityInfo = new NullabilityInfoContext();
     }
 }
