@@ -24,13 +24,13 @@ namespace PaintDotNet.Effects
             {
                 string dotnetVer = Environment.Version.ToString(2);
 
-                string latest6Dir = Directory.EnumerateDirectories(sdkPath, dotnetVer + ".*", SearchOption.TopDirectoryOnly)
+                string latestDir = Directory.EnumerateDirectories(sdkPath, dotnetVer + ".*", SearchOption.TopDirectoryOnly)
                     .OrderByDescending(dir => Directory.GetCreationTime(dir))
                     .FirstOrDefault();
 
-                if (latest6Dir != null)
+                if (latestDir != null)
                 {
-                    string xmlDir = Path.Combine(latest6Dir, @"ref\net" + dotnetVer);
+                    string xmlDir = Path.Combine(latestDir, @"ref\net" + dotnetVer);
                     if (Directory.Exists(xmlDir))
                     {
                         bclXml = Directory.EnumerateFiles(xmlDir, "*.xml", SearchOption.TopDirectoryOnly);
