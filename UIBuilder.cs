@@ -933,7 +933,7 @@ namespace PaintDotNet.Effects
             {
                 if (ControlStyle.SelectedIndex == 0 || ControlStyle.SelectedIndex == 2)
                 {
-                    ControlMax.Text = "‭16777215‬";
+                    ControlMax.Text = "16777215";
                     ControlMin.Text = "0";
                     ControlDef.Text = "0";
                 }
