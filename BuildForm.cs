@@ -705,7 +705,7 @@ namespace PaintDotNet.Effects
             memoryStream.Position = 0;
 
             var compressedData = new byte[memoryStream.Length];
-            memoryStream.Read(compressedData, 0, compressedData.Length);
+            memoryStream.ReadExactly(compressedData, 0, compressedData.Length);
 
             var gZipBuffer = new byte[compressedData.Length + 4];
             Buffer.BlockCopy(compressedData, 0, gZipBuffer, 4, compressedData.Length);
@@ -722,18 +722,11 @@ namespace PaintDotNet.Effects
                 memoryStream.Write(gZipBuffer, 4, gZipBuffer.Length - 4);
 
                 var buffer = new byte[dataLength];
-                Span<byte> spanOfBuffer = buffer;
 
                 memoryStream.Position = 0;
                 using (var gZipStream = new GZipStream(memoryStream, CompressionMode.Decompress))
                 {
-                    int totalRead = 0;
-                    while (totalRead < spanOfBuffer.Length)
-                    {
-                        int bytesRead = gZipStream.Read(spanOfBuffer.Slice(totalRead));
-                        if (bytesRead == 0) break;
-                        totalRead += bytesRead;
-                    }
+                    gZipStream.ReadExactly(buffer, 0, buffer.Length);
                 }
 
                 return Encoding.UTF8.GetString(buffer);
