@@ -27,7 +27,7 @@ using System.Windows.Forms;
 
 namespace PaintDotNet.Effects
 {
-    internal partial class CodeLabConfigDialog : EffectConfigDialog
+    internal partial class CodeLabConfigDialog : EffectConfigForm<CodeLab, CodeLabConfigToken>
     {
         #region Constructor
         private const string WindowTitle = "CodeLab v" + CodeLab.Version;
@@ -41,6 +41,7 @@ namespace PaintDotNet.Effects
         {
             get
             {
+#if !FASTDEBUG
                 if (this.effectFlag != null)
                 {
                     return this.effectFlag;
@@ -48,14 +49,14 @@ namespace PaintDotNet.Effects
 
                 if (this.Effect != null)
                 {
-                    string name = this.Effect.Name;
+                    string name = (this.Effect as IEffect).EffectInfo.Name;
                     int dashIndex = name.IndexOf('-', StringComparison.Ordinal);
                     this.effectFlag = dashIndex > 0 ?
                         " (" + name.Substring(dashIndex + 2) + ")" :
                         string.Empty;
                     return this.effectFlag;
                 }
-
+#endif
                 return string.Empty;
             }
         }
@@ -68,8 +69,6 @@ namespace PaintDotNet.Effects
 #if FASTDEBUG
             this.Icon = UIUtil.CreateIcon("CodeLab");
             this.ShowInTaskbar = true;
-#else
-            this.UseAppThemeColors = true;
 #endif
             PdnTheme.InitialColors(this.ForeColor, this.BackColor);
             LoadSettingsFromRegistry();
@@ -80,29 +79,18 @@ namespace PaintDotNet.Effects
             opacity90MenuItem.Checked = false;
             opacity100MenuItem.Checked = true;
             transparencyToolStripMenuItem.Enabled = EnableOpacity;
-
-            ResetScript();
-            BuildAsync();
-            txtCode.Focus();
         }
 
-        protected override void OnLoad(EventArgs e)
+        protected override void OnLoading()
         {
-            base.OnLoad(e);
+            base.OnLoading();
 
-#if FASTDEBUG
-            ShapeBuilder.SetEnviromentParams(100, 100, 0, 0, 100, 100, ColorBgra.Black, ColorBgra.White, 2);
-#else
-            Size srcSize = EnvironmentParameters.SourceSurface.Size;
-            Rectangle selection = EnvironmentParameters.SelectionBounds;
-            ColorBgra strokeColor = EnvironmentParameters.PrimaryColor;
-            ColorBgra fillColor = EnvironmentParameters.SecondaryColor;
-            double strokeThickness = EnvironmentParameters.BrushWidth;
-            ShapeBuilder.SetEnviromentParams(srcSize.Width, srcSize.Height, selection.X, selection.Y, selection.Width, selection.Height, strokeColor, fillColor, strokeThickness);
-
+#if !FASTDEBUG
             UIUtil.SetIShellService(this.Services.GetService<IShellService>());
 #endif
         }
+
+        protected override bool UseAppThemeColorsDefault => true;
 
         private void LoadSettingsFromRegistry()
         {
@@ -177,46 +165,45 @@ namespace PaintDotNet.Effects
         #endregion
 
         #region Token functions
-        protected override void InitTokenFromDialog()
+        protected override void OnUpdateTokenFromDialog(CodeLabConfigToken dstToken)
         {
-            CodeLabConfigToken sect = (CodeLabConfigToken)theEffectToken;
-            sect.UserCode = txtCode.Text;
-            sect.UserScriptObject = ScriptBuilder.BuiltEffect;
-            sect.ScriptName = FileName;
-            sect.ScriptPath = FullScriptPath;
-            sect.Dirty = tabStrip1.SelectedTabIsDirty;
-            sect.PreviewToken = previewToken;
-            sect.Bookmarks = txtCode.Bookmarks;
-            sect.ProjectType = tabStrip1.SelectedTabProjType;
+            dstToken.UserCode = txtCode.Text;
+            dstToken.UserScriptObject = ScriptBuilder.BuiltEffect;
+            dstToken.ScriptName = FileName;
+            dstToken.ScriptPath = FullScriptPath;
+            dstToken.Dirty = tabStrip1.SelectedTabIsDirty;
+            dstToken.PreviewToken = previewToken;
+            dstToken.Bookmarks = txtCode.Bookmarks;
+            dstToken.ProjectType = tabStrip1.SelectedTabProjType;
         }
 
-        protected override void InitDialogFromToken(EffectConfigToken effectTokenCopy)
+        protected override void OnUpdateDialogFromToken(CodeLabConfigToken token)
         {
-            if (effectTokenCopy is CodeLabConfigToken token)
+            FileName = token.ScriptName;
+            FullScriptPath = token.ScriptPath;
+            if (token.ProjectType != ProjectType.Effect)
             {
-                FileName = token.ScriptName;
-                FullScriptPath = token.ScriptPath;
-                if (token.ProjectType != ProjectType.Effect)
-                {
-                    tabStrip1.SelectedTabIsDirty = false;
-                    tabStrip1.NewTab(FileName, FullScriptPath, token.ProjectType);
-                    tabStrip1.CloseFirstTab();
-                }
-                txtCode.Text = token.UserCode;
-                txtCode.EmptyUndoBuffer();
-                if (!token.Dirty)
-                {
-                    txtCode.SetSavePoint();
-                }
-                txtCode.Bookmarks = token.Bookmarks;
-
-                UpdateTabProperties();
+                tabStrip1.SelectedTabIsDirty = false;
+                tabStrip1.NewTab(FileName, FullScriptPath, token.ProjectType);
+                tabStrip1.CloseFirstTab();
             }
+            txtCode.Text = token.UserCode;
+            txtCode.EmptyUndoBuffer();
+            if (!token.Dirty)
+            {
+                txtCode.SetSavePoint();
+            }
+            txtCode.Bookmarks = token.Bookmarks;
+
+            UpdateTabProperties();
+
+            BuildAsync();
+            txtCode.Focus();
         }
 
-        protected override void InitialInitToken()
+        protected override EffectConfigToken OnCreateInitialToken()
         {
-            theEffectToken = new CodeLabConfigToken
+            return new CodeLabConfigToken
             {
                 UserCode = ScriptWriter.DefaultCode,
                 UserScriptObject = null,
@@ -243,10 +230,10 @@ namespace PaintDotNet.Effects
             switch (projType)
             {
                 case ProjectType.Effect:
-                    ScriptBuilder.Build(txtCode.Text, OutputTextBox.Visible);
+                    ScriptBuilder.Build<Effect>(txtCode.Text, OutputTextBox.Visible);
                     DisplayErrors();
                     txtCode.UpdateSyntaxHighlighting();
-                    FinishTokenUpdate();
+                    UpdateTokenFromDialog();
                     break;
                 case ProjectType.FileType:
                     ScriptBuilder.BuildFileType(txtCode.Text, OutputTextBox.Visible);
@@ -257,7 +244,7 @@ namespace PaintDotNet.Effects
                 case ProjectType.Shape:
                     ShapeBuilder.TryParseShapeCode(txtCode.Text);
                     DisplayErrors();
-                    FinishTokenUpdate();
+                    UpdateTokenFromDialog();
                     break;
             }
         }
@@ -278,7 +265,7 @@ namespace PaintDotNet.Effects
                 switch (projType)
                 {
                     case ProjectType.Effect:
-                        ScriptBuilder.Build(code, debug);
+                        ScriptBuilder.Build<Effect>(code, debug);
                         break;
                     case ProjectType.FileType:
                         ScriptBuilder.BuildFileType(code, debug);
@@ -297,7 +284,7 @@ namespace PaintDotNet.Effects
             {
                 case ProjectType.Effect:
                     txtCode.UpdateSyntaxHighlighting();
-                    FinishTokenUpdate();
+                    UpdateTokenFromDialog();
                     break;
                 case ProjectType.FileType:
                     txtCode.UpdateSyntaxHighlighting();
@@ -323,19 +310,19 @@ namespace PaintDotNet.Effects
                 return;
             }
 
-            if (!ScriptBuilder.BuiltEffect.Options.Flags.HasFlag(EffectFlags.Configurable))
+            if (!ScriptBuilder.BuiltEffect.Options.IsConfigurable)
             {
                 FlexibleMessageBox.Show("There are no UI controls, so the Preview can't be displayed.", "Preview Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            ScriptBuilder.BuiltEffect.EnvironmentParameters = this.Effect.EnvironmentParameters;
-            using (EffectConfigDialog previewDialog = ScriptBuilder.BuiltEffect.CreateConfigDialog())
+            using IEffect effect = ScriptBuilder.BuiltEffect.EffectInfo.CreateInstance(this.Services, this.Environment);
+            using IEffectConfigForm previewDialog = effect.CreateConfigForm();
             {
-                previewToken = previewDialog.EffectToken;
-                previewDialog.EffectTokenChanged += (sender, e) => FinishTokenUpdate();
+                previewToken = previewDialog.Token;
+                previewDialog.TokenChanged += (sender, e) => UpdateTokenFromDialog();
 
-                previewDialog.ShowDialog();
+                previewDialog.ShowDialog(this);
             }
 
             previewToken = null;
@@ -360,10 +347,13 @@ namespace PaintDotNet.Effects
                 FlexibleMessageBox.Show(noControls, "Preview Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
 
-            using (SaveConfigDialog saveDialog = new SaveConfigDialog(ScriptBuilder.BuiltFileType, EnvironmentParameters.SourceSurface))
-            {
-                saveDialog.ShowDialog();
-            }
+            using Surface srcSurface = new Surface(800, 600);
+            using Graphics g = new RenderArgs(srcSurface).Graphics;
+            using System.Drawing.Drawing2D.LinearGradientBrush gradientBrush = new System.Drawing.Drawing2D.LinearGradientBrush(srcSurface.Bounds, Color.Black, Color.White, 0f);
+            g.FillRectangle(gradientBrush, srcSurface.Bounds);
+
+            using SaveConfigDialog saveDialog = new SaveConfigDialog(ScriptBuilder.BuiltFileType, srcSurface);
+            saveDialog.ShowDialog();
         }
 
         private void RunFileType()
@@ -473,13 +463,6 @@ namespace PaintDotNet.Effects
 
             ShowErrors.Text = showErrorList;
             ShowErrors.ForeColor = this.ForeColor;
-        }
-
-        private void ResetScript()
-        {
-            InitialInitToken();
-            InitDialogFromToken();
-            FinishTokenUpdate();
         }
 
         private void LoadFile(string filePath)
@@ -787,22 +770,22 @@ namespace PaintDotNet.Effects
         #region Timer tick Event functions
         private void tmrExceptionCheck_Tick(object sender, EventArgs e)
         {
-            CodeLabConfigToken sect = (CodeLabConfigToken)theEffectToken;
+            CodeLabConfigToken sect = Token;
 
-            if (sect.LastExceptions.Count > 0)
+            if (Token.LastExceptions.Count > 0)
             {
                 Error exc = Error.NewExceptionError(sect.LastExceptions[0]);
-                sect.LastExceptions.Clear();
+                Token.LastExceptions.Clear();
 
                 errorList.AddError(exc);
                 ShowErrors.Text = $"{showErrorList} ({errorList.ErrorCount})";
                 ShowErrors.ForeColor = Color.Red;
             }
 
-            if (sect.Output.Count > 0)
+            if (Token.Output.Count > 0)
             {
-                string output = sect.Output[0];
-                sect.Output.Clear();
+                string output = Token.Output[0];
+                Token.Output.Clear();
 
                 if (output.Trim().Length > 0)
                 {
@@ -1224,7 +1207,7 @@ namespace PaintDotNet.Effects
 
             if (buildSucceeded)
             {
-                string fullPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
+                string fullPath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.DesktopDirectory);
                 fullPath = Path.Combine(fullPath, fileName);
                 string zipPath = Path.ChangeExtension(fullPath, ".zip");
 
@@ -1247,7 +1230,14 @@ namespace PaintDotNet.Effects
         private void UIDesigner()
         {
             // User Interface Designer
-            using UIBuilder myUIBuilderForm = new UIBuilder(txtCode.Text, tabStrip1.SelectedTabProjType, EnvironmentParameters);
+            using UIBuilder myUIBuilderForm = new UIBuilder(txtCode.Text, tabStrip1.SelectedTabProjType,
+#if FASTDEBUG
+                null
+#else
+                this.Environment
+#endif
+                );
+
             if (myUIBuilderForm.ShowDialog() == DialogResult.OK)
             {
                 // update generated code
@@ -2175,6 +2165,7 @@ namespace PaintDotNet.Effects
     {
         None,
         Effect,
+        EffectGpu,
         FileType,
         Reference,
         Shape

@@ -18,9 +18,9 @@ using System.Collections.Generic;
 
 namespace PaintDotNet.Effects
 {
-    internal class CodeLabConfigToken : EffectConfigToken
+    public class CodeLabConfigToken : EffectConfigToken
     {
-        internal Effect UserScriptObject;
+        internal IEffect UserScriptObject;
         internal string UserCode;
         internal List<Exception> LastExceptions;
         internal List<string> Output;

@@ -71,6 +71,9 @@
     <Reference Include="PaintDotNet.Windows.Core">
       <HintPath>C:\Program Files\paint.net\PaintDotNet.Windows.Core.dll</HintPath>
     </Reference>
+    <Reference Include="PaintDotNet.Windows.Framework">
+      <HintPath>C:\Program Files\paint.net\PaintDotNet.Windows.Framework.dll</HintPath>
+    </Reference>
     <Reference Include="ScintillaNET">
       <HintPath>References\ScintillaNET.dll</HintPath>
     </Reference>

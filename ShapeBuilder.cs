@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Linq;
-using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Markup;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using System.Xml;
 using System.Xml.Linq;
 
@@ -13,41 +9,9 @@ namespace PaintDotNet.Effects
 {
     internal static class ShapeBuilder
     {
-        private static Size canvasSize;
-        private static Rect selection;
-        private static SolidColorBrush strokeBrush;
-        private static SolidColorBrush fillBrush;
-        private static double strokeThickness;
-
         private static Error error;
 
         internal static Error Error => error;
-        internal static System.Drawing.Bitmap Shape;
-
-        internal static void SetEnviromentParams(int canvasWidth, int canvasHeight, int selectionX, int selectionY,
-            int selectionWidth, int selctionHeight, ColorBgra strokeColor, ColorBgra fillColor, double strokeWidth)
-        {
-            canvasSize = new Size(canvasWidth, canvasHeight);
-            selection = new Rect(selectionX, selectionY, selectionWidth, selctionHeight);
-            strokeBrush = new SolidColorBrush(Color.FromArgb(strokeColor.A, strokeColor.R, strokeColor.G, strokeColor.B));
-            fillBrush = new SolidColorBrush(Color.FromArgb(fillColor.A, fillColor.R, fillColor.G, fillColor.B));
-            strokeThickness = strokeWidth;
-        }
-
-        internal static bool RenderShape(string shapeCode)
-        {
-            Shape?.Dispose();
-            Shape = null;
-
-            Geometry geometry = GeometryFromRawString(shapeCode);
-            if (geometry == null)
-            {
-                return false;
-            }
-
-            RenderGeometry(geometry);
-            return true;
-        }
 
         internal static bool TryParseShapeCode(string shapeCode)
         {
@@ -56,7 +20,7 @@ namespace PaintDotNet.Effects
             return geometry != null;
         }
 
-        private static Geometry GeometryFromRawString(string shapeCode)
+        internal static Geometry GeometryFromRawString(string shapeCode)
         {
             error = null;
 
@@ -222,55 +186,6 @@ namespace PaintDotNet.Effects
             }
 
             return streamGeometry;
-        }
-
-        private static void RenderGeometry(Geometry geometry)
-        {
-            const int padding = 5;
-
-            Path path = new Path
-            {
-                Data = geometry,
-                HorizontalAlignment = HorizontalAlignment.Center,
-                VerticalAlignment = VerticalAlignment.Center,
-                Stroke = strokeBrush,
-                Fill = fillBrush,
-                StrokeThickness = strokeThickness,
-                Stretch = Stretch.Uniform,
-                Width = selection.Width - padding * 2,
-                Height = selection.Height - padding * 2,
-                Margin = new Thickness(padding)
-            };
-
-            Canvas canvas = new Canvas
-            {
-                Width = canvasSize.Width,
-                Height = canvasSize.Height,
-                Margin = new Thickness(selection.X, selection.Y, 0, 0),
-                Background = Brushes.Transparent
-            };
-
-            canvas.Children.Add(path);
-
-            canvas.Measure(new Size(canvas.Width, canvas.Height));
-            canvas.Arrange(new Rect(new Size(canvas.Width, canvas.Height)));
-
-            CreateBitmap(canvas, (int)canvas.Width, (int)canvas.Height);
-        }
-
-        private static void CreateBitmap(Visual visual, int width, int height)
-        {
-            RenderTargetBitmap bitmap = new RenderTargetBitmap(width, height, 96, 96, PixelFormats.Pbgra32);
-            bitmap.Render(visual);
-
-            BmpBitmapEncoder image = new BmpBitmapEncoder();
-            image.Frames.Add(BitmapFrame.Create(bitmap));
-            using (System.IO.MemoryStream ms = new System.IO.MemoryStream())
-            {
-                image.Save(ms);
-                ms.Seek(0, System.IO.SeekOrigin.Begin);
-                Shape = new System.Drawing.Bitmap(ms);
-            }
         }
     }
 }

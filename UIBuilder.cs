@@ -13,13 +13,13 @@
 // Latest distribution: https://www.BoltBait.com/pdn/codelab
 /////////////////////////////////////////////////////////////////////////////////
 
+using PaintDotNet.Imaging;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
-using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
@@ -28,7 +28,7 @@ namespace PaintDotNet.Effects
     internal partial class UIBuilder : ChildFormBase
     {
         internal string UIControlsText;
-        private readonly EffectEnvironmentParameters environmentParameters;
+        private readonly IEffectEnvironment environmentParameters;
         private readonly ProjectType projectType;
         private bool dirty = false;
         private readonly List<UIElement> MasterList = new List<UIElement>();
@@ -56,7 +56,7 @@ namespace PaintDotNet.Effects
             UIUtil.GetImage("16FolderControl")
         };
 
-        internal UIBuilder(string UserScriptText, ProjectType projectType, EffectEnvironmentParameters environmentParameters)
+        internal UIBuilder(string UserScriptText, ProjectType projectType, IEffectEnvironment environmentParameters)
         {
             InitializeComponent();
 
@@ -1006,19 +1006,19 @@ namespace PaintDotNet.Effects
             {
                 FlexibleMessageBox.Show("Something went wrong, and the Preview can't be displayed.", "Preview Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            else if (!ScriptBuilder.BuiltEffect.Options.Flags.HasFlag(EffectFlags.Configurable))
+            else if (!ScriptBuilder.BuiltEffect.Options.IsConfigurable)
             {
                 FlexibleMessageBox.Show("There are no UI controls, so the Preview can't be displayed.", "Preview Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             else
             {
-                using (Surface emptySurface = new Surface(this.environmentParameters.SourceSurface.Size))
-                using (EffectEnvironmentParameters enviroParams = environmentParameters.CloneWithDifferentSourceSurface(emptySurface))
-                {
-                    emptySurface.Fill(ColorBgra.White);
-                    ScriptBuilder.BuiltEffect.EnvironmentParameters = enviroParams;
-                    ScriptBuilder.BuiltEffect.CreateConfigDialog().ShowDialog();
-                }
+                using Surface emptySurface = new Surface(this.environmentParameters.Document.Size);
+                emptySurface.Fill(ColorBgra.White);
+                using IBitmap<ColorBgra32> bitmap = emptySurface.CreateSharedBitmap();
+                using IEffectEnvironment enviroParams = environmentParameters.CloneWithNewSource(bitmap);
+                using IEffect effect = ScriptBuilder.BuiltEffect.EffectInfo.CreateInstance(null, enviroParams);
+                using IEffectConfigForm effectConfigDialog = effect.CreateConfigForm();
+                effectConfigDialog.ShowDialog(this);
             }
         }
 

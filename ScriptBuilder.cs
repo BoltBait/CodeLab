@@ -30,7 +30,7 @@ namespace PaintDotNet.Effects
 {
     internal static class ScriptBuilder
     {
-        private static Effect builtEffect;
+        private static IEffect builtEffect;
         private static FileType builtFileType;
         private static int lineOffset;
         private static string exceptionMsg;
@@ -45,7 +45,7 @@ namespace PaintDotNet.Effects
         private static IEnumerable<Diagnostic> errors;
 
         #region Properties
-        internal static Effect BuiltEffect => builtEffect;
+        internal static IEffect BuiltEffect => builtEffect;
         internal static FileType BuiltFileType => builtFileType;
         internal static int LineOffset => lineOffset;
         internal static int ColumnOffset => 8;
@@ -80,7 +80,8 @@ namespace PaintDotNet.Effects
             warningsToIgnore = warnings;
         }
 
-        internal static bool Build(string scriptText, bool debug)
+        internal static bool Build<TEffect>(string scriptText, bool debug)
+            where TEffect : IEffect
         {
             builtEffect = null;
 
@@ -102,9 +103,9 @@ namespace PaintDotNet.Effects
 
             foreach (Type type in assembly.GetTypes())
             {
-                if (type.IsSubclassOf(typeof(Effect)) && !type.IsAbstract)
+                if (type.IsSubclassOf(typeof(TEffect)) && !type.IsAbstract)
                 {
-                    builtEffect = (Effect)type.GetConstructor(Type.EmptyTypes).Invoke(null);
+                    builtEffect = (TEffect)type.GetConstructor(Type.EmptyTypes).Invoke(null);
                     Intelli.UserScript = type;
                 }
                 else if (type.DeclaringType != null && type.DeclaringType.FullName.StartsWith(Intelli.UserScriptFullName, StringComparison.Ordinal) && !Intelli.UserDefinedTypes.ContainsKey(type.Name))

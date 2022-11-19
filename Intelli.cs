@@ -30,22 +30,26 @@ namespace PaintDotNet.Effects
         internal static Dictionary<string, int> VarPos { get; }
         internal static Dictionary<string, Type> Parameters { get; }
         internal static Dictionary<string, Type> UserDefinedTypes { get; }
-        internal static Dictionary<string, Type> AutoCompleteTypes { get; }
+        internal static Dictionary<string, Type> AutoCompleteTypes { get; private set; }
         internal static Dictionary<string, Type> XamlAutoCompleteTypes { get; }
-        internal static Dictionary<string, Type> AllTypes { get; }
+        internal static Dictionary<string, Type> AllTypes { get; private set; }
         internal static Dictionary<string, string> Snippets { get; }
         internal static Dictionary<string, string> TypeAliases { get; }
         internal static IEnumerable<string> Keywords { get; }
-        internal static IEnumerable<Assembly> ReferenceAssemblies { get; }
-        internal static IEnumerable<string> PdnAssemblyNames { get; }
+        internal static IEnumerable<Assembly> ReferenceAssemblies { get; private set; }
+        internal static IEnumerable<string> PdnAssemblyNames { get; private set; }
         internal static Type UserScript { get; set; }
-        internal static string ClassList { get; }
-        internal static string EnumList { get; }
-        internal static string StructList { get; }
-        internal static string InterfaceList { get; }
+        internal static string ClassList { get; private set; }
+        internal static string EnumList { get; private set; }
+        internal static string StructList { get; private set; }
+        internal static string InterfaceList { get; private set; }
 
         internal const string UserScriptFullName = "PaintDotNet.Effects.UserScript";
-        private static readonly IEnumerable<MethodInfo> extMethods;
+        private static IEnumerable<MethodInfo> extMethods;
+
+        private static readonly ImmutableArray<Assembly> sdkAssemblies;
+        private static readonly ImmutableArray<Assembly> allPdnAssemblies;
+        private static readonly ImmutableArray<KeyValuePair<string, Type>> aliasTypes;
 
         internal static IEnumerable<MethodInfo> GetExtensionMethod(this Type extendedType, string methodName)
         {
@@ -80,165 +84,53 @@ namespace PaintDotNet.Effects
             return true;
         }
 
-        static Intelli()
+        internal static void SetReferences(ProjectType projectType)
         {
-            TypeAliases = new Dictionary<string, string>
-            {
-                { "Byte", "byte" },
-                { "SByte", "sbyte" },
-                { "Int16", "short" },
-                { "UInt16", "ushort" },
-                { "Int32", "int" },
-                { "UInt32", "uint" },
-                { "Int64", "long" },
-                { "UInt64", "ulong" },
-                { "Single", "float" },
-                { "Double", "double" },
-                { "Decimal", "decimal" },
-                { "Boolean", "bool" },
-                { "Char", "char" },
-                { "String", "string" },
-                { "Object", "object" },
-                { "Byte[]", "byte[]" },
-                { "SByte[]", "sbyte[]" },
-                { "Int16[]", "short[]" },
-                { "UInt16[]", "ushort[]" },
-                { "Int32[]", "int[]" },
-                { "UInt32[]", "uint[]" },
-                { "Int64[]", "long[]" },
-                { "UInt64[]", "ulong[]" },
-                { "Single[]", "float[]" },
-                { "Double[]", "double[]" },
-                { "Decimal[]", "decimal[]" },
-                { "Boolean[]", "bool[]" },
-                { "Char[]", "char[]" },
-                { "String[]", "string[]" },
-                { "Object[]", "object[]" },
-                { "Void", "void" },
-                { "ValueType", "struct" }
-            };
-
-            Keywords = new string[]
-            {
-                "abstract", "as", "base", "break", "case", "catch", "checked", "class", "const", "continue",
-                "default", "delegate", "do", "enum", "event", "explicit", "extern", "false", "finally", "fixed",
-                "get", "goto", "implicit", "in", "interface", "internal", "is", "lock", "new", "not", "null",
-                "object", "operator", "out", "override", "params", "partial", "private", "protected", "public",
-                "readonly", "ref", "return", "stackalloc", "static", "sealed", "set", "sizeof", "struct",
-                "this", "throw", "true", "try", "typeof", "unchecked", "unsafe", "var", "virtual", "void", "volatile",
-                "with", "#endif", "#endregion"
-            };
-
-            PdnAssemblyNames = new string[]
+            List<string> pdnAssemblyNames = new List<string>
             {
                 "PaintDotNet.Base",
                 "PaintDotNet.ComponentModel",
                 "PaintDotNet.Core",
                 "PaintDotNet.Data",
-                "PaintDotNet.Effects",
-                "PaintDotNet.Effects.Core",
-                "PaintDotNet.Effects.Legacy",
+                "PaintDotNet.Framework.dll",
                 "PaintDotNet.Fundamentals",
                 "PaintDotNet.ObjectModel",
                 "PaintDotNet.Primitives",
                 "PaintDotNet.PropertySystem",
                 "PaintDotNet.Windows",
-                "PaintDotNet.Windows.Core"
+                "PaintDotNet.Windows.Core",
+                "PaintDotNet.Windows.Framework.dll"
             };
 
-            // exclude assemblies that were loaded into separate contexts; i.e. Plugins
-            IEnumerable<Assembly> assemblies = AppDomain.CurrentDomain
-                .GetAssemblies()
-                .Where(a => !a.IsCollectible);
-
-            // Cherry pick certain dotPDN assemblies
-            IEnumerable<Assembly> pdnAssemblies = assemblies
-                .Where(a => a.GetCustomAttribute<AssemblyCompanyAttribute>()?.Company == "dotPDN LLC" &&
-                            PdnAssemblyNames.Contains(a.GetName().Name, StringComparer.OrdinalIgnoreCase));
-
-            // Cherry pick Microsoft assemblies
-            IEnumerable<Assembly> msAssemblies = assemblies
-                .Where(a => a.GetCustomAttribute<AssemblyCompanyAttribute>()?.Company == "Microsoft Corporation");
-
-            ReferenceAssemblies = msAssemblies
-                .Concat(pdnAssemblies)
-                .Append(typeof(System.Diagnostics.TextWriterTraceListener).Assembly)
-                .Distinct()
-                .ToImmutableArray();
-
-            Dictionary<string, string> userSnippets = null;
-            string userSnippetsJson = Settings.Snippets;
-
-            if (userSnippetsJson.Length > 0)
+            switch (projectType)
             {
-                try
-                {
-                    userSnippets = JsonSerializer.Deserialize<Dictionary<string, string>>(userSnippetsJson);
-                }
-                catch
-                {
-                }
+                case ProjectType.Effect:
+                    pdnAssemblyNames.Add("PaintDotNet.Effects");
+                    pdnAssemblyNames.Add("PaintDotNet.Effects.Core");
+                    pdnAssemblyNames.Add("PaintDotNet.Effects.Legacy");
+                    break;
+                case ProjectType.EffectGpu:
+                    pdnAssemblyNames.Add("PaintDotNet.Effects.Core");
+                    pdnAssemblyNames.Add("PaintDotNet.Effects.Gpu");
+                    break;
+                case ProjectType.Reference:
+                    pdnAssemblyNames.Add("PaintDotNet.Effects");
+                    pdnAssemblyNames.Add("PaintDotNet.Effects.Core");
+                    pdnAssemblyNames.Add("PaintDotNet.Effects.Gpu");
+                    pdnAssemblyNames.Add("PaintDotNet.Effects.Legacy");
+                    break;
             }
 
-            Snippets = userSnippets ??
-                new Dictionary<string, string>()
-                {
-                    { "if", "if (true$)\r\n{\r\n    \r\n}" },
-                    { "else", "else\r\n{\r\n    $\r\n}" },
-                    { "while", "while (true$)\r\n{\r\n    break;\r\n}" },
-                    { "for", "for (int i = 0; i < length$; i++)\r\n{\r\n    \r\n}" },
-                    { "foreach", "foreach (var item in collection$)\r\n{\r\n    \r\n}" },
-                    { "using", "using (resource$)\r\n{\r\n    \r\n}" },
-                    { "switch", "switch (variable$)\r\n{\r\n    case 0:\r\n        break;\r\n    default:\r\n        break;\r\n}" },
-                    { "#region", "#region MyRegion$\r\n\r\n#endregion" },
-                    { "#if", "#if true$\r\n\r\n#endif" },
-                    { "try", "try\r\n{\r\n    $\r\n}\r\ncatch (Exception ex)\r\n{\r\n    \r\n}" }
-                };
+            PdnAssemblyNames = pdnAssemblyNames
+                .OrderBy(x => x, StringComparer.Ordinal)
+                .ToImmutableArray();
 
-            Variables = new Dictionary<string, Type>();
+            ReferenceAssemblies = sdkAssemblies
+                .Concat(allPdnAssemblies.Where(a => pdnAssemblyNames.Contains(a.GetName().Name, StringComparer.Ordinal)))
+                .ToImmutableArray();
 
-            Parameters = new Dictionary<string, Type>();
-
-            VarPos = new Dictionary<string, int>();
-
-            UserDefinedTypes = new Dictionary<string, Type>();
-
-            AllTypes = new Dictionary<string, Type>
-            {
-                // Add the predefined aliases of types in the System namespace
-                { "bool", typeof(bool) },
-                { "byte", typeof(byte) },
-                { "sbyte", typeof(sbyte) },
-                { "char", typeof(char) },
-                { "decimal", typeof(decimal) },
-                { "double", typeof(double) },
-                { "float", typeof(float) },
-                { "int", typeof(int) },
-                { "uint", typeof(uint) },
-                { "long", typeof(long) },
-                { "ulong", typeof(ulong) },
-                { "object", typeof(object) },
-                { "short", typeof(short) },
-                { "ushort", typeof(ushort) },
-                { "string", typeof(string) },
-                // Add the aliases for the UI controls
-                { "IntSliderControl", typeof(int) },
-                { "CheckboxControl", typeof(bool) },
-                { "ColorWheelControl", typeof(ColorBgra) },
-                { "AngleControl", typeof(double) },
-                { "PanSliderControl", typeof(Vector2Double) },
-                { "TextboxControl", typeof(string) },
-                { "FilenameControl", typeof(string) },
-                { "FolderControl", typeof(string) },
-                { "DoubleSliderControl", typeof(double) },
-                { "RollControl", typeof(Vector3Double) },
-                { "ListBoxControl", typeof(byte) },
-                { "RadioButtonControl", typeof(byte) },
-                { "ReseedButtonControl", typeof(byte) },
-                { "MultiLineTextboxControl", typeof(string) }
-            };
-
-            AutoCompleteTypes = new Dictionary<string, Type>(AllTypes);
+            AllTypes = new Dictionary<string, Type>(aliasTypes);
+            AutoCompleteTypes = new Dictionary<string, Type>(aliasTypes);
 
             HashSet<string> enums = new HashSet<string>();
             HashSet<string> interfaces = new HashSet<string>();
@@ -343,6 +235,167 @@ namespace PaintDotNet.Effects
             EnumList = enums.Join(" ");
             StructList = structs.Join(" ");
             InterfaceList = interfaces.Join(" ");
+        }
+
+        static Intelli()
+        {
+            TypeAliases = new Dictionary<string, string>
+            {
+                { "Byte", "byte" },
+                { "SByte", "sbyte" },
+                { "Int16", "short" },
+                { "UInt16", "ushort" },
+                { "Int32", "int" },
+                { "UInt32", "uint" },
+                { "Int64", "long" },
+                { "UInt64", "ulong" },
+                { "Single", "float" },
+                { "Double", "double" },
+                { "Decimal", "decimal" },
+                { "Boolean", "bool" },
+                { "Char", "char" },
+                { "String", "string" },
+                { "Object", "object" },
+                { "Byte[]", "byte[]" },
+                { "SByte[]", "sbyte[]" },
+                { "Int16[]", "short[]" },
+                { "UInt16[]", "ushort[]" },
+                { "Int32[]", "int[]" },
+                { "UInt32[]", "uint[]" },
+                { "Int64[]", "long[]" },
+                { "UInt64[]", "ulong[]" },
+                { "Single[]", "float[]" },
+                { "Double[]", "double[]" },
+                { "Decimal[]", "decimal[]" },
+                { "Boolean[]", "bool[]" },
+                { "Char[]", "char[]" },
+                { "String[]", "string[]" },
+                { "Object[]", "object[]" },
+                { "Void", "void" },
+                { "ValueType", "struct" }
+            };
+
+            Keywords = new string[]
+            {
+                "abstract", "as", "base", "break", "case", "catch", "checked", "class", "const", "continue",
+                "default", "delegate", "do", "enum", "event", "explicit", "extern", "false", "finally", "fixed",
+                "get", "goto", "implicit", "in", "interface", "internal", "is", "lock", "new", "not", "null",
+                "object", "operator", "out", "override", "params", "partial", "private", "protected", "public",
+                "readonly", "ref", "return", "stackalloc", "static", "sealed", "set", "sizeof", "struct",
+                "this", "throw", "true", "try", "typeof", "unchecked", "unsafe", "var", "virtual", "void", "volatile",
+                "with", "#endif", "#endregion"
+            };
+
+            string[] allPdnAssemblyNames = new string[]
+            {
+                "PaintDotNet.Base",
+                "PaintDotNet.ComponentModel",
+                "PaintDotNet.Core",
+                "PaintDotNet.Data",
+                "PaintDotNet.Effects",
+                "PaintDotNet.Effects.Core",
+                "PaintDotNet.Effects.Gpu",
+                "PaintDotNet.Effects.Legacy",
+                "PaintDotNet.Framework.dll",
+                "PaintDotNet.Fundamentals",
+                "PaintDotNet.ObjectModel",
+                "PaintDotNet.Primitives",
+                "PaintDotNet.PropertySystem",
+                "PaintDotNet.Windows",
+                "PaintDotNet.Windows.Core",
+                "PaintDotNet.Windows.Framework.dll"
+            };
+
+            // exclude assemblies that were loaded into separate contexts; i.e. Plugins
+            IEnumerable<Assembly> assemblies = AppDomain.CurrentDomain
+                .GetAssemblies()
+                .Where(a => !a.IsCollectible);
+
+            // Cherry pick certain dotPDN assemblies
+            allPdnAssemblies = assemblies
+                .Where(a => a.GetCustomAttribute<AssemblyCompanyAttribute>()?.Company == "dotPDN LLC" &&
+                            allPdnAssemblyNames.Contains(a.GetName().Name, StringComparer.OrdinalIgnoreCase))
+                .ToImmutableArray();
+
+            // Cherry pick Microsoft assemblies
+            sdkAssemblies = assemblies
+                .Where(a => a.GetCustomAttribute<AssemblyCompanyAttribute>()?.Company == "Microsoft Corporation")
+                .Append(typeof(System.Diagnostics.TextWriterTraceListener).Assembly)
+                .Distinct()
+                .ToImmutableArray();
+
+            Dictionary<string, string> userSnippets = null;
+            string userSnippetsJson = Settings.Snippets;
+
+            if (userSnippetsJson.Length > 0)
+            {
+                try
+                {
+                    userSnippets = JsonSerializer.Deserialize<Dictionary<string, string>>(userSnippetsJson);
+                }
+                catch
+                {
+                }
+            }
+
+            Snippets = userSnippets ??
+                new Dictionary<string, string>()
+                {
+                    { "if", "if (true$)\r\n{\r\n    \r\n}" },
+                    { "else", "else\r\n{\r\n    $\r\n}" },
+                    { "while", "while (true$)\r\n{\r\n    break;\r\n}" },
+                    { "for", "for (int i = 0; i < length$; i++)\r\n{\r\n    \r\n}" },
+                    { "foreach", "foreach (var item in collection$)\r\n{\r\n    \r\n}" },
+                    { "using", "using (resource$)\r\n{\r\n    \r\n}" },
+                    { "switch", "switch (variable$)\r\n{\r\n    case 0:\r\n        break;\r\n    default:\r\n        break;\r\n}" },
+                    { "#region", "#region MyRegion$\r\n\r\n#endregion" },
+                    { "#if", "#if true$\r\n\r\n#endif" },
+                    { "try", "try\r\n{\r\n    $\r\n}\r\ncatch (Exception ex)\r\n{\r\n    \r\n}" }
+                };
+
+            Variables = new Dictionary<string, Type>();
+            Parameters = new Dictionary<string, Type>();
+            VarPos = new Dictionary<string, int>();
+            UserDefinedTypes = new Dictionary<string, Type>();
+            AutoCompleteTypes = new Dictionary<string, Type>();
+
+            aliasTypes = new Dictionary<string, Type>
+            {
+                // Add the predefined aliases of types in the System namespace
+                { "bool", typeof(bool) },
+                { "byte", typeof(byte) },
+                { "sbyte", typeof(sbyte) },
+                { "char", typeof(char) },
+                { "decimal", typeof(decimal) },
+                { "double", typeof(double) },
+                { "float", typeof(float) },
+                { "int", typeof(int) },
+                { "uint", typeof(uint) },
+                { "long", typeof(long) },
+                { "ulong", typeof(ulong) },
+                { "object", typeof(object) },
+                { "short", typeof(short) },
+                { "ushort", typeof(ushort) },
+                { "string", typeof(string) },
+                // Add the aliases for the UI controls
+                { "IntSliderControl", typeof(int) },
+                { "CheckboxControl", typeof(bool) },
+                { "ColorWheelControl", typeof(ColorBgra) },
+                { "AngleControl", typeof(double) },
+                { "PanSliderControl", typeof(Vector2Double) },
+                { "TextboxControl", typeof(string) },
+                { "FilenameControl", typeof(string) },
+                { "FolderControl", typeof(string) },
+                { "DoubleSliderControl", typeof(double) },
+                { "RollControl", typeof(Vector3Double) },
+                { "ListBoxControl", typeof(byte) },
+                { "RadioButtonControl", typeof(byte) },
+                { "ReseedButtonControl", typeof(byte) },
+                { "MultiLineTextboxControl", typeof(string) }
+            }
+            .ToImmutableArray();
+
+            SetReferences(ProjectType.Effect);
 
             XamlAutoCompleteTypes = new Dictionary<string, Type>();
             foreach (Type type in Assembly.GetAssembly(typeof(System.Windows.Media.Geometry)).GetExportedTypes())
