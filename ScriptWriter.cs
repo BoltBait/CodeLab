@@ -1016,6 +1016,7 @@ namespace PaintDotNet.Effects
                 HelpPart += "                using (var gZipStream = new GZipStream(memoryStream, CompressionMode.Decompress))\r\n";
                 HelpPart += "                {\r\n";
                 HelpPart += "                    gZipStream.ReadExactly(buffer, 0, buffer.Length);\r\n";
+                HelpPart += "                }\r\n";
                 HelpPart += "\r\n";
                 HelpPart += "                return System.Text.Encoding.UTF8.GetString(buffer);\r\n";
                 HelpPart += "            }\r\n";
