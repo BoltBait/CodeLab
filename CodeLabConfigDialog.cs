@@ -821,8 +821,6 @@ namespace PaintDotNet.Effects
             base.OnFormClosing(e);
         }
 
-        protected override bool UseSystemMenuFontInInitializeComponent => true;
-
         protected override void OnHelpRequested(HelpEventArgs hevent)
         {
             // no-op
