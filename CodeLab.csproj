@@ -242,10 +242,10 @@
     <EmbeddedResource Include="Icons\SuperScript.32.png" />
     <EmbeddedResource Include="Icons\Underline.32.png" />
     <EmbeddedResource Include="Icons\WordPad.32.png" />
-    <EmbeddedResource Include="Icons\DecreaseFontSize.32png.png" />
+    <EmbeddedResource Include="Icons\DecreaseFontSize.32.png" />
     <EmbeddedResource Include="Icons\Format.32.png" />
     <EmbeddedResource Include="Icons\FormDesigner.32.png" />
-    <EmbeddedResource Include="Icons\IncreaseFontSize.32png.png" />
+    <EmbeddedResource Include="Icons\IncreaseFontSize.32.png" />
     <EmbeddedResource Include="Icons\Newspaper.32.png" />
     <EmbeddedResource Include="Icons\Bulb.32.png" />
     <EmbeddedResource Include="Icons\Add.32.png" />
