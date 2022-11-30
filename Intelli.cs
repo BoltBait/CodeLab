@@ -92,14 +92,14 @@ namespace PaintDotNet.Effects
                 "PaintDotNet.ComponentModel",
                 "PaintDotNet.Core",
                 "PaintDotNet.Data",
-                "PaintDotNet.Framework.dll",
+                "PaintDotNet.Framework",
                 "PaintDotNet.Fundamentals",
                 "PaintDotNet.ObjectModel",
                 "PaintDotNet.Primitives",
                 "PaintDotNet.PropertySystem",
                 "PaintDotNet.Windows",
                 "PaintDotNet.Windows.Core",
-                "PaintDotNet.Windows.Framework.dll"
+                "PaintDotNet.Windows.Framework"
             };
 
             switch (projectType)
@@ -296,14 +296,14 @@ namespace PaintDotNet.Effects
                 "PaintDotNet.Effects.Core",
                 "PaintDotNet.Effects.Gpu",
                 "PaintDotNet.Effects.Legacy",
-                "PaintDotNet.Framework.dll",
+                "PaintDotNet.Framework",
                 "PaintDotNet.Fundamentals",
                 "PaintDotNet.ObjectModel",
                 "PaintDotNet.Primitives",
                 "PaintDotNet.PropertySystem",
                 "PaintDotNet.Windows",
                 "PaintDotNet.Windows.Core",
-                "PaintDotNet.Windows.Framework.dll"
+                "PaintDotNet.Windows.Framework"
             };
 
             // exclude assemblies that were loaded into separate contexts; i.e. Plugins
