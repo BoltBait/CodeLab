@@ -90,8 +90,6 @@ namespace PaintDotNet.Effects
 #endif
         }
 
-        protected override bool UseAppThemeColorsDefault => true;
-
         private void LoadSettingsFromRegistry()
         {
             bool useWordWrap = (this.tabStrip1.SelectedTabProjType == ProjectType.None) ? Settings.WordWrapPlainText : Settings.WordWrap;
