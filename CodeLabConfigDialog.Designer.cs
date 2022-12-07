@@ -1321,7 +1321,6 @@
             this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(772, 500);
             this.Controls.Add(this.tabStrip1);
             this.Controls.Add(this.ClearOutput);
@@ -1335,7 +1334,6 @@
             this.Controls.Add(this.menuStrip1);
             this.Controls.Add(this.OutputTextBox);
             this.Controls.Add(this.errorList);
-            this.ForeColor = System.Drawing.Color.Black;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
             this.MainMenuStrip = this.menuStrip1;
             this.MaximizeBox = true;
