@@ -86,15 +86,19 @@ namespace PaintDotNet.Effects
                     string[] data = line.Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
                     if (data.Length >= 2 && data[0] == ThisApplication)
                     {
-                        if (data[1] != ThisVersion)
+                        if (Version.TryParse(data[1], out Version remoteVersion) &&
+                            Version.TryParse(ThisVersion, out Version localVersion))
                         {
-                            updateStatus = UpdateStatus.UpdateAvailable;
-                            updateVER = data[1];
-                            updateURL = data[2];
-                        }
-                        else
-                        {
-                            updateStatus = UpdateStatus.UpToDate;
+                            if (remoteVersion > localVersion)
+                            {
+                                updateStatus = UpdateStatus.UpdateAvailable;
+                                updateVER = data[1];
+                                updateURL = data[2];
+                            }
+                            else
+                            {
+                                updateStatus = UpdateStatus.UpToDate;
+                            }
                         }
 
                         break;
