@@ -17,6 +17,7 @@ using System;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
 
 namespace PaintDotNet.Effects
@@ -306,44 +307,25 @@ namespace PaintDotNet.Effects
             EffectPart += "        {\r\n";
             EffectPart += "            get\r\n";
             EffectPart += "            {\r\n";
-            if (submenuname.Trim().Length == 0)
+
+            submenuname = submenuname.Trim();
+            if (submenuname.Length == 0)
             {
                 EffectPart += "                return null;\r\n";
             }
             else
             {
                 EffectPart += "                return ";
-                switch (submenuname.Trim().ToLower())
-                {
-                    case "artistic":
-                        EffectPart += "SubmenuNames.Artistic;\r\n";
-                        break;
-                    case "blurs":
-                        EffectPart += "SubmenuNames.Blurs;\r\n";
-                        break;
-                    case "color":
-                        EffectPart += "SubmenuNames.Color;\r\n"; // added in PdN 4.2.16
-                        break;
-                    case "distort":
-                        EffectPart += "SubmenuNames.Distort;\r\n";
-                        break;
-                    case "noise":
-                        EffectPart += "SubmenuNames.Noise;\r\n";
-                        break;
-                    case "photo":
-                        EffectPart += "SubmenuNames.Photo;\r\n";
-                        break;
-                    case "render":
-                        EffectPart += "SubmenuNames.Render;\r\n";
-                        break;
-                    case "stylize":
-                        EffectPart += "SubmenuNames.Stylize;\r\n";
-                        break;
-                    default:
-                        // If a non-builtin submenu name is specified, add that in
-                        EffectPart += "\"" + submenuname.Trim().Replace('"', '\'') + "\";\r\n";
-                        break;
-                }
+
+                string builtinSubmenu = typeof(SubmenuNames)
+                    .GetProperties(BindingFlags.Public | BindingFlags.Static)
+                    .Where(x => x.PropertyType == typeof(string))
+                    .Select(x => x.Name)
+                    .FirstOrDefault(x => x.Equals(submenuname, StringComparison.OrdinalIgnoreCase));
+
+                EffectPart += (builtinSubmenu != null)
+                    ? nameof(SubmenuNames) + "." + builtinSubmenu + ";\r\n"
+                    : "\"" + submenuname.Replace('"', '\'') + "\";\r\n";
             }
             EffectPart += "            }\r\n";
             EffectPart += "        }\r\n";
