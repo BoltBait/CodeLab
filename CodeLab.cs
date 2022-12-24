@@ -83,7 +83,7 @@ namespace PaintDotNet.Effects
             this.sourceBitmap = this.Environment.GetSourceBitmapBgra32();
 
             renderInfo.Flags = this.renderingFlags;
-            renderInfo.Schedule= this.renderingSchedule;
+            renderInfo.Schedule = this.renderingSchedule;
             base.OnInitializeRenderInfo(renderInfo);
         }
 
@@ -94,7 +94,7 @@ namespace PaintDotNet.Effects
             fetchDebugMsg = true;
             shapeCode = (projectType == ProjectType.Shape) ? newToken.UserCode : null;
 
-            if (projectType == ProjectType.Effect && userEffect != null)
+            if (projectType.IsEffect() && userEffect != null)
             {
                 using (IEffect effect = userEffect.EffectInfo.CreateInstance(this.Services, this.Environment))
                 {
@@ -171,7 +171,7 @@ namespace PaintDotNet.Effects
                     }
                 }
             }
-            else if (projectType == ProjectType.Effect && userEffect != null)
+            else if (projectType.IsEffect() && userEffect != null)
             {
                 try
                 {
@@ -260,7 +260,6 @@ namespace PaintDotNet.Effects
         }
     }
 
-    /*
     [PluginSupportInfo(typeof(PluginSupportInfo), DisplayName = "CodeLab")]
     public class CodeLabNoClip : CodeLab
     {
@@ -268,5 +267,4 @@ namespace PaintDotNet.Effects
         {
         }
     }
-    */
 }

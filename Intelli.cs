@@ -104,12 +104,13 @@ namespace PaintDotNet.Effects
 
             switch (projectType)
             {
-                case ProjectType.Effect:
+                case ProjectType.ClassicEffect:
                     pdnAssemblyNames.Add("PaintDotNet.Effects");
                     pdnAssemblyNames.Add("PaintDotNet.Effects.Core");
                     pdnAssemblyNames.Add("PaintDotNet.Effects.Legacy");
                     break;
-                case ProjectType.EffectGpu:
+                case ProjectType.GpuEffect:
+                case ProjectType.BitmapEffect:
                     pdnAssemblyNames.Add("PaintDotNet.Effects.Core");
                     pdnAssemblyNames.Add("PaintDotNet.Effects.Gpu");
                     break;
@@ -395,7 +396,7 @@ namespace PaintDotNet.Effects
             }
             .ToImmutableArray();
 
-            SetReferences(ProjectType.Effect);
+            SetReferences(ProjectType.ClassicEffect);
 
             XamlAutoCompleteTypes = new Dictionary<string, Type>();
             foreach (Type type in Assembly.GetAssembly(typeof(System.Windows.Media.Geometry)).GetExportedTypes())

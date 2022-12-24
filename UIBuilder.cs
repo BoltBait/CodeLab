@@ -990,7 +990,7 @@ namespace PaintDotNet.Effects
 #endif
             switch (this.projectType)
             {
-                case ProjectType.Effect:
+                case ProjectType.ClassicEffect:
                     PreviewEffect();
                     break;
                 case ProjectType.FileType:
@@ -1218,7 +1218,7 @@ namespace PaintDotNet.Effects
 
     public class ControlTypeComboBox : ComboBox
     {
-        private ProjectType projectType = ProjectType.Effect;
+        private ProjectType projectType = ProjectType.ClassicEffect;
 
         internal ProjectType ProjectType
         {
