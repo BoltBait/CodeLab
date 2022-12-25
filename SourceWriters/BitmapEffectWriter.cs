@@ -168,7 +168,7 @@ namespace PaintDotNet.Effects
 
         internal static string FullSourceCode(string SourceCode, string FileName, bool isAdjustment, string submenuname, string menuname, string iconpath, string SupportURL, ScriptRenderingFlags renderingFlags, ScriptRenderingSchedule renderingSchedule, string Author, int MajorVersion, int MinorVersion, string Description, string KeyWords, string WindowTitleStr, HelpType HelpType, string HelpText)
         {
-            UIElement[] UserControls = UIElement.ProcessUIControls(SourceCode, ProjectType.ClassicEffect);
+            UIElement[] UserControls = UIElement.ProcessUIControls(SourceCode);
 
             return
                 BitmapEffectWriter.UsingStatements +

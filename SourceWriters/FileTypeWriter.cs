@@ -104,7 +104,7 @@ namespace PaintDotNet.Effects
 
         internal static string FullFileTypeSourceCode(string scriptText, string projectName, string author, int majorVersion, int minorVersion, string supportURL, string description, string loadExt, string saveExt, bool supoortLayers, string title)
         {
-            UIElement[] userControls = UIElement.ProcessUIControls(scriptText, ProjectType.FileType);
+            UIElement[] userControls = UIElement.ProcessUIControls(scriptText, false);
 
             return
                 UsingPartCode() +
@@ -118,6 +118,5 @@ namespace PaintDotNet.Effects
                 CommonWriter.UserEnteredPart(scriptText) +
                 CommonWriter.EndPart();
         }
-
     }
 }

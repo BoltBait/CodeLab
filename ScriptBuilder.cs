@@ -95,7 +95,7 @@ namespace PaintDotNet.Effects
         internal static bool BuildClassicEffectFullPreview(string scriptText)
         {
             const string FileName = "PreviewEffect";
-            UIElement[] UserControls = UIElement.ProcessUIControls(scriptText, ProjectType.ClassicEffect);
+            UIElement[] UserControls = UIElement.ProcessUIControls(scriptText);
 
             string sourceCode =
                 ClassicEffectWriter.UsingPartCode() +
@@ -154,7 +154,7 @@ namespace PaintDotNet.Effects
         internal static bool BuildBitmapEffectFullPreview(string scriptText)
         {
             const string FileName = "PreviewEffect";
-            UIElement[] UserControls = UIElement.ProcessUIControls(scriptText, ProjectType.BitmapEffect);
+            UIElement[] UserControls = UIElement.ProcessUIControls(scriptText);
 
             string sourceCode =
                 BitmapEffectWriter.UsingStatements +
@@ -173,7 +173,7 @@ namespace PaintDotNet.Effects
             const string FileName = "UiPreviewEffect";
             uiCode = "#region UICode\r\n" + uiCode + "\r\n#endregion\r\n";
 
-            UIElement[] UserControls = UIElement.ProcessUIControls(uiCode, ProjectType.ClassicEffect);
+            UIElement[] UserControls = UIElement.ProcessUIControls(uiCode);
 
             string sourceCode =
                 ClassicEffectWriter.UsingPartCode() +
@@ -252,7 +252,7 @@ namespace PaintDotNet.Effects
 
             const string projectName = "MyFileType";
 
-            UIElement[] userControls = UIElement.ProcessUIControls(fileTypeCode, ProjectType.FileType);
+            UIElement[] userControls = UIElement.ProcessUIControls(fileTypeCode, false);
 
             string sourceCode =
                 ClassicEffectWriter.UsingPartCode() +

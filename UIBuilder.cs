@@ -105,7 +105,7 @@ namespace PaintDotNet.Effects
             DefaultColorComboBox.Items.Add("SecondaryColor");
             DefaultColorComboBox.Items.AddRange(UIUtil.GetColorNames(false));
 
-            MasterList.AddRange(UIElement.ProcessUIControls(UserScriptText, projectType));
+            MasterList.AddRange(UIElement.ProcessUIControls(UserScriptText, projectType.IsEffect()));
 
             foreach (UIElement element in MasterList)
             {
@@ -988,14 +988,13 @@ namespace PaintDotNet.Effects
 #if FASTDEBUG
             return;
 #endif
-            switch (this.projectType)
+            if (this.projectType.IsEffect())
             {
-                case ProjectType.ClassicEffect:
-                    PreviewEffect();
-                    break;
-                case ProjectType.FileType:
-                    PreviewFileType();
-                    break;
+                PreviewEffect();
+            }
+            else if (this.projectType == ProjectType.FileType)
+            {
+                PreviewFileType();
             }
         }
 
@@ -1231,7 +1230,7 @@ namespace PaintDotNet.Effects
                 projectType = value;
 
                  ControlTypeItem[] controlTypes = Enum.GetValues<ElementType>()
-                    .Where(et => UIElement.IsControlAllowed(et, projectType))
+                    .Where(et => UIElement.IsControlAllowed(et, projectType.IsEffect()))
                     .Select(et => new ControlTypeItem(et))
                     .ToArray();
 
@@ -1352,7 +1351,7 @@ namespace PaintDotNet.Effects
             "FolderControl"             // 16
         };
 
-        internal static UIElement[] ProcessUIControls(string SourceCode, ProjectType projectType)
+        internal static UIElement[] ProcessUIControls(string SourceCode, bool isEffect = true)
         {
             string UIControlsText = "";
             Match mcc = Regex.Match(SourceCode, @"\#region UICode(?<sublabel>.*?)\#endregion", RegexOptions.Singleline | RegexOptions.IgnoreCase);
@@ -1386,29 +1385,17 @@ namespace PaintDotNet.Effects
                 return Array.Empty<UIElement>();
             }
 
-            // process those UI controls
-            string[] SrcLines = UIControlsText.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-            List<UIElement> UserControls = new List<UIElement>();
-            foreach (string Line in SrcLines)
-            {
-                if (Line.StartsWith("//", StringComparison.Ordinal))
-                {
-                    continue;
-                }
-
-                UIElement element = UIElement.FromSourceLine(Line);
-                if (element != null && IsControlAllowed(element.ElementType, projectType))
-                {
-                    UserControls.Add(element);
-                }
-            }
-
-            return UserControls.ToArray();
+            return UIControlsText
+                .Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                .Where(x => !x.StartsWith("//", StringComparison.Ordinal))
+                .Select(x => FromSourceLine(x))
+                .Where(x => x != null && IsControlAllowed(x.ElementType, isEffect))
+                .ToArray();
         }
 
-        internal static bool IsControlAllowed(ElementType elementType, ProjectType projectType)
+        internal static bool IsControlAllowed(ElementType elementType, bool isEffect)
         {
-            if (projectType != ProjectType.FileType)
+            if (isEffect)
             {
                 return true;
             }
