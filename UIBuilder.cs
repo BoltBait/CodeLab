@@ -1001,7 +1001,9 @@ namespace PaintDotNet.Effects
         private void PreviewEffect()
         {
             string uiCode = MasterList.Select(uiE => uiE.ToSourceString(false)).Join("");
-            if (!ScriptBuilder.BuildUiPreview(uiCode))
+            string previewSourceCode = ClassicEffectWriter.UiPreview(uiCode);
+
+            if (!ScriptBuilder.BuildEffect<Effect>(previewSourceCode))
             {
                 FlexibleMessageBox.Show("Something went wrong, and the Preview can't be displayed.", "Preview Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
@@ -1032,7 +1034,9 @@ namespace PaintDotNet.Effects
             code += "Document LoadImage(Stream input)\r\n";
             code += "{ return new Document(400, 300); }\r\n";
 
-            if (!ScriptBuilder.BuildFileType(code, false))
+            string fileTypeSourceCode = FileTypeWriter.Run(code, false);
+
+            if (!ScriptBuilder.BuildFileType(fileTypeSourceCode))
             {
                 MessageBox.Show("Compilation Failed!");
                 return;

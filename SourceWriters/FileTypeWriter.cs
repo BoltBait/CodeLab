@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,7 +9,7 @@ namespace PaintDotNet.Effects
 {
     internal static class FileTypeWriter
     {
-        internal static string UsingPartCode()
+        private static string UsingPartCode()
         {
             return ""
                 + "using System;\r\n"
@@ -46,7 +47,7 @@ namespace PaintDotNet.Effects
                 + "\r\n";
         }
 
-        internal static string FileTypePart(string projectName, string loadExt, string saveExt, bool supoortLayers, string title)
+        private static string FileTypePart(string projectName, string loadExt, string saveExt, bool supoortLayers, string title)
         {
             string fileTypePart = "";
             fileTypePart += "    public sealed class " + projectName + "Factory : IFileTypeFactory\r\n";
@@ -74,7 +75,7 @@ namespace PaintDotNet.Effects
             return fileTypePart;
         }
 
-        internal static string FileTypePart2(UIElement[] userControls)
+        private static string FileTypePart2(UIElement[] userControls)
         {
             string fileTypePart2 = "";
             //fileTypePart2 += "        protected override bool IsReflexive(PropertyBasedSaveConfigToken token)\r\n";
@@ -102,7 +103,7 @@ namespace PaintDotNet.Effects
             return fileTypePart2;
         }
 
-        internal static string FullFileTypeSourceCode(string scriptText, string projectName, string author, int majorVersion, int minorVersion, string supportURL, string description, string loadExt, string saveExt, bool supoortLayers, string title)
+        internal static string FullSourceCode(string scriptText, string projectName, string author, int majorVersion, int minorVersion, string supportURL, string description, string loadExt, string saveExt, bool supoortLayers, string title)
         {
             UIElement[] userControls = UIElement.ProcessUIControls(scriptText, false);
 
@@ -116,6 +117,23 @@ namespace PaintDotNet.Effects
                 CommonWriter.PropertyPart(userControls, projectName, string.Empty, HelpType.None, string.Empty, true) +
                 FileTypePart2(userControls) +
                 CommonWriter.UserEnteredPart(scriptText) +
+                CommonWriter.EndPart();
+        }
+
+        internal static string Run(string fileTypeCode, bool debug)
+        {
+            const string projectName = "MyFileType";
+
+            UIElement[] userControls = UIElement.ProcessUIControls(fileTypeCode, false);
+
+            return
+                FileTypeWriter.UsingPartCode() +
+                CommonWriter.NamespacePart(projectName, true) +
+                FileTypeWriter.FileTypePart(projectName, "\".foo\"", "\".foo\"", false, projectName) +
+                CommonWriter.ConstructorBodyPart(debug) +
+                CommonWriter.PropertyPart(userControls, projectName, string.Empty, HelpType.None, string.Empty, true) +
+                FileTypeWriter.FileTypePart2(userControls) +
+                CommonWriter.UserEnteredPart(fileTypeCode) +
                 CommonWriter.EndPart();
         }
     }

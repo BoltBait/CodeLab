@@ -13,6 +13,7 @@
 // Latest distribution: https://www.BoltBait.com/pdn/codelab
 /////////////////////////////////////////////////////////////////////////////////
 
+using System;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -65,12 +66,12 @@ namespace PaintDotNet.Effects
             + "    }\r\n"
             + "}\r\n";
 
-        internal const string EmptyCode = "\r\n"
+        private const string EmptyCode = "\r\n"
             + "#region User Entered Code\r\n"
             + "void Render(Surface dst, Surface src, Rectangle rect) { }\r\n"
             + "#endregion\r\n";
 
-        internal static string UsingPartCode()
+        private static string UsingPartCode()
         {
             return ""
                 + "using System;\r\n"
@@ -116,7 +117,7 @@ namespace PaintDotNet.Effects
                 + "\r\n";
         }
 
-        internal const string prepend_code = "\r\n"
+        private const string prepend_code = "\r\n"
             + "namespace PaintDotNet.Effects\r\n"
             + "{\r\n"
             + "public class UserScript : Effect\r\n"
@@ -138,7 +139,7 @@ namespace PaintDotNet.Effects
             + "    public UserScript()\r\n"
             + "        : base(\"UserScript\", string.Empty, new EffectOptions())\r\n";
 
-        internal static string ConstructorPart(UIElement[] UserControls, string FileName, string submenuname, string menuname, string iconpath, ScriptRenderingFlags renderingFlags, ScriptRenderingSchedule renderingSchedule)
+        private static string ConstructorPart(UIElement[] UserControls, string FileName, string submenuname, string menuname, string iconpath, ScriptRenderingFlags renderingFlags, ScriptRenderingSchedule renderingSchedule)
         {
             menuname = menuname.Trim().Replace('"', '\'');
             if (menuname.Length == 0)
@@ -191,7 +192,7 @@ namespace PaintDotNet.Effects
             return EffectPart;
         }
 
-        internal static string SetRenderPart(UIElement[] UserControls, bool toDll, bool PreRenderExists)
+        private static string SetRenderPart(UIElement[] UserControls, bool toDll, bool PreRenderExists)
         {
             string SetRenderPart = "";
             if (!toDll && !PreRenderExists)
@@ -220,7 +221,7 @@ namespace PaintDotNet.Effects
             return SetRenderPart;
         }
 
-        internal static string RenderLoopPart(UIElement[] UserControls)
+        private static string RenderLoopPart(UIElement[] UserControls)
         {
             bool hasReseed = UserControls.Any(u => u.ElementType == ElementType.ReseedButton);
 
@@ -277,7 +278,52 @@ namespace PaintDotNet.Effects
             return sUsingPart + sAssemblyInfoPart + sNamespacePart + sSupportInfoPart + sCategoryPart + sEffectPart + sHelpPart + sPropertyPart + sSetRenderPart + sRenderLoopPart + sUserEnteredPart + sEndPart;
         }
 
-        internal static bool HasPreRender(string sourceCode)
+        internal static string FullPreview(string scriptText)
+        {
+            const string FileName = "PreviewEffect";
+            UIElement[] UserControls = UIElement.ProcessUIControls(scriptText);
+
+            return
+                ClassicEffectWriter.UsingPartCode() +
+                CommonWriter.NamespacePart(FileName) +
+                ClassicEffectWriter.ConstructorPart(UserControls, FileName, string.Empty, FileName, string.Empty, ScriptRenderingFlags.None, ScriptRenderingSchedule.Default) +
+                CommonWriter.PropertyPart(UserControls, FileName, "FULL UI PREVIEW - Temporarily renders to canvas", HelpType.None, string.Empty, false) +
+                ClassicEffectWriter.SetRenderPart(UserControls, true, ClassicEffectWriter.HasPreRender(scriptText)) +
+                ClassicEffectWriter.RenderLoopPart(UserControls) +
+                CommonWriter.UserEnteredPart(scriptText) +
+                CommonWriter.EndPart();
+        }
+
+        internal static string UiPreview(string uiCode)
+        {
+            const string FileName = "UiPreviewEffect";
+            uiCode = "#region UICode\r\n" + uiCode + "\r\n#endregion\r\n";
+
+            UIElement[] UserControls = UIElement.ProcessUIControls(uiCode);
+
+            return
+                ClassicEffectWriter.UsingPartCode() +
+                CommonWriter.NamespacePart(FileName) +
+                ClassicEffectWriter.ConstructorPart(UserControls, FileName, string.Empty, "UI PREVIEW - Does NOT Render to canvas", string.Empty, ScriptRenderingFlags.None, ScriptRenderingSchedule.Default) +
+                CommonWriter.PropertyPart(UserControls, FileName, string.Empty, HelpType.None, string.Empty, false) +
+                ClassicEffectWriter.RenderLoopPart(UserControls) +
+                uiCode +
+                ClassicEffectWriter.EmptyCode +
+                CommonWriter.EndPart();
+        }
+
+        internal static string Run(string scriptText, bool debug)
+        {
+            return
+                ClassicEffectWriter.UsingPartCode() +
+                ClassicEffectWriter.prepend_code +
+                CommonWriter.ConstructorBodyPart(debug) +
+                ClassicEffectWriter.SetRenderPart(Array.Empty<UIElement>(), false, ClassicEffectWriter.HasPreRender(scriptText)) +
+                CommonWriter.UserEnteredPart(scriptText) +
+                CommonWriter.EndPart();
+        }
+
+        private static bool HasPreRender(string sourceCode)
         {
             return Regex.IsMatch(sourceCode, @"void\s+PreRender\s*\(\s*Surface\s+dst\s*,\s*Surface\s+src\s*\)\s*{(.|\s)*}", RegexOptions.Singleline);
         }

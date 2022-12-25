@@ -239,28 +239,34 @@ namespace PaintDotNet.Effects
                 return;
             }
 
+            string userCode = txtCode.Text;
+            bool debugMode = OutputTextBox.Visible;
+
             switch (projType)
             {
                 case ProjectType.ClassicEffect:
-                    ScriptBuilder.BuildClassicEffect(txtCode.Text, OutputTextBox.Visible);
+                    string classicSourceCode = ClassicEffectWriter.Run(userCode, debugMode);
+                    ScriptBuilder.BuildEffect<Effect>(classicSourceCode, debugMode);
                     DisplayErrors();
                     txtCode.UpdateSyntaxHighlighting();
                     UpdateTokenFromDialog();
                     break;
                 case ProjectType.BitmapEffect:
-                    ScriptBuilder.BuildBitmapEffect(txtCode.Text, OutputTextBox.Visible);
+                    string bitmapSourceCode = BitmapEffectWriter.Run(userCode, debugMode);
+                    ScriptBuilder.BuildEffect<BitmapEffect>(bitmapSourceCode, debugMode);
                     DisplayErrors();
                     txtCode.UpdateSyntaxHighlighting();
                     UpdateTokenFromDialog();
                     break;
                 case ProjectType.FileType:
-                    ScriptBuilder.BuildFileType(txtCode.Text, OutputTextBox.Visible);
+                    string fileTypeSourceCode = FileTypeWriter.Run(userCode, debugMode);
+                    ScriptBuilder.BuildFileType(fileTypeSourceCode, debugMode);
                     DisplayErrors();
                     txtCode.UpdateSyntaxHighlighting();
                     RunFileType();
                     break;
                 case ProjectType.Shape:
-                    ShapeBuilder.TryParseShapeCode(txtCode.Text);
+                    ShapeBuilder.TryParseShapeCode(userCode);
                     DisplayErrors();
                     UpdateTokenFromDialog();
                     break;
@@ -276,20 +282,23 @@ namespace PaintDotNet.Effects
             }
 
             tmrCompile.Enabled = false;
-            string code = txtCode.Text;
-            bool debug = OutputTextBox.Visible;
+            string userCode = txtCode.Text;
+            bool debugMode = OutputTextBox.Visible;
             await Task.Run(() =>
             {
                 switch (projType)
                 {
                     case ProjectType.ClassicEffect:
-                        ScriptBuilder.BuildClassicEffect(code, debug);
+                        string classicSourceCode = ClassicEffectWriter.Run(userCode, debugMode);
+                        ScriptBuilder.BuildEffect<Effect>(classicSourceCode, debugMode);
                         break;
                     case ProjectType.BitmapEffect:
-                        ScriptBuilder.BuildBitmapEffect(code, debug);
+                        string bitmapSourceCode = BitmapEffectWriter.Run(userCode, debugMode);
+                        ScriptBuilder.BuildEffect<BitmapEffect>(bitmapSourceCode, debugMode);
                         break;
                     case ProjectType.FileType:
-                        ScriptBuilder.BuildFileType(code, debug);
+                        string fileTypeSourceCode = FileTypeWriter.Run(userCode, debugMode);
+                        ScriptBuilder.BuildFileType(fileTypeSourceCode, debugMode);
                         break;
                 }
             });
@@ -330,10 +339,12 @@ namespace PaintDotNet.Effects
             switch (projectType)
             {
                 case ProjectType.ClassicEffect:
-                    built = ScriptBuilder.BuildClassicEffectFullPreview(txtCode.Text);
+                    string classicSourceCode = ClassicEffectWriter.FullPreview(txtCode.Text);
+                    built = ScriptBuilder.BuildEffect<Effect>(classicSourceCode);
                     break;
                 case ProjectType.BitmapEffect:
-                    built = ScriptBuilder.BuildBitmapEffectFullPreview(txtCode.Text);
+                    string bitmapSourceCode = BitmapEffectWriter.FullPreview(txtCode.Text);
+                    built = ScriptBuilder.BuildEffect<BitmapEffect>(txtCode.Text);
                     break;
             }
 
@@ -1223,13 +1234,13 @@ namespace PaintDotNet.Effects
                             return;
                         }
 
-                        string sourceCode = ClassicEffectWriter.FullSourceCode(
+                        string classicSourceCode = ClassicEffectWriter.FullSourceCode(
                             txtCode.Text, Path.GetFileNameWithoutExtension(FullScriptPath), buildForm.isAdjustment,
                             buildForm.SubMenu, buildForm.MenuItemName, buildForm.IconPath, buildForm.URL, buildForm.RenderingFlags,
                             buildForm.RenderingSchedule, buildForm.Author, buildForm.MajorVer, buildForm.MinorVer,
                             buildForm.Description, buildForm.KeyWords, buildForm.WindowTitle, buildForm.HelpType, buildForm.HelpStr);
 
-                        buildSucceeded = ScriptBuilder.BuildEffectDll(sourceCode, FullScriptPath, buildForm.IconPath, buildForm.HelpType);
+                        buildSucceeded = ScriptBuilder.BuildEffectDll(classicSourceCode, FullScriptPath, buildForm.IconPath, buildForm.HelpType);
                     }
 
                     break;
@@ -1241,13 +1252,13 @@ namespace PaintDotNet.Effects
                             return;
                         }
 
-                        string sourceCode = BitmapEffectWriter.FullSourceCode(
+                        string bitMapSourceCode = BitmapEffectWriter.FullSourceCode(
                             txtCode.Text, Path.GetFileNameWithoutExtension(FullScriptPath), buildForm.isAdjustment,
                             buildForm.SubMenu, buildForm.MenuItemName, buildForm.IconPath, buildForm.URL, buildForm.RenderingFlags,
                             buildForm.RenderingSchedule, buildForm.Author, buildForm.MajorVer, buildForm.MinorVer,
                             buildForm.Description, buildForm.KeyWords, buildForm.WindowTitle, buildForm.HelpType, buildForm.HelpStr);
 
-                        buildSucceeded = ScriptBuilder.BuildEffectDll(sourceCode, FullScriptPath, buildForm.IconPath, buildForm.HelpType);
+                        buildSucceeded = ScriptBuilder.BuildEffectDll(bitMapSourceCode, FullScriptPath, buildForm.IconPath, buildForm.HelpType);
                     }
 
                     break;
@@ -1259,10 +1270,14 @@ namespace PaintDotNet.Effects
                             return;
                         }
 
-                        buildSucceeded = ScriptBuilder.BuildFileTypeDll(
-                            txtCode.Text, FullScriptPath, buildFileTypeDialog.Author, buildFileTypeDialog.Major, buildFileTypeDialog.Minor,
+                        string projectName = Path.GetFileNameWithoutExtension(FullScriptPath);
+
+                        string fileTypeSourceCode = FileTypeWriter.FullSourceCode(
+                            txtCode.Text, projectName, buildFileTypeDialog.Author, buildFileTypeDialog.Major, buildFileTypeDialog.Minor,
                             buildFileTypeDialog.URL, buildFileTypeDialog.Description, buildFileTypeDialog.LoadExt, buildFileTypeDialog.SaveExt,
                             buildFileTypeDialog.Layers, buildFileTypeDialog.PluginName);
+
+                        buildSucceeded = ScriptBuilder.BuildFileTypeDll(fileTypeSourceCode, projectName);
                     }
 
                     break;

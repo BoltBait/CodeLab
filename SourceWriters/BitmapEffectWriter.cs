@@ -14,7 +14,7 @@ namespace PaintDotNet.Effects
 {
     internal static class BitmapEffectWriter
     {
-        internal const string UsingStatements = ""
+        private const string UsingStatements = ""
             + "using System;\r\n"
             + "using System.IO;\r\n"
             + "using System.Linq;\r\n"
@@ -59,7 +59,7 @@ namespace PaintDotNet.Effects
             + "using MultiLineTextboxControl = System.String;\r\n"
             + "\r\n";
 
-        internal const string prepend_code = "\r\n"
+        private const string prepend_code = "\r\n"
             + "namespace PaintDotNet.Effects\r\n"
             + "{\r\n"
             + "public class UserScript : BitmapEffect\r\n"
@@ -67,7 +67,7 @@ namespace PaintDotNet.Effects
             + "    public UserScript()\r\n"
             + "        : base(\"UserScript\", string.Empty, new BitmapEffectOptions())\r\n";
 
-        internal static string ConstructorPart(UIElement[] UserControls, string FileName, string submenuname, string menuname, string iconpath)
+        private static string ConstructorPart(UIElement[] UserControls, string FileName, string submenuname, string menuname, string iconpath)
         {
             menuname = menuname.Trim().Replace('"', '\'');
             if (menuname.Length == 0)
@@ -105,7 +105,7 @@ namespace PaintDotNet.Effects
             return EffectPart;
         }
 
-        internal static string InitializeRenderInfoPart(ScriptRenderingFlags renderingFlags, ScriptRenderingSchedule renderingSchedule)
+        private static string InitializeRenderInfoPart(ScriptRenderingFlags renderingFlags, ScriptRenderingSchedule renderingSchedule)
         {
             string renderInfo =
                 "        protected override void OnInitializeRenderInfo(IBitmapEffectRenderInfo renderInfo)\r\n" +
@@ -148,7 +148,7 @@ namespace PaintDotNet.Effects
             return renderInfo;
         }
 
-        internal static string SetTokenPart(UIElement[] UserControls)
+        private static string SetTokenPart(UIElement[] UserControls)
         {
             string setToken =
                 "        protected override void OnSetToken(PropertyBasedEffectConfigToken newToken)\r\n" +
@@ -182,6 +182,31 @@ namespace PaintDotNet.Effects
                 BitmapEffectWriter.InitializeRenderInfoPart(renderingFlags, renderingSchedule) +
                 BitmapEffectWriter.SetTokenPart(UserControls) +
                 CommonWriter.UserEnteredPart(SourceCode) +
+                CommonWriter.EndPart();
+        }
+
+        internal static string FullPreview(string scriptText)
+        {
+            const string FileName = "PreviewEffect";
+            UIElement[] UserControls = UIElement.ProcessUIControls(scriptText);
+
+            return
+                BitmapEffectWriter.UsingStatements +
+                CommonWriter.NamespacePart("UserScript") +
+                BitmapEffectWriter.ConstructorPart(UserControls, FileName, string.Empty, FileName, string.Empty) +
+                CommonWriter.PropertyPart(UserControls, FileName, "FULL UI PREVIEW - Temporarily renders to canvas", HelpType.None, string.Empty, false) +
+                BitmapEffectWriter.SetTokenPart(UserControls) +
+                CommonWriter.UserEnteredPart(scriptText) +
+                CommonWriter.EndPart();
+        }
+
+        internal static string Run(string scriptText, bool debug)
+        {
+            return
+                BitmapEffectWriter.UsingStatements +
+                BitmapEffectWriter.prepend_code +
+                CommonWriter.ConstructorBodyPart(debug) +
+                CommonWriter.UserEnteredPart(scriptText) +
                 CommonWriter.EndPart();
         }
     }
