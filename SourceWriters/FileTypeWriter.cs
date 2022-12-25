@@ -114,7 +114,7 @@ namespace PaintDotNet.Effects
                 CommonWriter.SupportInfoPart(title, supportURL) +
                 FileTypePart(projectName, loadExt, saveExt, supoortLayers, title) +
                 CommonWriter.ConstructorBodyPart(false) +
-                CommonWriter.PropertyPart(userControls, projectName, string.Empty, HelpType.None, string.Empty, true) +
+                CommonWriter.PropertyPart(userControls, projectName, string.Empty, HelpType.None, string.Empty, ProjectType.FileType) +
                 FileTypePart2(userControls) +
                 CommonWriter.UserEnteredPart(scriptText) +
                 CommonWriter.EndPart();
@@ -131,7 +131,7 @@ namespace PaintDotNet.Effects
                 CommonWriter.NamespacePart(projectName, true) +
                 FileTypeWriter.FileTypePart(projectName, "\".foo\"", "\".foo\"", false, projectName) +
                 CommonWriter.ConstructorBodyPart(debug) +
-                CommonWriter.PropertyPart(userControls, projectName, string.Empty, HelpType.None, string.Empty, true) +
+                CommonWriter.PropertyPart(userControls, projectName, string.Empty, HelpType.None, string.Empty, ProjectType.FileType) +
                 FileTypeWriter.FileTypePart2(userControls) +
                 CommonWriter.UserEnteredPart(fileTypeCode) +
                 CommonWriter.EndPart();

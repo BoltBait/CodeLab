@@ -37,5 +37,12 @@ namespace PaintDotNet.Effects
                 projectType == ProjectType.GpuEffect ||
                 projectType == ProjectType.BitmapEffect;
         }
+
+        internal static bool Is5Effect(this ProjectType projectType)
+        {
+            return
+                projectType == ProjectType.GpuEffect ||
+                projectType == ProjectType.BitmapEffect;
+        }
     }
 }

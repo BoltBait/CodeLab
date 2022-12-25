@@ -92,13 +92,13 @@ namespace PaintDotNet.Effects
             return isAdjustment ? "    [EffectCategory(EffectCategory.Adjustment)]\r\n" : string.Empty;
         }
 
-        internal static string PropertyPart(UIElement[] UserControls, string FileName, string WindowTitleStr, HelpType HelpType, string HelpText, bool isFileType)
+        internal static string PropertyPart(UIElement[] UserControls, string FileName, string WindowTitleStr, HelpType HelpType, string HelpText, ProjectType projectType)
         {
             string PropertyPart = "";
             if (UserControls.Length == 0)
             {
                 // No controls, so no User Interface. Generate an empty OnCreatePropertyCollection()
-                if (isFileType)
+                if (projectType == ProjectType.FileType)
                 {
                     PropertyPart += "        public override PropertyCollection OnCreateSavePropertyCollection()\r\n";
                 }
@@ -169,7 +169,7 @@ namespace PaintDotNet.Effects
             // generate OnCreatePropertyCollection()
             PropertyPart += "\r\n";
 
-            if (isFileType)
+            if (projectType == ProjectType.FileType)
             {
                 PropertyPart += "        public override PropertyCollection OnCreateSavePropertyCollection()\r\n";
             }
@@ -183,8 +183,17 @@ namespace PaintDotNet.Effects
             // Check to see if we're including a color wheel without an alpha slider
             if (UserControls.Any(u => u.ElementType == ElementType.ColorWheel && !u.ColorWheelOptions.HasFlag(ColorWheelOptions.Alpha)))
             {
-                PropertyPart += "            ColorBgra PrimaryColor = EnvironmentParameters.PrimaryColor.NewAlpha(byte.MaxValue);\r\n";
-                PropertyPart += "            ColorBgra SecondaryColor = EnvironmentParameters.SecondaryColor.NewAlpha(byte.MaxValue);\r\n";
+                if (projectType.Is5Effect())
+                {
+                    PropertyPart += "            ColorBgra32 PrimaryColor = Environment.PrimaryColor with { A = byte.MaxValue };\r\n";
+                    PropertyPart += "            ColorBgra32 SecondaryColor = Environment.SecondaryColor with { A = byte.MaxValue };\r\n";
+                }
+                else
+                {
+                    PropertyPart += "            ColorBgra PrimaryColor = EnvironmentParameters.PrimaryColor.NewAlpha(byte.MaxValue);\r\n";
+                    PropertyPart += "            ColorBgra SecondaryColor = EnvironmentParameters.SecondaryColor.NewAlpha(byte.MaxValue);\r\n";
+                }
+
                 PropertyPart += "\r\n";
             }
 
@@ -268,15 +277,17 @@ namespace PaintDotNet.Effects
                             }
                             else  // include alpha slider
                             {
+                                string environment = projectType.Is5Effect() ? "Environment" : "EnvironmentParameters";
+
                                 if (ColorControlCount < 2)
                                 {
                                     // First color wheel defaults to Primary Color
-                                    PropertyPart += "            props.Add(new Int32Property(PropertyNames." + propertyName + ", unchecked((int)EnvironmentParameters.PrimaryColor.Bgra), Int32.MinValue, Int32.MaxValue));\r\n";
+                                    PropertyPart += "            props.Add(new Int32Property(PropertyNames." + propertyName + ", unchecked((int)" + environment + ".PrimaryColor.Bgra), Int32.MinValue, Int32.MaxValue));\r\n";
                                 }
                                 else
                                 {
                                     // Second color wheel (and beyond) defaults to Secondary Color
-                                    PropertyPart += "            props.Add(new Int32Property(PropertyNames." + propertyName + ", unchecked((int)EnvironmentParameters.SecondaryColor.Bgra), Int32.MinValue, Int32.MaxValue));\r\n";
+                                    PropertyPart += "            props.Add(new Int32Property(PropertyNames." + propertyName + ", unchecked((int)" + environment + ".SecondaryColor.Bgra), Int32.MinValue, Int32.MaxValue));\r\n";
                                 }
                             }
                         }
@@ -413,7 +424,7 @@ namespace PaintDotNet.Effects
             // generate OnCreateConfigUI()
             PropertyPart += "\r\n";
 
-            if (isFileType)
+            if (projectType == ProjectType.FileType)
             {
                 PropertyPart += "        public override ControlInfo OnCreateSaveConfigUI(PropertyCollection props)\r\n";
             }
@@ -435,12 +446,21 @@ namespace PaintDotNet.Effects
 
             if (UserControls.Any(u => u.ElementType == ElementType.PanSlider))
             {
-                PropertyPart += "            Rectangle selection = EnvironmentParameters.SelectionBounds;\r\n";
-                PropertyPart += "            ImageResource imageResource = ImageResource.FromImage(EnvironmentParameters.SourceSurface.CreateAliasedBitmap(selection));\r\n";
+                if (projectType.Is5Effect())
+                {
+                    PropertyPart += "            RectInt32 selection = Environment.Selection.RenderBounds;;\r\n";
+                    PropertyPart += "            IBitmapSource<ColorBgra32> panImage = Environment.GetSourceBitmapBgra32().CreateClipper(selection)\r\n";
+                }
+                else
+                {
+                    PropertyPart += "            Rectangle selection = EnvironmentParameters.SelectionBounds;\r\n";
+                    PropertyPart += "            ImageResource panImage = ImageResource.FromImage(EnvironmentParameters.SourceSurface.CreateAliasedBitmap(selection));\r\n";
+                }
+
                 PropertyPart += "\r\n";
             }
 
-            if (isFileType)
+            if (projectType == ProjectType.FileType)
             {
                 PropertyPart += "            ControlInfo configUI = CreateDefaultSaveConfigUI(props);\r\n";
             }
@@ -535,7 +555,7 @@ namespace PaintDotNet.Effects
                         PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.SliderLargeChangeY, 0.25);\r\n";
                         PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.UpDownIncrementY, 0.01);\r\n";
                         PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.DecimalPlaces, 3);\r\n";
-                        PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.StaticImageUnderlay, imageResource);\r\n";
+                        PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.StaticImageUnderlay, panImage);\r\n";
                         break;
                     case ElementType.DoubleSlider:
                         PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.SliderLargeChange, 0.25);\r\n";

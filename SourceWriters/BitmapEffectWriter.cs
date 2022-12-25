@@ -178,7 +178,7 @@ namespace PaintDotNet.Effects
                 CommonWriter.CategoryPart(isAdjustment) +
                 ConstructorPart(UserControls, FileName, submenuname, menuname, iconpath) +
                 CommonWriter.HelpPart(HelpType, HelpText) +
-                CommonWriter.PropertyPart(UserControls, FileName, WindowTitleStr, HelpType, HelpText, false) +
+                CommonWriter.PropertyPart(UserControls, FileName, WindowTitleStr, HelpType, HelpText, ProjectType.BitmapEffect) +
                 BitmapEffectWriter.InitializeRenderInfoPart(renderingFlags, renderingSchedule) +
                 BitmapEffectWriter.SetTokenPart(UserControls) +
                 CommonWriter.UserEnteredPart(SourceCode) +
@@ -194,7 +194,7 @@ namespace PaintDotNet.Effects
                 BitmapEffectWriter.UsingStatements +
                 CommonWriter.NamespacePart("UserScript") +
                 BitmapEffectWriter.ConstructorPart(UserControls, FileName, string.Empty, FileName, string.Empty) +
-                CommonWriter.PropertyPart(UserControls, FileName, "FULL UI PREVIEW - Temporarily renders to canvas", HelpType.None, string.Empty, false) +
+                CommonWriter.PropertyPart(UserControls, FileName, "FULL UI PREVIEW - Temporarily renders to canvas", HelpType.None, string.Empty, ProjectType.BitmapEffect) +
                 BitmapEffectWriter.SetTokenPart(UserControls) +
                 CommonWriter.UserEnteredPart(scriptText) +
                 CommonWriter.EndPart();

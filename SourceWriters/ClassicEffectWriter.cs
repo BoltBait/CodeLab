@@ -269,7 +269,7 @@ namespace PaintDotNet.Effects
             string sCategoryPart = CommonWriter.CategoryPart(isAdjustment);
             string sEffectPart = ConstructorPart(UserControls, FileName, submenuname, menuname, iconpath, renderingFlags, renderingSchedule);
             string sHelpPart = CommonWriter.HelpPart(HelpType, HelpText);
-            string sPropertyPart = CommonWriter.PropertyPart(UserControls, FileName, WindowTitleStr, HelpType, HelpText, false);
+            string sPropertyPart = CommonWriter.PropertyPart(UserControls, FileName, WindowTitleStr, HelpType, HelpText, ProjectType.ClassicEffect);
             string sSetRenderPart = SetRenderPart(UserControls, true, hasPreRender);
             string sRenderLoopPart = RenderLoopPart(UserControls);
             string sUserEnteredPart = CommonWriter.UserEnteredPart(SourceCode);
@@ -287,7 +287,7 @@ namespace PaintDotNet.Effects
                 ClassicEffectWriter.UsingPartCode() +
                 CommonWriter.NamespacePart(FileName) +
                 ClassicEffectWriter.ConstructorPart(UserControls, FileName, string.Empty, FileName, string.Empty, ScriptRenderingFlags.None, ScriptRenderingSchedule.Default) +
-                CommonWriter.PropertyPart(UserControls, FileName, "FULL UI PREVIEW - Temporarily renders to canvas", HelpType.None, string.Empty, false) +
+                CommonWriter.PropertyPart(UserControls, FileName, "FULL UI PREVIEW - Temporarily renders to canvas", HelpType.None, string.Empty, ProjectType.ClassicEffect) +
                 ClassicEffectWriter.SetRenderPart(UserControls, true, ClassicEffectWriter.HasPreRender(scriptText)) +
                 ClassicEffectWriter.RenderLoopPart(UserControls) +
                 CommonWriter.UserEnteredPart(scriptText) +
@@ -305,7 +305,7 @@ namespace PaintDotNet.Effects
                 ClassicEffectWriter.UsingPartCode() +
                 CommonWriter.NamespacePart(FileName) +
                 ClassicEffectWriter.ConstructorPart(UserControls, FileName, string.Empty, "UI PREVIEW - Does NOT Render to canvas", string.Empty, ScriptRenderingFlags.None, ScriptRenderingSchedule.Default) +
-                CommonWriter.PropertyPart(UserControls, FileName, string.Empty, HelpType.None, string.Empty, false) +
+                CommonWriter.PropertyPart(UserControls, FileName, string.Empty, HelpType.None, string.Empty, ProjectType.ClassicEffect) +
                 ClassicEffectWriter.RenderLoopPart(UserControls) +
                 uiCode +
                 ClassicEffectWriter.EmptyCode +
