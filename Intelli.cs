@@ -396,7 +396,7 @@ namespace PaintDotNet.Effects
             }
             .ToImmutableArray();
 
-            SetReferences(ProjectType.ClassicEffect);
+            SetReferences(ProjectType.Default);
 
             XamlAutoCompleteTypes = new Dictionary<string, Type>();
             foreach (Type type in Assembly.GetAssembly(typeof(System.Windows.Media.Geometry)).GetExportedTypes())

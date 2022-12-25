@@ -38,7 +38,7 @@ namespace PaintDotNet.Effects
         internal string Description = "";
         internal string KeyWords = "";
         internal ScriptRenderingFlags RenderingFlags = ScriptRenderingFlags.None;
-        internal ScriptRenderingSchedule RenderingSchedule = ScriptRenderingSchedule.SquareTiles;
+        internal ScriptRenderingSchedule RenderingSchedule = ScriptRenderingSchedule.Default;
         internal HelpType HelpType = 0;
         internal string HelpStr = "";
         internal string RTZPath = "";
@@ -351,7 +351,7 @@ namespace PaintDotNet.Effects
             Description = DescriptionBox.Text.Trim().Replace('\\', '/');
             KeyWords = KeyWordsBox.Text.Trim().Replace('\\', '/');
 
-            this.RenderingSchedule = ScriptRenderingSchedule.SquareTiles;
+            this.RenderingSchedule = ScriptRenderingSchedule.Default;
             if (forceLegacyRoiBox.Checked)
             {
                 this.RenderingSchedule = ScriptRenderingSchedule.HorizontalStrips;

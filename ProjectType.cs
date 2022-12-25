@@ -14,7 +14,9 @@ namespace PaintDotNet.Effects
         BitmapEffect,
         FileType,
         Reference,
-        Shape
+        Shape,
+
+        Default = ClassicEffect
     }
 
     internal static class ProjectTypeExtensions

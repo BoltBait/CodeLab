@@ -100,7 +100,7 @@ namespace PaintDotNet.Effects
             string sourceCode =
                 ClassicEffectWriter.UsingPartCode() +
                 CommonWriter.NamespacePart(FileName) +
-                ClassicEffectWriter.ConstructorPart(UserControls, FileName, string.Empty, FileName, string.Empty, ScriptRenderingFlags.None, ScriptRenderingSchedule.SquareTiles) +
+                ClassicEffectWriter.ConstructorPart(UserControls, FileName, string.Empty, FileName, string.Empty, ScriptRenderingFlags.None, ScriptRenderingSchedule.Default) +
                 CommonWriter.PropertyPart(UserControls, FileName, "FULL UI PREVIEW - Temporarily renders to canvas", HelpType.None, string.Empty, false) +
                 ClassicEffectWriter.SetRenderPart(UserControls, true, ClassicEffectWriter.HasPreRender(scriptText)) +
                 ClassicEffectWriter.RenderLoopPart(UserControls) +
@@ -178,7 +178,7 @@ namespace PaintDotNet.Effects
             string sourceCode =
                 ClassicEffectWriter.UsingPartCode() +
                 CommonWriter.NamespacePart(FileName) +
-                ClassicEffectWriter.ConstructorPart(UserControls, FileName, string.Empty, "UI PREVIEW - Does NOT Render to canvas", string.Empty, ScriptRenderingFlags.None, ScriptRenderingSchedule.SquareTiles) +
+                ClassicEffectWriter.ConstructorPart(UserControls, FileName, string.Empty, "UI PREVIEW - Does NOT Render to canvas", string.Empty, ScriptRenderingFlags.None, ScriptRenderingSchedule.Default) +
                 CommonWriter.PropertyPart(UserControls, FileName, string.Empty, HelpType.None, string.Empty, false) +
                 ClassicEffectWriter.RenderLoopPart(UserControls) +
                 uiCode +

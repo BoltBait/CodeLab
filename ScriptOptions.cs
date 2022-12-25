@@ -8,9 +8,11 @@ namespace PaintDotNet.Effects
 {
     internal enum ScriptRenderingSchedule
     {
-        None = 0,               // SingleRenderCall
-        HorizontalStrips = 1,   // Legacy
-        SquareTiles = 2         // Default
+        None,               // SingleRenderCall
+        HorizontalStrips,   // Legacy
+        SquareTiles,
+
+        Default = SquareTiles
     }
 
     [Flags]

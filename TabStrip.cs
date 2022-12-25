@@ -337,7 +337,7 @@ namespace PaintDotNet.Effects
             /// Do NOT USE. For Initial Tab only.
             /// </summary>
             public Tab()
-                : this("Untitled", string.Empty, ProjectType.ClassicEffect)
+                : this("Untitled", string.Empty, ProjectType.Default)
             {
                 this.Guid = Guid.Empty;
             }
