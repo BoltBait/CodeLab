@@ -19,13 +19,10 @@ namespace PaintDotNet.Effects
             + "using System.IO;\r\n"
             + "using System.Linq;\r\n"
             + "using System.Diagnostics;\r\n"
-            + "using System.Drawing;\r\n"
             + "using System.Threading;\r\n"
             + "using System.Reflection;\r\n"
-            + "using System.Drawing.Text;\r\n"
             + "using System.Windows.Forms;\r\n"
             + "using System.IO.Compression;\r\n"
-            + "using System.Drawing.Drawing2D;\r\n"
             + "using System.Collections.Generic;\r\n"
             + "using System.Text;\r\n"
             + "using System.Text.RegularExpressions;\r\n"
@@ -43,7 +40,7 @@ namespace PaintDotNet.Effects
             + "using PaintDotNet.Collections;\r\n"
             + "using PaintDotNet.PropertySystem;\r\n"
             + "using PaintDotNet.Rendering;\r\n"
-            + "using ColorWheelControl = PaintDotNet.ColorBgra;\r\n"
+            + "using ColorWheelControl = PaintDotNet.Imaging.ColorBgra32;\r\n"
             + "using AngleControl = System.Double;\r\n"
             + "using PanSliderControl = PaintDotNet.Rendering.Vector2Double;\r\n"
             + "using FolderControl = System.String;\r\n"
@@ -67,6 +64,11 @@ namespace PaintDotNet.Effects
             + "    public UserScript()\r\n"
             + "        : base(\"UserScript\", string.Empty, new BitmapEffectOptions())\r\n";
 
+        private const string EmptyCode = "\r\n"
+            + "#region User Entered Code\r\n"
+            + "protected override void OnRender(IBitmapEffectOutput output) { }\r\n"
+            + "#endregion\r\n";
+
         private static string ConstructorPart(UIElement[] UserControls, string FileName, string submenuname, string menuname, string iconpath)
         {
             menuname = menuname.Trim().Replace('"', '\'');
@@ -78,7 +80,7 @@ namespace PaintDotNet.Effects
             string className = Regex.Replace(FileName, @"[^\w]", "") + "EffectPlugin";
 
             string icon = File.Exists(iconpath)
-                ? "new Bitmap(typeof(" + className + "), \"" + Path.GetFileName(iconpath) + "\")"
+                ? "new System.Drawing.Bitmap(typeof(" + className + "), \"" + Path.GetFileName(iconpath) + "\")"
                 : "null";
 
             string configurable = (UserControls.Length != 0).ToString().ToLowerInvariant();
@@ -87,7 +89,7 @@ namespace PaintDotNet.Effects
             EffectPart += "    public class " + className + " : PropertyBasedBitmapEffect\r\n";
             EffectPart += "    {\r\n";
             EffectPart += "        public static string StaticName => \"" + menuname + "\";\r\n";
-            EffectPart += "        public static Image StaticIcon => " + icon + ";\r\n";
+            EffectPart += "        public static System.Drawing.Image StaticIcon => " + icon + ";\r\n";
             EffectPart += "        public static string SubmenuName => " + CommonWriter.SubmenuPart(submenuname) + ";\r\n";
             EffectPart += "\r\n";
             EffectPart += "        public " + className + "()\r\n";
@@ -193,10 +195,27 @@ namespace PaintDotNet.Effects
             return
                 BitmapEffectWriter.UsingStatements +
                 CommonWriter.NamespacePart("UserScript") +
-                BitmapEffectWriter.ConstructorPart(UserControls, FileName, string.Empty, FileName, string.Empty) +
-                CommonWriter.PropertyPart(UserControls, FileName, "FULL UI PREVIEW - Temporarily renders to canvas", HelpType.None, string.Empty, ProjectType.BitmapEffect) +
+                BitmapEffectWriter.ConstructorPart(UserControls, FileName, "FULL UI PREVIEW - Temporarily renders to canvas", FileName, string.Empty) +
+                CommonWriter.PropertyPart(UserControls, FileName, string.Empty, HelpType.None, string.Empty, ProjectType.BitmapEffect) +
                 BitmapEffectWriter.SetTokenPart(UserControls) +
                 CommonWriter.UserEnteredPart(scriptText) +
+                CommonWriter.EndPart();
+        }
+
+        internal static string UiPreview(string uiCode)
+        {
+            const string FileName = "UiPreviewEffect";
+            uiCode = "#region UICode\r\n" + uiCode + "\r\n#endregion\r\n";
+
+            UIElement[] UserControls = UIElement.ProcessUIControls(uiCode);
+
+            return
+                BitmapEffectWriter.UsingStatements +
+                CommonWriter.NamespacePart(FileName) +
+                BitmapEffectWriter.ConstructorPart(UserControls, FileName, string.Empty, "UI PREVIEW - Does NOT Render to canvas", string.Empty) +
+                CommonWriter.PropertyPart(UserControls, FileName, string.Empty, HelpType.None, string.Empty, ProjectType.BitmapEffect) +
+                uiCode +
+                BitmapEffectWriter.EmptyCode +
                 CommonWriter.EndPart();
         }
 

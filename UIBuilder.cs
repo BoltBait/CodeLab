@@ -29,6 +29,7 @@ namespace PaintDotNet.Effects
     {
         internal string UIControlsText;
         private readonly IEffectEnvironment environmentParameters;
+        private readonly IServiceProvider serviceProvider;
         private readonly ProjectType projectType;
         private bool dirty = false;
         private readonly List<UIElement> MasterList = new List<UIElement>();
@@ -56,7 +57,7 @@ namespace PaintDotNet.Effects
             UIUtil.GetImage("16FolderControl")
         };
 
-        internal UIBuilder(string UserScriptText, ProjectType projectType, IEffectEnvironment environmentParameters)
+        internal UIBuilder(string UserScriptText, ProjectType projectType, IServiceProvider serviceProvider, IEffectEnvironment environmentParameters)
         {
             InitializeComponent();
 
@@ -114,6 +115,7 @@ namespace PaintDotNet.Effects
             refreshListView(0);
             dirty = false;
             this.environmentParameters = environmentParameters;
+            this.serviceProvider = serviceProvider;
             this.projectType = projectType;
         }
 
@@ -1001,9 +1003,9 @@ namespace PaintDotNet.Effects
         private void PreviewEffect()
         {
             string uiCode = MasterList.Select(uiE => uiE.ToSourceString(false)).Join("");
-            string previewSourceCode = ClassicEffectWriter.UiPreview(uiCode);
+            string previewSourceCode = BitmapEffectWriter.UiPreview(uiCode);
 
-            if (!ScriptBuilder.BuildEffect<Effect>(previewSourceCode))
+            if (!ScriptBuilder.BuildEffect<BitmapEffect>(previewSourceCode))
             {
                 FlexibleMessageBox.Show("Something went wrong, and the Preview can't be displayed.", "Preview Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
@@ -1017,7 +1019,7 @@ namespace PaintDotNet.Effects
                 emptySurface.Fill(ColorBgra.White);
                 using IBitmap<ColorBgra32> bitmap = emptySurface.CreateSharedBitmap();
                 using IEffectEnvironment enviroParams = environmentParameters.CloneWithNewSource(bitmap);
-                using IEffect effect = ScriptBuilder.BuiltEffect.EffectInfo.CreateInstance(null, enviroParams);
+                using IEffect effect = ScriptBuilder.BuiltEffect.EffectInfo.CreateInstance(this.serviceProvider, enviroParams);
                 using IEffectConfigForm effectConfigDialog = effect.CreateConfigForm();
                 effectConfigDialog.ShowDialog(this);
             }

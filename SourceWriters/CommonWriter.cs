@@ -448,8 +448,8 @@ namespace PaintDotNet.Effects
             {
                 if (projectType.Is5Effect())
                 {
-                    PropertyPart += "            RectInt32 selection = Environment.Selection.RenderBounds;;\r\n";
-                    PropertyPart += "            IBitmapSource<ColorBgra32> panImage = Environment.GetSourceBitmapBgra32().CreateClipper(selection)\r\n";
+                    PropertyPart += "            RectInt32 selection = Environment.Selection.RenderBounds;\r\n";
+                    PropertyPart += "            IBitmapSource<ColorBgra32> panImage = Environment.GetSourceBitmapBgra32().CreateClipper(selection);\r\n";
                 }
                 else
                 {
@@ -936,8 +936,8 @@ namespace PaintDotNet.Effects
                 .FirstOrDefault(x => x.Equals(submenuName, StringComparison.OrdinalIgnoreCase));
 
             return (builtinSubmenu != null)
-                ? nameof(SubmenuNames) + "." + builtinSubmenu + ";\r\n"
-                : "\"" + submenuName.Replace('"', '\'') + "\";\r\n";
+                ? nameof(SubmenuNames) + "." + builtinSubmenu
+                : "\"" + submenuName.Replace('"', '\'') + "\"";
         }
 
         internal static string EndPart()

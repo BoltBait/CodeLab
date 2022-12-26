@@ -286,8 +286,8 @@ namespace PaintDotNet.Effects
             return
                 ClassicEffectWriter.UsingPartCode() +
                 CommonWriter.NamespacePart(FileName) +
-                ClassicEffectWriter.ConstructorPart(UserControls, FileName, string.Empty, FileName, string.Empty, ScriptRenderingFlags.None, ScriptRenderingSchedule.Default) +
-                CommonWriter.PropertyPart(UserControls, FileName, "FULL UI PREVIEW - Temporarily renders to canvas", HelpType.None, string.Empty, ProjectType.ClassicEffect) +
+                ClassicEffectWriter.ConstructorPart(UserControls, FileName, "FULL UI PREVIEW - Temporarily renders to canvas", FileName, string.Empty, ScriptRenderingFlags.None, ScriptRenderingSchedule.Default) +
+                CommonWriter.PropertyPart(UserControls, FileName, string.Empty, HelpType.None, string.Empty, ProjectType.ClassicEffect) +
                 ClassicEffectWriter.SetRenderPart(UserControls, true, ClassicEffectWriter.HasPreRender(scriptText)) +
                 ClassicEffectWriter.RenderLoopPart(UserControls) +
                 CommonWriter.UserEnteredPart(scriptText) +

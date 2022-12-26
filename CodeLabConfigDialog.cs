@@ -344,7 +344,7 @@ namespace PaintDotNet.Effects
                     break;
                 case ProjectType.BitmapEffect:
                     string bitmapSourceCode = BitmapEffectWriter.FullPreview(txtCode.Text);
-                    built = ScriptBuilder.BuildEffect<BitmapEffect>(txtCode.Text);
+                    built = ScriptBuilder.BuildEffect<BitmapEffect>(bitmapSourceCode);
                     break;
             }
 
@@ -1310,9 +1310,9 @@ namespace PaintDotNet.Effects
             // User Interface Designer
             using UIBuilder myUIBuilderForm = new UIBuilder(txtCode.Text, tabStrip1.SelectedTabProjType,
 #if FASTDEBUG
-                null
+                null, null
 #else
-                this.Environment
+                this.Services, this.Environment
 #endif
                 );
 
@@ -2124,6 +2124,7 @@ namespace PaintDotNet.Effects
             if (projectType.IsCSharp())
             {
                 EnableCSharpButtons(true);
+                Intelli.SetReferences(projectType);
                 BuildAsync();
             }
             else
@@ -2144,6 +2145,11 @@ namespace PaintDotNet.Effects
             UpdateToolBarButtons();
             DisableButtonsForRef(projectType == ProjectType.Reference);
             EnableCSharpButtons(projectType.IsCSharp());
+
+            if (projectType.IsCSharp())
+            {
+                Intelli.SetReferences(projectType);
+            }
         }
 
         private void EnableCSharpButtons(bool enable)
