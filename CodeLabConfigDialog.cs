@@ -18,13 +18,11 @@ using PaintDotNet.AppModel;
 using ScintillaNET;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Windows.Controls.Primitives;
 using System.Windows.Forms;
 
 namespace PaintDotNet.Effects
@@ -90,8 +88,6 @@ namespace PaintDotNet.Effects
             ToolStripDropDownButton newDocTypeChooser = new ToolStripDropDownButton();
             newDocTypeChooser.DropDownItems.AddRange(items);
             toolStrip1.Items.Insert(1, newDocTypeChooser);
-
-            //NewButton.DropDownItems.AddRange(items);
 #endif
         }
 
@@ -193,7 +189,7 @@ namespace PaintDotNet.Effects
         {
             FileName = token.ScriptName;
             FullScriptPath = token.ScriptPath;
-            if (token.ProjectType != ProjectType.ClassicEffect)
+            if (token.ProjectType != ProjectType.Default)
             {
                 tabStrip1.SelectedTabIsDirty = false;
                 tabStrip1.NewTab(FileName, FullScriptPath, token.ProjectType);
@@ -1779,7 +1775,7 @@ namespace PaintDotNet.Effects
 
             bool hasText = txtCode.TextLength > 0;
             bool isTextSelected = hasText && txtCode.SelectedText.Length > 0;
-            bool cSharp = tabStrip1.SelectedTabProjType == ProjectType.ClassicEffect || tabStrip1.SelectedTabProjType == ProjectType.FileType;
+            bool cSharp = tabStrip1.SelectedTabProjType.IsCSharp();
 
             this.cutToolStripMenuItem.Enabled = isTextSelected;
             this.copyToolStripMenuItem.Enabled = isTextSelected;
