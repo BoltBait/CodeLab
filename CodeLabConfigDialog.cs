@@ -79,6 +79,16 @@ namespace PaintDotNet.Effects
             opacity90MenuItem.Checked = false;
             opacity100MenuItem.Checked = true;
             transparencyToolStripMenuItem.Enabled = EnableOpacity;
+
+#if !RELEASE
+            ToolStripMenuItem[] items = Enum.GetValues<ProjectType>()
+                .Select(x => new ToolStripMenuItem(x.ToString(), null, (sender, e) => tabStrip1.NewTab(FileName, FullScriptPath, Enum.Parse<ProjectType>(((ToolStripMenuItem)sender).Text))))
+                .ToArray();
+
+            ToolStripDropDownButton newDocTypeChooser = new ToolStripDropDownButton();
+            newDocTypeChooser.DropDownItems.AddRange(items);
+            toolStrip1.Items.Insert(1, newDocTypeChooser);
+#endif
         }
 
         protected override void OnLoading()
@@ -179,7 +189,7 @@ namespace PaintDotNet.Effects
         {
             FileName = token.ScriptName;
             FullScriptPath = token.ScriptPath;
-            if (token.ProjectType != ProjectType.Effect)
+            if (token.ProjectType != ProjectType.Default)
             {
                 tabStrip1.SelectedTabIsDirty = false;
                 tabStrip1.NewTab(FileName, FullScriptPath, token.ProjectType);
@@ -203,7 +213,7 @@ namespace PaintDotNet.Effects
         {
             return new CodeLabConfigToken
             {
-                UserCode = ScriptWriter.DefaultCode,
+                UserCode = ClassicEffectWriter.DefaultCode,
                 UserScriptObject = null,
                 ScriptName = "Untitled",
                 ScriptPath = "",
@@ -225,22 +235,34 @@ namespace PaintDotNet.Effects
                 return;
             }
 
+            string userCode = txtCode.Text;
+            bool debugMode = OutputTextBox.Visible;
+
             switch (projType)
             {
-                case ProjectType.Effect:
-                    ScriptBuilder.Build<Effect>(txtCode.Text, OutputTextBox.Visible);
+                case ProjectType.ClassicEffect:
+                    string classicSourceCode = ClassicEffectWriter.Run(userCode, debugMode);
+                    ScriptBuilder.BuildEffect<Effect>(classicSourceCode, debugMode);
+                    DisplayErrors();
+                    txtCode.UpdateSyntaxHighlighting();
+                    UpdateTokenFromDialog();
+                    break;
+                case ProjectType.BitmapEffect:
+                    string bitmapSourceCode = BitmapEffectWriter.Run(userCode, debugMode);
+                    ScriptBuilder.BuildEffect<BitmapEffect>(bitmapSourceCode, debugMode);
                     DisplayErrors();
                     txtCode.UpdateSyntaxHighlighting();
                     UpdateTokenFromDialog();
                     break;
                 case ProjectType.FileType:
-                    ScriptBuilder.BuildFileType(txtCode.Text, OutputTextBox.Visible);
+                    string fileTypeSourceCode = FileTypeWriter.Run(userCode, debugMode);
+                    ScriptBuilder.BuildFileType(fileTypeSourceCode, debugMode);
                     DisplayErrors();
                     txtCode.UpdateSyntaxHighlighting();
                     RunFileType();
                     break;
                 case ProjectType.Shape:
-                    ShapeBuilder.TryParseShapeCode(txtCode.Text);
+                    ShapeBuilder.TryParseShapeCode(userCode);
                     DisplayErrors();
                     UpdateTokenFromDialog();
                     break;
@@ -256,17 +278,23 @@ namespace PaintDotNet.Effects
             }
 
             tmrCompile.Enabled = false;
-            string code = txtCode.Text;
-            bool debug = OutputTextBox.Visible;
+            string userCode = txtCode.Text;
+            bool debugMode = OutputTextBox.Visible;
             await Task.Run(() =>
             {
                 switch (projType)
                 {
-                    case ProjectType.Effect:
-                        ScriptBuilder.Build<Effect>(code, debug);
+                    case ProjectType.ClassicEffect:
+                        string classicSourceCode = ClassicEffectWriter.Run(userCode, debugMode);
+                        ScriptBuilder.BuildEffect<Effect>(classicSourceCode, debugMode);
+                        break;
+                    case ProjectType.BitmapEffect:
+                        string bitmapSourceCode = BitmapEffectWriter.Run(userCode, debugMode);
+                        ScriptBuilder.BuildEffect<BitmapEffect>(bitmapSourceCode, debugMode);
                         break;
                     case ProjectType.FileType:
-                        ScriptBuilder.BuildFileType(code, debug);
+                        string fileTypeSourceCode = FileTypeWriter.Run(userCode, debugMode);
+                        ScriptBuilder.BuildFileType(fileTypeSourceCode, debugMode);
                         break;
                 }
             });
@@ -280,7 +308,9 @@ namespace PaintDotNet.Effects
 
             switch (projType)
             {
-                case ProjectType.Effect:
+                case ProjectType.ClassicEffect:
+                case ProjectType.GpuEffect:
+                case ProjectType.BitmapEffect:
                     txtCode.UpdateSyntaxHighlighting();
                     UpdateTokenFromDialog();
                     break;
@@ -293,7 +323,7 @@ namespace PaintDotNet.Effects
             tmrCompile.Enabled = true;
         }
 
-        private void RunEffectWithDialog()
+        private void RunEffectWithDialog(ProjectType projectType)
         {
             if (errorList.HasErrors)
             {
@@ -301,7 +331,20 @@ namespace PaintDotNet.Effects
                 return;
             }
 
-            if (!ScriptBuilder.BuildFullPreview(txtCode.Text))
+            bool built = false;
+            switch (projectType)
+            {
+                case ProjectType.ClassicEffect:
+                    string classicSourceCode = ClassicEffectWriter.FullPreview(txtCode.Text);
+                    built = ScriptBuilder.BuildEffect<Effect>(classicSourceCode);
+                    break;
+                case ProjectType.BitmapEffect:
+                    string bitmapSourceCode = BitmapEffectWriter.FullPreview(txtCode.Text);
+                    built = ScriptBuilder.BuildEffect<BitmapEffect>(bitmapSourceCode);
+                    break;
+            }
+
+            if (!built)
             {
                 FlexibleMessageBox.Show("Something went wrong, and the Preview can't be run.", "Preview Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 DisplayErrors();
@@ -412,7 +455,8 @@ namespace PaintDotNet.Effects
 
             switch (tabStrip1.SelectedTabProjType)
             {
-                case ProjectType.Effect:
+                case ProjectType.ClassicEffect:
+                case ProjectType.BitmapEffect:
                 case ProjectType.FileType:
                     if (ScriptBuilder.Errors.Count == 0)
                     {
@@ -491,7 +535,11 @@ namespace PaintDotNet.Effects
                 case ".cs":
                     if (Regex.IsMatch(fileContents, @"void\s+Render\s*\(\s*Surface\s+dst\s*,\s*Surface\s+src\s*,\s*Rectangle\s+rect\s*\)\s*{(.|\s)*}", RegexOptions.Singleline))
                     {
-                        projType = ProjectType.Effect;
+                        projType = ProjectType.ClassicEffect;
+                    }
+                    else if (Regex.IsMatch(fileContents, @"protected\s+override\s+void\s+OnRender\s*\(\s*IBitmapEffectOutput\s+output\s*\)\s*{(.|\s)*}", RegexOptions.Singleline))
+                    {
+                        projType = ProjectType.BitmapEffect;
                     }
                     else if (Regex.IsMatch(fileContents, @"void\s+SaveImage\s*\(\s*Document\s+input\s*,\s*Stream\s+output\s*,\s*PropertyBasedSaveConfigToken\s+token\s*,\s*Surface\s+scratchSurface\s*,\s*ProgressEventHandler\s+progressCallback\s*\)\s*{(.|\s)*}", RegexOptions.Singleline))
                     {
@@ -585,7 +633,7 @@ namespace PaintDotNet.Effects
                     description = "XAML Shape";
                     isCSharp = false;
                     break;
-                case ProjectType.Effect:
+                case ProjectType.ClassicEffect:
                 case ProjectType.FileType:
                 default:
                     fileExt = ".cs";
@@ -943,13 +991,13 @@ namespace PaintDotNet.Effects
                 FileName = "Untitled";
                 FullScriptPath = "";
 
-                if (tabStrip1.SelectedTabIsInitial && tabStrip1.SelectedTabProjType == ProjectType.Effect && txtCode.IsVirgin)
+                if (tabStrip1.SelectedTabIsInitial && tabStrip1.SelectedTabProjType == ProjectType.Default && txtCode.IsVirgin)
                 {
                     UpdateTabProperties();
                 }
                 else
                 {
-                    tabStrip1.NewTab(FileName, FullScriptPath, ProjectType.Effect);
+                    tabStrip1.NewTab(FileName, FullScriptPath, ProjectType.ClassicEffect);
                 }
 
                 txtCode.Text = fn.CodeTemplate;
@@ -1167,37 +1215,67 @@ namespace PaintDotNet.Effects
 
             bool buildSucceeded = false;
 #if FASTDEBUG
-                    const bool isClassic = false;
+            const bool canCreateSln = false;
 #else
-            bool isClassic = this.Services.GetService<IAppInfoService>().InstallType == AppInstallType.Classic;
+            bool canCreateSln = this.Services.GetService<IAppInfoService>().InstallType == AppInstallType.Classic;
 #endif
 
             switch (tabStrip1.SelectedTabProjType)
             {
-                case ProjectType.Effect:
-                    BuildForm buildForm = new BuildForm(fileName, txtCode.Text, FullScriptPath, isClassic);
-                    if (buildForm.ShowDialog() != DialogResult.OK)
+                case ProjectType.ClassicEffect:
+                    using (BuildForm buildForm = new BuildForm(fileName, txtCode.Text, FullScriptPath, ProjectType.ClassicEffect, canCreateSln))
                     {
-                        return;
+                        if (buildForm.ShowDialog() != DialogResult.OK)
+                        {
+                            return;
+                        }
+
+                        string classicSourceCode = ClassicEffectWriter.FullSourceCode(
+                            txtCode.Text, Path.GetFileNameWithoutExtension(FullScriptPath), buildForm.isAdjustment,
+                            buildForm.SubMenu, buildForm.MenuItemName, buildForm.IconPath, buildForm.URL, buildForm.RenderingFlags,
+                            buildForm.RenderingSchedule, buildForm.Author, buildForm.MajorVer, buildForm.MinorVer,
+                            buildForm.Description, buildForm.KeyWords, buildForm.WindowTitle, buildForm.HelpType, buildForm.HelpStr);
+
+                        buildSucceeded = ScriptBuilder.BuildEffectDll(classicSourceCode, FullScriptPath, buildForm.IconPath, buildForm.HelpType);
                     }
 
-                    buildSucceeded = ScriptBuilder.BuildEffectDll(
-                        txtCode.Text, FullScriptPath, buildForm.SubMenu, buildForm.MenuItemName, buildForm.IconPath, buildForm.Author, buildForm.MajorVer, buildForm.MinorVer, buildForm.URL,
-                        buildForm.WindowTitle, buildForm.isAdjustment, buildForm.Description, buildForm.KeyWords, buildForm.EffectFlags, buildForm.RenderingSchedule, buildForm.HelpType, buildForm.HelpStr);
+                    break;
+                case ProjectType.BitmapEffect:
+                    using (BuildForm buildForm = new BuildForm(fileName, txtCode.Text, FullScriptPath, ProjectType.BitmapEffect, canCreateSln))
+                    {
+                        if (buildForm.ShowDialog() != DialogResult.OK)
+                        {
+                            return;
+                        }
 
-                    buildForm.Dispose();
+                        string bitMapSourceCode = BitmapEffectWriter.FullSourceCode(
+                            txtCode.Text, Path.GetFileNameWithoutExtension(FullScriptPath), buildForm.isAdjustment,
+                            buildForm.SubMenu, buildForm.MenuItemName, buildForm.IconPath, buildForm.URL, buildForm.RenderingFlags,
+                            buildForm.RenderingSchedule, buildForm.Author, buildForm.MajorVer, buildForm.MinorVer,
+                            buildForm.Description, buildForm.KeyWords, buildForm.WindowTitle, buildForm.HelpType, buildForm.HelpStr);
+
+                        buildSucceeded = ScriptBuilder.BuildEffectDll(bitMapSourceCode, FullScriptPath, buildForm.IconPath, buildForm.HelpType);
+                    }
+
                     break;
                 case ProjectType.FileType:
-                    BuildFileTypeDialog buildFileTypeDialog = new BuildFileTypeDialog(fileName, txtCode.Text, isClassic);
-                    if (buildFileTypeDialog.ShowDialog() != DialogResult.OK)
+                    using (BuildFileTypeDialog buildFileTypeDialog = new BuildFileTypeDialog(fileName, txtCode.Text, canCreateSln))
                     {
-                        return;
+                        if (buildFileTypeDialog.ShowDialog() != DialogResult.OK)
+                        {
+                            return;
+                        }
+
+                        string projectName = Path.GetFileNameWithoutExtension(FullScriptPath);
+
+                        string fileTypeSourceCode = FileTypeWriter.FullSourceCode(
+                            txtCode.Text, projectName, buildFileTypeDialog.Author, buildFileTypeDialog.Major, buildFileTypeDialog.Minor,
+                            buildFileTypeDialog.URL, buildFileTypeDialog.Description, buildFileTypeDialog.LoadExt, buildFileTypeDialog.SaveExt,
+                            buildFileTypeDialog.Layers, buildFileTypeDialog.PluginName);
+
+                        buildSucceeded = ScriptBuilder.BuildFileTypeDll(fileTypeSourceCode, projectName);
                     }
 
-                    buildSucceeded = ScriptBuilder.BuildFileTypeDll(txtCode.Text, FullScriptPath, buildFileTypeDialog.Author, buildFileTypeDialog.Major, buildFileTypeDialog.Minor,
-                        buildFileTypeDialog.URL, buildFileTypeDialog.Description, buildFileTypeDialog.LoadExt, buildFileTypeDialog.SaveExt, buildFileTypeDialog.Layers, buildFileTypeDialog.PluginName);
-
-                    buildFileTypeDialog.Dispose();
                     break;
             }
 
@@ -1228,9 +1306,9 @@ namespace PaintDotNet.Effects
             // User Interface Designer
             using UIBuilder myUIBuilderForm = new UIBuilder(txtCode.Text, tabStrip1.SelectedTabProjType,
 #if FASTDEBUG
-                null
+                null, null
 #else
-                this.Environment
+                this.Services, this.Environment
 #endif
                 );
 
@@ -1363,10 +1441,12 @@ namespace PaintDotNet.Effects
             tmrCompile.Enabled = false;
             Build();
 
-            switch (this.tabStrip1.SelectedTabProjType)
+            ProjectType projectType = this.tabStrip1.SelectedTabProjType;
+            switch (projectType)
             {
-                case ProjectType.Effect:
-                    RunEffectWithDialog();
+                case ProjectType.ClassicEffect:
+                case ProjectType.BitmapEffect:
+                    RunEffectWithDialog(projectType);
                     break;
                 case ProjectType.FileType:
                     RunFileTypeWithDialog();
@@ -1383,7 +1463,7 @@ namespace PaintDotNet.Effects
         {
             ProjectType projectType = tabStrip1.SelectedTabProjType;
             bool notRef = projectType != ProjectType.Reference;
-            bool cSharp = projectType == ProjectType.Effect || projectType == ProjectType.FileType;
+            bool cSharp = projectType.IsCSharp();
 
             saveToolStripMenuItem.Enabled = notRef;
             saveAsToolStripMenuItem.Enabled = notRef;
@@ -1454,7 +1534,7 @@ namespace PaintDotNet.Effects
         {
             bool hasText = txtCode.TextLength > 0;
             bool isTextSelected = hasText && txtCode.SelectedText.Length > 0;
-            bool cSharp = tabStrip1.SelectedTabProjType == ProjectType.Effect || tabStrip1.SelectedTabProjType == ProjectType.FileType;
+            bool cSharp = tabStrip1.SelectedTabProjType.IsCSharp();
 
             this.cutToolStripMenuItem1.Enabled = isTextSelected;
             this.copyToolStripMenuItem1.Enabled = isTextSelected;
@@ -1695,7 +1775,7 @@ namespace PaintDotNet.Effects
 
             bool hasText = txtCode.TextLength > 0;
             bool isTextSelected = hasText && txtCode.SelectedText.Length > 0;
-            bool cSharp = tabStrip1.SelectedTabProjType == ProjectType.Effect || tabStrip1.SelectedTabProjType == ProjectType.FileType;
+            bool cSharp = tabStrip1.SelectedTabProjType.IsCSharp();
 
             this.cutToolStripMenuItem.Enabled = isTextSelected;
             this.copyToolStripMenuItem.Enabled = isTextSelected;
@@ -2037,10 +2117,10 @@ namespace PaintDotNet.Effects
             UpdateToolBarButtons();
             DisableButtonsForRef(projectType == ProjectType.Reference);
 
-            if (projectType == ProjectType.Effect ||
-                projectType == ProjectType.FileType)
+            if (projectType.IsCSharp())
             {
                 EnableCSharpButtons(true);
+                Intelli.SetReferences(projectType);
                 BuildAsync();
             }
             else
@@ -2060,7 +2140,12 @@ namespace PaintDotNet.Effects
             UpdateWindowTitle();
             UpdateToolBarButtons();
             DisableButtonsForRef(projectType == ProjectType.Reference);
-            EnableCSharpButtons(projectType == ProjectType.Effect || projectType == ProjectType.FileType);
+            EnableCSharpButtons(projectType.IsCSharp());
+
+            if (projectType.IsCSharp())
+            {
+                Intelli.SetReferences(projectType);
+            }
         }
 
         private void EnableCSharpButtons(bool enable)
@@ -2155,15 +2240,5 @@ namespace PaintDotNet.Effects
         }
         #endregion
 
-    }
-
-    public enum ProjectType
-    {
-        None,
-        Effect,
-        EffectGpu,
-        FileType,
-        Reference,
-        Shape
     }
 }

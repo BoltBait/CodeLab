@@ -1,158 +1,18 @@
-﻿/////////////////////////////////////////////////////////////////////////////////
-// CodeLab for Paint.NET
-// Copyright ©2006 Rick Brewster, Tom Jackson. All Rights Reserved.
-// Portions Copyright ©2018 BoltBait. All Rights Reserved.
-// Portions Copyright ©Microsoft Corporation. All Rights Reserved.
-//
-// THE CODELAB DEVELOPERS MAKE NO WARRANTY OF ANY KIND REGARDING THE CODE. THEY
-// SPECIFICALLY DISCLAIM ANY WARRANTY OF FITNESS FOR ANY PARTICULAR PURPOSE OR
-// ANY OTHER WARRANTY.  THE CODELAB DEVELOPERS DISCLAIM ALL LIABILITY RELATING
-// TO THE USE OF THIS CODE.  NO LICENSE, EXPRESS OR IMPLIED, BY ESTOPPEL OR
-// OTHERWISE, TO ANY INTELLECTUAL PROPERTY RIGHTS IS GRANTED HEREIN.
-//
-// Latest distribution: https://www.BoltBait.com/pdn/codelab
-/////////////////////////////////////////////////////////////////////////////////
-
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using System.Windows.Controls.Primitives;
 
 namespace PaintDotNet.Effects
 {
-    internal static class ScriptWriter
+    internal static class CommonWriter
     {
-        internal const string DefaultCode = ""
-            + "// Name:\r\n"
-            + "// Submenu:\r\n"
-            + "// Author:\r\n"
-            + "// Title:\r\n"
-            + "// Version:\r\n"
-            + "// Desc:\r\n"
-            + "// Keywords:\r\n"
-            + "// URL:\r\n"
-            + "// Help:\r\n"
-            + "#region UICode\r\n"
-            + "IntSliderControl Amount1 = 0; // [0,100] Slider 1 Description\r\n"
-            + "IntSliderControl Amount2 = 0; // [0,100] Slider 2 Description\r\n"
-            + "IntSliderControl Amount3 = 0; // [0,100] Slider 3 Description\r\n"
-            + "#endregion\r\n"
-            + "\r\n"
-            + "void Render(Surface dst, Surface src, Rectangle rect)\r\n"
-            + "{\r\n"
-            + "    // Delete any of these lines you don't need\r\n"
-            + "    Rectangle selection = EnvironmentParameters.SelectionBounds;\r\n"
-            + "    int centerX = ((selection.Right - selection.Left) / 2) + selection.Left;\r\n"
-            + "    int centerY = ((selection.Bottom - selection.Top) / 2) + selection.Top;\r\n"
-            + "    ColorBgra primaryColor = EnvironmentParameters.PrimaryColor;\r\n"
-            + "    ColorBgra secondaryColor = EnvironmentParameters.SecondaryColor;\r\n"
-            + "    int brushWidth = (int)EnvironmentParameters.BrushWidth;\r\n"
-            + "\r\n"
-            + "    ColorBgra currentPixel;\r\n"
-            + "    for (int y = rect.Top; y < rect.Bottom; y++)\r\n"
-            + "    {\r\n"
-            + "        if (IsCancelRequested) return;\r\n"
-            + "        for (int x = rect.Left; x < rect.Right; x++)\r\n"
-            + "        {\r\n"
-            + "            currentPixel = src[x,y];\r\n"
-            + "            // TODO: Add pixel processing code here\r\n"
-            + "            // Access RGBA values this way, for example:\r\n"
-            + "            // currentPixel.R = primaryColor.R;\r\n"
-            + "            // currentPixel.G = primaryColor.G;\r\n"
-            + "            // currentPixel.B = primaryColor.B;\r\n"
-            + "            // currentPixel.A = primaryColor.A;\r\n"
-            + "            dst[x,y] = currentPixel;\r\n"
-            + "        }\r\n"
-            + "    }\r\n"
-            + "}\r\n";
-
-        internal const string EmptyCode = "\r\n"
-            + "#region User Entered Code\r\n"
-            + "void Render(Surface dst, Surface src, Rectangle rect) { }\r\n"
-            + "#endregion\r\n";
-
-        internal static string UsingPartCode(ProjectType projectType)
-        {
-            string namespaces = ""
-            + "using System;\r\n"
-            + "using System.IO;\r\n"
-            + "using System.Linq;\r\n"
-            + "using System.Diagnostics;\r\n"
-            + "using System.Drawing;\r\n"
-            + "using System.Threading;\r\n"
-            + "using System.Reflection;\r\n"
-            + "using System.Drawing.Text;\r\n"
-            + "using System.Windows.Forms;\r\n"
-            + "using System.IO.Compression;\r\n"
-            + "using System.Drawing.Drawing2D;\r\n"
-            + "using System.Collections.Generic;\r\n"
-            + "using System.Text;\r\n"
-            + "using System.Text.RegularExpressions;\r\n"
-            + "using System.Runtime.InteropServices;\r\n"
-            + "using System.Runtime.Versioning;\r\n"
-            + "using Registry = Microsoft.Win32.Registry;\r\n"
-            + "using RegistryKey = Microsoft.Win32.RegistryKey;\r\n"
-            + "using PaintDotNet;\r\n"
-            + "using PaintDotNet.AppModel;\r\n"
-            + "using PaintDotNet.Clipboard;\r\n"
-            + "using PaintDotNet.IndirectUI;\r\n"
-            + "using PaintDotNet.Collections;\r\n"
-            + "using PaintDotNet.PropertySystem;\r\n"
-            + "using PaintDotNet.Rendering;\r\n";
-
-            if (projectType == ProjectType.Effect)
-            {
-                namespaces += ""
-                + "using PaintDotNet.Effects;\r\n"
-                + "using ColorWheelControl = PaintDotNet.ColorBgra;\r\n"
-                + "using AngleControl = System.Double;\r\n"
-                + "using PanSliderControl = PaintDotNet.Rendering.Vector2Double;\r\n"
-                + "using FolderControl = System.String;\r\n"
-                + "using FilenameControl = System.String;\r\n"
-                + "using ReseedButtonControl = System.Byte;\r\n"
-                + "using RollControl = PaintDotNet.Rendering.Vector3Double;\r\n";
-            }
-
-            namespaces += ""
-            + "using IntSliderControl = System.Int32;\r\n"
-            + "using CheckboxControl = System.Boolean;\r\n"
-            + "using TextboxControl = System.String;\r\n"
-            + "using DoubleSliderControl = System.Double;\r\n"
-            + "using ListBoxControl = System.Byte;\r\n"
-            + "using RadioButtonControl = System.Byte;\r\n"
-            + "using MultiLineTextboxControl = System.String;\r\n"
-            + "\r\n";
-
-            return namespaces;
-        }
-
-        internal const string prepend_code = "\r\n"
-            + "namespace PaintDotNet.Effects\r\n"
-            + "{\r\n"
-            + "public class UserScript : Effect\r\n"
-            + "{\r\n"
-            + "    [ThreadStatic]\r\n"
-            + "    private static Random RandomNumber;\r\n"
-            + "    private int instanceSeed = unchecked((int)DateTime.Now.Ticks);\r\n"
-            + "\r\n"
-            + "    public override void Render(EffectConfigToken parameters, RenderArgs dstArgs, RenderArgs srcArgs, Rectangle[] rois, int startIndex, int length)\r\n"
-            + "    {\r\n"
-            + "        if (length == 0) return;\r\n"
-            + "        RandomNumber = new Random(instanceSeed ^ (1 << 16) ^ (rois[startIndex].X << 8) ^ rois[startIndex].Y);\r\n"
-            + "        for (int i = startIndex; i < startIndex + length; ++i)\r\n"
-            + "        {\r\n"
-            + "            Render(dstArgs.Surface, srcArgs.Surface, rois[i]);\r\n"
-            + "        }\r\n"
-            + "    }\r\n"
-            + "\r\n"
-            + "    public UserScript()\r\n"
-            + "        : base(\"UserScript\", string.Empty, new EffectOptions())\r\n";
-        internal const string append_code = ""
-            + "    }\r\n"
-            + "}\r\n";
-
         internal static string AssemblyInfoPart(string FileName, string menuname, string Author, int MajorVersion, int MinorVersion, string Description, string KeyWords)
         {
             // Replace quotes with single quotes from Attribute fields
@@ -192,10 +52,10 @@ namespace PaintDotNet.Effects
             return AssemblyInfoPart;
         }
 
-        internal static string NamespacePart(string FileName, ProjectType projectType)
+        internal static string NamespacePart(string FileName, bool isFileType = false)
         {
             // Remove non-alpha characters from namespace
-            string pluginType = (projectType == ProjectType.Effect) ? "Effect" : "FileType";
+            string pluginType = (!isFileType) ? "Effect" : "FileType";
             string NameSpace = Regex.Replace(FileName, @"[^\w]", "") + pluginType;
 
             string NamespacePart = "";
@@ -216,45 +76,11 @@ namespace PaintDotNet.Effects
             string SupportInfoPart = "";
             SupportInfoPart += "    public class PluginSupportInfo : IPluginSupportInfo\r\n";
             SupportInfoPart += "    {\r\n";
-            SupportInfoPart += "        public string Author\r\n";
-            SupportInfoPart += "        {\r\n";
-            SupportInfoPart += "            get\r\n";
-            SupportInfoPart += "            {\r\n";
-            SupportInfoPart += "                return base.GetType().Assembly.GetCustomAttribute<AssemblyCopyrightAttribute>().Copyright;\r\n";
-            SupportInfoPart += "            }\r\n";
-            SupportInfoPart += "        }\r\n";
-            SupportInfoPart += "\r\n";
-            SupportInfoPart += "        public string Copyright\r\n";
-            SupportInfoPart += "        {\r\n";
-            SupportInfoPart += "            get\r\n";
-            SupportInfoPart += "            {\r\n";
-            SupportInfoPart += "                return base.GetType().Assembly.GetCustomAttribute<AssemblyDescriptionAttribute>().Description;\r\n";
-            SupportInfoPart += "            }\r\n";
-            SupportInfoPart += "        }\r\n";
-            SupportInfoPart += "\r\n";
-            SupportInfoPart += "        public string DisplayName\r\n";
-            SupportInfoPart += "        {\r\n";
-            SupportInfoPart += "            get\r\n";
-            SupportInfoPart += "            {\r\n";
-            SupportInfoPart += "                return base.GetType().Assembly.GetCustomAttribute<AssemblyProductAttribute>().Product;\r\n";
-            SupportInfoPart += "            }\r\n";
-            SupportInfoPart += "        }\r\n";
-            SupportInfoPart += "\r\n";
-            SupportInfoPart += "        public Version Version\r\n";
-            SupportInfoPart += "        {\r\n";
-            SupportInfoPart += "            get\r\n";
-            SupportInfoPart += "            {\r\n";
-            SupportInfoPart += "                return base.GetType().Assembly.GetName().Version;\r\n";
-            SupportInfoPart += "            }\r\n";
-            SupportInfoPart += "        }\r\n";
-            SupportInfoPart += "\r\n";
-            SupportInfoPart += "        public Uri WebsiteUri\r\n";
-            SupportInfoPart += "        {\r\n";
-            SupportInfoPart += "            get\r\n";
-            SupportInfoPart += "            {\r\n";
-            SupportInfoPart += "                return new Uri(\"" + SupportURL + "\");\r\n";
-            SupportInfoPart += "            }\r\n";
-            SupportInfoPart += "        }\r\n";
+            SupportInfoPart += "        public string Author => base.GetType().Assembly.GetCustomAttribute<AssemblyCopyrightAttribute>().Copyright;\r\n";
+            SupportInfoPart += "        public string Copyright => base.GetType().Assembly.GetCustomAttribute<AssemblyDescriptionAttribute>().Description;\r\n";
+            SupportInfoPart += "        public string DisplayName => base.GetType().Assembly.GetCustomAttribute<AssemblyProductAttribute>().Product;\r\n";
+            SupportInfoPart += "        public Version Version => base.GetType().Assembly.GetName().Version;\r\n";
+            SupportInfoPart += "        public Uri WebsiteUri => new Uri(\"" + SupportURL + "\");\r\n";
             SupportInfoPart += "    }\r\n";
             SupportInfoPart += "\r\n";
             SupportInfoPart += "    [PluginSupportInfo(typeof(PluginSupportInfo), DisplayName = \"" + menuname + "\")]\r\n";
@@ -264,102 +90,6 @@ namespace PaintDotNet.Effects
         internal static string CategoryPart(bool isAdjustment)
         {
             return isAdjustment ? "    [EffectCategory(EffectCategory.Adjustment)]\r\n" : string.Empty;
-        }
-
-        internal static string EffectPart(UIElement[] UserControls, string FileName, string submenuname, string menuname, string iconpath, EffectFlags effectFlags, EffectRenderingSchedule renderingSchedule)
-        {
-            menuname = menuname.Trim().Replace('"', '\'');
-            if (menuname.Length == 0)
-            {
-                menuname = FileName;
-            }
-            string NameSpace = Regex.Replace(FileName, @"[^\w]", "") + "Effect";
-            string iconResName = Path.GetFileName(iconpath);
-
-            string EffectPart = "";
-            EffectPart += "    public class " + NameSpace + "Plugin : PropertyBasedEffect\r\n";
-            EffectPart += "    {\r\n";
-            EffectPart += "        public static string StaticName\r\n";
-            EffectPart += "        {\r\n";
-            EffectPart += "            get\r\n";
-            EffectPart += "            {\r\n";
-            EffectPart += "                return \"" + menuname + "\";\r\n";
-            EffectPart += "            }\r\n";
-            EffectPart += "        }\r\n";
-            EffectPart += "\r\n";
-            EffectPart += "        public static Image StaticIcon\r\n";
-            EffectPart += "        {\r\n";
-            EffectPart += "            get\r\n";
-            EffectPart += "            {\r\n";
-            if (File.Exists(iconpath))
-            {
-                EffectPart += "                return new Bitmap(typeof(" + NameSpace + "Plugin), \"" + iconResName + "\");\r\n";
-            }
-            else
-            {
-                EffectPart += "                return null;\r\n";
-            }
-            EffectPart += "            }\r\n";
-            EffectPart += "        }\r\n";
-
-            EffectPart += "\r\n";
-            EffectPart += "        public static string SubmenuName\r\n";
-            EffectPart += "        {\r\n";
-            EffectPart += "            get\r\n";
-            EffectPart += "            {\r\n";
-
-            submenuname = submenuname.Trim();
-            if (submenuname.Length == 0)
-            {
-                EffectPart += "                return null;\r\n";
-            }
-            else
-            {
-                EffectPart += "                return ";
-
-                string builtinSubmenu = typeof(SubmenuNames)
-                    .GetProperties(BindingFlags.Public | BindingFlags.Static)
-                    .Where(x => x.PropertyType == typeof(string))
-                    .Select(x => x.Name)
-                    .FirstOrDefault(x => x.Equals(submenuname, StringComparison.OrdinalIgnoreCase));
-
-                EffectPart += (builtinSubmenu != null)
-                    ? nameof(SubmenuNames) + "." + builtinSubmenu + ";\r\n"
-                    : "\"" + submenuname.Replace('"', '\'') + "\";\r\n";
-            }
-            EffectPart += "            }\r\n";
-            EffectPart += "        }\r\n";
-            EffectPart += "\r\n";
-            EffectPart += "        public " + NameSpace + "Plugin()\r\n";
-
-            // Set Effect Flags
-            string flags = (UserControls.Length != 0) ? "EffectFlags.Configurable" : "EffectFlags.None";
-            if (effectFlags.HasFlag(EffectFlags.ForceAliasedSelectionQuality)) flags += " | EffectFlags.ForceAliasedSelectionQuality";
-            if (effectFlags.HasFlag(EffectFlags.SingleThreaded)) flags += " | EffectFlags.SingleThreaded";
-
-            // Rendering Schedule
-            string schedule = string.Empty;
-            if (renderingSchedule == EffectRenderingSchedule.SmallHorizontalStrips)
-            {
-                schedule = ", RenderingSchedule = EffectRenderingSchedule.SmallHorizontalStrips";
-            }
-            else if (renderingSchedule == EffectRenderingSchedule.None)
-            {
-                schedule = ", RenderingSchedule = EffectRenderingSchedule.None";
-            }
-
-            EffectPart += "            : base(StaticName, StaticIcon, SubmenuName, new EffectOptions() { Flags = " + flags + schedule + " })\r\n";
-            EffectPart += "        {\r\n";
-
-            if (UserControls.Any(u => u.ElementType == ElementType.ReseedButton))
-            {
-                // if we have a random number generator control, include the following line...
-                EffectPart += "            instanceSeed = unchecked((int)DateTime.Now.Ticks);\r\n";
-            }
-
-            EffectPart += "        }\r\n";
-            EffectPart += "\r\n";
-            return EffectPart;
         }
 
         internal static string PropertyPart(UIElement[] UserControls, string FileName, string WindowTitleStr, HelpType HelpType, string HelpText, ProjectType projectType)
@@ -453,8 +183,17 @@ namespace PaintDotNet.Effects
             // Check to see if we're including a color wheel without an alpha slider
             if (UserControls.Any(u => u.ElementType == ElementType.ColorWheel && !u.ColorWheelOptions.HasFlag(ColorWheelOptions.Alpha)))
             {
-                PropertyPart += "            ColorBgra PrimaryColor = EnvironmentParameters.PrimaryColor.NewAlpha(byte.MaxValue);\r\n";
-                PropertyPart += "            ColorBgra SecondaryColor = EnvironmentParameters.SecondaryColor.NewAlpha(byte.MaxValue);\r\n";
+                if (projectType.Is5Effect())
+                {
+                    PropertyPart += "            ColorBgra32 PrimaryColor = Environment.PrimaryColor with { A = byte.MaxValue };\r\n";
+                    PropertyPart += "            ColorBgra32 SecondaryColor = Environment.SecondaryColor with { A = byte.MaxValue };\r\n";
+                }
+                else
+                {
+                    PropertyPart += "            ColorBgra PrimaryColor = EnvironmentParameters.PrimaryColor.NewAlpha(byte.MaxValue);\r\n";
+                    PropertyPart += "            ColorBgra SecondaryColor = EnvironmentParameters.SecondaryColor.NewAlpha(byte.MaxValue);\r\n";
+                }
+
                 PropertyPart += "\r\n";
             }
 
@@ -538,15 +277,17 @@ namespace PaintDotNet.Effects
                             }
                             else  // include alpha slider
                             {
+                                string environment = projectType.Is5Effect() ? "Environment" : "EnvironmentParameters";
+
                                 if (ColorControlCount < 2)
                                 {
                                     // First color wheel defaults to Primary Color
-                                    PropertyPart += "            props.Add(new Int32Property(PropertyNames." + propertyName + ", unchecked((int)EnvironmentParameters.PrimaryColor.Bgra), Int32.MinValue, Int32.MaxValue));\r\n";
+                                    PropertyPart += "            props.Add(new Int32Property(PropertyNames." + propertyName + ", unchecked((int)" + environment + ".PrimaryColor.Bgra), Int32.MinValue, Int32.MaxValue));\r\n";
                                 }
                                 else
                                 {
                                     // Second color wheel (and beyond) defaults to Secondary Color
-                                    PropertyPart += "            props.Add(new Int32Property(PropertyNames." + propertyName + ", unchecked((int)EnvironmentParameters.SecondaryColor.Bgra), Int32.MinValue, Int32.MaxValue));\r\n";
+                                    PropertyPart += "            props.Add(new Int32Property(PropertyNames." + propertyName + ", unchecked((int)" + environment + ".SecondaryColor.Bgra), Int32.MinValue, Int32.MaxValue));\r\n";
                                 }
                             }
                         }
@@ -665,9 +406,9 @@ namespace PaintDotNet.Effects
                         case ElementType.RollBall:
                             PropertyPart += "            propRules.Add(new ReadOnlyBoundToValueRule<Vector3Double, DoubleVector3Property>(PropertyNames." + targetPropName + ", PropertyNames." + sourcePropName + ", new Vector3Double(0d,0d,0d), " + inverse + "));\r\n";
                             break;
-                        //BinaryPixelOp
-                        //FontFamily
-                        //Uri
+                            //BinaryPixelOp
+                            //FontFamily
+                            //Uri
                     }
                 }
                 PropertyPart += "\r\n";
@@ -705,8 +446,17 @@ namespace PaintDotNet.Effects
 
             if (UserControls.Any(u => u.ElementType == ElementType.PanSlider))
             {
-                PropertyPart += "            Rectangle selection = EnvironmentParameters.SelectionBounds;\r\n";
-                PropertyPart += "            ImageResource imageResource = ImageResource.FromImage(EnvironmentParameters.SourceSurface.CreateAliasedBitmap(selection));\r\n";
+                if (projectType.Is5Effect())
+                {
+                    PropertyPart += "            RectInt32 selection = Environment.Selection.RenderBounds;\r\n";
+                    PropertyPart += "            IBitmapSource<ColorBgra32> panImage = Environment.GetSourceBitmapBgra32().CreateClipper(selection);\r\n";
+                }
+                else
+                {
+                    PropertyPart += "            Rectangle selection = EnvironmentParameters.SelectionBounds;\r\n";
+                    PropertyPart += "            ImageResource panImage = ImageResource.FromImage(EnvironmentParameters.SourceSurface.CreateAliasedBitmap(selection));\r\n";
+                }
+
                 PropertyPart += "\r\n";
             }
 
@@ -805,7 +555,7 @@ namespace PaintDotNet.Effects
                         PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.SliderLargeChangeY, 0.25);\r\n";
                         PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.UpDownIncrementY, 0.01);\r\n";
                         PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.DecimalPlaces, 3);\r\n";
-                        PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.StaticImageUnderlay, imageResource);\r\n";
+                        PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.StaticImageUnderlay, panImage);\r\n";
                         break;
                     case ElementType.DoubleSlider:
                         PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.SliderLargeChange, 0.25);\r\n";
@@ -1068,183 +818,7 @@ namespace PaintDotNet.Effects
             return HelpPart;
         }
 
-        internal static string SetRenderPart(UIElement[] UserControls, bool toDll, bool PreRenderExists)
-        {
-            string SetRenderPart = "";
-            if (!toDll && !PreRenderExists)
-            {
-                return SetRenderPart;
-            }
-
-            string tokenType = (toDll) ? "PropertyBasedEffectConfigToken" : "EffectConfigToken";
-            SetRenderPart += "        protected override void OnSetRenderInfo(" + tokenType + " token, RenderArgs dstArgs, RenderArgs srcArgs)\r\n";
-            SetRenderPart += "        {\r\n";
-
-            if (toDll && UserControls.Length > 0)
-            {
-                SetRenderPart += TokenValuesPart(UserControls);
-            }
-
-            if (PreRenderExists)
-            {
-                SetRenderPart += "            PreRender(dstArgs.Surface, srcArgs.Surface);\r\n";
-                SetRenderPart += "\r\n";
-            }
-
-            SetRenderPart += "            base.OnSetRenderInfo(token, dstArgs, srcArgs);\r\n";
-            SetRenderPart += "        }\r\n";
-            SetRenderPart += "\r\n";
-            return SetRenderPart;
-        }
-
-        internal static string RenderLoopPart(UIElement[] UserControls)
-        {
-            bool hasReseed = UserControls.Any(u => u.ElementType == ElementType.ReseedButton);
-
-            string RenderLoopPart = "";
-            RenderLoopPart += "        protected override unsafe void OnRender(Rectangle[] rois, int startIndex, int length)\r\n";
-            RenderLoopPart += "        {\r\n";
-            RenderLoopPart += "            if (length == 0) return;\r\n";
-
-            if (hasReseed)
-            {
-                // if we have a random number generator control, include the following line...
-                RenderLoopPart += "            RandomNumber = GetRandomNumberGenerator(rois, startIndex);\r\n";
-            }
-
-            RenderLoopPart += "            for (int i = startIndex; i < startIndex + length; ++i)\r\n";
-            RenderLoopPart += "            {\r\n";
-            RenderLoopPart += "                Render(DstArgs.Surface,SrcArgs.Surface,rois[i]);\r\n";
-            RenderLoopPart += "            }\r\n";
-            RenderLoopPart += "        }\r\n";
-            RenderLoopPart += "\r\n";
-
-            if (hasReseed)
-            {
-                // if we have a random number generator control, include the following line...
-                RenderLoopPart += "        private Random GetRandomNumberGenerator(Rectangle[] rois, int startIndex)\r\n";
-                RenderLoopPart += "        {\r\n";
-                RenderLoopPart += "            Rectangle roi = rois[startIndex];\r\n";
-                RenderLoopPart += "            return new Random(instanceSeed ^ (randomSeed << 16) ^ (roi.X << 8) ^ roi.Y);\r\n";
-                RenderLoopPart += "        }\r\n";
-                RenderLoopPart += "\r\n";
-            }
-
-            return RenderLoopPart;
-        }
-
-        internal static string UserEnteredPart(string SourceCode)
-        {
-            SourceCode = Regex.Replace(SourceCode, @"\b(?:RadioButtonControl|ListBoxControl)<(?<TEnum>\S+)>\s+", match => match.Groups["TEnum"].Value + " ");
-
-            string UserEnteredPart = "";
-            UserEnteredPart += "        #region User Entered Code\r\n        ";
-            UserEnteredPart += SourceCode.Replace("\n", "\n        ");
-            UserEnteredPart += "\r\n";
-            UserEnteredPart += "        #endregion\r\n";
-            return UserEnteredPart;
-        }
-
-        internal static string EndPart()
-        {
-            return append_code;
-        }
-
-        internal static string FullSourceCode(string SourceCode, string FileName, bool isAdjustment, string submenuname, string menuname, string iconpath, string SupportURL, EffectFlags effectFlags, EffectRenderingSchedule renderingSchedule, string Author, int MajorVersion, int MinorVersion, string Description, string KeyWords, string WindowTitleStr, HelpType HelpType, string HelpText)
-        {
-            UIElement[] UserControls = UIElement.ProcessUIControls(SourceCode, ProjectType.Effect);
-            bool hasPreRender = Regex.IsMatch(SourceCode, @"void\s+PreRender\s*\(\s*Surface\s+dst\s*,\s*Surface\s+src\s*\)\s*{(.|\s)*}", RegexOptions.Singleline);
-
-            string sUsingPart = UsingPartCode(ProjectType.Effect);
-            string sAssemblyInfoPart = AssemblyInfoPart(FileName, menuname, Author, MajorVersion, MinorVersion, Description, KeyWords);
-            string sNamespacePart = NamespacePart(FileName, ProjectType.Effect);
-            string sSupportInfoPart = SupportInfoPart(menuname, SupportURL);
-            string sCategoryPart = CategoryPart(isAdjustment);
-            string sEffectPart = EffectPart(UserControls, FileName, submenuname, menuname, iconpath, effectFlags, renderingSchedule);
-            string sHelpPart = HelpPart(HelpType, HelpText);
-            string sPropertyPart = PropertyPart(UserControls, FileName, WindowTitleStr, HelpType, HelpText, ProjectType.Effect);
-            string sSetRenderPart = SetRenderPart(UserControls, true, hasPreRender);
-            string sRenderLoopPart = RenderLoopPart(UserControls);
-            string sUserEnteredPart = UserEnteredPart(SourceCode);
-            string sEndPart = EndPart();
-
-            return sUsingPart + sAssemblyInfoPart + sNamespacePart + sSupportInfoPart + sCategoryPart + sEffectPart + sHelpPart + sPropertyPart + sSetRenderPart + sRenderLoopPart + sUserEnteredPart + sEndPart;
-        }
-
-        internal static string FullFileTypeSourceCode(string scriptText, string projectName, string author, int majorVersion, int minorVersion, string supportURL, string description, string loadExt, string saveExt, bool supoortLayers, string title)
-        {
-            UIElement[] userControls = UIElement.ProcessUIControls(scriptText, ProjectType.FileType);
-
-            return
-                UsingPartCode(ProjectType.FileType) +
-                AssemblyInfoPart(projectName, projectName, author, majorVersion, minorVersion, description, string.Empty) +
-                NamespacePart(projectName, ProjectType.FileType) +
-                SupportInfoPart(title, supportURL) +
-                FileTypePart(projectName, loadExt, saveExt, supoortLayers, title) +
-                ConstructorPart(false) +
-                PropertyPart(userControls, projectName, string.Empty, HelpType.None, string.Empty, ProjectType.FileType) +
-                FileTypePart2(userControls) +
-                UserEnteredPart(scriptText) +
-                EndPart();
-        }
-
-        internal static string FileTypePart(string projectName, string loadExt, string saveExt, bool supoortLayers, string title)
-        {
-            string fileTypePart = "";
-            fileTypePart += "    public sealed class " + projectName + "Factory : IFileTypeFactory\r\n";
-            fileTypePart += "    {\r\n";
-            fileTypePart += "        public FileType[] GetFileTypeInstances()\r\n";
-            fileTypePart += "        {\r\n";
-            fileTypePart += "            return new[] { new " + projectName + "Plugin() };\r\n";
-            fileTypePart += "        }\r\n";
-            fileTypePart += "    }\r\n";
-            fileTypePart += "\r\n";
-            fileTypePart += "    [PluginSupportInfo(typeof(PluginSupportInfo))]\r\n";
-            fileTypePart += "    internal class " + projectName + "Plugin : PropertyBasedFileType\r\n";
-            fileTypePart += "    {\r\n";
-            fileTypePart += "        internal " + projectName + "Plugin()\r\n";
-            fileTypePart += "            : base(\r\n";
-            fileTypePart += "                \"" + title + "\",\r\n";
-            fileTypePart += "                new FileTypeOptions\r\n";
-            fileTypePart += "                {\r\n";
-            fileTypePart += "                    LoadExtensions = new string[] { " + loadExt + " },\r\n";
-            fileTypePart += "                    SaveExtensions = new string[] { " + saveExt + " },\r\n";
-            fileTypePart += "                    SupportsCancellation = true,\r\n";
-            fileTypePart += "                    SupportsLayers = " + supoortLayers.ToString().ToLowerInvariant() + "\r\n";
-            fileTypePart += "                })\r\n";
-
-            return fileTypePart;
-        }
-
-        internal static string FileTypePart2(UIElement[] userControls)
-        {
-            string fileTypePart2 = "";
-            //fileTypePart2 += "        protected override bool IsReflexive(PropertyBasedSaveConfigToken token)\r\n";
-            //fileTypePart2 += "        {\r\n";
-            //fileTypePart2 += "            return false;\r\n";
-            //fileTypePart2 += "        }\r\n";
-            //fileTypePart2 += "\r\n";
-            //fileTypePart2 += "\r\n";
-            fileTypePart2 += "        protected override void OnSaveT(Document input, Stream output, PropertyBasedSaveConfigToken token, Surface scratchSurface, ProgressEventHandler progressCallback)\r\n";
-            fileTypePart2 += "        {\r\n";
-
-            if (userControls.Length > 0)
-            {
-                fileTypePart2 += TokenValuesPart(userControls);
-            }
-
-            fileTypePart2 += "            SaveImage(input, output, token, scratchSurface, progressCallback);\r\n";
-            fileTypePart2 += "        }\r\n";
-            fileTypePart2 += "\r\n";
-            fileTypePart2 += "        protected override Document OnLoad(Stream input)\r\n";
-            fileTypePart2 += "        {\r\n";
-            fileTypePart2 += "            return LoadImage(input);\r\n";
-            fileTypePart2 += "        }\r\n";
-
-            return fileTypePart2;
-        }
-
-        private static string TokenValuesPart(UIElement[] userControls)
+        internal static string TokenValuesPart(UIElement[] userControls, string tokenName)
         {
             string tokenValues = "";
             foreach (UIElement u in userControls)
@@ -1253,51 +827,51 @@ namespace PaintDotNet.Effects
                 switch (u.ElementType)
                 {
                     case ElementType.IntSlider:
-                        tokenValues += "            " + u.Identifier + " = token.GetProperty<Int32Property>(PropertyNames." + propertyName + ").Value;\r\n";
+                        tokenValues += $"            {u.Identifier} = {tokenName}.GetProperty<Int32Property>(PropertyNames.{propertyName}).Value;\r\n";
                         break;
                     case ElementType.Checkbox:
-                        tokenValues += "            " + u.Identifier + " = token.GetProperty<BooleanProperty>(PropertyNames." + propertyName + ").Value;\r\n";
+                        tokenValues += $"            {u.Identifier} = {tokenName}.GetProperty<BooleanProperty>(PropertyNames.{propertyName}).Value;\r\n";
                         break;
                     case ElementType.ColorWheel:
                         if (!u.ColorWheelOptions.HasFlag(ColorWheelOptions.Alpha))
                         {
-                            tokenValues += "            " + u.Identifier + " = ColorBgra.FromOpaqueInt32(token.GetProperty<Int32Property>(PropertyNames." + propertyName + ").Value);\r\n";
+                            tokenValues += $"            {u.Identifier} = ColorBgra.FromOpaqueInt32({tokenName}.GetProperty<Int32Property>(PropertyNames.{propertyName}).Value);\r\n";
                         }
                         else
                         {
-                            tokenValues += "            " + u.Identifier + " = ColorBgra.FromUInt32(unchecked((uint)token.GetProperty<Int32Property>(PropertyNames." + propertyName + ").Value));\r\n";
+                            tokenValues += $"            {u.Identifier} = ColorBgra.FromUInt32(unchecked((uint){tokenName}.GetProperty<Int32Property>(PropertyNames.{propertyName}).Value));\r\n";
                         }
                         break;
                     case ElementType.AngleChooser:
                     case ElementType.DoubleSlider:
-                        tokenValues += "            " + u.Identifier + " = token.GetProperty<DoubleProperty>(PropertyNames." + propertyName + ").Value;\r\n";
+                        tokenValues += $"            {u.Identifier} = {tokenName}.GetProperty<DoubleProperty>(PropertyNames.{propertyName}).Value;\r\n";
                         break;
                     case ElementType.PanSlider:
-                        tokenValues += "            " + u.Identifier + " = token.GetProperty<DoubleVectorProperty>(PropertyNames." + propertyName + ").Value;\r\n";
+                        tokenValues += $"            {u.Identifier} = {tokenName}.GetProperty<DoubleVectorProperty>(PropertyNames.{propertyName}).Value;\r\n";
                         break;
                     case ElementType.Filename:
                     case ElementType.Folder:
                     case ElementType.Textbox:
                     case ElementType.MultiLineTextbox:
-                        tokenValues += "            " + u.Identifier + " = token.GetProperty<StringProperty>(PropertyNames." + propertyName + ").Value;\r\n";
+                        tokenValues += $"            {u.Identifier} = {tokenName}.GetProperty<StringProperty>(PropertyNames.{propertyName}).Value;\r\n";
                         break;
                     case ElementType.DropDown:
                     case ElementType.RadioButtons:
                         string typeCast = Intelli.IsEnum(u.TEnum) ? u.TEnum : "byte)(int";
-                        tokenValues += "            " + u.Identifier + " = (" + typeCast + ")token.GetProperty<StaticListChoiceProperty>(PropertyNames." + propertyName + ").Value;\r\n";
+                        tokenValues += $"            {u.Identifier} = ({typeCast}){tokenName}.GetProperty<StaticListChoiceProperty>(PropertyNames.{propertyName}).Value;\r\n";
                         break;
                     case ElementType.BinaryPixelOp:
-                        tokenValues += "            " + u.Identifier + " = LayerBlendModeUtil.CreateCompositionOp((LayerBlendMode)token.GetProperty<StaticListChoiceProperty>(PropertyNames." + propertyName + ").Value);\r\n";
+                        tokenValues += $"            {u.Identifier} = LayerBlendModeUtil.CreateCompositionOp((LayerBlendMode){tokenName}.GetProperty<StaticListChoiceProperty>(PropertyNames.{propertyName}).Value);\r\n";
                         break;
                     case ElementType.FontFamily:
-                        tokenValues += "            " + u.Identifier + " = (FontFamily)token.GetProperty<StaticListChoiceProperty>(PropertyNames." + propertyName + ").Value;\r\n";
+                        tokenValues += $"            {u.Identifier} = (FontFamily){tokenName}.GetProperty<StaticListChoiceProperty>(PropertyNames.{propertyName}).Value;\r\n";
                         break;
                     case ElementType.ReseedButton:
-                        tokenValues += "            " + u.Identifier + " = (byte)token.GetProperty<Int32Property>(PropertyNames." + propertyName + ").Value;\r\n";
-                        tokenValues += "            randomSeed = " + u.Identifier + ";\r\n";
+                        tokenValues += $"            {u.Identifier} = (byte){tokenName}.GetProperty<Int32Property>(PropertyNames.{propertyName}).Value;\r\n";
+                        tokenValues += $"            randomSeed = {u.Identifier};\r\n";
                         break;
                     case ElementType.RollBall:
-                        tokenValues += "            " + u.Identifier + " = token.GetProperty<DoubleVector3Property>(PropertyNames." + propertyName + ").Value;\r\n";
+                        tokenValues += $"            {u.Identifier} = {tokenName}.GetProperty<DoubleVector3Property>(PropertyNames.{propertyName}).Value;\r\n";
                         break;
                 }
             }
@@ -1306,7 +880,7 @@ namespace PaintDotNet.Effects
             return tokenValues;
         }
 
-        internal static string ConstructorPart(bool debug)
+        internal static string ConstructorBodyPart(bool debug)
         {
             if (!debug)
             {
@@ -1316,7 +890,7 @@ namespace PaintDotNet.Effects
                     + "\r\n";
             }
 
-            return  ""
+            return ""
                 + "        {\r\n"
                 + "            __listener = new TextWriterTraceListener(__debugWriter);\r\n"
                 + "            Trace.Listeners.Add(__listener);\r\n"
@@ -1333,6 +907,44 @@ namespace PaintDotNet.Effects
                 + "            }\r\n"
                 + "        }\r\n"
                 + "\r\n";
+        }
+
+        internal static string UserEnteredPart(string SourceCode)
+        {
+            SourceCode = Regex.Replace(SourceCode, @"\b(?:RadioButtonControl|ListBoxControl)<(?<TEnum>\S+)>\s+", match => match.Groups["TEnum"].Value + " ");
+
+            string UserEnteredPart = "";
+            UserEnteredPart += "        #region User Entered Code\r\n        ";
+            UserEnteredPart += SourceCode.Replace("\n", "\n        ");
+            UserEnteredPart += "\r\n";
+            UserEnteredPart += "        #endregion\r\n";
+            return UserEnteredPart;
+        }
+
+        internal static string SubmenuPart(string submenuName)
+        {
+            submenuName = submenuName.Trim();
+            if (submenuName.Length == 0)
+            {
+                return "null";
+            }
+
+            string builtinSubmenu = typeof(SubmenuNames)
+                .GetProperties(BindingFlags.Public | BindingFlags.Static)
+                .Where(x => x.PropertyType == typeof(string))
+                .Select(x => x.Name)
+                .FirstOrDefault(x => x.Equals(submenuName, StringComparison.OrdinalIgnoreCase));
+
+            return (builtinSubmenu != null)
+                ? nameof(SubmenuNames) + "." + builtinSubmenu
+                : "\"" + submenuName.Replace('"', '\'') + "\"";
+        }
+
+        internal static string EndPart()
+        {
+            return ""
+                + "    }\r\n"
+                + "}\r\n";
         }
     }
 }

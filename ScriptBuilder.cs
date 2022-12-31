@@ -34,7 +34,6 @@ namespace PaintDotNet.Effects
         private static FileType builtFileType;
         private static int lineOffset;
         private static string exceptionMsg;
-        private static readonly Regex preRenderRegex = new Regex(@"void\s+PreRender\s*\(\s*Surface\s+dst\s*,\s*Surface\s+src\s*\)\s*{(.|\s)*}", RegexOptions.Singleline);
 
         private static readonly IEnumerable<MetadataReference> references = Intelli.ReferenceAssemblies.Select(a => MetadataReference.CreateFromFile(a.Location));
         private static readonly CSharpParseOptions parseOptions = CSharpParseOptions.Default
@@ -80,20 +79,12 @@ namespace PaintDotNet.Effects
             warningsToIgnore = warnings;
         }
 
-        internal static bool Build<TEffect>(string scriptText, bool debug)
+        internal static bool BuildEffect<TEffect>(string fullSourceCode, bool debug = false)
             where TEffect : IEffect
         {
             builtEffect = null;
 
-            string SourceCode =
-                ScriptWriter.UsingPartCode(ProjectType.Effect) +
-                ScriptWriter.prepend_code +
-                ScriptWriter.ConstructorPart(debug) +
-                ScriptWriter.SetRenderPart(Array.Empty<UIElement>(), false, preRenderRegex.IsMatch(scriptText)) +
-                ScriptWriter.UserEnteredPart(scriptText) +
-                ScriptWriter.append_code;
-
-            Assembly assembly = CreateAssembly(SourceCode, debug);
+            Assembly assembly = CreateAssembly(fullSourceCode, debug);
             if (assembly == null)
             {
                 return false;
@@ -117,12 +108,9 @@ namespace PaintDotNet.Effects
             return builtEffect != null;
         }
 
-        internal static bool BuildEffectDll(string scriptText, string scriptPath, string subMenuname, string menuName, string iconPath, string author, int majorVersion, int minorVersion, string supportURL, string windowTitle, bool isAdjustment, string description, string keyWords, EffectFlags effectFlags, EffectRenderingSchedule renderingSchedule, HelpType helpType, string helpText)
+        internal static bool BuildEffectDll(string fullSourceCode, string scriptPath, string iconPath, HelpType helpType)
         {
             string projectName = Path.GetFileNameWithoutExtension(scriptPath);
-
-            // Generate code
-            string sourceCode = ScriptWriter.FullSourceCode(scriptText, projectName, isAdjustment, subMenuname, menuName, iconPath, supportURL, effectFlags, renderingSchedule, author, majorVersion, minorVersion, description, keyWords, windowTitle, helpType, helpText);
 
             List<string> resourceFiles = new List<string>();
 
@@ -146,101 +134,14 @@ namespace PaintDotNet.Effects
                 resourceFiles.Add(helpPath);
             }
 
-            return BuildDll(projectName, resourceFiles, sourceCode, ProjectType.Effect);
+            return BuildDll(projectName, resourceFiles, fullSourceCode, true);
         }
 
-        internal static bool BuildFullPreview(string scriptText)
-        {
-            builtEffect = null;
-
-            const string FileName = "PreviewEffect";
-
-            UIElement[] UserControls = UIElement.ProcessUIControls(scriptText, ProjectType.Effect);
-
-            string SourceCode =
-                ScriptWriter.UsingPartCode(ProjectType.Effect) +
-                ScriptWriter.NamespacePart(FileName, ProjectType.Effect) +
-                ScriptWriter.EffectPart(UserControls, FileName, string.Empty, FileName, string.Empty, EffectFlags.None, EffectRenderingSchedule.DefaultTilesForCpuRendering) +
-                ScriptWriter.PropertyPart(UserControls, FileName, "FULL UI PREVIEW - Temporarily renders to canvas", HelpType.None, string.Empty, ProjectType.Effect) +
-                ScriptWriter.SetRenderPart(UserControls, true, preRenderRegex.IsMatch(scriptText)) +
-                ScriptWriter.RenderLoopPart(UserControls) +
-                ScriptWriter.UserEnteredPart(scriptText) +
-                ScriptWriter.EndPart();
-
-            Assembly assembly = CreateAssembly(SourceCode, false);
-            if (assembly == null)
-            {
-                return false;
-            }
-
-            foreach (Type type in assembly.GetTypes())
-            {
-                if (type.IsSubclassOf(typeof(PropertyBasedEffect)) && !type.IsAbstract)
-                {
-                    builtEffect = (Effect)type.GetConstructor(Type.EmptyTypes).Invoke(null);
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        internal static bool BuildUiPreview(string uiCode)
-        {
-            builtEffect = null;
-
-            const string FileName = "UiPreviewEffect";
-            uiCode = "#region UICode\r\n" + uiCode + "\r\n#endregion\r\n";
-
-            UIElement[] UserControls = UIElement.ProcessUIControls(uiCode, ProjectType.Effect);
-
-            string SourceCode =
-                ScriptWriter.UsingPartCode(ProjectType.Effect) +
-                ScriptWriter.NamespacePart(FileName, ProjectType.Effect) +
-                ScriptWriter.EffectPart(UserControls, FileName, string.Empty, "UI PREVIEW - Does NOT Render to canvas", string.Empty, EffectFlags.None, EffectRenderingSchedule.DefaultTilesForCpuRendering) +
-                ScriptWriter.PropertyPart(UserControls, FileName, string.Empty, HelpType.None, string.Empty, ProjectType.Effect) +
-                ScriptWriter.RenderLoopPart(UserControls) +
-                uiCode +
-                ScriptWriter.EmptyCode +
-                ScriptWriter.EndPart();
-
-            Assembly assembly = CreateAssembly(SourceCode, false);
-            if (assembly == null)
-            {
-                return false;
-            }
-
-            foreach (Type type in assembly.GetTypes())
-            {
-                if (type.IsSubclassOf(typeof(PropertyBasedEffect)) && !type.IsAbstract)
-                {
-                    builtEffect = (Effect)type.GetConstructor(Type.EmptyTypes).Invoke(null);
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        internal static bool BuildFileType(string fileTypeCode, bool debug)
+        internal static bool BuildFileType(string fullSourceCode, bool debug = false)
         {
             builtFileType = null;
 
-            const string projectName = "MyFileType";
-
-            UIElement[] userControls = UIElement.ProcessUIControls(fileTypeCode, ProjectType.FileType);
-
-            string sourceCode =
-                ScriptWriter.UsingPartCode(ProjectType.FileType) +
-                ScriptWriter.NamespacePart(projectName, ProjectType.FileType) +
-                ScriptWriter.FileTypePart(projectName, "\".foo\"", "\".foo\"", false, projectName) +
-                ScriptWriter.ConstructorPart(debug) +
-                ScriptWriter.PropertyPart(userControls, projectName, string.Empty, HelpType.None, string.Empty, ProjectType.FileType) +
-                ScriptWriter.FileTypePart2(userControls) +
-                ScriptWriter.UserEnteredPart(fileTypeCode) +
-                ScriptWriter.EndPart();
-
-            Assembly assembly = CreateAssembly(sourceCode, debug);
+            Assembly assembly = CreateAssembly(fullSourceCode, debug);
             if (assembly == null)
             {
                 return false;
@@ -250,7 +151,7 @@ namespace PaintDotNet.Effects
 
             foreach (Type type in assembly.GetTypes())
             {
-                if (type.IsSubclassOf(typeof(PropertyBasedFileType)) && !type.IsAbstract)
+                if (type.IsSubclassOf(typeof(FileType)) && !type.IsAbstract)
                 {
                     builtFileType = (FileType)type.GetConstructors(BindingFlags.NonPublic | BindingFlags.Instance)[0].Invoke(null);
                     return true;
@@ -260,15 +161,12 @@ namespace PaintDotNet.Effects
             return false;
         }
 
-        internal static bool BuildFileTypeDll(string scriptText, string scriptPath, string author, int majorVersion, int minorVersion, string supportURL, string description, string loadExt, string saveExt, bool supoortLayers, string title)
+        internal static bool BuildFileTypeDll(string fullSourceCode, string projectName)
         {
-            string projectName = Path.GetFileNameWithoutExtension(scriptPath);
-            string sourceCode = ScriptWriter.FullFileTypeSourceCode(scriptText, projectName, author, majorVersion, minorVersion, supportURL, description, loadExt, saveExt, supoortLayers, title);
-
-            return BuildDll(projectName, Array.Empty<string>(), sourceCode, ProjectType.FileType);
+            return BuildDll(projectName, Array.Empty<string>(), fullSourceCode, false);
         }
 
-        private static bool BuildDll(string projectName, IEnumerable<string> resources, string sourceCode, ProjectType projectType)
+        private static bool BuildDll(string projectName, IEnumerable<string> resources, string sourceCode, bool isEffect)
         {
             lineOffset = CalculateLineOffset(sourceCode);
             exceptionMsg = null;
@@ -319,7 +217,7 @@ namespace PaintDotNet.Effects
                     File.Delete(zipPath);
                 }
 
-                string pluginDirName = (projectType == ProjectType.Effect) ? "Effects" : "FileTypes";
+                string pluginDirName = isEffect ? "Effects" : "FileTypes";
 
                 // Try this in Russian for outputting Russian characters to the install batch file:
 

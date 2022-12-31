@@ -223,7 +223,7 @@ namespace PaintDotNet.Effects
 
         internal bool IsVirgin
         {
-            get => !(this.CanUndo || this.CanRedo) && this.Text.Equals(ScriptWriter.DefaultCode);
+            get => !(this.CanUndo || this.CanRedo) && this.Text.Equals(ClassicEffectWriter.DefaultCode);
         }
 
         internal bool CaretLineFrameEnabled
@@ -4794,7 +4794,9 @@ namespace PaintDotNet.Effects
                 case ProjectType.None:
                     this.Lexer = Lexer.Null;
                     break;
-                case ProjectType.Effect:
+                case ProjectType.ClassicEffect:
+                case ProjectType.GpuEffect:
+                case ProjectType.BitmapEffect:
                 case ProjectType.FileType:
                 case ProjectType.Reference:
                     this.Lexer = Lexer.Cpp;

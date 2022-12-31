@@ -77,20 +77,37 @@ namespace PaintDotNet.Effects
             get => activeTab.Path;
             set
             {
-                activeTab.Path = value;
+                if (value == activeTab.Path)
+                {
+                    return;
+                }
 
+                activeTab.Path = value;
                 activeTab.ToolTipText = (value.IsNullOrEmpty()) ? activeTab.Title : value;
 
-                if (activeTab.ProjectType == ProjectType.Effect)
+                if (!activeTab.ProjectType.IsEffect())
                 {
-                    string imagePath = Path.ChangeExtension(value, ".png");
-                    if (File.Exists(imagePath))
+                    return;
+                }
+
+                string imagePath = Path.ChangeExtension(value, ".png");
+                if (File.Exists(imagePath))
+                {
+                    activeTab.Image = UIUtil.GetBitmapFromFile(imagePath);
+                }
+                else
+                {
+                    switch (activeTab.ProjectType)
                     {
-                        activeTab.Image = UIUtil.GetBitmapFromFile(imagePath);
-                    }
-                    else
-                    {
-                        activeTab.ImageName = "Untitled";
+                        case ProjectType.ClassicEffect:
+                            activeTab.ImageName = "ClassicEffect";
+                            break;
+                        case ProjectType.GpuEffect:
+                            activeTab.ImageName = "Untitled";
+                            break;
+                        case ProjectType.BitmapEffect:
+                            activeTab.ImageName = "BitmapEffect";
+                            break;
                     }
                 }
             }
@@ -320,7 +337,7 @@ namespace PaintDotNet.Effects
             /// Do NOT USE. For Initial Tab only.
             /// </summary>
             public Tab()
-                : this("Untitled", string.Empty, ProjectType.Effect)
+                : this("Untitled", string.Empty, ProjectType.Default)
             {
                 this.Guid = Guid.Empty;
             }
@@ -331,32 +348,38 @@ namespace PaintDotNet.Effects
                 this.Margin = new Padding(0, 5, 3, 0);
                 this.AutoToolTip = false;
 
-                switch (projectType)
+                string imagePath = System.IO.Path.ChangeExtension(path, ".png");
+                if (projectType.IsEffect() && File.Exists(imagePath))
                 {
-                    case ProjectType.Effect:
-                        string imagePath = System.IO.Path.ChangeExtension(path, ".png");
-                        if (File.Exists(imagePath))
-                        {
-                            this.Image = UIUtil.GetBitmapFromFile(imagePath);
-                        }
-                        else
-                        {
+                    this.Image = UIUtil.GetBitmapFromFile(imagePath);
+                }
+                else
+                {
+                    switch (projectType)
+                    {
+                        case ProjectType.ClassicEffect:
+                            this.ImageName = "ClassicEffect";
+                            break;
+                        case ProjectType.GpuEffect:
                             this.ImageName = "Untitled";
-                        }
-                        break;
-                    case ProjectType.FileType:
-                        this.ImageName = "Save";
-                        break;
-                    case ProjectType.Reference:
-                        this.ImageName = "Book";
-                        break;
-                    case ProjectType.Shape:
-                        this.ImageName = "Shape";
-                        break;
-                    case ProjectType.None:
-                    default:
-                        this.ImageName = "PlainText";
-                        break;
+                            break;
+                        case ProjectType.BitmapEffect:
+                            this.ImageName = "BitmapEffect";
+                            break;
+                        case ProjectType.FileType:
+                            this.ImageName = "Save";
+                            break;
+                        case ProjectType.Reference:
+                            this.ImageName = "Book";
+                            break;
+                        case ProjectType.Shape:
+                            this.ImageName = "Shape";
+                            break;
+                        case ProjectType.None:
+                        default:
+                            this.ImageName = "PlainText";
+                            break;
+                    }
                 }
 
                 this.Text = title;

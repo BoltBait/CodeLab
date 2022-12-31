@@ -37,18 +37,18 @@ namespace PaintDotNet.Effects
         internal bool isAdjustment = false;
         internal string Description = "";
         internal string KeyWords = "";
-        internal EffectFlags EffectFlags = EffectFlags.None;
-        internal EffectRenderingSchedule RenderingSchedule = EffectRenderingSchedule.DefaultTilesForCpuRendering;
+        internal ScriptRenderingFlags RenderingFlags = ScriptRenderingFlags.None;
+        internal ScriptRenderingSchedule RenderingSchedule = ScriptRenderingSchedule.Default;
         internal HelpType HelpType = 0;
         internal string HelpStr = "";
         internal string RTZPath = "";
         private string FullScriptText = "";
         private string FileName = "";
         private readonly string resourcePath;
-        private readonly bool isClassic;
+        private readonly bool canCreateSln;
         private readonly bool customHelp;
 
-        internal BuildForm(string ScriptName, string ScriptText, string ScriptPath, bool isClassic)
+        internal BuildForm(string ScriptName, string ScriptText, string ScriptPath, ProjectType projectType, bool canCreateSln)
         {
             InitializeComponent();
 
@@ -69,7 +69,7 @@ namespace PaintDotNet.Effects
                 }
             }
 
-            this.isClassic = isClassic;
+            this.canCreateSln = canCreateSln;
 
             WarningLabel.Visible = false;
 
@@ -83,7 +83,7 @@ namespace PaintDotNet.Effects
             FileName = ScriptName;
 
             // Will the plugin have a User Interface
-            bool hasUI = UIElement.ProcessUIControls(ScriptText, ProjectType.Effect).Length > 0;
+            bool hasUI = UIElement.ProcessUIControls(ScriptText).Length > 0;
 
             // Preload submenu name
             Match msm = Regex.Match(ScriptText, @"//[\s-[\r\n]]*SubMenu[\s-[\r\n]]*:[\s-[\r\n]]*(?<sublabel>.*)(?=\r?\n|$)", RegexOptions.IgnoreCase);
@@ -351,19 +351,19 @@ namespace PaintDotNet.Effects
             Description = DescriptionBox.Text.Trim().Replace('\\', '/');
             KeyWords = KeyWordsBox.Text.Trim().Replace('\\', '/');
 
-            this.RenderingSchedule = EffectRenderingSchedule.DefaultTilesForCpuRendering;
+            this.RenderingSchedule = ScriptRenderingSchedule.Default;
             if (forceLegacyRoiBox.Checked)
             {
-                this.RenderingSchedule = EffectRenderingSchedule.SmallHorizontalStrips;
+                this.RenderingSchedule = ScriptRenderingSchedule.HorizontalStrips;
             }
             else if (forceSingleRenderBox.Checked)
             {
-                this.RenderingSchedule = EffectRenderingSchedule.None;
+                this.RenderingSchedule = ScriptRenderingSchedule.None;
             }
 
-            this.EffectFlags = EffectFlags.None;
-            if (ForceAliasSelectionBox.Checked) this.EffectFlags |= EffectFlags.ForceAliasedSelectionQuality;
-            if (ForceSingleThreadedBox.Checked) this.EffectFlags |= EffectFlags.SingleThreaded;
+            this.RenderingFlags = ScriptRenderingFlags.None;
+            if (ForceAliasSelectionBox.Checked) this.RenderingFlags |= ScriptRenderingFlags.AliasedSelection;
+            if (ForceSingleThreadedBox.Checked) this.RenderingFlags |= ScriptRenderingFlags.SingleThreaded;
 
             if (radioButtonNone.Checked)
             {
@@ -1133,7 +1133,7 @@ namespace PaintDotNet.Effects
                 return;
             }
 
-            string SourceCode = ScriptWriter.FullSourceCode(FullScriptText, FileName, isAdjustment, SubMenuName.Text, MenuName.Text, IconPath, URL, EffectFlags, RenderingSchedule, Author, MajorVer, MinorVer, Description, KeyWords, WindowTitle, HelpType, HelpStr);
+            string SourceCode = ClassicEffectWriter.FullSourceCode(FullScriptText, FileName, isAdjustment, SubMenuName.Text, MenuName.Text, IconPath, URL, RenderingFlags, RenderingSchedule, Author, MajorVer, MinorVer, Description, KeyWords, WindowTitle, HelpType, HelpStr);
             using (ViewSrc VSW = new ViewSrc("Full Source Code", SourceCode, true))
             {
                 VSW.ShowDialog();
@@ -1142,7 +1142,7 @@ namespace PaintDotNet.Effects
 
         private void GenSlnButton_Click(object sender, EventArgs e)
         {
-            if (!this.isClassic)
+            if (!this.canCreateSln)
             {
                 FlexibleMessageBox.Show("Due to technical reasons, this feature is only available on classic installations of Paint.NET.", "Generate Visual Studio Solution", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
@@ -1167,7 +1167,7 @@ namespace PaintDotNet.Effects
 
                 if (fbd.ShowDialog() == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
                 {
-                    string SourceCode = ScriptWriter.FullSourceCode(FullScriptText, FileName, isAdjustment, SubMenuName.Text, MenuName.Text, IconPath, URL, EffectFlags, RenderingSchedule, Author, MajorVer, MinorVer, Description, KeyWords, WindowTitle, HelpType, HelpStr);
+                    string SourceCode = ClassicEffectWriter.FullSourceCode(FullScriptText, FileName, isAdjustment, SubMenuName.Text, MenuName.Text, IconPath, URL, RenderingFlags, RenderingSchedule, Author, MajorVer, MinorVer, Description, KeyWords, WindowTitle, HelpType, HelpStr);
                     string slnFilePath = Solution.Generate(fbd.SelectedPath, FileName, SourceCode, IconPath, resourcePath);
 
                     if (slnFilePath != null)
@@ -1201,14 +1201,5 @@ namespace PaintDotNet.Effects
                 }
             }
         }
-    }
-
-    internal enum HelpType
-    {
-        None,
-        URL,
-        PlainText,
-        RichText,
-        Custom
     }
 }
