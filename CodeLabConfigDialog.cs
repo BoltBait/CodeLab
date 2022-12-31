@@ -1215,15 +1215,15 @@ namespace PaintDotNet.Effects
 
             bool buildSucceeded = false;
 #if FASTDEBUG
-            const bool canBuildSln = false;
+            const bool canCreateSln = false;
 #else
-            bool canBuildSln = this.Services.GetService<IAppInfoService>().InstallType == AppInstallType.Classic;
+            bool canCreateSln = this.Services.GetService<IAppInfoService>().InstallType == AppInstallType.Classic;
 #endif
 
             switch (tabStrip1.SelectedTabProjType)
             {
                 case ProjectType.ClassicEffect:
-                    using (BuildForm buildForm = new BuildForm(fileName, txtCode.Text, FullScriptPath, ProjectType.ClassicEffect, canBuildSln))
+                    using (BuildForm buildForm = new BuildForm(fileName, txtCode.Text, FullScriptPath, ProjectType.ClassicEffect, canCreateSln))
                     {
                         if (buildForm.ShowDialog() != DialogResult.OK)
                         {
@@ -1241,7 +1241,7 @@ namespace PaintDotNet.Effects
 
                     break;
                 case ProjectType.BitmapEffect:
-                    using (BuildForm buildForm = new BuildForm(fileName, txtCode.Text, FullScriptPath, ProjectType.BitmapEffect, canBuildSln))
+                    using (BuildForm buildForm = new BuildForm(fileName, txtCode.Text, FullScriptPath, ProjectType.BitmapEffect, canCreateSln))
                     {
                         if (buildForm.ShowDialog() != DialogResult.OK)
                         {
@@ -1259,7 +1259,7 @@ namespace PaintDotNet.Effects
 
                     break;
                 case ProjectType.FileType:
-                    using (BuildFileTypeDialog buildFileTypeDialog = new BuildFileTypeDialog(fileName, txtCode.Text, canBuildSln))
+                    using (BuildFileTypeDialog buildFileTypeDialog = new BuildFileTypeDialog(fileName, txtCode.Text, canCreateSln))
                     {
                         if (buildFileTypeDialog.ShowDialog() != DialogResult.OK)
                         {

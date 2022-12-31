@@ -45,10 +45,10 @@ namespace PaintDotNet.Effects
         private string FullScriptText = "";
         private string FileName = "";
         private readonly string resourcePath;
-        private readonly bool canBuildSln;
+        private readonly bool canCreateSln;
         private readonly bool customHelp;
 
-        internal BuildForm(string ScriptName, string ScriptText, string ScriptPath, ProjectType projectType, bool canBuildSln)
+        internal BuildForm(string ScriptName, string ScriptText, string ScriptPath, ProjectType projectType, bool canCreateSln)
         {
             InitializeComponent();
 
@@ -69,7 +69,7 @@ namespace PaintDotNet.Effects
                 }
             }
 
-            this.canBuildSln = canBuildSln;
+            this.canCreateSln = canCreateSln;
 
             WarningLabel.Visible = false;
 
@@ -1142,7 +1142,7 @@ namespace PaintDotNet.Effects
 
         private void GenSlnButton_Click(object sender, EventArgs e)
         {
-            if (!this.canBuildSln)
+            if (!this.canCreateSln)
             {
                 FlexibleMessageBox.Show("Due to technical reasons, this feature is only available on classic installations of Paint.NET.", "Generate Visual Studio Solution", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
