@@ -991,7 +991,7 @@ namespace PaintDotNet.Effects
                 FileName = "Untitled";
                 FullScriptPath = "";
 
-                if (tabStrip1.SelectedTabIsInitial && tabStrip1.SelectedTabProjType == ProjectType.ClassicEffect && txtCode.IsVirgin)
+                if (tabStrip1.SelectedTabIsInitial && tabStrip1.SelectedTabProjType == ProjectType.Default && txtCode.IsVirgin)
                 {
                     UpdateTabProperties();
                 }
