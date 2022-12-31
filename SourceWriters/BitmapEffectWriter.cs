@@ -132,14 +132,16 @@ namespace PaintDotNet.Effects
                 renderInfo += "         renderInfo.Flags = " + flags.Join(" | ") + ";\r\n";
             }
 
-            if (renderingSchedule != ScriptRenderingSchedule.SquareTiles)
+            if (renderingSchedule != ScriptRenderingSchedule.Default)
             {
                 string schedule = renderingSchedule switch
                 {
                     ScriptRenderingSchedule.None => "BitmapEffectRenderingSchedule.None",
                     ScriptRenderingSchedule.HorizontalStrips => "BitmapEffectRenderingSchedule.HorizontalStrips",
-                    _ => "BitmapEffectRenderingSchedule.SquareTiles",
+                    ScriptRenderingSchedule.SquareTiles => "BitmapEffectRenderingSchedule.SquareTiles",
+                    _ => "BitmapEffectRenderingSchedule.SquareTiles"
                 };
+
                 renderInfo += "         renderInfo.Schedule = " + schedule + ";\r\n";
             }
 
