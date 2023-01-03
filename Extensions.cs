@@ -556,6 +556,21 @@ namespace PaintDotNet.Effects
             return member.IsDefined(typeof(ObsoleteAttribute), false);
         }
 
+        internal static bool IsCompilerGenerated(this MemberInfo member)
+        {
+            return member.IsDefined(typeof(CompilerGeneratedAttribute), false);
+        }
+
+        internal static bool IsVisibleToReflectedType(this MethodInfo method)
+        {
+            return method.IsPublic || method.IsFamily || method.DeclaringType == method.ReflectedType;
+        }
+
+        internal static bool IsVisibleToReflectedType(this PropertyInfo property)
+        {
+            return property.GetMethod.IsPublic || property.GetMethod.IsFamily || property.DeclaringType == property.ReflectedType;
+        }
+
         internal static bool IsDelegate(this Type type)
         {
             return typeof(Delegate).IsAssignableFrom(type);

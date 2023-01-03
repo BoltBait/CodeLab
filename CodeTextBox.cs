@@ -1216,7 +1216,7 @@ namespace PaintDotNet.Effects
                 {
                     string methodName = this.GetWordFromPosition(openParenPos);
                     IEnumerable<MethodInfo> methodMatches = methods
-                        .Where(m => !m.IsVirtual && m.Name.Equals(methodName, StringComparison.Ordinal));
+                        .Where(m => m.Name.Equals(methodName, StringComparison.Ordinal));
 
                     methods = methodMatches.Any()
                         ? new[] { GetOverload(methodMatches, openParenPos) }
@@ -1394,7 +1394,6 @@ namespace PaintDotNet.Effects
             }
 
             IEnumerable<string> paramNames = Intelli.UserScript.GetMethods(userScriptBindingFlags)
-                .Where(m => !m.IsVirtual)
                 .SelectMany(m => m.GetParameters())
                 .Select(p => p.Name)
                 .Distinct();

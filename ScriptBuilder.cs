@@ -35,7 +35,7 @@ namespace PaintDotNet.Effects
         private static int lineOffset;
         private static string exceptionMsg;
 
-        private static readonly IEnumerable<MetadataReference> references = Intelli.ReferenceAssemblies.Select(a => MetadataReference.CreateFromFile(a.Location));
+        private static IEnumerable<MetadataReference> references = Array.Empty<MetadataReference>();
         private static readonly CSharpParseOptions parseOptions = CSharpParseOptions.Default
             .WithLanguageVersion(LanguageVersion.CSharp11); // https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/configure-language-version
         private static CSharpCompilationOptions compilationOptions = new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary, allowUnsafe: true, optimizationLevel: OptimizationLevel.Release, deterministic: false);
@@ -68,6 +68,11 @@ namespace PaintDotNet.Effects
             }
         }
         #endregion
+
+        internal static void UpdateRefernces(IEnumerable<string> dllFilePaths)
+        {
+            references = dllFilePaths.Select(a => MetadataReference.CreateFromFile(a));
+        }
 
         internal static void SetWarningLevel(int level)
         {

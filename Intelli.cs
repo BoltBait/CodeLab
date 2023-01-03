@@ -36,7 +36,6 @@ namespace PaintDotNet.Effects
         internal static Dictionary<string, string> Snippets { get; }
         internal static Dictionary<string, string> TypeAliases { get; }
         internal static IEnumerable<string> Keywords { get; }
-        internal static IEnumerable<Assembly> ReferenceAssemblies { get; private set; }
         internal static IEnumerable<string> PdnAssemblyNames { get; private set; }
         internal static Type UserScript { get; set; }
         internal static string ClassList { get; private set; }
@@ -96,10 +95,13 @@ namespace PaintDotNet.Effects
                 "PaintDotNet.Fundamentals",
                 "PaintDotNet.ObjectModel",
                 "PaintDotNet.Primitives",
-                "PaintDotNet.PropertySystem",
-                "PaintDotNet.Windows",
-                "PaintDotNet.Windows.Core",
-                "PaintDotNet.Windows.Framework"
+                "PaintDotNet.PropertySystem"
+            };
+
+            List<string> assemblyBlackList = new List<string>
+            {
+                "PresentationFramework",
+                "WindowsBase"
             };
 
             switch (projectType)
@@ -113,12 +115,21 @@ namespace PaintDotNet.Effects
                 case ProjectType.BitmapEffect:
                     pdnAssemblyNames.Add("PaintDotNet.Effects.Core");
                     pdnAssemblyNames.Add("PaintDotNet.Effects.Gpu");
+                    pdnAssemblyNames.Add("PaintDotNet.Windows");
+                    pdnAssemblyNames.Add("PaintDotNet.Windows.Core");
+                    pdnAssemblyNames.Add("PaintDotNet.Windows.Framework");
+
+                    assemblyBlackList.Add("System.Drawing.Common");
+                    assemblyBlackList.Add("System.Drawing.Primitives");
                     break;
                 case ProjectType.Reference:
                     pdnAssemblyNames.Add("PaintDotNet.Effects");
                     pdnAssemblyNames.Add("PaintDotNet.Effects.Core");
                     pdnAssemblyNames.Add("PaintDotNet.Effects.Gpu");
                     pdnAssemblyNames.Add("PaintDotNet.Effects.Legacy");
+                    pdnAssemblyNames.Add("PaintDotNet.Windows");
+                    pdnAssemblyNames.Add("PaintDotNet.Windows.Core");
+                    pdnAssemblyNames.Add("PaintDotNet.Windows.Framework");
                     break;
             }
 
@@ -126,9 +137,12 @@ namespace PaintDotNet.Effects
                 .OrderBy(x => x, StringComparer.Ordinal)
                 .ToImmutableArray();
 
-            ReferenceAssemblies = sdkAssemblies
+            ImmutableArray<Assembly> assemblies = sdkAssemblies
+                .Where(a => !assemblyBlackList.Contains(a.GetName().Name, StringComparer.Ordinal))
                 .Concat(allPdnAssemblies.Where(a => pdnAssemblyNames.Contains(a.GetName().Name, StringComparer.Ordinal)))
                 .ToImmutableArray();
+
+            ScriptBuilder.UpdateRefernces(assemblies.Select(a => a.Location));
 
             AllTypes = new Dictionary<string, Type>(aliasTypes);
             AutoCompleteTypes = new Dictionary<string, Type>(aliasTypes);
@@ -161,12 +175,13 @@ namespace PaintDotNet.Effects
             string[] namespaceWhiteList =
             {
                 "Microsoft.Win32", "PaintDotNet", "PaintDotNet.AppModel", "PaintDotNet.Effects", "PaintDotNet.Imaging",
+                "PaintDotNet.Rendering", "PaintDotNet.Direct2D1", "PaintDotNet.Direct2D1.Effects", "PaintDotNet.Effects.Gpu",
                 "System", "System.Collections.Generic", "System.Diagnostics", "System.Drawing", "System.Drawing.Drawing2D",
                 "System.Drawing.Text", "System.IO", "System.IO.Compression", "System.Text.RegularExpressions"
             };
 
             // Add the referenced assembly types
-            foreach (Assembly a in ReferenceAssemblies)
+            foreach (Assembly a in assemblies)
             {
                 foreach (Type type in a.GetExportedTypes())
                 {
@@ -208,6 +223,13 @@ namespace PaintDotNet.Effects
             }
 
             extMethods = extMethodsList;
+
+            if (projectType.Is5Effect())
+            {
+                // removed to prevent name collision with Environment property
+                AllTypes.Remove(nameof(Environment));
+                AutoCompleteTypes.Remove(nameof(Environment));
+            }
 
             foreach (KeyValuePair<string, Type> kvp in AllTypes)
             {
