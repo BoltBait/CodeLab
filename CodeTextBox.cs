@@ -838,13 +838,13 @@ namespace PaintDotNet.Effects
             this.Indicators[Indicator.BraceColor0].Style = IndicatorStyle.TextFore;
             this.Indicators[Indicator.BraceColor0].ForeColor = Color.HotPink;
             this.Indicators[Indicator.BraceColor1].Style = IndicatorStyle.TextFore;
-            this.Indicators[Indicator.BraceColor1].ForeColor = Color.Orchid;
+            this.Indicators[Indicator.BraceColor1].ForeColor = Color.DarkOrchid;
             this.Indicators[Indicator.BraceColor2].Style = IndicatorStyle.TextFore;
             this.Indicators[Indicator.BraceColor2].ForeColor = Color.Cyan;
             this.Indicators[Indicator.BraceColor3].Style = IndicatorStyle.TextFore;
             this.Indicators[Indicator.BraceColor3].ForeColor = Color.Gold;
             this.Indicators[Indicator.BraceColor4].Style = IndicatorStyle.TextFore;
-            this.Indicators[Indicator.BraceColor4].ForeColor = Color.Lime;
+            this.Indicators[Indicator.BraceColor4].ForeColor = Color.PaleGreen;
 
             // Vertical indent guides
             this.IndentationGuides = IndentView.None;
