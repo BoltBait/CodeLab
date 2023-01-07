@@ -69,7 +69,7 @@ namespace PaintDotNet.Effects
         }
         #endregion
 
-        internal static void UpdateRefernces(IEnumerable<string> dllFilePaths)
+        internal static void SetReferences(IEnumerable<string> dllFilePaths)
         {
             references = dllFilePaths.Select(a => MetadataReference.CreateFromFile(a));
         }

@@ -142,7 +142,7 @@ namespace PaintDotNet.Effects
                 .Concat(allPdnAssemblies.Where(a => pdnAssemblyNames.Contains(a.GetName().Name, StringComparer.Ordinal)))
                 .ToImmutableArray();
 
-            ScriptBuilder.UpdateRefernces(assemblies.Select(a => a.Location));
+            ScriptBuilder.SetReferences(assemblies.Select(a => a.Location));
 
             AllTypes = new Dictionary<string, Type>(aliasTypes);
             AutoCompleteTypes = new Dictionary<string, Type>(aliasTypes);
