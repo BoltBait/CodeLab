@@ -441,52 +441,57 @@ namespace PaintDotNet.Effects
                     unFilteredItems.Add(new IntelliBoxItem(para, para, toolTip, IntelliType.Parameter));
                 }
 
-                MemberInfo[] members = Intelli.UserScript.GetMembers(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
-                foreach (MemberInfo memberInfo in members)
-                {
-                    if (memberInfo.IsObsolete())
-                    {
-                        continue;
-                    }
+                IEnumerable<IGrouping<MemberTypes, MemberInfo>> userScriptMembers = Intelli.UserScript
+                    .GetMembers(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
+                    .Where(m => !m.IsObsolete() && !m.IsCompilerGenerated())
+                    .GroupBy(m => m.MemberType);
 
-                    switch (memberInfo.MemberType)
+                foreach (IGrouping<MemberTypes, MemberInfo> group in userScriptMembers)
+                {
+                    switch (group.Key)
                     {
                         case MemberTypes.Method:
-                            MethodInfo methodInfo = (MethodInfo)memberInfo;
-                            if (methodInfo.IsSpecialName || methodInfo.DeclaringType != Intelli.UserScript ||
-                                methodInfo.Name.Equals("Render", StringComparison.Ordinal) || methodInfo.Name.Equals("PreRender", StringComparison.Ordinal))
-                            {
-                                continue;
-                            }
+                            group.OfType<MethodInfo>()
+                                .Where(m =>
+                                {
+                                    return !(m.IsSpecialName ||
+                                        m.IsVirtual ||
+                                        !m.IsVisibleToReflectedType() ||
+                                        m.Name.Equals("Render", StringComparison.Ordinal) ||
+                                        m.Name.Equals("PreRender", StringComparison.Ordinal) ||
+                                        m.Name.Equals("SetRenderInfo", StringComparison.Ordinal));
+                                })
+                                .ForEach(m => AddMethod(m, false));
 
-                            AddMethod(methodInfo, false);
                             break;
                         case MemberTypes.Property:
-                            PropertyInfo property = (PropertyInfo)memberInfo;
-                            if (property.Name.Equals("SetRenderInfoCalled", StringComparison.Ordinal) || property.Name.Equals("__DebugMsgs", StringComparison.Ordinal) ||
-                                property.IsIndexer())
-                            {
-                                continue;
-                            }
+                            group.OfType<PropertyInfo>()
+                                .Where(p =>
+                                {
+                                    return !(!p.IsVisibleToReflectedType() ||
+                                        p.Name.Equals("__DebugMsgs", StringComparison.Ordinal) ||
+                                        p.IsIndexer());
+                                })
+                                .DistinctBy(p => p.Name)
+                                .ForEach(p => AddProperty(p));
 
-                            AddProperty(property);
                             break;
                         case MemberTypes.Event:
-                            EventInfo eventInfo = (EventInfo)memberInfo;
+                            group.OfType<EventInfo>()
+                                .ForEach(e => AddEvent(e));
 
-                            AddEvent(eventInfo);
                             break;
                         case MemberTypes.Field:
-                            if (memberInfo.Name.Equals("RandomNumber", StringComparison.Ordinal) || memberInfo.Name.Equals("instanceSeed", StringComparison.Ordinal) ||
-                                memberInfo.Name.EndsWith("_BackingField", StringComparison.Ordinal) ||
-                                memberInfo.Name.Equals("__listener", StringComparison.Ordinal) || memberInfo.Name.Equals("__debugWriter", StringComparison.Ordinal))
-                            {
-                                continue;
-                            }
+                            group.OfType<FieldInfo>()
+                                .Where(f =>
+                                {
+                                    return !(f.Name.Equals("RandomNumber", StringComparison.Ordinal) ||
+                                        f.Name.Equals("instanceSeed", StringComparison.Ordinal) ||
+                                        f.Name.Equals("__listener", StringComparison.Ordinal) ||
+                                        f.Name.Equals("__debugWriter", StringComparison.Ordinal));
+                                })
+                                .ForEach(f => AddField(f));
 
-                            FieldInfo field = (FieldInfo)memberInfo;
-
-                            AddField(field);
                             break;
                     }
                 }
