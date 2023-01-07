@@ -303,7 +303,7 @@ namespace PaintDotNet.Effects
                 "abstract", "as", "base", "break", "case", "catch", "checked", "class", "const", "continue",
                 "default", "delegate", "do", "enum", "event", "explicit", "extern", "false", "finally", "fixed",
                 "get", "goto", "implicit", "in", "interface", "internal", "is", "lock", "new", "not", "null",
-                "object", "operator", "out", "override", "params", "partial", "private", "protected", "public",
+                "operator", "out", "override", "params", "partial", "private", "protected", "public",
                 "readonly", "ref", "return", "stackalloc", "static", "sealed", "set", "sizeof", "struct",
                 "this", "throw", "true", "try", "typeof", "unchecked", "unsafe", "var", "virtual", "void", "volatile",
                 "with", "#endif", "#endregion"
