@@ -1,11 +1,14 @@
-﻿using System;
+﻿using PaintDotNet.Controls;
+using PaintDotNet.Direct2D1;
+using PaintDotNet.Rendering;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 
 namespace PaintDotNet.Effects
 {
-    internal sealed class IndicatorBar : Control
+    internal sealed class IndicatorBar : Direct2DControl
     {
         private Rectangle upButtonRect;
         private Rectangle downButtonRect;
@@ -456,55 +459,58 @@ namespace PaintDotNet.Effects
             this.Invalidate();
         }
 
-        protected override void OnPaint(PaintEventArgs e)
+        protected override void OnRender(Direct2D1.IDeviceContext deviceContext, RectFloat clipRect)
         {
-            base.OnPaint(e);
+            base.OnRender(deviceContext, clipRect);
 
-            Point[] upArrow = new Point[]
+            Point2Float[] upArrow =
             {
-                new Point(upButtonRect.Width / 2, upButtonRect.Height / 3),
-                new Point(upButtonRect.Width * 4 / 5, upButtonRect.Height * 2 / 3),
-                new Point(upButtonRect.Width / 5, upButtonRect.Height * 2 / 3),
+                new Point2Int32(upButtonRect.Width / 2, upButtonRect.Height / 3),
+                new Point2Int32(upButtonRect.Width * 4 / 5, upButtonRect.Height * 2 / 3),
+                new Point2Int32(upButtonRect.Width / 5, upButtonRect.Height * 2 / 3),
             };
 
-            Point[] downArrow = new Point[]
+            Point2Float[] downArrow =
             {
-                new Point(downButtonRect.Width / 5 + 1, downButtonRect.Top + downButtonRect.Height / 3),
-                new Point(downButtonRect.Width * 4 / 5, downButtonRect.Top + downButtonRect.Height / 3),
-                new Point(downButtonRect.Width / 2, downButtonRect.Top - 1 + downButtonRect.Height * 2 / 3)
+                new Point2Int32(downButtonRect.Width / 5 + 1, downButtonRect.Top + downButtonRect.Height / 3),
+                new Point2Int32(downButtonRect.Width * 4 / 5, downButtonRect.Top + downButtonRect.Height / 3),
+                new Point2Int32(downButtonRect.Width / 2, downButtonRect.Top - 1 + downButtonRect.Height * 2 / 3)
             };
 
-            using (SolidBrush brush = new SolidBrush(posTrackColor))
+            using (ISolidColorBrush brush = deviceContext.CreateSolidColorBrush(posTrackColor))
             {
-                e.Graphics.FillRectangle(brush, e.ClipRectangle);
+                deviceContext.FillRectangle(clipRect, brush);
 
                 brush.Color = upButtonClick ? arrowColorClick : upButtonHover ? arrowColorHover : arrowColor;
-                e.Graphics.FillPolygon(brush, upArrow);
+                deviceContext.FillPolygon(upArrow, brush);
 
                 brush.Color = downButtonClick ? arrowColorClick : downButtonHover ? arrowColorHover : arrowColor;
-                e.Graphics.FillPolygon(brush, downArrow);
+                deviceContext.FillPolygon(downArrow, brush);
 
                 brush.Color = posSliderClick ? posColorClick : posSliderHover ? posColorHover : posColor;
-                e.Graphics.FillRectangle(brush, new Rectangle(posSliderRect.Width / 4, posSliderRect.Y, posSliderRect.Width - posSliderRect.Width / 2, posSliderRect.Height));
+                RectInt32 posRect = new RectInt32(posSliderRect.Width / 4, posSliderRect.Y, posSliderRect.Width - posSliderRect.Width / 2, posSliderRect.Height);
+                deviceContext.FillRectangle(posRect, brush);
             }
 
-            float dpiY = e.Graphics.DpiY / 96f;
+            float dpiY = deviceContext.Dpi.Y / 96f;
 
-            using (Pen caretPen = new Pen(caretColor, 2f * dpiY))
+            using (ISolidColorBrush caretBrush = deviceContext.CreateSolidColorBrush(caretColor))
             {
                 float curLineVPos = (float)(caret + 0) / maximum * posTrackRect.Height + posTrackRect.Top;
                 curLineVPos = curLineVPos.Clamp(posTrackRect.Top * dpiY, posTrackRect.Bottom * dpiY);
-                e.Graphics.DrawLine(caretPen, posTrackRect.Left, curLineVPos, posTrackRect.Right, curLineVPos);
+                deviceContext.DrawLine(posTrackRect.Left, curLineVPos, posTrackRect.Right, curLineVPos, caretBrush, 2f * dpiY);
             }
 
-            using (Pen indicatorPen = new Pen(matchColor, 4f * dpiY))
+            using (ISolidColorBrush indicatorPen = deviceContext.CreateSolidColorBrush(matchColor))
             {
+                float strokeWidth = 4f * dpiY;
+
                 indicatorPen.Color = bookmarkColor;
                 foreach (int bookmark in this.bookmarks)
                 {
                     float bkmkVPos = (float)bookmark / maximum * posTrackRect.Height + posTrackRect.Top;
                     bkmkVPos = bkmkVPos.Clamp(posTrackRect.Top, posTrackRect.Bottom);
-                    e.Graphics.DrawLine(indicatorPen, posTrackRect.Left + 6f * dpiY, bkmkVPos, posTrackRect.Right - 6f * dpiY, bkmkVPos);
+                    deviceContext.DrawLine(posTrackRect.Left + 6f * dpiY, bkmkVPos, posTrackRect.Right - 6f * dpiY, bkmkVPos, indicatorPen, strokeWidth);
                 }
 
                 indicatorPen.Color = matchColor;
@@ -512,7 +518,7 @@ namespace PaintDotNet.Effects
                 {
                     float matchLineVPos = (float)match / maximum * posTrackRect.Height + posTrackRect.Top;
                     matchLineVPos = matchLineVPos.Clamp(posTrackRect.Top, posTrackRect.Bottom);
-                    e.Graphics.DrawLine(indicatorPen, posTrackRect.Left, matchLineVPos, posTrackRect.Left + 4f * dpiY, matchLineVPos);
+                    deviceContext.DrawLine(posTrackRect.Left, matchLineVPos, posTrackRect.Left + 4f * dpiY, matchLineVPos, indicatorPen, strokeWidth);
                 }
 
                 indicatorPen.Color = warningColor;
@@ -520,7 +526,7 @@ namespace PaintDotNet.Effects
                 {
                     float warnLineVPos = (float)error / maximum * posTrackRect.Height + posTrackRect.Top;
                     warnLineVPos = warnLineVPos.Clamp(posTrackRect.Top, posTrackRect.Bottom);
-                    e.Graphics.DrawLine(indicatorPen, posTrackRect.Right - 4f * dpiY, warnLineVPos, posTrackRect.Right, warnLineVPos);
+                    deviceContext.DrawLine(posTrackRect.Right - 4f * dpiY, warnLineVPos, posTrackRect.Right, warnLineVPos, indicatorPen, strokeWidth);
                 }
 
                 indicatorPen.Color = errorColor;
@@ -528,7 +534,7 @@ namespace PaintDotNet.Effects
                 {
                     float errLineVPos = (float)error / maximum * posTrackRect.Height + posTrackRect.Top;
                     errLineVPos = errLineVPos.Clamp(posTrackRect.Top, posTrackRect.Bottom);
-                    e.Graphics.DrawLine(indicatorPen, posTrackRect.Right - 4f * dpiY, errLineVPos, posTrackRect.Right, errLineVPos);
+                    deviceContext.DrawLine(posTrackRect.Right - 4f * dpiY, errLineVPos, posTrackRect.Right, errLineVPos, indicatorPen, strokeWidth);
                 }
             }
         }
