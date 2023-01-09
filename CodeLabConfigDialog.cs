@@ -82,10 +82,12 @@ namespace PaintDotNet.Effects
 
 #if !RELEASE
             ToolStripMenuItem[] items = Enum.GetValues<ProjectType>()
+                .Distinct() // ProjectType.Default creates a duplicate
                 .Select(x => new ToolStripMenuItem(x.ToString(), null, (sender, e) => tabStrip1.NewTab(FileName, FullScriptPath, Enum.Parse<ProjectType>(((ToolStripMenuItem)sender).Text))))
                 .ToArray();
 
             ToolStripDropDownButton newDocTypeChooser = new ToolStripDropDownButton();
+            ((ToolStripDropDownMenu)newDocTypeChooser.DropDown).ShowImageMargin = false;
             newDocTypeChooser.DropDownItems.AddRange(items);
             toolStrip1.Items.Insert(1, newDocTypeChooser);
 #endif
