@@ -41,6 +41,7 @@ namespace PaintDotNet.Effects
         private Color bookmarkColor;
 
         private int posClicked;
+        private int posSliderClicked;
         private readonly Timer arrowTimer = new Timer();
         private int trackDirection;
 
@@ -351,9 +352,9 @@ namespace PaintDotNet.Effects
                 posTrackHover = false;
             }
 
-            if (posSliderClick && posTrackRect.Contains(0, e.Y))
+            if (posSliderClick)
             {
-                posSliderRect.Y -= posClicked - e.Y;
+                posSliderRect.Y = e.Y - posSliderClicked;
 
                 if (posSliderRect.Top < posTrackRect.Top)
                 {
@@ -364,7 +365,6 @@ namespace PaintDotNet.Effects
                     posSliderRect.Y = posTrackRect.Bottom - posSliderRect.Height;
                 }
 
-                posClicked = e.Y;
                 Refresh(); // Need to redraw very quickly here. Refresh() rather than Invalidate().
                 OnScroll(new ScrollEventArgs(ScrollEventType.ThumbTrack, this.Value));
             }
@@ -424,7 +424,7 @@ namespace PaintDotNet.Effects
             else if (posSliderRect.Contains(e.Location))
             {
                 posSliderClick = true;
-                posClicked = e.Y;
+                posSliderClicked = e.Y - posSliderRect.Top;
                 this.Invalidate();
             }
             else if (posTrackRect.Contains(e.Location))
