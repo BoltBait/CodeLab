@@ -1,19 +1,19 @@
 ﻿using PaintDotNet.Controls;
 using PaintDotNet.Direct2D1;
+using PaintDotNet.Imaging;
 using PaintDotNet.Rendering;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Windows.Forms;
 
 namespace PaintDotNet.Effects
 {
     internal sealed class IndicatorBar : Direct2DControl
     {
-        private Rectangle upButtonRect;
-        private Rectangle downButtonRect;
-        private Rectangle posSliderRect;
-        private Rectangle posTrackRect;
+        private RectInt32 upButtonRect;
+        private RectInt32 downButtonRect;
+        private RectInt32 posSliderRect;
+        private RectInt32 posTrackRect;
 
         private bool upButtonHover;
         private bool downButtonHover;
@@ -25,20 +25,20 @@ namespace PaintDotNet.Effects
         private bool posSliderClick;
         private bool posTrackClick;
 
-        private Color arrowColor;
-        private Color arrowColorHover;
-        private Color arrowColorClick;
+        private ColorBgra32 arrowColor;
+        private ColorBgra32 arrowColorHover;
+        private ColorBgra32 arrowColorClick;
 
-        private Color posTrackColor;
-        private Color posColor;
-        private Color posColorHover;
-        private Color posColorClick;
+        private ColorBgra32 posTrackColor;
+        private ColorBgra32 posColor;
+        private ColorBgra32 posColorHover;
+        private ColorBgra32 posColorClick;
 
-        private Color caretColor;
-        private Color errorColor;
-        private Color warningColor;
-        private Color matchColor;
-        private Color bookmarkColor;
+        private ColorBgra32 caretColor;
+        private ColorBgra32 errorColor;
+        private ColorBgra32 warningColor;
+        private ColorBgra32 matchColor;
+        private ColorBgra32 bookmarkColor;
 
         private int posClicked;
         private int posSliderClicked;
@@ -75,38 +75,38 @@ namespace PaintDotNet.Effects
                 switch (value)
                 {
                     case Theme.Dark:
-                        arrowColor = Color.FromArgb(153, 153, 153);
-                        arrowColorHover = Color.FromArgb(28, 151, 234);
-                        arrowColorClick = Color.FromArgb(0, 122, 204);
+                        arrowColor = ColorBgra32FromRgb(153, 153, 153);
+                        arrowColorHover = ColorBgra32FromRgb(28, 151, 234);
+                        arrowColorClick = ColorBgra32FromRgb(0, 122, 204);
 
-                        posTrackColor = Color.FromArgb(62, 62, 66);
-                        posColor = Color.FromArgb(104, 104, 104);
-                        posColorHover = Color.FromArgb(158, 158, 158);
-                        posColorClick = Color.FromArgb(239, 235, 239);
+                        posTrackColor = ColorBgra32FromRgb(62, 62, 66);
+                        posColor = ColorBgra32FromRgb(104, 104, 104);
+                        posColorHover = ColorBgra32FromRgb(158, 158, 158);
+                        posColorClick = ColorBgra32FromRgb(239, 235, 239);
 
-                        caretColor = Color.Gainsboro;
-                        errorColor = Color.FromArgb(252, 62, 54);
-                        warningColor = Color.FromArgb(149, 219, 125);
-                        matchColor = Color.Orange;
-                        bookmarkColor = Color.DeepSkyBlue;
+                        caretColor = Colors.Gainsboro;
+                        errorColor = ColorBgra32FromRgb(252, 62, 54);
+                        warningColor = ColorBgra32FromRgb(149, 219, 125);
+                        matchColor = Colors.Orange;
+                        bookmarkColor = Colors.DeepSkyBlue;
                         break;
 
                     case Theme.Light:
                     default:
-                        arrowColor = Color.FromArgb(134, 137, 153);
-                        arrowColorHover = Color.FromArgb(28, 151, 234);
-                        arrowColorClick = Color.FromArgb(0, 122, 204);
+                        arrowColor = ColorBgra32FromRgb(134, 137, 153);
+                        arrowColorHover = ColorBgra32FromRgb(28, 151, 234);
+                        arrowColorClick = ColorBgra32FromRgb(0, 122, 204);
 
-                        posTrackColor = Color.FromArgb(245, 245, 245);
-                        posColor = Color.FromArgb(194, 195, 201);
-                        posColorHover = Color.FromArgb(104, 104, 104);
-                        posColorClick = Color.FromArgb(91, 91, 91);
+                        posTrackColor = ColorBgra32FromRgb(245, 245, 245);
+                        posColor = ColorBgra32FromRgb(194, 195, 201);
+                        posColorHover = ColorBgra32FromRgb(104, 104, 104);
+                        posColorClick = ColorBgra32FromRgb(91, 91, 91);
 
-                        caretColor = Color.FromArgb(0, 0, 205);
-                        errorColor = Color.Red;
-                        warningColor = Color.Green;
-                        matchColor = Color.FromArgb(246, 185, 77);
-                        bookmarkColor = Color.DeepSkyBlue;
+                        caretColor = ColorBgra32FromRgb(0, 0, 205);
+                        errorColor = Colors.Red;
+                        warningColor = Colors.Green;
+                        matchColor = ColorBgra32FromRgb(246, 185, 77);
+                        bookmarkColor = Colors.DeepSkyBlue;
                         break;
                 }
             }
@@ -253,12 +253,12 @@ namespace PaintDotNet.Effects
             int width = SystemInformation.VerticalScrollBarWidth;
             base.Width = width;
 
-            this.upButtonRect.Size = new Size(width, width);
-            this.downButtonRect.Size = new Size(width, width);
+            this.upButtonRect.Size = new SizeInt32(width, width);
+            this.downButtonRect.Size = new SizeInt32(width, width);
 
             this.posSliderRect.Width = width;
 
-            this.posTrackRect = Rectangle.FromLTRB(this.ClientRectangle.Left, upButtonRect.Bottom + 1, this.ClientRectangle.Right, downButtonRect.Top - 1);
+            this.posTrackRect = RectInt32.FromEdges(this.ClientRectangle.Left, upButtonRect.Bottom + 1, this.ClientRectangle.Right, upButtonRect.Bottom + 10);
 
             this.arrowTimer.Enabled = false;
             this.arrowTimer.Interval = 500;
@@ -606,6 +606,11 @@ namespace PaintDotNet.Effects
 
             Invalidate();
             OnScroll(new ScrollEventArgs(scrollType, this.Value));
+        }
+
+        private static ColorBgra32 ColorBgra32FromRgb(byte r, byte g, byte b)
+        {
+            return ColorBgra32.FromBgra(b, g, r, byte.MaxValue);
         }
     }
 }
