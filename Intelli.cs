@@ -100,6 +100,7 @@ namespace PaintDotNet.Effects
 
             List<string> assemblyBlackList = new List<string>
             {
+                "PresentationCore",
                 "PresentationFramework",
                 "WindowsBase"
             };
