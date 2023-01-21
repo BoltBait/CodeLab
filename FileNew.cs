@@ -1769,8 +1769,8 @@ namespace PaintDotNet.Effects
             using (SolidBrush solidBrush = new SolidBrush(e.ForeColor))
             using (SolidBrush foreBrush = new SolidBrush(e.ForeColor))
             using (SolidBrush backBrush = new SolidBrush(Color.Gray))
-            using (Font bigfont = new Font(e.Font.FontFamily, e.Font.Size * 2, FontStyle.Bold))
-            using (Font smallfont = new Font(e.Font, FontStyle.Regular))
+            using (Font bigFont = new Font(e.Font.FontFamily, e.Font.Size * 2, FontStyle.Bold))
+            using (Font smallFont = new Font(e.Font, FontStyle.Regular))
             {
                 solidBrush.Color = Color.FromName(smallText);
                 Image iconImage = UIUtil.GetImage(srcGraphicName);
@@ -1821,8 +1821,8 @@ namespace PaintDotNet.Effects
                     bigText += " Effect";
                 }
 
-                e.Graphics.DrawString(bigText, bigfont, foreBrush, new Rectangle(e.Bounds.X + e.Bounds.Height, e.Bounds.Y + (int)(7 * UIfactor), e.Bounds.Width - e.Bounds.Height, e.Bounds.Height));
-                e.Graphics.DrawString(smallText/*flowList.Items[e.Index].ToString()*/, smallfont, foreBrush, new Rectangle(e.Bounds.X + e.Bounds.Height + 2, e.Bounds.Y + (int)(bigfont.SizeInPoints / 72 * e.Graphics.DpiY) + (int)(14 * UIfactor), e.Bounds.Width - e.Bounds.Height, e.Bounds.Height));
+                e.Graphics.DrawString(bigText, bigFont, foreBrush, new Rectangle(e.Bounds.X + e.Bounds.Height, e.Bounds.Y + (int)(7 * UIfactor), e.Bounds.Width - e.Bounds.Height, e.Bounds.Height));
+                e.Graphics.DrawString(smallText/*flowList.Items[e.Index].ToString()*/, smallFont, foreBrush, new Rectangle(e.Bounds.X + e.Bounds.Height + 2, e.Bounds.Y + (int)(bigFont.SizeInPoints / 72 * e.Graphics.DpiY) + (int)(14 * UIfactor), e.Bounds.Width - e.Bounds.Height, e.Bounds.Height));
             }
             e.DrawFocusRectangle();
         }
@@ -1879,7 +1879,7 @@ namespace PaintDotNet.Effects
             if (ModifierKeys.HasFlag(Keys.Control))
             {
                 flowList.SelectedIndex = -1;
-                //catagoryBox.Text = "";
+                //categoryBox.Text = "";
             }
         }
 
@@ -1899,7 +1899,7 @@ namespace PaintDotNet.Effects
             ret += destinationBox.Text.Substring(0, 1); // always visible
             int iconLength = ret.Length;
             ret += "|";
-            // catagory
+            // category
             ret += categoryBox.Text;
             ret += "|";
             // big text
@@ -1949,7 +1949,7 @@ namespace PaintDotNet.Effects
         {
             if (flowList.SelectedItems.Count == 0)
             {
-                //catagoryBox.Text = "";
+                //categoryBox.Text = "";
                 return;
             }
             string[] item = flowList.SelectedItem.ToString().Split('|');
@@ -2019,7 +2019,7 @@ namespace PaintDotNet.Effects
             updateScreen();
         }
 
-        private void catagoryBox_SelectedIndexChanged(object sender, EventArgs e)
+        private void categoryBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             updateScreen();
         }

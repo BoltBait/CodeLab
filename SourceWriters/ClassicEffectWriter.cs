@@ -139,26 +139,26 @@ namespace PaintDotNet.Effects
             + "    public UserScript()\r\n"
             + "        : base(\"UserScript\", string.Empty, new EffectOptions())\r\n";
 
-        private static string ConstructorPart(UIElement[] UserControls, string FileName, string submenuname, string menuname, string iconpath, ScriptRenderingFlags renderingFlags, ScriptRenderingSchedule renderingSchedule)
+        private static string ConstructorPart(UIElement[] UserControls, string FileName, string subMenuName, string menuName, string iconPath, ScriptRenderingFlags renderingFlags, ScriptRenderingSchedule renderingSchedule)
         {
-            menuname = menuname.Trim().Replace('"', '\'');
-            if (menuname.Length == 0)
+            menuName = menuName.Trim().Replace('"', '\'');
+            if (menuName.Length == 0)
             {
-                menuname = FileName;
+                menuName = FileName;
             }
 
             string className = Regex.Replace(FileName, @"[^\w]", "") + "EffectPlugin";
 
-            string icon = File.Exists(iconpath)
-                ? "new Bitmap(typeof(" + className + "), \"" + Path.GetFileName(iconpath) + "\")"
+            string icon = File.Exists(iconPath)
+                ? "new Bitmap(typeof(" + className + "), \"" + Path.GetFileName(iconPath) + "\")"
                 : "null";
 
             string EffectPart = "";
             EffectPart += "    public class " + className + " : PropertyBasedEffect\r\n";
             EffectPart += "    {\r\n";
-            EffectPart += "        public static string StaticName => \"" + menuname + "\";\r\n";
+            EffectPart += "        public static string StaticName => \"" + menuName + "\";\r\n";
             EffectPart += "        public static Image StaticIcon => " + icon + ";\r\n";
-            EffectPart += "        public static string SubmenuName => " + CommonWriter.SubmenuPart(submenuname) + ";\r\n";
+            EffectPart += "        public static string SubmenuName => " + CommonWriter.SubmenuPart(subMenuName) + ";\r\n";
             EffectPart += "\r\n";
             EffectPart += "        public " + className + "()\r\n";
 
@@ -257,17 +257,17 @@ namespace PaintDotNet.Effects
             return RenderLoopPart;
         }
 
-        internal static string FullSourceCode(string SourceCode, string FileName, bool isAdjustment, string submenuname, string menuname, string iconpath, string SupportURL, ScriptRenderingFlags renderingFlags, ScriptRenderingSchedule renderingSchedule, string Author, int MajorVersion, int MinorVersion, string Description, string KeyWords, string WindowTitleStr, HelpType HelpType, string HelpText)
+        internal static string FullSourceCode(string SourceCode, string FileName, bool isAdjustment, string subMenuName, string menuName, string iconPath, string SupportURL, ScriptRenderingFlags renderingFlags, ScriptRenderingSchedule renderingSchedule, string Author, int MajorVersion, int MinorVersion, string Description, string KeyWords, string WindowTitleStr, HelpType HelpType, string HelpText)
         {
             UIElement[] UserControls = UIElement.ProcessUIControls(SourceCode);
             bool hasPreRender = HasPreRender(SourceCode);
 
             string sUsingPart = UsingPartCode();
-            string sAssemblyInfoPart = CommonWriter.AssemblyInfoPart(FileName, menuname, Author, MajorVersion, MinorVersion, Description, KeyWords);
+            string sAssemblyInfoPart = CommonWriter.AssemblyInfoPart(FileName, menuName, Author, MajorVersion, MinorVersion, Description, KeyWords);
             string sNamespacePart = CommonWriter.NamespacePart(FileName);
-            string sSupportInfoPart = CommonWriter.SupportInfoPart(menuname, SupportURL);
+            string sSupportInfoPart = CommonWriter.SupportInfoPart(menuName, SupportURL);
             string sCategoryPart = CommonWriter.CategoryPart(isAdjustment);
-            string sEffectPart = ConstructorPart(UserControls, FileName, submenuname, menuname, iconpath, renderingFlags, renderingSchedule);
+            string sEffectPart = ConstructorPart(UserControls, FileName, subMenuName, menuName, iconPath, renderingFlags, renderingSchedule);
             string sHelpPart = CommonWriter.HelpPart(HelpType, HelpText);
             string sPropertyPart = CommonWriter.PropertyPart(UserControls, FileName, WindowTitleStr, HelpType, HelpText, ProjectType.ClassicEffect);
             string sSetRenderPart = SetRenderPart(UserControls, true, hasPreRender);

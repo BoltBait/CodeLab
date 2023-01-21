@@ -295,7 +295,7 @@ namespace PaintDotNet.Effects
                 }
 
                 string genericArgs = string.Empty;
-                string genericContraints = string.Empty;
+                string genericConstraints = string.Empty;
 
                 if (method.IsGenericMethod)
                 {
@@ -307,7 +307,7 @@ namespace PaintDotNet.Effects
                         string constraints = args.GetConstraints().Join("\r\n    " + spaces);
                         if (constraints.Length > 0)
                         {
-                            genericContraints = "\r\n    " + spaces + constraints;
+                            genericConstraints = "\r\n    " + spaces + constraints;
                         }
                     }
                 }
@@ -316,7 +316,7 @@ namespace PaintDotNet.Effects
                 string modifier = isInterface ? string.Empty : method.GetModifiers();
                 string access = isInterface ? string.Empty : method.GetAccessModifiers();
 
-                string methodDef = summary + spaces + access + modifier + name + genericArgs + "(" + method.Params(false) + ")" + genericContraints + ";";
+                string methodDef = summary + spaces + access + modifier + name + genericArgs + "(" + method.Params(false) + ")" + genericConstraints + ";";
 
                 if (isImExOperator)
                 {

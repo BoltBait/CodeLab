@@ -867,20 +867,20 @@ namespace PaintDotNet.Effects
             {
                 try
                 {
-                    string fileExtenion = Path.GetExtension(ofd.FileName);
-                    if (fileExtenion.Equals(".rtf", StringComparison.OrdinalIgnoreCase))
+                    string fileExtension = Path.GetExtension(ofd.FileName);
+                    if (fileExtension.Equals(".rtf", StringComparison.OrdinalIgnoreCase))
                     {
                         RichHelpContent.ResetText();
                         RichHelpContent.Rtf = File.ReadAllText(ofd.FileName);
                     }
-                    else if (fileExtenion.Equals(".rtz", StringComparison.OrdinalIgnoreCase))
+                    else if (fileExtension.Equals(".rtz", StringComparison.OrdinalIgnoreCase))
                     {
                         string FileContents = File.ReadAllText(ofd.FileName);
                         string ExpandedContents = DecompressString(FileContents);
                         RichHelpContent.ResetText();
                         RichHelpContent.Rtf = ExpandedContents;
                     }
-                    else if (fileExtenion.Equals(".txt", StringComparison.OrdinalIgnoreCase))
+                    else if (fileExtension.Equals(".txt", StringComparison.OrdinalIgnoreCase))
                     {
                         RichHelpContent.ResetText();
                         RichHelpContent.Text = File.ReadAllText(ofd.FileName);

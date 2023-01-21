@@ -70,7 +70,7 @@ namespace PaintDotNet.Effects
             return string.IsNullOrEmpty(str);
         }
 
-        internal static bool IsCSharpIndentifier(this string value)
+        internal static bool IsCSharpIdentifier(this string value)
         {
             if (value.Length == 0 || char.IsNumber(value[0]))
             {

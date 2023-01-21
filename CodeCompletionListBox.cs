@@ -646,7 +646,7 @@ namespace PaintDotNet.Effects
             string byRef = methodInfo.ReturnType.IsByRef ? "ref " : string.Empty;
             string methodParameters = $"({methodInfo.Params()})";
             string genericArgs = string.Empty;
-            string genericContraints = string.Empty;
+            string genericConstraints = string.Empty;
             string ext = isExtension ? "Extension " : string.Empty;
 
             if (methodInfo.IsGenericMethod)
@@ -659,12 +659,12 @@ namespace PaintDotNet.Effects
                     string constraints = args.GetConstraints().Join("\r\n    ");
                     if (constraints.Length > 0)
                     {
-                        genericContraints = "\r\n    " + constraints;
+                        genericConstraints = "\r\n    " + constraints;
                     }
                 }
             }
 
-            string toolTip = $"{byRef}{returnType}{nullable} - {methodInfo.Name}{genericArgs}{methodParameters}{genericContraints}\n{ext}{methodInfo.MemberType}";
+            string toolTip = $"{byRef}{returnType}{nullable} - {methodInfo.Name}{genericArgs}{methodParameters}{genericConstraints}\n{ext}{methodInfo.MemberType}";
             unFilteredItems.Add(new IntelliBoxItem(methodInfo.Name + genericArgs + methodParameters, methodInfo.Name, toolTip, IntelliType.Method));
         }
 
@@ -825,8 +825,8 @@ namespace PaintDotNet.Effects
 
         internal void Filter(IntelliType intelliType)
         {
-            IEnumerable<FilterButton> filterbuttons = this.toolStrip.Items.OfType<FilterButton>();
-            FilterButton filterButton = filterbuttons.FirstOrDefault(b => b.Visible && b.IntelliType == intelliType);
+            IEnumerable<FilterButton> filterButtons = this.toolStrip.Items.OfType<FilterButton>();
+            FilterButton filterButton = filterButtons.FirstOrDefault(b => b.Visible && b.IntelliType == intelliType);
 
             if (filterButton is null)
             {
@@ -836,9 +836,9 @@ namespace PaintDotNet.Effects
             filterButton.Checked = !filterButton.Checked;
 
             IEnumerable<IntelliType> matchingTypes = listBox.Items.OfType<IntelliBoxItem>().Select(i => i.IntelliType).Distinct().ToArray();
-            if (filterbuttons.Any(x => x.Checked))
+            if (filterButtons.Any(x => x.Checked))
             {
-                IEnumerable<IntelliType> checkedTypes = filterbuttons.Where(x => x.Checked).Select(x => x.IntelliType).Intersect(matchingTypes);
+                IEnumerable<IntelliType> checkedTypes = filterButtons.Where(x => x.Checked).Select(x => x.IntelliType).Intersect(matchingTypes);
                 SetFilterButtonAppearance(checkedTypes);
             }
             else

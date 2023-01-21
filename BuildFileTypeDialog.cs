@@ -43,10 +43,10 @@ namespace PaintDotNet.Effects
             this.Text = $"Building {this.fileName}.DLL";
 
             // Preload menu name
-            Match mmn = Regex.Match(scriptText, @"//[\s-[\r\n]]*Name[\s-[\r\n]]*:[\s-[\r\n]]*(?<menulabel>.*)(?=\r?\n|$)", RegexOptions.IgnoreCase);
+            Match mmn = Regex.Match(scriptText, @"//[\s-[\r\n]]*Name[\s-[\r\n]]*:[\s-[\r\n]]*(?<menuLabel>.*)(?=\r?\n|$)", RegexOptions.IgnoreCase);
             if (mmn.Success)
             {
-                string menuName = mmn.Groups["menulabel"].Value.Trim();
+                string menuName = mmn.Groups["menuLabel"].Value.Trim();
                 nameBox.Text = (menuName.Length > 0) ? menuName : this.fileName;
             }
             else
@@ -55,36 +55,36 @@ namespace PaintDotNet.Effects
             }
 
             // Preload version checking for Major.Minor (period or comma)
-            Match vsn = Regex.Match(scriptText, @"//[\s-[\r\n]]*Version[\s-[\r\n]]*:[\s-[\r\n]]*(?<majorversionlabel>\d+)[\.\,](?<minorversionlabel>\d+)(?=\r?\n|$)", RegexOptions.IgnoreCase);
+            Match vsn = Regex.Match(scriptText, @"//[\s-[\r\n]]*Version[\s-[\r\n]]*:[\s-[\r\n]]*(?<majorVersionLabel>\d+)[\.\,](?<minorVersionLabel>\d+)(?=\r?\n|$)", RegexOptions.IgnoreCase);
             if (!vsn.Success)
             {
                 // Preload version checking for just Major
-                vsn = Regex.Match(scriptText, @"//[\s-[\r\n]]*Version[\s-[\r\n]]*:[\s-[\r\n]]*(?<majorversionlabel>\d+)(?=\r?\n|$)", RegexOptions.IgnoreCase);
+                vsn = Regex.Match(scriptText, @"//[\s-[\r\n]]*Version[\s-[\r\n]]*:[\s-[\r\n]]*(?<majorVersionLabel>\d+)(?=\r?\n|$)", RegexOptions.IgnoreCase);
             }
             if (vsn.Success)
             {
-                if (decimal.TryParse(vsn.Groups["majorversionlabel"].Value.Trim(), out decimal majorv))
+                if (decimal.TryParse(vsn.Groups["majorVersionLabel"].Value.Trim(), out decimal majorv))
                 {
                     this.majorBox.Value = majorv.Clamp(this.majorBox.Minimum, this.majorBox.Maximum);
                 }
-                if (decimal.TryParse(vsn.Groups["minorversionlabel"].Value.Trim(), out decimal minorv))
+                if (decimal.TryParse(vsn.Groups["minorVersionLabel"].Value.Trim(), out decimal minorv))
                 {
                     this.minorBox.Value = minorv.Clamp(this.majorBox.Minimum, this.majorBox.Maximum);
                 }
             }
 
             // Preload author's name
-            Match mau = Regex.Match(scriptText, @"//[\s-[\r\n]]*Author[\s-[\r\n]]*:[\s-[\r\n]]*(?<authorlabel>.*)(?=\r?\n|$)", RegexOptions.IgnoreCase);
+            Match mau = Regex.Match(scriptText, @"//[\s-[\r\n]]*Author[\s-[\r\n]]*:[\s-[\r\n]]*(?<authorLabel>.*)(?=\r?\n|$)", RegexOptions.IgnoreCase);
             if (mau.Success)
             {
-                this.authorBox.Text = mau.Groups["authorlabel"].Value.Trim();
+                this.authorBox.Text = mau.Groups["authorLabel"].Value.Trim();
             }
 
             // Preload Description
-            Match mds = Regex.Match(scriptText, @"//[\s-[\r\n]]*Desc[\s-[\r\n]]*:[\s-[\r\n]]*(?<desclabel>.*)(?=\r?\n|$)", RegexOptions.IgnoreCase);
-            if (mds.Success && mds.Groups["desclabel"].Value.Trim() != "")
+            Match mds = Regex.Match(scriptText, @"//[\s-[\r\n]]*Desc[\s-[\r\n]]*:[\s-[\r\n]]*(?<descLabel>.*)(?=\r?\n|$)", RegexOptions.IgnoreCase);
+            if (mds.Success && mds.Groups["descLabel"].Value.Trim() != "")
             {
-                this.descriptionBox.Text = mds.Groups["desclabel"].Value.Trim();
+                this.descriptionBox.Text = mds.Groups["descLabel"].Value.Trim();
             }
             else
             {
@@ -92,31 +92,31 @@ namespace PaintDotNet.Effects
             }
 
             // Preload Support URL
-            Match msu = Regex.Match(scriptText, @"//[\s-[\r\n]]*URL[\s-[\r\n]]*:[\s-[\r\n]]*(?<urllabel>.*)(?=\r?\n|$)", RegexOptions.IgnoreCase);
+            Match msu = Regex.Match(scriptText, @"//[\s-[\r\n]]*URL[\s-[\r\n]]*:[\s-[\r\n]]*(?<urlLabel>.*)(?=\r?\n|$)", RegexOptions.IgnoreCase);
             if (msu.Success)
             {
-                this.urlBox.Text = msu.Groups["urllabel"].Value.Trim();
+                this.urlBox.Text = msu.Groups["urlLabel"].Value.Trim();
             }
 
             // Preload Load Extensions
-            Match mle = Regex.Match(scriptText, @"//[\s-[\r\n]]*LoadExtns[\s-[\r\n]]*:[\s-[\r\n]]*(?<loadlabel>.*)(?=\r?\n|$)", RegexOptions.IgnoreCase);
+            Match mle = Regex.Match(scriptText, @"//[\s-[\r\n]]*LoadExtns[\s-[\r\n]]*:[\s-[\r\n]]*(?<loadLabel>.*)(?=\r?\n|$)", RegexOptions.IgnoreCase);
             if (mle.Success)
             {
-                this.loadExtBox.Text = mle.Groups["loadlabel"].Value.Trim();
+                this.loadExtBox.Text = mle.Groups["loadLabel"].Value.Trim();
             }
 
             // Preload Save Extensions
-            Match mse = Regex.Match(scriptText, @"//[\s-[\r\n]]*SaveExtns[\s-[\r\n]]*:[\s-[\r\n]]*(?<savelabel>.*)(?=\r?\n|$)", RegexOptions.IgnoreCase);
+            Match mse = Regex.Match(scriptText, @"//[\s-[\r\n]]*SaveExtns[\s-[\r\n]]*:[\s-[\r\n]]*(?<saveLabel>.*)(?=\r?\n|$)", RegexOptions.IgnoreCase);
             if (mse.Success)
             {
-                this.saveExtBox.Text = mse.Groups["savelabel"].Value.Trim();
+                this.saveExtBox.Text = mse.Groups["saveLabel"].Value.Trim();
             }
 
             // Preload Supports Layers
-            Match msl = Regex.Match(scriptText, @"//[\s-[\r\n]]*Flattened[\s-[\r\n]]*:[\s-[\r\n]]*(?<flattenlabel>.*)(?=\r?\n|$)", RegexOptions.IgnoreCase);
+            Match msl = Regex.Match(scriptText, @"//[\s-[\r\n]]*Flattened[\s-[\r\n]]*:[\s-[\r\n]]*(?<flattenLabel>.*)(?=\r?\n|$)", RegexOptions.IgnoreCase);
             if (msl.Success)
             {
-                this.layersCheckBox.Checked = msl.Groups["flattenlabel"].Value.Trim().Equals("true", StringComparison.OrdinalIgnoreCase);
+                this.layersCheckBox.Checked = msl.Groups["flattenLabel"].Value.Trim().Equals("true", StringComparison.OrdinalIgnoreCase);
             }
         }
 

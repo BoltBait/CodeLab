@@ -47,7 +47,7 @@ namespace PaintDotNet.Effects
                 + "\r\n";
         }
 
-        private static string FileTypePart(string projectName, string loadExt, string saveExt, bool supoortLayers, string title)
+        private static string FileTypePart(string projectName, string loadExt, string saveExt, bool supportsLayers, string title)
         {
             string fileTypePart = "";
             fileTypePart += "    public sealed class " + projectName + "Factory : IFileTypeFactory\r\n";
@@ -69,7 +69,7 @@ namespace PaintDotNet.Effects
             fileTypePart += "                    LoadExtensions = new string[] { " + loadExt + " },\r\n";
             fileTypePart += "                    SaveExtensions = new string[] { " + saveExt + " },\r\n";
             fileTypePart += "                    SupportsCancellation = true,\r\n";
-            fileTypePart += "                    SupportsLayers = " + supoortLayers.ToString().ToLowerInvariant() + "\r\n";
+            fileTypePart += "                    SupportsLayers = " + supportsLayers.ToString().ToLowerInvariant() + "\r\n";
             fileTypePart += "                })\r\n";
 
             return fileTypePart;
@@ -103,7 +103,7 @@ namespace PaintDotNet.Effects
             return fileTypePart2;
         }
 
-        internal static string FullSourceCode(string scriptText, string projectName, string author, int majorVersion, int minorVersion, string supportURL, string description, string loadExt, string saveExt, bool supoortLayers, string title)
+        internal static string FullSourceCode(string scriptText, string projectName, string author, int majorVersion, int minorVersion, string supportURL, string description, string loadExt, string saveExt, bool supportsLayers, string title)
         {
             UIElement[] userControls = UIElement.ProcessUIControls(scriptText, false);
 
@@ -112,7 +112,7 @@ namespace PaintDotNet.Effects
                 CommonWriter.AssemblyInfoPart(projectName, projectName, author, majorVersion, minorVersion, description, string.Empty) +
                 CommonWriter.NamespacePart(projectName, true) +
                 CommonWriter.SupportInfoPart(title, supportURL) +
-                FileTypePart(projectName, loadExt, saveExt, supoortLayers, title) +
+                FileTypePart(projectName, loadExt, saveExt, supportsLayers, title) +
                 CommonWriter.ConstructorBodyPart(false) +
                 CommonWriter.PropertyPart(userControls, projectName, string.Empty, HelpType.None, string.Empty, ProjectType.FileType) +
                 FileTypePart2(userControls) +

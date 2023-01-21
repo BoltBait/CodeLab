@@ -180,8 +180,8 @@ namespace PaintDotNet.Effects
             {
                 identifier = "Amount" + (MasterList.Count + 1);
             }
-            string enableIndentifer = (this.rbEnabledWhen.Checked) ? MasterList[enabledWhenField.SelectedIndex].Identifier : string.Empty;
-            MasterList.Add(new UIElement(elementType, ControlName.Text, ControlMin.Text, ControlMax.Text, defaultStr, OptionsText.Text, ControlStyle.SelectedIndex, rbEnabledWhen.Checked, enableIndentifer, (enabledWhenCondition.SelectedIndex != 0), identifier, null));
+            string enableIdentifier = (this.rbEnabledWhen.Checked) ? MasterList[enabledWhenField.SelectedIndex].Identifier : string.Empty;
+            MasterList.Add(new UIElement(elementType, ControlName.Text, ControlMin.Text, ControlMax.Text, defaultStr, OptionsText.Text, ControlStyle.SelectedIndex, rbEnabledWhen.Checked, enableIdentifier, (enabledWhenCondition.SelectedIndex != 0), identifier, null));
             IDList.Add(identifier);
             refreshListView(MasterList.Count - 1);
             dirty = false;
@@ -602,9 +602,9 @@ namespace PaintDotNet.Effects
             string defaultStr = (elementType == ElementType.ColorWheel) ? DefaultColorComboBox.SelectedItem.ToString() : ControlDef.Text;
             if (elementType == ElementType.Uri) defaultStr = OptionsText.Text.Trim();
             string identifier = !string.IsNullOrWhiteSpace(ControlID.Text) ? ControlID.Text.Trim() : "Amount" + (MasterList.Count + 1);
-            string enableIndentifer = (this.rbEnabledWhen.Checked) ? MasterList[enabledWhenField.SelectedIndex].Identifier : string.Empty;
+            string enableIdentifier = (this.rbEnabledWhen.Checked) ? MasterList[enabledWhenField.SelectedIndex].Identifier : string.Empty;
             string typeEnum = (CurrentItem > -1) ? MasterList[CurrentItem].TEnum : null;
-            UIElement uiElement = new UIElement(elementType, ControlName.Text, ControlMin.Text, ControlMax.Text, defaultStr, OptionsText.Text, ControlStyle.SelectedIndex, rbEnabledWhen.Checked, enableIndentifer, (enabledWhenCondition.SelectedIndex != 0), identifier, typeEnum);
+            UIElement uiElement = new UIElement(elementType, ControlName.Text, ControlMin.Text, ControlMax.Text, defaultStr, OptionsText.Text, ControlStyle.SelectedIndex, rbEnabledWhen.Checked, enableIdentifier, (enabledWhenCondition.SelectedIndex != 0), identifier, typeEnum);
 
             if (CurrentItem > -1)
             {
@@ -1170,7 +1170,7 @@ namespace PaintDotNet.Effects
         {
             dirty = true;
             string newID = ControlID.Text.Trim();
-            bool error = (newID.Length == 0 || (newID != this.currentID && IDList.Contains(newID)) || !newID.IsCSharpIndentifier());
+            bool error = (newID.Length == 0 || (newID != this.currentID && IDList.Contains(newID)) || !newID.IsCSharpIdentifier());
             ControlID.ForeColor = error ? Color.Black : Color.Black;
             ControlID.BackColor = error ? Color.FromArgb(246, 97, 81) : Color.White;
         }
@@ -1474,9 +1474,9 @@ namespace PaintDotNet.Effects
                     Max = alpha ? int.MaxValue : 0xffffff;
                     if (StrDefault.Length > 0)
                     {
-                        string alphastyle = alpha ? "?" : "";
-                        string resetstyle = ColorWheelOptions.HasFlag(ColorWheelOptions.NoReset) ? "!" : "";
-                        Description += " (" + StrDefault + alphastyle + resetstyle + ")";
+                        string alphaStyle = alpha ? "?" : "";
+                        string resetStyle = ColorWheelOptions.HasFlag(ColorWheelOptions.NoReset) ? "!" : "";
+                        Description += " (" + StrDefault + alphaStyle + resetStyle + ")";
                     }
                     Description += EnabledDescription;
                     break;
@@ -1923,12 +1923,12 @@ namespace PaintDotNet.Effects
                     }
 
                     string rgb = c.B.ToString() + ", " + c.G.ToString() + ", " + c.R.ToString();
-                    string resetstyle = ColorWheelOptions.HasFlag(ColorWheelOptions.NoReset) ? "!" : "";
-                    string alphastyle = "";
+                    string resetStyle = ColorWheelOptions.HasFlag(ColorWheelOptions.NoReset) ? "!" : "";
+                    string alphaStyle = "";
 
                     if (ColorWheelOptions.HasFlag(ColorWheelOptions.Alpha))
                     {
-                        alphastyle = "?";
+                        alphaStyle = "?";
                         SourceCode += " = ColorBgra.FromBgra(" + rgb + ", 255)";
                     }
                     else
@@ -1938,7 +1938,7 @@ namespace PaintDotNet.Effects
 
                     SourceCode += "; // ";
 
-                    string config = StrDefault.Trim() + alphastyle + resetstyle;
+                    string config = StrDefault.Trim() + alphaStyle + resetStyle;
                     if (config.Length > 0)
                     {
                         SourceCode += "[" + config + "] ";

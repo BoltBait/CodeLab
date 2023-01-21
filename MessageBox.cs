@@ -582,9 +582,9 @@ namespace PaintDotNet.Effects
                     MessageBoxIcon.Question => 94
                 };
 
-                string imageresPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "imageres.dll");
+                string imageResPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "imageres.dll");
 
-                using (Icon icon = UIUtil.ExtractIcon(imageresPath, iconIndex, true))
+                using (Icon icon = UIUtil.ExtractIcon(imageResPath, iconIndex, true))
                 {
                     return icon?.ToBitmap();
                 }

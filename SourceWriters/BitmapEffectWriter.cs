@@ -69,18 +69,18 @@ namespace PaintDotNet.Effects
             + "protected override void OnRender(IBitmapEffectOutput output) { }\r\n"
             + "#endregion\r\n";
 
-        private static string ConstructorPart(UIElement[] UserControls, string FileName, string submenuname, string menuname, string iconpath)
+        private static string ConstructorPart(UIElement[] UserControls, string FileName, string subMenuName, string menuName, string iconPath)
         {
-            menuname = menuname.Trim().Replace('"', '\'');
-            if (menuname.Length == 0)
+            menuName = menuName.Trim().Replace('"', '\'');
+            if (menuName.Length == 0)
             {
-                menuname = FileName;
+                menuName = FileName;
             }
 
             string className = Regex.Replace(FileName, @"[^\w]", "") + "EffectPlugin";
 
-            string icon = File.Exists(iconpath)
-                ? "new System.Drawing.Bitmap(typeof(" + className + "), \"" + Path.GetFileName(iconpath) + "\")"
+            string icon = File.Exists(iconPath)
+                ? "new System.Drawing.Bitmap(typeof(" + className + "), \"" + Path.GetFileName(iconPath) + "\")"
                 : "null";
 
             string configurable = (UserControls.Length != 0).ToString().ToLowerInvariant();
@@ -88,9 +88,9 @@ namespace PaintDotNet.Effects
             string EffectPart = "";
             EffectPart += "    public class " + className + " : PropertyBasedBitmapEffect\r\n";
             EffectPart += "    {\r\n";
-            EffectPart += "        public static string StaticName => \"" + menuname + "\";\r\n";
+            EffectPart += "        public static string StaticName => \"" + menuName + "\";\r\n";
             EffectPart += "        public static System.Drawing.Image StaticIcon => " + icon + ";\r\n";
-            EffectPart += "        public static string SubmenuName => " + CommonWriter.SubmenuPart(submenuname) + ";\r\n";
+            EffectPart += "        public static string SubmenuName => " + CommonWriter.SubmenuPart(subMenuName) + ";\r\n";
             EffectPart += "\r\n";
             EffectPart += "        public " + className + "()\r\n";
             EffectPart += "            : base(StaticName, StaticIcon, SubmenuName, new BitmapEffectOptions { IsConfigurable = " + configurable + " })\r\n";
@@ -170,17 +170,17 @@ namespace PaintDotNet.Effects
             return setToken;
         }
 
-        internal static string FullSourceCode(string SourceCode, string FileName, bool isAdjustment, string submenuname, string menuname, string iconpath, string SupportURL, ScriptRenderingFlags renderingFlags, ScriptRenderingSchedule renderingSchedule, string Author, int MajorVersion, int MinorVersion, string Description, string KeyWords, string WindowTitleStr, HelpType HelpType, string HelpText)
+        internal static string FullSourceCode(string SourceCode, string FileName, bool isAdjustment, string subMenuName, string menuName, string iconPath, string SupportURL, ScriptRenderingFlags renderingFlags, ScriptRenderingSchedule renderingSchedule, string Author, int MajorVersion, int MinorVersion, string Description, string KeyWords, string WindowTitleStr, HelpType HelpType, string HelpText)
         {
             UIElement[] UserControls = UIElement.ProcessUIControls(SourceCode);
 
             return
                 BitmapEffectWriter.UsingStatements +
-                CommonWriter.AssemblyInfoPart(FileName, menuname, Author, MajorVersion, MinorVersion, Description, KeyWords) +
+                CommonWriter.AssemblyInfoPart(FileName, menuName, Author, MajorVersion, MinorVersion, Description, KeyWords) +
                 CommonWriter.NamespacePart(FileName) +
-                CommonWriter.SupportInfoPart(menuname, SupportURL) +
+                CommonWriter.SupportInfoPart(menuName, SupportURL) +
                 CommonWriter.CategoryPart(isAdjustment) +
-                ConstructorPart(UserControls, FileName, submenuname, menuname, iconpath) +
+                ConstructorPart(UserControls, FileName, subMenuName, menuName, iconPath) +
                 CommonWriter.HelpPart(HelpType, HelpText) +
                 CommonWriter.PropertyPart(UserControls, FileName, WindowTitleStr, HelpType, HelpText, ProjectType.BitmapEffect) +
                 BitmapEffectWriter.InitializeRenderInfoPart(renderingFlags, renderingSchedule) +

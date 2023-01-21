@@ -125,11 +125,11 @@ namespace PaintDotNet.Effects
                 resourceFiles.Add(iconPath);
             }
 
-            string samplepath = Path.ChangeExtension(scriptPath, ".sample.png");
-            if (File.Exists(samplepath))
+            string samplePath = Path.ChangeExtension(scriptPath, ".sample.png");
+            if (File.Exists(samplePath))
             {
                 // If an image exists in the icon directory with a ".sample.png" extension, add it to the build as an embedded resource.
-                resourceFiles.Add(samplepath);
+                resourceFiles.Add(samplePath);
             }
 
             string helpPath = Path.ChangeExtension(scriptPath, ".rtz");
@@ -179,19 +179,19 @@ namespace PaintDotNet.Effects
 
             try
             {
-                string santizedProjectName = Regex.Replace(projectName, @"[^\w]", ""); // Remove non-alpha characters from namespace
+                string sanitizedProjectName = Regex.Replace(projectName, @"[^\w]", ""); // Remove non-alpha characters from namespace
 
                 // Calculate output path
                 string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
-                string dllPath = Path.Combine(desktopPath, santizedProjectName);
+                string dllPath = Path.Combine(desktopPath, sanitizedProjectName);
                 dllPath = Path.ChangeExtension(dllPath, ".dll");
 
                 IEnumerable<SyntaxTree> syntaxTree = new[] { CSharpSyntaxTree.ParseText(sourceCode, options: parseOptions) };
 
-                CSharpCompilation compilation = CSharpCompilation.Create(santizedProjectName, syntaxTree, references, compilationOptions);
+                CSharpCompilation compilation = CSharpCompilation.Create(sanitizedProjectName, syntaxTree, references, compilationOptions);
 
                 IEnumerable<ResourceDescription> resourceDescriptions = resources.Select(res => new ResourceDescription(
-                    santizedProjectName + "Effect." + Path.GetFileName(res),
+                    sanitizedProjectName + "Effect." + Path.GetFileName(res),
                     () => File.OpenRead(res),
                     true));
 
@@ -209,7 +209,7 @@ namespace PaintDotNet.Effects
                 }
 
                 string zipPath = Path.ChangeExtension(dllPath, ".zip");
-                string batPath = Path.Combine(desktopPath, "Install_" + santizedProjectName);
+                string batPath = Path.Combine(desktopPath, "Install_" + sanitizedProjectName);
                 batPath = Path.ChangeExtension(batPath, ".bat");
 
                 // Create install bat file

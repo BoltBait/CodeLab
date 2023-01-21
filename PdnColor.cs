@@ -62,11 +62,11 @@ namespace PaintDotNet.Effects
             get => HSVColor.ToColor(MasterAlpha, MasterHue, MasterSat, MasterVal);
             set
             {
-                Color _colorval = value;
-                MasterHue = HSVColor.FromColor(_colorval, MasterHue).Hue;
-                MasterSat = HSVColor.FromColor(_colorval, MasterHue).Sat;
-                MasterVal = HSVColor.FromColor(_colorval, MasterHue).Value;
-                MasterAlpha = _colorval.A;
+                Color _colorVal = value;
+                MasterHue = HSVColor.FromColor(_colorVal, MasterHue).Hue;
+                MasterSat = HSVColor.FromColor(_colorVal, MasterHue).Sat;
+                MasterVal = HSVColor.FromColor(_colorVal, MasterHue).Value;
+                MasterAlpha = _colorVal.A;
                 setColors(true, true);
                 UpdateColorSliders();
                 colorWheelBox.Refresh();
@@ -176,9 +176,9 @@ namespace PaintDotNet.Effects
                     g.DrawEllipse(markPen, _hueMark);
                 }
 
-                //draw colorsample
+                //draw color sample
                 g.SmoothingMode = SmoothingMode.None;
-                Color _colorval = HSVColor.ToColor(MasterAlpha, MasterHue, MasterSat, MasterVal);
+                Color _colorVal = HSVColor.ToColor(MasterAlpha, MasterHue, MasterSat, MasterVal);
 
                 Rectangle SwatchRect1 = new Rectangle(0, 0, (int)MathF.Round(30 * dpiX), (int)MathF.Round(30 * dpiY));
                 Rectangle SwatchRect2 = Rectangle.FromLTRB(SwatchRect1.Left + (int)MathF.Round(1 * dpiX), SwatchRect1.Top + (int)MathF.Round(1 * dpiY), SwatchRect1.Right - (int)MathF.Round(1 * dpiX), SwatchRect1.Bottom - (int)MathF.Round(1 * dpiY));
@@ -187,7 +187,7 @@ namespace PaintDotNet.Effects
                 {
                     g.FillRectangle(hb, SwatchRect1);
                 }
-                using (SolidBrush SB = new SolidBrush(_colorval))
+                using (SolidBrush SB = new SolidBrush(_colorVal))
                 {
                     g.FillRectangle(SB, SwatchRect1);
                 }
@@ -256,11 +256,11 @@ namespace PaintDotNet.Effects
                 return;
             }
 
-            Color _colorval = Color.FromArgb((int)alphaBox.Value, (int)redBox.Value, (int)greenBox.Value, (int)blueBox.Value);
-            MasterHue = HSVColor.FromColor(_colorval, MasterHue).Hue;
-            MasterSat = HSVColor.FromColor(_colorval, MasterHue).Sat;
-            MasterVal = HSVColor.FromColor(_colorval, MasterHue).Value;
-            MasterAlpha = _colorval.A;
+            Color _colorVal = Color.FromArgb((int)alphaBox.Value, (int)redBox.Value, (int)greenBox.Value, (int)blueBox.Value);
+            MasterHue = HSVColor.FromColor(_colorVal, MasterHue).Hue;
+            MasterSat = HSVColor.FromColor(_colorVal, MasterHue).Sat;
+            MasterVal = HSVColor.FromColor(_colorVal, MasterHue).Value;
+            MasterAlpha = _colorVal.A;
 
             UpdateColorSliders();
 
@@ -268,8 +268,8 @@ namespace PaintDotNet.Effects
 
             ignore = true;
             hexBox.Text = (showAlpha) ?
-                _colorval.ToArgb().ToString("X8") :
-                _colorval.ToArgb().ToString("X8").Substring(2);
+                _colorVal.ToArgb().ToString("X8") :
+                _colorVal.ToArgb().ToString("X8").Substring(2);
             ignore = false;
 
             colorWheelBox.Refresh();
@@ -303,21 +303,21 @@ namespace PaintDotNet.Effects
                 return;
             }
 
-            Color _colorval = Color.FromArgb((int)aColorSlider.Value, (int)rColorSlider.Value, (int)gColorSlider.Value, (int)bColorSlider.Value);
-            MasterHue = HSVColor.FromColor(_colorval, MasterHue).Hue;
-            MasterSat = HSVColor.FromColor(_colorval, MasterHue).Sat;
-            MasterVal = HSVColor.FromColor(_colorval, MasterHue).Value;
+            Color _colorVal = Color.FromArgb((int)aColorSlider.Value, (int)rColorSlider.Value, (int)gColorSlider.Value, (int)bColorSlider.Value);
+            MasterHue = HSVColor.FromColor(_colorVal, MasterHue).Hue;
+            MasterSat = HSVColor.FromColor(_colorVal, MasterHue).Sat;
+            MasterVal = HSVColor.FromColor(_colorVal, MasterHue).Value;
             MasterAlpha = (int)aColorSlider.Value;
 
             setColors(false, false);
 
             ignore = true;
-            redBox.Value = _colorval.R;
-            greenBox.Value = _colorval.G;
-            blueBox.Value = _colorval.B;
+            redBox.Value = _colorVal.R;
+            greenBox.Value = _colorVal.G;
+            blueBox.Value = _colorVal.B;
             hexBox.Text = (showAlpha) ?
-                _colorval.ToArgb().ToString("X8") :
-                _colorval.ToArgb().ToString("X8").Substring(2);
+                _colorVal.ToArgb().ToString("X8") :
+                _colorVal.ToArgb().ToString("X8").Substring(2);
             ignore = false;
 
             UpdateColorSliders();
@@ -334,26 +334,26 @@ namespace PaintDotNet.Effects
                 return;
             }
 
-            Color _colorval;
+            Color _colorVal;
             try
             {
                 ColorConverter c = new ColorConverter();
-                _colorval = (Color)c.ConvertFromString("#" + hexBox.Text);
+                _colorVal = (Color)c.ConvertFromString("#" + hexBox.Text);
             }
             catch
             {
-                _colorval = HSVColor.ToColor(MasterAlpha, MasterHue, MasterSat, MasterVal);
+                _colorVal = HSVColor.ToColor(MasterAlpha, MasterHue, MasterSat, MasterVal);
                 hexBox.Text = (showAlpha) ?
-                    _colorval.ToArgb().ToString("X8") :
-                    _colorval.ToArgb().ToString("X8").Substring(2);
+                    _colorVal.ToArgb().ToString("X8") :
+                    _colorVal.ToArgb().ToString("X8").Substring(2);
 
                 return;
             }
 
-            MasterHue = HSVColor.FromColor(_colorval, MasterHue).Hue;
-            MasterSat = HSVColor.FromColor(_colorval, MasterHue).Sat;
-            MasterVal = HSVColor.FromColor(_colorval, MasterHue).Value;
-            MasterAlpha = (showAlpha) ? _colorval.A : 255;
+            MasterHue = HSVColor.FromColor(_colorVal, MasterHue).Hue;
+            MasterSat = HSVColor.FromColor(_colorVal, MasterHue).Sat;
+            MasterVal = HSVColor.FromColor(_colorVal, MasterHue).Value;
+            MasterAlpha = (showAlpha) ? _colorVal.A : 255;
 
             setColors(true, false);
             colorWheelBox.Refresh();
@@ -441,22 +441,22 @@ namespace PaintDotNet.Effects
         private void setColors(bool rgb, bool hex)
         {
             ignore = true;
-            Color _colorval = HSVColor.ToColor(MasterAlpha, MasterHue, MasterSat, MasterVal);
+            Color _colorVal = HSVColor.ToColor(MasterAlpha, MasterHue, MasterSat, MasterVal);
             if (rgb)
             {
-                redBox.Value = _colorval.R;
-                greenBox.Value = _colorval.G;
-                blueBox.Value = _colorval.B;
+                redBox.Value = _colorVal.R;
+                greenBox.Value = _colorVal.G;
+                blueBox.Value = _colorVal.B;
             }
-            alphaBox.Value = _colorval.A;
+            alphaBox.Value = _colorVal.A;
             hueBox.Value = (decimal)MasterHue * 360;
             satBox.Value = (decimal)MasterSat * 100;
             valBox.Value = (decimal)MasterVal * 100;
             if (hex)
             {
                 hexBox.Text = (showAlpha) ?
-                    _colorval.ToArgb().ToString("X8") :
-                    _colorval.ToArgb().ToString("X8").Substring(2);
+                    _colorVal.ToArgb().ToString("X8") :
+                    _colorVal.ToArgb().ToString("X8").Substring(2);
             }
             ignore = false;
         }

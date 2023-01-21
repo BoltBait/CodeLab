@@ -377,7 +377,7 @@
             this.categoryBox.Name = "categoryBox";
             this.categoryBox.Size = new System.Drawing.Size(92, 23);
             this.categoryBox.TabIndex = 26;
-            this.categoryBox.SelectedIndexChanged += new System.EventHandler(this.catagoryBox_SelectedIndexChanged);
+            this.categoryBox.SelectedIndexChanged += new System.EventHandler(this.categoryBox_SelectedIndexChanged);
             // 
             // label11
             // 

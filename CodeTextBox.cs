@@ -1349,7 +1349,7 @@ namespace PaintDotNet.Effects
                         string varName = this.GetWordFromPosition(thisVarPos);
 
                         // Ensure the variable doesn't contain illegal characters
-                        if (!varName.IsCSharpIndentifier())
+                        if (!varName.IsCSharpIdentifier())
                         {
                             continue;
                         }
@@ -1841,7 +1841,7 @@ namespace PaintDotNet.Effects
                     }
 
                     string genericArgs = string.Empty;
-                    string genericContraints = string.Empty;
+                    string genericConstraints = string.Empty;
 
                     if (method.IsGenericMethod)
                     {
@@ -1853,7 +1853,7 @@ namespace PaintDotNet.Effects
                             string constraints = args.GetConstraints().Join("\r\n    ");
                             if (constraints.Length > 0)
                             {
-                                genericContraints = "\r\n    " + constraints;
+                                genericConstraints = "\r\n    " + constraints;
                             }
                         }
                     }
@@ -1864,7 +1864,7 @@ namespace PaintDotNet.Effects
                     string overloads = (length > 1) ? $" (+ {length - 1} overloads)" : string.Empty;
                     string methodSummary = method.GetDocCommentForToolTip();
 
-                    return $"{byRef}{returnType}{nullable} - {precedingType}.{method.Name}{genericArgs}({method.Params()}){overloads}{genericContraints}\n{ext}{method.MemberType}{methodSummary}";
+                    return $"{byRef}{returnType}{nullable} - {precedingType}.{method.Name}{genericArgs}({method.Params()}){overloads}{genericConstraints}\n{ext}{method.MemberType}{methodSummary}";
                 case MemberTypes.Field:
                     FieldInfo field = (FieldInfo)memberInfo;
                     returnType = field.FieldType.GetDisplayName();
@@ -3766,7 +3766,7 @@ namespace PaintDotNet.Effects
                 {
                     // Do nothing
                 }
-                else if (word.IsCSharpIndentifier())
+                else if (word.IsCSharpIdentifier())
                 {
                     int wordStartPos = this.WordStartPosition(this.CurrentPosition);
                     if (wordStartPos > 0 && this.GetCharAt(wordStartPos - 1).Equals('#'))
@@ -3880,7 +3880,7 @@ namespace PaintDotNet.Effects
                     }
                     else
                     {
-                        bool procedeWithBox = true;
+                        bool proceedWithBox = true;
 
                         // Test for when declaring multiple variables in series.
                         // Ex: double a, b;
@@ -3902,13 +3902,13 @@ namespace PaintDotNet.Effects
                                 }
                                 else if (c.Equals(';') || c.Equals('{') || c.Equals(')'))
                                 {
-                                    procedeWithBox = false;
+                                    proceedWithBox = false;
                                     break;
                                 }
                             }
                         }
 
-                        if (procedeWithBox)
+                        if (proceedWithBox)
                         {
                             NonMemberIntelliBox(this.CurrentPosition - 1);
                         }
@@ -4253,7 +4253,7 @@ namespace PaintDotNet.Effects
 
             int lineIndent = 0;
             bool codeBlock = false;
-            bool braceless = false;
+            bool braceLess = false;
 
             int withinCase = 0;
             bool caseStart = false;
@@ -4266,7 +4266,7 @@ namespace PaintDotNet.Effects
 
                 if (codeBlock && !trimmedLine.StartsWith("{", StringComparison.Ordinal) && !trimmedLine.StartsWith("using", StringComparison.Ordinal))
                 {
-                    braceless = true;
+                    braceLess = true;
                     lineIndent += this.TabWidth;
                 }
                 else if (trimmedLine.Equals("}", StringComparison.Ordinal) || trimmedLine.Equals("};", StringComparison.Ordinal))
@@ -4288,9 +4288,9 @@ namespace PaintDotNet.Effects
                 lineIndent = this.Lines[line].Indentation; // make sure they're in sync, as scintilla may clamp
 
                 codeBlock = false;
-                if (braceless)
+                if (braceLess)
                 {
-                    braceless = false;
+                    braceLess = false;
                     lineIndent -= this.TabWidth;
                 }
                 if (trimmedLine.StartsWith("case ", StringComparison.Ordinal) || trimmedLine.StartsWith("default:", StringComparison.Ordinal))

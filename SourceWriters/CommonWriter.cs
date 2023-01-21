@@ -13,21 +13,21 @@ namespace PaintDotNet.Effects
 {
     internal static class CommonWriter
     {
-        internal static string AssemblyInfoPart(string FileName, string menuname, string Author, int MajorVersion, int MinorVersion, string Description, string KeyWords)
+        internal static string AssemblyInfoPart(string FileName, string menuName, string Author, int MajorVersion, int MinorVersion, string Description, string KeyWords)
         {
             // Replace quotes with single quotes from Attribute fields
             Description = Description.Replace('"', '\'');
             KeyWords = KeyWords.Replace('"', '\'');
             Author = Author.Replace('"', '\'');
-            menuname = menuname.Replace('"', '\'');
+            menuName = menuName.Replace('"', '\'');
             Description = Description.Trim();
             if (Description.Length == 0)
             {
-                Description = menuname + " selected pixels";
+                Description = menuName + " selected pixels";
             }
             if (KeyWords.Length == 0)
             {
-                KeyWords = menuname;
+                KeyWords = menuName;
             }
 
             string AssemblyInfoPart = "";
@@ -64,9 +64,9 @@ namespace PaintDotNet.Effects
             return NamespacePart;
         }
 
-        internal static string SupportInfoPart(string menuname, string SupportURL)
+        internal static string SupportInfoPart(string menuName, string SupportURL)
         {
-            menuname = menuname.Replace('"', '\'');
+            menuName = menuName.Replace('"', '\'');
             SupportURL = SupportURL.Trim();
             if (!SupportURL.IsWebAddress())
             {
@@ -83,7 +83,7 @@ namespace PaintDotNet.Effects
             SupportInfoPart += "        public Uri WebsiteUri => new Uri(\"" + SupportURL + "\");\r\n";
             SupportInfoPart += "    }\r\n";
             SupportInfoPart += "\r\n";
-            SupportInfoPart += "    [PluginSupportInfo(typeof(PluginSupportInfo), DisplayName = \"" + menuname + "\")]\r\n";
+            SupportInfoPart += "    [PluginSupportInfo(typeof(PluginSupportInfo), DisplayName = \"" + menuName + "\")]\r\n";
             return SupportInfoPart;
         }
 
