@@ -111,6 +111,7 @@ namespace PaintDotNet.Effects
                     pdnAssemblyNames.Add("PaintDotNet.Effects");
                     pdnAssemblyNames.Add("PaintDotNet.Effects.Core");
                     pdnAssemblyNames.Add("PaintDotNet.Effects.Legacy");
+                    pdnAssemblyNames.Add("PaintDotNet.Windows"); // needed for the Classic Effect constructor that uses a System.Drawing.Bitmap
                     break;
                 case ProjectType.GpuEffect:
                 case ProjectType.BitmapEffect:
