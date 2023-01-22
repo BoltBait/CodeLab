@@ -633,6 +633,7 @@ namespace PaintDotNet.Effects
                         PropertyPart += "            configUI.SetPropertyControlType(PropertyNames." + propertyName + ", PropertyControlType.FolderChooser);\r\n";
                         break;
                 }
+                PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.ShowHeaderLine, false);\r\n";
             }
             PropertyPart += "\r\n";
             PropertyPart += "            return configUI;\r\n";
