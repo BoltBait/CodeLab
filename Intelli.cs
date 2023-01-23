@@ -111,7 +111,6 @@ namespace PaintDotNet.Effects
                     pdnAssemblyNames.Add("PaintDotNet.Effects");
                     pdnAssemblyNames.Add("PaintDotNet.Effects.Core");
                     pdnAssemblyNames.Add("PaintDotNet.Effects.Legacy");
-                    pdnAssemblyNames.Add("PaintDotNet.Windows"); // needed for the Classic Effect constructor that uses a System.Drawing.Bitmap
                     break;
                 case ProjectType.GpuEffect:
                 case ProjectType.BitmapEffect:
@@ -136,6 +135,8 @@ namespace PaintDotNet.Effects
             }
 
             PdnAssemblyNames = pdnAssemblyNames
+                .Append("PaintDotNet.Windows") // PaintDotNet.Windows needed for the Classic Effect constructor that uses a System.Drawing.Bitmap
+                .Distinct()
                 .OrderBy(x => x, StringComparer.Ordinal)
                 .ToImmutableArray();
 
@@ -144,7 +145,12 @@ namespace PaintDotNet.Effects
                 .Concat(allPdnAssemblies.Where(a => pdnAssemblyNames.Contains(a.GetName().Name, StringComparer.Ordinal)))
                 .ToImmutableArray();
 
-            ScriptBuilder.SetReferences(assemblies.Select(a => a.Location));
+            IEnumerable<string> refFilePaths = assemblies
+                .Append(allPdnAssemblies.First(a => a.GetName().Name.Equals("PaintDotNet.Windows", StringComparison.Ordinal)))
+                .Select(a => a.Location)
+                .Distinct();
+
+            ScriptBuilder.SetReferences(refFilePaths);
 
             AllTypes = new Dictionary<string, Type>(aliasTypes);
             AutoCompleteTypes = new Dictionary<string, Type>(aliasTypes);
