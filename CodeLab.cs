@@ -228,7 +228,7 @@ namespace PaintDotNet.Effects
         }
     }
 
-    [PluginSupportInfo(typeof(PluginSupportInfo), DisplayName = "CodeLab")]
+    [PluginSupportInfo<PluginSupportInfo>]
     public class CodeLabRegular : CodeLab
     {
         public CodeLabRegular() : base(string.Empty, BitmapEffectRenderingFlags.None, BitmapEffectRenderingSchedule.SquareTiles)
@@ -236,7 +236,7 @@ namespace PaintDotNet.Effects
         }
     }
 
-    [PluginSupportInfo(typeof(PluginSupportInfo), DisplayName = "CodeLab")]
+    [PluginSupportInfo<PluginSupportInfo>]
     public class CodeLabLegacyROI : CodeLab
     {
         public CodeLabLegacyROI() : base(" - Legacy ROI", BitmapEffectRenderingFlags.None, BitmapEffectRenderingSchedule.HorizontalStrips)
@@ -244,7 +244,7 @@ namespace PaintDotNet.Effects
         }
     }
 
-    [PluginSupportInfo(typeof(PluginSupportInfo), DisplayName = "CodeLab")]
+    [PluginSupportInfo<PluginSupportInfo>]
     public class CodeLabAliased : CodeLab
     {
         public CodeLabAliased() : base(" - Aliased Selection", BitmapEffectRenderingFlags.ForceAliasedSelectionQuality, BitmapEffectRenderingSchedule.SquareTiles)
@@ -252,7 +252,7 @@ namespace PaintDotNet.Effects
         }
     }
 
-    [PluginSupportInfo(typeof(PluginSupportInfo), DisplayName = "CodeLab")]
+    [PluginSupportInfo<PluginSupportInfo>]
     public class CodeLabSingleRender : CodeLab
     {
         public CodeLabSingleRender() : base(" - Single Render Call", BitmapEffectRenderingFlags.None, BitmapEffectRenderingSchedule.None)
@@ -260,7 +260,7 @@ namespace PaintDotNet.Effects
         }
     }
 
-    [PluginSupportInfo(typeof(PluginSupportInfo), DisplayName = "CodeLab")]
+    [PluginSupportInfo<PluginSupportInfo>]
     public class CodeLabNoClip : CodeLab
     {
         public CodeLabNoClip() : base(" - No Selection Clip", BitmapEffectRenderingFlags.DisableSelectionClipping, BitmapEffectRenderingSchedule.SquareTiles)

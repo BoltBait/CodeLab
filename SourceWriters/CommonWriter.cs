@@ -83,7 +83,7 @@ namespace PaintDotNet.Effects
             SupportInfoPart += "        public Uri WebsiteUri => new Uri(\"" + SupportURL + "\");\r\n";
             SupportInfoPart += "    }\r\n";
             SupportInfoPart += "\r\n";
-            SupportInfoPart += "    [PluginSupportInfo(typeof(PluginSupportInfo), DisplayName = \"" + menuName + "\")]\r\n";
+            SupportInfoPart += "    [PluginSupportInfo<PluginSupportInfo>(DisplayName = \"" + menuName + "\")]\r\n";
             return SupportInfoPart;
         }
 

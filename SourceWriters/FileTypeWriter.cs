@@ -58,7 +58,7 @@ namespace PaintDotNet.Effects
             fileTypePart += "        }\r\n";
             fileTypePart += "    }\r\n";
             fileTypePart += "\r\n";
-            fileTypePart += "    [PluginSupportInfo(typeof(PluginSupportInfo))]\r\n";
+            fileTypePart += "    [PluginSupportInfo<PluginSupportInfo>]\r\n";
             fileTypePart += "    internal class " + projectName + "Plugin : PropertyBasedFileType\r\n";
             fileTypePart += "    {\r\n";
             fileTypePart += "        internal " + projectName + "Plugin()\r\n";
