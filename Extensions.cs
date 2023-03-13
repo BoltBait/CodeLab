@@ -472,9 +472,20 @@ namespace PaintDotNet.Effects
 
             if (extType.IsAssignableFromAsIEnumerable(type))
             {
-                return (method.GetGenericArguments().Length == 1)
-                    ? method.MakeGenericMethod(type.GenericTypeArguments[0])
-                    : method;
+                if (method.GetGenericArguments().Length == 1)
+                {
+                    if (type.IsConstructedGenericType)
+                    {
+                        return method.MakeGenericMethod(type.GenericTypeArguments[0]);
+                    }
+
+                    if (type.IsArray)
+                    {
+                        return method.MakeGenericMethod(type.GetElementType());
+                    }
+                }
+
+                return method;
             }
 
             return null;
