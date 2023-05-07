@@ -84,11 +84,11 @@ namespace PaintDotNet.Effects
                         posColorHover = ColorBgra32FromRgb(158, 158, 158);
                         posColorClick = ColorBgra32FromRgb(239, 235, 239);
 
-                        caretColor = Colors.Gainsboro;
+                        caretColor = SrgbColors.Gainsboro;
                         errorColor = ColorBgra32FromRgb(252, 62, 54);
                         warningColor = ColorBgra32FromRgb(149, 219, 125);
-                        matchColor = Colors.Orange;
-                        bookmarkColor = Colors.DeepSkyBlue;
+                        matchColor = SrgbColors.Orange;
+                        bookmarkColor = SrgbColors.DeepSkyBlue;
                         break;
 
                     case Theme.Light:
@@ -103,10 +103,10 @@ namespace PaintDotNet.Effects
                         posColorClick = ColorBgra32FromRgb(91, 91, 91);
 
                         caretColor = ColorBgra32FromRgb(0, 0, 205);
-                        errorColor = Colors.Red;
-                        warningColor = Colors.Green;
+                        errorColor = SrgbColors.Red;
+                        warningColor = SrgbColors.Green;
                         matchColor = ColorBgra32FromRgb(246, 185, 77);
-                        bookmarkColor = Colors.DeepSkyBlue;
+                        bookmarkColor = SrgbColors.DeepSkyBlue;
                         break;
                 }
             }

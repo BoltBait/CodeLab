@@ -57,7 +57,7 @@ namespace PaintDotNet.Effects
         internal static string VersionFull => typeof(CodeLab).Assembly.GetName().Version.ToString();
 
         protected CodeLab(string extendedName, BitmapEffectRenderingFlags renderingFlags, BitmapEffectRenderingSchedule renderingSchedule)
-            : base("CodeLab" + extendedName, UIUtil.GetImage("CodeLab"), "Advanced", new BitmapEffectOptions { IsConfigurable = true })
+            : base("CodeLab" + extendedName, UIUtil.GetImage("CodeLab"), "Advanced", BitmapEffectOptions.Create() with { IsConfigurable = true })
         {
             this.renderingFlags = renderingFlags;
             this.renderingSchedule = renderingSchedule;
