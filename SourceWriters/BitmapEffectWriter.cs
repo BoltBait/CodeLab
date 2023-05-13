@@ -178,7 +178,7 @@ namespace PaintDotNet.Effects
                 BitmapEffectWriter.UsingStatements +
                 CommonWriter.AssemblyInfoPart(FileName, menuName, Author, MajorVersion, MinorVersion, Description, KeyWords) +
                 CommonWriter.NamespacePart(FileName) +
-                CommonWriter.SupportInfoPart(menuName, SupportURL) +
+                CommonWriter.SupportInfoPart(FileName, menuName, SupportURL) +
                 CommonWriter.CategoryPart(isAdjustment) +
                 ConstructorPart(UserControls, FileName, subMenuName, menuName, iconPath) +
                 CommonWriter.HelpPart(HelpType, HelpText) +

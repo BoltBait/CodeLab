@@ -47,7 +47,7 @@ namespace PaintDotNet.Effects
                 + "\r\n";
         }
 
-        private static string FileTypePart(string projectName, string loadExt, string saveExt, bool supportsLayers, string title)
+        private static string FileTypeFactoryPart(string projectName)
         {
             string fileTypePart = "";
             fileTypePart += "    public sealed class " + projectName + "Factory : IFileTypeFactory\r\n";
@@ -58,7 +58,13 @@ namespace PaintDotNet.Effects
             fileTypePart += "        }\r\n";
             fileTypePart += "    }\r\n";
             fileTypePart += "\r\n";
-            fileTypePart += "    [PluginSupportInfo<PluginSupportInfo>]\r\n";
+
+            return fileTypePart;
+        }
+
+        private static string FileTypeCtorPart(string projectName, string loadExt, string saveExt, bool supportsLayers, string title)
+        {
+            string fileTypePart = "";
             fileTypePart += "    internal class " + projectName + "Plugin : PropertyBasedFileType\r\n";
             fileTypePart += "    {\r\n";
             fileTypePart += "        internal " + projectName + "Plugin()\r\n";
@@ -111,8 +117,9 @@ namespace PaintDotNet.Effects
                 UsingPartCode() +
                 CommonWriter.AssemblyInfoPart(projectName, projectName, author, majorVersion, minorVersion, description, string.Empty) +
                 CommonWriter.NamespacePart(projectName, true) +
-                CommonWriter.SupportInfoPart(title, supportURL) +
-                FileTypePart(projectName, loadExt, saveExt, supportsLayers, title) +
+                FileTypeFactoryPart(projectName) +
+                CommonWriter.SupportInfoPart(projectName, title, supportURL) +
+                FileTypeCtorPart(projectName, loadExt, saveExt, supportsLayers, title) +
                 CommonWriter.ConstructorBodyPart(false) +
                 CommonWriter.PropertyPart(userControls, projectName, string.Empty, HelpType.None, string.Empty, ProjectType.FileType) +
                 FileTypePart2(userControls) +
@@ -129,7 +136,8 @@ namespace PaintDotNet.Effects
             return
                 FileTypeWriter.UsingPartCode() +
                 CommonWriter.NamespacePart(projectName, true) +
-                FileTypeWriter.FileTypePart(projectName, "\".foo\"", "\".foo\"", false, projectName) +
+                FileTypeWriter.FileTypeFactoryPart(projectName) +
+                FileTypeWriter.FileTypeCtorPart(projectName, "\".foo\"", "\".foo\"", false, projectName) +
                 CommonWriter.ConstructorBodyPart(debug) +
                 CommonWriter.PropertyPart(userControls, projectName, string.Empty, HelpType.None, string.Empty, ProjectType.FileType) +
                 FileTypeWriter.FileTypePart2(userControls) +

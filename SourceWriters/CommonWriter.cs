@@ -64,8 +64,9 @@ namespace PaintDotNet.Effects
             return NamespacePart;
         }
 
-        internal static string SupportInfoPart(string menuName, string SupportURL)
+        internal static string SupportInfoPart(string projectName, string menuName, string SupportURL)
         {
+            string className = projectName + "SupportInfo";
             menuName = menuName.Replace('"', '\'');
             SupportURL = SupportURL.Trim();
             if (!SupportURL.IsWebAddress())
@@ -74,7 +75,7 @@ namespace PaintDotNet.Effects
             }
 
             string SupportInfoPart = "";
-            SupportInfoPart += "    public class PluginSupportInfo : IPluginSupportInfo\r\n";
+            SupportInfoPart += "    public class " + className + " : IPluginSupportInfo\r\n";
             SupportInfoPart += "    {\r\n";
             SupportInfoPart += "        public string Author => base.GetType().Assembly.GetCustomAttribute<AssemblyCopyrightAttribute>().Copyright;\r\n";
             SupportInfoPart += "        public string Copyright => base.GetType().Assembly.GetCustomAttribute<AssemblyDescriptionAttribute>().Description;\r\n";
@@ -83,7 +84,7 @@ namespace PaintDotNet.Effects
             SupportInfoPart += "        public Uri WebsiteUri => new Uri(\"" + SupportURL + "\");\r\n";
             SupportInfoPart += "    }\r\n";
             SupportInfoPart += "\r\n";
-            SupportInfoPart += "    [PluginSupportInfo<PluginSupportInfo>(DisplayName = \"" + menuName + "\")]\r\n";
+            SupportInfoPart += "    [PluginSupportInfo<" + className + ">(DisplayName = \"" + menuName + "\")]\r\n";
             return SupportInfoPart;
         }
 

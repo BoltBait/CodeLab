@@ -265,7 +265,7 @@ namespace PaintDotNet.Effects
             string sUsingPart = UsingPartCode();
             string sAssemblyInfoPart = CommonWriter.AssemblyInfoPart(FileName, menuName, Author, MajorVersion, MinorVersion, Description, KeyWords);
             string sNamespacePart = CommonWriter.NamespacePart(FileName);
-            string sSupportInfoPart = CommonWriter.SupportInfoPart(menuName, SupportURL);
+            string sSupportInfoPart = CommonWriter.SupportInfoPart(FileName, menuName, SupportURL);
             string sCategoryPart = CommonWriter.CategoryPart(isAdjustment);
             string sEffectPart = ConstructorPart(UserControls, FileName, subMenuName, menuName, iconPath, renderingFlags, renderingSchedule);
             string sHelpPart = CommonWriter.HelpPart(HelpType, HelpText);
