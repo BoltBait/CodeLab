@@ -1135,7 +1135,7 @@ namespace PaintDotNet.Effects
             {
                 if (obj is IntelliBoxItem other)
                 {
-                    return (this.Text == other.Text && this.Code == other.Code && this.ToolTip == other.ToolTip && this.ImageIndex == other.ImageIndex);
+                    return Equals(other);
                 }
 
                 return false;
