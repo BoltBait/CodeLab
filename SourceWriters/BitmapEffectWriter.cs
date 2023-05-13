@@ -93,7 +93,7 @@ namespace PaintDotNet.Effects
             EffectPart += "        public static string SubmenuName => " + CommonWriter.SubmenuPart(subMenuName) + ";\r\n";
             EffectPart += "\r\n";
             EffectPart += "        public " + className + "()\r\n";
-            EffectPart += "            : base(StaticName, StaticIcon, SubmenuName, new BitmapEffectOptions { IsConfigurable = " + configurable + " })\r\n";
+            EffectPart += "            : base(StaticName, StaticIcon, SubmenuName, BitmapEffectOptions.Create() with { IsConfigurable = " + configurable + " })\r\n";
             EffectPart += "        {\r\n";
 
             if (UserControls.Any(u => u.ElementType == ElementType.ReseedButton))
