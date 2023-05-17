@@ -561,7 +561,15 @@ namespace PaintDotNet.Effects
             {
                 if (icon != MessageBoxIcon.None)
                 {
-                    flexibleMessageBoxForm.pictureBoxForIcon.Image = GetMessageBoxIcon(icon);
+                    StockIconId iconId = icon switch
+                    {
+                        MessageBoxIcon.Information => StockIconId.Info,
+                        MessageBoxIcon.Warning => StockIconId.Warning,
+                        MessageBoxIcon.Error => StockIconId.Error,
+                        MessageBoxIcon.Question => StockIconId.Help
+                    };
+
+                    flexibleMessageBoxForm.pictureBoxForIcon.Image = SystemIcons.GetStockIcon(iconId).ToBitmap();
                 }
                 else
                 {
@@ -569,24 +577,6 @@ namespace PaintDotNet.Effects
                     flexibleMessageBoxForm.pictureBoxForIcon.Visible = false;
                     flexibleMessageBoxForm.richTextBoxMessage.Left -= flexibleMessageBoxForm.pictureBoxForIcon.Width;
                     flexibleMessageBoxForm.richTextBoxMessage.Width += flexibleMessageBoxForm.pictureBoxForIcon.Width;
-                }
-            }
-
-            private static Bitmap GetMessageBoxIcon(MessageBoxIcon messageBoxIcon)
-            {
-                int iconIndex = messageBoxIcon switch
-                {
-                    MessageBoxIcon.Information => 76,
-                    MessageBoxIcon.Warning => 79,
-                    MessageBoxIcon.Error => 93,
-                    MessageBoxIcon.Question => 94
-                };
-
-                string imageResPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "imageres.dll");
-
-                using (Icon icon = UIUtil.ExtractIcon(imageResPath, iconIndex, true))
-                {
-                    return icon?.ToBitmap();
                 }
             }
 
