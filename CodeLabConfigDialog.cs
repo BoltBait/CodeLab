@@ -719,7 +719,7 @@ namespace PaintDotNet.Effects
                 return;
             }
 
-            ErrorCodeMenuItem.Visible = errorList.SelectedError.ErrorNumber.Length > 0;
+            ErrorCodeMenuItem.Visible = errorList.SelectedError.ErrorUrl?.Length > 0;
             ignoreWarningMenuItem.Visible = errorList.SelectedError.IsWarning;
         }
 
@@ -750,7 +750,7 @@ namespace PaintDotNet.Effects
         {
             if (errorList.SelectedIndex > -1)
             {
-                string url = Error.ErrorUrl(errorList.SelectedError.ErrorNumber);
+                string url = errorList.SelectedError.ErrorUrl;
                 LaunchUrl(url);
             }
         }

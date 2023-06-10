@@ -28,6 +28,7 @@ namespace PaintDotNet.Effects
         internal int EndColumn { get; }
         internal string ErrorNumber { get; }
         internal string ErrorText { get; }
+        internal string ErrorUrl { get; }
         internal bool IsWarning { get; }
         internal string FullError => ToString();
 
@@ -43,25 +44,26 @@ namespace PaintDotNet.Effects
                 span.End.Character - ScriptBuilder.ColumnOffset,
                 diagnostic.Id,
                 diagnostic.GetMessage(),
+                diagnostic.Descriptor.HelpLinkUri,
                 diagnostic.Severity == DiagnosticSeverity.Warning);
         }
 
         internal static Error NewShapeError(int line, int column, string errorText)
         {
-            return new Error(ErrorType.Xaml, line - 1, column - 1, -1, -1, string.Empty, errorText, false);
+            return new Error(ErrorType.Xaml, line - 1, column - 1, -1, -1, string.Empty, errorText, null, false);
         }
 
         internal static Error NewInternalError(string internalError)
         {
-            return new Error(ErrorType.Internal, 0, 0, -1, -1, string.Empty, internalError, false);
+            return new Error(ErrorType.Internal, 0, 0, -1, -1, string.Empty, internalError, null, false);
         }
 
         internal static Error NewExceptionError(Exception exception)
         {
-            return new Error(ErrorType.Exception, 0, 0, -1, -1, string.Empty, exception.ToString(), false);
+            return new Error(ErrorType.Exception, 0, 0, -1, -1, string.Empty, exception.ToString(), null, false);
         }
 
-        private Error(ErrorType errorType, int startLine, int startColumn, int endLine, int endColumn, string errorNumber, string errorText, bool isWarning)
+        private Error(ErrorType errorType, int startLine, int startColumn, int endLine, int endColumn, string errorNumber, string errorText, string errorUrl, bool isWarning)
         {
             this.errorType = errorType;
             this.StartLine = startLine;
@@ -70,6 +72,7 @@ namespace PaintDotNet.Effects
             this.EndColumn = endColumn;
             this.ErrorNumber = errorNumber;
             this.ErrorText = errorText;
+            this.ErrorUrl = errorUrl;
             this.IsWarning = isWarning;
         }
 
@@ -103,7 +106,7 @@ namespace PaintDotNet.Effects
             Exception
         }
 
-        internal static string ErrorUrl(string errorNumber)
+        internal static string GetErrorUrl(string errorNumber)
         {
             return $"https://msdn.microsoft.com/query/roslyn.query?appId=roslyn&k=k({errorNumber})";
         }

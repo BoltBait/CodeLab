@@ -338,7 +338,7 @@ namespace PaintDotNet.Effects
         {
             if (warningsToIgnoreList.SelectedIndex > -1)
             {
-                string url = Error.ErrorUrl(warningsToIgnoreList.Text);
+                string url = Error.GetErrorUrl(warningsToIgnoreList.Text);
                 UIUtil.LaunchUrl(this, url);
             }
         }
