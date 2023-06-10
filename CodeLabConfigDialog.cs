@@ -750,8 +750,7 @@ namespace PaintDotNet.Effects
         {
             if (errorList.SelectedIndex > -1)
             {
-                string url = $"https://msdn.microsoft.com/query/roslyn.query?appId=roslyn&k=k({errorList.SelectedError.ErrorNumber})";
-
+                string url = Error.ErrorUrl(errorList.SelectedError.ErrorNumber);
                 LaunchUrl(url);
             }
         }

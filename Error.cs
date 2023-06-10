@@ -102,5 +102,10 @@ namespace PaintDotNet.Effects
             Internal,
             Exception
         }
+
+        internal static string ErrorUrl(string errorNumber)
+        {
+            return $"https://msdn.microsoft.com/query/roslyn.query?appId=roslyn&k=k({errorNumber})";
+        }
     }
 }
