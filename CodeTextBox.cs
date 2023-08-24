@@ -2470,7 +2470,7 @@ namespace PaintDotNet.Effects
             return false;
         }
 
-        private bool GoToDefinitionCSharp(bool msDocs)
+        private bool GoToDefinitionCSharp(bool apiDocs)
         {
             int position = this.WordStartPosition(this.CurrentPosition);
 
@@ -2483,11 +2483,12 @@ namespace PaintDotNet.Effects
             {
                 return false;
             }
+
             if (style == Style.Cpp.String || style == Style.Cpp.String + Preprocessor ||
                 style == Style.Cpp.StringEol || style == Style.Cpp.StringEol + Preprocessor ||
                 style == Style.Cpp.Verbatim || style == Style.Cpp.Verbatim + Preprocessor)
             {
-                if (msDocs)
+                if (apiDocs)
                 {
                     OpenMsDocs(typeof(string).FullName);
                 }
@@ -2498,9 +2499,10 @@ namespace PaintDotNet.Effects
 
                 return true;
             }
+
             if (style == Style.Cpp.Character || style == Style.Cpp.Character + Preprocessor)
             {
-                if (msDocs)
+                if (apiDocs)
                 {
                     OpenMsDocs(typeof(char).FullName);
                 }
@@ -2511,6 +2513,7 @@ namespace PaintDotNet.Effects
 
                 return true;
             }
+
             if (style == Style.Cpp.Number || style == Style.Cpp.Number + Preprocessor)
             {
                 Type numType = GetNumberType(position);
@@ -2519,7 +2522,7 @@ namespace PaintDotNet.Effects
                     return false;
                 }
 
-                if (msDocs)
+                if (apiDocs)
                 {
                     OpenMsDocs(numType.FullName);
                 }
@@ -2537,7 +2540,7 @@ namespace PaintDotNet.Effects
                 return false;
             }
 
-            if (!msDocs && (Intelli.Variables.ContainsKey(lastWords) || Intelli.Parameters.ContainsKey(lastWords)) && Intelli.VarPos.ContainsKey(lastWords))
+            if (!apiDocs && (Intelli.Variables.ContainsKey(lastWords) || Intelli.Parameters.ContainsKey(lastWords)) && Intelli.VarPos.ContainsKey(lastWords))
             {
                 this.SelectionStart = Intelli.VarPos[lastWords];
                 this.SelectionEnd = this.WordEndPosition(Intelli.VarPos[lastWords]);
@@ -2545,7 +2548,7 @@ namespace PaintDotNet.Effects
                 return true;
             }
 
-            if (!msDocs && Intelli.UserDefinedTypes.ContainsKey(lastWords))
+            if (!apiDocs && Intelli.UserDefinedTypes.ContainsKey(lastWords))
             {
                 Type t = Intelli.UserDefinedTypes[lastWords];
 
@@ -2595,17 +2598,24 @@ namespace PaintDotNet.Effects
             {
                 Type t = Intelli.AllTypes[lastWords];
 
-                if (msDocs)
+                if (apiDocs)
                 {
-                    if (t.Namespace.StartsWith("PaintDotNet", StringComparison.Ordinal))
-                    {
-                        return false;
-                    }
-
                     string typeName = (t.IsGenericType) ? t.Name.Replace("`", "-") : t.Name;
                     string fullName = $"{t.Namespace}.{typeName}";
 
-                    OpenMsDocs(fullName);
+                    if (t.Namespace.StartsWith("PaintDotNet", StringComparison.Ordinal))
+                    {
+                        if (t.Name.Equals("UserScript", StringComparison.Ordinal))
+                        {
+                            return false;
+                        }
+
+                        OpenPdnDocs(fullName);
+                    }
+                    else
+                    {
+                        OpenMsDocs(fullName);
+                    }
                 }
                 else
                 {
@@ -2621,7 +2631,7 @@ namespace PaintDotNet.Effects
                 return false;
             }
 
-            if (!msDocs && memberInfo.DeclaringType == Intelli.UserScript)
+            if (!apiDocs && memberInfo.DeclaringType == Intelli.UserScript)
             {
                 string returnType = memberInfo.GetReturnType()?.GetDisplayName();
 
@@ -2694,18 +2704,25 @@ namespace PaintDotNet.Effects
                 return found;
             }
 
-            if (msDocs)
+            if (apiDocs)
             {
                 Type declaringType = memberInfo.DeclaringType;
-                if (declaringType.Namespace.StartsWith("PaintDotNet", StringComparison.Ordinal))
-                {
-                    return false;
-                }
-
                 string typeName = (declaringType.IsGenericType) ? declaringType.Name.Replace("`", "-") : declaringType.Name;
                 string fullName = $"{declaringType.Namespace}.{typeName}.{memberInfo.Name}";
 
-                OpenMsDocs(fullName);
+                if (declaringType.Namespace.StartsWith("PaintDotNet", StringComparison.Ordinal))
+                {
+                    if (declaringType.Name.Equals("UserScript", StringComparison.Ordinal))
+                    {
+                        return false;
+                    }
+
+                    OpenPdnDocs(fullName);
+                }
+                else
+                {
+                    OpenMsDocs(fullName);
+                }
             }
             else
             {
@@ -2719,6 +2736,11 @@ namespace PaintDotNet.Effects
         {
             string dotnetVer = Environment.Version.ToString(2);
             UIUtil.LaunchUrl(this, $"https://learn.microsoft.com/dotnet/api/{fullName}?view=net-{dotnetVer}");
+        }
+
+        private void OpenPdnDocs(string fullName)
+        {
+            UIUtil.LaunchUrl(this, $"https://paintdotnet.github.io/apidocs/api/{fullName}.html");
         }
 
         protected override void OnMouseWheel(MouseEventArgs e)
