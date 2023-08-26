@@ -39,34 +39,10 @@ namespace PaintDotNet.Effects
         private string FileName = "Untitled";
         private string FullScriptPath = "";
         private EffectConfigToken previewToken = null;
-        private string effectFlag = null;
+        private readonly string extendedName;
         private const string showErrorList = "Show Error List";
 
-        private string EffectFlag
-        {
-            get
-            {
-#if !FASTDEBUG
-                if (this.effectFlag != null)
-                {
-                    return this.effectFlag;
-                }
-
-                if (this.Effect != null)
-                {
-                    string name = (this.Effect as IEffect).EffectInfo.Name;
-                    int dashIndex = name.IndexOf('-', StringComparison.Ordinal);
-                    this.effectFlag = dashIndex > 0 ?
-                        " (" + name.Substring(dashIndex + 2) + ")" :
-                        string.Empty;
-                    return this.effectFlag;
-                }
-#endif
-                return string.Empty;
-            }
-        }
-
-        public CodeLabConfigDialog()
+        public CodeLabConfigDialog(string extendedName)
         {
             Task.Run(() => Intelli.Keywords); // Forces the Intelli class to start initializing in the background
             InitializeComponent();
@@ -102,6 +78,10 @@ namespace PaintDotNet.Effects
             newDocTypeChooser.DropDownItems.AddRange(items);
             toolStrip1.Items.Insert(1, newDocTypeChooser);
 #endif
+
+            this.extendedName = extendedName.Length > 0
+                ? " (" + extendedName + ")"
+                : string.Empty;
         }
 
 #if !FASTDEBUG
@@ -1014,7 +994,7 @@ namespace PaintDotNet.Effects
         #region Common functions for button/menu events
         private void CreateNewEffect()
         {
-            FileNew fn = new FileNew(this.EffectFlag);
+            FileNew fn = new FileNew(this.extendedName);
             if (fn.ShowDialog() == DialogResult.OK)
             {
                 FileName = "Untitled";
@@ -2199,7 +2179,7 @@ namespace PaintDotNet.Effects
 
         private void UpdateWindowTitle()
         {
-            this.Text = FileName + " - " + WindowTitle + this.EffectFlag;
+            this.Text = FileName + " - " + WindowTitle + this.extendedName;
         }
         #endregion
 
