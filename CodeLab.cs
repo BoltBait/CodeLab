@@ -66,10 +66,12 @@ namespace PaintDotNet.Effects
         private readonly BitmapEffectRenderingFlags renderingFlags;
         private readonly BitmapEffectRenderingSchedule renderingSchedule;
 
+#if !FASTDEBUG
         protected override IEffectConfigForm OnCreateConfigForm()
         {
             return new CodeLabConfigDialog();
         }
+#endif
 
         private IEffect userEffect;
         private bool fetchDebugMsg;

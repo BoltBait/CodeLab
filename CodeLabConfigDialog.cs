@@ -27,7 +27,12 @@ using System.Windows.Forms;
 
 namespace PaintDotNet.Effects
 {
-    internal partial class CodeLabConfigDialog : EffectConfigForm<CodeLab, CodeLabConfigToken>
+    internal partial class CodeLabConfigDialog
+#if FASTDEBUG
+        : Form
+#else
+        : EffectConfigForm<CodeLab, CodeLabConfigToken>
+#endif
     {
         #region Constructor
         private const string WindowTitle = "CodeLab v" + CodeLab.Version;
@@ -67,8 +72,12 @@ namespace PaintDotNet.Effects
             InitializeComponent();
 
 #if FASTDEBUG
+            this.BackColor = Color.FromArgb(40, 40, 40);
+            this.ForeColor = Color.White;
             this.Icon = UIUtil.CreateIcon("CodeLab");
             this.ShowInTaskbar = true;
+#else
+            transparencyToolStripMenuItem.Enabled = EnableOpacity;
 #endif
             PdnTheme.InitialColors(this.ForeColor, this.BackColor);
             LoadSettingsFromRegistry();
@@ -78,7 +87,6 @@ namespace PaintDotNet.Effects
             opacity75MenuItem.Checked = false;
             opacity90MenuItem.Checked = false;
             opacity100MenuItem.Checked = true;
-            transparencyToolStripMenuItem.Enabled = EnableOpacity;
 
 #if !RELEASE
             ToolStripMenuItem[] items = Enum.GetValues<ProjectType>()
@@ -93,14 +101,21 @@ namespace PaintDotNet.Effects
 #endif
         }
 
+#if !FASTDEBUG
         protected override void OnLoading()
         {
             base.OnLoading();
 
-#if !FASTDEBUG
             UIUtil.SetIShellService(this.Services.GetService<IShellService>());
-#endif
         }
+#else
+        protected override void OnShown(EventArgs e)
+        {
+            base.OnShown(e);
+
+            this.txtCode.Text = ClassicEffectWriter.DefaultCode;
+        }
+#endif
 
         private void LoadSettingsFromRegistry()
         {
@@ -175,6 +190,7 @@ namespace PaintDotNet.Effects
         #endregion
 
         #region Token functions
+#if !FASTDEBUG
         protected override void OnUpdateTokenFromDialog(CodeLabConfigToken dstToken)
         {
             dstToken.UserCode = txtCode.Text;
@@ -224,6 +240,11 @@ namespace PaintDotNet.Effects
                 Bookmarks = Array.Empty<int>()
             };
         }
+#else
+        private void UpdateTokenFromDialog()
+        {
+        }
+#endif
         #endregion
 
         #region Build Script actions
@@ -359,6 +380,7 @@ namespace PaintDotNet.Effects
                 return;
             }
 
+#if !FASTDEBUG
             using IEffect effect = ScriptBuilder.BuiltEffect.EffectInfo.CreateInstance(this.Services, this.Environment);
             using IEffectConfigForm previewDialog = effect.CreateConfigForm();
             {
@@ -367,6 +389,7 @@ namespace PaintDotNet.Effects
 
                 previewDialog.ShowDialog(this);
             }
+#endif
 
             previewToken = null;
             Build();
@@ -817,6 +840,7 @@ namespace PaintDotNet.Effects
         #region Timer tick Event functions
         private void tmrExceptionCheck_Tick(object sender, EventArgs e)
         {
+#if !FASTDEBUG
             CodeLabConfigToken sect = Token;
 
             if (Token.LastExceptions.Count > 0)
@@ -839,6 +863,7 @@ namespace PaintDotNet.Effects
                     OutputTextBox.AppendText(output);
                 }
             }
+#endif
         }
 
         private void tmrCompile_Tick(object sender, EventArgs e)
