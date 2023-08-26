@@ -149,11 +149,23 @@
             OutputTextBox = new System.Windows.Forms.TextBox();
             ClearOutput = new System.Windows.Forms.Button();
             ShowOutput = new System.Windows.Forms.CheckBox();
+            mainSplitContainer = new System.Windows.Forms.SplitContainer();
+            bottomPaneSplitContainer = new System.Windows.Forms.SplitContainer();
+            footerPanel = new System.Windows.Forms.Panel();
             tabStrip1 = new TabStrip();
             errorListMenu.SuspendLayout();
             contextMenuStrip1.SuspendLayout();
             menuStrip1.SuspendLayout();
             toolStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)mainSplitContainer).BeginInit();
+            mainSplitContainer.Panel1.SuspendLayout();
+            mainSplitContainer.Panel2.SuspendLayout();
+            mainSplitContainer.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)bottomPaneSplitContainer).BeginInit();
+            bottomPaneSplitContainer.Panel1.SuspendLayout();
+            bottomPaneSplitContainer.Panel2.SuspendLayout();
+            bottomPaneSplitContainer.SuspendLayout();
+            footerPanel.SuspendLayout();
             SuspendLayout();
             // 
             // btnOK
@@ -162,7 +174,7 @@
             btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
             btnOK.FlatStyle = System.Windows.Forms.FlatStyle.System;
             btnOK.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            btnOK.Location = new System.Drawing.Point(759, 614);
+            btnOK.Location = new System.Drawing.Point(754, 8);
             btnOK.Name = "btnOK";
             btnOK.Size = new System.Drawing.Size(64, 24);
             btnOK.TabIndex = 3;
@@ -175,7 +187,7 @@
             btnCancel.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
             btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            btnCancel.Location = new System.Drawing.Point(829, 614);
+            btnCancel.Location = new System.Drawing.Point(824, 8);
             btnCancel.Name = "btnCancel";
             btnCancel.Size = new System.Drawing.Size(64, 24);
             btnCancel.TabIndex = 4;
@@ -187,7 +199,7 @@
             // 
             btnBuild.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
             btnBuild.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            btnBuild.Location = new System.Drawing.Point(689, 614);
+            btnBuild.Location = new System.Drawing.Point(684, 8);
             btnBuild.Name = "btnBuild";
             btnBuild.Size = new System.Drawing.Size(64, 24);
             btnBuild.TabIndex = 2;
@@ -198,15 +210,15 @@
             // 
             // errorList
             // 
-            errorList.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
             errorList.ContextMenuStrip = errorListMenu;
+            errorList.Dock = System.Windows.Forms.DockStyle.Fill;
             errorList.Font = new System.Drawing.Font("Courier New", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             errorList.IntegralHeight = false;
             errorList.ItemHeight = 14;
-            errorList.Location = new System.Drawing.Point(-1, 518);
+            errorList.Location = new System.Drawing.Point(0, 0);
             errorList.Name = "errorList";
             errorList.ScrollAlwaysVisible = true;
-            errorList.Size = new System.Drawing.Size(902, 88);
+            errorList.Size = new System.Drawing.Size(446, 104);
             errorList.TabIndex = 5;
             toolTips.SetToolTip(errorList, "Click on error message to locate that line.\r\nDouble-click on error message to read entire message.");
             errorList.SelectedIndexChanged += listErrors_SelectedIndexChanged;
@@ -1114,7 +1126,6 @@
             // txtCode
             // 
             txtCode.AccessibleRole = System.Windows.Forms.AccessibleRole.Text;
-            txtCode.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
             txtCode.AutoCMaxHeight = 9;
             txtCode.AutomaticFold = ScintillaNET.AutomaticFold.Show | ScintillaNET.AutomaticFold.Change;
             txtCode.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
@@ -1122,14 +1133,15 @@
             txtCode.CaretLineVisible = true;
             txtCode.CaretLineVisibleAlways = true;
             txtCode.ContextMenuStrip = contextMenuStrip1;
+            txtCode.Dock = System.Windows.Forms.DockStyle.Fill;
             txtCode.EdgeColor = System.Drawing.Color.PowderBlue;
             txtCode.IdleStyling = ScintillaNET.IdleStyling.All;
             txtCode.Lexer = ScintillaNET.Lexer.Cpp;
-            txtCode.Location = new System.Drawing.Point(-1, 74);
+            txtCode.Location = new System.Drawing.Point(0, 0);
             txtCode.Margin = new System.Windows.Forms.Padding(0);
             txtCode.MouseDwellTime = 250;
             txtCode.Name = "txtCode";
-            txtCode.Size = new System.Drawing.Size(901, 441);
+            txtCode.Size = new System.Drawing.Size(900, 421);
             txtCode.TabIndex = 1;
             txtCode.Technology = ScintillaNET.Technology.DirectWrite;
             txtCode.WrapIndentMode = ScintillaNET.WrapIndentMode.Indent;
@@ -1145,7 +1157,7 @@
             // 
             ShowErrors.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
             ShowErrors.AutoSize = true;
-            ShowErrors.Location = new System.Drawing.Point(12, 617);
+            ShowErrors.Location = new System.Drawing.Point(7, 11);
             ShowErrors.Name = "ShowErrors";
             ShowErrors.Size = new System.Drawing.Size(104, 19);
             ShowErrors.TabIndex = 15;
@@ -1155,25 +1167,24 @@
             // 
             // OutputTextBox
             // 
-            OutputTextBox.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
             OutputTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            OutputTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
             OutputTextBox.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            OutputTextBox.Location = new System.Drawing.Point(-1, 518);
+            OutputTextBox.Location = new System.Drawing.Point(0, 0);
             OutputTextBox.Multiline = true;
             OutputTextBox.Name = "OutputTextBox";
             OutputTextBox.ReadOnly = true;
             OutputTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            OutputTextBox.Size = new System.Drawing.Size(901, 88);
+            OutputTextBox.Size = new System.Drawing.Size(450, 104);
             OutputTextBox.TabIndex = 16;
             OutputTextBox.Text = resources.GetString("OutputTextBox.Text");
-            OutputTextBox.Visible = false;
             // 
             // ClearOutput
             // 
             ClearOutput.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
             ClearOutput.Enabled = false;
             ClearOutput.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            ClearOutput.Location = new System.Drawing.Point(280, 615);
+            ClearOutput.Location = new System.Drawing.Point(275, 9);
             ClearOutput.Name = "ClearOutput";
             ClearOutput.Size = new System.Drawing.Size(45, 23);
             ClearOutput.TabIndex = 18;
@@ -1185,13 +1196,64 @@
             // 
             ShowOutput.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
             ShowOutput.AutoSize = true;
-            ShowOutput.Location = new System.Drawing.Point(140, 617);
+            ShowOutput.Location = new System.Drawing.Point(135, 11);
             ShowOutput.Name = "ShowOutput";
             ShowOutput.Size = new System.Drawing.Size(134, 19);
             ShowOutput.TabIndex = 19;
             ShowOutput.Text = "Show Debug Output";
             ShowOutput.UseVisualStyleBackColor = true;
             ShowOutput.Click += ShowOutput_Click;
+            // 
+            // mainSplitContainer
+            // 
+            mainSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
+            mainSplitContainer.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
+            mainSplitContainer.Location = new System.Drawing.Point(0, 76);
+            mainSplitContainer.Name = "mainSplitContainer";
+            mainSplitContainer.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // mainSplitContainer.Panel1
+            // 
+            mainSplitContainer.Panel1.Controls.Add(txtCode);
+            // 
+            // mainSplitContainer.Panel2
+            // 
+            mainSplitContainer.Panel2.Controls.Add(bottomPaneSplitContainer);
+            mainSplitContainer.Size = new System.Drawing.Size(900, 529);
+            mainSplitContainer.SplitterDistance = 421;
+            mainSplitContainer.TabIndex = 21;
+            // 
+            // bottomPaneSplitContainer
+            // 
+            bottomPaneSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
+            bottomPaneSplitContainer.Location = new System.Drawing.Point(0, 0);
+            bottomPaneSplitContainer.Name = "bottomPaneSplitContainer";
+            // 
+            // bottomPaneSplitContainer.Panel1
+            // 
+            bottomPaneSplitContainer.Panel1.Controls.Add(errorList);
+            // 
+            // bottomPaneSplitContainer.Panel2
+            // 
+            bottomPaneSplitContainer.Panel2.Controls.Add(OutputTextBox);
+            bottomPaneSplitContainer.Size = new System.Drawing.Size(900, 104);
+            bottomPaneSplitContainer.SplitterDistance = 446;
+            bottomPaneSplitContainer.TabIndex = 22;
+            // 
+            // footerPanel
+            // 
+            footerPanel.BackColor = System.Drawing.Color.Transparent;
+            footerPanel.Controls.Add(btnCancel);
+            footerPanel.Controls.Add(btnBuild);
+            footerPanel.Controls.Add(btnOK);
+            footerPanel.Controls.Add(ClearOutput);
+            footerPanel.Controls.Add(ShowErrors);
+            footerPanel.Controls.Add(ShowOutput);
+            footerPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
+            footerPanel.Location = new System.Drawing.Point(0, 605);
+            footerPanel.Name = "footerPanel";
+            footerPanel.Size = new System.Drawing.Size(900, 40);
+            footerPanel.TabIndex = 21;
             // 
             // tabStrip1
             // 
@@ -1212,18 +1274,11 @@
             AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             ClientSize = new System.Drawing.Size(900, 645);
+            Controls.Add(mainSplitContainer);
             Controls.Add(tabStrip1);
-            Controls.Add(ClearOutput);
-            Controls.Add(ShowOutput);
-            Controls.Add(ShowErrors);
-            Controls.Add(txtCode);
             Controls.Add(toolStrip1);
-            Controls.Add(btnOK);
-            Controls.Add(btnCancel);
-            Controls.Add(btnBuild);
             Controls.Add(menuStrip1);
-            Controls.Add(OutputTextBox);
-            Controls.Add(errorList);
+            Controls.Add(footerPanel);
             MainMenuStrip = menuStrip1;
             MinimumSize = new System.Drawing.Size(560, 325);
             Name = "CodeLabConfigDialog";
@@ -1235,6 +1290,17 @@
             menuStrip1.PerformLayout();
             toolStrip1.ResumeLayout(false);
             toolStrip1.PerformLayout();
+            mainSplitContainer.Panel1.ResumeLayout(false);
+            mainSplitContainer.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)mainSplitContainer).EndInit();
+            mainSplitContainer.ResumeLayout(false);
+            bottomPaneSplitContainer.Panel1.ResumeLayout(false);
+            bottomPaneSplitContainer.Panel2.ResumeLayout(false);
+            bottomPaneSplitContainer.Panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)bottomPaneSplitContainer).EndInit();
+            bottomPaneSplitContainer.ResumeLayout(false);
+            footerPanel.ResumeLayout(false);
+            footerPanel.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -1361,5 +1427,8 @@
         private ScaledToolStripButton settingsButton;
         private ScaledToolStripMenuItem ignoreWarningMenuItem;
         private ScaledToolStripMenuItem discussToolStripMenuItem;
+        private System.Windows.Forms.Panel footerPanel;
+        private System.Windows.Forms.SplitContainer mainSplitContainer;
+        private System.Windows.Forms.SplitContainer bottomPaneSplitContainer;
     }
 }

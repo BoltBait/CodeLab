@@ -157,7 +157,7 @@ namespace PaintDotNet.Effects
                 viewToolStripMenuItem.CheckState = CheckState.Unchecked;
             }
 
-            viewCheckBoxes(Settings.ErrorBox, Settings.Output);
+            SetBottomPanes(Settings.ErrorBox, Settings.Output);
 
             ApplyTheme(Settings.EditorTheme);
 
@@ -1646,70 +1646,40 @@ namespace PaintDotNet.Effects
         #endregion
 
         #region View menu Event functions
-        private void viewCheckBoxes(bool ErrorsVisible, bool DebugVisible)
+        private void SetBottomPanes(bool ErrorsVisible, bool DebugVisible)
         {
-            if (ErrorsVisible)
-            {
-                Settings.ErrorBox = true;
-                Settings.Output = false;
-                viewErrorsToolStripMenuItem.CheckState = CheckState.Checked;
-                viewDebugToolStripMenuItem.CheckState = CheckState.Unchecked;
-                ShowErrors.Checked = true;
-                ShowOutput.Checked = false;
-                errorList.Visible = true;
-                OutputTextBox.Visible = false;
-                ClearOutput.Enabled = false;
-                txtCode.Height = errorList.Top - txtCode.Top + 1;
-            }
-            else if (DebugVisible)
-            {
-                Settings.ErrorBox = false;
-                Settings.Output = true;
-                viewErrorsToolStripMenuItem.CheckState = CheckState.Unchecked;
-                viewDebugToolStripMenuItem.CheckState = CheckState.Checked;
-                ShowErrors.Checked = false;
-                ShowOutput.Checked = true;
-                errorList.Visible = false;
-                OutputTextBox.Visible = true;
-                ClearOutput.Enabled = true;
-                txtCode.Height = errorList.Top - txtCode.Top + 1;
-            }
-            else
-            {
-                Settings.ErrorBox = false;
-                Settings.Output = false;
-                viewErrorsToolStripMenuItem.CheckState = CheckState.Unchecked;
-                viewDebugToolStripMenuItem.CheckState = CheckState.Unchecked;
-                ShowErrors.Checked = false;
-                ShowOutput.Checked = false;
-                errorList.Visible = false;
-                OutputTextBox.Visible = false;
-                ClearOutput.Enabled = false;
-                txtCode.Height = errorList.Bottom - txtCode.Top;
-            }
+            bottomPaneSplitContainer.Panel1Collapsed = !ErrorsVisible;
+            bottomPaneSplitContainer.Panel2Collapsed = !DebugVisible;
+
+            mainSplitContainer.Panel2Collapsed = !ErrorsVisible && !DebugVisible;
+
+            ClearOutput.Enabled = DebugVisible;
+            viewErrorsToolStripMenuItem.Checked = ErrorsVisible;
+            viewDebugToolStripMenuItem.Checked = DebugVisible;
+            ShowErrors.Checked = ErrorsVisible;
+            ShowOutput.Checked = DebugVisible;
+            Settings.ErrorBox = ErrorsVisible;
+            Settings.Output = DebugVisible;
         }
 
         private void viewErrorsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            viewCheckBoxes(!ShowErrors.Checked, false);
+            SetBottomPanes(!ShowErrors.Checked, ShowOutput.Checked);
             txtCode.Focus();
         }
-
         private void viewDebugToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            viewCheckBoxes(false, !ShowOutput.Checked);
+            SetBottomPanes(ShowErrors.Checked, !ShowOutput.Checked);
             txtCode.Focus();
         }
-
         private void ShowErrors_Click(object sender, EventArgs e)
         {
-            viewCheckBoxes(ShowErrors.Checked, false);
+            SetBottomPanes(ShowErrors.Checked, ShowOutput.Checked);
             txtCode.Focus();
         }
-
         private void ShowOutput_Click(object sender, EventArgs e)
         {
-            viewCheckBoxes(false, ShowOutput.Checked);
+            SetBottomPanes(ShowErrors.Checked, ShowOutput.Checked);
             txtCode.Focus();
         }
 
@@ -2268,6 +2238,5 @@ namespace PaintDotNet.Effects
             }
         }
         #endregion
-
     }
 }
