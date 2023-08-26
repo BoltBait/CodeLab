@@ -162,7 +162,7 @@
             btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
             btnOK.FlatStyle = System.Windows.Forms.FlatStyle.System;
             btnOK.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            btnOK.Location = new System.Drawing.Point(631, 469);
+            btnOK.Location = new System.Drawing.Point(759, 614);
             btnOK.Name = "btnOK";
             btnOK.Size = new System.Drawing.Size(64, 24);
             btnOK.TabIndex = 3;
@@ -175,7 +175,7 @@
             btnCancel.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
             btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            btnCancel.Location = new System.Drawing.Point(701, 469);
+            btnCancel.Location = new System.Drawing.Point(829, 614);
             btnCancel.Name = "btnCancel";
             btnCancel.Size = new System.Drawing.Size(64, 24);
             btnCancel.TabIndex = 4;
@@ -187,7 +187,7 @@
             // 
             btnBuild.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
             btnBuild.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            btnBuild.Location = new System.Drawing.Point(561, 469);
+            btnBuild.Location = new System.Drawing.Point(689, 614);
             btnBuild.Name = "btnBuild";
             btnBuild.Size = new System.Drawing.Size(64, 24);
             btnBuild.TabIndex = 2;
@@ -203,10 +203,10 @@
             errorList.Font = new System.Drawing.Font("Courier New", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             errorList.IntegralHeight = false;
             errorList.ItemHeight = 14;
-            errorList.Location = new System.Drawing.Point(-1, 373);
+            errorList.Location = new System.Drawing.Point(-1, 518);
             errorList.Name = "errorList";
             errorList.ScrollAlwaysVisible = true;
-            errorList.Size = new System.Drawing.Size(774, 88);
+            errorList.Size = new System.Drawing.Size(902, 88);
             errorList.TabIndex = 5;
             toolTips.SetToolTip(errorList, "Click on error message to locate that line.\r\nDouble-click on error message to read entire message.");
             errorList.SelectedIndexChanged += listErrors_SelectedIndexChanged;
@@ -434,7 +434,7 @@
             menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { fileToolStripMenuItem, editToolStripMenuItem, viewToolStripMenuItem, helpToolStripMenuItem });
             menuStrip1.Location = new System.Drawing.Point(0, 0);
             menuStrip1.Name = "menuStrip1";
-            menuStrip1.Size = new System.Drawing.Size(772, 24);
+            menuStrip1.Size = new System.Drawing.Size(900, 24);
             menuStrip1.TabIndex = 13;
             menuStrip1.Text = "menuStrip1";
             // 
@@ -858,7 +858,7 @@
             toolStrip1.Location = new System.Drawing.Point(0, 24);
             toolStrip1.Name = "toolStrip1";
             toolStrip1.Padding = new System.Windows.Forms.Padding(5, 0, 0, 0);
-            toolStrip1.Size = new System.Drawing.Size(772, 27);
+            toolStrip1.Size = new System.Drawing.Size(900, 27);
             toolStrip1.TabIndex = 14;
             toolStrip1.Text = "toolStrip1";
             // 
@@ -1129,7 +1129,7 @@
             txtCode.Margin = new System.Windows.Forms.Padding(0);
             txtCode.MouseDwellTime = 250;
             txtCode.Name = "txtCode";
-            txtCode.Size = new System.Drawing.Size(773, 296);
+            txtCode.Size = new System.Drawing.Size(901, 441);
             txtCode.TabIndex = 1;
             txtCode.Technology = ScintillaNET.Technology.DirectWrite;
             txtCode.WrapIndentMode = ScintillaNET.WrapIndentMode.Indent;
@@ -1145,7 +1145,7 @@
             // 
             ShowErrors.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
             ShowErrors.AutoSize = true;
-            ShowErrors.Location = new System.Drawing.Point(12, 472);
+            ShowErrors.Location = new System.Drawing.Point(12, 617);
             ShowErrors.Name = "ShowErrors";
             ShowErrors.Size = new System.Drawing.Size(104, 19);
             ShowErrors.TabIndex = 15;
@@ -1158,12 +1158,12 @@
             OutputTextBox.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
             OutputTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             OutputTextBox.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            OutputTextBox.Location = new System.Drawing.Point(-1, 373);
+            OutputTextBox.Location = new System.Drawing.Point(-1, 518);
             OutputTextBox.Multiline = true;
             OutputTextBox.Name = "OutputTextBox";
             OutputTextBox.ReadOnly = true;
             OutputTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            OutputTextBox.Size = new System.Drawing.Size(773, 88);
+            OutputTextBox.Size = new System.Drawing.Size(901, 88);
             OutputTextBox.TabIndex = 16;
             OutputTextBox.Text = resources.GetString("OutputTextBox.Text");
             OutputTextBox.Visible = false;
@@ -1173,7 +1173,7 @@
             ClearOutput.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
             ClearOutput.Enabled = false;
             ClearOutput.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            ClearOutput.Location = new System.Drawing.Point(280, 470);
+            ClearOutput.Location = new System.Drawing.Point(280, 615);
             ClearOutput.Name = "ClearOutput";
             ClearOutput.Size = new System.Drawing.Size(45, 23);
             ClearOutput.TabIndex = 18;
@@ -1185,7 +1185,7 @@
             // 
             ShowOutput.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
             ShowOutput.AutoSize = true;
-            ShowOutput.Location = new System.Drawing.Point(140, 472);
+            ShowOutput.Location = new System.Drawing.Point(140, 617);
             ShowOutput.Name = "ShowOutput";
             ShowOutput.Size = new System.Drawing.Size(134, 19);
             ShowOutput.TabIndex = 19;
@@ -1199,7 +1199,7 @@
             tabStrip1.Dock = System.Windows.Forms.DockStyle.Top;
             tabStrip1.Location = new System.Drawing.Point(0, 51);
             tabStrip1.Name = "tabStrip1";
-            tabStrip1.Size = new System.Drawing.Size(772, 25);
+            tabStrip1.Size = new System.Drawing.Size(900, 25);
             tabStrip1.TabIndex = 20;
             tabStrip1.SelectedTabChanged += tabStrip1_SelectedIndexChanged;
             tabStrip1.NewTabCreated += tabStrip1_NewTabCreated;
@@ -1211,7 +1211,7 @@
             AllowDrop = true;
             AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            ClientSize = new System.Drawing.Size(772, 500);
+            ClientSize = new System.Drawing.Size(900, 645);
             Controls.Add(tabStrip1);
             Controls.Add(ClearOutput);
             Controls.Add(ShowOutput);
