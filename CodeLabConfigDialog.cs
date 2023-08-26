@@ -71,6 +71,9 @@ namespace PaintDotNet.Effects
             Task.Run(() => Intelli.Keywords); // Forces the Intelli class to start initializing in the background
             InitializeComponent();
 
+            FormBorderStyle = FormBorderStyle.Sizable;
+            MaximizeBox = true;
+
 #if FASTDEBUG
             this.BackColor = Color.FromArgb(40, 40, 40);
             this.ForeColor = Color.White;
