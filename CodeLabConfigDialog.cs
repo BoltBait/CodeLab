@@ -32,7 +32,7 @@ namespace PdnCodeLab
 {
     internal partial class CodeLabConfigDialog
 #if FASTDEBUG
-        : Form
+        : PdnBaseForm
 #else
         : EffectConfigForm<CodeLab, CodeLabConfigToken>
 #endif
@@ -54,12 +54,8 @@ namespace PdnCodeLab
             MaximizeBox = true;
 
 #if FASTDEBUG
-            this.BackColor = Color.FromArgb(40, 40, 40);
-            this.ForeColor = Color.White;
             this.Icon = UIUtil.CreateIcon("CodeLab");
             this.ShowInTaskbar = true;
-#else
-            transparencyToolStripMenuItem.Enabled = EnableOpacity;
 #endif
             PdnTheme.InitialColors(this.ForeColor, this.BackColor);
             LoadSettingsFromRegistry();
@@ -69,6 +65,7 @@ namespace PdnCodeLab
             opacity75MenuItem.Checked = false;
             opacity90MenuItem.Checked = false;
             opacity100MenuItem.Checked = true;
+            transparencyToolStripMenuItem.Enabled = EnableOpacity;
 
 #if !RELEASE
             ToolStripMenuItem[] items = Enum.GetValues<ProjectType>()
