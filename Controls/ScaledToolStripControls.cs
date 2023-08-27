@@ -21,6 +21,7 @@ namespace PdnCodeLab
             set => base.Image = value;
         }
 
+        [DefaultValue("")]
         [Category(nameof(CategoryAttribute.Appearance))]
         public string ImageName
         {
@@ -51,6 +52,7 @@ namespace PdnCodeLab
         }
 
         [Category(nameof(CategoryAttribute.Appearance))]
+        [DefaultValue("")]
         public string ImageName
         {
             get => imageName;
@@ -75,6 +77,7 @@ namespace PdnCodeLab
         }
 
         [Category(nameof(CategoryAttribute.Appearance))]
+        [DefaultValue("")]
         public string ImageName
         {
             get => imageName;
@@ -99,6 +102,7 @@ namespace PdnCodeLab
         }
 
         [Category(nameof(CategoryAttribute.Appearance))]
+        [DefaultValue("")]
         public string ImageName
         {
             get => imageName;
@@ -123,6 +127,7 @@ namespace PdnCodeLab
         }
 
         [Category(nameof(CategoryAttribute.Appearance))]
+        [DefaultValue("")]
         public string ImageName
         {
             get => imageName;
