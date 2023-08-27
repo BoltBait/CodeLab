@@ -62,7 +62,7 @@ namespace PaintDotNet.Effects
             + "public class UserScript : BitmapEffect\r\n"
             + "{\r\n"
             + "    public UserScript()\r\n"
-            + "        : base(\"UserScript\", string.Empty, new BitmapEffectOptions())\r\n";
+            + "        : base(\"UserScript\", string.Empty, BitmapEffectOptions.Create())\r\n";
 
         private const string EmptyCode = "\r\n"
             + "#region User Entered Code\r\n"
