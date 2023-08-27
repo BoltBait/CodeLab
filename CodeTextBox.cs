@@ -223,7 +223,7 @@ namespace PaintDotNet.Effects
 
         internal bool IsVirgin
         {
-            get => !(this.CanUndo || this.CanRedo) && this.Text.Equals(ClassicEffectWriter.DefaultCode);
+            get => !(this.CanUndo || this.CanRedo) && this.Text.Equals(DefaultCode.Default);
         }
 
         internal bool CaretLineFrameEnabled

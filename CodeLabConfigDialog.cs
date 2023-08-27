@@ -96,7 +96,7 @@ namespace PaintDotNet.Effects
         {
             base.OnShown(e);
 
-            this.txtCode.Text = ClassicEffectWriter.DefaultCode;
+            this.txtCode.Text = DefaultCode.Default;
         }
 #endif
 
@@ -214,7 +214,7 @@ namespace PaintDotNet.Effects
         {
             return new CodeLabConfigToken
             {
-                UserCode = ClassicEffectWriter.DefaultCode,
+                UserCode = DefaultCode.Default,
                 UserScriptObject = null,
                 ScriptName = "Untitled",
                 ScriptPath = "",
@@ -1026,7 +1026,7 @@ namespace PaintDotNet.Effects
 
             tabStrip1.NewTab(FileName, FullScriptPath, ProjectType.BitmapEffect);
 
-            txtCode.Text = string.Empty;
+            txtCode.Text = DefaultCode.BitmapEffect;
             txtCode.EmptyUndoBuffer();
             Build();
             txtCode.Focus();
