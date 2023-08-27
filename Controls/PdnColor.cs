@@ -689,7 +689,7 @@ namespace PdnCodeLab
             float offset = this.ClientSize.Width * 0.0548f;
 
             value = e.X / range * maxValue - offset;
-            value = Clamp(value, 0, maxValue);
+            value = Math.Clamp(value, 0, maxValue);
             this.Refresh();
             OnValueChanged();
         }
@@ -814,11 +814,6 @@ namespace PdnCodeLab
                     g.FillRectangle(brush, colorRect);
                 }
             }
-        }
-
-        private static float Clamp(float value, float min, float max)
-        {
-            return (value < min) ? min : (value > max) ? max : value;
         }
     }
 }

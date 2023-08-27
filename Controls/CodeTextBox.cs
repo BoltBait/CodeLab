@@ -4517,7 +4517,7 @@ namespace PdnCodeLab
         #region Helper functions
         private int GetVisibleLine(int line)
         {
-            line = line.Clamp(0, this.Lines.Count - 1);
+            line = Math.Clamp(line, 0, this.Lines.Count - 1);
 
             while (!this.Lines[line].Visible)
             {

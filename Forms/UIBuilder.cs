@@ -1483,10 +1483,10 @@ namespace PdnCodeLab
                     Description += EnabledDescription;
                     break;
                 case ElementType.AngleChooser:
-                    dMin = parsedMin.Clamp(-180.0, 360.0);
+                    dMin = Math.Clamp(parsedMin, -180.0, 360.0);
                     double upperBound = (dMin < 0.0) ? 180.0 : 360;
-                    dMax = parsedMax.Clamp(dMin, upperBound);
-                    dDefault = parsedDefault.Clamp(dMin, dMax);
+                    dMax = Math.Clamp(parsedMax, dMin, upperBound);
+                    dDefault = Math.Clamp(parsedDefault, dMin, dMax);
                     Description = eName + " (" + dMin.ToString() + ".." + dDefault.ToString() + ".." + dMax.ToString() + ")" + EnabledDescription;
                     break;
                 case ElementType.PanSlider:
@@ -1510,7 +1510,7 @@ namespace PdnCodeLab
                 case ElementType.RadioButtons:
                     Name += "|" + eOptions;
                     int maxValue = Name.Split('|').Length - 2;
-                    Default = (int)parsedDefault.Clamp(0, maxValue);
+                    Default = (int)Math.Clamp(parsedDefault, 0, maxValue);
                     StrDefault = eDefault;
                     int nameLength1 = Name.IndexOf("|", StringComparison.Ordinal);
                     if (nameLength1 == -1) nameLength1 = Name.Length;
@@ -1841,11 +1841,11 @@ namespace PdnCodeLab
                 {
                     if (double.TryParse(xyPair.Groups["x"].Value, NumberStyles.Float, CultureInfo.InvariantCulture, out x))
                     {
-                        x = x.Clamp(-1, 1);
+                        x = Math.Clamp(x, -1, 1);
                     }
                     if (double.TryParse(xyPair.Groups["y"].Value, NumberStyles.Float, CultureInfo.InvariantCulture, out y))
                     {
-                        y = y.Clamp(-1, 1);
+                        y = Math.Clamp(y, -1, 1);
                     }
                 }
 

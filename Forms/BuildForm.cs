@@ -20,7 +20,6 @@ using System.Text.RegularExpressions;
 using System.Runtime.InteropServices;
 using System.IO.Compression;
 using System.Text;
-using PaintDotNet;
 
 namespace PdnCodeLab
 {
@@ -137,11 +136,11 @@ namespace PdnCodeLab
             {
                 if (decimal.TryParse(vsn.Groups["majorversionlabel"].Value.Trim(), out decimal majorv))
                 {
-                    MajorVersion.Value = majorv.Clamp(MajorVersion.Minimum, MajorVersion.Maximum);
+                    MajorVersion.Value = Math.Clamp(majorv, MajorVersion.Minimum, MajorVersion.Maximum);
                 }
                 if (decimal.TryParse(vsn.Groups["minorversionlabel"].Value.Trim(), out decimal minorv))
                 {
-                    MinorVersion.Value = minorv.Clamp(MinorVersion.Minimum, MinorVersion.Maximum);
+                    MinorVersion.Value = Math.Clamp(minorv, MinorVersion.Minimum, MinorVersion.Maximum);
                 }
             }
 

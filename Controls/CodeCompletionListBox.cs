@@ -231,7 +231,7 @@ namespace PdnCodeLab
             if (this.listBoxMouseOver && this.listBox.Items.Count > 0)
             {
                 int newTopIndex = this.listBox.TopIndex - Math.Sign(delta) * SystemInformation.MouseWheelScrollLines;
-                this.listBox.TopIndex = newTopIndex.Clamp(0, this.listBox.Items.Count - 1);
+                this.listBox.TopIndex = Math.Clamp(newTopIndex, 0, this.listBox.Items.Count - 1);
             }
         }
 

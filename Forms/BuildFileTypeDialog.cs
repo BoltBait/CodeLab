@@ -66,11 +66,11 @@ namespace PdnCodeLab
             {
                 if (decimal.TryParse(vsn.Groups["majorVersionLabel"].Value.Trim(), out decimal majorv))
                 {
-                    this.majorBox.Value = majorv.Clamp(this.majorBox.Minimum, this.majorBox.Maximum);
+                    this.majorBox.Value = Math.Clamp(majorv, this.majorBox.Minimum, this.majorBox.Maximum);
                 }
                 if (decimal.TryParse(vsn.Groups["minorVersionLabel"].Value.Trim(), out decimal minorv))
                 {
-                    this.minorBox.Value = minorv.Clamp(this.majorBox.Minimum, this.majorBox.Maximum);
+                    this.minorBox.Value = Math.Clamp(minorv, this.majorBox.Minimum, this.majorBox.Maximum);
                 }
             }
 

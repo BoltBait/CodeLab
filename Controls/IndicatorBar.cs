@@ -1,5 +1,4 @@
-﻿using PaintDotNet;
-using PaintDotNet.Controls;
+﻿using PaintDotNet.Controls;
 using PaintDotNet.Direct2D1;
 using PaintDotNet.Imaging;
 using PaintDotNet.Rendering;
@@ -498,7 +497,7 @@ namespace PdnCodeLab
             using (ISolidColorBrush caretBrush = deviceContext.CreateSolidColorBrush(caretColor))
             {
                 float curLineVPos = (float)(caret + 0) / maximum * posTrackRect.Height + posTrackRect.Top;
-                curLineVPos = curLineVPos.Clamp(posTrackRect.Top * dpiY, posTrackRect.Bottom * dpiY);
+                curLineVPos = Math.Clamp(curLineVPos, posTrackRect.Top * dpiY, posTrackRect.Bottom * dpiY);
                 deviceContext.DrawLine(posTrackRect.Left, curLineVPos, posTrackRect.Right, curLineVPos, caretBrush, 2f * dpiY);
             }
 
@@ -510,7 +509,7 @@ namespace PdnCodeLab
                 foreach (int bookmark in this.bookmarks)
                 {
                     float bkmkVPos = (float)bookmark / maximum * posTrackRect.Height + posTrackRect.Top;
-                    bkmkVPos = bkmkVPos.Clamp(posTrackRect.Top, posTrackRect.Bottom);
+                    bkmkVPos = Math.Clamp(bkmkVPos, posTrackRect.Top, posTrackRect.Bottom);
                     deviceContext.DrawLine(posTrackRect.Left + 6f * dpiY, bkmkVPos, posTrackRect.Right - 6f * dpiY, bkmkVPos, indicatorPen, strokeWidth);
                 }
 
@@ -518,7 +517,7 @@ namespace PdnCodeLab
                 foreach (int match in this.matches)
                 {
                     float matchLineVPos = (float)match / maximum * posTrackRect.Height + posTrackRect.Top;
-                    matchLineVPos = matchLineVPos.Clamp(posTrackRect.Top, posTrackRect.Bottom);
+                    matchLineVPos = Math.Clamp(matchLineVPos, posTrackRect.Top, posTrackRect.Bottom);
                     deviceContext.DrawLine(posTrackRect.Left, matchLineVPos, posTrackRect.Left + 4f * dpiY, matchLineVPos, indicatorPen, strokeWidth);
                 }
 
@@ -526,7 +525,7 @@ namespace PdnCodeLab
                 foreach (int error in this.warnings)
                 {
                     float warnLineVPos = (float)error / maximum * posTrackRect.Height + posTrackRect.Top;
-                    warnLineVPos = warnLineVPos.Clamp(posTrackRect.Top, posTrackRect.Bottom);
+                    warnLineVPos = Math.Clamp(warnLineVPos, posTrackRect.Top, posTrackRect.Bottom);
                     deviceContext.DrawLine(posTrackRect.Right - 4f * dpiY, warnLineVPos, posTrackRect.Right, warnLineVPos, indicatorPen, strokeWidth);
                 }
 
@@ -534,7 +533,7 @@ namespace PdnCodeLab
                 foreach (int error in this.errors)
                 {
                     float errLineVPos = (float)error / maximum * posTrackRect.Height + posTrackRect.Top;
-                    errLineVPos = errLineVPos.Clamp(posTrackRect.Top, posTrackRect.Bottom);
+                    errLineVPos = Math.Clamp(errLineVPos, posTrackRect.Top, posTrackRect.Bottom);
                     deviceContext.DrawLine(posTrackRect.Right - 4f * dpiY, errLineVPos, posTrackRect.Right, errLineVPos, indicatorPen, strokeWidth);
                 }
             }
