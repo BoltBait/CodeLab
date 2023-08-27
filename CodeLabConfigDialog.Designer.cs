@@ -1289,10 +1289,12 @@
             // bottomPaneSplitContainer.Panel1
             // 
             bottomPaneSplitContainer.Panel1.Controls.Add(errorList);
+            bottomPaneSplitContainer.Panel1MinSize = 100;
             // 
             // bottomPaneSplitContainer.Panel2
             // 
             bottomPaneSplitContainer.Panel2.Controls.Add(OutputTextBox);
+            bottomPaneSplitContainer.Panel2MinSize = 100;
             bottomPaneSplitContainer.Size = new System.Drawing.Size(900, 104);
             bottomPaneSplitContainer.SplitterDistance = 446;
             bottomPaneSplitContainer.TabIndex = 22;
