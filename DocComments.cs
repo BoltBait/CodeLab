@@ -82,7 +82,7 @@ namespace PaintDotNet.Effects
             string commentKey = BuildCommentKey(memberInfo);
 
             return docComments.TryGetValue(commentKey, out string summary)
-                ? "\r\n\r\n" + summary.InsertLineBreaks(100)
+                ? "\r\n\r\n" + summary
                 : string.Empty;
         }
 
