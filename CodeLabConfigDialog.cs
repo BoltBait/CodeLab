@@ -14,7 +14,9 @@
 // Latest distribution: https://www.BoltBait.com/pdn/codelab
 /////////////////////////////////////////////////////////////////////////////////
 
+using PaintDotNet;
 using PaintDotNet.AppModel;
+using PaintDotNet.Effects;
 using ScintillaNET;
 using System;
 using System.Collections.Generic;
@@ -24,8 +26,9 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Document = PaintDotNet.Document;
 
-namespace PaintDotNet.Effects
+namespace PdnCodeLab
 {
     internal partial class CodeLabConfigDialog
 #if FASTDEBUG

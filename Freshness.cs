@@ -18,7 +18,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace PaintDotNet.Effects
+namespace PdnCodeLab
 {
     internal static class Freshness
     {

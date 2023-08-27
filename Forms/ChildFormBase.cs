@@ -1,8 +1,9 @@
-﻿using System.ComponentModel;
+﻿using PaintDotNet;
+using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace PaintDotNet.Effects
+namespace PdnCodeLab
 {
     public class ChildFormBase : PdnBaseForm
     {

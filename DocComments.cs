@@ -1,4 +1,5 @@
 ﻿using Microsoft.CodeAnalysis;
+using PaintDotNet;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,7 +9,7 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml.Linq;
 
-namespace PaintDotNet.Effects
+namespace PdnCodeLab
 {
     internal static class DocComment
     {

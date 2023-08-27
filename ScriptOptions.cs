@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PaintDotNet.Effects
+namespace PdnCodeLab
 {
     internal enum ScriptRenderingSchedule
     {

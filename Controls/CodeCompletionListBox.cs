@@ -17,6 +17,7 @@
 // which required tons of fixes in order to get it to work properly.
 /////////////////////////////////////////////////////////////////////////////////
 
+using PaintDotNet;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -26,7 +27,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
-namespace PaintDotNet.Effects
+namespace PdnCodeLab
 {
     internal sealed class IntelliBox : UserControl
     {

@@ -1,4 +1,4 @@
-﻿namespace PaintDotNet.Effects
+﻿namespace PdnCodeLab
 {
     partial class ColorWindow
     {
@@ -30,7 +30,7 @@
         {
             this.CancelButton = new System.Windows.Forms.Button();
             this.OkButton = new System.Windows.Forms.Button();
-            this.pdnColor1 = new PaintDotNet.Effects.PdnColor();
+            this.pdnColor1 = new PdnCodeLab.PdnColor();
             this.SuspendLayout();
             // 
             // CancelButton

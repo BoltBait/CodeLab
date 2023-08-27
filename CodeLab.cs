@@ -14,15 +14,17 @@
 // Latest distribution: https://www.BoltBait.com/pdn/codelab
 /////////////////////////////////////////////////////////////////////////////////
 
+using PaintDotNet;
 using PaintDotNet.Direct2D1;
+using PaintDotNet.Effects;
 using PaintDotNet.Imaging;
 using PaintDotNet.Rendering;
 using System;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
-using WpfGeometry = System.Windows.Media.Geometry;
 using IDeviceContext = PaintDotNet.Direct2D1.IDeviceContext;
+using WpfGeometry = System.Windows.Media.Geometry;
 
 [assembly: AssemblyTitle("CodeLab plugin for Paint.NET")]
 [assembly: AssemblyDescription("C# Code Editor for Paint.NET Plugin Development")]
@@ -34,11 +36,11 @@ using IDeviceContext = PaintDotNet.Direct2D1.IDeviceContext;
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]
 [assembly: SupportedOSPlatform("Windows")]
-[assembly: AssemblyVersion(PaintDotNet.Effects.CodeLab.Version + ".*")]
+[assembly: AssemblyVersion(PdnCodeLab.CodeLab.Version + ".*")]
 // The ScintillaNET text editor requires the assembly to have a Guid.
 [assembly: Guid("b908a26a-45e2-4d24-9681-e6f2020e68a8")]
 
-namespace PaintDotNet.Effects
+namespace PdnCodeLab
 {
     public class CodeLabSupportInfo : IPluginSupportInfo
     {

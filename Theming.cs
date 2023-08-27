@@ -12,10 +12,11 @@
 // Latest distribution: https://www.BoltBait.com/pdn/codelab
 /////////////////////////////////////////////////////////////////////////////////
 
+using PaintDotNet;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace PaintDotNet.Effects
+namespace PdnCodeLab
 {
     internal sealed class ThemeRenderer : ToolStripProfessionalRenderer
     {

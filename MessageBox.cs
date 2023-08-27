@@ -7,6 +7,7 @@
  *  
  *  Bug fixes and enhancements ©2019 by BoltBait
  */
+using PaintDotNet;
 using System;
 using System.Drawing;
 using System.Globalization;
@@ -14,7 +15,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace PaintDotNet.Effects
+namespace PdnCodeLab
 {
     public static class FlexibleMessageBox
     {

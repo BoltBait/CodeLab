@@ -1,4 +1,5 @@
-﻿using PaintDotNet.AppModel;
+﻿using PaintDotNet;
+using PaintDotNet.AppModel;
 using PaintDotNet.Drawing;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
-namespace PaintDotNet.Effects
+namespace PdnCodeLab
 {
     internal static class UIUtil
     {

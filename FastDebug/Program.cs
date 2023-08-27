@@ -2,7 +2,7 @@
 using System;
 using System.Windows.Forms;
 
-namespace PaintDotNet.Effects
+namespace PdnCodeLab
 {
     internal static class Program
     {

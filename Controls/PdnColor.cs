@@ -19,7 +19,7 @@ using System.Windows.Forms;
 using System.Drawing.Drawing2D;
 using System.ComponentModel;
 
-namespace PaintDotNet.Effects
+namespace PdnCodeLab
 {
     [DefaultEvent(nameof(ValueChanged))]
     [DefaultProperty(nameof(Color))]

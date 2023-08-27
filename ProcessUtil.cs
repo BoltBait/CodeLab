@@ -4,6 +4,7 @@
 // All Rights Reserved.                                                        //
 /////////////////////////////////////////////////////////////////////////////////
 
+using PaintDotNet;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -11,7 +12,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace PaintDotNet.Effects
+namespace PdnCodeLab
 {
     public static class ProcessUtil
     {

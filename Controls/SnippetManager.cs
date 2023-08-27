@@ -9,7 +9,7 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using ScintillaNET;
 
-namespace PaintDotNet.Effects
+namespace PdnCodeLab
 {
     public partial class SnippetManager : UserControl
     {

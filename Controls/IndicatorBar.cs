@@ -1,4 +1,5 @@
-﻿using PaintDotNet.Controls;
+﻿using PaintDotNet;
+using PaintDotNet.Controls;
 using PaintDotNet.Direct2D1;
 using PaintDotNet.Imaging;
 using PaintDotNet.Rendering;
@@ -6,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
-namespace PaintDotNet.Effects
+namespace PdnCodeLab
 {
     internal sealed class IndicatorBar : Direct2DControl
     {
@@ -459,7 +460,7 @@ namespace PaintDotNet.Effects
             this.Invalidate();
         }
 
-        protected override void OnRender(Direct2D1.IDeviceContext deviceContext, RectFloat clipRect)
+        protected override void OnRender(IDeviceContext deviceContext, RectFloat clipRect)
         {
             base.OnRender(deviceContext, clipRect);
 

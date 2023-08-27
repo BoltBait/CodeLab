@@ -5,7 +5,7 @@ using System.Windows.Media;
 using System.Xml;
 using System.Xml.Linq;
 
-namespace PaintDotNet.Effects
+namespace PdnCodeLab
 {
     internal static class ShapeBuilder
     {

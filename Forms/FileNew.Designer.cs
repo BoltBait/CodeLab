@@ -1,4 +1,4 @@
-﻿namespace PaintDotNet.Effects
+﻿namespace PdnCodeLab
 {
     partial class FileNew
     {

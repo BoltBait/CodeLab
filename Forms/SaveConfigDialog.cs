@@ -1,9 +1,10 @@
-﻿using System;
+﻿using PaintDotNet;
+using System;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 
-namespace PaintDotNet.Effects
+namespace PdnCodeLab
 {
     internal sealed class SaveConfigDialog : ChildFormBase
     {

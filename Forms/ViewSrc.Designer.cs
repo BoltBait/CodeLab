@@ -1,4 +1,4 @@
-namespace PaintDotNet.Effects
+namespace PdnCodeLab
 {
     partial class ViewSrc
     {
@@ -32,8 +32,8 @@ namespace PaintDotNet.Effects
             this.TextSrcBox = new System.Windows.Forms.TextBox();
             this.ButtonClose = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.CopyButton = new PaintDotNet.Effects.ScaledButton();
-            this.SaveButton = new PaintDotNet.Effects.ScaledButton();
+            this.CopyButton = new PdnCodeLab.ScaledButton();
+            this.SaveButton = new PdnCodeLab.ScaledButton();
             this.SuspendLayout();
             // 
             // TextSrcBox

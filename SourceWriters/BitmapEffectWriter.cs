@@ -1,4 +1,5 @@
-﻿using PaintDotNet.Effects.Gpu;
+﻿using PaintDotNet;
+using PaintDotNet.Effects.Gpu;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -10,7 +11,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace PaintDotNet.Effects
+namespace PdnCodeLab
 {
     internal static class BitmapEffectWriter
     {
@@ -57,7 +58,7 @@ namespace PaintDotNet.Effects
             + "\r\n";
 
         private const string prepend_code = "\r\n"
-            + "namespace PaintDotNet.Effects\r\n"
+            + "namespace PdnCodeLab\r\n"
             + "{\r\n"
             + "public class UserScript : BitmapEffect\r\n"
             + "{\r\n"

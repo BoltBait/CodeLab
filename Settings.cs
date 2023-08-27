@@ -1,9 +1,10 @@
 ﻿using Microsoft.Win32;
+using PaintDotNet;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 
-namespace PaintDotNet.Effects
+namespace PdnCodeLab
 {
     internal static class Settings
     {

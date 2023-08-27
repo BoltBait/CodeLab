@@ -13,10 +13,11 @@
 // Latest distribution: https://www.BoltBait.com/pdn/codelab
 /////////////////////////////////////////////////////////////////////////////////
 
+using PaintDotNet.Effects;
 using System;
 using System.Collections.Generic;
 
-namespace PaintDotNet.Effects
+namespace PdnCodeLab
 {
     public class CodeLabConfigToken : EffectConfigToken
     {

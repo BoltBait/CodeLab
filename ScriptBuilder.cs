@@ -17,6 +17,8 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Emit;
+using PaintDotNet;
+using PaintDotNet.Effects;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -26,7 +28,7 @@ using System.Reflection;
 using System.Runtime.Loader;
 using System.Text.RegularExpressions;
 
-namespace PaintDotNet.Effects
+namespace PdnCodeLab
 {
     internal static class ScriptBuilder
     {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PaintDotNet.Effects;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -9,7 +10,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Controls.Primitives;
 
-namespace PaintDotNet.Effects
+namespace PdnCodeLab
 {
     internal static class CommonWriter
     {

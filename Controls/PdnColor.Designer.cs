@@ -1,4 +1,4 @@
-﻿namespace PaintDotNet.Effects
+﻿namespace PdnCodeLab
 {
     partial class PdnColor
     {
@@ -50,13 +50,13 @@
             this.valBox = new System.Windows.Forms.NumericUpDown();
             this.RGBlabel = new System.Windows.Forms.Label();
             this.hsvLabel = new System.Windows.Forms.Label();
-            this.vColorSlider = new PaintDotNet.Effects.ColorSlider();
-            this.sColorSlider = new PaintDotNet.Effects.ColorSlider();
-            this.hColorSlider = new PaintDotNet.Effects.ColorSlider();
-            this.bColorSlider = new PaintDotNet.Effects.ColorSlider();
-            this.gColorSlider = new PaintDotNet.Effects.ColorSlider();
-            this.rColorSlider = new PaintDotNet.Effects.ColorSlider();
-            this.aColorSlider = new PaintDotNet.Effects.ColorSlider();
+            this.vColorSlider = new PdnCodeLab.ColorSlider();
+            this.sColorSlider = new PdnCodeLab.ColorSlider();
+            this.hColorSlider = new PdnCodeLab.ColorSlider();
+            this.bColorSlider = new PdnCodeLab.ColorSlider();
+            this.gColorSlider = new PdnCodeLab.ColorSlider();
+            this.rColorSlider = new PdnCodeLab.ColorSlider();
+            this.aColorSlider = new PdnCodeLab.ColorSlider();
             ((System.ComponentModel.ISupportInitialize)(this.colorWheelBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.alphaBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.blueBox)).BeginInit();

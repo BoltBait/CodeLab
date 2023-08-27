@@ -13,6 +13,7 @@
 // Latest distribution: https://www.BoltBait.com/pdn/codelab
 /////////////////////////////////////////////////////////////////////////////////
 
+using PaintDotNet;
 using PaintDotNet.Rendering;
 using System;
 using System.Collections.Generic;
@@ -22,7 +23,7 @@ using System.Reflection;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 
-namespace PaintDotNet.Effects
+namespace PdnCodeLab
 {
     internal static class Intelli
     {
@@ -43,7 +44,7 @@ namespace PaintDotNet.Effects
         internal static string StructList { get; private set; }
         internal static string InterfaceList { get; private set; }
 
-        internal const string UserScriptFullName = "PaintDotNet.Effects.UserScript";
+        internal const string UserScriptFullName = "PdnCodeLab.UserScript";
         private static IEnumerable<MethodInfo> extMethods;
 
         private static readonly ImmutableArray<Assembly> sdkAssemblies;

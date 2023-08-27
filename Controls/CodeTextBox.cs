@@ -22,6 +22,7 @@
 // Implemented in CodeLab and customized by Jason Wendt.
 /////////////////////////////////////////////////////////////////////////////////
 
+using PaintDotNet;
 using PlatformSpellCheck;
 using ScintillaNET;
 using System;
@@ -33,7 +34,7 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
-namespace PaintDotNet.Effects
+namespace PdnCodeLab
 {
     public sealed class CodeTextBox : Scintilla
     {
@@ -2603,13 +2604,12 @@ namespace PaintDotNet.Effects
                     string typeName = (t.IsGenericType) ? t.Name.Replace("`", "-") : t.Name;
                     string fullName = $"{t.Namespace}.{typeName}";
 
-                    if (t.Namespace.StartsWith("PaintDotNet", StringComparison.Ordinal))
+                    if (t.Namespace.Equals(nameof(PdnCodeLab), StringComparison.Ordinal))
                     {
-                        if (t.Name.Equals("UserScript", StringComparison.Ordinal))
-                        {
-                            return false;
-                        }
-
+                        return false; // UserScript
+                    }
+                    else if (t.Namespace.StartsWith("PaintDotNet", StringComparison.Ordinal))
+                    {
                         OpenPdnDocs(fullName);
                     }
                     else
@@ -2710,13 +2710,12 @@ namespace PaintDotNet.Effects
                 string typeName = (declaringType.IsGenericType) ? declaringType.Name.Replace("`", "-") : declaringType.Name;
                 string fullName = $"{declaringType.Namespace}.{typeName}.{memberInfo.Name}";
 
-                if (declaringType.Namespace.StartsWith("PaintDotNet", StringComparison.Ordinal))
+                if (declaringType.Namespace.Equals(nameof(PdnCodeLab), StringComparison.Ordinal))
                 {
-                    if (declaringType.Name.Equals("UserScript", StringComparison.Ordinal))
-                    {
-                        return false;
-                    }
-
+                    return false; // UserScript
+                }
+                else if (declaringType.Namespace.StartsWith("PaintDotNet", StringComparison.Ordinal))
+                {
                     OpenPdnDocs(fullName);
                 }
                 else

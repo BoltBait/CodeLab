@@ -1,10 +1,11 @@
-﻿using System;
+﻿using PaintDotNet;
+using System;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
-namespace PaintDotNet.Effects
+namespace PdnCodeLab
 {
     internal partial class BuildFileTypeDialog : ChildFormBase
     {

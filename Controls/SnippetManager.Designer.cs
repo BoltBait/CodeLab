@@ -1,4 +1,4 @@
-﻿namespace PaintDotNet.Effects
+﻿namespace PdnCodeLab
 {
     partial class SnippetManager
     {
@@ -31,16 +31,16 @@
             this.SnippetList = new System.Windows.Forms.ListBox();
             this.SnippetName = new System.Windows.Forms.TextBox();
             this.UpdateButton = new System.Windows.Forms.Button();
-            this.SnippetBody = new PaintDotNet.Effects.CodeTextBox();
+            this.SnippetBody = new PdnCodeLab.CodeTextBox();
             this.DeleteButton = new System.Windows.Forms.Button();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.AddNewButton = new PaintDotNet.Effects.ScaledToolStripButton();
-            this.ImportExportMenu = new PaintDotNet.Effects.ScaledToolStripDropDownButton();
-            this.ImportFromFileButton = new PaintDotNet.Effects.ScaledToolStripMenuItem();
-            this.ImportFromClipButton = new PaintDotNet.Effects.ScaledToolStripMenuItem();
+            this.AddNewButton = new PdnCodeLab.ScaledToolStripButton();
+            this.ImportExportMenu = new PdnCodeLab.ScaledToolStripDropDownButton();
+            this.ImportFromFileButton = new PdnCodeLab.ScaledToolStripMenuItem();
+            this.ImportFromClipButton = new PdnCodeLab.ScaledToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.ExportToFileButton = new PaintDotNet.Effects.ScaledToolStripMenuItem();
-            this.ExportToClipButton = new PaintDotNet.Effects.ScaledToolStripMenuItem();
+            this.ExportToFileButton = new PdnCodeLab.ScaledToolStripMenuItem();
+            this.ExportToClipButton = new PdnCodeLab.ScaledToolStripMenuItem();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 

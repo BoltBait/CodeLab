@@ -13,6 +13,8 @@
 // Latest distribution: https://www.BoltBait.com/pdn/codelab
 /////////////////////////////////////////////////////////////////////////////////
 
+using PaintDotNet;
+using PaintDotNet.Effects;
 using PaintDotNet.Imaging;
 using System;
 using System.Collections.Generic;
@@ -23,7 +25,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
-namespace PaintDotNet.Effects
+namespace PdnCodeLab
 {
     internal partial class UIBuilder : ChildFormBase
     {

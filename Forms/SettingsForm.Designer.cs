@@ -1,4 +1,4 @@
-﻿namespace PaintDotNet.Effects
+﻿namespace PdnCodeLab
 {
     partial class SettingsForm
     {
@@ -67,7 +67,7 @@
             this.bookMarksCheckbox = new System.Windows.Forms.CheckBox();
             this.lineNumbersCheckbox = new System.Windows.Forms.CheckBox();
             this.settingsList = new System.Windows.Forms.ListBox();
-            this.panelSnippet = new PaintDotNet.Effects.SnippetManager();
+            this.panelSnippet = new PdnCodeLab.SnippetManager();
             this.panelSpelling = new System.Windows.Forms.Panel();
             this.addLangsButton = new System.Windows.Forms.Button();
             this.enableSpellcheckCheckBox = new System.Windows.Forms.CheckBox();

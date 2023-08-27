@@ -1,4 +1,4 @@
-﻿namespace PaintDotNet.Effects
+﻿namespace PdnCodeLab
 {
     partial class TabStrip
     {
@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.untitledTab = new PaintDotNet.Effects.TabStrip.Tab();
+            this.untitledTab = new PdnCodeLab.TabStrip.Tab();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -83,6 +83,6 @@
         #endregion
 
         private System.Windows.Forms.ToolStrip toolStrip1;
-        private Effects.TabStrip.Tab untitledTab;
+        private PdnCodeLab.TabStrip.Tab untitledTab;
     }
 }

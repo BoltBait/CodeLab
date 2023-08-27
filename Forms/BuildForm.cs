@@ -20,8 +20,9 @@ using System.Text.RegularExpressions;
 using System.Runtime.InteropServices;
 using System.IO.Compression;
 using System.Text;
+using PaintDotNet;
 
-namespace PaintDotNet.Effects
+namespace PdnCodeLab
 {
     internal partial class BuildForm : ChildFormBase
     {

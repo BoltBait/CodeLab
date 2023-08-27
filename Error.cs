@@ -16,7 +16,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
 using System;
 
-namespace PaintDotNet.Effects
+namespace PdnCodeLab
 {
     internal sealed class Error : IComparable<Error>
     {

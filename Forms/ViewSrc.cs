@@ -17,7 +17,7 @@ using System.Windows.Forms;
 using System.IO;
 using System.Drawing;
 
-namespace PaintDotNet.Effects
+namespace PdnCodeLab
 {
     internal partial class ViewSrc : ChildFormBase
     {

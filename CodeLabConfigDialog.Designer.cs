@@ -1,4 +1,4 @@
-﻿namespace PaintDotNet.Effects
+﻿namespace PdnCodeLab
 {
     partial class CodeLabConfigDialog
     {
@@ -1465,7 +1465,7 @@
         private System.Windows.Forms.ToolStripMenuItem viewDebugToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator19;
         private System.Windows.Forms.ContextMenuStrip errorListMenu;
-        private PaintDotNet.Effects.ScaledToolStripMenuItem CopyErrorMenuItem;
+        private PdnCodeLab.ScaledToolStripMenuItem CopyErrorMenuItem;
         private ScaledToolStripMenuItem FullErrorMenuItem;
         private ScaledToolStripMenuItem ErrorCodeMenuItem;
         private TabStrip tabStrip1;

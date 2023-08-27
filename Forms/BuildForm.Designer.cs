@@ -1,4 +1,4 @@
-namespace PaintDotNet.Effects
+namespace PdnCodeLab
 {
     partial class BuildForm
     {
@@ -73,25 +73,25 @@ namespace PaintDotNet.Effects
             this.HelpPlainText = new System.Windows.Forms.TextBox();
             this.RichHelpContent = new System.Windows.Forms.RichTextBox();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.OpenButton = new PaintDotNet.Effects.ScaledToolStripButton();
-            this.SaveButton = new PaintDotNet.Effects.ScaledToolStripButton();
-            this.WordPadButton = new PaintDotNet.Effects.ScaledToolStripButton();
+            this.OpenButton = new PdnCodeLab.ScaledToolStripButton();
+            this.SaveButton = new PdnCodeLab.ScaledToolStripButton();
+            this.WordPadButton = new PdnCodeLab.ScaledToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.BoldButton = new PaintDotNet.Effects.ScaledToolStripButton();
-            this.ItalicsButton = new PaintDotNet.Effects.ScaledToolStripButton();
-            this.UnderlineButton = new PaintDotNet.Effects.ScaledToolStripButton();
-            this.SuperScriptButton = new PaintDotNet.Effects.ScaledToolStripButton();
-            this.SubScriptButton = new PaintDotNet.Effects.ScaledToolStripButton();
-            this.LargeFontButton = new PaintDotNet.Effects.ScaledToolStripButton();
-            this.SmallFontButton = new PaintDotNet.Effects.ScaledToolStripButton();
-            this.ColorButton = new PaintDotNet.Effects.ScaledToolStripButton();
+            this.BoldButton = new PdnCodeLab.ScaledToolStripButton();
+            this.ItalicsButton = new PdnCodeLab.ScaledToolStripButton();
+            this.UnderlineButton = new PdnCodeLab.ScaledToolStripButton();
+            this.SuperScriptButton = new PdnCodeLab.ScaledToolStripButton();
+            this.SubScriptButton = new PdnCodeLab.ScaledToolStripButton();
+            this.LargeFontButton = new PdnCodeLab.ScaledToolStripButton();
+            this.SmallFontButton = new PdnCodeLab.ScaledToolStripButton();
+            this.ColorButton = new PdnCodeLab.ScaledToolStripButton();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-            this.InsertImageButton = new PaintDotNet.Effects.ScaledToolStripButton();
-            this.BulletButton = new PaintDotNet.Effects.ScaledToolStripButton();
-            this.IndentButton = new PaintDotNet.Effects.ScaledToolStripButton();
-            this.UnindentButton = new PaintDotNet.Effects.ScaledToolStripButton();
-            this.ParagraphLeftButton = new PaintDotNet.Effects.ScaledToolStripButton();
-            this.CenterButton = new PaintDotNet.Effects.ScaledToolStripButton();
+            this.InsertImageButton = new PdnCodeLab.ScaledToolStripButton();
+            this.BulletButton = new PdnCodeLab.ScaledToolStripButton();
+            this.IndentButton = new PdnCodeLab.ScaledToolStripButton();
+            this.UnindentButton = new PdnCodeLab.ScaledToolStripButton();
+            this.ParagraphLeftButton = new PdnCodeLab.ScaledToolStripButton();
+            this.CenterButton = new PdnCodeLab.ScaledToolStripButton();
             this.panel1 = new System.Windows.Forms.Panel();
             this.PreviewLabel = new System.Windows.Forms.Label();
             this.PlainTextLabel = new System.Windows.Forms.Label();

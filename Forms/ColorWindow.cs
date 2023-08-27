@@ -16,7 +16,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace PaintDotNet.Effects
+namespace PdnCodeLab
 {
     internal partial class ColorWindow : ChildFormBase
     {

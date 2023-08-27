@@ -18,7 +18,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace PaintDotNet.Effects
+namespace PdnCodeLab
 {
     internal static class ClassicEffectWriter
     {
@@ -74,7 +74,7 @@ namespace PaintDotNet.Effects
         }
 
         private const string prepend_code = "\r\n"
-            + "namespace PaintDotNet.Effects\r\n"
+            + "namespace PdnCodeLab\r\n"
             + "{\r\n"
             + "public class UserScript : Effect\r\n"
             + "{\r\n"

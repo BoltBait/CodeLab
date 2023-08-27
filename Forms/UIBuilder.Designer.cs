@@ -1,4 +1,4 @@
-namespace PaintDotNet.Effects
+namespace PdnCodeLab
 {
     partial class UIBuilder
     {
@@ -49,7 +49,7 @@ namespace PaintDotNet.Effects
             this.PreviewButton = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.controlTabPage = new System.Windows.Forms.TabPage();
-            this.ControlType = new PaintDotNet.Effects.ControlTypeComboBox();
+            this.ControlType = new PdnCodeLab.ControlTypeComboBox();
             this.labelIdent = new System.Windows.Forms.Label();
             this.MinimumLabel = new System.Windows.Forms.Label();
             this.DefaultLabel = new System.Windows.Forms.Label();
@@ -581,7 +581,7 @@ namespace PaintDotNet.Effects
         private System.Windows.Forms.Button PreviewButton;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage controlTabPage;
-        private PaintDotNet.Effects.ControlTypeComboBox ControlType;
+        private PdnCodeLab.ControlTypeComboBox ControlType;
         private System.Windows.Forms.Label labelIdent;
         private System.Windows.Forms.Label MinimumLabel;
         private System.Windows.Forms.TextBox ControlID;

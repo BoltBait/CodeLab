@@ -19,7 +19,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace PaintDotNet.Effects
+namespace PdnCodeLab
 {
     [DefaultEvent(nameof(SelectedTabChanged))]
     public partial class TabStrip : UserControl
