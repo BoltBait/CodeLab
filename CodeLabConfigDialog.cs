@@ -1732,6 +1732,11 @@ namespace PdnCodeLab
             LaunchUrl("https://www.BoltBait.com/pdn/codelab/help");
         }
 
+        private void apiDocMenuItem_Click(object sender, EventArgs e)
+        {
+            LaunchUrl("https://paintdotnet.github.io/apidocs/");
+        }
+
         private void changesInThisVersionToolStripMenuItem_Click(object sender, EventArgs e)
         {
             LaunchUrl("https://www.boltbait.com/pdn/codelab/history/#v" + CodeLab.Version);

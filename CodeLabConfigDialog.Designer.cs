@@ -114,6 +114,7 @@
             opacity100MenuItem = new System.Windows.Forms.ToolStripMenuItem();
             helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             helpTopicsToolStripMenuItem = new ScaledToolStripMenuItem();
+            apiDocMenuItem = new ScaledToolStripMenuItem();
             changesInThisVersionToolStripMenuItem = new ScaledToolStripMenuItem();
             discussToolStripMenuItem = new ScaledToolStripMenuItem();
             settingsToolStripMenuItem = new ScaledToolStripMenuItem();
@@ -832,7 +833,7 @@
             // 
             // helpToolStripMenuItem
             // 
-            helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { helpTopicsToolStripMenuItem, changesInThisVersionToolStripMenuItem, discussToolStripMenuItem, settingsToolStripMenuItem, aboutToolStripMenuItem });
+            helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { helpTopicsToolStripMenuItem, apiDocMenuItem, changesInThisVersionToolStripMenuItem, discussToolStripMenuItem, settingsToolStripMenuItem, aboutToolStripMenuItem });
             helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             helpToolStripMenuItem.Text = "Help";
@@ -844,6 +845,13 @@
             helpTopicsToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
             helpTopicsToolStripMenuItem.Text = "&Help topics...";
             helpTopicsToolStripMenuItem.Click += helpTopicsToolStripMenuItem_Click;
+            // 
+            // apiDocMenuItem
+            // 
+            apiDocMenuItem.Name = "apiDocMenuItem";
+            apiDocMenuItem.Size = new System.Drawing.Size(233, 22);
+            apiDocMenuItem.Text = "API Documentation";
+            apiDocMenuItem.Click += apiDocMenuItem_Click;
             // 
             // changesInThisVersionToolStripMenuItem
             // 
@@ -1495,5 +1503,6 @@
         private ScaledToolStripMenuItem NewFileTypeMenuItem1;
         private ScaledToolStripMenuItem NewShapeMenuItem1;
         private ScaledToolStripMenuItem NewTextMenuItem1;
+        private ScaledToolStripMenuItem apiDocMenuItem;
     }
 }
