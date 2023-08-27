@@ -1019,6 +1019,19 @@ namespace PaintDotNet.Effects
             txtCode.Focus();
         }
 
+        private void CreateNewBitmapEffect()
+        {
+            FileName = "Untitled";
+            FullScriptPath = string.Empty;
+
+            tabStrip1.NewTab(FileName, FullScriptPath, ProjectType.BitmapEffect);
+
+            txtCode.Text = string.Empty;
+            txtCode.EmptyUndoBuffer();
+            Build();
+            txtCode.Focus();
+        }
+
         private void CreateNewPlainText()
         {
             FileName = "Untitled";
@@ -1851,6 +1864,11 @@ namespace PaintDotNet.Effects
             CreateNewEffect();
         }
 
+        private void NewBitmapEffect_Click(object sender, EventArgs e)
+        {
+            CreateNewBitmapEffect();
+        }
+
         private void OpenButton_Click(object sender, EventArgs e)
         {
             Open();
@@ -1974,7 +1992,12 @@ namespace PaintDotNet.Effects
 
         private void openRecentToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
         {
-            this.openRecentToolStripMenuItem.DropDownItems.Clear();
+            if (sender is not ToolStripDropDownItem menu)
+            {
+                return;
+            }
+
+            menu.DropDownItems.Clear();
 
             string recents = Settings.RecentDocs;
 
@@ -2033,7 +2056,7 @@ namespace PaintDotNet.Effects
                 clearRecents.Click += ClearRecents_Click;
                 recentsList.Add(clearRecents);
 
-                this.openRecentToolStripMenuItem.DropDownItems.AddRange(recentsList.ToArray());
+                menu.DropDownItems.AddRange(recentsList.ToArray());
             }
             else
             {
@@ -2043,7 +2066,7 @@ namespace PaintDotNet.Effects
                     Enabled = false
                 };
 
-                this.openRecentToolStripMenuItem.DropDownItems.Add(noRecents);
+                menu.DropDownItems.Add(noRecents);
             }
         }
 
