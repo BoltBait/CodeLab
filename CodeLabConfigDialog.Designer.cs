@@ -484,7 +484,7 @@
             // 
             // NewBitmapEffectMenuItem
             // 
-            NewBitmapEffectMenuItem.ImageName = "";
+            NewBitmapEffectMenuItem.ImageName = "BitmapEffect";
             NewBitmapEffectMenuItem.Name = "NewBitmapEffectMenuItem";
             NewBitmapEffectMenuItem.Size = new System.Drawing.Size(186, 22);
             NewBitmapEffectMenuItem.Text = "Bitmap Effect";
@@ -911,7 +911,7 @@
             // 
             // NewBitmapMenuItem1
             // 
-            NewBitmapMenuItem1.ImageName = "";
+            NewBitmapMenuItem1.ImageName = "BitmapEffect";
             NewBitmapMenuItem1.Name = "NewBitmapMenuItem1";
             NewBitmapMenuItem1.Size = new System.Drawing.Size(186, 22);
             NewBitmapMenuItem1.Text = "Bitmap Effect";
