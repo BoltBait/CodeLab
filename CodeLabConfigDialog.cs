@@ -38,7 +38,11 @@ namespace PdnCodeLab
 #endif
     {
         #region Constructor
+#if RELEASE
         private const string WindowTitle = "CodeLab v" + CodeLab.Version;
+#else
+        private const string WindowTitle = "CodeLab Debug";
+#endif
         private string FileName = "Untitled";
         private string FullScriptPath = "";
         private EffectConfigToken previewToken = null;
@@ -56,6 +60,8 @@ namespace PdnCodeLab
 #if FASTDEBUG
             this.Icon = UIUtil.CreateIcon("CodeLab");
             this.ShowInTaskbar = true;
+            this.UseAppThemeColors = true;
+            UpdateWindowTitle();
 #endif
             PdnTheme.InitialColors(this.ForeColor, this.BackColor);
             LoadSettingsFromRegistry();
@@ -583,7 +589,7 @@ namespace PdnCodeLab
 
         private DialogResult PromptToSave()
         {
-            int buttonPressed = (int)FlexibleMessageBox.Show(this, $"Do you want to save changes to '{FileName}'?", "Unsaved Changes", new string[] { "Save","Discard","Cancel" }, MessageBoxIcon.Question);
+            int buttonPressed = (int)FlexibleMessageBox.Show(this, $"Do you want to save changes to '{FileName}'?", "Unsaved Changes", new string[] { "Save", "Discard", "Cancel" }, MessageBoxIcon.Question);
             switch (buttonPressed)
             {
                 case 1: // Save
@@ -972,7 +978,7 @@ namespace PdnCodeLab
             errorList.BackColor = PdnTheme.BackColor;
             OutputTextBox.ForeColor = PdnTheme.ForeColor;
             OutputTextBox.BackColor = PdnTheme.BackColor;
-            ShowErrors.ForeColor = (ShowErrors.Text == showErrorList) ? this.ForeColor : Color.Red;
+            ShowErrors.ForeColor = errorList.HasErrors ? this.ForeColor : Color.Red;
         }
 
         private void LaunchUrl(string url)
