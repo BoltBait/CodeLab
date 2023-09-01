@@ -47,6 +47,7 @@ namespace PdnCodeLab
         private readonly string resourcePath;
         private readonly bool canCreateSln;
         private readonly bool customHelp;
+        private readonly ProjectType projectType;
 
         internal BuildForm(string ScriptName, string ScriptText, string ScriptPath, ProjectType projectType, bool canCreateSln)
         {
@@ -69,6 +70,7 @@ namespace PdnCodeLab
                 }
             }
 
+            this.projectType = projectType;
             this.canCreateSln = canCreateSln;
 
             WarningLabel.Visible = false;
@@ -1133,11 +1135,15 @@ namespace PdnCodeLab
                 return;
             }
 
-            string SourceCode = ClassicEffectWriter.FullSourceCode(FullScriptText, FileName, isAdjustment, SubMenuName.Text, MenuName.Text, IconPath, URL, RenderingFlags, RenderingSchedule, Author, MajorVer, MinorVer, Description, KeyWords, WindowTitle, HelpType, HelpStr);
-            using (ViewSrc VSW = new ViewSrc("Full Source Code", SourceCode, true))
+            string SourceCode = this.projectType switch
             {
-                VSW.ShowDialog();
-            }
+                ProjectType.ClassicEffect => ClassicEffectWriter.FullSourceCode(FullScriptText, FileName, isAdjustment, SubMenuName.Text, MenuName.Text, IconPath, URL, RenderingFlags, RenderingSchedule, Author, MajorVer, MinorVer, Description, KeyWords, WindowTitle, HelpType, HelpStr),
+                ProjectType.BitmapEffect => BitmapEffectWriter.FullSourceCode(FullScriptText, FileName, isAdjustment, SubMenuName.Text, MenuName.Text, IconPath, URL, RenderingFlags, RenderingSchedule, Author, MajorVer, MinorVer, Description, KeyWords, WindowTitle, HelpType, HelpStr),
+                _ => throw new NotImplementedException("Invalid Project Type"),
+            };
+
+            using ViewSrc VSW = new ViewSrc("Full Source Code", SourceCode, true);
+            VSW.ShowDialog();
         }
 
         private void GenSlnButton_Click(object sender, EventArgs e)
@@ -1167,7 +1173,13 @@ namespace PdnCodeLab
 
                 if (fbd.ShowDialog() == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
                 {
-                    string SourceCode = ClassicEffectWriter.FullSourceCode(FullScriptText, FileName, isAdjustment, SubMenuName.Text, MenuName.Text, IconPath, URL, RenderingFlags, RenderingSchedule, Author, MajorVer, MinorVer, Description, KeyWords, WindowTitle, HelpType, HelpStr);
+                    string SourceCode = this.projectType switch
+                    {
+                        ProjectType.ClassicEffect => ClassicEffectWriter.FullSourceCode(FullScriptText, FileName, isAdjustment, SubMenuName.Text, MenuName.Text, IconPath, URL, RenderingFlags, RenderingSchedule, Author, MajorVer, MinorVer, Description, KeyWords, WindowTitle, HelpType, HelpStr),
+                        ProjectType.BitmapEffect => BitmapEffectWriter.FullSourceCode(FullScriptText, FileName, isAdjustment, SubMenuName.Text, MenuName.Text, IconPath, URL, RenderingFlags, RenderingSchedule, Author, MajorVer, MinorVer, Description, KeyWords, WindowTitle, HelpType, HelpStr),
+                        _ => throw new NotImplementedException("Invalid Project Type"),
+                    };
+
                     string slnFilePath = Solution.Generate(fbd.SelectedPath, FileName, SourceCode, IconPath, resourcePath);
 
                     if (slnFilePath != null)

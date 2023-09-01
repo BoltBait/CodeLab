@@ -130,7 +130,7 @@ namespace PdnCodeLab
                     flags.Add("BitmapEffectRenderingFlags.ForceAliasedSelectionQuality");
                 }
 
-                renderInfo += "         renderInfo.Flags = " + flags.Join(" | ") + ";\r\n";
+                renderInfo += "            renderInfo.Flags = " + flags.Join(" | ") + ";\r\n";
             }
 
             if (renderingSchedule != ScriptRenderingSchedule.Default)
@@ -143,12 +143,13 @@ namespace PdnCodeLab
                     _ => "BitmapEffectRenderingSchedule.SquareTiles"
                 };
 
-                renderInfo += "         renderInfo.Schedule = " + schedule + ";\r\n";
+                renderInfo += "            renderInfo.Schedule = " + schedule + ";\r\n";
             }
 
             renderInfo +=
-                "         base.OnInitializeRenderInfo(renderInfo);\r\n" +
-                "    }\r\n";
+                "            base.OnInitializeRenderInfo(renderInfo);\r\n" +
+                "        }\r\n" +
+                "\r\n";
 
             return renderInfo;
         }
@@ -165,8 +166,9 @@ namespace PdnCodeLab
             }
 
             setToken +=
-                "         base.OnSetToken(newToken);\r\n" +
-                "    }\r\n";
+                "            base.OnSetToken(newToken);\r\n" +
+                "        }\r\n" +
+                "\r\n";
 
             return setToken;
         }
