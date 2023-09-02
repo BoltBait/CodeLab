@@ -1,14 +1,10 @@
-﻿using PaintDotNet.Effects;
+﻿using PaintDotNet;
+using PaintDotNet.Effects;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Windows.Controls.Primitives;
 
 namespace PdnCodeLab
 {
@@ -916,9 +912,14 @@ namespace PdnCodeLab
         {
             SourceCode = Regex.Replace(SourceCode, @"\b(?:RadioButtonControl|ListBoxControl)<(?<TEnum>\S+)>\s+", match => match.Groups["TEnum"].Value + " ");
 
+            SourceCode = SourceCode
+                .Split('\n')
+                .Select(x => string.IsNullOrWhiteSpace(x) ? string.Empty : "        " + x.TrimEnd())
+                .Join(Environment.NewLine);
+
             string UserEnteredPart = "";
-            UserEnteredPart += "        #region User Entered Code\r\n        ";
-            UserEnteredPart += SourceCode.Replace("\n", "\n        ");
+            UserEnteredPart += "        #region User Entered Code\r\n";
+            UserEnteredPart += SourceCode;
             UserEnteredPart += "\r\n";
             UserEnteredPart += "        #endregion\r\n";
             return UserEnteredPart;
