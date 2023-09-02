@@ -202,6 +202,10 @@ namespace PdnCodeLab
                 tabStrip1.NewTab(FileName, FullScriptPath, token.ProjectType);
                 tabStrip1.CloseFirstTab();
             }
+            else if (token.ProjectType.IsCSharp())
+            {
+                Intelli.SetReferences(token.ProjectType);
+            }
             txtCode.Text = token.UserCode;
             txtCode.EmptyUndoBuffer();
             if (!token.Dirty)
@@ -573,13 +577,13 @@ namespace PdnCodeLab
                     break;
             }
 
-            if (tabStrip1.SelectedTabIsInitial && tabStrip1.SelectedTabProjType == projType && txtCode.IsVirgin)
+            bool removedInitTab = tabStrip1.SelectedTabIsInitial && txtCode.IsVirgin;
+
+            tabStrip1.NewTab(FileName, FullScriptPath, projType);
+
+            if (removedInitTab)
             {
-                UpdateTabProperties();
-            }
-            else
-            {
-                tabStrip1.NewTab(FileName, FullScriptPath, projType);
+                tabStrip1.CloseFirstTab();
             }
 
             txtCode.Text = fileContents;
@@ -976,9 +980,11 @@ namespace PdnCodeLab
             errorListMenu.Renderer = PdnTheme.Renderer;
             errorList.ForeColor = PdnTheme.ForeColor;
             errorList.BackColor = PdnTheme.BackColor;
+            errorList.EnableUxThemeDarkMode(PdnTheme.Theme == Theme.Dark);
             OutputTextBox.ForeColor = PdnTheme.ForeColor;
             OutputTextBox.BackColor = PdnTheme.BackColor;
-            ShowErrors.ForeColor = errorList.HasErrors ? this.ForeColor : Color.Red;
+            OutputTextBox.EnableUxThemeDarkMode(PdnTheme.Theme == Theme.Dark);
+            ShowErrors.ForeColor = errorList.HasErrors ? Color.Red : this.ForeColor;
         }
 
         private void LaunchUrl(string url)
