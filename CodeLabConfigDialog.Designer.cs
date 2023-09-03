@@ -475,7 +475,7 @@
             // 
             // NewEffectMenuItem
             // 
-            NewEffectMenuItem.ImageName = "Untitled";
+            NewEffectMenuItem.ImageName = "ClassicEffect";
             NewEffectMenuItem.Name = "NewEffectMenuItem";
             NewEffectMenuItem.Padding = new System.Windows.Forms.Padding(2);
             NewEffectMenuItem.ShortcutKeys = System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N;
@@ -910,7 +910,7 @@
             // 
             // NewEffectMenuItem1
             // 
-            NewEffectMenuItem1.ImageName = "Untitled";
+            NewEffectMenuItem1.ImageName = "ClassicEffect";
             NewEffectMenuItem1.Name = "NewEffectMenuItem1";
             NewEffectMenuItem1.ShortcutKeyDisplayString = "Ctrl+N";
             NewEffectMenuItem1.Size = new System.Drawing.Size(186, 22);
