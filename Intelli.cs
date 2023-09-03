@@ -99,7 +99,7 @@ namespace PdnCodeLab
                 "PaintDotNet.PropertySystem"
             };
 
-            List<string> assemblyBlackList = new List<string>
+            List<string> intelliIgnoreList = new List<string>
             {
                 "PresentationCore",
                 "PresentationFramework",
@@ -121,8 +121,8 @@ namespace PdnCodeLab
                     pdnAssemblyNames.Add("PaintDotNet.Windows.Core");
                     pdnAssemblyNames.Add("PaintDotNet.Windows.Framework");
 
-                    assemblyBlackList.Add("System.Drawing.Common");
-                    assemblyBlackList.Add("System.Drawing.Primitives");
+                    intelliIgnoreList.Add("System.Drawing.Common");
+                    intelliIgnoreList.Add("System.Drawing.Primitives");
                     break;
                 case ProjectType.Reference:
                     pdnAssemblyNames.Add("PaintDotNet.Effects");
@@ -141,12 +141,15 @@ namespace PdnCodeLab
                 .OrderBy(x => x, StringComparer.Ordinal)
                 .ToImmutableArray();
 
-            ImmutableArray<Assembly> assemblies = sdkAssemblies
-                .Where(a => !assemblyBlackList.Contains(a.GetName().Name, StringComparer.Ordinal))
+            ImmutableArray<Assembly> allAssemblies = sdkAssemblies
                 .Concat(allPdnAssemblies.Where(a => pdnAssemblyNames.Contains(a.GetName().Name, StringComparer.Ordinal)))
                 .ToImmutableArray();
 
-            IEnumerable<string> refFilePaths = assemblies
+            ImmutableArray<Assembly> intelliAssemblies = allAssemblies
+                .Where(a => !intelliIgnoreList.Contains(a.GetName().Name, StringComparer.Ordinal))
+                .ToImmutableArray();
+
+            IEnumerable<string> refFilePaths = allAssemblies
                 .Append(allPdnAssemblies.First(a => a.GetName().Name.Equals("PaintDotNet.Windows", StringComparison.Ordinal)))
                 .Select(a => a.Location)
                 .Distinct();
@@ -190,7 +193,7 @@ namespace PdnCodeLab
             };
 
             // Add the referenced assembly types
-            foreach (Assembly a in assemblies)
+            foreach (Assembly a in intelliAssemblies)
             {
                 foreach (Type type in a.GetExportedTypes())
                 {
