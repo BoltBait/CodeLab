@@ -1,12 +1,15 @@
-﻿namespace PdnCodeLab
+﻿using PaintDotNet.Direct2D1;
+using System;
+
+namespace PdnCodeLab
 {
     internal static class DefaultCode
     {
         internal static string Default => ProjectType.Default switch
         {
             ProjectType.ClassicEffect => ClassicEffect,
-            ProjectType.GpuEffect => string.Empty,
             ProjectType.BitmapEffect => BitmapEffect,
+            ProjectType.GpuEffect => GPUEffect,
             _ => string.Empty,
         };
 
@@ -110,6 +113,28 @@
             + "            outputRegion[x,y] = sourcePixel;\r\n"
             + "        }\r\n"
             + "    }\r\n"
+            + "}\r\n";
+
+        internal const string GPUEffect = ""
+            + "// Name:\r\n"
+            + "// Submenu:\r\n"
+            + "// Author:\r\n"
+            + "// Title:\r\n"
+            + "// Version:\r\n"
+            + "// Desc:\r\n"
+            + "// Keywords:\r\n"
+            + "// URL:\r\n"
+            + "// Help:\r\n"
+            + "#region UICode\r\n"
+            + "IntSliderControl Amount1 = 0; // [0,100] Slider 1 Description\r\n"
+            + "IntSliderControl Amount2 = 0; // [0,100] Slider 2 Description\r\n"
+            + "IntSliderControl Amount3 = 0; // [0,100] Slider 3 Description\r\n"
+            + "#endregion\r\n"
+            + "\r\n"
+            + "protected override IDeviceImage OnCreateOutput(PaintDotNet.Direct2D1.IDeviceContext deviceContext)\r\n"
+            + "{\r\n"
+            + "    // TODO: replace this return statement with your GPU pipeline algorithm\r\n"
+            + "    return Environment.SourceImage;\r\n"
             + "}\r\n";
     }
 }

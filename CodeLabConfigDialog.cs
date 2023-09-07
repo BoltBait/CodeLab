@@ -17,6 +17,7 @@
 using PaintDotNet;
 using PaintDotNet.AppModel;
 using PaintDotNet.Effects;
+using PaintDotNet.Effects.Gpu;
 using ScintillaNET;
 using System;
 using System.Collections.Generic;
@@ -270,6 +271,13 @@ namespace PdnCodeLab
                     txtCode.UpdateSyntaxHighlighting();
                     UpdateTokenFromDialog();
                     break;
+                case ProjectType.GpuEffect:
+                    string gpuSourceCode = GPUEffectWriter.Run(userCode, debugMode);
+                    ScriptBuilder.BuildEffect<GpuImageEffect>(gpuSourceCode, debugMode);
+                    DisplayErrors();
+                    txtCode.UpdateSyntaxHighlighting();
+                    UpdateTokenFromDialog();
+                    break;
                 case ProjectType.FileType:
                     string fileTypeSourceCode = FileTypeWriter.Run(userCode, debugMode);
                     ScriptBuilder.BuildFileType(fileTypeSourceCode, debugMode);
@@ -307,6 +315,10 @@ namespace PdnCodeLab
                     case ProjectType.BitmapEffect:
                         string bitmapSourceCode = BitmapEffectWriter.Run(userCode, debugMode);
                         ScriptBuilder.BuildEffect<BitmapEffect>(bitmapSourceCode, debugMode);
+                        break;
+                    case ProjectType.GpuEffect:
+                        string gpuSourceCode = GPUEffectWriter.Run(userCode, debugMode);
+                        ScriptBuilder.BuildEffect<GpuImageEffect>(gpuSourceCode, debugMode);
                         break;
                     case ProjectType.FileType:
                         string fileTypeSourceCode = FileTypeWriter.Run(userCode, debugMode);
@@ -357,6 +369,10 @@ namespace PdnCodeLab
                 case ProjectType.BitmapEffect:
                     string bitmapSourceCode = BitmapEffectWriter.FullPreview(txtCode.Text);
                     built = ScriptBuilder.BuildEffect<BitmapEffect>(bitmapSourceCode);
+                    break;
+                case ProjectType.GpuEffect:
+                    string gpuSourceCode = GPUEffectWriter.FullPreview(txtCode.Text);
+                    built = ScriptBuilder.BuildEffect<GpuImageEffect>(gpuSourceCode);
                     break;
             }
 
@@ -475,6 +491,7 @@ namespace PdnCodeLab
             {
                 case ProjectType.ClassicEffect:
                 case ProjectType.BitmapEffect:
+                case ProjectType.GpuEffect:
                 case ProjectType.FileType:
                     if (ScriptBuilder.Errors.Count == 0)
                     {
@@ -558,6 +575,10 @@ namespace PdnCodeLab
                     else if (Regex.IsMatch(fileContents, @"protected\s+override\s+void\s+OnRender\s*\(\s*IBitmapEffectOutput\s+output\s*\)\s*{(.|\s)*}", RegexOptions.Singleline))
                     {
                         projType = ProjectType.BitmapEffect;
+                    }
+                    else if (Regex.IsMatch(fileContents, @"protected\s+override\s+IDeviceImage\s+OnCreateOutput\(PaintDotNet\.Direct2D1\.IDeviceContext\s+deviceContext\)\s*{(.|\s)*}", RegexOptions.Singleline))
+                    {
+                        projType = ProjectType.GpuEffect;
                     }
                     else if (Regex.IsMatch(fileContents, @"void\s+SaveImage\s*\(\s*Document\s+input\s*,\s*Stream\s+output\s*,\s*PropertyBasedSaveConfigToken\s+token\s*,\s*Surface\s+scratchSurface\s*,\s*ProgressEventHandler\s+progressCallback\s*\)\s*{(.|\s)*}", RegexOptions.Singleline))
                     {
@@ -1044,6 +1065,19 @@ namespace PdnCodeLab
             txtCode.Focus();
         }
 
+        private void CreateNewGPUEffect()
+        {
+            FileName = "Untitled";
+            FullScriptPath = string.Empty;
+
+            tabStrip1.NewTab(FileName, FullScriptPath, ProjectType.GpuEffect);
+
+            txtCode.Text = DefaultCode.GPUEffect;
+            txtCode.EmptyUndoBuffer();
+            Build();
+            txtCode.Focus();
+        }
+
         private void CreateNewPlainText()
         {
             FileName = "Untitled";
@@ -1292,6 +1326,24 @@ namespace PdnCodeLab
                     }
 
                     break;
+                case ProjectType.GpuEffect:
+                    using (BuildForm buildForm = new BuildForm(fileName, txtCode.Text, FullScriptPath, ProjectType.GpuEffect, canCreateSln))
+                    {
+                        if (buildForm.ShowDialog() != DialogResult.OK)
+                        {
+                            return;
+                        }
+
+                        string gpuSourceCode = GPUEffectWriter.FullSourceCode(
+                            txtCode.Text, Path.GetFileNameWithoutExtension(FullScriptPath), buildForm.isAdjustment,
+                            buildForm.SubMenu, buildForm.MenuItemName, buildForm.IconPath, buildForm.URL, buildForm.RenderingFlags,
+                            buildForm.RenderingSchedule, buildForm.Author, buildForm.MajorVer, buildForm.MinorVer,
+                            buildForm.Description, buildForm.KeyWords, buildForm.WindowTitle, buildForm.HelpType, buildForm.HelpStr);
+
+                        buildSucceeded = ScriptBuilder.BuildEffectDll(gpuSourceCode, FullScriptPath, buildForm.IconPath, buildForm.HelpType);
+                    }
+
+                    break;
                 case ProjectType.FileType:
                     using (BuildFileTypeDialog buildFileTypeDialog = new BuildFileTypeDialog(fileName, txtCode.Text, canCreateSln))
                     {
@@ -1480,6 +1532,7 @@ namespace PdnCodeLab
             {
                 case ProjectType.ClassicEffect:
                 case ProjectType.BitmapEffect:
+                case ProjectType.GpuEffect:
                     RunEffectWithDialog(projectType);
                     break;
                 case ProjectType.FileType:
@@ -1768,7 +1821,7 @@ namespace PdnCodeLab
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FlexibleMessageBox.Show(WindowTitle + "\nCopyright ©2006-2023, All Rights Reserved.\n\nTom Jackson:\tConcept, Initial Code, Compile to DLL\n\nDavid Issel:\tEffect UI Creation, Effect Icons, Effect Help\n\t\tSystem, File New Complex Pixel Flow Code\n\t\tGeneration, CodeLab Updater, Settings\n\t\tScreen, Bug Fixes), Tutorials and Installer.\n\nJason Wendt:\tMigration to ScintillaNET editor control,\n\t\t.NET 6.0, and the C# 9.0 \"Roslyn\" Compiler.\n\t\tIntelligent Assistance (including code\n\t\tcompletion, tips, snippets, and variable\n\t\tname suggestions), Debug Output, Dark\n\t\tTheme, HiDPI icons, Live Effect Preview,\n\t\tSpellcheck, Filetype plugin creation, and\n\t\tShape editing.\n\nJörg Reichert:\tFlexibleMessageBox", "About CodeLab", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            FlexibleMessageBox.Show(WindowTitle + "\nCopyright ©2006-2023, All Rights Reserved.\n\nTom Jackson:\tConcept, Initial Code, Compile to DLL\n\nDavid Issel:\tEffect UI Creation, Effect Icons, Effect Help\n\t\tSystem, File New Complex Pixel Flow Code\n\t\tGeneration, CodeLab Updater, Settings\n\t\tScreen, Bug Fixes, Tutorials and Installer.\n\nJason Wendt:\tMigration to ScintillaNET editor control,\n\t\t.NET 6.0, and the C# 9.0 \"Roslyn\" Compiler.\n\t\tIntelligent Assistance (including code\n\t\tcompletion, tips, snippets, and variable\n\t\tname suggestions), Debug Output, Dark\n\t\tTheme, HiDPI icons, Live Effect Preview,\n\t\tSpellcheck, Filetype plugin creation, and\n\t\tShape editing.\n\nJörg Reichert:\tFlexibleMessageBox", "About CodeLab", MessageBoxButtons.OK, MessageBoxIcon.Information);
             txtCode.Focus();
         }
         #endregion
