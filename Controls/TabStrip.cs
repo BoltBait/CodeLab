@@ -355,31 +355,16 @@ namespace PdnCodeLab
                 }
                 else
                 {
-                    switch (projectType)
+                    this.ImageName = projectType switch
                     {
-                        case ProjectType.ClassicEffect:
-                            this.ImageName = "ClassicEffect";
-                            break;
-                        case ProjectType.GpuEffect:
-                            this.ImageName = "GpuEffect";
-                            break;
-                        case ProjectType.BitmapEffect:
-                            this.ImageName = "BitmapEffect";
-                            break;
-                        case ProjectType.FileType:
-                            this.ImageName = "Save";
-                            break;
-                        case ProjectType.Reference:
-                            this.ImageName = "Book";
-                            break;
-                        case ProjectType.Shape:
-                            this.ImageName = "Shape";
-                            break;
-                        case ProjectType.None:
-                        default:
-                            this.ImageName = "PlainText";
-                            break;
-                    }
+                        ProjectType.ClassicEffect => "ClassicEffect",
+                        ProjectType.GpuEffect => "GpuEffect",
+                        ProjectType.BitmapEffect => "BitmapEffect",
+                        ProjectType.FileType => "Save",
+                        ProjectType.Reference => "Book",
+                        ProjectType.Shape => "Shape",
+                        _ => "PlainText",
+                    };
                 }
 
                 this.Text = title;
