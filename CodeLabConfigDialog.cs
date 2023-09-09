@@ -1420,9 +1420,7 @@ namespace PdnCodeLab
 
         private void RunCommand()
         {
-#if FASTDEBUG
-            return;
-#else
+#if !FASTDEBUG
             double SaveOpacitySetting = Opacity;
             Opacity = 0;
             tmrCompile.Enabled = false;
@@ -1445,7 +1443,7 @@ namespace PdnCodeLab
             Opacity = SaveOpacitySetting;
 #endif
         }
-#endregion
+        #endregion
 
         #region File Menu Event functions
         private void fileToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
