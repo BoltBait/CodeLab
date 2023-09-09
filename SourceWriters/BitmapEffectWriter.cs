@@ -200,7 +200,7 @@ namespace PdnCodeLab
             return
                 BitmapEffectWriter.UsingStatements +
                 CommonWriter.NamespacePart("UserScript") +
-                BitmapEffectWriter.ConstructorPart(UserControls, FileName, "FULL UI PREVIEW - Temporarily renders to canvas", FileName, string.Empty) +
+                BitmapEffectWriter.ConstructorPart(UserControls, FileName, string.Empty, "FULL UI PREVIEW - Temporarily renders to canvas", string.Empty) +
                 CommonWriter.PropertyPart(UserControls, FileName, string.Empty, HelpType.None, string.Empty, ProjectType.BitmapEffect) +
                 BitmapEffectWriter.SetTokenPart(UserControls) +
                 CommonWriter.UserEnteredPart(scriptText) +

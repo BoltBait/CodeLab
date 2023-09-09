@@ -212,7 +212,7 @@ namespace PdnCodeLab
             return
                 GPUEffectWriter.UsingStatements +
                 CommonWriter.NamespacePart("UserScript") +
-                GPUEffectWriter.ConstructorPart(UserControls, FileName, "FULL UI PREVIEW - Temporarily renders to canvas", FileName, string.Empty) +
+                GPUEffectWriter.ConstructorPart(UserControls, FileName, string.Empty, "FULL UI PREVIEW - Temporarily renders to canvas", string.Empty) +
                 CommonWriter.PropertyPart(UserControls, FileName, string.Empty, HelpType.None, string.Empty, ProjectType.GpuEffect) +
                 GPUEffectWriter.SetTokenPart(UserControls) +
                 CommonWriter.UserEnteredPart(scriptText) +
