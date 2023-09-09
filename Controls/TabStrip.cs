@@ -361,7 +361,7 @@ namespace PdnCodeLab
                             this.ImageName = "ClassicEffect";
                             break;
                         case ProjectType.GpuEffect:
-                            this.ImageName = "Untitled";
+                            this.ImageName = "GpuEffect";
                             break;
                         case ProjectType.BitmapEffect:
                             this.ImageName = "BitmapEffect";
