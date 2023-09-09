@@ -364,8 +364,8 @@ namespace PdnCodeLab
             }
 
             this.RenderingFlags = ScriptRenderingFlags.None;
-            if (ForceAliasSelectionBox.Checked) this.RenderingFlags |= ScriptRenderingFlags.AliasedSelection;
-            if (ForceSingleThreadedBox.Checked) this.RenderingFlags |= ScriptRenderingFlags.SingleThreaded;
+            if (ForceAliasSelectionBox.Checked) { this.RenderingFlags |= ScriptRenderingFlags.AliasedSelection; }
+            if (ForceSingleThreadedBox.Checked) { this.RenderingFlags |= ScriptRenderingFlags.SingleThreaded; }
 
             if (radioButtonNone.Checked)
             {

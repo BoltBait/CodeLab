@@ -452,7 +452,7 @@ namespace PdnCodeLab
             /// <returns>The string rows as 1-dimensional array</returns>
             private static string[] GetStringRows(string message)
             {
-                if (string.IsNullOrEmpty(message)) return null;
+                if (string.IsNullOrEmpty(message)) { return null; }
 
                 // Added "Replace" in next line to fix bug where dialog box would be too narrow if text contained \t character - BoltBait
                 var messageRows = message.Replace("\t","        ").Split(new char[] { '\n' }, StringSplitOptions.None);
@@ -493,8 +493,8 @@ namespace PdnCodeLab
                 const double MIN_FACTOR = 0.2;
                 const double MAX_FACTOR = 1.0;
 
-                if (workingAreaFactor < MIN_FACTOR) return MIN_FACTOR;
-                if (workingAreaFactor > MAX_FACTOR) return MAX_FACTOR;
+                if (workingAreaFactor < MIN_FACTOR) { return MIN_FACTOR; }
+                if (workingAreaFactor > MAX_FACTOR) { return MAX_FACTOR; }
 
                 return workingAreaFactor;
             }
@@ -532,7 +532,7 @@ namespace PdnCodeLab
 
                 //Get rows. Exit if there are no rows to render...
                 var stringRows = GetStringRows(text);
-                if (stringRows == null) return;
+                if (stringRows == null) { return; }
 
                 //Calculate whole text height
                 var textHeight = TextRenderer.MeasureText(text, FONT).Height;
@@ -580,7 +580,8 @@ namespace PdnCodeLab
                     MessageBoxIcon.Information => 76,
                     MessageBoxIcon.Warning => 79,
                     MessageBoxIcon.Error => 93,
-                    MessageBoxIcon.Question => 94
+                    MessageBoxIcon.Question => 94,
+                    _ => 76
                 };
 
                 string imageResPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "imageres.dll");
@@ -786,7 +787,7 @@ namespace PdnCodeLab
                         break;
                 }
 
-                if (buttonIndexToFocus > this.visibleButtonsCount) buttonIndexToFocus = this.visibleButtonsCount;
+                if (buttonIndexToFocus > this.visibleButtonsCount) { buttonIndexToFocus = this.visibleButtonsCount; }
 
                 if (buttonIndexToFocus == 3)
                 {

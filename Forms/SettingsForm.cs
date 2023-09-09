@@ -1,4 +1,6 @@
-﻿using System;
+﻿#pragma warning disable CS4014
+
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -165,7 +167,7 @@ namespace PdnCodeLab
         #region Updates Page
         private void checkForUpdates_CheckedChanged(object sender, EventArgs e)
         {
-            if (Initializing) return;
+            if (Initializing) { return; }
             Settings.CheckForUpdates = checkForUpdates.Checked;
         }
 
@@ -178,54 +180,54 @@ namespace PdnCodeLab
         #region UI Page
         private void toolbarCheckbox_CheckedChanged(object sender, EventArgs e)
         {
-            if (Initializing) return;
+            if (Initializing) { return; }
             Settings.ToolBar = toolbarCheckbox.Checked;
         }
         private void lineNumbersCheckbox_CheckedChanged(object sender, EventArgs e)
         {
-            if (Initializing) return;
+            if (Initializing) { return; }
             Settings.LineNumbers = lineNumbersCheckbox.Checked;
         }
 
         private void bookMarksCheckbox_CheckedChanged(object sender, EventArgs e)
         {
-            if (Initializing) return;
+            if (Initializing) { return; }
             Settings.Bookmarks = bookMarksCheckbox.Checked;
         }
 
         private void codeFoldingCheckbox_CheckedChanged(object sender, EventArgs e)
         {
-            if (Initializing) return;
+            if (Initializing) { return; }
             Settings.CodeFolding = codeFoldingCheckbox.Checked;
         }
 
         private void indicatorMapCheckbox_CheckedChanged(object sender, EventArgs e)
         {
-            if (Initializing) return;
+            if (Initializing) { return; }
             Settings.Map = indicatorMapCheckbox.Checked;
         }
 
         private void wordWrapCheckbox_CheckedChanged(object sender, EventArgs e)
         {
-            if (Initializing) return;
+            if (Initializing) { return; }
             Settings.WordWrap = wordWrapCheckbox.Checked;
         }
 
         private void showWhiteSpaceCheckbox_CheckedChanged(object sender, EventArgs e)
         {
-            if (Initializing) return;
+            if (Initializing) { return; }
             Settings.WhiteSpace = showWhiteSpaceCheckbox.Checked;
         }
 
         private void indentSpacesComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (Initializing) return;
+            if (Initializing) { return; }
             Settings.IndentSpaces = indentSpacesComboBox.SelectedIndex == 0 ? 2 : 4;
         }
 
         private void fontCombobox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (Initializing) return;
+            if (Initializing) { return; }
             string SelectedFont = fontCombobox.Text;
             if (SelectedFont.EndsWith("*", StringComparison.Ordinal))
             {
@@ -237,39 +239,39 @@ namespace PdnCodeLab
 
         private void largeFontCheckbox_CheckedChanged(object sender, EventArgs e)
         {
-            if (Initializing) return;
+            if (Initializing) { return; }
             Settings.LargeFonts = largeFontCheckbox.Checked;
         }
 
         private void themeCombobox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (Initializing) return;
-            if (themeCombobox.Text == "Auto") Settings.EditorTheme = Theme.Auto;
-            if (themeCombobox.Text == "Dark") Settings.EditorTheme = Theme.Dark;
-            if (themeCombobox.Text == "Light") Settings.EditorTheme = Theme.Light;
+            if (Initializing) { return; }
+            if (themeCombobox.Text == "Auto") { Settings.EditorTheme = Theme.Auto; }
+            if (themeCombobox.Text == "Dark") { Settings.EditorTheme = Theme.Dark; }
+            if (themeCombobox.Text == "Light") { Settings.EditorTheme = Theme.Light; }
         }
 
         private void extendedColorsCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            if (Initializing) return;
+            if (Initializing) { return; }
             Settings.ExtendedColors = extendedColorsCheckBox.Checked;
         }
 
         private void wordWrapTextFilesCheckbox_CheckedChanged(object sender, EventArgs e)
         {
-            if (Initializing) return;
+            if (Initializing) { return; }
             Settings.WordWrapPlainText = wordWrapTextFilesCheckbox.Checked;
         }
 
         private void caretLineFrameCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            if (Initializing) return;
+            if (Initializing) { return; }
             Settings.CaretLineFrame = caretLineFrameCheckBox.Checked;
         }
 
         private void disableAutoCompCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            if (Initializing) return;
+            if (Initializing) { return; }
             Settings.DisableAutoComplete = disableAutoCompCheckBox.Checked;
         }
 
@@ -298,13 +300,13 @@ namespace PdnCodeLab
 
         private void enableSpellcheckCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            if (Initializing) return;
+            if (Initializing) { return; }
             Settings.Spellcheck = enableSpellcheckCheckBox.Checked;
         }
 
         private void spellLangComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (Initializing) return;
+            if (Initializing) { return; }
             Settings.SpellingLang = spellLangComboBox.Text;
         }
 
@@ -321,7 +323,7 @@ namespace PdnCodeLab
         #region Compiler Page
         private void warningLevelCombobox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (Initializing) return;
+            if (Initializing) { return; }
             Settings.WarningLevel = warningLevelCombobox.SelectedIndex;
         }
 

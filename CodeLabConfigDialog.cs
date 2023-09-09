@@ -13,6 +13,7 @@
 //
 // Latest distribution: https://www.BoltBait.com/pdn/codelab
 /////////////////////////////////////////////////////////////////////////////////
+#pragma warning disable CS4014
 
 using PaintDotNet;
 using PaintDotNet.AppModel;
@@ -1521,7 +1522,7 @@ namespace PdnCodeLab
         {
 #if FASTDEBUG
             return;
-#endif
+#else
             double SaveOpacitySetting = Opacity;
             Opacity = 0;
             tmrCompile.Enabled = false;
@@ -1542,8 +1543,9 @@ namespace PdnCodeLab
 
             tmrCompile.Enabled = true;
             Opacity = SaveOpacitySetting;
+#endif
         }
-        #endregion
+#endregion
 
         #region File Menu Event functions
         private void fileToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
@@ -1937,6 +1939,11 @@ namespace PdnCodeLab
         private void NewBitmapEffect_Click(object sender, EventArgs e)
         {
             CreateNewBitmapEffect();
+        }
+
+        private void NewGpuEffect_Click(object sender, EventArgs e)
+        {
+            CreateNewGPUEffect();
         }
 
         private void OpenButton_Click(object sender, EventArgs e)
