@@ -34,7 +34,7 @@ namespace PdnCodeLab
 #if FASTDEBUG
         : PdnBaseForm
 #else
-        : EffectConfigForm<CodeLab, CodeLabConfigToken>
+        : EffectConfigForm
 #endif
     {
         #region Constructor
@@ -180,7 +180,19 @@ namespace PdnCodeLab
 
         #region Token functions
 #if !FASTDEBUG
-        protected override void OnUpdateTokenFromDialog(CodeLabConfigToken dstToken)
+        public new CodeLabConfigToken Token
+        {
+            get => (CodeLabConfigToken)base.Token;
+
+            set => base.Token = value;
+        }
+
+        protected override void OnUpdateTokenFromDialog(EffectConfigToken dstToken)
+        {
+            OnUpdateTokenFromDialog((CodeLabConfigToken)dstToken);
+        }
+
+        private void OnUpdateTokenFromDialog(CodeLabConfigToken dstToken)
         {
             dstToken.UserCode = txtCode.Text;
             dstToken.UserScriptObject = ScriptBuilder.BuiltEffect;
@@ -192,7 +204,12 @@ namespace PdnCodeLab
             dstToken.ProjectType = tabStrip1.SelectedTabProjType;
         }
 
-        protected override void OnUpdateDialogFromToken(CodeLabConfigToken token)
+        protected override void OnUpdateDialogFromToken(EffectConfigToken token)
+        {
+            OnUpdateDialogFromToken((CodeLabConfigToken)token);
+        }
+
+        private void OnUpdateDialogFromToken(CodeLabConfigToken token)
         {
             FileName = token.ScriptName;
             FullScriptPath = token.ScriptPath;
