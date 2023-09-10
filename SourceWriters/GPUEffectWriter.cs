@@ -13,33 +13,35 @@ using System.Threading.Tasks;
 
 namespace PdnCodeLab
 {
-    internal static class BitmapEffectWriter
+    internal static class GPUEffectWriter
     {
         private const string UsingStatements = ""
             + "using System;\r\n"
             + "using System.IO;\r\n"
-            + "using System.Linq;\r\n"
-            + "using System.Diagnostics;\r\n"
-            + "using System.Threading;\r\n"
+//            + "using System.Linq;\r\n"
+//            + "using System.Diagnostics;\r\n"
+//            + "using System.Threading;\r\n"
             + "using System.Reflection;\r\n"
             + "using System.Windows.Forms;\r\n"
             + "using System.IO.Compression;\r\n"
             + "using System.Collections.Generic;\r\n"
-            + "using System.Text;\r\n"
-            + "using System.Text.RegularExpressions;\r\n"
+//            + "using System.Text;\r\n"
+//            + "using System.Text.RegularExpressions;\r\n"
             + "using System.Runtime.InteropServices;\r\n"
             + "using System.Runtime.Versioning;\r\n"
-            + "using Registry = Microsoft.Win32.Registry;\r\n"
-            + "using RegistryKey = Microsoft.Win32.RegistryKey;\r\n"
+//            + "using Registry = Microsoft.Win32.Registry;\r\n"
+//            + "using RegistryKey = Microsoft.Win32.RegistryKey;\r\n"
             + "using PaintDotNet;\r\n"
             + "using PaintDotNet.AppModel;\r\n"
             + "using PaintDotNet.Direct2D1;\r\n"
-            + "using PaintDotNet.Effects;\r\n"
-            + "using PaintDotNet.Clipboard;\r\n"
-            + "using PaintDotNet.Imaging;\r\n"
+            + "using PaintDotNet.Direct2D1.Effects;\r\n"
             + "using PaintDotNet.IndirectUI;\r\n"
-            + "using PaintDotNet.Collections;\r\n"
             + "using PaintDotNet.PropertySystem;\r\n"
+            + "using PaintDotNet.Effects;\r\n"
+            + "using PaintDotNet.Effects.Gpu;\r\n"
+//            + "using PaintDotNet.Clipboard;\r\n"
+//            + "using PaintDotNet.Imaging;\r\n"
+//            + "using PaintDotNet.Collections;\r\n"
             + "using PaintDotNet.Rendering;\r\n"
             + "using ColorWheelControl = PaintDotNet.Imaging.ColorBgra32;\r\n"
             + "using AngleControl = System.Double;\r\n"
@@ -60,14 +62,14 @@ namespace PdnCodeLab
         private const string prepend_code = "\r\n"
             + "namespace PdnCodeLab\r\n"
             + "{\r\n"
-            + "public class UserScript : BitmapEffect\r\n"
+            + "public class UserScript : GpuImageEffect\r\n"
             + "{\r\n"
             + "    public UserScript()\r\n"
-            + "        : base(\"UserScript\", string.Empty, BitmapEffectOptions.Create())\r\n";
+            + "        : base(\"UserScript\", string.Empty, GpuImageEffectOptions.Create() with { IsConfigurable = false })\r\n";
 
         private const string EmptyCode = "\r\n"
             + "#region User Entered Code\r\n"
-            + "protected override void OnRender(IBitmapEffectOutput output) { }\r\n"
+            + "protected override IDeviceImage OnCreateOutput(PaintDotNet.Direct2D1.IDeviceContext deviceContext) { return Environment.SourceImage; }\r\n"
             + "#endregion\r\n";
 
         private static string ConstructorPart(UIElement[] UserControls, string FileName, string subMenuName, string menuName, string iconPath)
@@ -87,14 +89,14 @@ namespace PdnCodeLab
             string configurable = (UserControls.Length != 0).ToString().ToLowerInvariant();
 
             string EffectPart = "";
-            EffectPart += "    public class " + className + " : PropertyBasedBitmapEffect\r\n";
+            EffectPart += "    public class " + className + " : PropertyBasedGpuImageEffect\r\n";
             EffectPart += "    {\r\n";
             EffectPart += "        public static string StaticName => \"" + menuName + "\";\r\n";
             EffectPart += "        public static System.Drawing.Image StaticIcon => " + icon + ";\r\n";
             EffectPart += "        public static string SubmenuName => " + CommonWriter.SubmenuPart(subMenuName) + ";\r\n";
             EffectPart += "\r\n";
             EffectPart += "        public " + className + "()\r\n";
-            EffectPart += "            : base(StaticName, StaticIcon, SubmenuName, BitmapEffectOptions.Create() with { IsConfigurable = " + configurable + " })\r\n";
+            EffectPart += "            : base(StaticName, StaticIcon, SubmenuName, GpuImageEffectOptions.Create() with { IsConfigurable = " + configurable + " })\r\n";
             EffectPart += "        {\r\n";
 
             if (UserControls.Any(u => u.ElementType == ElementType.ReseedButton))
@@ -111,7 +113,7 @@ namespace PdnCodeLab
         private static string InitializeRenderInfoPart(ScriptRenderingFlags renderingFlags, ScriptRenderingSchedule renderingSchedule)
         {
             string renderInfo =
-                "        protected override void OnInitializeRenderInfo(IBitmapEffectRenderInfo renderInfo)\r\n" +
+                "        protected override void OnInitializeRenderInfo(IGpuImageEffectRenderInfo renderInfo)\r\n" +
                 "        {\r\n";
 
             if (renderingFlags != ScriptRenderingFlags.None)
@@ -119,20 +121,25 @@ namespace PdnCodeLab
                 List<string> flags= new List<string>();
                 if (renderingFlags.HasFlag(ScriptRenderingFlags.SingleThreaded))
                 {
-                    flags.Add("BitmapEffectRenderingFlags.SingleThreaded");
+                    flags.Add("GpuEffectRenderingFlags.SingleThreaded");
                 }
                 if (renderingFlags.HasFlag(ScriptRenderingFlags.NoSelectionClipping))
                 {
-                    flags.Add("BitmapEffectRenderingFlags.DisableSelectionClipping");
+                    flags.Add("GpuEffectRenderingFlags.DisableSelectionClipping");
                 }
                 if (renderingFlags.HasFlag(ScriptRenderingFlags.AliasedSelection))
                 {
-                    flags.Add("BitmapEffectRenderingFlags.ForceAliasedSelectionQuality");
+                    flags.Add("GpuEffectRenderingFlags.ForceAliasedSelectionQuality");
                 }
 
-                renderInfo += "            renderInfo.Flags = " + flags.Join(" | ") + ";\r\n";
+                foreach(string flag in flags)
+                {
+                    renderInfo += "            renderInfo.Flags |= " + flag + ";\r\n";
+                }
+
             }
 
+            /*
             if (renderingSchedule != ScriptRenderingSchedule.Default)
             {
                 string schedule = renderingSchedule switch
@@ -142,9 +149,14 @@ namespace PdnCodeLab
                     ScriptRenderingSchedule.SquareTiles => "BitmapEffectRenderingSchedule.SquareTiles",
                     _ => "BitmapEffectRenderingSchedule.SquareTiles"
                 };
+                
 
                 renderInfo += "            renderInfo.Schedule = " + schedule + ";\r\n";
             }
+            */
+
+            renderInfo += "renderInfo.InputAlphaMode = GpuEffectAlphaMode.Straight;";
+            renderInfo += "renderInfo.OutputAlphaMode = GpuEffectAlphaMode.Straight;";
 
             renderInfo +=
                 "            base.OnInitializeRenderInfo(renderInfo);\r\n" +
@@ -178,16 +190,16 @@ namespace PdnCodeLab
             UIElement[] UserControls = UIElement.ProcessUIControls(SourceCode);
 
             return
-                BitmapEffectWriter.UsingStatements +
+                GPUEffectWriter.UsingStatements +
                 CommonWriter.AssemblyInfoPart(FileName, menuName, Author, MajorVersion, MinorVersion, Description, KeyWords) +
                 CommonWriter.NamespacePart(FileName) +
                 CommonWriter.SupportInfoPart(FileName, menuName, SupportURL) +
                 CommonWriter.CategoryPart(isAdjustment) +
                 ConstructorPart(UserControls, FileName, subMenuName, menuName, iconPath) +
                 CommonWriter.HelpPart(HelpType, HelpText) +
-                CommonWriter.PropertyPart(UserControls, FileName, WindowTitleStr, HelpType, HelpText, ProjectType.BitmapEffect) +
-                BitmapEffectWriter.InitializeRenderInfoPart(renderingFlags, renderingSchedule) +
-                BitmapEffectWriter.SetTokenPart(UserControls) +
+                CommonWriter.PropertyPart(UserControls, FileName, WindowTitleStr, HelpType, HelpText, ProjectType.GpuEffect) +
+                GPUEffectWriter.InitializeRenderInfoPart(renderingFlags, renderingSchedule) +
+                GPUEffectWriter.SetTokenPart(UserControls) +
                 CommonWriter.UserEnteredPart(SourceCode) +
                 CommonWriter.EndPart();
         }
@@ -198,11 +210,11 @@ namespace PdnCodeLab
             UIElement[] UserControls = UIElement.ProcessUIControls(scriptText);
 
             return
-                BitmapEffectWriter.UsingStatements +
+                GPUEffectWriter.UsingStatements +
                 CommonWriter.NamespacePart("UserScript") +
-                BitmapEffectWriter.ConstructorPart(UserControls, FileName, string.Empty, "FULL UI PREVIEW - Temporarily renders to canvas", string.Empty) +
-                CommonWriter.PropertyPart(UserControls, FileName, string.Empty, HelpType.None, string.Empty, ProjectType.BitmapEffect) +
-                BitmapEffectWriter.SetTokenPart(UserControls) +
+                GPUEffectWriter.ConstructorPart(UserControls, FileName, string.Empty, "FULL UI PREVIEW - Temporarily renders to canvas", string.Empty) +
+                CommonWriter.PropertyPart(UserControls, FileName, string.Empty, HelpType.None, string.Empty, ProjectType.GpuEffect) +
+                GPUEffectWriter.SetTokenPart(UserControls) +
                 CommonWriter.UserEnteredPart(scriptText) +
                 CommonWriter.EndPart();
         }
@@ -215,20 +227,20 @@ namespace PdnCodeLab
             UIElement[] UserControls = UIElement.ProcessUIControls(uiCode);
 
             return
-                BitmapEffectWriter.UsingStatements +
+                GPUEffectWriter.UsingStatements +
                 CommonWriter.NamespacePart(FileName) +
-                BitmapEffectWriter.ConstructorPart(UserControls, FileName, string.Empty, "UI PREVIEW - Does NOT Render to canvas", string.Empty) +
-                CommonWriter.PropertyPart(UserControls, FileName, string.Empty, HelpType.None, string.Empty, ProjectType.BitmapEffect) +
+                GPUEffectWriter.ConstructorPart(UserControls, FileName, string.Empty, "UI PREVIEW - Does NOT Render to canvas", string.Empty) +
+                CommonWriter.PropertyPart(UserControls, FileName, string.Empty, HelpType.None, string.Empty, ProjectType.GpuEffect) +
                 uiCode +
-                BitmapEffectWriter.EmptyCode +
+                GPUEffectWriter.EmptyCode +
                 CommonWriter.EndPart();
         }
 
         internal static string Run(string scriptText, bool debug)
         {
             return
-                BitmapEffectWriter.UsingStatements +
-                BitmapEffectWriter.prepend_code +
+                GPUEffectWriter.UsingStatements +
+                GPUEffectWriter.prepend_code +
                 CommonWriter.ConstructorBodyPart(debug) +
                 CommonWriter.UserEnteredPart(scriptText) +
                 CommonWriter.EndPart();
