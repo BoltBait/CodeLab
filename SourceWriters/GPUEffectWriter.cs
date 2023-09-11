@@ -57,6 +57,7 @@ namespace PdnCodeLab
             + "using ListBoxControl = System.Byte;\r\n"
             + "using RadioButtonControl = System.Byte;\r\n"
             + "using MultiLineTextboxControl = System.String;\r\n"
+            + "using LabelComment = System.String;\r\n"
             + "\r\n";
 
         private const string prepend_code = "\r\n"
@@ -155,9 +156,9 @@ namespace PdnCodeLab
             }
             */
 
-            renderInfo += "renderInfo.InputAlphaMode = GpuEffectAlphaMode.Straight;";
-            renderInfo += "renderInfo.OutputAlphaMode = GpuEffectAlphaMode.Straight;";
-
+            renderInfo += "            renderInfo.InputAlphaMode = GpuEffectAlphaMode.Premultiplied;\r\n";
+            renderInfo += "            renderInfo.OutputAlphaMode = GpuEffectAlphaMode.Premultiplied;\r\n";
+            
             renderInfo +=
                 "            base.OnInitializeRenderInfo(renderInfo);\r\n" +
                 "        }\r\n" +

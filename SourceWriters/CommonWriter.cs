@@ -341,6 +341,9 @@ namespace PdnCodeLab
                     case ElementType.Uri:
                         PropertyPart += "            props.Add(new UriProperty(PropertyNames." + propertyName + ", new Uri(\"" + u.StrDefault + "\")));\r\n";
                         break;
+                    case ElementType.LabelComment:
+                        PropertyPart += "            props.Add(new StringProperty(PropertyNames." + propertyName + ", \"\"));\r\n";
+                        break;
                 }
             }
 
@@ -407,6 +410,7 @@ namespace PdnCodeLab
                             //BinaryPixelOp
                             //FontFamily
                             //Uri
+                            //LabelComment
                     }
                 }
                 PropertyPart += "\r\n";
@@ -475,7 +479,8 @@ namespace PdnCodeLab
 
                 if (u.ElementType == ElementType.Checkbox ||
                     u.ElementType == ElementType.ReseedButton ||
-                    u.ElementType == ElementType.Uri)
+                    u.ElementType == ElementType.Uri ||
+                    u.ElementType == ElementType.LabelComment)
                 {
                     PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.DisplayName, string.Empty);\r\n";
                 }
@@ -629,6 +634,10 @@ namespace PdnCodeLab
                         break;
                     case ElementType.Folder:
                         PropertyPart += "            configUI.SetPropertyControlType(PropertyNames." + propertyName + ", PropertyControlType.FolderChooser);\r\n";
+                        break;
+                    case ElementType.LabelComment:
+                        PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.Description, \"" + u.StrDefault + "\");\r\n";
+                        PropertyPart += "            configUI.SetPropertyControlType(PropertyNames." + propertyName + ", PropertyControlType.Label);\r\n";
                         break;
                 }
                 PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.ShowHeaderLine, false);\r\n";
