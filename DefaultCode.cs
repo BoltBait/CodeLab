@@ -5,15 +5,18 @@ namespace PdnCodeLab
 {
     internal static class DefaultCode
     {
-        internal static string Default => ProjectType.Default switch
+        internal static string Default => ForProjectType(ProjectType.Default);
+
+        internal static string ForProjectType(ProjectType projectType) => projectType switch
         {
             ProjectType.ClassicEffect => ClassicEffect,
             ProjectType.BitmapEffect => BitmapEffect,
             ProjectType.GpuEffect => GPUEffect,
+            ProjectType.FileType => FileType,
             _ => string.Empty,
         };
 
-        internal const string ClassicEffect = ""
+        private const string ClassicEffect = ""
             + "// Name:\r\n"
             + "// Submenu:\r\n"
             + "// Author:\r\n"
@@ -57,7 +60,7 @@ namespace PdnCodeLab
             + "    }\r\n"
             + "}\r\n";
 
-        internal const string BitmapEffect = ""
+        private const string BitmapEffect = ""
             + "// Name:\r\n"
             + "// Submenu:\r\n"
             + "// Author:\r\n"
@@ -115,7 +118,7 @@ namespace PdnCodeLab
             + "    }\r\n"
             + "}\r\n";
 
-        internal const string GPUEffect = ""
+        private const string GPUEffect = ""
             + "// Name:\r\n"
             + "// Submenu:\r\n"
             + "// Author:\r\n"
@@ -137,7 +140,7 @@ namespace PdnCodeLab
             + "    return Environment.SourceImage;\r\n"
             + "}\r\n";
 
-        internal const string FileType = "" +
+        private const string FileType = "" +
             "// Name:\r\n" +
             "// Author:\r\n" +
             "// Version:\r\n" +
