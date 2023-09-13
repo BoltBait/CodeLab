@@ -196,8 +196,8 @@ namespace PdnCodeLab
         {
             dstToken.UserCode = txtCode.Text;
             dstToken.UserScriptObject = ScriptBuilder.BuiltEffect;
-            dstToken.ScriptName = FileName;
-            dstToken.ScriptPath = FullScriptPath;
+            dstToken.ScriptName = tabStrip1.SelectedTabTitle;
+            dstToken.ScriptPath = tabStrip1.SelectedTabPath;
             dstToken.Dirty = tabStrip1.SelectedTabIsDirty;
             dstToken.PreviewToken = previewToken;
             dstToken.Bookmarks = txtCode.Bookmarks;
@@ -211,12 +211,10 @@ namespace PdnCodeLab
 
         private void OnUpdateDialogFromToken(CodeLabConfigToken token)
         {
-            FileName = token.ScriptName;
-            FullScriptPath = token.ScriptPath;
             if (token.ProjectType != ProjectType.Default)
             {
                 tabStrip1.SelectedTabIsDirty = false;
-                tabStrip1.NewTab(FileName, FullScriptPath, token.ProjectType);
+                tabStrip1.NewTab(token.ScriptName, token.ScriptPath, token.ProjectType);
                 tabStrip1.CloseFirstTab();
             }
             else if (token.ProjectType.IsCSharp())
@@ -231,7 +229,7 @@ namespace PdnCodeLab
             }
             txtCode.Bookmarks = token.Bookmarks;
 
-            UpdateTabProperties();
+            UpdateWindowTitle();
 
             BuildAsync();
             txtCode.Focus();
