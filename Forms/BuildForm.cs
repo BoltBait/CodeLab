@@ -183,6 +183,12 @@ namespace PdnCodeLab
 
             // Preload Single Render Call
             forceSingleRenderBox.Checked = Regex.IsMatch(ScriptText, @"//[\s-[\r\n]]*(Force\s*Single\s*Render\s*Call|FSR)[\s-[\r\n]]*(?=\r?\n|$)", RegexOptions.IgnoreCase);
+
+            // Disable Selection Clipping
+            NoSelectionClippingBox.Checked = Regex.IsMatch(ScriptText, @"//[\s-[\r\n]]*(No\s*Selection\s*Clipping|NSC)[\s-[\r\n]]*(?=\r?\n|$)", RegexOptions.IgnoreCase);
+
+            // Premultiplied/Straight Alpha for GPU Effects
+            StraightAlphaBox.Checked = Regex.IsMatch(ScriptText, @"//[\s-[\r\n]]*(Straight\s*Alpha|SA)[\s-[\r\n]]*(?=\r?\n|$)", RegexOptions.IgnoreCase);
             #endregion
 
             resourcePath = Path.Combine(Path.GetDirectoryName(ScriptPath), ScriptName);
@@ -366,6 +372,8 @@ namespace PdnCodeLab
             this.RenderingFlags = ScriptRenderingFlags.None;
             if (ForceAliasSelectionBox.Checked) { this.RenderingFlags |= ScriptRenderingFlags.AliasedSelection; }
             if (ForceSingleThreadedBox.Checked) { this.RenderingFlags |= ScriptRenderingFlags.SingleThreaded; }
+            if (NoSelectionClippingBox.Checked) { this.RenderingFlags |= ScriptRenderingFlags.NoSelectionClipping; }
+            if (StraightAlphaBox.Checked) { this.RenderingFlags |= ScriptRenderingFlags.StraightAlpha; }
 
             if (radioButtonNone.Checked)
             {

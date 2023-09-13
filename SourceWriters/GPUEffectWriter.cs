@@ -140,26 +140,18 @@ namespace PdnCodeLab
 
             }
 
-            /*
-            if (renderingSchedule != ScriptRenderingSchedule.Default)
+            if (renderingFlags.HasFlag(ScriptRenderingFlags.StraightAlpha))
             {
-                string schedule = renderingSchedule switch
-                {
-                    ScriptRenderingSchedule.None => "BitmapEffectRenderingSchedule.None",
-                    ScriptRenderingSchedule.HorizontalStrips => "BitmapEffectRenderingSchedule.HorizontalStrips",
-                    ScriptRenderingSchedule.SquareTiles => "BitmapEffectRenderingSchedule.SquareTiles",
-                    _ => "BitmapEffectRenderingSchedule.SquareTiles"
-                };
-                
-
-                renderInfo += "            renderInfo.Schedule = " + schedule + ";\r\n";
+                renderInfo += "            renderInfo.InputAlphaMode = GpuEffectAlphaMode.Straight;\r\n";
+                renderInfo += "            renderInfo.OutputAlphaMode = GpuEffectAlphaMode.Straight;\r\n";
             }
-            */
+            else
+            {
+                renderInfo += "            renderInfo.InputAlphaMode = GpuEffectAlphaMode.Premultiplied;\r\n";
+                renderInfo += "            renderInfo.OutputAlphaMode = GpuEffectAlphaMode.Premultiplied;\r\n";
+            }
 
-            renderInfo += "            renderInfo.InputAlphaMode = GpuEffectAlphaMode.Premultiplied;\r\n";
-            renderInfo += "            renderInfo.OutputAlphaMode = GpuEffectAlphaMode.Premultiplied;\r\n";
-            
-            renderInfo +=
+            renderInfo += "\r\n" +
                 "            base.OnInitializeRenderInfo(renderInfo);\r\n" +
                 "        }\r\n" +
                 "\r\n";

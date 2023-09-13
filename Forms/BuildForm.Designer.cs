@@ -28,941 +28,916 @@ namespace PdnCodeLab
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.ButtonCancel = new System.Windows.Forms.Button();
-            this.ButtonSave = new System.Windows.Forms.Button();
-            this.MenuName = new System.Windows.Forms.TextBox();
-            this.SubMenuName = new System.Windows.Forms.ComboBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.ButtonIcon = new System.Windows.Forms.LinkLabel();
-            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.MajorVersion = new System.Windows.Forms.NumericUpDown();
-            this.MinorVersion = new System.Windows.Forms.NumericUpDown();
-            this.WindowTitleText = new System.Windows.Forms.TextBox();
-            this.DescriptionBox = new System.Windows.Forms.TextBox();
-            this.KeyWordsBox = new System.Windows.Forms.TextBox();
-            this.ForceAliasSelectionBox = new System.Windows.Forms.CheckBox();
-            this.PreviewHelpButton = new System.Windows.Forms.Button();
-            this.ViewSourceButton = new System.Windows.Forms.Button();
-            this.EffectRadio = new System.Windows.Forms.RadioButton();
-            this.AdjustmentRadio = new System.Windows.Forms.RadioButton();
-            this.AuthorName = new System.Windows.Forms.TextBox();
-            this.label16 = new System.Windows.Forms.Label();
-            this.label17 = new System.Windows.Forms.Label();
-            this.DecimalSymbol = new System.Windows.Forms.Label();
-            this.SupportURL = new System.Windows.Forms.TextBox();
-            this.label19 = new System.Windows.Forms.Label();
-            this.label20 = new System.Windows.Forms.Label();
-            this.label21 = new System.Windows.Forms.Label();
-            this.label23 = new System.Windows.Forms.Label();
-            this.label24 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
-            this.ForceSingleThreadedBox = new System.Windows.Forms.CheckBox();
-            this.label8 = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
-            this.radioButtonNone = new System.Windows.Forms.RadioButton();
-            this.radioButtonURL = new System.Windows.Forms.RadioButton();
-            this.radioButtonPlain = new System.Windows.Forms.RadioButton();
-            this.radioButtonRich = new System.Windows.Forms.RadioButton();
-            this.HelpURL = new System.Windows.Forms.TextBox();
-            this.HelpPlainText = new System.Windows.Forms.TextBox();
-            this.RichHelpContent = new System.Windows.Forms.RichTextBox();
-            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.OpenButton = new PdnCodeLab.ScaledToolStripButton();
-            this.SaveButton = new PdnCodeLab.ScaledToolStripButton();
-            this.WordPadButton = new PdnCodeLab.ScaledToolStripButton();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.BoldButton = new PdnCodeLab.ScaledToolStripButton();
-            this.ItalicsButton = new PdnCodeLab.ScaledToolStripButton();
-            this.UnderlineButton = new PdnCodeLab.ScaledToolStripButton();
-            this.SuperScriptButton = new PdnCodeLab.ScaledToolStripButton();
-            this.SubScriptButton = new PdnCodeLab.ScaledToolStripButton();
-            this.LargeFontButton = new PdnCodeLab.ScaledToolStripButton();
-            this.SmallFontButton = new PdnCodeLab.ScaledToolStripButton();
-            this.ColorButton = new PdnCodeLab.ScaledToolStripButton();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-            this.InsertImageButton = new PdnCodeLab.ScaledToolStripButton();
-            this.BulletButton = new PdnCodeLab.ScaledToolStripButton();
-            this.IndentButton = new PdnCodeLab.ScaledToolStripButton();
-            this.UnindentButton = new PdnCodeLab.ScaledToolStripButton();
-            this.ParagraphLeftButton = new PdnCodeLab.ScaledToolStripButton();
-            this.CenterButton = new PdnCodeLab.ScaledToolStripButton();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.PreviewLabel = new System.Windows.Forms.Label();
-            this.PlainTextLabel = new System.Windows.Forms.Label();
-            this.WarningLabel = new System.Windows.Forms.Label();
-            this.MenuIcon = new System.Windows.Forms.PictureBox();
-            this.GenSlnButton = new System.Windows.Forms.Button();
-            this.sampleImage = new System.Windows.Forms.PictureBox();
-            this.sampleLabel = new System.Windows.Forms.Label();
-            this.forceLegacyRoiBox = new System.Windows.Forms.CheckBox();
-            this.forceSingleRenderBox = new System.Windows.Forms.CheckBox();
-            ((System.ComponentModel.ISupportInitialize)(this.MajorVersion)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.MinorVersion)).BeginInit();
-            this.toolStrip1.SuspendLayout();
-            this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.MenuIcon)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.sampleImage)).BeginInit();
-            this.SuspendLayout();
+            components = new System.ComponentModel.Container();
+            ButtonCancel = new System.Windows.Forms.Button();
+            ButtonSave = new System.Windows.Forms.Button();
+            MenuName = new System.Windows.Forms.TextBox();
+            SubMenuName = new System.Windows.Forms.ComboBox();
+            label1 = new System.Windows.Forms.Label();
+            label2 = new System.Windows.Forms.Label();
+            ButtonIcon = new System.Windows.Forms.LinkLabel();
+            toolTip1 = new System.Windows.Forms.ToolTip(components);
+            MajorVersion = new System.Windows.Forms.NumericUpDown();
+            MinorVersion = new System.Windows.Forms.NumericUpDown();
+            WindowTitleText = new System.Windows.Forms.TextBox();
+            DescriptionBox = new System.Windows.Forms.TextBox();
+            KeyWordsBox = new System.Windows.Forms.TextBox();
+            ForceAliasSelectionBox = new System.Windows.Forms.CheckBox();
+            PreviewHelpButton = new System.Windows.Forms.Button();
+            ViewSourceButton = new System.Windows.Forms.Button();
+            StraightAlphaBox = new System.Windows.Forms.CheckBox();
+            EffectRadio = new System.Windows.Forms.RadioButton();
+            AdjustmentRadio = new System.Windows.Forms.RadioButton();
+            AuthorName = new System.Windows.Forms.TextBox();
+            label16 = new System.Windows.Forms.Label();
+            label17 = new System.Windows.Forms.Label();
+            DecimalSymbol = new System.Windows.Forms.Label();
+            SupportURL = new System.Windows.Forms.TextBox();
+            label19 = new System.Windows.Forms.Label();
+            label20 = new System.Windows.Forms.Label();
+            label21 = new System.Windows.Forms.Label();
+            label23 = new System.Windows.Forms.Label();
+            label24 = new System.Windows.Forms.Label();
+            label3 = new System.Windows.Forms.Label();
+            label4 = new System.Windows.Forms.Label();
+            label5 = new System.Windows.Forms.Label();
+            label6 = new System.Windows.Forms.Label();
+            label7 = new System.Windows.Forms.Label();
+            ForceSingleThreadedBox = new System.Windows.Forms.CheckBox();
+            label8 = new System.Windows.Forms.Label();
+            label9 = new System.Windows.Forms.Label();
+            radioButtonNone = new System.Windows.Forms.RadioButton();
+            radioButtonURL = new System.Windows.Forms.RadioButton();
+            radioButtonPlain = new System.Windows.Forms.RadioButton();
+            radioButtonRich = new System.Windows.Forms.RadioButton();
+            HelpURL = new System.Windows.Forms.TextBox();
+            HelpPlainText = new System.Windows.Forms.TextBox();
+            RichHelpContent = new System.Windows.Forms.RichTextBox();
+            toolStrip1 = new System.Windows.Forms.ToolStrip();
+            OpenButton = new ScaledToolStripButton();
+            SaveButton = new ScaledToolStripButton();
+            WordPadButton = new ScaledToolStripButton();
+            toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            BoldButton = new ScaledToolStripButton();
+            ItalicsButton = new ScaledToolStripButton();
+            UnderlineButton = new ScaledToolStripButton();
+            SuperScriptButton = new ScaledToolStripButton();
+            SubScriptButton = new ScaledToolStripButton();
+            LargeFontButton = new ScaledToolStripButton();
+            SmallFontButton = new ScaledToolStripButton();
+            ColorButton = new ScaledToolStripButton();
+            toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            InsertImageButton = new ScaledToolStripButton();
+            BulletButton = new ScaledToolStripButton();
+            IndentButton = new ScaledToolStripButton();
+            UnindentButton = new ScaledToolStripButton();
+            ParagraphLeftButton = new ScaledToolStripButton();
+            CenterButton = new ScaledToolStripButton();
+            panel1 = new System.Windows.Forms.Panel();
+            PreviewLabel = new System.Windows.Forms.Label();
+            PlainTextLabel = new System.Windows.Forms.Label();
+            WarningLabel = new System.Windows.Forms.Label();
+            MenuIcon = new System.Windows.Forms.PictureBox();
+            GenSlnButton = new System.Windows.Forms.Button();
+            sampleImage = new System.Windows.Forms.PictureBox();
+            sampleLabel = new System.Windows.Forms.Label();
+            forceLegacyRoiBox = new System.Windows.Forms.CheckBox();
+            forceSingleRenderBox = new System.Windows.Forms.CheckBox();
+            NoSelectionClippingBox = new System.Windows.Forms.CheckBox();
+            ((System.ComponentModel.ISupportInitialize)MajorVersion).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)MinorVersion).BeginInit();
+            toolStrip1.SuspendLayout();
+            panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)MenuIcon).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)sampleImage).BeginInit();
+            SuspendLayout();
             // 
             // ButtonCancel
             // 
-            this.ButtonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.ButtonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.ButtonCancel.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.ButtonCancel.Location = new System.Drawing.Point(635, 602);
-            this.ButtonCancel.Name = "ButtonCancel";
-            this.ButtonCancel.Size = new System.Drawing.Size(75, 24);
-            this.ButtonCancel.TabIndex = 26;
-            this.ButtonCancel.Text = "Cancel";
-            this.ButtonCancel.UseVisualStyleBackColor = true;
-            this.ButtonCancel.Click += new System.EventHandler(this.ButtonCancel_Click);
+            ButtonCancel.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
+            ButtonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            ButtonCancel.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            ButtonCancel.Location = new System.Drawing.Point(635, 631);
+            ButtonCancel.Name = "ButtonCancel";
+            ButtonCancel.Size = new System.Drawing.Size(75, 24);
+            ButtonCancel.TabIndex = 28;
+            ButtonCancel.Text = "Cancel";
+            ButtonCancel.UseVisualStyleBackColor = true;
+            ButtonCancel.Click += ButtonCancel_Click;
             // 
             // ButtonSave
             // 
-            this.ButtonSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.ButtonSave.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.ButtonSave.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonSave.Location = new System.Drawing.Point(554, 602);
-            this.ButtonSave.Name = "ButtonSave";
-            this.ButtonSave.Size = new System.Drawing.Size(75, 24);
-            this.ButtonSave.TabIndex = 25;
-            this.ButtonSave.Text = "Build";
-            this.ButtonSave.UseVisualStyleBackColor = true;
-            this.ButtonSave.Click += new System.EventHandler(this.ButtonSave_Click);
+            ButtonSave.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
+            ButtonSave.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            ButtonSave.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
+            ButtonSave.Location = new System.Drawing.Point(554, 631);
+            ButtonSave.Name = "ButtonSave";
+            ButtonSave.Size = new System.Drawing.Size(75, 24);
+            ButtonSave.TabIndex = 27;
+            ButtonSave.Text = "Build";
+            ButtonSave.UseVisualStyleBackColor = true;
+            ButtonSave.Click += ButtonSave_Click;
             // 
             // MenuName
             // 
-            this.MenuName.Location = new System.Drawing.Point(110, 100);
-            this.MenuName.MaxLength = 50;
-            this.MenuName.Name = "MenuName";
-            this.MenuName.Size = new System.Drawing.Size(150, 23);
-            this.MenuName.TabIndex = 2;
-            this.toolTip1.SetToolTip(this.MenuName, "Enter a name for your effect\r\nas it will show up in Paint.NET");
+            MenuName.Location = new System.Drawing.Point(110, 100);
+            MenuName.MaxLength = 50;
+            MenuName.Name = "MenuName";
+            MenuName.Size = new System.Drawing.Size(150, 23);
+            MenuName.TabIndex = 2;
+            toolTip1.SetToolTip(MenuName, "Enter a name for your effect\r\nas it will show up in Paint.NET");
             // 
             // SubMenuName
             // 
-            this.SubMenuName.FormattingEnabled = true;
-            this.SubMenuName.Items.AddRange(new object[] {
-            "",
-            "Advanced",
-            "Artistic",
-            "Blurs",
-            "Color",
-            "Distort",
-            "Noise",
-            "Object",
-            "Photo",
-            "Render",
-            "Stylize"});
-            this.SubMenuName.Location = new System.Drawing.Point(110, 63);
-            this.SubMenuName.MaxDropDownItems = 12;
-            this.SubMenuName.Name = "SubMenuName";
-            this.SubMenuName.Size = new System.Drawing.Size(150, 23);
-            this.SubMenuName.TabIndex = 1;
-            this.toolTip1.SetToolTip(this.SubMenuName, "Select a submenu or leave blank for the main Effects menu.");
+            SubMenuName.FormattingEnabled = true;
+            SubMenuName.Items.AddRange(new object[] { "", "Advanced", "Artistic", "Blurs", "Color", "Distort", "Noise", "Object", "Photo", "Render", "Stylize" });
+            SubMenuName.Location = new System.Drawing.Point(110, 63);
+            SubMenuName.MaxDropDownItems = 12;
+            SubMenuName.Name = "SubMenuName";
+            SubMenuName.Size = new System.Drawing.Size(150, 23);
+            SubMenuName.TabIndex = 1;
+            toolTip1.SetToolTip(SubMenuName, "Select a submenu or leave blank for the main Effects menu.");
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(16, 67);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(61, 15);
-            this.label1.TabIndex = 5;
-            this.label1.Text = "Submenu:";
+            label1.AutoSize = true;
+            label1.Location = new System.Drawing.Point(16, 67);
+            label1.Name = "label1";
+            label1.Size = new System.Drawing.Size(61, 15);
+            label1.TabIndex = 5;
+            label1.Text = "Submenu:";
             // 
             // label2
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(16, 104);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(66, 15);
-            this.label2.TabIndex = 6;
-            this.label2.Text = "Menu Text:";
+            label2.AutoSize = true;
+            label2.Location = new System.Drawing.Point(16, 104);
+            label2.Name = "label2";
+            label2.Size = new System.Drawing.Size(65, 15);
+            label2.TabIndex = 6;
+            label2.Text = "Menu Text:";
             // 
             // ButtonIcon
             // 
-            this.ButtonIcon.AutoSize = true;
-            this.ButtonIcon.Location = new System.Drawing.Point(198, 123);
-            this.ButtonIcon.Name = "ButtonIcon";
-            this.ButtonIcon.Size = new System.Drawing.Size(64, 15);
-            this.ButtonIcon.TabIndex = 3;
-            this.ButtonIcon.TabStop = true;
-            this.ButtonIcon.Text = "Select Icon";
-            this.toolTip1.SetToolTip(this.ButtonIcon, "Select a 16x16 PNG file for display in the Effects menu.");
-            this.ButtonIcon.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.ButtonIcon_LinkClicked);
+            ButtonIcon.AutoSize = true;
+            ButtonIcon.Location = new System.Drawing.Point(198, 123);
+            ButtonIcon.Name = "ButtonIcon";
+            ButtonIcon.Size = new System.Drawing.Size(64, 15);
+            ButtonIcon.TabIndex = 3;
+            ButtonIcon.TabStop = true;
+            ButtonIcon.Text = "Select Icon";
+            toolTip1.SetToolTip(ButtonIcon, "Select a 16x16 PNG file for display in the Effects menu.");
+            ButtonIcon.LinkClicked += ButtonIcon_LinkClicked;
             // 
             // MajorVersion
             // 
-            this.MajorVersion.Location = new System.Drawing.Point(133, 243);
-            this.MajorVersion.Maximum = new decimal(new int[] {
-            255,
-            0,
-            0,
-            0});
-            this.MajorVersion.Name = "MajorVersion";
-            this.MajorVersion.Size = new System.Drawing.Size(50, 23);
-            this.MajorVersion.TabIndex = 6;
-            this.toolTip1.SetToolTip(this.MajorVersion, "Major Version");
-            this.MajorVersion.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
+            MajorVersion.Location = new System.Drawing.Point(133, 243);
+            MajorVersion.Maximum = new decimal(new int[] { 255, 0, 0, 0 });
+            MajorVersion.Name = "MajorVersion";
+            MajorVersion.Size = new System.Drawing.Size(50, 23);
+            MajorVersion.TabIndex = 6;
+            toolTip1.SetToolTip(MajorVersion, "Major Version");
+            MajorVersion.Value = new decimal(new int[] { 1, 0, 0, 0 });
             // 
             // MinorVersion
             // 
-            this.MinorVersion.Location = new System.Drawing.Point(206, 243);
-            this.MinorVersion.Maximum = new decimal(new int[] {
-            255,
-            0,
-            0,
-            0});
-            this.MinorVersion.Name = "MinorVersion";
-            this.MinorVersion.Size = new System.Drawing.Size(54, 23);
-            this.MinorVersion.TabIndex = 7;
-            this.toolTip1.SetToolTip(this.MinorVersion, "Minor Version");
+            MinorVersion.Location = new System.Drawing.Point(206, 243);
+            MinorVersion.Maximum = new decimal(new int[] { 255, 0, 0, 0 });
+            MinorVersion.Name = "MinorVersion";
+            MinorVersion.Size = new System.Drawing.Size(54, 23);
+            MinorVersion.TabIndex = 7;
+            toolTip1.SetToolTip(MinorVersion, "Minor Version");
             // 
             // WindowTitleText
             // 
-            this.WindowTitleText.Location = new System.Drawing.Point(110, 146);
-            this.WindowTitleText.MaxLength = 255;
-            this.WindowTitleText.Name = "WindowTitleText";
-            this.WindowTitleText.Size = new System.Drawing.Size(150, 23);
-            this.WindowTitleText.TabIndex = 4;
-            this.toolTip1.SetToolTip(this.WindowTitleText, "Enter a title for your effect UI window.");
+            WindowTitleText.Location = new System.Drawing.Point(110, 146);
+            WindowTitleText.MaxLength = 255;
+            WindowTitleText.Name = "WindowTitleText";
+            WindowTitleText.Size = new System.Drawing.Size(150, 23);
+            WindowTitleText.TabIndex = 4;
+            toolTip1.SetToolTip(WindowTitleText, "Enter a title for your effect UI window.");
             // 
             // DescriptionBox
             // 
-            this.DescriptionBox.Location = new System.Drawing.Point(60, 277);
-            this.DescriptionBox.MaxLength = 75;
-            this.DescriptionBox.Name = "DescriptionBox";
-            this.DescriptionBox.Size = new System.Drawing.Size(200, 23);
-            this.DescriptionBox.TabIndex = 8;
-            this.toolTip1.SetToolTip(this.DescriptionBox, "Describe your effect in 5 words or less.");
+            DescriptionBox.Location = new System.Drawing.Point(60, 277);
+            DescriptionBox.MaxLength = 75;
+            DescriptionBox.Name = "DescriptionBox";
+            DescriptionBox.Size = new System.Drawing.Size(200, 23);
+            DescriptionBox.TabIndex = 8;
+            toolTip1.SetToolTip(DescriptionBox, "Describe your effect in 5 words or less.");
             // 
             // KeyWordsBox
             // 
-            this.KeyWordsBox.Location = new System.Drawing.Point(90, 311);
-            this.KeyWordsBox.MaxLength = 50;
-            this.KeyWordsBox.Name = "KeyWordsBox";
-            this.KeyWordsBox.Size = new System.Drawing.Size(170, 23);
-            this.KeyWordsBox.TabIndex = 9;
-            this.toolTip1.SetToolTip(this.KeyWordsBox, "If you wish your effect to be searchable via keywords,\r\nenter them separated by t" +
-        "he pipe symbol.");
+            KeyWordsBox.Location = new System.Drawing.Point(90, 311);
+            KeyWordsBox.MaxLength = 50;
+            KeyWordsBox.Name = "KeyWordsBox";
+            KeyWordsBox.Size = new System.Drawing.Size(170, 23);
+            KeyWordsBox.TabIndex = 9;
+            toolTip1.SetToolTip(KeyWordsBox, "If you wish your effect to be searchable via keywords,\r\nenter them separated by the pipe symbol.");
             // 
             // ForceAliasSelectionBox
             // 
-            this.ForceAliasSelectionBox.AutoSize = true;
-            this.ForceAliasSelectionBox.Location = new System.Drawing.Point(19, 405);
-            this.ForceAliasSelectionBox.Name = "ForceAliasSelectionBox";
-            this.ForceAliasSelectionBox.Size = new System.Drawing.Size(115, 19);
-            this.ForceAliasSelectionBox.TabIndex = 11;
-            this.ForceAliasSelectionBox.Text = "Aliased Selection";
-            this.toolTip1.SetToolTip(this.ForceAliasSelectionBox, "Normally, selections are anti-aliased.\r\nThis will force a selection to be aliased" +
-        ".\r\nIt is useful if you are modifying the alpha values\r\nalong the marching ants b" +
-        "oundary.");
-            this.ForceAliasSelectionBox.UseVisualStyleBackColor = true;
+            ForceAliasSelectionBox.AutoSize = true;
+            ForceAliasSelectionBox.Location = new System.Drawing.Point(19, 405);
+            ForceAliasSelectionBox.Name = "ForceAliasSelectionBox";
+            ForceAliasSelectionBox.Size = new System.Drawing.Size(115, 19);
+            ForceAliasSelectionBox.TabIndex = 11;
+            ForceAliasSelectionBox.Text = "Aliased Selection";
+            toolTip1.SetToolTip(ForceAliasSelectionBox, "Normally, selections are anti-aliased.\r\nThis will force a selection to be aliased.\r\nIt is useful if you are modifying the alpha values\r\nalong the marching ants boundary.");
+            ForceAliasSelectionBox.UseVisualStyleBackColor = true;
             // 
             // PreviewHelpButton
             // 
-            this.PreviewHelpButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.PreviewHelpButton.BackColor = System.Drawing.SystemColors.ActiveCaption;
-            this.PreviewHelpButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.PreviewHelpButton.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.PreviewHelpButton.Location = new System.Drawing.Point(684, 25);
-            this.PreviewHelpButton.Name = "PreviewHelpButton";
-            this.PreviewHelpButton.Size = new System.Drawing.Size(26, 23);
-            this.PreviewHelpButton.TabIndex = 16;
-            this.PreviewHelpButton.Text = "?";
-            this.toolTip1.SetToolTip(this.PreviewHelpButton, "Preview Help Content");
-            this.PreviewHelpButton.UseVisualStyleBackColor = false;
-            this.PreviewHelpButton.Click += new System.EventHandler(this.PreviewHelp_Click);
+            PreviewHelpButton.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            PreviewHelpButton.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            PreviewHelpButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
+            PreviewHelpButton.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            PreviewHelpButton.Location = new System.Drawing.Point(684, 25);
+            PreviewHelpButton.Name = "PreviewHelpButton";
+            PreviewHelpButton.Size = new System.Drawing.Size(26, 23);
+            PreviewHelpButton.TabIndex = 18;
+            PreviewHelpButton.Text = "?";
+            toolTip1.SetToolTip(PreviewHelpButton, "Preview Help Content");
+            PreviewHelpButton.UseVisualStyleBackColor = false;
+            PreviewHelpButton.Click += PreviewHelp_Click;
             // 
             // ViewSourceButton
             // 
-            this.ViewSourceButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.ViewSourceButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.ViewSourceButton.Location = new System.Drawing.Point(288, 602);
-            this.ViewSourceButton.Name = "ViewSourceButton";
-            this.ViewSourceButton.Size = new System.Drawing.Size(85, 24);
-            this.ViewSourceButton.TabIndex = 23;
-            this.ViewSourceButton.Text = "View Source";
-            this.toolTip1.SetToolTip(this.ViewSourceButton, "View complete source code that will be built");
-            this.ViewSourceButton.UseVisualStyleBackColor = true;
-            this.ViewSourceButton.Click += new System.EventHandler(this.ViewSourceButton_Click);
+            ViewSourceButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
+            ViewSourceButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            ViewSourceButton.Location = new System.Drawing.Point(288, 631);
+            ViewSourceButton.Name = "ViewSourceButton";
+            ViewSourceButton.Size = new System.Drawing.Size(85, 24);
+            ViewSourceButton.TabIndex = 25;
+            ViewSourceButton.Text = "View Source";
+            toolTip1.SetToolTip(ViewSourceButton, "View complete source code that will be built");
+            ViewSourceButton.UseVisualStyleBackColor = true;
+            ViewSourceButton.Click += ViewSourceButton_Click;
+            // 
+            // StraightAlphaBox
+            // 
+            StraightAlphaBox.AutoSize = true;
+            StraightAlphaBox.Location = new System.Drawing.Point(19, 453);
+            StraightAlphaBox.Name = "StraightAlphaBox";
+            StraightAlphaBox.Size = new System.Drawing.Size(101, 19);
+            StraightAlphaBox.TabIndex = 15;
+            StraightAlphaBox.Text = "Straight Alpha";
+            toolTip1.SetToolTip(StraightAlphaBox, "If unchecked Premultiplied Alpha is supplied to GPU accellerated effects");
+            StraightAlphaBox.UseVisualStyleBackColor = true;
             // 
             // EffectRadio
             // 
-            this.EffectRadio.AutoSize = true;
-            this.EffectRadio.Checked = true;
-            this.EffectRadio.Location = new System.Drawing.Point(147, 4);
-            this.EffectRadio.Name = "EffectRadio";
-            this.EffectRadio.Size = new System.Drawing.Size(89, 19);
-            this.EffectRadio.TabIndex = 1;
-            this.EffectRadio.TabStop = true;
-            this.EffectRadio.Text = "Effect Menu";
-            this.EffectRadio.UseVisualStyleBackColor = true;
+            EffectRadio.AutoSize = true;
+            EffectRadio.Checked = true;
+            EffectRadio.Location = new System.Drawing.Point(147, 4);
+            EffectRadio.Name = "EffectRadio";
+            EffectRadio.Size = new System.Drawing.Size(89, 19);
+            EffectRadio.TabIndex = 1;
+            EffectRadio.TabStop = true;
+            EffectRadio.Text = "Effect Menu";
+            EffectRadio.UseVisualStyleBackColor = true;
             // 
             // AdjustmentRadio
             // 
-            this.AdjustmentRadio.AutoSize = true;
-            this.AdjustmentRadio.Location = new System.Drawing.Point(12, 3);
-            this.AdjustmentRadio.Name = "AdjustmentRadio";
-            this.AdjustmentRadio.Size = new System.Drawing.Size(121, 19);
-            this.AdjustmentRadio.TabIndex = 0;
-            this.AdjustmentRadio.Text = "Adjustment Menu";
-            this.AdjustmentRadio.UseVisualStyleBackColor = true;
+            AdjustmentRadio.AutoSize = true;
+            AdjustmentRadio.Location = new System.Drawing.Point(12, 3);
+            AdjustmentRadio.Name = "AdjustmentRadio";
+            AdjustmentRadio.Size = new System.Drawing.Size(121, 19);
+            AdjustmentRadio.TabIndex = 0;
+            AdjustmentRadio.Text = "Adjustment Menu";
+            AdjustmentRadio.UseVisualStyleBackColor = true;
             // 
             // AuthorName
             // 
-            this.AuthorName.Location = new System.Drawing.Point(110, 209);
-            this.AuthorName.MaxLength = 50;
-            this.AuthorName.Name = "AuthorName";
-            this.AuthorName.Size = new System.Drawing.Size(150, 23);
-            this.AuthorName.TabIndex = 5;
+            AuthorName.Location = new System.Drawing.Point(110, 209);
+            AuthorName.MaxLength = 50;
+            AuthorName.Name = "AuthorName";
+            AuthorName.Size = new System.Drawing.Size(150, 23);
+            AuthorName.TabIndex = 5;
             // 
             // label16
             // 
-            this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(16, 212);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(90, 15);
-            this.label16.TabIndex = 37;
-            this.label16.Text = "Author\'s Name:";
+            label16.AutoSize = true;
+            label16.Location = new System.Drawing.Point(16, 212);
+            label16.Name = "label16";
+            label16.Size = new System.Drawing.Size(90, 15);
+            label16.TabIndex = 37;
+            label16.Text = "Author's Name:";
             // 
             // label17
             // 
-            this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(16, 246);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(72, 15);
-            this.label17.TabIndex = 40;
-            this.label17.Text = "DLL Version:";
+            label17.AutoSize = true;
+            label17.Location = new System.Drawing.Point(16, 246);
+            label17.Name = "label17";
+            label17.Size = new System.Drawing.Size(71, 15);
+            label17.TabIndex = 40;
+            label17.Text = "DLL Version:";
             // 
             // DecimalSymbol
             // 
-            this.DecimalSymbol.AutoSize = true;
-            this.DecimalSymbol.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.DecimalSymbol.Location = new System.Drawing.Point(185, 233);
-            this.DecimalSymbol.Name = "DecimalSymbol";
-            this.DecimalSymbol.Size = new System.Drawing.Size(20, 29);
-            this.DecimalSymbol.TabIndex = 41;
-            this.DecimalSymbol.Text = ".";
+            DecimalSymbol.AutoSize = true;
+            DecimalSymbol.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
+            DecimalSymbol.Location = new System.Drawing.Point(185, 233);
+            DecimalSymbol.Name = "DecimalSymbol";
+            DecimalSymbol.Size = new System.Drawing.Size(20, 29);
+            DecimalSymbol.TabIndex = 41;
+            DecimalSymbol.Text = ".";
             // 
             // SupportURL
             // 
-            this.SupportURL.Location = new System.Drawing.Point(60, 345);
-            this.SupportURL.MaxLength = 255;
-            this.SupportURL.Name = "SupportURL";
-            this.SupportURL.Size = new System.Drawing.Size(200, 23);
-            this.SupportURL.TabIndex = 10;
-            this.SupportURL.Text = "https://www.getpaint.net/redirect/plugins.html";
+            SupportURL.Location = new System.Drawing.Point(60, 345);
+            SupportURL.MaxLength = 255;
+            SupportURL.Name = "SupportURL";
+            SupportURL.Size = new System.Drawing.Size(200, 23);
+            SupportURL.TabIndex = 10;
+            SupportURL.Text = "https://www.getpaint.net/redirect/plugins.html";
             // 
             // label19
             // 
-            this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(16, 348);
-            this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(31, 15);
-            this.label19.TabIndex = 43;
-            this.label19.Text = "URL:";
+            label19.AutoSize = true;
+            label19.Location = new System.Drawing.Point(16, 348);
+            label19.Name = "label19";
+            label19.Size = new System.Drawing.Size(31, 15);
+            label19.TabIndex = 43;
+            label19.Text = "URL:";
             // 
             // label20
             // 
-            this.label20.AutoSize = true;
-            this.label20.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label20.Location = new System.Drawing.Point(6, 184);
-            this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(117, 13);
-            this.label20.TabIndex = 44;
-            this.label20.Text = "Support Information:";
+            label20.AutoSize = true;
+            label20.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
+            label20.Location = new System.Drawing.Point(6, 184);
+            label20.Name = "label20";
+            label20.Size = new System.Drawing.Size(117, 13);
+            label20.TabIndex = 44;
+            label20.Text = "Support Information:";
             // 
             // label21
             // 
-            this.label21.AutoSize = true;
-            this.label21.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label21.Location = new System.Drawing.Point(6, 10);
-            this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(91, 15);
-            this.label21.TabIndex = 45;
-            this.label21.Text = "Menu Settings:";
+            label21.AutoSize = true;
+            label21.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
+            label21.Location = new System.Drawing.Point(6, 10);
+            label21.Name = "label21";
+            label21.Size = new System.Drawing.Size(91, 15);
+            label21.TabIndex = 45;
+            label21.Text = "Menu Settings:";
             // 
             // label23
             // 
-            this.label23.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.label23.Location = new System.Drawing.Point(22, 191);
-            this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(222, 2);
-            this.label23.TabIndex = 48;
+            label23.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            label23.Location = new System.Drawing.Point(22, 191);
+            label23.Name = "label23";
+            label23.Size = new System.Drawing.Size(222, 2);
+            label23.TabIndex = 48;
             // 
             // label24
             // 
-            this.label24.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.label24.Location = new System.Drawing.Point(22, 17);
-            this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(238, 2);
-            this.label24.TabIndex = 49;
+            label24.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            label24.Location = new System.Drawing.Point(22, 17);
+            label24.Name = "label24";
+            label24.Size = new System.Drawing.Size(238, 2);
+            label24.TabIndex = 49;
             // 
             // label3
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(16, 150);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(77, 15);
-            this.label3.TabIndex = 52;
-            this.label3.Text = "Window title:";
+            label3.AutoSize = true;
+            label3.Location = new System.Drawing.Point(16, 150);
+            label3.Name = "label3";
+            label3.Size = new System.Drawing.Size(77, 15);
+            label3.TabIndex = 52;
+            label3.Text = "Window title:";
             // 
             // label4
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(16, 280);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(35, 15);
-            this.label4.TabIndex = 53;
-            this.label4.Text = "Desc:";
+            label4.AutoSize = true;
+            label4.Location = new System.Drawing.Point(16, 280);
+            label4.Name = "label4";
+            label4.Size = new System.Drawing.Size(35, 15);
+            label4.TabIndex = 53;
+            label4.Text = "Desc:";
             // 
             // label5
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(16, 314);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(66, 15);
-            this.label5.TabIndex = 55;
-            this.label5.Text = "Key|Words:";
+            label5.AutoSize = true;
+            label5.Location = new System.Drawing.Point(16, 314);
+            label5.Name = "label5";
+            label5.Size = new System.Drawing.Size(66, 15);
+            label5.TabIndex = 55;
+            label5.Text = "Key|Words:";
             // 
             // label6
             // 
-            this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(6, 382);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(161, 13);
-            this.label6.TabIndex = 56;
-            this.label6.Text = "Forced Settings: (Rarely used)";
+            label6.AutoSize = true;
+            label6.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
+            label6.Location = new System.Drawing.Point(6, 382);
+            label6.Name = "label6";
+            label6.Size = new System.Drawing.Size(161, 13);
+            label6.TabIndex = 56;
+            label6.Text = "Forced Settings: (Rarely used)";
             // 
             // label7
             // 
-            this.label7.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.label7.Location = new System.Drawing.Point(22, 390);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(238, 2);
-            this.label7.TabIndex = 57;
+            label7.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            label7.Location = new System.Drawing.Point(22, 390);
+            label7.Name = "label7";
+            label7.Size = new System.Drawing.Size(238, 2);
+            label7.TabIndex = 57;
             // 
             // ForceSingleThreadedBox
             // 
-            this.ForceSingleThreadedBox.AutoSize = true;
-            this.ForceSingleThreadedBox.Location = new System.Drawing.Point(141, 405);
-            this.ForceSingleThreadedBox.Name = "ForceSingleThreadedBox";
-            this.ForceSingleThreadedBox.Size = new System.Drawing.Size(111, 19);
-            this.ForceSingleThreadedBox.TabIndex = 12;
-            this.ForceSingleThreadedBox.Text = "Single Threaded";
-            this.ForceSingleThreadedBox.UseVisualStyleBackColor = true;
+            ForceSingleThreadedBox.AutoSize = true;
+            ForceSingleThreadedBox.Location = new System.Drawing.Point(141, 405);
+            ForceSingleThreadedBox.Name = "ForceSingleThreadedBox";
+            ForceSingleThreadedBox.Size = new System.Drawing.Size(110, 19);
+            ForceSingleThreadedBox.TabIndex = 12;
+            ForceSingleThreadedBox.Text = "Single Threaded";
+            ForceSingleThreadedBox.UseVisualStyleBackColor = true;
             // 
             // label8
             // 
-            this.label8.AutoSize = true;
-            this.label8.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.Location = new System.Drawing.Point(285, 10);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(79, 13);
-            this.label8.TabIndex = 59;
-            this.label8.Text = "Help Content:";
+            label8.AutoSize = true;
+            label8.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
+            label8.Location = new System.Drawing.Point(285, 10);
+            label8.Name = "label8";
+            label8.Size = new System.Drawing.Size(79, 13);
+            label8.TabIndex = 59;
+            label8.Text = "Help Content:";
             // 
             // label9
             // 
-            this.label9.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.label9.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.label9.Location = new System.Drawing.Point(328, 17);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(385, 2);
-            this.label9.TabIndex = 60;
+            label9.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            label9.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            label9.Location = new System.Drawing.Point(328, 17);
+            label9.Name = "label9";
+            label9.Size = new System.Drawing.Size(385, 2);
+            label9.TabIndex = 60;
             // 
             // radioButtonNone
             // 
-            this.radioButtonNone.AutoSize = true;
-            this.radioButtonNone.Checked = true;
-            this.radioButtonNone.Location = new System.Drawing.Point(298, 27);
-            this.radioButtonNone.Name = "radioButtonNone";
-            this.radioButtonNone.Size = new System.Drawing.Size(54, 19);
-            this.radioButtonNone.TabIndex = 15;
-            this.radioButtonNone.TabStop = true;
-            this.radioButtonNone.Text = "None";
-            this.radioButtonNone.UseVisualStyleBackColor = true;
-            this.radioButtonNone.CheckedChanged += new System.EventHandler(this.radioButtonNone_CheckedChanged);
+            radioButtonNone.AutoSize = true;
+            radioButtonNone.Checked = true;
+            radioButtonNone.Location = new System.Drawing.Point(298, 27);
+            radioButtonNone.Name = "radioButtonNone";
+            radioButtonNone.Size = new System.Drawing.Size(54, 19);
+            radioButtonNone.TabIndex = 17;
+            radioButtonNone.TabStop = true;
+            radioButtonNone.Text = "None";
+            radioButtonNone.UseVisualStyleBackColor = true;
+            radioButtonNone.CheckedChanged += radioButtonNone_CheckedChanged;
             // 
             // radioButtonURL
             // 
-            this.radioButtonURL.AutoSize = true;
-            this.radioButtonURL.Location = new System.Drawing.Point(298, 51);
-            this.radioButtonURL.Name = "radioButtonURL";
-            this.radioButtonURL.Size = new System.Drawing.Size(77, 19);
-            this.radioButtonURL.TabIndex = 17;
-            this.radioButtonURL.TabStop = true;
-            this.radioButtonURL.Text = "Help URL:";
-            this.radioButtonURL.UseVisualStyleBackColor = true;
-            this.radioButtonURL.CheckedChanged += new System.EventHandler(this.radioButtonURL_CheckedChanged);
+            radioButtonURL.AutoSize = true;
+            radioButtonURL.Location = new System.Drawing.Point(298, 51);
+            radioButtonURL.Name = "radioButtonURL";
+            radioButtonURL.Size = new System.Drawing.Size(77, 19);
+            radioButtonURL.TabIndex = 19;
+            radioButtonURL.TabStop = true;
+            radioButtonURL.Text = "Help URL:";
+            radioButtonURL.UseVisualStyleBackColor = true;
+            radioButtonURL.CheckedChanged += radioButtonURL_CheckedChanged;
             // 
             // radioButtonPlain
             // 
-            this.radioButtonPlain.AutoSize = true;
-            this.radioButtonPlain.Location = new System.Drawing.Point(298, 78);
-            this.radioButtonPlain.Name = "radioButtonPlain";
-            this.radioButtonPlain.Size = new System.Drawing.Size(76, 19);
-            this.radioButtonPlain.TabIndex = 19;
-            this.radioButtonPlain.TabStop = true;
-            this.radioButtonPlain.Text = "Plain text:";
-            this.radioButtonPlain.UseVisualStyleBackColor = true;
-            this.radioButtonPlain.CheckedChanged += new System.EventHandler(this.radioButtonPlain_CheckedChanged);
+            radioButtonPlain.AutoSize = true;
+            radioButtonPlain.Location = new System.Drawing.Point(298, 78);
+            radioButtonPlain.Name = "radioButtonPlain";
+            radioButtonPlain.Size = new System.Drawing.Size(77, 19);
+            radioButtonPlain.TabIndex = 21;
+            radioButtonPlain.TabStop = true;
+            radioButtonPlain.Text = "Plain text:";
+            radioButtonPlain.UseVisualStyleBackColor = true;
+            radioButtonPlain.CheckedChanged += radioButtonPlain_CheckedChanged;
             // 
             // radioButtonRich
             // 
-            this.radioButtonRich.AutoSize = true;
-            this.radioButtonRich.Location = new System.Drawing.Point(298, 134);
-            this.radioButtonRich.Name = "radioButtonRich";
-            this.radioButtonRich.Size = new System.Drawing.Size(73, 19);
-            this.radioButtonRich.TabIndex = 21;
-            this.radioButtonRich.TabStop = true;
-            this.radioButtonRich.Text = "Rich text:";
-            this.radioButtonRich.UseVisualStyleBackColor = true;
-            this.radioButtonRich.CheckedChanged += new System.EventHandler(this.radioButtonRich_CheckedChanged);
+            radioButtonRich.AutoSize = true;
+            radioButtonRich.Location = new System.Drawing.Point(298, 134);
+            radioButtonRich.Name = "radioButtonRich";
+            radioButtonRich.Size = new System.Drawing.Size(74, 19);
+            radioButtonRich.TabIndex = 23;
+            radioButtonRich.TabStop = true;
+            radioButtonRich.Text = "Rich text:";
+            radioButtonRich.UseVisualStyleBackColor = true;
+            radioButtonRich.CheckedChanged += radioButtonRich_CheckedChanged;
             // 
             // HelpURL
             // 
-            this.HelpURL.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.HelpURL.Location = new System.Drawing.Point(385, 50);
-            this.HelpURL.Name = "HelpURL";
-            this.HelpURL.Size = new System.Drawing.Size(325, 23);
-            this.HelpURL.TabIndex = 18;
-            this.HelpURL.Text = "https://www.getpaint.net/redirect/plugins.html";
+            HelpURL.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            HelpURL.Location = new System.Drawing.Point(385, 50);
+            HelpURL.Name = "HelpURL";
+            HelpURL.Size = new System.Drawing.Size(325, 23);
+            HelpURL.TabIndex = 20;
+            HelpURL.Text = "https://www.getpaint.net/redirect/plugins.html";
             // 
             // HelpPlainText
             // 
-            this.HelpPlainText.AcceptsReturn = true;
-            this.HelpPlainText.AcceptsTab = true;
-            this.HelpPlainText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.HelpPlainText.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.HelpPlainText.Location = new System.Drawing.Point(385, 77);
-            this.HelpPlainText.Multiline = true;
-            this.HelpPlainText.Name = "HelpPlainText";
-            this.HelpPlainText.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.HelpPlainText.Size = new System.Drawing.Size(325, 53);
-            this.HelpPlainText.TabIndex = 20;
+            HelpPlainText.AcceptsReturn = true;
+            HelpPlainText.AcceptsTab = true;
+            HelpPlainText.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            HelpPlainText.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            HelpPlainText.Location = new System.Drawing.Point(385, 77);
+            HelpPlainText.Multiline = true;
+            HelpPlainText.Name = "HelpPlainText";
+            HelpPlainText.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            HelpPlainText.Size = new System.Drawing.Size(325, 53);
+            HelpPlainText.TabIndex = 22;
             // 
             // RichHelpContent
             // 
-            this.RichHelpContent.AcceptsTab = true;
-            this.RichHelpContent.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.RichHelpContent.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.RichHelpContent.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.RichHelpContent.Location = new System.Drawing.Point(288, 182);
-            this.RichHelpContent.Name = "RichHelpContent";
-            this.RichHelpContent.Size = new System.Drawing.Size(422, 404);
-            this.RichHelpContent.TabIndex = 22;
-            this.RichHelpContent.Text = "";
-            this.RichHelpContent.KeyDown += new System.Windows.Forms.KeyEventHandler(this.RichHelpContent_KeyDown);
+            RichHelpContent.AcceptsTab = true;
+            RichHelpContent.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            RichHelpContent.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            RichHelpContent.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            RichHelpContent.Location = new System.Drawing.Point(288, 182);
+            RichHelpContent.Name = "RichHelpContent";
+            RichHelpContent.Size = new System.Drawing.Size(422, 433);
+            RichHelpContent.TabIndex = 24;
+            RichHelpContent.Text = "";
+            RichHelpContent.KeyDown += RichHelpContent_KeyDown;
             // 
             // toolStrip1
             // 
-            this.toolStrip1.Dock = System.Windows.Forms.DockStyle.None;
-            this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
-            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.OpenButton,
-            this.SaveButton,
-            this.WordPadButton,
-            this.toolStripSeparator2,
-            this.BoldButton,
-            this.ItalicsButton,
-            this.UnderlineButton,
-            this.SuperScriptButton,
-            this.SubScriptButton,
-            this.LargeFontButton,
-            this.SmallFontButton,
-            this.ColorButton,
-            this.toolStripSeparator3,
-            this.InsertImageButton,
-            this.BulletButton,
-            this.IndentButton,
-            this.UnindentButton,
-            this.ParagraphLeftButton,
-            this.CenterButton});
-            this.toolStrip1.Location = new System.Drawing.Point(288, 155);
-            this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Padding = new System.Windows.Forms.Padding(0);
-            this.toolStrip1.Size = new System.Drawing.Size(422, 27);
-            this.toolStrip1.TabIndex = 0;
+            toolStrip1.Dock = System.Windows.Forms.DockStyle.None;
+            toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+            toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { OpenButton, SaveButton, WordPadButton, toolStripSeparator2, BoldButton, ItalicsButton, UnderlineButton, SuperScriptButton, SubScriptButton, LargeFontButton, SmallFontButton, ColorButton, toolStripSeparator3, InsertImageButton, BulletButton, IndentButton, UnindentButton, ParagraphLeftButton, CenterButton });
+            toolStrip1.Location = new System.Drawing.Point(288, 155);
+            toolStrip1.Name = "toolStrip1";
+            toolStrip1.Padding = new System.Windows.Forms.Padding(0);
+            toolStrip1.Size = new System.Drawing.Size(422, 27);
+            toolStrip1.TabIndex = 0;
             // 
             // OpenButton
             // 
-            this.OpenButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.OpenButton.ImageName = "Open";
-            this.OpenButton.Name = "OpenButton";
-            this.OpenButton.Padding = new System.Windows.Forms.Padding(2);
-            this.OpenButton.Size = new System.Drawing.Size(24, 24);
-            this.OpenButton.Text = "Open";
-            this.OpenButton.ToolTipText = "Open (Ctrl+O)";
-            this.OpenButton.Click += new System.EventHandler(this.OpenButton_Click);
+            OpenButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            OpenButton.ImageName = "Open";
+            OpenButton.Name = "OpenButton";
+            OpenButton.Padding = new System.Windows.Forms.Padding(2);
+            OpenButton.Size = new System.Drawing.Size(24, 24);
+            OpenButton.Text = "Open";
+            OpenButton.ToolTipText = "Open (Ctrl+O)";
+            OpenButton.Click += OpenButton_Click;
             // 
             // SaveButton
             // 
-            this.SaveButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.SaveButton.ImageName = "Save";
-            this.SaveButton.Name = "SaveButton";
-            this.SaveButton.Padding = new System.Windows.Forms.Padding(2);
-            this.SaveButton.Size = new System.Drawing.Size(24, 24);
-            this.SaveButton.Text = "Save";
-            this.SaveButton.ToolTipText = "Save (Ctrl+S)";
-            this.SaveButton.Click += new System.EventHandler(this.SaveButton_Click_1);
+            SaveButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            SaveButton.ImageName = "Save";
+            SaveButton.Name = "SaveButton";
+            SaveButton.Padding = new System.Windows.Forms.Padding(2);
+            SaveButton.Size = new System.Drawing.Size(24, 24);
+            SaveButton.Text = "Save";
+            SaveButton.ToolTipText = "Save (Ctrl+S)";
+            SaveButton.Click += SaveButton_Click_1;
             // 
             // WordPadButton
             // 
-            this.WordPadButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.WordPadButton.ImageName = "WordPad";
-            this.WordPadButton.Name = "WordPadButton";
-            this.WordPadButton.Padding = new System.Windows.Forms.Padding(2);
-            this.WordPadButton.Size = new System.Drawing.Size(24, 24);
-            this.WordPadButton.Text = "Edit in WordPad";
-            this.WordPadButton.ToolTipText = "Edit in WordPad (Ctrl+W)";
-            this.WordPadButton.Click += new System.EventHandler(this.WordPadButton_Click);
+            WordPadButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            WordPadButton.ImageName = "WordPad";
+            WordPadButton.Name = "WordPadButton";
+            WordPadButton.Padding = new System.Windows.Forms.Padding(2);
+            WordPadButton.Size = new System.Drawing.Size(24, 24);
+            WordPadButton.Text = "Edit in WordPad";
+            WordPadButton.ToolTipText = "Edit in WordPad (Ctrl+W)";
+            WordPadButton.Click += WordPadButton_Click;
             // 
             // toolStripSeparator2
             // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 27);
+            toolStripSeparator2.Name = "toolStripSeparator2";
+            toolStripSeparator2.Size = new System.Drawing.Size(6, 27);
             // 
             // BoldButton
             // 
-            this.BoldButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.BoldButton.ImageName = "Bold";
-            this.BoldButton.Name = "BoldButton";
-            this.BoldButton.Padding = new System.Windows.Forms.Padding(2);
-            this.BoldButton.Size = new System.Drawing.Size(24, 24);
-            this.BoldButton.Text = "Bold";
-            this.BoldButton.ToolTipText = "Bold (Ctrl+B)";
-            this.BoldButton.Click += new System.EventHandler(this.BoldButton_Click);
+            BoldButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            BoldButton.ImageName = "Bold";
+            BoldButton.Name = "BoldButton";
+            BoldButton.Padding = new System.Windows.Forms.Padding(2);
+            BoldButton.Size = new System.Drawing.Size(24, 24);
+            BoldButton.Text = "Bold";
+            BoldButton.ToolTipText = "Bold (Ctrl+B)";
+            BoldButton.Click += BoldButton_Click;
             // 
             // ItalicsButton
             // 
-            this.ItalicsButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.ItalicsButton.ImageName = "Italic";
-            this.ItalicsButton.Name = "ItalicsButton";
-            this.ItalicsButton.Padding = new System.Windows.Forms.Padding(2);
-            this.ItalicsButton.Size = new System.Drawing.Size(24, 24);
-            this.ItalicsButton.Text = "Italics";
-            this.ItalicsButton.ToolTipText = "Italics (Ctrl+I)";
-            this.ItalicsButton.Click += new System.EventHandler(this.ItalicsButton_Click);
+            ItalicsButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            ItalicsButton.ImageName = "Italic";
+            ItalicsButton.Name = "ItalicsButton";
+            ItalicsButton.Padding = new System.Windows.Forms.Padding(2);
+            ItalicsButton.Size = new System.Drawing.Size(24, 24);
+            ItalicsButton.Text = "Italics";
+            ItalicsButton.ToolTipText = "Italics (Ctrl+I)";
+            ItalicsButton.Click += ItalicsButton_Click;
             // 
             // UnderlineButton
             // 
-            this.UnderlineButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.UnderlineButton.ImageName = "Underline";
-            this.UnderlineButton.Name = "UnderlineButton";
-            this.UnderlineButton.Padding = new System.Windows.Forms.Padding(2);
-            this.UnderlineButton.Size = new System.Drawing.Size(24, 24);
-            this.UnderlineButton.Text = "Underline";
-            this.UnderlineButton.ToolTipText = "Underline (Ctrl+U)";
-            this.UnderlineButton.Click += new System.EventHandler(this.UnderlineButton_Click);
+            UnderlineButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            UnderlineButton.ImageName = "Underline";
+            UnderlineButton.Name = "UnderlineButton";
+            UnderlineButton.Padding = new System.Windows.Forms.Padding(2);
+            UnderlineButton.Size = new System.Drawing.Size(24, 24);
+            UnderlineButton.Text = "Underline";
+            UnderlineButton.ToolTipText = "Underline (Ctrl+U)";
+            UnderlineButton.Click += UnderlineButton_Click;
             // 
             // SuperScriptButton
             // 
-            this.SuperScriptButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.SuperScriptButton.ImageName = "SuperScript";
-            this.SuperScriptButton.Name = "SuperScriptButton";
-            this.SuperScriptButton.Padding = new System.Windows.Forms.Padding(2);
-            this.SuperScriptButton.Size = new System.Drawing.Size(24, 24);
-            this.SuperScriptButton.Text = "SuperScript";
-            this.SuperScriptButton.ToolTipText = "Superscript";
-            this.SuperScriptButton.Click += new System.EventHandler(this.SuperScriptButton_Click);
+            SuperScriptButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            SuperScriptButton.ImageName = "SuperScript";
+            SuperScriptButton.Name = "SuperScriptButton";
+            SuperScriptButton.Padding = new System.Windows.Forms.Padding(2);
+            SuperScriptButton.Size = new System.Drawing.Size(24, 24);
+            SuperScriptButton.Text = "SuperScript";
+            SuperScriptButton.ToolTipText = "Superscript";
+            SuperScriptButton.Click += SuperScriptButton_Click;
             // 
             // SubScriptButton
             // 
-            this.SubScriptButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.SubScriptButton.ImageName = "SubScript";
-            this.SubScriptButton.Name = "SubScriptButton";
-            this.SubScriptButton.Padding = new System.Windows.Forms.Padding(2);
-            this.SubScriptButton.Size = new System.Drawing.Size(24, 24);
-            this.SubScriptButton.Text = "Subscript";
-            this.SubScriptButton.Click += new System.EventHandler(this.SubScriptButton_Click);
+            SubScriptButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            SubScriptButton.ImageName = "SubScript";
+            SubScriptButton.Name = "SubScriptButton";
+            SubScriptButton.Padding = new System.Windows.Forms.Padding(2);
+            SubScriptButton.Size = new System.Drawing.Size(24, 24);
+            SubScriptButton.Text = "Subscript";
+            SubScriptButton.Click += SubScriptButton_Click;
             // 
             // LargeFontButton
             // 
-            this.LargeFontButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.LargeFontButton.ImageName = "IncreaseFontSize";
-            this.LargeFontButton.Name = "LargeFontButton";
-            this.LargeFontButton.Padding = new System.Windows.Forms.Padding(2);
-            this.LargeFontButton.Size = new System.Drawing.Size(24, 24);
-            this.LargeFontButton.Text = "Increase Font Size";
-            this.LargeFontButton.Click += new System.EventHandler(this.LargeFontButton_Click);
+            LargeFontButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            LargeFontButton.ImageName = "IncreaseFontSize";
+            LargeFontButton.Name = "LargeFontButton";
+            LargeFontButton.Padding = new System.Windows.Forms.Padding(2);
+            LargeFontButton.Size = new System.Drawing.Size(24, 24);
+            LargeFontButton.Text = "Increase Font Size";
+            LargeFontButton.Click += LargeFontButton_Click;
             // 
             // SmallFontButton
             // 
-            this.SmallFontButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.SmallFontButton.ImageName = "DecreaseFontSize";
-            this.SmallFontButton.Name = "SmallFontButton";
-            this.SmallFontButton.Padding = new System.Windows.Forms.Padding(2);
-            this.SmallFontButton.Size = new System.Drawing.Size(24, 24);
-            this.SmallFontButton.Text = "Decrease Font Size";
-            this.SmallFontButton.Click += new System.EventHandler(this.SmallFontButton_Click);
+            SmallFontButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            SmallFontButton.ImageName = "DecreaseFontSize";
+            SmallFontButton.Name = "SmallFontButton";
+            SmallFontButton.Padding = new System.Windows.Forms.Padding(2);
+            SmallFontButton.Size = new System.Drawing.Size(24, 24);
+            SmallFontButton.Text = "Decrease Font Size";
+            SmallFontButton.Click += SmallFontButton_Click;
             // 
             // ColorButton
             // 
-            this.ColorButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.ColorButton.ImageName = "02ColorWheel";
-            this.ColorButton.Name = "ColorButton";
-            this.ColorButton.Padding = new System.Windows.Forms.Padding(2);
-            this.ColorButton.Size = new System.Drawing.Size(24, 24);
-            this.ColorButton.Text = "Color";
-            this.ColorButton.ToolTipText = "Color (F8)";
-            this.ColorButton.Click += new System.EventHandler(this.ColorButton_Click);
+            ColorButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            ColorButton.ImageName = "02ColorWheel";
+            ColorButton.Name = "ColorButton";
+            ColorButton.Padding = new System.Windows.Forms.Padding(2);
+            ColorButton.Size = new System.Drawing.Size(24, 24);
+            ColorButton.Text = "Color";
+            ColorButton.ToolTipText = "Color (F8)";
+            ColorButton.Click += ColorButton_Click;
             // 
             // toolStripSeparator3
             // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 27);
+            toolStripSeparator3.Name = "toolStripSeparator3";
+            toolStripSeparator3.Size = new System.Drawing.Size(6, 27);
             // 
             // InsertImageButton
             // 
-            this.InsertImageButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.InsertImageButton.ImageName = "InsertPicture";
-            this.InsertImageButton.Name = "InsertImageButton";
-            this.InsertImageButton.Padding = new System.Windows.Forms.Padding(2);
-            this.InsertImageButton.Size = new System.Drawing.Size(24, 24);
-            this.InsertImageButton.Text = "Insert Image";
-            this.InsertImageButton.Click += new System.EventHandler(this.InsertImageButton_Click);
+            InsertImageButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            InsertImageButton.ImageName = "InsertPicture";
+            InsertImageButton.Name = "InsertImageButton";
+            InsertImageButton.Padding = new System.Windows.Forms.Padding(2);
+            InsertImageButton.Size = new System.Drawing.Size(24, 24);
+            InsertImageButton.Text = "Insert Image";
+            InsertImageButton.Click += InsertImageButton_Click;
             // 
             // BulletButton
             // 
-            this.BulletButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.BulletButton.ImageName = "Bullets";
-            this.BulletButton.Name = "BulletButton";
-            this.BulletButton.Padding = new System.Windows.Forms.Padding(2);
-            this.BulletButton.Size = new System.Drawing.Size(24, 24);
-            this.BulletButton.Text = "Bullets";
-            this.BulletButton.Click += new System.EventHandler(this.BulletButton_Click);
+            BulletButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            BulletButton.ImageName = "Bullets";
+            BulletButton.Name = "BulletButton";
+            BulletButton.Padding = new System.Windows.Forms.Padding(2);
+            BulletButton.Size = new System.Drawing.Size(24, 24);
+            BulletButton.Text = "Bullets";
+            BulletButton.Click += BulletButton_Click;
             // 
             // IndentButton
             // 
-            this.IndentButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.IndentButton.ImageName = "Indent";
-            this.IndentButton.Name = "IndentButton";
-            this.IndentButton.Padding = new System.Windows.Forms.Padding(2);
-            this.IndentButton.Size = new System.Drawing.Size(24, 24);
-            this.IndentButton.Text = "Indent";
-            this.IndentButton.Click += new System.EventHandler(this.IndentButton_Click);
+            IndentButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            IndentButton.ImageName = "Indent";
+            IndentButton.Name = "IndentButton";
+            IndentButton.Padding = new System.Windows.Forms.Padding(2);
+            IndentButton.Size = new System.Drawing.Size(24, 24);
+            IndentButton.Text = "Indent";
+            IndentButton.Click += IndentButton_Click;
             // 
             // UnindentButton
             // 
-            this.UnindentButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.UnindentButton.ImageName = "Unindent";
-            this.UnindentButton.Name = "UnindentButton";
-            this.UnindentButton.Padding = new System.Windows.Forms.Padding(2);
-            this.UnindentButton.Size = new System.Drawing.Size(24, 24);
-            this.UnindentButton.Text = "Unindent";
-            this.UnindentButton.Click += new System.EventHandler(this.UnindentButton_Click);
+            UnindentButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            UnindentButton.ImageName = "Unindent";
+            UnindentButton.Name = "UnindentButton";
+            UnindentButton.Padding = new System.Windows.Forms.Padding(2);
+            UnindentButton.Size = new System.Drawing.Size(24, 24);
+            UnindentButton.Text = "Unindent";
+            UnindentButton.Click += UnindentButton_Click;
             // 
             // ParagraphLeftButton
             // 
-            this.ParagraphLeftButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.ParagraphLeftButton.ImageName = "ParagraphLeft";
-            this.ParagraphLeftButton.Name = "ParagraphLeftButton";
-            this.ParagraphLeftButton.Padding = new System.Windows.Forms.Padding(2);
-            this.ParagraphLeftButton.Size = new System.Drawing.Size(24, 24);
-            this.ParagraphLeftButton.Text = "Align Left";
-            this.ParagraphLeftButton.Click += new System.EventHandler(this.ParagraphLeftButton_Click);
+            ParagraphLeftButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            ParagraphLeftButton.ImageName = "ParagraphLeft";
+            ParagraphLeftButton.Name = "ParagraphLeftButton";
+            ParagraphLeftButton.Padding = new System.Windows.Forms.Padding(2);
+            ParagraphLeftButton.Size = new System.Drawing.Size(24, 24);
+            ParagraphLeftButton.Text = "Align Left";
+            ParagraphLeftButton.Click += ParagraphLeftButton_Click;
             // 
             // CenterButton
             // 
-            this.CenterButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.CenterButton.ImageName = "ParagraphCenter";
-            this.CenterButton.Name = "CenterButton";
-            this.CenterButton.Padding = new System.Windows.Forms.Padding(2);
-            this.CenterButton.Size = new System.Drawing.Size(24, 24);
-            this.CenterButton.Text = "Center";
-            this.CenterButton.Click += new System.EventHandler(this.CenterButton_Click);
+            CenterButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            CenterButton.ImageName = "ParagraphCenter";
+            CenterButton.Name = "CenterButton";
+            CenterButton.Padding = new System.Windows.Forms.Padding(2);
+            CenterButton.Size = new System.Drawing.Size(24, 24);
+            CenterButton.Text = "Center";
+            CenterButton.Click += CenterButton_Click;
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.AdjustmentRadio);
-            this.panel1.Controls.Add(this.EffectRadio);
-            this.panel1.Location = new System.Drawing.Point(9, 30);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(240, 28);
-            this.panel1.TabIndex = 0;
+            panel1.Controls.Add(AdjustmentRadio);
+            panel1.Controls.Add(EffectRadio);
+            panel1.Location = new System.Drawing.Point(9, 30);
+            panel1.Name = "panel1";
+            panel1.Size = new System.Drawing.Size(240, 28);
+            panel1.TabIndex = 0;
             // 
             // PreviewLabel
             // 
-            this.PreviewLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.PreviewLabel.AutoSize = true;
-            this.PreviewLabel.Location = new System.Drawing.Point(553, 29);
-            this.PreviewLabel.Name = "PreviewLabel";
-            this.PreviewLabel.Size = new System.Drawing.Size(121, 15);
-            this.PreviewLabel.TabIndex = 85;
-            this.PreviewLabel.Text = "Preview help content:";
+            PreviewLabel.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            PreviewLabel.AutoSize = true;
+            PreviewLabel.Location = new System.Drawing.Point(553, 29);
+            PreviewLabel.Name = "PreviewLabel";
+            PreviewLabel.Size = new System.Drawing.Size(121, 15);
+            PreviewLabel.TabIndex = 85;
+            PreviewLabel.Text = "Preview help content:";
             // 
             // PlainTextLabel
             // 
-            this.PlainTextLabel.AutoSize = true;
-            this.PlainTextLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.PlainTextLabel.Location = new System.Drawing.Point(319, 97);
-            this.PlainTextLabel.Name = "PlainTextLabel";
-            this.PlainTextLabel.Size = new System.Drawing.Size(42, 24);
-            this.PlainTextLabel.TabIndex = 80;
-            this.PlainTextLabel.Text = "(Use Tab\r\nor Enter)";
+            PlainTextLabel.AutoSize = true;
+            PlainTextLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            PlainTextLabel.Location = new System.Drawing.Point(319, 97);
+            PlainTextLabel.Name = "PlainTextLabel";
+            PlainTextLabel.Size = new System.Drawing.Size(42, 24);
+            PlainTextLabel.TabIndex = 80;
+            PlainTextLabel.Text = "(Use Tab\r\nor Enter)";
             // 
             // WarningLabel
             // 
-            this.WarningLabel.AutoSize = true;
-            this.WarningLabel.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.WarningLabel.ForeColor = System.Drawing.Color.Red;
-            this.WarningLabel.Location = new System.Drawing.Point(376, 136);
-            this.WarningLabel.Name = "WarningLabel";
-            this.WarningLabel.Size = new System.Drawing.Size(154, 13);
-            this.WarningLabel.TabIndex = 86;
-            this.WarningLabel.Text = "Close WordPad to continue!";
+            WarningLabel.AutoSize = true;
+            WarningLabel.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
+            WarningLabel.ForeColor = System.Drawing.Color.Red;
+            WarningLabel.Location = new System.Drawing.Point(376, 136);
+            WarningLabel.Name = "WarningLabel";
+            WarningLabel.Size = new System.Drawing.Size(154, 13);
+            WarningLabel.TabIndex = 86;
+            WarningLabel.Text = "Close WordPad to continue!";
             // 
             // MenuIcon
             // 
-            this.MenuIcon.Location = new System.Drawing.Point(89, 104);
-            this.MenuIcon.Name = "MenuIcon";
-            this.MenuIcon.Size = new System.Drawing.Size(16, 16);
-            this.MenuIcon.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.MenuIcon.TabIndex = 3;
-            this.MenuIcon.TabStop = false;
+            MenuIcon.Location = new System.Drawing.Point(89, 104);
+            MenuIcon.Name = "MenuIcon";
+            MenuIcon.Size = new System.Drawing.Size(16, 16);
+            MenuIcon.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            MenuIcon.TabIndex = 3;
+            MenuIcon.TabStop = false;
             // 
             // GenSlnButton
             // 
-            this.GenSlnButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.GenSlnButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.GenSlnButton.Location = new System.Drawing.Point(379, 602);
-            this.GenSlnButton.Name = "GenSlnButton";
-            this.GenSlnButton.Size = new System.Drawing.Size(131, 24);
-            this.GenSlnButton.TabIndex = 24;
-            this.GenSlnButton.Text = "Generate VS Solution";
-            this.GenSlnButton.UseVisualStyleBackColor = true;
-            this.GenSlnButton.Click += new System.EventHandler(this.GenSlnButton_Click);
+            GenSlnButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
+            GenSlnButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            GenSlnButton.Location = new System.Drawing.Point(379, 631);
+            GenSlnButton.Name = "GenSlnButton";
+            GenSlnButton.Size = new System.Drawing.Size(131, 24);
+            GenSlnButton.TabIndex = 26;
+            GenSlnButton.Text = "Generate VS Solution";
+            GenSlnButton.UseVisualStyleBackColor = true;
+            GenSlnButton.Click += GenSlnButton_Click;
             // 
             // sampleImage
             // 
-            this.sampleImage.Location = new System.Drawing.Point(35, 472);
-            this.sampleImage.Name = "sampleImage";
-            this.sampleImage.Size = new System.Drawing.Size(200, 150);
-            this.sampleImage.TabIndex = 89;
-            this.sampleImage.TabStop = false;
+            sampleImage.Location = new System.Drawing.Point(35, 504);
+            sampleImage.Name = "sampleImage";
+            sampleImage.Size = new System.Drawing.Size(200, 150);
+            sampleImage.TabIndex = 89;
+            sampleImage.TabStop = false;
             // 
             // sampleLabel
             // 
-            this.sampleLabel.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold);
-            this.sampleLabel.Location = new System.Drawing.Point(6, 456);
-            this.sampleLabel.Name = "sampleLabel";
-            this.sampleLabel.Size = new System.Drawing.Size(254, 124);
-            this.sampleLabel.TabIndex = 90;
-            this.sampleLabel.Text = "Sample Image Detected:";
+            sampleLabel.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold);
+            sampleLabel.Location = new System.Drawing.Point(6, 488);
+            sampleLabel.Name = "sampleLabel";
+            sampleLabel.Size = new System.Drawing.Size(254, 124);
+            sampleLabel.TabIndex = 90;
+            sampleLabel.Text = "Sample Image Detected:";
             // 
             // forceLegacyRoiBox
             // 
-            this.forceLegacyRoiBox.AutoSize = true;
-            this.forceLegacyRoiBox.Location = new System.Drawing.Point(19, 428);
-            this.forceLegacyRoiBox.Name = "forceLegacyRoiBox";
-            this.forceLegacyRoiBox.Size = new System.Drawing.Size(85, 19);
-            this.forceLegacyRoiBox.TabIndex = 13;
-            this.forceLegacyRoiBox.Text = "Legacy ROI";
-            this.forceLegacyRoiBox.UseVisualStyleBackColor = true;
-            this.forceLegacyRoiBox.CheckedChanged += new System.EventHandler(this.ForceROI_CheckedChanged);
+            forceLegacyRoiBox.AutoSize = true;
+            forceLegacyRoiBox.Location = new System.Drawing.Point(19, 428);
+            forceLegacyRoiBox.Name = "forceLegacyRoiBox";
+            forceLegacyRoiBox.Size = new System.Drawing.Size(85, 19);
+            forceLegacyRoiBox.TabIndex = 13;
+            forceLegacyRoiBox.Text = "Legacy ROI";
+            forceLegacyRoiBox.UseVisualStyleBackColor = true;
+            forceLegacyRoiBox.CheckedChanged += ForceROI_CheckedChanged;
             // 
             // forceSingleRenderBox
             // 
-            this.forceSingleRenderBox.AutoSize = true;
-            this.forceSingleRenderBox.Location = new System.Drawing.Point(141, 428);
-            this.forceSingleRenderBox.Name = "forceSingleRenderBox";
-            this.forceSingleRenderBox.Size = new System.Drawing.Size(121, 19);
-            this.forceSingleRenderBox.TabIndex = 14;
-            this.forceSingleRenderBox.Text = "Single Render Call";
-            this.forceSingleRenderBox.UseVisualStyleBackColor = true;
-            this.forceSingleRenderBox.CheckedChanged += new System.EventHandler(this.ForceROI_CheckedChanged);
+            forceSingleRenderBox.AutoSize = true;
+            forceSingleRenderBox.Location = new System.Drawing.Point(141, 428);
+            forceSingleRenderBox.Name = "forceSingleRenderBox";
+            forceSingleRenderBox.Size = new System.Drawing.Size(121, 19);
+            forceSingleRenderBox.TabIndex = 14;
+            forceSingleRenderBox.Text = "Single Render Call";
+            forceSingleRenderBox.UseVisualStyleBackColor = true;
+            forceSingleRenderBox.CheckedChanged += ForceROI_CheckedChanged;
+            // 
+            // NoSelectionClippingBox
+            // 
+            NoSelectionClippingBox.AutoSize = true;
+            NoSelectionClippingBox.Location = new System.Drawing.Point(141, 453);
+            NoSelectionClippingBox.Name = "NoSelectionClippingBox";
+            NoSelectionClippingBox.Size = new System.Drawing.Size(117, 19);
+            NoSelectionClippingBox.TabIndex = 16;
+            NoSelectionClippingBox.Text = "No Selection Clip";
+            NoSelectionClippingBox.UseVisualStyleBackColor = true;
             // 
             // BuildForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.CancelButton = this.ButtonCancel;
-            this.ClientSize = new System.Drawing.Size(730, 640);
-            this.Controls.Add(this.forceSingleRenderBox);
-            this.Controls.Add(this.forceLegacyRoiBox);
-            this.Controls.Add(this.sampleImage);
-            this.Controls.Add(this.sampleLabel);
-            this.Controls.Add(this.GenSlnButton);
-            this.Controls.Add(this.ViewSourceButton);
-            this.Controls.Add(this.toolStrip1);
-            this.Controls.Add(this.WarningLabel);
-            this.Controls.Add(this.PreviewLabel);
-            this.Controls.Add(this.panel1);
-            this.Controls.Add(this.RichHelpContent);
-            this.Controls.Add(this.HelpPlainText);
-            this.Controls.Add(this.PlainTextLabel);
-            this.Controls.Add(this.HelpURL);
-            this.Controls.Add(this.radioButtonRich);
-            this.Controls.Add(this.radioButtonPlain);
-            this.Controls.Add(this.radioButtonURL);
-            this.Controls.Add(this.radioButtonNone);
-            this.Controls.Add(this.PreviewHelpButton);
-            this.Controls.Add(this.label8);
-            this.Controls.Add(this.label9);
-            this.Controls.Add(this.ForceSingleThreadedBox);
-            this.Controls.Add(this.label6);
-            this.Controls.Add(this.label7);
-            this.Controls.Add(this.ForceAliasSelectionBox);
-            this.Controls.Add(this.KeyWordsBox);
-            this.Controls.Add(this.label5);
-            this.Controls.Add(this.DescriptionBox);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.WindowTitleText);
-            this.Controls.Add(this.label20);
-            this.Controls.Add(this.label21);
-            this.Controls.Add(this.label24);
-            this.Controls.Add(this.label23);
-            this.Controls.Add(this.label19);
-            this.Controls.Add(this.SupportURL);
-            this.Controls.Add(this.label17);
-            this.Controls.Add(this.MinorVersion);
-            this.Controls.Add(this.MajorVersion);
-            this.Controls.Add(this.label16);
-            this.Controls.Add(this.AuthorName);
-            this.Controls.Add(this.ButtonIcon);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.SubMenuName);
-            this.Controls.Add(this.MenuIcon);
-            this.Controls.Add(this.MenuName);
-            this.Controls.Add(this.ButtonSave);
-            this.Controls.Add(this.ButtonCancel);
-            this.Controls.Add(this.DecimalSymbol);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
-            this.IconName = "SaveAsDll";
-            this.MinimizeBox = true;
-            this.MinimumSize = new System.Drawing.Size(743, 675);
-            this.Name = "BuildForm";
-            this.Text = "Building DLL";
-            ((System.ComponentModel.ISupportInitialize)(this.MajorVersion)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.MinorVersion)).EndInit();
-            this.toolStrip1.ResumeLayout(false);
-            this.toolStrip1.PerformLayout();
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.MenuIcon)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.sampleImage)).EndInit();
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            CancelButton = ButtonCancel;
+            ClientSize = new System.Drawing.Size(730, 669);
+            Controls.Add(NoSelectionClippingBox);
+            Controls.Add(StraightAlphaBox);
+            Controls.Add(forceSingleRenderBox);
+            Controls.Add(forceLegacyRoiBox);
+            Controls.Add(sampleImage);
+            Controls.Add(sampleLabel);
+            Controls.Add(GenSlnButton);
+            Controls.Add(ViewSourceButton);
+            Controls.Add(toolStrip1);
+            Controls.Add(WarningLabel);
+            Controls.Add(PreviewLabel);
+            Controls.Add(panel1);
+            Controls.Add(RichHelpContent);
+            Controls.Add(HelpPlainText);
+            Controls.Add(PlainTextLabel);
+            Controls.Add(HelpURL);
+            Controls.Add(radioButtonRich);
+            Controls.Add(radioButtonPlain);
+            Controls.Add(radioButtonURL);
+            Controls.Add(radioButtonNone);
+            Controls.Add(PreviewHelpButton);
+            Controls.Add(label8);
+            Controls.Add(label9);
+            Controls.Add(ForceSingleThreadedBox);
+            Controls.Add(label6);
+            Controls.Add(label7);
+            Controls.Add(ForceAliasSelectionBox);
+            Controls.Add(KeyWordsBox);
+            Controls.Add(label5);
+            Controls.Add(DescriptionBox);
+            Controls.Add(label4);
+            Controls.Add(label3);
+            Controls.Add(WindowTitleText);
+            Controls.Add(label20);
+            Controls.Add(label21);
+            Controls.Add(label24);
+            Controls.Add(label23);
+            Controls.Add(label19);
+            Controls.Add(SupportURL);
+            Controls.Add(label17);
+            Controls.Add(MinorVersion);
+            Controls.Add(MajorVersion);
+            Controls.Add(label16);
+            Controls.Add(AuthorName);
+            Controls.Add(ButtonIcon);
+            Controls.Add(label2);
+            Controls.Add(label1);
+            Controls.Add(SubMenuName);
+            Controls.Add(MenuIcon);
+            Controls.Add(MenuName);
+            Controls.Add(ButtonSave);
+            Controls.Add(ButtonCancel);
+            Controls.Add(DecimalSymbol);
+            FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
+            IconName = "SaveAsDll";
+            Location = new System.Drawing.Point(0, 0);
+            MinimizeBox = true;
+            MinimumSize = new System.Drawing.Size(743, 675);
+            Name = "BuildForm";
+            Text = "Building DLL";
+            ((System.ComponentModel.ISupportInitialize)MajorVersion).EndInit();
+            ((System.ComponentModel.ISupportInitialize)MinorVersion).EndInit();
+            toolStrip1.ResumeLayout(false);
+            toolStrip1.PerformLayout();
+            panel1.ResumeLayout(false);
+            panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)MenuIcon).EndInit();
+            ((System.ComponentModel.ISupportInitialize)sampleImage).EndInit();
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -1040,5 +1015,7 @@ namespace PdnCodeLab
         private System.Windows.Forms.Label sampleLabel;
         private System.Windows.Forms.CheckBox forceLegacyRoiBox;
         private System.Windows.Forms.CheckBox forceSingleRenderBox;
+        private System.Windows.Forms.CheckBox StraightAlphaBox;
+        private System.Windows.Forms.CheckBox NoSelectionClippingBox;
     }
 }
