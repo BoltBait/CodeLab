@@ -83,7 +83,7 @@ namespace PdnCodeLab
             // 
             MoveUp.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
             MoveUp.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            MoveUp.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            MoveUp.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             MoveUp.Location = new System.Drawing.Point(410, 28);
             MoveUp.Name = "MoveUp";
             MoveUp.Size = new System.Drawing.Size(23, 23);
@@ -97,7 +97,7 @@ namespace PdnCodeLab
             // 
             MoveDown.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
             MoveDown.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            MoveDown.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            MoveDown.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             MoveDown.Location = new System.Drawing.Point(410, 56);
             MoveDown.Name = "MoveDown";
             MoveDown.Size = new System.Drawing.Size(23, 23);
@@ -110,7 +110,7 @@ namespace PdnCodeLab
             // Delete
             // 
             Delete.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
-            Delete.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
+            Delete.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             Delete.ForeColor = System.Drawing.Color.Red;
             Delete.Location = new System.Drawing.Point(410, 100);
             Delete.Name = "Delete";
@@ -139,7 +139,7 @@ namespace PdnCodeLab
             OK.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
             OK.DialogResult = System.Windows.Forms.DialogResult.OK;
             OK.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            OK.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
+            OK.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             OK.Location = new System.Drawing.Point(277, 392);
             OK.Name = "OK";
             OK.Size = new System.Drawing.Size(76, 24);
@@ -197,7 +197,7 @@ namespace PdnCodeLab
             OptionsText.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
             OptionsText.Location = new System.Drawing.Point(85, 63);
             OptionsText.Name = "OptionsText";
-            OptionsText.Size = new System.Drawing.Size(1176, 23);
+            OptionsText.Size = new System.Drawing.Size(325, 23);
             OptionsText.TabIndex = 11;
             toolTip1.SetToolTip(OptionsText, "Separate options with the vertical bar character (|)");
             OptionsText.Visible = false;
@@ -375,11 +375,12 @@ namespace PdnCodeLab
             // 
             OptionsLabel.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
             OptionsLabel.AutoSize = true;
-            OptionsLabel.Location = new System.Drawing.Point(22, 67);
+            OptionsLabel.Location = new System.Drawing.Point(21, 67);
             OptionsLabel.Name = "OptionsLabel";
             OptionsLabel.Size = new System.Drawing.Size(52, 15);
             OptionsLabel.TabIndex = 9;
             OptionsLabel.Text = "Options:";
+            OptionsLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             OptionsLabel.Visible = false;
             // 
             // rbEnabled
@@ -490,7 +491,7 @@ namespace PdnCodeLab
             DefaultColorComboBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             DefaultColorComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             DefaultColorComboBox.DropDownWidth = 150;
-            DefaultColorComboBox.Location = new System.Drawing.Point(190, 59);
+            DefaultColorComboBox.Location = new System.Drawing.Point(190, 62);
             DefaultColorComboBox.MaxDropDownItems = 10;
             DefaultColorComboBox.Name = "DefaultColorComboBox";
             DefaultColorComboBox.Size = new System.Drawing.Size(92, 24);

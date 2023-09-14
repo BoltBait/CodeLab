@@ -159,7 +159,7 @@ namespace PdnCodeLab
 
         private void Delete_Click(object sender, EventArgs e)
         {
-            int CurrentItem = (ControlListView.SelectedItems.Count > 0) ? ControlListView.SelectedItems[0].Index : - 1;
+            int CurrentItem = (ControlListView.SelectedItems.Count > 0) ? ControlListView.SelectedItems[0].Index : -1;
             if (CurrentItem > -1)
             {
                 IDList.Remove(MasterList[CurrentItem].Identifier);
@@ -1313,10 +1313,10 @@ namespace PdnCodeLab
             {
                 projectType = value;
 
-                 ControlTypeItem[] controlTypes = Enum.GetValues<ElementType>()
-                    .Where(et => UIElement.IsControlAllowed(et, projectType.IsEffect()))
-                    .Select(et => new ControlTypeItem(et))
-                    .ToArray();
+                ControlTypeItem[] controlTypes = Enum.GetValues<ElementType>()
+                   .Where(et => UIElement.IsControlAllowed(et, projectType.IsEffect()))
+                   .Select(et => new ControlTypeItem(et))
+                   .ToArray();
 
                 this.Items.Clear();
                 this.Items.AddRange(controlTypes);
@@ -2076,7 +2076,7 @@ namespace PdnCodeLab
                     SourceCode += " = @\"\"; // ";
                     break;
                 case ElementType.LabelComment:
-                    SourceCode += " = \""+ StrDefault + "\"; // ";
+                    SourceCode += " = \"" + StrDefault + "\"; // ";
                     break;
             }
 

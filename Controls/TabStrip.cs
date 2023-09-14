@@ -102,8 +102,9 @@ namespace PdnCodeLab
                         case ProjectType.ClassicEffect:
                             activeTab.ImageName = "ClassicEffect";
                             break;
+                        case ProjectType.GpuDrawEffect:
                         case ProjectType.GpuEffect:
-                            activeTab.ImageName = "Untitled";
+                            activeTab.ImageName = "GpuEffect";
                             break;
                         case ProjectType.BitmapEffect:
                             activeTab.ImageName = "BitmapEffect";
@@ -359,6 +360,7 @@ namespace PdnCodeLab
                     {
                         ProjectType.ClassicEffect => "ClassicEffect",
                         ProjectType.GpuEffect => "GpuEffect",
+                        ProjectType.GpuDrawEffect => "GpuEffect",
                         ProjectType.BitmapEffect => "BitmapEffect",
                         ProjectType.FileType => "Save",
                         ProjectType.Reference => "Book",

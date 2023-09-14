@@ -292,6 +292,13 @@ namespace PdnCodeLab
                     txtCode.UpdateSyntaxHighlighting();
                     UpdateTokenFromDialog();
                     break;
+                case ProjectType.GpuDrawEffect:
+                    string gpuDrawSourceCode = GPUDrawWriter.Run(userCode, debugMode);
+                    ScriptBuilder.BuildEffect<GpuDrawingEffect>(gpuDrawSourceCode, debugMode);
+                    DisplayErrors();
+                    txtCode.UpdateSyntaxHighlighting();
+                    UpdateTokenFromDialog();
+                    break;
                 case ProjectType.FileType:
                     string fileTypeSourceCode = FileTypeWriter.Run(userCode, debugMode);
                     ScriptBuilder.BuildFileType(fileTypeSourceCode, debugMode);
@@ -334,6 +341,10 @@ namespace PdnCodeLab
                         string gpuSourceCode = GPUEffectWriter.Run(userCode, debugMode);
                         ScriptBuilder.BuildEffect<GpuImageEffect>(gpuSourceCode, debugMode);
                         break;
+                    case ProjectType.GpuDrawEffect:
+                        string gpuDrawSourceCode = GPUDrawWriter.Run(userCode, debugMode);
+                        ScriptBuilder.BuildEffect<GpuDrawingEffect>(gpuDrawSourceCode, debugMode);
+                        break;
                     case ProjectType.FileType:
                         string fileTypeSourceCode = FileTypeWriter.Run(userCode, debugMode);
                         ScriptBuilder.BuildFileType(fileTypeSourceCode, debugMode);
@@ -352,6 +363,7 @@ namespace PdnCodeLab
             {
                 case ProjectType.ClassicEffect:
                 case ProjectType.GpuEffect:
+                case ProjectType.GpuDrawEffect:
                 case ProjectType.BitmapEffect:
                     txtCode.UpdateSyntaxHighlighting();
                     UpdateTokenFromDialog();
@@ -387,6 +399,10 @@ namespace PdnCodeLab
                 case ProjectType.GpuEffect:
                     string gpuSourceCode = GPUEffectWriter.FullPreview(txtCode.Text);
                     built = ScriptBuilder.BuildEffect<GpuImageEffect>(gpuSourceCode);
+                    break;
+                case ProjectType.GpuDrawEffect:
+                    string gpuDrawSourceCode = GPUDrawWriter.FullPreview(txtCode.Text);
+                    built = ScriptBuilder.BuildEffect<GpuDrawingEffect>(gpuDrawSourceCode);
                     break;
             }
 
@@ -506,6 +522,7 @@ namespace PdnCodeLab
                 case ProjectType.ClassicEffect:
                 case ProjectType.BitmapEffect:
                 case ProjectType.GpuEffect:
+                case ProjectType.GpuDrawEffect:
                 case ProjectType.FileType:
                     if (ScriptBuilder.Errors.Count == 0)
                     {
@@ -590,6 +607,10 @@ namespace PdnCodeLab
                     else if (Regex.IsMatch(fileContents, @"protected\s+override\s+IDeviceImage\s+OnCreateOutput\(PaintDotNet\.Direct2D1\.IDeviceContext\s+deviceContext\)\s*{(.|\s)*}", RegexOptions.Singleline))
                     {
                         projType = ProjectType.GpuEffect;
+                    }
+                    else if (Regex.IsMatch(fileContents, @"protected\s+override\s+unsafe\s+void\s+OnDraw\(PaintDotNet\.Direct2D1\.IDeviceContext\s+deviceContext\)\s*{(.|\s)*}", RegexOptions.Singleline))
+                    {
+                        projType = ProjectType.GpuDrawEffect;
                     }
                     else if (Regex.IsMatch(fileContents, @"void\s+SaveImage\s*\(\s*Document\s+input\s*,\s*Stream\s+output\s*,\s*PropertyBasedSaveConfigToken\s+token\s*,\s*Surface\s+scratchSurface\s*,\s*ProgressEventHandler\s+progressCallback\s*\)\s*{(.|\s)*}", RegexOptions.Singleline))
                     {
@@ -1056,6 +1077,11 @@ namespace PdnCodeLab
             CreateNewProjectTab(ProjectType.GpuEffect);
         }
 
+        private void CreateNewGPUDrawEffect()
+        {
+            CreateNewProjectTab(ProjectType.GpuDrawEffect);
+        }
+
         private void CreateNewPlainText()
         {
             CreateNewProjectTab(ProjectType.None);
@@ -1202,19 +1228,33 @@ namespace PdnCodeLab
                     }
 
                     break;
+                case ProjectType.GpuDrawEffect:
                 case ProjectType.GpuEffect:
-                    using (BuildForm buildForm = new BuildForm(fileName, txtCode.Text, scriptPath, ProjectType.GpuEffect, canCreateSln))
+                    using (BuildForm buildForm = new BuildForm(fileName, txtCode.Text, scriptPath, tabStrip1.SelectedTabProjType, canCreateSln))
                     {
                         if (buildForm.ShowDialog() != DialogResult.OK)
                         {
                             return;
                         }
 
-                        string gpuSourceCode = GPUEffectWriter.FullSourceCode(
-                            txtCode.Text, Path.GetFileNameWithoutExtension(scriptPath), buildForm.isAdjustment,
-                            buildForm.SubMenu, buildForm.MenuItemName, buildForm.IconPath, buildForm.URL, buildForm.RenderingFlags,
-                            buildForm.RenderingSchedule, buildForm.Author, buildForm.MajorVer, buildForm.MinorVer,
-                            buildForm.Description, buildForm.KeyWords, buildForm.WindowTitle, buildForm.HelpType, buildForm.HelpStr);
+                        string gpuSourceCode = "";
+
+                        if (tabStrip1.SelectedTabProjType == ProjectType.GpuEffect)
+                        {
+                            gpuSourceCode += GPUEffectWriter.FullSourceCode(
+                                txtCode.Text, Path.GetFileNameWithoutExtension(scriptPath), buildForm.isAdjustment,
+                                buildForm.SubMenu, buildForm.MenuItemName, buildForm.IconPath, buildForm.URL, buildForm.RenderingFlags,
+                                buildForm.RenderingSchedule, buildForm.Author, buildForm.MajorVer, buildForm.MinorVer,
+                                buildForm.Description, buildForm.KeyWords, buildForm.WindowTitle, buildForm.HelpType, buildForm.HelpStr);
+                        }
+                        else if (tabStrip1.SelectedTabProjType == ProjectType.GpuDrawEffect)
+                        {
+                            gpuSourceCode += GPUDrawWriter.FullSourceCode(
+                                txtCode.Text, Path.GetFileNameWithoutExtension(scriptPath), buildForm.isAdjustment,
+                                buildForm.SubMenu, buildForm.MenuItemName, buildForm.IconPath, buildForm.URL, buildForm.RenderingFlags,
+                                buildForm.RenderingSchedule, buildForm.Author, buildForm.MajorVer, buildForm.MinorVer,
+                                buildForm.Description, buildForm.KeyWords, buildForm.WindowTitle, buildForm.HelpType, buildForm.HelpStr);
+                        }
 
                         buildSucceeded = ScriptBuilder.BuildEffectDll(gpuSourceCode, scriptPath, buildForm.IconPath, buildForm.HelpType);
                     }
@@ -1407,6 +1447,7 @@ namespace PdnCodeLab
                 case ProjectType.ClassicEffect:
                 case ProjectType.BitmapEffect:
                 case ProjectType.GpuEffect:
+                case ProjectType.GpuDrawEffect:
                     RunEffectWithDialog(projectType);
                     break;
                 case ProjectType.FileType:
@@ -1817,6 +1858,11 @@ namespace PdnCodeLab
         private void NewGpuEffect_Click(object sender, EventArgs e)
         {
             CreateNewGPUEffect();
+        }
+
+        private void NewGpuDrawEffect_Click(object sender, EventArgs e)
+        {
+            CreateNewGPUDrawEffect();
         }
 
         private void OpenButton_Click(object sender, EventArgs e)

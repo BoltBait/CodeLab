@@ -11,6 +11,7 @@ namespace PdnCodeLab
         None,
         ClassicEffect,
         GpuEffect,
+        GpuDrawEffect,
         BitmapEffect,
         FileType,
         Reference,
@@ -26,6 +27,7 @@ namespace PdnCodeLab
             return
                 projectType == ProjectType.ClassicEffect ||
                 projectType == ProjectType.GpuEffect ||
+                projectType == ProjectType.GpuDrawEffect ||
                 projectType == ProjectType.BitmapEffect ||
                 projectType == ProjectType.FileType;
         }
@@ -35,6 +37,7 @@ namespace PdnCodeLab
             return
                 projectType == ProjectType.ClassicEffect ||
                 projectType == ProjectType.GpuEffect ||
+                projectType == ProjectType.GpuDrawEffect ||
                 projectType == ProjectType.BitmapEffect;
         }
 
@@ -42,6 +45,7 @@ namespace PdnCodeLab
         {
             return
                 projectType == ProjectType.GpuEffect ||
+                projectType == ProjectType.GpuDrawEffect ||
                 projectType == ProjectType.BitmapEffect;
         }
     }
