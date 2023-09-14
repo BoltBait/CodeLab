@@ -500,7 +500,7 @@
             NewGpuEffectMenuItem.ImageName = "GpuEffect";
             NewGpuEffectMenuItem.Name = "NewGpuEffectMenuItem";
             NewGpuEffectMenuItem.Size = new System.Drawing.Size(186, 22);
-            NewGpuEffectMenuItem.Text = "GPU Effect";
+            NewGpuEffectMenuItem.Text = "GPU Image Effect";
             NewGpuEffectMenuItem.Click += NewGpuEffect_Click;
             // 
             // NewGpuDrawEffectMenuItem
@@ -950,7 +950,7 @@
             NewGpuMenuItem1.ImageName = "GpuEffect";
             NewGpuMenuItem1.Name = "NewGpuMenuItem1";
             NewGpuMenuItem1.Size = new System.Drawing.Size(186, 22);
-            NewGpuMenuItem1.Text = "GPU Effect";
+            NewGpuMenuItem1.Text = "GPU Image Effect";
             NewGpuMenuItem1.Click += NewGpuEffect_Click;
             // 
             // NewGpuDrawMenuItem1

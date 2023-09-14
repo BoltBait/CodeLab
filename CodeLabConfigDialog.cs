@@ -1,8 +1,8 @@
 ﻿/////////////////////////////////////////////////////////////////////////////////
 // CodeLab for Paint.NET
 // Copyright ©2006 Rick Brewster, Tom Jackson. All Rights Reserved.
-// Portions Copyright ©2007-2020 BoltBait. All Rights Reserved.
-// Portions Copyright ©2016-2020 Jason Wendt. All Rights Reserved.
+// Portions Copyright ©2007-2023 BoltBait. All Rights Reserved.
+// Portions Copyright ©2016-2023 Jason Wendt. All Rights Reserved.
 // Portions Copyright ©Microsoft Corporation. All Rights Reserved.
 //
 // THE CODELAB DEVELOPERS MAKE NO WARRANTY OF ANY KIND REGARDING THE CODE. THEY
@@ -1737,7 +1737,7 @@ namespace PdnCodeLab
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FlexibleMessageBox.Show(WindowTitle + "\nCopyright ©2006-2023, All Rights Reserved.\n\nTom Jackson:\tConcept, Initial Code, Compile to DLL\n\nDavid Issel:\tEffect UI Creation, Effect Icons, Effect Help\n\t\tSystem, File New Complex Pixel Flow Code\n\t\tGeneration, CodeLab Updater, Settings\n\t\tScreen, Bug Fixes, Tutorials and Installer.\n\nJason Wendt:\tMigration to ScintillaNET editor control,\n\t\t.NET 6.0, and the C# 9.0 \"Roslyn\" Compiler.\n\t\tIntelligent Assistance (including code\n\t\tcompletion, tips, snippets, and variable\n\t\tname suggestions), Debug Output, Dark\n\t\tTheme, HiDPI icons, Live Effect Preview,\n\t\tSpellcheck, Filetype plugin creation, and\n\t\tShape editing.\n\nJörg Reichert:\tFlexibleMessageBox", "About CodeLab", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            FlexibleMessageBox.Show(WindowTitle + "\nCopyright ©2006-2023, All Rights Reserved.\n\nTom Jackson:\tConcept, Initial Code, Compile to DLL\n\nDavid Issel:\tEffect UI Creation, Effect Icons, Effect Help\n\t\tSystem, File New Complex Pixel Flow Code\n\t\tGeneration, GPU Image and Drawing\n\t\tEffects, CodeLab Updater, Settings\n\t\tScreen, Bug Fixes, Tutorials and Installer.\n\nJason Wendt:\tMigration to ScintillaNET editor control,\n\t\t.NET 6.0, and the C# 9.0 \"Roslyn\" Compiler.\n\t\tIntelligent Assistance (including code\n\t\tcompletion, tips, snippets, and variable\n\t\tname suggestions), Bitmap Effects, Debug\n\t\tOutput, Dark Theme, HiDPI icons, Live\n\t\tEffect Preview, Spellcheck, Filetype\n\t\tplugin creation, and Shape editing.\n\nJörg Reichert:\tFlexibleMessageBox", "About CodeLab", MessageBoxButtons.OK, MessageBoxIcon.Information);
             txtCode.Focus();
         }
         #endregion
