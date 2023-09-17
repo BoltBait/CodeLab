@@ -25,20 +25,20 @@ namespace PdnCodeLab
         private bool posSliderClick;
         private bool posTrackClick;
 
-        private ColorBgra32 arrowColor;
-        private ColorBgra32 arrowColorHover;
-        private ColorBgra32 arrowColorClick;
+        private ColorRgb24 arrowColor;
+        private ColorRgb24 arrowColorHover;
+        private ColorRgb24 arrowColorClick;
 
-        private ColorBgra32 posTrackColor;
-        private ColorBgra32 posColor;
-        private ColorBgra32 posColorHover;
-        private ColorBgra32 posColorClick;
+        private ColorRgb24 posTrackColor;
+        private ColorRgb24 posColor;
+        private ColorRgb24 posColorHover;
+        private ColorRgb24 posColorClick;
 
-        private ColorBgra32 caretColor;
-        private ColorBgra32 errorColor;
-        private ColorBgra32 warningColor;
-        private ColorBgra32 matchColor;
-        private ColorBgra32 bookmarkColor;
+        private ColorRgb24 caretColor;
+        private ColorRgb24 errorColor;
+        private ColorRgb24 warningColor;
+        private ColorRgb24 matchColor;
+        private ColorRgb24 bookmarkColor;
 
         private int posClicked;
         private int posSliderClicked;
@@ -75,37 +75,37 @@ namespace PdnCodeLab
                 switch (value)
                 {
                     case Theme.Dark:
-                        arrowColor = ColorBgra32FromRgb(153, 153, 153);
-                        arrowColorHover = ColorBgra32FromRgb(28, 151, 234);
-                        arrowColorClick = ColorBgra32FromRgb(0, 122, 204);
+                        arrowColor = new ColorRgb24(153, 153, 153);
+                        arrowColorHover = new ColorRgb24(28, 151, 234);
+                        arrowColorClick = new ColorRgb24(0, 122, 204);
 
-                        posTrackColor = ColorBgra32FromRgb(62, 62, 66);
-                        posColor = ColorBgra32FromRgb(104, 104, 104);
-                        posColorHover = ColorBgra32FromRgb(158, 158, 158);
-                        posColorClick = ColorBgra32FromRgb(239, 235, 239);
+                        posTrackColor = new ColorRgb24(62, 62, 66);
+                        posColor = new ColorRgb24(104, 104, 104);
+                        posColorHover = new ColorRgb24(158, 158, 158);
+                        posColorClick = new ColorRgb24(239, 235, 239);
 
                         caretColor = SrgbColors.Gainsboro;
-                        errorColor = ColorBgra32FromRgb(252, 62, 54);
-                        warningColor = ColorBgra32FromRgb(149, 219, 125);
+                        errorColor = new ColorRgb24(252, 62, 54);
+                        warningColor = new ColorRgb24(149, 219, 125);
                         matchColor = SrgbColors.Orange;
                         bookmarkColor = SrgbColors.DeepSkyBlue;
                         break;
 
                     case Theme.Light:
                     default:
-                        arrowColor = ColorBgra32FromRgb(134, 137, 153);
-                        arrowColorHover = ColorBgra32FromRgb(28, 151, 234);
-                        arrowColorClick = ColorBgra32FromRgb(0, 122, 204);
+                        arrowColor = new ColorRgb24(134, 137, 153);
+                        arrowColorHover = new ColorRgb24(28, 151, 234);
+                        arrowColorClick = new ColorRgb24(0, 122, 204);
 
-                        posTrackColor = ColorBgra32FromRgb(245, 245, 245);
-                        posColor = ColorBgra32FromRgb(194, 195, 201);
-                        posColorHover = ColorBgra32FromRgb(104, 104, 104);
-                        posColorClick = ColorBgra32FromRgb(91, 91, 91);
+                        posTrackColor = new ColorRgb24(245, 245, 245);
+                        posColor = new ColorRgb24(194, 195, 201);
+                        posColorHover = new ColorRgb24(104, 104, 104);
+                        posColorClick = new ColorRgb24(91, 91, 91);
 
-                        caretColor = ColorBgra32FromRgb(0, 0, 205);
+                        caretColor = new ColorRgb24(0, 0, 205);
                         errorColor = SrgbColors.Red;
                         warningColor = SrgbColors.Green;
-                        matchColor = ColorBgra32FromRgb(246, 185, 77);
+                        matchColor = new ColorRgb24(246, 185, 77);
                         bookmarkColor = SrgbColors.DeepSkyBlue;
                         break;
                 }
@@ -606,11 +606,6 @@ namespace PdnCodeLab
 
             Invalidate();
             OnScroll(new ScrollEventArgs(scrollType, this.Value));
-        }
-
-        private static ColorBgra32 ColorBgra32FromRgb(byte r, byte g, byte b)
-        {
-            return ColorBgra32.FromBgra(b, g, r, byte.MaxValue);
         }
     }
 }

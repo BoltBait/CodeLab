@@ -113,6 +113,7 @@ namespace PdnCodeLab
                     pdnAssemblyNames.Add("PaintDotNet.Effects.Core");
                     pdnAssemblyNames.Add("PaintDotNet.Effects.Legacy");
                     break;
+                case ProjectType.GpuDrawEffect:
                 case ProjectType.GpuEffect:
                 case ProjectType.BitmapEffect:
                     pdnAssemblyNames.Add("PaintDotNet.Effects.Core");
@@ -179,7 +180,8 @@ namespace PdnCodeLab
                 "FilenameControl",
                 "FolderControl",
                 "RollControl",
-                "MultiLineTextboxControl"
+                "MultiLineTextboxControl",
+                "LabelComment"
             };
 
             List<MethodInfo> extMethodsList = new List<MethodInfo>();

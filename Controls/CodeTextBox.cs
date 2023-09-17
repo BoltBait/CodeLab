@@ -4817,6 +4817,7 @@ namespace PdnCodeLab
                     break;
                 case ProjectType.ClassicEffect:
                 case ProjectType.GpuEffect:
+                case ProjectType.GpuDrawEffect:
                 case ProjectType.BitmapEffect:
                 case ProjectType.FileType:
                 case ProjectType.Reference:

@@ -1,8 +1,8 @@
 ﻿/////////////////////////////////////////////////////////////////////////////////
 // CodeLab for Paint.NET
 // Copyright ©2006 Rick Brewster, Tom Jackson. All Rights Reserved.
-// Portions Copyright ©2007-2020 BoltBait. All Rights Reserved.
-// Portions Copyright ©2016-2020 Jason Wendt. All Rights Reserved.
+// Portions Copyright ©2007-2023 BoltBait. All Rights Reserved.
+// Portions Copyright ©2016-2023 Jason Wendt. All Rights Reserved.
 // Portions Copyright ©Microsoft Corporation. All Rights Reserved.
 //
 // THE CODELAB DEVELOPERS MAKE NO WARRANTY OF ANY KIND REGARDING THE CODE. THEY
@@ -45,8 +45,6 @@ namespace PdnCodeLab
 #else
         private const string WindowTitle = "CodeLab Debug";
 #endif
-        private string FileName = "Untitled";
-        private string FullScriptPath = "";
         private EffectConfigToken previewToken = null;
         private readonly string extendedName;
         private const string showErrorList = "Show Error List";
@@ -78,7 +76,7 @@ namespace PdnCodeLab
 #if !RELEASE
             ToolStripMenuItem[] items = Enum.GetValues<ProjectType>()
                 .Distinct() // ProjectType.Default creates a duplicate
-                .Select(x => new ToolStripMenuItem(x.ToString(), null, (sender, e) => tabStrip1.NewTab(FileName, FullScriptPath, Enum.Parse<ProjectType>(((ToolStripMenuItem)sender).Text))))
+                .Select(x => new ToolStripMenuItem(x.ToString(), null, (sender, e) => CreateNewProjectTab(Enum.Parse<ProjectType>(((ToolStripMenuItem)sender).Text))))
                 .ToArray();
 
             ToolStripDropDownButton newDocTypeChooser = new ToolStripDropDownButton();
@@ -198,8 +196,8 @@ namespace PdnCodeLab
         {
             dstToken.UserCode = txtCode.Text;
             dstToken.UserScriptObject = ScriptBuilder.BuiltEffect;
-            dstToken.ScriptName = FileName;
-            dstToken.ScriptPath = FullScriptPath;
+            dstToken.ScriptName = tabStrip1.SelectedTabTitle;
+            dstToken.ScriptPath = tabStrip1.SelectedTabPath;
             dstToken.Dirty = tabStrip1.SelectedTabIsDirty;
             dstToken.PreviewToken = previewToken;
             dstToken.Bookmarks = txtCode.Bookmarks;
@@ -213,12 +211,10 @@ namespace PdnCodeLab
 
         private void OnUpdateDialogFromToken(CodeLabConfigToken token)
         {
-            FileName = token.ScriptName;
-            FullScriptPath = token.ScriptPath;
             if (token.ProjectType != ProjectType.Default)
             {
                 tabStrip1.SelectedTabIsDirty = false;
-                tabStrip1.NewTab(FileName, FullScriptPath, token.ProjectType);
+                tabStrip1.NewTab(token.ScriptName, token.ScriptPath, token.ProjectType);
                 tabStrip1.CloseFirstTab();
             }
             else if (token.ProjectType.IsCSharp())
@@ -233,7 +229,7 @@ namespace PdnCodeLab
             }
             txtCode.Bookmarks = token.Bookmarks;
 
-            UpdateTabProperties();
+            UpdateWindowTitle();
 
             BuildAsync();
             txtCode.Focus();
@@ -296,6 +292,13 @@ namespace PdnCodeLab
                     txtCode.UpdateSyntaxHighlighting();
                     UpdateTokenFromDialog();
                     break;
+                case ProjectType.GpuDrawEffect:
+                    string gpuDrawSourceCode = GPUDrawWriter.Run(userCode, debugMode);
+                    ScriptBuilder.BuildEffect<GpuDrawingEffect>(gpuDrawSourceCode, debugMode);
+                    DisplayErrors();
+                    txtCode.UpdateSyntaxHighlighting();
+                    UpdateTokenFromDialog();
+                    break;
                 case ProjectType.FileType:
                     string fileTypeSourceCode = FileTypeWriter.Run(userCode, debugMode);
                     ScriptBuilder.BuildFileType(fileTypeSourceCode, debugMode);
@@ -338,6 +341,10 @@ namespace PdnCodeLab
                         string gpuSourceCode = GPUEffectWriter.Run(userCode, debugMode);
                         ScriptBuilder.BuildEffect<GpuImageEffect>(gpuSourceCode, debugMode);
                         break;
+                    case ProjectType.GpuDrawEffect:
+                        string gpuDrawSourceCode = GPUDrawWriter.Run(userCode, debugMode);
+                        ScriptBuilder.BuildEffect<GpuDrawingEffect>(gpuDrawSourceCode, debugMode);
+                        break;
                     case ProjectType.FileType:
                         string fileTypeSourceCode = FileTypeWriter.Run(userCode, debugMode);
                         ScriptBuilder.BuildFileType(fileTypeSourceCode, debugMode);
@@ -356,6 +363,7 @@ namespace PdnCodeLab
             {
                 case ProjectType.ClassicEffect:
                 case ProjectType.GpuEffect:
+                case ProjectType.GpuDrawEffect:
                 case ProjectType.BitmapEffect:
                     txtCode.UpdateSyntaxHighlighting();
                     UpdateTokenFromDialog();
@@ -391,6 +399,10 @@ namespace PdnCodeLab
                 case ProjectType.GpuEffect:
                     string gpuSourceCode = GPUEffectWriter.FullPreview(txtCode.Text);
                     built = ScriptBuilder.BuildEffect<GpuImageEffect>(gpuSourceCode);
+                    break;
+                case ProjectType.GpuDrawEffect:
+                    string gpuDrawSourceCode = GPUDrawWriter.FullPreview(txtCode.Text);
+                    built = ScriptBuilder.BuildEffect<GpuDrawingEffect>(gpuDrawSourceCode);
                     break;
             }
 
@@ -510,6 +522,7 @@ namespace PdnCodeLab
                 case ProjectType.ClassicEffect:
                 case ProjectType.BitmapEffect:
                 case ProjectType.GpuEffect:
+                case ProjectType.GpuDrawEffect:
                 case ProjectType.FileType:
                     if (ScriptBuilder.Errors.Count == 0)
                     {
@@ -579,9 +592,6 @@ namespace PdnCodeLab
 
             AddToRecents(filePath);
 
-            FullScriptPath = filePath;
-            FileName = Path.GetFileNameWithoutExtension(filePath);
-
             ProjectType projType;
             switch (Path.GetExtension(filePath).ToLowerInvariant())
             {
@@ -597,6 +607,10 @@ namespace PdnCodeLab
                     else if (Regex.IsMatch(fileContents, @"protected\s+override\s+IDeviceImage\s+OnCreateOutput\(PaintDotNet\.Direct2D1\.IDeviceContext\s+deviceContext\)\s*{(.|\s)*}", RegexOptions.Singleline))
                     {
                         projType = ProjectType.GpuEffect;
+                    }
+                    else if (Regex.IsMatch(fileContents, @"protected\s+override\s+unsafe\s+void\s+OnDraw\(PaintDotNet\.Direct2D1\.IDeviceContext\s+deviceContext\)\s*{(.|\s)*}", RegexOptions.Singleline))
+                    {
+                        projType = ProjectType.GpuDrawEffect;
                     }
                     else if (Regex.IsMatch(fileContents, @"void\s+SaveImage\s*\(\s*Document\s+input\s*,\s*Stream\s+output\s*,\s*PropertyBasedSaveConfigToken\s+token\s*,\s*Surface\s+scratchSurface\s*,\s*ProgressEventHandler\s+progressCallback\s*\)\s*{(.|\s)*}", RegexOptions.Singleline))
                     {
@@ -618,7 +632,7 @@ namespace PdnCodeLab
 
             bool removedInitTab = tabStrip1.SelectedTabIsInitial && txtCode.IsVirgin;
 
-            tabStrip1.NewTab(FileName, FullScriptPath, projType);
+            tabStrip1.NewTab(Path.GetFileNameWithoutExtension(filePath), filePath, projType);
 
             if (removedInitTab)
             {
@@ -632,7 +646,7 @@ namespace PdnCodeLab
 
         private DialogResult PromptToSave()
         {
-            int buttonPressed = (int)FlexibleMessageBox.Show(this, $"Do you want to save changes to '{FileName}'?", "Unsaved Changes", new string[] { "Save", "Discard", "Cancel" }, MessageBoxIcon.Question);
+            int buttonPressed = (int)FlexibleMessageBox.Show(this, $"Do you want to save changes to '{tabStrip1.SelectedTabTitle}'?", "Unsaved Changes", new string[] { "Save", "Discard", "Cancel" }, MessageBoxIcon.Question);
             switch (buttonPressed)
             {
                 case 1: // Save
@@ -654,7 +668,8 @@ namespace PdnCodeLab
 
         private bool SaveFile()
         {
-            if (FullScriptPath.IsNullOrEmpty() || !File.Exists(FullScriptPath))
+            string filePath = tabStrip1.SelectedTabPath;
+            if (filePath.IsNullOrEmpty() || !File.Exists(filePath))
             {
                 return SaveAsFile();
             }
@@ -662,7 +677,7 @@ namespace PdnCodeLab
             bool saved = false;
             try
             {
-                File.WriteAllText(FullScriptPath, txtCode.Text);
+                File.WriteAllText(filePath, txtCode.Text);
                 saved = true;
             }
             catch
@@ -674,7 +689,7 @@ namespace PdnCodeLab
 
         private bool SaveAsFile()
         {
-            string fileName = this.FileName;
+            string fileName = tabStrip1.SelectedTabTitle;
             string fileExt;
             string description;
             bool isCSharp;
@@ -743,10 +758,10 @@ namespace PdnCodeLab
                 try
                 {
                     File.WriteAllText(sfd.FileName, txtCode.Text);
-                    FullScriptPath = sfd.FileName;
                     Settings.LastSourceDirectory = Path.GetDirectoryName(sfd.FileName);
-                    FileName = Path.GetFileNameWithoutExtension(sfd.FileName);
-                    UpdateTabProperties();
+                    tabStrip1.SelectedTabPath = sfd.FileName;
+                    tabStrip1.SelectedTabTitle = Path.GetFileNameWithoutExtension(sfd.FileName);
+                    UpdateWindowTitle();
                     AddToRecents(sfd.FileName);
                     saved = true;
                 }
@@ -1043,101 +1058,68 @@ namespace PdnCodeLab
         #endregion
 
         #region Common functions for button/menu events
-        private void CreateNewEffect()
+        private void CreateNewClassicEffect()
         {
-            FileNew fn = new FileNew(this.extendedName);
+            using FileNew fn = new FileNew(this.extendedName);
             if (fn.ShowDialog() == DialogResult.OK)
             {
-                FileName = "Untitled";
-                FullScriptPath = "";
-
-                if (tabStrip1.SelectedTabIsInitial && tabStrip1.SelectedTabProjType == ProjectType.Default && txtCode.IsVirgin)
-                {
-                    UpdateTabProperties();
-                }
-                else
-                {
-                    tabStrip1.NewTab(FileName, FullScriptPath, ProjectType.ClassicEffect);
-                }
-
-                txtCode.Text = fn.CodeTemplate;
-                txtCode.FormatDocument();
-                txtCode.EmptyUndoBuffer();
-                Build();
+                CreateNewProjectTab(ProjectType.ClassicEffect, fn.CodeTemplate);
             }
-            fn.Dispose();
-
-            txtCode.Focus();
         }
 
         private void CreateNewBitmapEffect()
         {
-            FileName = "Untitled";
-            FullScriptPath = string.Empty;
-
-            tabStrip1.NewTab(FileName, FullScriptPath, ProjectType.BitmapEffect);
-
-            txtCode.Text = DefaultCode.BitmapEffect;
-            txtCode.EmptyUndoBuffer();
-            Build();
-            txtCode.Focus();
+            CreateNewProjectTab(ProjectType.BitmapEffect);
         }
 
         private void CreateNewGPUEffect()
         {
-            FileName = "Untitled";
-            FullScriptPath = string.Empty;
+            CreateNewProjectTab(ProjectType.GpuEffect);
+        }
 
-            tabStrip1.NewTab(FileName, FullScriptPath, ProjectType.GpuEffect);
-
-            txtCode.Text = DefaultCode.GPUEffect;
-            txtCode.EmptyUndoBuffer();
-            Build();
-            txtCode.Focus();
+        private void CreateNewGPUDrawEffect()
+        {
+            CreateNewProjectTab(ProjectType.GpuDrawEffect);
         }
 
         private void CreateNewPlainText()
         {
-            FileName = "Untitled";
-            FullScriptPath = string.Empty;
-
-            tabStrip1.NewTab(FileName, FullScriptPath, ProjectType.None);
-
-            //txtCode.Text = string.Empty;
-            txtCode.EmptyUndoBuffer();
-            Build();
-            txtCode.Focus();
+            CreateNewProjectTab(ProjectType.None);
         }
 
         private void CreateNewFileType()
         {
-            FileName = "Untitled";
-            FullScriptPath = string.Empty;
-
-            tabStrip1.NewTab(FileName, FullScriptPath, ProjectType.FileType);
-
-            txtCode.Text = DefaultCode.FileType;
-            txtCode.EmptyUndoBuffer();
-            Build();
-            txtCode.Focus();
+            CreateNewProjectTab(ProjectType.FileType);
         }
 
         private void CreateNewShape()
         {
-            NewShape newShape = new NewShape();
+            using NewShape newShape = new NewShape();
             if (newShape.ShowDialog() == DialogResult.OK)
             {
-                FileName = "Untitled";
-                FullScriptPath = string.Empty;
-
-                tabStrip1.NewTab(FileName, FullScriptPath, ProjectType.Shape);
-
-                txtCode.Text = newShape.ShapeCode;
-                txtCode.EmptyUndoBuffer();
-                Build();
+                CreateNewProjectTab(ProjectType.Shape, newShape.ShapeCode);
             }
-            newShape.Dispose();
+        }
 
+        private void CreateNewProjectTab(ProjectType projectType)
+        {
+            CreateNewProjectTab(projectType, DefaultCode.ForProjectType(projectType));
+        }
+
+        private void CreateNewProjectTab(ProjectType projectType, string userCode)
+        {
+            bool removedInitTab = tabStrip1.TabCount == 1 && tabStrip1.SelectedTabIsInitial && txtCode.IsVirgin;
+
+            tabStrip1.NewTab("Untitled", string.Empty, projectType);
+
+            if (removedInitTab)
+            {
+                tabStrip1.CloseFirstTab();
+            }
+
+            txtCode.Text = userCode;
+            txtCode.EmptyUndoBuffer();
+            Build();
             txtCode.Focus();
         }
 
@@ -1192,7 +1174,7 @@ namespace PdnCodeLab
                 return;
             }
 
-            string fileName = FileName.Trim();
+            string fileName = tabStrip1.SelectedTabTitle.Trim();
             if (fileName.Length == 0 || fileName == "Untitled")
             {
                 FlexibleMessageBox.Show("Before you can build a DLL, you must first save your source file using the File > Save as... menu.", "Build Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -1206,10 +1188,12 @@ namespace PdnCodeLab
             bool canCreateSln = this.Services.GetService<IAppInfoService>().InstallType == AppInstallType.Classic;
 #endif
 
+            string scriptPath = tabStrip1.SelectedTabPath;
+
             switch (tabStrip1.SelectedTabProjType)
             {
                 case ProjectType.ClassicEffect:
-                    using (BuildForm buildForm = new BuildForm(fileName, txtCode.Text, FullScriptPath, ProjectType.ClassicEffect, canCreateSln))
+                    using (BuildForm buildForm = new BuildForm(fileName, txtCode.Text, scriptPath, ProjectType.ClassicEffect, canCreateSln))
                     {
                         if (buildForm.ShowDialog() != DialogResult.OK)
                         {
@@ -1217,17 +1201,17 @@ namespace PdnCodeLab
                         }
 
                         string classicSourceCode = ClassicEffectWriter.FullSourceCode(
-                            txtCode.Text, Path.GetFileNameWithoutExtension(FullScriptPath), buildForm.isAdjustment,
+                            txtCode.Text, Path.GetFileNameWithoutExtension(scriptPath), buildForm.isAdjustment,
                             buildForm.SubMenu, buildForm.MenuItemName, buildForm.IconPath, buildForm.URL, buildForm.RenderingFlags,
                             buildForm.RenderingSchedule, buildForm.Author, buildForm.MajorVer, buildForm.MinorVer,
                             buildForm.Description, buildForm.KeyWords, buildForm.WindowTitle, buildForm.HelpType, buildForm.HelpStr);
 
-                        buildSucceeded = ScriptBuilder.BuildEffectDll(classicSourceCode, FullScriptPath, buildForm.IconPath, buildForm.HelpType);
+                        buildSucceeded = ScriptBuilder.BuildEffectDll(classicSourceCode, scriptPath, buildForm.IconPath, buildForm.HelpType);
                     }
 
                     break;
                 case ProjectType.BitmapEffect:
-                    using (BuildForm buildForm = new BuildForm(fileName, txtCode.Text, FullScriptPath, ProjectType.BitmapEffect, canCreateSln))
+                    using (BuildForm buildForm = new BuildForm(fileName, txtCode.Text, scriptPath, ProjectType.BitmapEffect, canCreateSln))
                     {
                         if (buildForm.ShowDialog() != DialogResult.OK)
                         {
@@ -1235,30 +1219,44 @@ namespace PdnCodeLab
                         }
 
                         string bitMapSourceCode = BitmapEffectWriter.FullSourceCode(
-                            txtCode.Text, Path.GetFileNameWithoutExtension(FullScriptPath), buildForm.isAdjustment,
+                            txtCode.Text, Path.GetFileNameWithoutExtension(scriptPath), buildForm.isAdjustment,
                             buildForm.SubMenu, buildForm.MenuItemName, buildForm.IconPath, buildForm.URL, buildForm.RenderingFlags,
                             buildForm.RenderingSchedule, buildForm.Author, buildForm.MajorVer, buildForm.MinorVer,
                             buildForm.Description, buildForm.KeyWords, buildForm.WindowTitle, buildForm.HelpType, buildForm.HelpStr);
 
-                        buildSucceeded = ScriptBuilder.BuildEffectDll(bitMapSourceCode, FullScriptPath, buildForm.IconPath, buildForm.HelpType);
+                        buildSucceeded = ScriptBuilder.BuildEffectDll(bitMapSourceCode, scriptPath, buildForm.IconPath, buildForm.HelpType);
                     }
 
                     break;
+                case ProjectType.GpuDrawEffect:
                 case ProjectType.GpuEffect:
-                    using (BuildForm buildForm = new BuildForm(fileName, txtCode.Text, FullScriptPath, ProjectType.GpuEffect, canCreateSln))
+                    using (BuildForm buildForm = new BuildForm(fileName, txtCode.Text, scriptPath, tabStrip1.SelectedTabProjType, canCreateSln))
                     {
                         if (buildForm.ShowDialog() != DialogResult.OK)
                         {
                             return;
                         }
 
-                        string gpuSourceCode = GPUEffectWriter.FullSourceCode(
-                            txtCode.Text, Path.GetFileNameWithoutExtension(FullScriptPath), buildForm.isAdjustment,
-                            buildForm.SubMenu, buildForm.MenuItemName, buildForm.IconPath, buildForm.URL, buildForm.RenderingFlags,
-                            buildForm.RenderingSchedule, buildForm.Author, buildForm.MajorVer, buildForm.MinorVer,
-                            buildForm.Description, buildForm.KeyWords, buildForm.WindowTitle, buildForm.HelpType, buildForm.HelpStr);
+                        string gpuSourceCode = "";
 
-                        buildSucceeded = ScriptBuilder.BuildEffectDll(gpuSourceCode, FullScriptPath, buildForm.IconPath, buildForm.HelpType);
+                        if (tabStrip1.SelectedTabProjType == ProjectType.GpuEffect)
+                        {
+                            gpuSourceCode += GPUEffectWriter.FullSourceCode(
+                                txtCode.Text, Path.GetFileNameWithoutExtension(scriptPath), buildForm.isAdjustment,
+                                buildForm.SubMenu, buildForm.MenuItemName, buildForm.IconPath, buildForm.URL, buildForm.RenderingFlags,
+                                buildForm.RenderingSchedule, buildForm.Author, buildForm.MajorVer, buildForm.MinorVer,
+                                buildForm.Description, buildForm.KeyWords, buildForm.WindowTitle, buildForm.HelpType, buildForm.HelpStr);
+                        }
+                        else if (tabStrip1.SelectedTabProjType == ProjectType.GpuDrawEffect)
+                        {
+                            gpuSourceCode += GPUDrawWriter.FullSourceCode(
+                                txtCode.Text, Path.GetFileNameWithoutExtension(scriptPath), buildForm.isAdjustment,
+                                buildForm.SubMenu, buildForm.MenuItemName, buildForm.IconPath, buildForm.URL, buildForm.RenderingFlags,
+                                buildForm.RenderingSchedule, buildForm.Author, buildForm.MajorVer, buildForm.MinorVer,
+                                buildForm.Description, buildForm.KeyWords, buildForm.WindowTitle, buildForm.HelpType, buildForm.HelpStr);
+                        }
+
+                        buildSucceeded = ScriptBuilder.BuildEffectDll(gpuSourceCode, scriptPath, buildForm.IconPath, buildForm.HelpType);
                     }
 
                     break;
@@ -1270,7 +1268,7 @@ namespace PdnCodeLab
                             return;
                         }
 
-                        string projectName = Path.GetFileNameWithoutExtension(FullScriptPath);
+                        string projectName = Path.GetFileNameWithoutExtension(scriptPath);
 
                         string fileTypeSourceCode = FileTypeWriter.FullSourceCode(
                             txtCode.Text, projectName, buildFileTypeDialog.Author, buildFileTypeDialog.Major, buildFileTypeDialog.Minor,
@@ -1449,6 +1447,7 @@ namespace PdnCodeLab
                 case ProjectType.ClassicEffect:
                 case ProjectType.BitmapEffect:
                 case ProjectType.GpuEffect:
+                case ProjectType.GpuDrawEffect:
                     RunEffectWithDialog(projectType);
                     break;
                 case ProjectType.FileType:
@@ -1478,7 +1477,7 @@ namespace PdnCodeLab
 
         private void NewEffectMenuItem_Click(object sender, EventArgs e)
         {
-            CreateNewEffect();
+            CreateNewClassicEffect();
         }
 
         private void NewFileTypeMenuItem_Click(object sender, EventArgs e)
@@ -1738,7 +1737,7 @@ namespace PdnCodeLab
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FlexibleMessageBox.Show(WindowTitle + "\nCopyright ©2006-2023, All Rights Reserved.\n\nTom Jackson:\tConcept, Initial Code, Compile to DLL\n\nDavid Issel:\tEffect UI Creation, Effect Icons, Effect Help\n\t\tSystem, File New Complex Pixel Flow Code\n\t\tGeneration, CodeLab Updater, Settings\n\t\tScreen, Bug Fixes, Tutorials and Installer.\n\nJason Wendt:\tMigration to ScintillaNET editor control,\n\t\t.NET 6.0, and the C# 9.0 \"Roslyn\" Compiler.\n\t\tIntelligent Assistance (including code\n\t\tcompletion, tips, snippets, and variable\n\t\tname suggestions), Debug Output, Dark\n\t\tTheme, HiDPI icons, Live Effect Preview,\n\t\tSpellcheck, Filetype plugin creation, and\n\t\tShape editing.\n\nJörg Reichert:\tFlexibleMessageBox", "About CodeLab", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            FlexibleMessageBox.Show(WindowTitle + "\nCopyright ©2006-2023, All Rights Reserved.\n\nTom Jackson:\tConcept, Initial Code, Compile to DLL\n\nDavid Issel:\tEffect UI Creation, Effect Icons, Effect Help\n\t\tSystem, File New Complex Pixel Flow Code\n\t\tGeneration, GPU Image and Drawing\n\t\tEffects, CodeLab Updater, Settings\n\t\tScreen, Bug Fixes, Tutorials and Installer.\n\nJason Wendt:\tMigration to ScintillaNET editor control,\n\t\t.NET 6.0, and the C# 9.0 \"Roslyn\" Compiler.\n\t\tIntelligent Assistance (including code\n\t\tcompletion, tips, snippets, and variable\n\t\tname suggestions), Bitmap Effects, Debug\n\t\tOutput, Dark Theme, HiDPI icons, Live\n\t\tEffect Preview, Spellcheck, Filetype\n\t\tplugin creation, and Shape editing.\n\nJörg Reichert:\tFlexibleMessageBox", "About CodeLab", MessageBoxButtons.OK, MessageBoxIcon.Information);
             txtCode.Focus();
         }
         #endregion
@@ -1848,7 +1847,7 @@ namespace PdnCodeLab
         #region Toolbar Event functions
         private void NewButton_Click(object sender, EventArgs e)
         {
-            CreateNewEffect();
+            CreateNewClassicEffect();
         }
 
         private void NewBitmapEffect_Click(object sender, EventArgs e)
@@ -1859,6 +1858,11 @@ namespace PdnCodeLab
         private void NewGpuEffect_Click(object sender, EventArgs e)
         {
             CreateNewGPUEffect();
+        }
+
+        private void NewGpuDrawEffect_Click(object sender, EventArgs e)
+        {
+            CreateNewGPUDrawEffect();
         }
 
         private void OpenButton_Click(object sender, EventArgs e)
@@ -2101,8 +2105,6 @@ namespace PdnCodeLab
         #region Document Tabs functions
         private void tabStrip1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            FileName = tabStrip1.SelectedTabTitle;
-            FullScriptPath = tabStrip1.SelectedTabPath;
             ProjectType projectType = tabStrip1.SelectedTabProjType;
             UpdateWindowTitle();
             txtCode.SwitchToDocument(tabStrip1.SelectedTabGuid);
@@ -2173,10 +2175,7 @@ namespace PdnCodeLab
 
         private void txtCode_DefTabNeeded(object sender, NewTabEventArgs e)
         {
-            FileName = e.Name;
-            FullScriptPath = e.Path;
-
-            tabStrip1.NewTab(FileName, FullScriptPath, ProjectType.Reference);
+            tabStrip1.NewTab(e.Name, e.Path, ProjectType.Reference);
         }
 
         private void tabStrip1_TabClosed(object sender, TabClosedEventArgs e)
@@ -2184,17 +2183,9 @@ namespace PdnCodeLab
             this.txtCode.CloseDocument(e.TabGuid);
         }
 
-        private void UpdateTabProperties()
-        {
-            tabStrip1.SelectedTabTitle = FileName;
-            tabStrip1.SelectedTabPath = FullScriptPath;
-
-            UpdateWindowTitle();
-        }
-
         private void UpdateWindowTitle()
         {
-            this.Text = FileName + " - " + WindowTitle + this.extendedName;
+            this.Text = tabStrip1.SelectedTabTitle + " - " + WindowTitle + this.extendedName;
         }
         #endregion
 

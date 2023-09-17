@@ -17,7 +17,8 @@ namespace PdnCodeLab
         None = 0,
         SingleThreaded = 1,
         NoSelectionClipping = 2,
-        AliasedSelection = 4
+        AliasedSelection = 4,
+        StraightAlpha = 8
     }
 
     internal enum HelpType

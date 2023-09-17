@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace PdnCodeLab
 {
-    internal static class GPUEffectWriter
+    internal static class GPUDrawWriter
     {
         private const string UsingStatements = ""
             + "using System;\r\n"
@@ -35,6 +35,8 @@ namespace PdnCodeLab
             + "using PaintDotNet.AppModel;\r\n"
             + "using PaintDotNet.Direct2D1;\r\n"
             + "using PaintDotNet.Direct2D1.Effects;\r\n"
+            + "using PaintDotNet.DirectWrite;\r\n"
+            + "using PaintDotNet.Imaging;\r\n"
             + "using PaintDotNet.IndirectUI;\r\n"
             + "using PaintDotNet.PropertySystem;\r\n"
             + "using PaintDotNet.Effects;\r\n"
@@ -58,19 +60,20 @@ namespace PdnCodeLab
             + "using RadioButtonControl = System.Byte;\r\n"
             + "using MultiLineTextboxControl = System.String;\r\n"
             + "using LabelComment = System.String;\r\n"
+            + "using FontStyle = PaintDotNet.DirectWrite.FontStyle;\r\n"
             + "\r\n";
 
         private const string prepend_code = "\r\n"
             + "namespace PdnCodeLab\r\n"
             + "{\r\n"
-            + "public class UserScript : GpuImageEffect\r\n"
+            + "public class UserScript : GpuDrawingEffect\r\n"
             + "{\r\n"
             + "    public UserScript()\r\n"
-            + "        : base(\"UserScript\", string.Empty, GpuImageEffectOptions.Create() with { IsConfigurable = false })\r\n";
+            + "        : base(\"UserScript\", string.Empty, GpuDrawingEffectOptions.Create() with { IsConfigurable = false })\r\n";
 
         private const string EmptyCode = "\r\n"
             + "#region User Entered Code\r\n"
-            + "protected override IDeviceImage OnCreateOutput(PaintDotNet.Direct2D1.IDeviceContext deviceContext) { return Environment.SourceImage; }\r\n"
+            + "protected override unsafe void OnDraw(PaintDotNet.Direct2D1.IDeviceContext deviceContext) { deviceContext.DrawImage(Environment.SourceImage); }\r\n"
             + "#endregion\r\n";
 
         private static string ConstructorPart(UIElement[] UserControls, string FileName, string subMenuName, string menuName, string iconPath)
@@ -90,14 +93,14 @@ namespace PdnCodeLab
             string configurable = (UserControls.Length != 0).ToString().ToLowerInvariant();
 
             string EffectPart = "";
-            EffectPart += "    public class " + className + " : PropertyBasedGpuImageEffect\r\n";
+            EffectPart += "    public class " + className + " : PropertyBasedGpuDrawingEffect\r\n";
             EffectPart += "    {\r\n";
             EffectPart += "        public static string StaticName => \"" + menuName + "\";\r\n";
             EffectPart += "        public static System.Drawing.Image StaticIcon => " + icon + ";\r\n";
             EffectPart += "        public static string SubmenuName => " + CommonWriter.SubmenuPart(subMenuName) + ";\r\n";
             EffectPart += "\r\n";
             EffectPart += "        public " + className + "()\r\n";
-            EffectPart += "            : base(StaticName, StaticIcon, SubmenuName, GpuImageEffectOptions.Create() with { IsConfigurable = " + configurable + " })\r\n";
+            EffectPart += "            : base(StaticName, StaticIcon, SubmenuName, GpuDrawingEffectOptions.Create() with { IsConfigurable = " + configurable + " })\r\n";
             EffectPart += "        {\r\n";
 
             if (UserControls.Any(u => u.ElementType == ElementType.ReseedButton))
@@ -183,7 +186,7 @@ namespace PdnCodeLab
             UIElement[] UserControls = UIElement.ProcessUIControls(SourceCode);
 
             return
-                GPUEffectWriter.UsingStatements +
+                GPUDrawWriter.UsingStatements +
                 CommonWriter.AssemblyInfoPart(FileName, menuName, Author, MajorVersion, MinorVersion, Description, KeyWords) +
                 CommonWriter.NamespacePart(FileName) +
                 CommonWriter.SupportInfoPart(FileName, menuName, SupportURL) +
@@ -191,8 +194,8 @@ namespace PdnCodeLab
                 ConstructorPart(UserControls, FileName, subMenuName, menuName, iconPath) +
                 CommonWriter.HelpPart(HelpType, HelpText) +
                 CommonWriter.PropertyPart(UserControls, FileName, WindowTitleStr, HelpType, HelpText, ProjectType.GpuEffect) +
-                GPUEffectWriter.InitializeRenderInfoPart(renderingFlags, renderingSchedule) +
-                GPUEffectWriter.SetTokenPart(UserControls) +
+                GPUDrawWriter.InitializeRenderInfoPart(renderingFlags, renderingSchedule) +
+                GPUDrawWriter.SetTokenPart(UserControls) +
                 CommonWriter.UserEnteredPart(SourceCode) +
                 CommonWriter.EndPart();
         }
@@ -203,11 +206,11 @@ namespace PdnCodeLab
             UIElement[] UserControls = UIElement.ProcessUIControls(scriptText);
 
             return
-                GPUEffectWriter.UsingStatements +
+                GPUDrawWriter.UsingStatements +
                 CommonWriter.NamespacePart("UserScript") +
-                GPUEffectWriter.ConstructorPart(UserControls, FileName, string.Empty, "FULL UI PREVIEW - Temporarily renders to canvas", string.Empty) +
+                GPUDrawWriter.ConstructorPart(UserControls, FileName, string.Empty, "FULL UI PREVIEW - Temporarily renders to canvas", string.Empty) +
                 CommonWriter.PropertyPart(UserControls, FileName, string.Empty, HelpType.None, string.Empty, ProjectType.GpuEffect) +
-                GPUEffectWriter.SetTokenPart(UserControls) +
+                GPUDrawWriter.SetTokenPart(UserControls) +
                 CommonWriter.UserEnteredPart(scriptText) +
                 CommonWriter.EndPart();
         }
@@ -220,20 +223,20 @@ namespace PdnCodeLab
             UIElement[] UserControls = UIElement.ProcessUIControls(uiCode);
 
             return
-                GPUEffectWriter.UsingStatements +
+                GPUDrawWriter.UsingStatements +
                 CommonWriter.NamespacePart(FileName) +
-                GPUEffectWriter.ConstructorPart(UserControls, FileName, string.Empty, "UI PREVIEW - Does NOT Render to canvas", string.Empty) +
+                GPUDrawWriter.ConstructorPart(UserControls, FileName, string.Empty, "UI PREVIEW - Does NOT Render to canvas", string.Empty) +
                 CommonWriter.PropertyPart(UserControls, FileName, string.Empty, HelpType.None, string.Empty, ProjectType.GpuEffect) +
                 uiCode +
-                GPUEffectWriter.EmptyCode +
+                GPUDrawWriter.EmptyCode +
                 CommonWriter.EndPart();
         }
 
         internal static string Run(string scriptText, bool debug)
         {
             return
-                GPUEffectWriter.UsingStatements +
-                GPUEffectWriter.prepend_code +
+                GPUDrawWriter.UsingStatements +
+                GPUDrawWriter.prepend_code +
                 CommonWriter.ConstructorBodyPart(debug) +
                 CommonWriter.UserEnteredPart(scriptText) +
                 CommonWriter.EndPart();

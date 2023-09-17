@@ -56,7 +56,8 @@ namespace PdnCodeLab
             UIUtil.GetImage("13RollControl"),
             UIUtil.GetImage("14FilenameControl"),
             UIUtil.GetImage("15Uri"),
-            UIUtil.GetImage("16FolderControl")
+            UIUtil.GetImage("16FolderControl"),
+            UIUtil.GetImage("17Comment")
         };
 
         internal UIBuilder(string UserScriptText, ProjectType projectType, IServiceProvider serviceProvider, IEffectEnvironment environmentParameters)
@@ -158,7 +159,7 @@ namespace PdnCodeLab
 
         private void Delete_Click(object sender, EventArgs e)
         {
-            int CurrentItem = (ControlListView.SelectedItems.Count > 0) ? ControlListView.SelectedItems[0].Index : - 1;
+            int CurrentItem = (ControlListView.SelectedItems.Count > 0) ? ControlListView.SelectedItems[0].Index : -1;
             if (CurrentItem > -1)
             {
                 IDList.Remove(MasterList[CurrentItem].Identifier);
@@ -176,7 +177,7 @@ namespace PdnCodeLab
         {
             ElementType elementType = ControlType.SelectedElementType;
             string defaultStr = (elementType == ElementType.ColorWheel) ? DefaultColorComboBox.SelectedItem.ToString() : ControlDef.Text;
-            if (elementType == ElementType.Uri) defaultStr = OptionsText.Text.Trim();
+            if (elementType == ElementType.Uri || elementType == ElementType.LabelComment) defaultStr = OptionsText.Text.Trim();
             string identifier = ControlID.Text.Trim();
             if (identifier.Length == 0 || IDList.Contains(identifier))
             {
@@ -219,6 +220,8 @@ namespace PdnCodeLab
                     StyleLabel.Enabled = true;
                     ControlStyle.Enabled = true;
                     FillStyleDropDown(0);
+                    rbEnabled.Enabled = true;
+                    rbEnabledWhen.Enabled = true;
                     break;
                 case ElementType.Checkbox:
                     OptionsLabel.Visible = false;
@@ -239,6 +242,8 @@ namespace PdnCodeLab
                     StyleLabel.Enabled = false;
                     ControlStyle.Enabled = false;
                     ControlStyle.SelectedIndex = 0;
+                    rbEnabled.Enabled = true;
+                    rbEnabledWhen.Enabled = true;
                     break;
                 case ElementType.ColorWheel:
                     OptionsLabel.Visible = false;
@@ -260,6 +265,8 @@ namespace PdnCodeLab
                     StyleLabel.Enabled = true;
                     ControlStyle.Enabled = true;
                     FillStyleDropDown(1);
+                    rbEnabled.Enabled = true;
+                    rbEnabledWhen.Enabled = true;
                     break;
                 case ElementType.AngleChooser:
                     OptionsLabel.Visible = false;
@@ -280,6 +287,8 @@ namespace PdnCodeLab
                     StyleLabel.Enabled = false;
                     ControlStyle.Enabled = false;
                     ControlStyle.SelectedIndex = 0;
+                    rbEnabled.Enabled = true;
+                    rbEnabledWhen.Enabled = true;
                     break;
                 case ElementType.PanSlider:
                     OptionsLabel.Visible = false;
@@ -300,6 +309,8 @@ namespace PdnCodeLab
                     StyleLabel.Enabled = false;
                     ControlStyle.Enabled = false;
                     ControlStyle.SelectedIndex = 0;
+                    rbEnabled.Enabled = true;
+                    rbEnabledWhen.Enabled = true;
                     break;
                 case ElementType.Textbox:
                     OptionsLabel.Visible = false;
@@ -320,6 +331,8 @@ namespace PdnCodeLab
                     StyleLabel.Enabled = false;
                     ControlStyle.Enabled = false;
                     ControlStyle.SelectedIndex = 0;
+                    rbEnabled.Enabled = true;
+                    rbEnabledWhen.Enabled = true;
                     break;
                 case ElementType.DoubleSlider:
                     OptionsLabel.Visible = false;
@@ -340,6 +353,8 @@ namespace PdnCodeLab
                     StyleLabel.Enabled = true;
                     ControlStyle.Enabled = true;
                     FillStyleDropDown(0);
+                    rbEnabled.Enabled = true;
+                    rbEnabledWhen.Enabled = true;
                     break;
                 case ElementType.DropDown:
                     OptionsLabel.Visible = true;
@@ -363,6 +378,8 @@ namespace PdnCodeLab
                     ControlStyle.Enabled = false;
                     ControlStyle.SelectedIndex = 0;
                     OptionsText.Text = "Option1|Option2";
+                    rbEnabled.Enabled = true;
+                    rbEnabledWhen.Enabled = true;
                     break;
                 case ElementType.BinaryPixelOp:
                     OptionsLabel.Visible = false;
@@ -383,6 +400,8 @@ namespace PdnCodeLab
                     StyleLabel.Enabled = false;
                     ControlStyle.Enabled = false;
                     ControlStyle.SelectedIndex = 0;
+                    rbEnabled.Enabled = true;
+                    rbEnabledWhen.Enabled = true;
                     break;
                 case ElementType.FontFamily:
                     OptionsLabel.Visible = false;
@@ -403,6 +422,8 @@ namespace PdnCodeLab
                     StyleLabel.Enabled = false;
                     ControlStyle.Enabled = false;
                     ControlStyle.SelectedIndex = 0;
+                    rbEnabled.Enabled = true;
+                    rbEnabledWhen.Enabled = true;
                     break;
                 case ElementType.RadioButtons:
                     OptionsLabel.Visible = true;
@@ -426,6 +447,8 @@ namespace PdnCodeLab
                     ControlStyle.Enabled = false;
                     ControlStyle.SelectedIndex = 0;
                     OptionsText.Text = "Option1|Option2";
+                    rbEnabled.Enabled = true;
+                    rbEnabledWhen.Enabled = true;
                     break;
                 case ElementType.ReseedButton:
                     OptionsLabel.Visible = false;
@@ -446,6 +469,8 @@ namespace PdnCodeLab
                     StyleLabel.Enabled = false;
                     ControlStyle.Enabled = false;
                     ControlStyle.SelectedIndex = 0;
+                    rbEnabled.Enabled = true;
+                    rbEnabledWhen.Enabled = true;
                     break;
                 case ElementType.MultiLineTextbox:
                     OptionsLabel.Visible = false;
@@ -466,6 +491,8 @@ namespace PdnCodeLab
                     StyleLabel.Enabled = false;
                     ControlStyle.Enabled = false;
                     ControlStyle.SelectedIndex = 0;
+                    rbEnabled.Enabled = true;
+                    rbEnabledWhen.Enabled = true;
                     break;
                 case ElementType.RollBall:
                     OptionsLabel.Visible = false;
@@ -486,6 +513,8 @@ namespace PdnCodeLab
                     StyleLabel.Enabled = false;
                     ControlStyle.Enabled = false;
                     ControlStyle.SelectedIndex = 0;
+                    rbEnabled.Enabled = true;
+                    rbEnabledWhen.Enabled = true;
                     break;
                 case ElementType.Filename:
                     OptionsLabel.Visible = true;
@@ -509,6 +538,8 @@ namespace PdnCodeLab
                     ControlStyle.Enabled = false;
                     ControlStyle.SelectedIndex = 0;
                     OptionsText.Text = "png|jpg|gif|bmp";
+                    rbEnabled.Enabled = true;
+                    rbEnabledWhen.Enabled = true;
                     break;
                 case ElementType.Uri:
                     OptionsLabel.Visible = true;
@@ -534,6 +565,8 @@ namespace PdnCodeLab
                     OptionsText.Text = "https://www.GetPaint.net";
                     OptionsLabel.Text = "URL:";
                     toolTip1.SetToolTip(this.OptionsText, "URL must begin with 'http://' or 'https://' to be valid.");
+                    rbEnabled.Enabled = true;
+                    rbEnabledWhen.Enabled = true;
                     break;
                 case ElementType.Folder:
                     OptionsLabel.Visible = true;
@@ -557,6 +590,36 @@ namespace PdnCodeLab
                     StyleLabel.Enabled = false;
                     ControlStyle.Enabled = false;
                     ControlStyle.SelectedIndex = 0;
+                    rbEnabled.Enabled = true;
+                    rbEnabledWhen.Enabled = true;
+                    break;
+                case ElementType.LabelComment:
+                    OptionsLabel.Visible = true;
+                    OptionsLabel.Enabled = true;
+                    OptionsText.Visible = true;
+                    OptionsText.Enabled = true;
+                    DefaultColorComboBox.Visible = false;
+                    ControlMin.Visible = false;
+                    ControlMax.Visible = false;
+                    ControlDef.Visible = false;
+                    MinimumLabel.Visible = false;
+                    MaximumLabel.Visible = false;
+                    DefaultLabel.Visible = false;
+                    ControlDef.Enabled = false;
+                    ControlMax.Enabled = false;
+                    ControlMin.Enabled = false;
+                    ControlMax.Text = "255";
+                    ControlMin.Text = "0";
+                    ControlDef.Text = "0";
+                    StyleLabel.Enabled = false;
+                    ControlStyle.Enabled = false;
+                    ControlStyle.SelectedIndex = 0;
+                    OptionsText.Text = "";
+                    OptionsLabel.Text = "Comment:";
+                    toolTip1.SetToolTip(this.OptionsText, "This is the comment that will appear in your UI.");
+                    rbEnabled.Checked = true;
+                    rbEnabled.Enabled = false;
+                    rbEnabledWhen.Enabled = false;
                     break;
             }
         }
@@ -602,7 +665,7 @@ namespace PdnCodeLab
 
             ElementType elementType = ControlType.SelectedElementType;
             string defaultStr = (elementType == ElementType.ColorWheel) ? DefaultColorComboBox.SelectedItem.ToString() : ControlDef.Text;
-            if (elementType == ElementType.Uri) defaultStr = OptionsText.Text.Trim();
+            if (elementType == ElementType.Uri || elementType == ElementType.LabelComment) defaultStr = OptionsText.Text.Trim();
             string identifier = !string.IsNullOrWhiteSpace(ControlID.Text) ? ControlID.Text.Trim() : "Amount" + (MasterList.Count + 1);
             string enableIdentifier = (this.rbEnabledWhen.Checked) ? MasterList[enabledWhenField.SelectedIndex].Identifier : string.Empty;
             string typeEnum = (CurrentItem > -1) ? MasterList[CurrentItem].TEnum : null;
@@ -817,6 +880,12 @@ namespace PdnCodeLab
                     ControlDef.Text = CurrentElement.Default.ToString();
                     ControlName.Text = CurrentElement.ToShortName();
                     break;
+                case ElementType.LabelComment:
+                    ControlStyle.SelectedIndex = 0;
+                    ControlMin.Text = CurrentElement.Min.ToString();
+                    ControlMax.Text = CurrentElement.Max.ToString();
+                    OptionsText.Text = CurrentElement.StrDefault;
+                    break;
                 default:
                     break;
             }
@@ -989,9 +1058,7 @@ namespace PdnCodeLab
 
         private void PreviewButton_Click(object sender, EventArgs e)
         {
-#if FASTDEBUG
-            return;
-#endif
+#if !FASTDEBUG
             if (this.projectType.IsEffect())
             {
                 PreviewEffect();
@@ -1000,6 +1067,8 @@ namespace PdnCodeLab
             {
                 PreviewFileType();
             }
+#endif
+            return;
         }
 
         private void PreviewEffect()
@@ -1209,6 +1278,13 @@ namespace PdnCodeLab
                     }
                 }
             }
+            else if (ControlType.SelectedElementType == ElementType.LabelComment)
+            {
+                if (newOptions.Contains('"', StringComparison.Ordinal))
+                {
+                    error = true;
+                }
+            }
             else
             {
                 // Make sure it looks like options (should contain at least one | character.
@@ -1237,10 +1313,10 @@ namespace PdnCodeLab
             {
                 projectType = value;
 
-                 ControlTypeItem[] controlTypes = Enum.GetValues<ElementType>()
-                    .Where(et => UIElement.IsControlAllowed(et, projectType.IsEffect()))
-                    .Select(et => new ControlTypeItem(et))
-                    .ToArray();
+                ControlTypeItem[] controlTypes = Enum.GetValues<ElementType>()
+                   .Where(et => UIElement.IsControlAllowed(et, projectType.IsEffect()))
+                   .Select(et => new ControlTypeItem(et))
+                   .ToArray();
 
                 this.Items.Clear();
                 this.Items.AddRange(controlTypes);
@@ -1356,7 +1432,8 @@ namespace PdnCodeLab
             "RollControl",              // 13
             "FilenameControl",          // 14
             "Uri",                      // 15
-            "FolderControl"             // 16
+            "FolderControl",            // 16
+            "LabelComment",             // 17
         };
 
         internal static UIElement[] ProcessUIControls(string SourceCode, bool isEffect = true)
@@ -1418,6 +1495,7 @@ namespace PdnCodeLab
                 case ElementType.DoubleSlider:
                 case ElementType.DropDown:
                 case ElementType.RadioButtons:
+                case ElementType.LabelComment:
                     return true;
             }
 
@@ -1551,6 +1629,10 @@ namespace PdnCodeLab
                     break;
                 case ElementType.Folder:
                     Description = eName + EnabledDescription;
+                    break;
+                case ElementType.LabelComment:
+                    StrDefault = eDefault;
+                    Description = eDefault;
                     break;
             }
         }
@@ -1709,6 +1791,10 @@ namespace PdnCodeLab
             {
                 elementType = ElementType.Folder;
             }
+            else if (TypeStr == "LabelComment")
+            {
+                elementType = ElementType.LabelComment;
+            }
             #region Detections for legacy scripts
             else if (TypeStr == "bool")
             {
@@ -1831,6 +1917,14 @@ namespace PdnCodeLab
             else if (elementType == ElementType.Checkbox)
             {
                 defaultValue = DefaultStr.Contains("true", StringComparison.OrdinalIgnoreCase) ? "1" : "0";
+            }
+            else if (elementType == ElementType.LabelComment)
+            {
+                Match mComment = Regex.Match(DefaultStr, @"""(?<comment>.*?[^\\])""");
+                if (mComment.Success)
+                {
+                    defaultValue = mComment.Groups["comment"].Value;
+                }
             }
             else if (elementType == ElementType.PanSlider)
             {
@@ -1981,6 +2075,9 @@ namespace PdnCodeLab
                 case ElementType.Folder:
                     SourceCode += " = @\"\"; // ";
                     break;
+                case ElementType.LabelComment:
+                    SourceCode += " = \"" + StrDefault + "\"; // ";
+                    break;
             }
 
             if (EnabledWhen)
@@ -2067,7 +2164,9 @@ namespace PdnCodeLab
         [Description("Web Link")]
         Uri,
         [Description("Folder Control")]
-        Folder
+        Folder,
+        [Description("Label")]
+        LabelComment
     }
 
     internal enum SliderStyle

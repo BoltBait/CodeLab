@@ -5,15 +5,19 @@ namespace PdnCodeLab
 {
     internal static class DefaultCode
     {
-        internal static string Default => ProjectType.Default switch
+        internal static string Default => ForProjectType(ProjectType.Default);
+
+        internal static string ForProjectType(ProjectType projectType) => projectType switch
         {
             ProjectType.ClassicEffect => ClassicEffect,
             ProjectType.BitmapEffect => BitmapEffect,
             ProjectType.GpuEffect => GPUEffect,
+            ProjectType.GpuDrawEffect => GPUDrawEffect,
+            ProjectType.FileType => FileType,
             _ => string.Empty,
         };
 
-        internal const string ClassicEffect = ""
+        private const string ClassicEffect = ""
             + "// Name:\r\n"
             + "// Submenu:\r\n"
             + "// Author:\r\n"
@@ -57,7 +61,7 @@ namespace PdnCodeLab
             + "    }\r\n"
             + "}\r\n";
 
-        internal const string BitmapEffect = ""
+        private const string BitmapEffect = ""
             + "// Name:\r\n"
             + "// Submenu:\r\n"
             + "// Author:\r\n"
@@ -115,7 +119,7 @@ namespace PdnCodeLab
             + "    }\r\n"
             + "}\r\n";
 
-        internal const string GPUEffect = ""
+        private const string GPUEffect = ""
             + "// Name:\r\n"
             + "// Submenu:\r\n"
             + "// Author:\r\n"
@@ -137,7 +141,29 @@ namespace PdnCodeLab
             + "    return Environment.SourceImage;\r\n"
             + "}\r\n";
 
-        internal const string FileType = "" +
+        private const string GPUDrawEffect = ""
+            + "// Name:\r\n"
+            + "// Submenu:\r\n"
+            + "// Author:\r\n"
+            + "// Title:\r\n"
+            + "// Version:\r\n"
+            + "// Desc:\r\n"
+            + "// Keywords:\r\n"
+            + "// URL:\r\n"
+            + "// Help:\r\n"
+            + "#region UICode\r\n"
+            + "IntSliderControl Amount1 = 0; // [0,100] Slider 1 Description\r\n"
+            + "IntSliderControl Amount2 = 0; // [0,100] Slider 2 Description\r\n"
+            + "IntSliderControl Amount3 = 0; // [0,100] Slider 3 Description\r\n"
+            + "#endregion\r\n"
+            + "\r\n"
+            + "protected override unsafe void OnDraw(PaintDotNet.Direct2D1.IDeviceContext deviceContext)\r\n"
+            + "{\r\n"
+            + "    // TODO: replace this DrawImage statement with your GPU Drawing statements\r\n"
+            + "    deviceContext.DrawImage(Environment.SourceImage);\r\n"
+            + "}\r\n";
+
+        private const string FileType = "" +
             "// Name:\r\n" +
             "// Author:\r\n" +
             "// Version:\r\n" +

@@ -28,543 +28,521 @@ namespace PdnCodeLab
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.label22 = new System.Windows.Forms.Label();
-            this.MoveUp = new System.Windows.Forms.Button();
-            this.MoveDown = new System.Windows.Forms.Button();
-            this.Delete = new System.Windows.Forms.Button();
-            this.Cancel = new System.Windows.Forms.Button();
-            this.OK = new System.Windows.Forms.Button();
-            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.ControlName = new System.Windows.Forms.TextBox();
-            this.ControlMin = new System.Windows.Forms.TextBox();
-            this.ControlMax = new System.Windows.Forms.TextBox();
-            this.ControlDef = new System.Windows.Forms.TextBox();
-            this.OptionsText = new System.Windows.Forms.TextBox();
-            this.UpdateBtn = new System.Windows.Forms.Button();
-            this.Add = new System.Windows.Forms.Button();
-            this.ControlID = new System.Windows.Forms.TextBox();
-            this.ControlListView = new System.Windows.Forms.ListView();
-            this.imgList = new System.Windows.Forms.ImageList(this.components);
-            this.PreviewButton = new System.Windows.Forms.Button();
-            this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.controlTabPage = new System.Windows.Forms.TabPage();
-            this.ControlType = new PdnCodeLab.ControlTypeComboBox();
-            this.labelIdent = new System.Windows.Forms.Label();
-            this.MinimumLabel = new System.Windows.Forms.Label();
-            this.DefaultLabel = new System.Windows.Forms.Label();
-            this.MaximumLabel = new System.Windows.Forms.Label();
-            this.OptionsLabel = new System.Windows.Forms.Label();
-            this.rbEnabled = new System.Windows.Forms.RadioButton();
-            this.rbEnabledWhen = new System.Windows.Forms.RadioButton();
-            this.enabledWhenField = new System.Windows.Forms.ComboBox();
-            this.enabledWhenCondition = new System.Windows.Forms.ComboBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.StyleLabel = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.ControlStyle = new System.Windows.Forms.ComboBox();
-            this.DefaultColorComboBox = new System.Windows.Forms.ComboBox();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.tabControl1.SuspendLayout();
-            this.controlTabPage.SuspendLayout();
-            this.SuspendLayout();
+            components = new System.ComponentModel.Container();
+            label22 = new System.Windows.Forms.Label();
+            MoveUp = new System.Windows.Forms.Button();
+            MoveDown = new System.Windows.Forms.Button();
+            Delete = new System.Windows.Forms.Button();
+            Cancel = new System.Windows.Forms.Button();
+            OK = new System.Windows.Forms.Button();
+            toolTip1 = new System.Windows.Forms.ToolTip(components);
+            ControlName = new System.Windows.Forms.TextBox();
+            ControlMin = new System.Windows.Forms.TextBox();
+            ControlMax = new System.Windows.Forms.TextBox();
+            ControlDef = new System.Windows.Forms.TextBox();
+            OptionsText = new System.Windows.Forms.TextBox();
+            UpdateBtn = new System.Windows.Forms.Button();
+            Add = new System.Windows.Forms.Button();
+            ControlID = new System.Windows.Forms.TextBox();
+            ControlListView = new System.Windows.Forms.ListView();
+            imgList = new System.Windows.Forms.ImageList(components);
+            PreviewButton = new System.Windows.Forms.Button();
+            tabControl1 = new System.Windows.Forms.TabControl();
+            controlTabPage = new System.Windows.Forms.TabPage();
+            ControlType = new ControlTypeComboBox();
+            labelIdent = new System.Windows.Forms.Label();
+            MinimumLabel = new System.Windows.Forms.Label();
+            DefaultLabel = new System.Windows.Forms.Label();
+            MaximumLabel = new System.Windows.Forms.Label();
+            OptionsLabel = new System.Windows.Forms.Label();
+            rbEnabled = new System.Windows.Forms.RadioButton();
+            rbEnabledWhen = new System.Windows.Forms.RadioButton();
+            enabledWhenField = new System.Windows.Forms.ComboBox();
+            enabledWhenCondition = new System.Windows.Forms.ComboBox();
+            label3 = new System.Windows.Forms.Label();
+            StyleLabel = new System.Windows.Forms.Label();
+            label1 = new System.Windows.Forms.Label();
+            ControlStyle = new System.Windows.Forms.ComboBox();
+            DefaultColorComboBox = new System.Windows.Forms.ComboBox();
+            panel1 = new System.Windows.Forms.Panel();
+            panel2 = new System.Windows.Forms.Panel();
+            tabControl1.SuspendLayout();
+            controlTabPage.SuspendLayout();
+            SuspendLayout();
             // 
             // label22
             // 
-            this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(12, 10);
-            this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(130, 15);
-            this.label22.TabIndex = 10;
-            this.label22.Text = "User Interface Controls:";
+            label22.AutoSize = true;
+            label22.Location = new System.Drawing.Point(12, 10);
+            label22.Name = "label22";
+            label22.Size = new System.Drawing.Size(130, 15);
+            label22.TabIndex = 10;
+            label22.Text = "User Interface Controls:";
             // 
             // MoveUp
             // 
-            this.MoveUp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.MoveUp.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.MoveUp.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.MoveUp.Location = new System.Drawing.Point(410, 28);
-            this.MoveUp.Name = "MoveUp";
-            this.MoveUp.Size = new System.Drawing.Size(23, 23);
-            this.MoveUp.TabIndex = 1;
-            this.MoveUp.Text = "▲";
-            this.toolTip1.SetToolTip(this.MoveUp, "Move Up");
-            this.MoveUp.UseVisualStyleBackColor = true;
-            this.MoveUp.Click += new System.EventHandler(this.MoveUp_Click);
+            MoveUp.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            MoveUp.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            MoveUp.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            MoveUp.Location = new System.Drawing.Point(410, 28);
+            MoveUp.Name = "MoveUp";
+            MoveUp.Size = new System.Drawing.Size(23, 23);
+            MoveUp.TabIndex = 1;
+            MoveUp.Text = "▲";
+            toolTip1.SetToolTip(MoveUp, "Move Up");
+            MoveUp.UseVisualStyleBackColor = true;
+            MoveUp.Click += MoveUp_Click;
             // 
             // MoveDown
             // 
-            this.MoveDown.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.MoveDown.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.MoveDown.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.MoveDown.Location = new System.Drawing.Point(410, 56);
-            this.MoveDown.Name = "MoveDown";
-            this.MoveDown.Size = new System.Drawing.Size(23, 23);
-            this.MoveDown.TabIndex = 2;
-            this.MoveDown.Text = "▼";
-            this.toolTip1.SetToolTip(this.MoveDown, "Move Down");
-            this.MoveDown.UseVisualStyleBackColor = true;
-            this.MoveDown.Click += new System.EventHandler(this.MoveDown_Click);
+            MoveDown.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            MoveDown.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            MoveDown.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            MoveDown.Location = new System.Drawing.Point(410, 56);
+            MoveDown.Name = "MoveDown";
+            MoveDown.Size = new System.Drawing.Size(23, 23);
+            MoveDown.TabIndex = 2;
+            MoveDown.Text = "▼";
+            toolTip1.SetToolTip(MoveDown, "Move Down");
+            MoveDown.UseVisualStyleBackColor = true;
+            MoveDown.Click += MoveDown_Click;
             // 
             // Delete
             // 
-            this.Delete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.Delete.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Delete.ForeColor = System.Drawing.Color.Red;
-            this.Delete.Location = new System.Drawing.Point(410, 100);
-            this.Delete.Name = "Delete";
-            this.Delete.Size = new System.Drawing.Size(23, 23);
-            this.Delete.TabIndex = 3;
-            this.Delete.Text = "✗";
-            this.toolTip1.SetToolTip(this.Delete, "Delete");
-            this.Delete.UseVisualStyleBackColor = true;
-            this.Delete.Click += new System.EventHandler(this.Delete_Click);
+            Delete.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            Delete.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            Delete.ForeColor = System.Drawing.Color.Red;
+            Delete.Location = new System.Drawing.Point(410, 100);
+            Delete.Name = "Delete";
+            Delete.Size = new System.Drawing.Size(23, 23);
+            Delete.TabIndex = 3;
+            Delete.Text = "✗";
+            toolTip1.SetToolTip(Delete, "Delete");
+            Delete.UseVisualStyleBackColor = true;
+            Delete.Click += Delete_Click;
             // 
             // Cancel
             // 
-            this.Cancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.Cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.Cancel.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.Cancel.Location = new System.Drawing.Point(358, 398);
-            this.Cancel.Name = "Cancel";
-            this.Cancel.Size = new System.Drawing.Size(76, 24);
-            this.Cancel.TabIndex = 9;
-            this.Cancel.Text = "Cancel";
-            this.toolTip1.SetToolTip(this.Cancel, "Cancel your changes");
-            this.Cancel.UseVisualStyleBackColor = true;
+            Cancel.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
+            Cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            Cancel.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            Cancel.Location = new System.Drawing.Point(358, 392);
+            Cancel.Name = "Cancel";
+            Cancel.Size = new System.Drawing.Size(76, 24);
+            Cancel.TabIndex = 9;
+            Cancel.Text = "Cancel";
+            toolTip1.SetToolTip(Cancel, "Cancel your changes");
+            Cancel.UseVisualStyleBackColor = true;
             // 
             // OK
             // 
-            this.OK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.OK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.OK.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.OK.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.OK.Location = new System.Drawing.Point(277, 398);
-            this.OK.Name = "OK";
-            this.OK.Size = new System.Drawing.Size(76, 24);
-            this.OK.TabIndex = 8;
-            this.OK.Text = "OK";
-            this.toolTip1.SetToolTip(this.OK, "Save your changes");
-            this.OK.UseVisualStyleBackColor = true;
-            this.OK.Click += new System.EventHandler(this.OK_Click);
+            OK.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
+            OK.DialogResult = System.Windows.Forms.DialogResult.OK;
+            OK.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            OK.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            OK.Location = new System.Drawing.Point(277, 392);
+            OK.Name = "OK";
+            OK.Size = new System.Drawing.Size(76, 24);
+            OK.TabIndex = 8;
+            OK.Text = "OK";
+            toolTip1.SetToolTip(OK, "Save your changes");
+            OK.UseVisualStyleBackColor = true;
+            OK.Click += OK_Click;
             // 
             // ControlName
             // 
-            this.ControlName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.ControlName.Location = new System.Drawing.Point(85, 3);
-            this.ControlName.Name = "ControlName";
-            this.ControlName.Size = new System.Drawing.Size(158, 23);
-            this.ControlName.TabIndex = 1;
-            this.toolTip1.SetToolTip(this.ControlName, "Name to be displayed in the UI to your users");
-            this.ControlName.TextChanged += new System.EventHandler(this.ControlName_TextChanged);
+            ControlName.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
+            ControlName.Location = new System.Drawing.Point(85, 7);
+            ControlName.Name = "ControlName";
+            ControlName.Size = new System.Drawing.Size(158, 23);
+            ControlName.TabIndex = 1;
+            toolTip1.SetToolTip(ControlName, "Name to be displayed in the UI to your users");
+            ControlName.TextChanged += ControlName_TextChanged;
             // 
             // ControlMin
             // 
-            this.ControlMin.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.ControlMin.Location = new System.Drawing.Point(85, 59);
-            this.ControlMin.Name = "ControlMin";
-            this.ControlMin.Size = new System.Drawing.Size(49, 23);
-            this.ControlMin.TabIndex = 10;
-            this.ControlMin.Text = "0";
-            this.toolTip1.SetToolTip(this.ControlMin, "Minimum value");
-            this.ControlMin.Leave += new System.EventHandler(this.ControlMin_Leave);
+            ControlMin.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
+            ControlMin.Location = new System.Drawing.Point(85, 63);
+            ControlMin.Name = "ControlMin";
+            ControlMin.Size = new System.Drawing.Size(49, 23);
+            ControlMin.TabIndex = 10;
+            ControlMin.Text = "0";
+            toolTip1.SetToolTip(ControlMin, "Minimum value");
+            ControlMin.Leave += ControlMin_Leave;
             // 
             // ControlMax
             // 
-            this.ControlMax.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.ControlMax.Location = new System.Drawing.Point(356, 59);
-            this.ControlMax.Name = "ControlMax";
-            this.ControlMax.Size = new System.Drawing.Size(55, 23);
-            this.ControlMax.TabIndex = 15;
-            this.ControlMax.Text = "100";
-            this.toolTip1.SetToolTip(this.ControlMax, "Maximum value");
-            this.ControlMax.Leave += new System.EventHandler(this.ControlMax_Leave);
+            ControlMax.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
+            ControlMax.Location = new System.Drawing.Point(356, 63);
+            ControlMax.Name = "ControlMax";
+            ControlMax.Size = new System.Drawing.Size(55, 23);
+            ControlMax.TabIndex = 15;
+            ControlMax.Text = "100";
+            toolTip1.SetToolTip(ControlMax, "Maximum value");
+            ControlMax.Leave += ControlMax_Leave;
             // 
             // ControlDef
             // 
-            this.ControlDef.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.ControlDef.Location = new System.Drawing.Point(190, 59);
-            this.ControlDef.Name = "ControlDef";
-            this.ControlDef.Size = new System.Drawing.Size(56, 23);
-            this.ControlDef.TabIndex = 9;
-            this.ControlDef.Text = "0";
-            this.toolTip1.SetToolTip(this.ControlDef, "Default value");
-            this.ControlDef.Leave += new System.EventHandler(this.ControlDef_Leave);
+            ControlDef.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
+            ControlDef.Location = new System.Drawing.Point(190, 63);
+            ControlDef.Name = "ControlDef";
+            ControlDef.Size = new System.Drawing.Size(56, 23);
+            ControlDef.TabIndex = 9;
+            ControlDef.Text = "0";
+            toolTip1.SetToolTip(ControlDef, "Default value");
+            ControlDef.Leave += ControlDef_Leave;
             // 
             // OptionsText
             // 
-            this.OptionsText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.OptionsText.Location = new System.Drawing.Point(85, 59);
-            this.OptionsText.Name = "OptionsText";
-            this.OptionsText.Size = new System.Drawing.Size(324, 23);
-            this.OptionsText.TabIndex = 11;
-            this.toolTip1.SetToolTip(this.OptionsText, "Separate options with the vertical bar character (|)");
-            this.OptionsText.Visible = false;
-            this.OptionsText.TextChanged += new System.EventHandler(this.OptionsText_TextChanged);
+            OptionsText.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            OptionsText.Location = new System.Drawing.Point(85, 63);
+            OptionsText.Name = "OptionsText";
+            OptionsText.Size = new System.Drawing.Size(325, 23);
+            OptionsText.TabIndex = 11;
+            toolTip1.SetToolTip(OptionsText, "Separate options with the vertical bar character (|)");
+            OptionsText.Visible = false;
+            OptionsText.TextChanged += OptionsText_TextChanged;
             // 
             // UpdateBtn
             // 
-            this.UpdateBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.UpdateBtn.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.UpdateBtn.Location = new System.Drawing.Point(374, 245);
-            this.UpdateBtn.Name = "UpdateBtn";
-            this.UpdateBtn.Size = new System.Drawing.Size(59, 24);
-            this.UpdateBtn.TabIndex = 5;
-            this.UpdateBtn.Text = "Update";
-            this.toolTip1.SetToolTip(this.UpdateBtn, "Update the selected control");
-            this.UpdateBtn.UseVisualStyleBackColor = true;
-            this.UpdateBtn.Click += new System.EventHandler(this.Update_Click);
+            UpdateBtn.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
+            UpdateBtn.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            UpdateBtn.Location = new System.Drawing.Point(374, 233);
+            UpdateBtn.Name = "UpdateBtn";
+            UpdateBtn.Size = new System.Drawing.Size(59, 24);
+            UpdateBtn.TabIndex = 5;
+            UpdateBtn.Text = "Update";
+            toolTip1.SetToolTip(UpdateBtn, "Update the selected control");
+            UpdateBtn.UseVisualStyleBackColor = true;
+            UpdateBtn.Click += Update_Click;
             // 
             // Add
             // 
-            this.Add.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.Add.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.Add.Location = new System.Drawing.Point(325, 245);
-            this.Add.Name = "Add";
-            this.Add.Size = new System.Drawing.Size(43, 24);
-            this.Add.TabIndex = 4;
-            this.Add.Text = "Add";
-            this.toolTip1.SetToolTip(this.Add, "Add new control");
-            this.Add.UseVisualStyleBackColor = true;
-            this.Add.Click += new System.EventHandler(this.Add_Click);
+            Add.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
+            Add.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            Add.Location = new System.Drawing.Point(325, 233);
+            Add.Name = "Add";
+            Add.Size = new System.Drawing.Size(43, 24);
+            Add.TabIndex = 4;
+            Add.Text = "Add";
+            toolTip1.SetToolTip(Add, "Add new control");
+            Add.UseVisualStyleBackColor = true;
+            Add.Click += Add_Click;
             // 
             // ControlID
             // 
-            this.ControlID.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.ControlID.Location = new System.Drawing.Point(310, 3);
-            this.ControlID.Name = "ControlID";
-            this.ControlID.Size = new System.Drawing.Size(101, 23);
-            this.ControlID.TabIndex = 3;
-            this.toolTip1.SetToolTip(this.ControlID, "Variable name to be used in your script");
-            this.ControlID.TextChanged += new System.EventHandler(this.ControlID_TextChanged);
+            ControlID.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
+            ControlID.Location = new System.Drawing.Point(310, 7);
+            ControlID.Name = "ControlID";
+            ControlID.Size = new System.Drawing.Size(101, 23);
+            ControlID.TabIndex = 3;
+            toolTip1.SetToolTip(ControlID, "Variable name to be used in your script");
+            ControlID.TextChanged += ControlID_TextChanged;
             // 
             // ControlListView
             // 
-            this.ControlListView.Alignment = System.Windows.Forms.ListViewAlignment.Left;
-            this.ControlListView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.ControlListView.AutoArrange = false;
-            this.ControlListView.HideSelection = false;
-            this.ControlListView.Location = new System.Drawing.Point(13, 29);
-            this.ControlListView.MultiSelect = false;
-            this.ControlListView.Name = "ControlListView";
-            this.ControlListView.ShowGroups = false;
-            this.ControlListView.Size = new System.Drawing.Size(391, 211);
-            this.ControlListView.SmallImageList = this.imgList;
-            this.ControlListView.TabIndex = 0;
-            this.ControlListView.UseCompatibleStateImageBehavior = false;
-            this.ControlListView.View = System.Windows.Forms.View.List;
-            this.ControlListView.SelectedIndexChanged += new System.EventHandler(this.ControlListView_SelectedIndexChanged);
+            ControlListView.Alignment = System.Windows.Forms.ListViewAlignment.Left;
+            ControlListView.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            ControlListView.AutoArrange = false;
+            ControlListView.Location = new System.Drawing.Point(13, 29);
+            ControlListView.MultiSelect = false;
+            ControlListView.Name = "ControlListView";
+            ControlListView.ShowGroups = false;
+            ControlListView.Size = new System.Drawing.Size(391, 193);
+            ControlListView.SmallImageList = imgList;
+            ControlListView.TabIndex = 0;
+            ControlListView.UseCompatibleStateImageBehavior = false;
+            ControlListView.View = System.Windows.Forms.View.List;
+            ControlListView.SelectedIndexChanged += ControlListView_SelectedIndexChanged;
             // 
             // imgList
             // 
-            this.imgList.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
-            this.imgList.ImageSize = new System.Drawing.Size(16, 16);
-            this.imgList.TransparentColor = System.Drawing.Color.Transparent;
+            imgList.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
+            imgList.ImageSize = new System.Drawing.Size(16, 16);
+            imgList.TransparentColor = System.Drawing.Color.Transparent;
             // 
             // PreviewButton
             // 
-            this.PreviewButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.PreviewButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.PreviewButton.Location = new System.Drawing.Point(12, 398);
-            this.PreviewButton.Name = "PreviewButton";
-            this.PreviewButton.Size = new System.Drawing.Size(76, 24);
-            this.PreviewButton.TabIndex = 7;
-            this.PreviewButton.Text = "Preview UI";
-            this.PreviewButton.UseVisualStyleBackColor = true;
-            this.PreviewButton.Click += new System.EventHandler(this.PreviewButton_Click);
+            PreviewButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
+            PreviewButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            PreviewButton.Location = new System.Drawing.Point(12, 392);
+            PreviewButton.Name = "PreviewButton";
+            PreviewButton.Size = new System.Drawing.Size(76, 24);
+            PreviewButton.TabIndex = 7;
+            PreviewButton.Text = "Preview UI";
+            PreviewButton.UseVisualStyleBackColor = true;
+            PreviewButton.Click += PreviewButton_Click;
             // 
             // tabControl1
             // 
-            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.tabControl1.Controls.Add(this.controlTabPage);
-            this.tabControl1.Location = new System.Drawing.Point(13, 252);
-            this.tabControl1.Margin = new System.Windows.Forms.Padding(0);
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.Padding = new System.Drawing.Point(0, 0);
-            this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(421, 139);
-            this.tabControl1.TabIndex = 6;
+            tabControl1.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            tabControl1.Controls.Add(controlTabPage);
+            tabControl1.Location = new System.Drawing.Point(12, 239);
+            tabControl1.Margin = new System.Windows.Forms.Padding(0);
+            tabControl1.Name = "tabControl1";
+            tabControl1.Padding = new System.Drawing.Point(0, 0);
+            tabControl1.SelectedIndex = 0;
+            tabControl1.Size = new System.Drawing.Size(421, 142);
+            tabControl1.TabIndex = 6;
             // 
             // controlTabPage
             // 
-            this.controlTabPage.Controls.Add(this.ControlType);
-            this.controlTabPage.Controls.Add(this.labelIdent);
-            this.controlTabPage.Controls.Add(this.MinimumLabel);
-            this.controlTabPage.Controls.Add(this.ControlID);
-            this.controlTabPage.Controls.Add(this.DefaultLabel);
-            this.controlTabPage.Controls.Add(this.MaximumLabel);
-            this.controlTabPage.Controls.Add(this.OptionsLabel);
-            this.controlTabPage.Controls.Add(this.rbEnabled);
-            this.controlTabPage.Controls.Add(this.ControlMax);
-            this.controlTabPage.Controls.Add(this.rbEnabledWhen);
-            this.controlTabPage.Controls.Add(this.ControlMin);
-            this.controlTabPage.Controls.Add(this.enabledWhenField);
-            this.controlTabPage.Controls.Add(this.enabledWhenCondition);
-            this.controlTabPage.Controls.Add(this.label3);
-            this.controlTabPage.Controls.Add(this.StyleLabel);
-            this.controlTabPage.Controls.Add(this.label1);
-            this.controlTabPage.Controls.Add(this.ControlStyle);
-            this.controlTabPage.Controls.Add(this.ControlName);
-            this.controlTabPage.Controls.Add(this.DefaultColorComboBox);
-            this.controlTabPage.Controls.Add(this.ControlDef);
-            this.controlTabPage.Controls.Add(this.OptionsText);
-            this.controlTabPage.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.controlTabPage.Location = new System.Drawing.Point(4, 24);
-            this.controlTabPage.Margin = new System.Windows.Forms.Padding(0);
-            this.controlTabPage.Name = "controlTabPage";
-            this.controlTabPage.Size = new System.Drawing.Size(413, 111);
-            this.controlTabPage.TabIndex = 0;
-            this.controlTabPage.Text = "Control";
-            this.controlTabPage.UseVisualStyleBackColor = true;
+            controlTabPage.Controls.Add(ControlType);
+            controlTabPage.Controls.Add(labelIdent);
+            controlTabPage.Controls.Add(MinimumLabel);
+            controlTabPage.Controls.Add(ControlID);
+            controlTabPage.Controls.Add(DefaultLabel);
+            controlTabPage.Controls.Add(MaximumLabel);
+            controlTabPage.Controls.Add(OptionsLabel);
+            controlTabPage.Controls.Add(rbEnabled);
+            controlTabPage.Controls.Add(ControlMax);
+            controlTabPage.Controls.Add(rbEnabledWhen);
+            controlTabPage.Controls.Add(ControlMin);
+            controlTabPage.Controls.Add(enabledWhenField);
+            controlTabPage.Controls.Add(enabledWhenCondition);
+            controlTabPage.Controls.Add(label3);
+            controlTabPage.Controls.Add(StyleLabel);
+            controlTabPage.Controls.Add(label1);
+            controlTabPage.Controls.Add(ControlStyle);
+            controlTabPage.Controls.Add(ControlName);
+            controlTabPage.Controls.Add(DefaultColorComboBox);
+            controlTabPage.Controls.Add(ControlDef);
+            controlTabPage.Controls.Add(OptionsText);
+            controlTabPage.ForeColor = System.Drawing.SystemColors.WindowText;
+            controlTabPage.Location = new System.Drawing.Point(4, 24);
+            controlTabPage.Margin = new System.Windows.Forms.Padding(0);
+            controlTabPage.Name = "controlTabPage";
+            controlTabPage.Size = new System.Drawing.Size(413, 114);
+            controlTabPage.TabIndex = 0;
+            controlTabPage.Text = "Control";
+            controlTabPage.UseVisualStyleBackColor = true;
             // 
             // ControlType
             // 
-            this.ControlType.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.ControlType.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-            this.ControlType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ControlType.FormattingEnabled = true;
-            this.ControlType.Items.AddRange(new object[] {
-            "Don\'t add items here"});
-            this.ControlType.Location = new System.Drawing.Point(85, 30);
-            this.ControlType.MaxDropDownItems = 12;
-            this.ControlType.Name = "ControlType";
-            this.ControlType.Size = new System.Drawing.Size(158, 24);
-            this.ControlType.TabIndex = 5;
-            this.ControlType.SelectedIndexChanged += new System.EventHandler(this.ControlType_SelectedIndexChanged);
+            ControlType.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
+            ControlType.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            ControlType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            ControlType.FormattingEnabled = true;
+            ControlType.Items.AddRange(new object[] { "Don't add items here" });
+            ControlType.Location = new System.Drawing.Point(85, 34);
+            ControlType.MaxDropDownItems = 12;
+            ControlType.Name = "ControlType";
+            ControlType.Size = new System.Drawing.Size(158, 24);
+            ControlType.TabIndex = 5;
+            ControlType.SelectedIndexChanged += ControlType_SelectedIndexChanged;
             // 
             // labelIdent
             // 
-            this.labelIdent.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.labelIdent.AutoSize = true;
-            this.labelIdent.Location = new System.Drawing.Point(250, 6);
-            this.labelIdent.Name = "labelIdent";
-            this.labelIdent.Size = new System.Drawing.Size(52, 15);
-            this.labelIdent.TabIndex = 2;
-            this.labelIdent.Text = "Variable:";
+            labelIdent.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
+            labelIdent.AutoSize = true;
+            labelIdent.Location = new System.Drawing.Point(250, 10);
+            labelIdent.Name = "labelIdent";
+            labelIdent.Size = new System.Drawing.Size(51, 15);
+            labelIdent.TabIndex = 2;
+            labelIdent.Text = "Variable:";
             // 
             // MinimumLabel
             // 
-            this.MinimumLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.MinimumLabel.AutoSize = true;
-            this.MinimumLabel.Location = new System.Drawing.Point(17, 63);
-            this.MinimumLabel.Name = "MinimumLabel";
-            this.MinimumLabel.Size = new System.Drawing.Size(63, 15);
-            this.MinimumLabel.TabIndex = 8;
-            this.MinimumLabel.Text = "Minimum:";
+            MinimumLabel.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
+            MinimumLabel.AutoSize = true;
+            MinimumLabel.Location = new System.Drawing.Point(17, 67);
+            MinimumLabel.Name = "MinimumLabel";
+            MinimumLabel.Size = new System.Drawing.Size(63, 15);
+            MinimumLabel.TabIndex = 8;
+            MinimumLabel.Text = "Minimum:";
             // 
             // DefaultLabel
             // 
-            this.DefaultLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.DefaultLabel.AutoSize = true;
-            this.DefaultLabel.Location = new System.Drawing.Point(140, 63);
-            this.DefaultLabel.Name = "DefaultLabel";
-            this.DefaultLabel.Size = new System.Drawing.Size(48, 15);
-            this.DefaultLabel.TabIndex = 12;
-            this.DefaultLabel.Text = "Default:";
+            DefaultLabel.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
+            DefaultLabel.AutoSize = true;
+            DefaultLabel.Location = new System.Drawing.Point(140, 67);
+            DefaultLabel.Name = "DefaultLabel";
+            DefaultLabel.Size = new System.Drawing.Size(48, 15);
+            DefaultLabel.TabIndex = 12;
+            DefaultLabel.Text = "Default:";
             // 
             // MaximumLabel
             // 
-            this.MaximumLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.MaximumLabel.AutoSize = true;
-            this.MaximumLabel.Location = new System.Drawing.Point(285, 63);
-            this.MaximumLabel.Name = "MaximumLabel";
-            this.MaximumLabel.Size = new System.Drawing.Size(64, 15);
-            this.MaximumLabel.TabIndex = 14;
-            this.MaximumLabel.Text = "Maximum:";
+            MaximumLabel.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
+            MaximumLabel.AutoSize = true;
+            MaximumLabel.Location = new System.Drawing.Point(285, 67);
+            MaximumLabel.Name = "MaximumLabel";
+            MaximumLabel.Size = new System.Drawing.Size(65, 15);
+            MaximumLabel.TabIndex = 14;
+            MaximumLabel.Text = "Maximum:";
             // 
             // OptionsLabel
             // 
-            this.OptionsLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.OptionsLabel.AutoSize = true;
-            this.OptionsLabel.Location = new System.Drawing.Point(28, 63);
-            this.OptionsLabel.Name = "OptionsLabel";
-            this.OptionsLabel.Size = new System.Drawing.Size(52, 15);
-            this.OptionsLabel.TabIndex = 9;
-            this.OptionsLabel.Text = "Options:";
-            this.OptionsLabel.Visible = false;
+            OptionsLabel.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
+            OptionsLabel.AutoSize = true;
+            OptionsLabel.Location = new System.Drawing.Point(21, 67);
+            OptionsLabel.Name = "OptionsLabel";
+            OptionsLabel.Size = new System.Drawing.Size(52, 15);
+            OptionsLabel.TabIndex = 9;
+            OptionsLabel.Text = "Options:";
+            OptionsLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            OptionsLabel.Visible = false;
             // 
             // rbEnabled
             // 
-            this.rbEnabled.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.rbEnabled.AutoSize = true;
-            this.rbEnabled.Checked = true;
-            this.rbEnabled.Location = new System.Drawing.Point(5, 87);
-            this.rbEnabled.Name = "rbEnabled";
-            this.rbEnabled.Size = new System.Drawing.Size(67, 19);
-            this.rbEnabled.TabIndex = 16;
-            this.rbEnabled.TabStop = true;
-            this.rbEnabled.Text = "Enabled";
-            this.rbEnabled.UseVisualStyleBackColor = true;
-            this.rbEnabled.CheckedChanged += new System.EventHandler(this.rbEnabled_CheckedChanged);
+            rbEnabled.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
+            rbEnabled.AutoSize = true;
+            rbEnabled.Checked = true;
+            rbEnabled.Location = new System.Drawing.Point(5, 91);
+            rbEnabled.Name = "rbEnabled";
+            rbEnabled.Size = new System.Drawing.Size(67, 19);
+            rbEnabled.TabIndex = 16;
+            rbEnabled.TabStop = true;
+            rbEnabled.Text = "Enabled";
+            rbEnabled.UseVisualStyleBackColor = true;
+            rbEnabled.CheckedChanged += rbEnabled_CheckedChanged;
             // 
             // rbEnabledWhen
             // 
-            this.rbEnabledWhen.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.rbEnabledWhen.AutoSize = true;
-            this.rbEnabledWhen.Location = new System.Drawing.Point(76, 87);
-            this.rbEnabledWhen.Name = "rbEnabledWhen";
-            this.rbEnabledWhen.Size = new System.Drawing.Size(99, 19);
-            this.rbEnabledWhen.TabIndex = 17;
-            this.rbEnabledWhen.TabStop = true;
-            this.rbEnabledWhen.Text = "Enabled when";
-            this.rbEnabledWhen.UseVisualStyleBackColor = true;
-            this.rbEnabledWhen.CheckedChanged += new System.EventHandler(this.rbEnabledWhen_CheckedChanged);
+            rbEnabledWhen.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
+            rbEnabledWhen.AutoSize = true;
+            rbEnabledWhen.Location = new System.Drawing.Point(76, 91);
+            rbEnabledWhen.Name = "rbEnabledWhen";
+            rbEnabledWhen.Size = new System.Drawing.Size(99, 19);
+            rbEnabledWhen.TabIndex = 17;
+            rbEnabledWhen.TabStop = true;
+            rbEnabledWhen.Text = "Enabled when";
+            rbEnabledWhen.UseVisualStyleBackColor = true;
+            rbEnabledWhen.CheckedChanged += rbEnabledWhen_CheckedChanged;
             // 
             // enabledWhenField
             // 
-            this.enabledWhenField.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.enabledWhenField.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-            this.enabledWhenField.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.enabledWhenField.DropDownWidth = 150;
-            this.enabledWhenField.FormattingEnabled = true;
-            this.enabledWhenField.Items.AddRange(new object[] {
-            "Amount99"});
-            this.enabledWhenField.Location = new System.Drawing.Point(180, 86);
-            this.enabledWhenField.Name = "enabledWhenField";
-            this.enabledWhenField.Size = new System.Drawing.Size(113, 24);
-            this.enabledWhenField.TabIndex = 18;
-            this.enabledWhenField.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.enabledWhenField_DrawItem);
-            this.enabledWhenField.SelectedIndexChanged += new System.EventHandler(this.enabledWhenField_SelectedIndexChanged);
+            enabledWhenField.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
+            enabledWhenField.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            enabledWhenField.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            enabledWhenField.DropDownWidth = 150;
+            enabledWhenField.FormattingEnabled = true;
+            enabledWhenField.Items.AddRange(new object[] { "Amount99" });
+            enabledWhenField.Location = new System.Drawing.Point(180, 90);
+            enabledWhenField.Name = "enabledWhenField";
+            enabledWhenField.Size = new System.Drawing.Size(113, 24);
+            enabledWhenField.TabIndex = 18;
+            enabledWhenField.DrawItem += enabledWhenField_DrawItem;
+            enabledWhenField.SelectedIndexChanged += enabledWhenField_SelectedIndexChanged;
             // 
             // enabledWhenCondition
             // 
-            this.enabledWhenCondition.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.enabledWhenCondition.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-            this.enabledWhenCondition.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.enabledWhenCondition.FormattingEnabled = true;
-            this.enabledWhenCondition.Items.AddRange(new object[] {
-            "is checked, 0",
-            "not checked, 0"});
-            this.enabledWhenCondition.Location = new System.Drawing.Point(302, 86);
-            this.enabledWhenCondition.Name = "enabledWhenCondition";
-            this.enabledWhenCondition.Size = new System.Drawing.Size(109, 24);
-            this.enabledWhenCondition.TabIndex = 19;
-            this.enabledWhenCondition.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.enabledWhenCondition_DrawItem);
-            this.enabledWhenCondition.SelectedIndexChanged += new System.EventHandler(this.enabledWhenCondition_SelectedIndexChanged);
+            enabledWhenCondition.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
+            enabledWhenCondition.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            enabledWhenCondition.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            enabledWhenCondition.FormattingEnabled = true;
+            enabledWhenCondition.Items.AddRange(new object[] { "is checked, 0", "not checked, 0" });
+            enabledWhenCondition.Location = new System.Drawing.Point(302, 90);
+            enabledWhenCondition.Name = "enabledWhenCondition";
+            enabledWhenCondition.Size = new System.Drawing.Size(109, 24);
+            enabledWhenCondition.TabIndex = 19;
+            enabledWhenCondition.DrawItem += enabledWhenCondition_DrawItem;
+            enabledWhenCondition.SelectedIndexChanged += enabledWhenCondition_SelectedIndexChanged;
             // 
             // label3
             // 
-            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(4, 33);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(76, 15);
-            this.label3.TabIndex = 4;
-            this.label3.Text = "Control type:";
+            label3.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
+            label3.AutoSize = true;
+            label3.Location = new System.Drawing.Point(4, 37);
+            label3.Name = "label3";
+            label3.Size = new System.Drawing.Size(76, 15);
+            label3.TabIndex = 4;
+            label3.Text = "Control type:";
             // 
             // StyleLabel
             // 
-            this.StyleLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.StyleLabel.AutoSize = true;
-            this.StyleLabel.Location = new System.Drawing.Point(250, 35);
-            this.StyleLabel.Name = "StyleLabel";
-            this.StyleLabel.Size = new System.Drawing.Size(35, 15);
-            this.StyleLabel.TabIndex = 6;
-            this.StyleLabel.Text = "Style:";
+            StyleLabel.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
+            StyleLabel.AutoSize = true;
+            StyleLabel.Location = new System.Drawing.Point(250, 39);
+            StyleLabel.Name = "StyleLabel";
+            StyleLabel.Size = new System.Drawing.Size(35, 15);
+            StyleLabel.TabIndex = 6;
+            StyleLabel.Text = "Style:";
             // 
             // label1
             // 
-            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(-1, 6);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(81, 15);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Display name:";
+            label1.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
+            label1.AutoSize = true;
+            label1.Location = new System.Drawing.Point(-1, 10);
+            label1.Name = "label1";
+            label1.Size = new System.Drawing.Size(81, 15);
+            label1.TabIndex = 0;
+            label1.Text = "Display name:";
             // 
             // ControlStyle
             // 
-            this.ControlStyle.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.ControlStyle.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-            this.ControlStyle.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ControlStyle.FormattingEnabled = true;
-            this.ControlStyle.ItemHeight = 17;
-            this.ControlStyle.Items.AddRange(new object[] {
-            "Default",
-            "Hue",
-            "Hue Centered",
-            "Saturation",
-            "White-Black",
-            "Black-White",
-            "Cyan-Red",
-            "Magenta-Green",
-            "Yellow-Blue",
-            "Cyan-Orange",
-            "White-Red",
-            "White-Green",
-            "White-Blue"});
-            this.ControlStyle.Location = new System.Drawing.Point(295, 30);
-            this.ControlStyle.Name = "ControlStyle";
-            this.ControlStyle.Size = new System.Drawing.Size(116, 23);
-            this.ControlStyle.TabIndex = 7;
-            this.ControlStyle.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.ControlStyle_DrawItem);
-            this.ControlStyle.SelectedIndexChanged += new System.EventHandler(this.ControlStyle_SelectedIndexChanged);
+            ControlStyle.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
+            ControlStyle.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            ControlStyle.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            ControlStyle.FormattingEnabled = true;
+            ControlStyle.ItemHeight = 17;
+            ControlStyle.Items.AddRange(new object[] { "Default", "Hue", "Hue Centered", "Saturation", "White-Black", "Black-White", "Cyan-Red", "Magenta-Green", "Yellow-Blue", "Cyan-Orange", "White-Red", "White-Green", "White-Blue" });
+            ControlStyle.Location = new System.Drawing.Point(295, 34);
+            ControlStyle.Name = "ControlStyle";
+            ControlStyle.Size = new System.Drawing.Size(116, 23);
+            ControlStyle.TabIndex = 7;
+            ControlStyle.DrawItem += ControlStyle_DrawItem;
+            ControlStyle.SelectedIndexChanged += ControlStyle_SelectedIndexChanged;
             // 
             // DefaultColorComboBox
             // 
-            this.DefaultColorComboBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.DefaultColorComboBox.BackColor = System.Drawing.SystemColors.Window;
-            this.DefaultColorComboBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-            this.DefaultColorComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.DefaultColorComboBox.DropDownWidth = 150;
-            this.DefaultColorComboBox.Location = new System.Drawing.Point(190, 59);
-            this.DefaultColorComboBox.MaxDropDownItems = 10;
-            this.DefaultColorComboBox.Name = "DefaultColorComboBox";
-            this.DefaultColorComboBox.Size = new System.Drawing.Size(92, 24);
-            this.DefaultColorComboBox.TabIndex = 13;
-            this.DefaultColorComboBox.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.DefaultColorComboBox_DrawItem);
+            DefaultColorComboBox.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
+            DefaultColorComboBox.BackColor = System.Drawing.SystemColors.Window;
+            DefaultColorComboBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            DefaultColorComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            DefaultColorComboBox.DropDownWidth = 150;
+            DefaultColorComboBox.Location = new System.Drawing.Point(190, 62);
+            DefaultColorComboBox.MaxDropDownItems = 10;
+            DefaultColorComboBox.Name = "DefaultColorComboBox";
+            DefaultColorComboBox.Size = new System.Drawing.Size(92, 24);
+            DefaultColorComboBox.TabIndex = 13;
+            DefaultColorComboBox.DrawItem += DefaultColorComboBox_DrawItem;
             // 
             // panel1
             // 
-            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.panel1.Location = new System.Drawing.Point(432, 270);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(17, 125);
-            this.panel1.TabIndex = 11;
+            panel1.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
+            panel1.Location = new System.Drawing.Point(432, 258);
+            panel1.Name = "panel1";
+            panel1.Size = new System.Drawing.Size(17, 131);
+            panel1.TabIndex = 11;
             // 
             // panel2
             // 
-            this.panel2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.panel2.Location = new System.Drawing.Point(12, 390);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(427, 5);
-            this.panel2.TabIndex = 12;
+            panel2.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            panel2.Location = new System.Drawing.Point(12, 384);
+            panel2.Name = "panel2";
+            panel2.Size = new System.Drawing.Size(427, 5);
+            panel2.TabIndex = 12;
             // 
             // UIBuilder
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(446, 430);
-            this.Controls.Add(this.panel2);
-            this.Controls.Add(this.panel1);
-            this.Controls.Add(this.PreviewButton);
-            this.Controls.Add(this.ControlListView);
-            this.Controls.Add(this.OK);
-            this.Controls.Add(this.Cancel);
-            this.Controls.Add(this.Delete);
-            this.Controls.Add(this.UpdateBtn);
-            this.Controls.Add(this.Add);
-            this.Controls.Add(this.MoveDown);
-            this.Controls.Add(this.MoveUp);
-            this.Controls.Add(this.label22);
-            this.Controls.Add(this.tabControl1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
-            this.IconName = "FormDesigner";
-            this.MinimumSize = new System.Drawing.Size(462, 381);
-            this.Name = "UIBuilder";
-            this.Text = "User Interface Designer";
-            this.tabControl1.ResumeLayout(false);
-            this.controlTabPage.ResumeLayout(false);
-            this.controlTabPage.PerformLayout();
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            ClientSize = new System.Drawing.Size(446, 424);
+            Controls.Add(panel2);
+            Controls.Add(panel1);
+            Controls.Add(PreviewButton);
+            Controls.Add(ControlListView);
+            Controls.Add(OK);
+            Controls.Add(Cancel);
+            Controls.Add(Delete);
+            Controls.Add(UpdateBtn);
+            Controls.Add(Add);
+            Controls.Add(MoveDown);
+            Controls.Add(MoveUp);
+            Controls.Add(label22);
+            Controls.Add(tabControl1);
+            FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
+            IconName = "FormDesigner";
+            Location = new System.Drawing.Point(0, 0);
+            MinimumSize = new System.Drawing.Size(462, 381);
+            Name = "UIBuilder";
+            Text = "User Interface Designer";
+            tabControl1.ResumeLayout(false);
+            controlTabPage.ResumeLayout(false);
+            controlTabPage.PerformLayout();
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
