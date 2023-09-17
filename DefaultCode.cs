@@ -154,12 +154,8 @@ namespace PdnCodeLab
             "\r\n" +
             "void SaveImage(Document input, Stream output, PropertyBasedSaveConfigToken token, Surface scratchSurface, ProgressEventHandler progressCallback)\r\n" +
             "{\r\n" +
-            "    using (RenderArgs args = new RenderArgs(scratchSurface))\r\n" +
-            "    {\r\n" +
-            "        // Render a flattened view of the Document to the scratch surface.\r\n" +
-            "        scratchSurface.Clear();\r\n" +
-            "        input.CreateRenderer().Render(scratchSurface);\r\n" +
-            "    }\r\n" +
+            "    // Render a flattened view of the Document to the scratch surface.\r\n" +
+            "    input.CreateRenderer().Render(scratchSurface);\r\n" +
             "\r\n" +
             "    if (Amount1)\r\n" +
             "    {\r\n" +
