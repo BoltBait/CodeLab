@@ -131,7 +131,7 @@ namespace PdnCodeLab
             + "IntSliderControl Amount3 = 0; // [0,100] Slider 3 Description\r\n"
             + "#endregion\r\n"
             + "\r\n"
-            + "protected override IDeviceImage OnCreateOutput(PaintDotNet.Direct2D1.IDeviceContext deviceContext)\r\n"
+            + "protected override IDeviceImage OnCreateOutput(IDeviceContext deviceContext)\r\n"
             + "{\r\n"
             + "    // TODO: replace this return statement with your GPU pipeline algorithm\r\n"
             + "    return Environment.SourceImage;\r\n"
