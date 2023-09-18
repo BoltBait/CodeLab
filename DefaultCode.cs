@@ -157,7 +157,7 @@ namespace PdnCodeLab
             + "IntSliderControl Amount3 = 0; // [0,100] Slider 3 Description\r\n"
             + "#endregion\r\n"
             + "\r\n"
-            + "protected override unsafe void OnDraw(PaintDotNet.Direct2D1.IDeviceContext deviceContext)\r\n"
+            + "protected override unsafe void OnDraw(IDeviceContext deviceContext)\r\n"
             + "{\r\n"
             + "    // TODO: replace this DrawImage statement with your GPU Drawing statements\r\n"
             + "    deviceContext.DrawImage(Environment.SourceImage);\r\n"
