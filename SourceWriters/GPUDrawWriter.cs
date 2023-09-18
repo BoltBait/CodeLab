@@ -18,32 +18,31 @@ namespace PdnCodeLab
         private const string UsingStatements = ""
             + "using System;\r\n"
             + "using System.IO;\r\n"
-//            + "using System.Linq;\r\n"
-//            + "using System.Diagnostics;\r\n"
-//            + "using System.Threading;\r\n"
+            + "using System.Linq;\r\n"
+            + "using System.Diagnostics;\r\n"
+            + "using System.Threading;\r\n"
             + "using System.Reflection;\r\n"
             + "using System.Windows.Forms;\r\n"
             + "using System.IO.Compression;\r\n"
             + "using System.Collections.Generic;\r\n"
-//            + "using System.Text;\r\n"
-//            + "using System.Text.RegularExpressions;\r\n"
+            + "using System.Text;\r\n"
+            + "using System.Text.RegularExpressions;\r\n"
             + "using System.Runtime.InteropServices;\r\n"
             + "using System.Runtime.Versioning;\r\n"
-//            + "using Registry = Microsoft.Win32.Registry;\r\n"
-//            + "using RegistryKey = Microsoft.Win32.RegistryKey;\r\n"
+            + "using Registry = Microsoft.Win32.Registry;\r\n"
+            + "using RegistryKey = Microsoft.Win32.RegistryKey;\r\n"
             + "using PaintDotNet;\r\n"
             + "using PaintDotNet.AppModel;\r\n"
             + "using PaintDotNet.Direct2D1;\r\n"
             + "using PaintDotNet.Direct2D1.Effects;\r\n"
-            + "using PaintDotNet.DirectWrite;\r\n"
-            + "using PaintDotNet.Imaging;\r\n"
             + "using PaintDotNet.IndirectUI;\r\n"
+            + "using PaintDotNet.DirectWrite;\r\n"
             + "using PaintDotNet.PropertySystem;\r\n"
             + "using PaintDotNet.Effects;\r\n"
             + "using PaintDotNet.Effects.Gpu;\r\n"
-//            + "using PaintDotNet.Clipboard;\r\n"
-//            + "using PaintDotNet.Imaging;\r\n"
-//            + "using PaintDotNet.Collections;\r\n"
+            + "using PaintDotNet.Clipboard;\r\n"
+            + "using PaintDotNet.Imaging;\r\n"
+            + "using PaintDotNet.Collections;\r\n"
             + "using PaintDotNet.Rendering;\r\n"
             + "using ColorWheelControl = PaintDotNet.Imaging.ColorBgra32;\r\n"
             + "using AngleControl = System.Double;\r\n"
@@ -60,6 +59,7 @@ namespace PdnCodeLab
             + "using RadioButtonControl = System.Byte;\r\n"
             + "using MultiLineTextboxControl = System.String;\r\n"
             + "using LabelComment = System.String;\r\n"
+            + "using FontFamily = System.String;\r\n"
             + "using FontStyle = PaintDotNet.DirectWrite.FontStyle;\r\n"
             + "\r\n";
 
@@ -117,7 +117,7 @@ namespace PdnCodeLab
         private static string InitializeRenderInfoPart(ScriptRenderingFlags renderingFlags, ScriptRenderingSchedule renderingSchedule)
         {
             string renderInfo =
-                "        protected override void OnInitializeRenderInfo(IGpuImageEffectRenderInfo renderInfo)\r\n" +
+                "        protected override void OnInitializeRenderInfo(IGpuDrawingEffectRenderInfo renderInfo)\r\n" +
                 "        {\r\n";
 
             if (renderingFlags != ScriptRenderingFlags.None)

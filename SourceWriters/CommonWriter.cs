@@ -209,7 +209,21 @@ namespace PdnCodeLab
 
             if (UserControls.Any(u => u.ElementType == ElementType.FontFamily))
             {
-                PropertyPart += "            FontFamily[] installedFontFamilies = new InstalledFontCollection().Families;\r\n";
+                if (projectType == ProjectType.ClassicEffect)
+                {
+                    PropertyPart += "            FontFamily[] installedFontFamilies = new InstalledFontCollection().Families;\r\n";
+                } 
+                else
+                {
+                    PropertyPart += "            IDirectWriteFactory textFactory = this.Services.GetService<IDirectWriteFactory>();\r\n";
+                    PropertyPart += "            IGdiFontMap fonts = textFactory.GetGdiFontMap();\r\n";
+                    PropertyPart += "            string[] fontsList = fonts.Order().ToArray();\r\n";
+                    PropertyPart += "            int DefaultFontValueIndex = Array.FindIndex(fontsList, ff => ff.Equals(\"Arial\", StringComparison.OrdinalIgnoreCase));\r\n";
+                    PropertyPart += "            if (DefaultFontValueIndex < 0)\r\n";
+                    PropertyPart += "            {\r\n";
+                    PropertyPart += "                DefaultFontValueIndex = 0;\r\n";
+                    PropertyPart += "            }\r\n";
+                }
                 PropertyPart += "\r\n";
             }
 
@@ -243,7 +257,7 @@ namespace PdnCodeLab
                                 }
                                 else
                                 {
-                                    PropertyPart += "            props.Add(new Int32Property(PropertyNames." + propertyName + ", ColorBgra.ToOpaqueInt32(Color." + u.StrDefault + "), 0, 0xffffff));\r\n";
+                                    PropertyPart += "            props.Add(new Int32Property(PropertyNames." + propertyName + ", ColorBgra.ToOpaqueInt32(ColorBgra." + u.StrDefault + "), 0, 0xffffff));\r\n";
                                 }
                             }
                             else // include alpha slider
@@ -321,12 +335,19 @@ namespace PdnCodeLab
                         PropertyPart += "            props.Add(new StaticListChoiceProperty(PropertyNames." + propertyName + ", blendModesArray, defaultBlendModeIndex, false));\r\n";
                         break;
                     case ElementType.FontFamily:
-                        PropertyPart += "            int " + propertyName + "DefaultValueIndex = Array.FindIndex(installedFontFamilies, ff => ff.Name.Equals(\"" + u.StrDefault + "\", StringComparison.OrdinalIgnoreCase));\r\n";
-                        PropertyPart += "            if (" + propertyName + "DefaultValueIndex < 0)\r\n";
-                        PropertyPart += "            {\r\n";
-                        PropertyPart += "                " + propertyName + "DefaultValueIndex = 0;\r\n";
-                        PropertyPart += "            }\r\n";
-                        PropertyPart += "            props.Add(new StaticListChoiceProperty(PropertyNames." + propertyName + ", installedFontFamilies, " + propertyName + "DefaultValueIndex, false));\r\n";
+                        if (projectType == ProjectType.ClassicEffect)
+                        {
+                            PropertyPart += "            int " + propertyName + "DefaultValueIndex = Array.FindIndex(installedFontFamilies, ff => ff.Name.Equals(\"" + u.StrDefault + "\", StringComparison.OrdinalIgnoreCase));\r\n";
+                            PropertyPart += "            if (" + propertyName + "DefaultValueIndex < 0)\r\n";
+                            PropertyPart += "            {\r\n";
+                            PropertyPart += "                " + propertyName + "DefaultValueIndex = 0;\r\n";
+                            PropertyPart += "            }\r\n";
+                            PropertyPart += "            props.Add(new StaticListChoiceProperty(PropertyNames." + propertyName + ", installedFontFamilies, " + propertyName + "DefaultValueIndex, false));\r\n";
+                        }
+                        else
+                        {
+                            PropertyPart += "            props.Add(new StaticListChoiceProperty(PropertyNames." + propertyName + ", fontsList, DefaultFontValueIndex, false));\r\n";
+                        }
                         break;
                     case ElementType.ReseedButton:
                         PropertyPart += "            props.Add(new Int32Property(PropertyNames." + propertyName + ", 0, 0, 255));\r\n";
@@ -602,12 +623,15 @@ namespace PdnCodeLab
                         PropertyPart += "            }\r\n";
                         break;
                     case ElementType.FontFamily:
-                        PropertyPart += "            PropertyControlInfo " + propertyName + "FontFamilyControl = configUI.FindControlForPropertyName(PropertyNames." + propertyName + ");\r\n";
-                        PropertyPart += "            FontFamily[] " + propertyName + "FontFamilies = new InstalledFontCollection().Families;\r\n";
-                        PropertyPart += "            foreach (FontFamily ff in " + propertyName + "FontFamilies)\r\n";
-                        PropertyPart += "            {\r\n";
-                        PropertyPart += "                " + propertyName + "FontFamilyControl.SetValueDisplayName(ff, ff.Name);\r\n";
-                        PropertyPart += "            }\r\n";
+                        if (projectType == ProjectType.ClassicEffect)
+                        {
+                            PropertyPart += "            PropertyControlInfo " + propertyName + "FontFamilyControl = configUI.FindControlForPropertyName(PropertyNames." + propertyName + ");\r\n";
+                            PropertyPart += "            FontFamily[] " + propertyName + "FontFamilies = new InstalledFontCollection().Families;\r\n";
+                            PropertyPart += "            foreach (FontFamily ff in " + propertyName + "FontFamilies)\r\n";
+                            PropertyPart += "            {\r\n";
+                            PropertyPart += "                " + propertyName + "FontFamilyControl.SetValueDisplayName(ff, ff.Name);\r\n";
+                            PropertyPart += "            }\r\n";
+                        }
                         break;
                     case ElementType.ReseedButton:
                         PropertyPart += "            configUI.SetPropertyControlType(PropertyNames." + propertyName + ", PropertyControlType.IncrementButton);\r\n";

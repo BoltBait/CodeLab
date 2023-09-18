@@ -153,7 +153,7 @@ namespace PdnCodeLab
             UIControlsText = "";
             foreach (UIElement uie in MasterList)
             {
-                UIControlsText += uie.ToSourceString(true);
+                UIControlsText += uie.ToSourceString(true, this.projectType);
             }
         }
 
@@ -1061,7 +1061,7 @@ namespace PdnCodeLab
 #if !FASTDEBUG
             if (this.projectType.IsEffect())
             {
-                PreviewEffect();
+                PreviewEffect(this.projectType);
             }
             else if (this.projectType == ProjectType.FileType)
             {
@@ -1071,9 +1071,9 @@ namespace PdnCodeLab
             return;
         }
 
-        private void PreviewEffect()
+        private void PreviewEffect(ProjectType projectType)
         {
-            string uiCode = MasterList.Select(uiE => uiE.ToSourceString(false)).Join("");
+            string uiCode = MasterList.Select(uiE => uiE.ToSourceString(false, projectType)).Join("");
             string previewSourceCode = BitmapEffectWriter.UiPreview(uiCode);
 
             if (!ScriptBuilder.BuildEffect<BitmapEffect>(previewSourceCode))
@@ -1099,7 +1099,7 @@ namespace PdnCodeLab
         private void PreviewFileType()
         {
             string code = "#region UICode\r\n";
-            code += MasterList.Select(uiE => uiE.ToSourceString(false)).Join("");
+            code += MasterList.Select(uiE => uiE.ToSourceString(false, ProjectType.FileType)).Join("");
             code += "\r\n";
             code += "#endregion\r\n";
             code += "void SaveImage(Document input, Stream output, PropertyBasedSaveConfigToken token, Surface scratchSurface, ProgressEventHandler progressCallback)\r\n";
@@ -1973,7 +1973,7 @@ namespace PdnCodeLab
             return Identifier + " — " + Description;
         }
 
-        internal string ToSourceString(bool useTEnum)
+        internal string ToSourceString(bool useTEnum, ProjectType projectType)
         {
             bool hasTEnum = useTEnum && !TEnum.IsNullOrEmpty();
             string typeEnum = hasTEnum ? $"<{TEnum}>" : string.Empty;
@@ -2057,7 +2057,14 @@ namespace PdnCodeLab
                     SourceCode += " = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Normal); // ";
                     break;
                 case ElementType.FontFamily:
-                    SourceCode += " = new FontFamily(\"" + StrDefault + "\"); // ";
+                    if (projectType == ProjectType.ClassicEffect)
+                    {
+                        SourceCode += " = new FontFamily(\"" + StrDefault + "\"); // ";
+                    }
+                    else
+                    {
+                        SourceCode += " = \"" + StrDefault + "\"; // ";
+                    }
                     break;
                 case ElementType.ReseedButton:
                     SourceCode += " = 0; // ";

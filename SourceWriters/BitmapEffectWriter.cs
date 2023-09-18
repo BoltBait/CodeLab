@@ -56,6 +56,7 @@ namespace PdnCodeLab
             + "using RadioButtonControl = System.Byte;\r\n"
             + "using MultiLineTextboxControl = System.String;\r\n"
             + "using LabelComment = System.String;\r\n"
+            + "using FontFamily = System.String;\r\n"
             + "\r\n";
 
         private const string prepend_code = "\r\n"

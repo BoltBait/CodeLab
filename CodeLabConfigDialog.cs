@@ -604,11 +604,11 @@ namespace PdnCodeLab
                     {
                         projType = ProjectType.BitmapEffect;
                     }
-                    else if (Regex.IsMatch(fileContents, @"protected\s+override\s+IDeviceImage\s+OnCreateOutput\(IDeviceContext\s+deviceContext\)\s*{(.|\s)*}", RegexOptions.Singleline))
+                    else if (Regex.IsMatch(fileContents, @"protected\s+override\s+IDeviceImage\s+OnCreateOutput\(IDeviceContext\s+deviceContext\s*\)\s*{(.|\s)*}", RegexOptions.Singleline))
                     {
                         projType = ProjectType.GpuEffect;
                     }
-                    else if (Regex.IsMatch(fileContents, @"protected\s+override\s+unsafe\s+void\s+OnDraw\(IDeviceContext\s+deviceContext\)\s*{(.|\s)*}", RegexOptions.Singleline))
+                    else if (Regex.IsMatch(fileContents, @"protected\s+override\s+unsafe\s+void\s+OnDraw\(IDeviceContext\s+deviceContext\s*\)\s*{(.|\s)*}", RegexOptions.Singleline))
                     {
                         projType = ProjectType.GpuDrawEffect;
                     }
