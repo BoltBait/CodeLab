@@ -135,7 +135,7 @@ namespace PdnCodeLab
             + "IntSliderControl Amount3 = 0; // [0,100] Slider 3 Description\r\n"
             + "#endregion\r\n"
             + "\r\n"
-            + "protected override IDeviceImage OnCreateOutput(PaintDotNet.Direct2D1.IDeviceContext deviceContext)\r\n"
+            + "protected override IDeviceImage OnCreateOutput(IDeviceContext deviceContext)\r\n"
             + "{\r\n"
             + "    // TODO: replace this return statement with your GPU pipeline algorithm\r\n"
             + "    return Environment.SourceImage;\r\n"
@@ -157,7 +157,7 @@ namespace PdnCodeLab
             + "IntSliderControl Amount3 = 0; // [0,100] Slider 3 Description\r\n"
             + "#endregion\r\n"
             + "\r\n"
-            + "protected override unsafe void OnDraw(PaintDotNet.Direct2D1.IDeviceContext deviceContext)\r\n"
+            + "protected override unsafe void OnDraw(IDeviceContext deviceContext)\r\n"
             + "{\r\n"
             + "    // TODO: replace this DrawImage statement with your GPU Drawing statements\r\n"
             + "    deviceContext.DrawImage(Environment.SourceImage);\r\n"
@@ -180,12 +180,8 @@ namespace PdnCodeLab
             "\r\n" +
             "void SaveImage(Document input, Stream output, PropertyBasedSaveConfigToken token, Surface scratchSurface, ProgressEventHandler progressCallback)\r\n" +
             "{\r\n" +
-            "    using (RenderArgs args = new RenderArgs(scratchSurface))\r\n" +
-            "    {\r\n" +
-            "        // Render a flattened view of the Document to the scratch surface.\r\n" +
-            "        scratchSurface.Clear();\r\n" +
-            "        input.CreateRenderer().Render(scratchSurface);\r\n" +
-            "    }\r\n" +
+            "    // Render a flattened view of the Document to the scratch surface.\r\n" +
+            "    input.CreateRenderer().Render(scratchSurface);\r\n" +
             "\r\n" +
             "    if (Amount1)\r\n" +
             "    {\r\n" +
