@@ -482,8 +482,7 @@
             NewEffectMenuItem.ImageName = "ClassicEffect";
             NewEffectMenuItem.Name = "NewEffectMenuItem";
             NewEffectMenuItem.Padding = new System.Windows.Forms.Padding(2);
-            NewEffectMenuItem.ShortcutKeys = System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N;
-            NewEffectMenuItem.Size = new System.Drawing.Size(190, 24);
+            NewEffectMenuItem.Size = new System.Drawing.Size(184, 24);
             NewEffectMenuItem.Text = "Classic Effect";
             NewEffectMenuItem.Click += NewEffectMenuItem_Click;
             // 
@@ -491,7 +490,7 @@
             // 
             NewBitmapEffectMenuItem.ImageName = "BitmapEffect";
             NewBitmapEffectMenuItem.Name = "NewBitmapEffectMenuItem";
-            NewBitmapEffectMenuItem.Size = new System.Drawing.Size(186, 22);
+            NewBitmapEffectMenuItem.Size = new System.Drawing.Size(180, 22);
             NewBitmapEffectMenuItem.Text = "Bitmap Effect";
             NewBitmapEffectMenuItem.Click += NewBitmapEffect_Click;
             // 
@@ -499,7 +498,7 @@
             // 
             NewGpuEffectMenuItem.ImageName = "GpuEffect";
             NewGpuEffectMenuItem.Name = "NewGpuEffectMenuItem";
-            NewGpuEffectMenuItem.Size = new System.Drawing.Size(186, 22);
+            NewGpuEffectMenuItem.Size = new System.Drawing.Size(180, 22);
             NewGpuEffectMenuItem.Text = "GPU Image Effect";
             NewGpuEffectMenuItem.Click += NewGpuEffect_Click;
             // 
@@ -507,7 +506,7 @@
             // 
             NewGpuDrawEffectMenuItem.ImageName = "GpuEffect";
             NewGpuDrawEffectMenuItem.Name = "NewGpuDrawEffectMenuItem";
-            NewGpuDrawEffectMenuItem.Size = new System.Drawing.Size(186, 22);
+            NewGpuDrawEffectMenuItem.Size = new System.Drawing.Size(180, 22);
             NewGpuDrawEffectMenuItem.Text = "GPU Drawing Effect";
             NewGpuDrawEffectMenuItem.Click += NewGpuDrawEffect_Click;
             // 
@@ -516,7 +515,7 @@
             NewFileTypeMenuItem.ImageName = "Save";
             NewFileTypeMenuItem.Name = "NewFileTypeMenuItem";
             NewFileTypeMenuItem.Padding = new System.Windows.Forms.Padding(2);
-            NewFileTypeMenuItem.Size = new System.Drawing.Size(190, 24);
+            NewFileTypeMenuItem.Size = new System.Drawing.Size(184, 24);
             NewFileTypeMenuItem.Text = "FileType";
             NewFileTypeMenuItem.Click += NewFileTypeMenuItem_Click;
             // 
@@ -525,7 +524,7 @@
             NewShapeMenuItem.ImageName = "Shape";
             NewShapeMenuItem.Name = "NewShapeMenuItem";
             NewShapeMenuItem.Padding = new System.Windows.Forms.Padding(2);
-            NewShapeMenuItem.Size = new System.Drawing.Size(190, 24);
+            NewShapeMenuItem.Size = new System.Drawing.Size(184, 24);
             NewShapeMenuItem.Text = "Shape";
             NewShapeMenuItem.Click += NewShapeMenuItem_Click;
             // 
@@ -534,7 +533,7 @@
             NewTextMenuItem.ImageName = "PlainText";
             NewTextMenuItem.Name = "NewTextMenuItem";
             NewTextMenuItem.Padding = new System.Windows.Forms.Padding(2);
-            NewTextMenuItem.Size = new System.Drawing.Size(190, 24);
+            NewTextMenuItem.Size = new System.Drawing.Size(184, 24);
             NewTextMenuItem.Text = "Plain Text";
             NewTextMenuItem.Click += NewTextMenuItem_Click;
             // 
@@ -932,8 +931,7 @@
             // 
             NewEffectMenuItem1.ImageName = "ClassicEffect";
             NewEffectMenuItem1.Name = "NewEffectMenuItem1";
-            NewEffectMenuItem1.ShortcutKeyDisplayString = "Ctrl+N";
-            NewEffectMenuItem1.Size = new System.Drawing.Size(186, 22);
+            NewEffectMenuItem1.Size = new System.Drawing.Size(180, 22);
             NewEffectMenuItem1.Text = "Classic Effect";
             NewEffectMenuItem1.Click += NewEffectMenuItem_Click;
             // 
@@ -941,7 +939,7 @@
             // 
             NewBitmapMenuItem1.ImageName = "BitmapEffect";
             NewBitmapMenuItem1.Name = "NewBitmapMenuItem1";
-            NewBitmapMenuItem1.Size = new System.Drawing.Size(186, 22);
+            NewBitmapMenuItem1.Size = new System.Drawing.Size(180, 22);
             NewBitmapMenuItem1.Text = "Bitmap Effect";
             NewBitmapMenuItem1.Click += NewBitmapEffect_Click;
             // 
@@ -949,7 +947,7 @@
             // 
             NewGpuMenuItem1.ImageName = "GpuEffect";
             NewGpuMenuItem1.Name = "NewGpuMenuItem1";
-            NewGpuMenuItem1.Size = new System.Drawing.Size(186, 22);
+            NewGpuMenuItem1.Size = new System.Drawing.Size(180, 22);
             NewGpuMenuItem1.Text = "GPU Image Effect";
             NewGpuMenuItem1.Click += NewGpuEffect_Click;
             // 
@@ -957,7 +955,7 @@
             // 
             NewGpuDrawMenuItem1.ImageName = "GpuEffect";
             NewGpuDrawMenuItem1.Name = "NewGpuDrawMenuItem1";
-            NewGpuDrawMenuItem1.Size = new System.Drawing.Size(186, 22);
+            NewGpuDrawMenuItem1.Size = new System.Drawing.Size(180, 22);
             NewGpuDrawMenuItem1.Text = "GPU Drawing Effect";
             NewGpuDrawMenuItem1.Click += NewGpuDrawEffect_Click;
             // 
@@ -965,7 +963,7 @@
             // 
             NewFileTypeMenuItem1.ImageName = "Save";
             NewFileTypeMenuItem1.Name = "NewFileTypeMenuItem1";
-            NewFileTypeMenuItem1.Size = new System.Drawing.Size(186, 22);
+            NewFileTypeMenuItem1.Size = new System.Drawing.Size(180, 22);
             NewFileTypeMenuItem1.Text = "FileType";
             NewFileTypeMenuItem1.Click += NewFileTypeMenuItem_Click;
             // 
@@ -973,7 +971,7 @@
             // 
             NewShapeMenuItem1.ImageName = "Shape";
             NewShapeMenuItem1.Name = "NewShapeMenuItem1";
-            NewShapeMenuItem1.Size = new System.Drawing.Size(186, 22);
+            NewShapeMenuItem1.Size = new System.Drawing.Size(180, 22);
             NewShapeMenuItem1.Text = "Shape";
             NewShapeMenuItem1.Click += NewShapeMenuItem_Click;
             // 
@@ -981,7 +979,7 @@
             // 
             NewTextMenuItem1.ImageName = "PlainText";
             NewTextMenuItem1.Name = "NewTextMenuItem1";
-            NewTextMenuItem1.Size = new System.Drawing.Size(186, 22);
+            NewTextMenuItem1.Size = new System.Drawing.Size(180, 22);
             NewTextMenuItem1.Text = "Plain Text";
             NewTextMenuItem1.Click += NewTextMenuItem_Click;
             // 

@@ -959,6 +959,10 @@ namespace PdnCodeLab
                 case (Keys.Control | Keys.W):
                     tabStrip1.CloseTab();
                     return true;
+                case (Keys.Control | Keys.N):
+                    fileToolStripMenuItem.ShowDropDown();
+                    newToolStripMenuItem.ShowDropDown();
+                    return true;
             }
 
             return base.ProcessCmdKey(ref msg, keyData);
