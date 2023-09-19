@@ -34,6 +34,7 @@ namespace PdnCodeLab
             + "using PaintDotNet;\r\n"
             + "using PaintDotNet.AppModel;\r\n"
             + "using PaintDotNet.Direct2D1;\r\n"
+            + "using PaintDotNet.DirectWrite;\r\n"
             + "using PaintDotNet.Effects;\r\n"
             + "using PaintDotNet.Clipboard;\r\n"
             + "using PaintDotNet.Imaging;\r\n"
