@@ -122,7 +122,7 @@
             settingsToolStripMenuItem = new ScaledToolStripMenuItem();
             aboutToolStripMenuItem = new ScaledToolStripMenuItem();
             toolStrip1 = new System.Windows.Forms.ToolStrip();
-            NewButton = new ScaledToolStripSplitButton();
+            NewButton = new ScaledToolStripDropDownButton();
             NewEffectMenuItem1 = new ScaledToolStripMenuItem();
             NewBitmapMenuItem1 = new ScaledToolStripMenuItem();
             NewGpuMenuItem1 = new ScaledToolStripMenuItem();
@@ -925,7 +925,6 @@
             NewButton.Size = new System.Drawing.Size(36, 24);
             NewButton.Text = "New File";
             NewButton.ToolTipText = "New (Ctrl+N)";
-            NewButton.ButtonClick += NewButton_Click;
             // 
             // NewEffectMenuItem1
             // 
@@ -1494,7 +1493,7 @@
         private ScaledToolStripButton CommentButton;
         private ScaledToolStripButton UnCommentButton;
         private System.Windows.Forms.CheckBox ShowErrors;
-        private ScaledToolStripSplitButton NewButton;
+        private ScaledToolStripDropDownButton NewButton;
         private System.Windows.Forms.ToolStripMenuItem openRecentToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem NoRecentsToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator18;

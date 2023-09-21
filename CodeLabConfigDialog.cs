@@ -962,6 +962,7 @@ namespace PdnCodeLab
                 case (Keys.Control | Keys.N):
                     fileToolStripMenuItem.ShowDropDown();
                     newToolStripMenuItem.ShowDropDown();
+                    NewGpuEffectMenuItem.Select();
                     return true;
             }
 
@@ -1849,11 +1850,6 @@ namespace PdnCodeLab
         #endregion
 
         #region Toolbar Event functions
-        private void NewButton_Click(object sender, EventArgs e)
-        {
-            CreateNewClassicEffect();
-        }
-
         private void NewBitmapEffect_Click(object sender, EventArgs e)
         {
             CreateNewBitmapEffect();
