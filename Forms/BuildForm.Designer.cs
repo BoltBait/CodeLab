@@ -46,6 +46,7 @@ namespace PdnCodeLab
             PreviewHelpButton = new System.Windows.Forms.Button();
             ViewSourceButton = new System.Windows.Forms.Button();
             StraightAlphaBox = new System.Windows.Forms.CheckBox();
+            WorkingSpaceColorContextBox = new System.Windows.Forms.CheckBox();
             EffectRadio = new System.Windows.Forms.RadioButton();
             AdjustmentRadio = new System.Windows.Forms.RadioButton();
             AuthorName = new System.Windows.Forms.TextBox();
@@ -117,7 +118,7 @@ namespace PdnCodeLab
             ButtonCancel.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
             ButtonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             ButtonCancel.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            ButtonCancel.Location = new System.Drawing.Point(635, 631);
+            ButtonCancel.Location = new System.Drawing.Point(635, 670);
             ButtonCancel.Name = "ButtonCancel";
             ButtonCancel.Size = new System.Drawing.Size(75, 24);
             ButtonCancel.TabIndex = 28;
@@ -129,8 +130,8 @@ namespace PdnCodeLab
             // 
             ButtonSave.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
             ButtonSave.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            ButtonSave.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
-            ButtonSave.Location = new System.Drawing.Point(554, 631);
+            ButtonSave.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            ButtonSave.Location = new System.Drawing.Point(554, 670);
             ButtonSave.Name = "ButtonSave";
             ButtonSave.Size = new System.Drawing.Size(75, 24);
             ButtonSave.TabIndex = 27;
@@ -249,7 +250,7 @@ namespace PdnCodeLab
             // 
             PreviewHelpButton.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
             PreviewHelpButton.BackColor = System.Drawing.SystemColors.ActiveCaption;
-            PreviewHelpButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
+            PreviewHelpButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             PreviewHelpButton.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
             PreviewHelpButton.Location = new System.Drawing.Point(684, 25);
             PreviewHelpButton.Name = "PreviewHelpButton";
@@ -264,7 +265,7 @@ namespace PdnCodeLab
             // 
             ViewSourceButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
             ViewSourceButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            ViewSourceButton.Location = new System.Drawing.Point(288, 631);
+            ViewSourceButton.Location = new System.Drawing.Point(288, 670);
             ViewSourceButton.Name = "ViewSourceButton";
             ViewSourceButton.Size = new System.Drawing.Size(85, 24);
             ViewSourceButton.TabIndex = 25;
@@ -276,13 +277,25 @@ namespace PdnCodeLab
             // StraightAlphaBox
             // 
             StraightAlphaBox.AutoSize = true;
-            StraightAlphaBox.Location = new System.Drawing.Point(19, 453);
+            StraightAlphaBox.Location = new System.Drawing.Point(19, 451);
             StraightAlphaBox.Name = "StraightAlphaBox";
             StraightAlphaBox.Size = new System.Drawing.Size(101, 19);
             StraightAlphaBox.TabIndex = 15;
             StraightAlphaBox.Text = "Straight Alpha";
-            toolTip1.SetToolTip(StraightAlphaBox, "If unchecked Premultiplied Alpha is supplied to GPU accellerated effects");
+            toolTip1.SetToolTip(StraightAlphaBox, "If unchecked Premultiplied Alpha is supplied to GPU accelerated effects");
             StraightAlphaBox.UseVisualStyleBackColor = true;
+            // 
+            // WorkingSpaceColorContextBox
+            // 
+            WorkingSpaceColorContextBox.AutoSize = true;
+            WorkingSpaceColorContextBox.Location = new System.Drawing.Point(19, 473);
+            WorkingSpaceColorContextBox.Margin = new System.Windows.Forms.Padding(2);
+            WorkingSpaceColorContextBox.Name = "WorkingSpaceColorContextBox";
+            WorkingSpaceColorContextBox.Size = new System.Drawing.Size(188, 19);
+            WorkingSpaceColorContextBox.TabIndex = 91;
+            WorkingSpaceColorContextBox.Text = "Working Space Gamma (sRGB 2.2)";
+            toolTip1.SetToolTip(WorkingSpaceColorContextBox, "If unchecked then the source images are supplied in linear (1.0) gamma. It is usually best to use linear gamma, but sRGB can be more comfortable or convenient in some cases.");
+            WorkingSpaceColorContextBox.UseVisualStyleBackColor = true;
             // 
             // EffectRadio
             // 
@@ -335,7 +348,7 @@ namespace PdnCodeLab
             // DecimalSymbol
             // 
             DecimalSymbol.AutoSize = true;
-            DecimalSymbol.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
+            DecimalSymbol.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             DecimalSymbol.Location = new System.Drawing.Point(185, 233);
             DecimalSymbol.Name = "DecimalSymbol";
             DecimalSymbol.Size = new System.Drawing.Size(20, 29);
@@ -363,7 +376,7 @@ namespace PdnCodeLab
             // label20
             // 
             label20.AutoSize = true;
-            label20.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
+            label20.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             label20.Location = new System.Drawing.Point(6, 184);
             label20.Name = "label20";
             label20.Size = new System.Drawing.Size(117, 13);
@@ -373,7 +386,7 @@ namespace PdnCodeLab
             // label21
             // 
             label21.AutoSize = true;
-            label21.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
+            label21.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             label21.Location = new System.Drawing.Point(6, 10);
             label21.Name = "label21";
             label21.Size = new System.Drawing.Size(91, 15);
@@ -426,7 +439,7 @@ namespace PdnCodeLab
             // label6
             // 
             label6.AutoSize = true;
-            label6.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
+            label6.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             label6.Location = new System.Drawing.Point(6, 382);
             label6.Name = "label6";
             label6.Size = new System.Drawing.Size(161, 13);
@@ -454,7 +467,7 @@ namespace PdnCodeLab
             // label8
             // 
             label8.AutoSize = true;
-            label8.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
+            label8.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             label8.Location = new System.Drawing.Point(285, 10);
             label8.Name = "label8";
             label8.Size = new System.Drawing.Size(79, 13);
@@ -533,7 +546,7 @@ namespace PdnCodeLab
             HelpPlainText.AcceptsReturn = true;
             HelpPlainText.AcceptsTab = true;
             HelpPlainText.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-            HelpPlainText.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            HelpPlainText.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             HelpPlainText.Location = new System.Drawing.Point(385, 77);
             HelpPlainText.Multiline = true;
             HelpPlainText.Name = "HelpPlainText";
@@ -546,7 +559,7 @@ namespace PdnCodeLab
             RichHelpContent.AcceptsTab = true;
             RichHelpContent.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
             RichHelpContent.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            RichHelpContent.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            RichHelpContent.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             RichHelpContent.Location = new System.Drawing.Point(288, 182);
             RichHelpContent.Name = "RichHelpContent";
             RichHelpContent.Size = new System.Drawing.Size(422, 433);
@@ -775,7 +788,7 @@ namespace PdnCodeLab
             // PlainTextLabel
             // 
             PlainTextLabel.AutoSize = true;
-            PlainTextLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            PlainTextLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             PlainTextLabel.Location = new System.Drawing.Point(319, 97);
             PlainTextLabel.Name = "PlainTextLabel";
             PlainTextLabel.Size = new System.Drawing.Size(42, 24);
@@ -785,7 +798,7 @@ namespace PdnCodeLab
             // WarningLabel
             // 
             WarningLabel.AutoSize = true;
-            WarningLabel.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
+            WarningLabel.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             WarningLabel.ForeColor = System.Drawing.Color.Red;
             WarningLabel.Location = new System.Drawing.Point(376, 136);
             WarningLabel.Name = "WarningLabel";
@@ -806,7 +819,7 @@ namespace PdnCodeLab
             // 
             GenSlnButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
             GenSlnButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            GenSlnButton.Location = new System.Drawing.Point(379, 631);
+            GenSlnButton.Location = new System.Drawing.Point(379, 670);
             GenSlnButton.Name = "GenSlnButton";
             GenSlnButton.Size = new System.Drawing.Size(131, 24);
             GenSlnButton.TabIndex = 26;
@@ -816,7 +829,7 @@ namespace PdnCodeLab
             // 
             // sampleImage
             // 
-            sampleImage.Location = new System.Drawing.Point(35, 504);
+            sampleImage.Location = new System.Drawing.Point(35, 529);
             sampleImage.Name = "sampleImage";
             sampleImage.Size = new System.Drawing.Size(200, 150);
             sampleImage.TabIndex = 89;
@@ -824,8 +837,8 @@ namespace PdnCodeLab
             // 
             // sampleLabel
             // 
-            sampleLabel.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold);
-            sampleLabel.Location = new System.Drawing.Point(6, 488);
+            sampleLabel.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            sampleLabel.Location = new System.Drawing.Point(6, 498);
             sampleLabel.Name = "sampleLabel";
             sampleLabel.Size = new System.Drawing.Size(254, 124);
             sampleLabel.TabIndex = 90;
@@ -856,7 +869,7 @@ namespace PdnCodeLab
             // NoSelectionClippingBox
             // 
             NoSelectionClippingBox.AutoSize = true;
-            NoSelectionClippingBox.Location = new System.Drawing.Point(141, 453);
+            NoSelectionClippingBox.Location = new System.Drawing.Point(141, 451);
             NoSelectionClippingBox.Name = "NoSelectionClippingBox";
             NoSelectionClippingBox.Size = new System.Drawing.Size(117, 19);
             NoSelectionClippingBox.TabIndex = 16;
@@ -867,7 +880,8 @@ namespace PdnCodeLab
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             CancelButton = ButtonCancel;
-            ClientSize = new System.Drawing.Size(730, 669);
+            ClientSize = new System.Drawing.Size(730, 709);
+            Controls.Add(WorkingSpaceColorContextBox);
             Controls.Add(NoSelectionClippingBox);
             Controls.Add(StraightAlphaBox);
             Controls.Add(forceSingleRenderBox);
@@ -1017,5 +1031,6 @@ namespace PdnCodeLab
         private System.Windows.Forms.CheckBox forceSingleRenderBox;
         private System.Windows.Forms.CheckBox StraightAlphaBox;
         private System.Windows.Forms.CheckBox NoSelectionClippingBox;
+        private System.Windows.Forms.CheckBox WorkingSpaceColorContextBox;
     }
 }

@@ -18,7 +18,8 @@ namespace PdnCodeLab
         SingleThreaded = 1,
         NoSelectionClipping = 2,
         AliasedSelection = 4,
-        StraightAlpha = 8
+        StraightAlpha = 8,
+        WorkingSpaceColorContext = 16,
     }
 
     internal enum HelpType

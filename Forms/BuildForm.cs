@@ -189,6 +189,9 @@ namespace PdnCodeLab
 
             // Premultiplied/Straight Alpha for GPU Effects
             StraightAlphaBox.Checked = Regex.IsMatch(ScriptText, @"//[\s-[\r\n]]*(Straight\s*Alpha|SA)[\s-[\r\n]]*(?=\r?\n|$)", RegexOptions.IgnoreCase);
+
+            // WorkingSpace/WorkingSpaceLinear for GPU Effects
+            WorkingSpaceColorContextBox.Checked = Regex.IsMatch(ScriptText, @"//[\s-[\r\n]]*(Working\s*Space\s*Color\s*Context|WSCC)[\s-[\r\n]]*(?=\r?\n|$)", RegexOptions.IgnoreCase);
             #endregion
 
             resourcePath = Path.Combine(Path.GetDirectoryName(ScriptPath), ScriptName);
@@ -374,6 +377,7 @@ namespace PdnCodeLab
             if (ForceSingleThreadedBox.Checked) { this.RenderingFlags |= ScriptRenderingFlags.SingleThreaded; }
             if (NoSelectionClippingBox.Checked) { this.RenderingFlags |= ScriptRenderingFlags.NoSelectionClipping; }
             if (StraightAlphaBox.Checked) { this.RenderingFlags |= ScriptRenderingFlags.StraightAlpha; }
+            if (WorkingSpaceColorContextBox.Checked) { this.RenderingFlags |= ScriptRenderingFlags.WorkingSpaceColorContext; }
 
             if (radioButtonNone.Checked)
             {
