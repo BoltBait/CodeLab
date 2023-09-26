@@ -314,7 +314,10 @@ namespace PdnCodeLab
                 BindingFlags.Static | BindingFlags.Public :
                 BindingFlags.Instance | BindingFlags.FlattenHierarchy | BindingFlags.CreateInstance | BindingFlags.Public;
 
-            MemberInfo[] members = type.GetMembers(bindingFlags);
+            MemberInfo[] members = type.IsInterface
+                ? type.GetInterfaces().SelectMany(x => x.GetMembers(bindingFlags)).ToArray()
+                : type.GetMembers(bindingFlags);
+
             foreach (MemberInfo memberInfo in members)
             {
                 if ((!memberInfo.ReflectedType.IsVisible && memberInfo.ReflectedType?.DeclaringType?.FullName != Intelli.UserScriptFullName) ||

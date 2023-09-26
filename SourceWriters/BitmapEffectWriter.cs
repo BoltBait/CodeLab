@@ -34,6 +34,7 @@ namespace PdnCodeLab
             + "using PaintDotNet;\r\n"
             + "using PaintDotNet.AppModel;\r\n"
             + "using PaintDotNet.Direct2D1;\r\n"
+            + "using PaintDotNet.DirectWrite;\r\n"
             + "using PaintDotNet.Effects;\r\n"
             + "using PaintDotNet.Clipboard;\r\n"
             + "using PaintDotNet.Imaging;\r\n"
@@ -56,6 +57,7 @@ namespace PdnCodeLab
             + "using RadioButtonControl = System.Byte;\r\n"
             + "using MultiLineTextboxControl = System.String;\r\n"
             + "using LabelComment = System.String;\r\n"
+            + "using FontFamily = System.String;\r\n"
             + "\r\n";
 
         private const string prepend_code = "\r\n"

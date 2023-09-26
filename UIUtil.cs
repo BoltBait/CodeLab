@@ -29,8 +29,8 @@ namespace PdnCodeLab
         internal static Image GetImage(string resName, string directory = "Icons")
         {
             string resource = hiDpi ?
-                $"PaintDotNet.Effects.{directory}.{resName}.32.png" :
-                $"PaintDotNet.Effects.{directory}.{resName}.png";
+                $"PdnCodeLab.{directory}.{resName}.32.png" :
+                $"PdnCodeLab.{directory}.{resName}.png";
 
             using (Stream imageStream = assembly.GetManifestResourceStream(resource))
             {
@@ -42,7 +42,7 @@ namespace PdnCodeLab
 
             if (hiDpi)
             {
-                resource = $"PaintDotNet.Effects.{directory}.{resName}.png";
+                resource = $"PdnCodeLab.{directory}.{resName}.png";
 
                 using (Stream imageStream = assembly.GetManifestResourceStream(resource))
                 {

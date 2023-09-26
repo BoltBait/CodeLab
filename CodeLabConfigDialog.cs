@@ -604,11 +604,11 @@ namespace PdnCodeLab
                     {
                         projType = ProjectType.BitmapEffect;
                     }
-                    else if (Regex.IsMatch(fileContents, @"protected\s+override\s+IDeviceImage\s+OnCreateOutput\(IDeviceContext\s+deviceContext\)\s*{(.|\s)*}", RegexOptions.Singleline))
+                    else if (Regex.IsMatch(fileContents, @"protected\s+override\s+IDeviceImage\s+OnCreateOutput\(IDeviceContext\s+deviceContext\s*\)\s*{(.|\s)*}", RegexOptions.Singleline))
                     {
                         projType = ProjectType.GpuEffect;
                     }
-                    else if (Regex.IsMatch(fileContents, @"protected\s+override\s+unsafe\s+void\s+OnDraw\(IDeviceContext\s+deviceContext\)\s*{(.|\s)*}", RegexOptions.Singleline))
+                    else if (Regex.IsMatch(fileContents, @"protected\s+override\s+unsafe\s+void\s+OnDraw\(IDeviceContext\s+deviceContext\s*\)\s*{(.|\s)*}", RegexOptions.Singleline))
                     {
                         projType = ProjectType.GpuDrawEffect;
                     }
@@ -958,6 +958,11 @@ namespace PdnCodeLab
                     return true;
                 case (Keys.Control | Keys.W):
                     tabStrip1.CloseTab();
+                    return true;
+                case (Keys.Control | Keys.N):
+                    fileToolStripMenuItem.ShowDropDown();
+                    newToolStripMenuItem.ShowDropDown();
+                    NewGpuEffectMenuItem.Select();
                     return true;
             }
 
@@ -1845,11 +1850,6 @@ namespace PdnCodeLab
         #endregion
 
         #region Toolbar Event functions
-        private void NewButton_Click(object sender, EventArgs e)
-        {
-            CreateNewClassicEffect();
-        }
-
         private void NewBitmapEffect_Click(object sender, EventArgs e)
         {
             CreateNewBitmapEffect();

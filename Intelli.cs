@@ -181,7 +181,8 @@ namespace PdnCodeLab
                 "FolderControl",
                 "RollControl",
                 "MultiLineTextboxControl",
-                "LabelComment"
+                "LabelComment",
+                "FontFamily"
             };
 
             List<MethodInfo> extMethodsList = new List<MethodInfo>();
