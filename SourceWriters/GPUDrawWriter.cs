@@ -154,6 +154,15 @@ namespace PdnCodeLab
                 renderInfo += "            renderInfo.OutputAlphaMode = GpuEffectAlphaMode.Premultiplied;\r\n";
             }
 
+            if (renderingFlags.HasFlag(ScriptRenderingFlags.WorkingSpaceColorContext))
+            {
+                renderInfo += "            renderInfo.ColorContext = GpuEffectColorContext.WorkingSpace;\r\n";
+            }
+            else
+            {
+                renderInfo += "            renderInfo.ColorContext = GpuEffectColorContext.WorkingSpaceLinear;\r\n";
+            }
+
             renderInfo += "\r\n" +
                 "            base.OnInitializeRenderInfo(renderInfo);\r\n" +
                 "        }\r\n" +
