@@ -294,7 +294,7 @@ namespace PdnCodeLab
             WorkingSpaceColorContextBox.Size = new System.Drawing.Size(188, 19);
             WorkingSpaceColorContextBox.TabIndex = 91;
             WorkingSpaceColorContextBox.Text = "Working Space Gamma (sRGB 2.2)";
-            toolTip1.SetToolTip(WorkingSpaceColorContextBox, "If unchecked then the source images are supplied in linear (1.0) gamma. It is usually best to use linear gamma, but sRGB can be more comfortable or convenient in some cases.");
+            toolTip1.SetToolTip(WorkingSpaceColorContextBox, "If unchecked then the source images are supplied in linear (1.0) gamma to GPU accelerated effects. It is usually best to use linear gamma, but sRGB can be more comfortable or convenient in some cases.");
             WorkingSpaceColorContextBox.UseVisualStyleBackColor = true;
             // 
             // EffectRadio
