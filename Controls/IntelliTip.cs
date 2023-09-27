@@ -63,7 +63,7 @@ namespace PdnCodeLab
 
         internal new void Show(string text, IWin32Window window, int x, int y)
         {
-            Match colorMatch = Regex.Match(text, @"^(Color|ColorBgra)\b - (Color|ColorBgra)\b.(?<NamedColor>\w+) { get; }\W+Property$");
+            Match colorMatch = Regex.Match(text, @"^(Color|ColorBgra|SrgbColor|LinearColor)\b - (Color|ColorBgra|SrgbColors|LinearColors)\b.(?<NamedColor>\w+) { get; }\W+Property");
             this.color = colorMatch.Success && Enum.TryParse(colorMatch.Groups["NamedColor"].Value, false, out KnownColor knownColor)
                 ? Color.FromKnownColor(knownColor)
                 : null;

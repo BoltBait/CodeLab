@@ -18,6 +18,7 @@
 /////////////////////////////////////////////////////////////////////////////////
 
 using PaintDotNet;
+using PaintDotNet.Imaging;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -307,7 +308,7 @@ namespace PdnCodeLab
         internal void PopulateMembers(Type type, bool isStatic)
         {
             Clear();
-            this.isStaticColorType = isStatic && (type == typeof(ColorBgra) || type == typeof(Color));
+            this.isStaticColorType = isStatic && (type == typeof(ColorBgra) || type == typeof(Color) || type == typeof(SrgbColors) || type == typeof(LinearColors));
             this.intelliBoxContents = IntelliBoxContents.Members;
 
             BindingFlags bindingFlags = isStatic ?
