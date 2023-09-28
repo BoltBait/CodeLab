@@ -46,10 +46,10 @@ namespace PdnCodeLab
         private const string WindowTitle = "CodeLab Debug";
 #endif
         private EffectConfigToken previewToken = null;
-        private readonly string extendedName;
+        private readonly RenderPreset renderPreset;
         private const string showErrorList = "Show Error List";
 
-        public CodeLabConfigDialog(string extendedName)
+        public CodeLabConfigDialog(RenderPreset renderPreset)
         {
             Task.Run(() => Intelli.Keywords); // Forces the Intelli class to start initializing in the background
             InitializeComponent();
@@ -85,9 +85,7 @@ namespace PdnCodeLab
             toolStrip1.Items.Insert(1, newDocTypeChooser);
 #endif
 
-            this.extendedName = extendedName.Length > 0
-                ? " (" + extendedName + ")"
-                : string.Empty;
+            this.renderPreset = renderPreset;
         }
 
 #if !FASTDEBUG
@@ -1065,7 +1063,7 @@ namespace PdnCodeLab
         #region Common functions for button/menu events
         private void CreateNewClassicEffect()
         {
-            using FileNew fn = new FileNew(this.extendedName);
+            using FileNew fn = new FileNew(this.renderPreset);
             if (fn.ShowDialog() == DialogResult.OK)
             {
                 CreateNewProjectTab(ProjectType.ClassicEffect, fn.CodeTemplate);
@@ -2185,7 +2183,7 @@ namespace PdnCodeLab
 
         private void UpdateWindowTitle()
         {
-            this.Text = tabStrip1.SelectedTabTitle + " - " + WindowTitle + this.extendedName;
+            this.Text = tabStrip1.SelectedTabTitle + " - " + WindowTitle + renderPreset.GetExTitle();
         }
         #endregion
 

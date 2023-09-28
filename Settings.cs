@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
 using PaintDotNet;
+using PaintDotNet.Effects;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -197,6 +198,24 @@ namespace PdnCodeLab
             set => SetRegValue("SpellingWordsToIgnore", value.Join("|"));
         }
 
+        internal static RenderPreset RenderPreset
+        {
+            get => GetRegValue(nameof(RenderPreset), RenderPreset.Regular);
+            set => SetRegValue(nameof(RenderPreset), value);
+        }
+
+        internal static BitmapEffectRenderingFlags RenderingFlags
+        {
+            get => GetRegValue(nameof(RenderingFlags), BitmapEffectRenderingFlags.None);
+            set => SetRegValue(nameof(RenderingFlags), value);
+        }
+
+        internal static BitmapEffectRenderingSchedule RenderingSchedule
+        {
+            get => GetRegValue(nameof(RenderingSchedule), BitmapEffectRenderingSchedule.SquareTiles);
+            set => SetRegValue(nameof(RenderingSchedule), value);
+        }
+
         private static void OpenRegKey()
         {
             if (regKey == null)
@@ -210,7 +229,7 @@ namespace PdnCodeLab
             }
         }
 
-        private static TType GetRegValue<TType>(string valueName, TType defaultValue)
+        private static T GetRegValue<T>(string valueName, T defaultValue)
         {
             if (regKey == null)
             {
@@ -222,22 +241,24 @@ namespace PdnCodeLab
                 int defaultInt = b ? 1 : 0;
                 int regValue = (int)regKey.GetValue(valueName, defaultInt);
                 object boolObj = regValue == 1;
-                return (TType)boolObj;
+                return (T)boolObj;
             }
             else if (defaultValue is int integer)
             {
-                return (TType)regKey.GetValue(valueName, integer);
+                return (T)regKey.GetValue(valueName, integer);
             }
             else if (defaultValue is string str)
             {
-                return (TType)regKey.GetValue(valueName, str);
+                return (T)regKey.GetValue(valueName, str);
             }
-            else if (defaultValue is Theme theme)
+            else if (defaultValue is Enum)
             {
-                int defaultTheme = (int)theme;
-                int regValue = (int)regKey.GetValue(valueName, defaultTheme);
-                object themeObj = Enum.IsDefined(typeof(Theme), regValue) ? (Theme)regValue : Theme.Auto;
-                return (TType)themeObj;
+                Type enumType = defaultValue.GetType();
+                Type underlyingType = Enum.GetUnderlyingType(enumType);
+                object defaultValueAsNum = Convert.ChangeType(defaultValue, underlyingType);
+                object regValue = regKey.GetValue(valueName, defaultValueAsNum);
+                object regValueAsNum = Convert.ChangeType(regValue, underlyingType);
+                return (T)regValueAsNum;
             }
             else
             {
@@ -245,7 +266,7 @@ namespace PdnCodeLab
             }
         }
 
-        private static void SetRegValue<TType>(string valueName, TType value)
+        private static void SetRegValue<T>(string valueName, T value)
         {
             if (regKey == null)
             {
@@ -265,10 +286,13 @@ namespace PdnCodeLab
             {
                 regKey.SetValue(valueName, str, RegistryValueKind.String);
             }
-            else if (value is Theme theme)
+            else if (value is Enum)
             {
-                int regValue = (int)theme;
-                regKey.SetValue(valueName, regValue, RegistryValueKind.DWord);
+                Type enumType = value.GetType();
+                Type underlyingType = Enum.GetUnderlyingType(enumType);
+                object valueAsNum = Convert.ChangeType(value, underlyingType);
+                RegistryValueKind valueKind = (underlyingType == typeof(ulong) || underlyingType == typeof(long)) ? RegistryValueKind.QWord : RegistryValueKind.DWord;
+                regKey.SetValue(valueName, valueAsNum, valueKind);
             }
             else
             {

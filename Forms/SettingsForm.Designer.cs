@@ -79,10 +79,24 @@
             label11 = new System.Windows.Forms.Label();
             spellcheckOptionsLabel = new System.Windows.Forms.Label();
             spellLangComboBox = new System.Windows.Forms.ComboBox();
+            panelRenderOptions = new System.Windows.Forms.Panel();
+            presetLabel = new System.Windows.Forms.Label();
+            panelRenderOptionsSub = new System.Windows.Forms.Panel();
+            flagsLabel = new System.Windows.Forms.Label();
+            scheduleLabel = new System.Windows.Forms.Label();
+            horizontalStripsRadioButton = new System.Windows.Forms.RadioButton();
+            squareTilesRadioButton = new System.Windows.Forms.RadioButton();
+            aliasedSelectionCheckBox = new System.Windows.Forms.CheckBox();
+            noneRadioButton = new System.Windows.Forms.RadioButton();
+            noClipCheckBox = new System.Windows.Forms.CheckBox();
+            singleThreadedCheckBox = new System.Windows.Forms.CheckBox();
+            presetComboBox = new System.Windows.Forms.ComboBox();
             panelUpdates.SuspendLayout();
             panelCompiler.SuspendLayout();
             panelUI.SuspendLayout();
             panelSpelling.SuspendLayout();
+            panelRenderOptions.SuspendLayout();
+            panelRenderOptionsSub.SuspendLayout();
             SuspendLayout();
             // 
             // closeButton
@@ -511,7 +525,7 @@
             settingsList.FormattingEnabled = true;
             settingsList.IntegralHeight = false;
             settingsList.ItemHeight = 32;
-            settingsList.Items.AddRange(new object[] { "User Interface", "Snippets", "Spellcheck", "Compiler", "Updates" });
+            settingsList.Items.AddRange(new object[] { "User Interface", "Snippets", "Spellcheck", "Compiler", "Updates", "Render Options" });
             settingsList.Location = new System.Drawing.Point(12, 12);
             settingsList.Name = "settingsList";
             settingsList.Size = new System.Drawing.Size(184, 406);
@@ -632,11 +646,143 @@
             spellLangComboBox.TabIndex = 3;
             spellLangComboBox.SelectedIndexChanged += spellLangComboBox_SelectedIndexChanged;
             // 
+            // panelRenderOptions
+            // 
+            panelRenderOptions.Controls.Add(presetLabel);
+            panelRenderOptions.Controls.Add(panelRenderOptionsSub);
+            panelRenderOptions.Controls.Add(presetComboBox);
+            panelRenderOptions.Location = new System.Drawing.Point(202, 12);
+            panelRenderOptions.Name = "panelRenderOptions";
+            panelRenderOptions.Size = new System.Drawing.Size(476, 405);
+            panelRenderOptions.TabIndex = 9;
+            // 
+            // presetLabel
+            // 
+            presetLabel.AutoSize = true;
+            presetLabel.Location = new System.Drawing.Point(17, 24);
+            presetLabel.Name = "presetLabel";
+            presetLabel.Size = new System.Drawing.Size(39, 15);
+            presetLabel.TabIndex = 13;
+            presetLabel.Text = "Preset";
+            // 
+            // panelRenderOptionsSub
+            // 
+            panelRenderOptionsSub.Controls.Add(flagsLabel);
+            panelRenderOptionsSub.Controls.Add(scheduleLabel);
+            panelRenderOptionsSub.Controls.Add(horizontalStripsRadioButton);
+            panelRenderOptionsSub.Controls.Add(squareTilesRadioButton);
+            panelRenderOptionsSub.Controls.Add(aliasedSelectionCheckBox);
+            panelRenderOptionsSub.Controls.Add(noneRadioButton);
+            panelRenderOptionsSub.Controls.Add(noClipCheckBox);
+            panelRenderOptionsSub.Controls.Add(singleThreadedCheckBox);
+            panelRenderOptionsSub.Location = new System.Drawing.Point(17, 50);
+            panelRenderOptionsSub.Name = "panelRenderOptionsSub";
+            panelRenderOptionsSub.Size = new System.Drawing.Size(398, 141);
+            panelRenderOptionsSub.TabIndex = 12;
+            // 
+            // flagsLabel
+            // 
+            flagsLabel.AutoSize = true;
+            flagsLabel.Location = new System.Drawing.Point(193, 23);
+            flagsLabel.Name = "flagsLabel";
+            flagsLabel.Size = new System.Drawing.Size(81, 15);
+            flagsLabel.TabIndex = 8;
+            flagsLabel.Text = "Rending Flags";
+            // 
+            // scheduleLabel
+            // 
+            scheduleLabel.AutoSize = true;
+            scheduleLabel.Location = new System.Drawing.Point(11, 23);
+            scheduleLabel.Name = "scheduleLabel";
+            scheduleLabel.Size = new System.Drawing.Size(102, 15);
+            scheduleLabel.TabIndex = 7;
+            scheduleLabel.Text = "Rending Schedule";
+            // 
+            // horizontalStripsRadioButton
+            // 
+            horizontalStripsRadioButton.AutoSize = true;
+            horizontalStripsRadioButton.Location = new System.Drawing.Point(14, 65);
+            horizontalStripsRadioButton.Name = "horizontalStripsRadioButton";
+            horizontalStripsRadioButton.Size = new System.Drawing.Size(112, 19);
+            horizontalStripsRadioButton.TabIndex = 5;
+            horizontalStripsRadioButton.TabStop = true;
+            horizontalStripsRadioButton.Text = "Horizontal Strips";
+            horizontalStripsRadioButton.UseVisualStyleBackColor = true;
+            horizontalStripsRadioButton.CheckedChanged += RenderOption_CheckedChanged;
+            // 
+            // squareTilesRadioButton
+            // 
+            squareTilesRadioButton.AutoSize = true;
+            squareTilesRadioButton.Location = new System.Drawing.Point(14, 40);
+            squareTilesRadioButton.Name = "squareTilesRadioButton";
+            squareTilesRadioButton.Size = new System.Drawing.Size(87, 19);
+            squareTilesRadioButton.TabIndex = 4;
+            squareTilesRadioButton.TabStop = true;
+            squareTilesRadioButton.Text = "Square Tiles";
+            squareTilesRadioButton.UseVisualStyleBackColor = true;
+            squareTilesRadioButton.CheckedChanged += RenderOption_CheckedChanged;
+            // 
+            // aliasedSelectionCheckBox
+            // 
+            aliasedSelectionCheckBox.AutoSize = true;
+            aliasedSelectionCheckBox.Location = new System.Drawing.Point(196, 66);
+            aliasedSelectionCheckBox.Name = "aliasedSelectionCheckBox";
+            aliasedSelectionCheckBox.Size = new System.Drawing.Size(188, 19);
+            aliasedSelectionCheckBox.TabIndex = 2;
+            aliasedSelectionCheckBox.Text = "Force Aliased Selection Quality";
+            aliasedSelectionCheckBox.UseVisualStyleBackColor = true;
+            aliasedSelectionCheckBox.CheckedChanged += RenderOption_CheckedChanged;
+            // 
+            // noneRadioButton
+            // 
+            noneRadioButton.AutoSize = true;
+            noneRadioButton.Location = new System.Drawing.Point(14, 90);
+            noneRadioButton.Name = "noneRadioButton";
+            noneRadioButton.Size = new System.Drawing.Size(54, 19);
+            noneRadioButton.TabIndex = 6;
+            noneRadioButton.TabStop = true;
+            noneRadioButton.Text = "None";
+            noneRadioButton.UseVisualStyleBackColor = true;
+            noneRadioButton.CheckedChanged += RenderOption_CheckedChanged;
+            // 
+            // noClipCheckBox
+            // 
+            noClipCheckBox.AutoSize = true;
+            noClipCheckBox.Location = new System.Drawing.Point(196, 41);
+            noClipCheckBox.Name = "noClipCheckBox";
+            noClipCheckBox.Size = new System.Drawing.Size(163, 19);
+            noClipCheckBox.TabIndex = 1;
+            noClipCheckBox.Text = "Disable Selection Clipping";
+            noClipCheckBox.UseVisualStyleBackColor = true;
+            noClipCheckBox.CheckedChanged += RenderOption_CheckedChanged;
+            // 
+            // singleThreadedCheckBox
+            // 
+            singleThreadedCheckBox.AutoSize = true;
+            singleThreadedCheckBox.Location = new System.Drawing.Point(196, 91);
+            singleThreadedCheckBox.Name = "singleThreadedCheckBox";
+            singleThreadedCheckBox.Size = new System.Drawing.Size(110, 19);
+            singleThreadedCheckBox.TabIndex = 0;
+            singleThreadedCheckBox.Text = "Single Threaded";
+            singleThreadedCheckBox.UseVisualStyleBackColor = true;
+            singleThreadedCheckBox.CheckedChanged += RenderOption_CheckedChanged;
+            // 
+            // presetComboBox
+            // 
+            presetComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            presetComboBox.FormattingEnabled = true;
+            presetComboBox.Location = new System.Drawing.Point(62, 21);
+            presetComboBox.Name = "presetComboBox";
+            presetComboBox.Size = new System.Drawing.Size(353, 23);
+            presetComboBox.TabIndex = 11;
+            presetComboBox.SelectedIndexChanged += presetComboBox_SelectedIndexChanged;
+            // 
             // SettingsForm
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             CancelButton = closeButton;
             ClientSize = new System.Drawing.Size(691, 468);
+            Controls.Add(panelRenderOptions);
             Controls.Add(settingsList);
             Controls.Add(closeButton);
             Controls.Add(panelUI);
@@ -656,6 +802,10 @@
             panelUI.PerformLayout();
             panelSpelling.ResumeLayout(false);
             panelSpelling.PerformLayout();
+            panelRenderOptions.ResumeLayout(false);
+            panelRenderOptions.PerformLayout();
+            panelRenderOptionsSub.ResumeLayout(false);
+            panelRenderOptionsSub.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -710,5 +860,17 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.CheckBox disableAutoCompCheckBox;
         private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Panel panelRenderOptions;
+        private System.Windows.Forms.Label presetLabel;
+        private System.Windows.Forms.Panel panelRenderOptionsSub;
+        private System.Windows.Forms.Label flagsLabel;
+        private System.Windows.Forms.Label scheduleLabel;
+        private System.Windows.Forms.RadioButton horizontalStripsRadioButton;
+        private System.Windows.Forms.RadioButton squareTilesRadioButton;
+        private System.Windows.Forms.CheckBox aliasedSelectionCheckBox;
+        private System.Windows.Forms.RadioButton noneRadioButton;
+        private System.Windows.Forms.CheckBox noClipCheckBox;
+        private System.Windows.Forms.CheckBox singleThreadedCheckBox;
+        private System.Windows.Forms.ComboBox presetComboBox;
     }
 }

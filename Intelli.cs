@@ -452,7 +452,7 @@ namespace PdnCodeLab
                 }
             }
 
-            UserScript = typeof(CodeLabRegular); // Placeholder effect Type until it's replaced when the UserScript is actually compiled
+            UserScript = typeof(CodeLab); // Placeholder effect Type until it's replaced when the UserScript is actually compiled
         }
     }
 

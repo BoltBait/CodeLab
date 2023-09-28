@@ -1,5 +1,6 @@
 ﻿#pragma warning disable CS4014
 
+using PaintDotNet.Effects;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -35,7 +36,8 @@ namespace PdnCodeLab
                 UIUtil.GetImage("Snippet"),
                 UIUtil.GetImage("Spelling"),
                 UIUtil.GetImage("Compiler"),
-                UIUtil.GetImage("Updates")
+                UIUtil.GetImage("Updates"),
+                UIUtil.GetImage("RenderOptions")
             };
 
             settingsList.ItemHeight = UIUtil.Scale(32);
@@ -93,6 +95,12 @@ namespace PdnCodeLab
             // Updates page
             checkForUpdates.Checked = Settings.CheckForUpdates;
 
+            // RenderOptions page
+            presetComboBox.Items.AddRange(Enum.GetValues<RenderPreset>().Select(x => new PresentBoxItem(x)).ToArray());
+            presetComboBox.SelectedIndex = (int)Settings.RenderPreset;
+            panelRenderOptionsSub.BackColor = Color.White;
+            panelRenderOptionsSub.ForeColor = Color.Black;
+
             Initializing = false;
         }
 
@@ -128,6 +136,7 @@ namespace PdnCodeLab
                 panelUI.Visible = true;
                 panelSpelling.Visible = false;
                 panelCompiler.Visible = false;
+                panelRenderOptions.Visible = false;
             }
             else if (item == "Snippets")
             {
@@ -136,6 +145,7 @@ namespace PdnCodeLab
                 panelUI.Visible = false;
                 panelSpelling.Visible = false;
                 panelCompiler.Visible = false;
+                panelRenderOptions.Visible = false;
             }
             else if (item == "Updates")
             {
@@ -144,6 +154,7 @@ namespace PdnCodeLab
                 panelUI.Visible = false;
                 panelSpelling.Visible = false;
                 panelCompiler.Visible = false;
+                panelRenderOptions.Visible = false;
             }
             else if (item == "Compiler")
             {
@@ -152,6 +163,7 @@ namespace PdnCodeLab
                 panelUI.Visible = false;
                 panelSpelling.Visible = false;
                 panelCompiler.Visible = true;
+                panelRenderOptions.Visible = false;
             }
             else if (item == "Spellcheck")
             {
@@ -160,6 +172,16 @@ namespace PdnCodeLab
                 panelUI.Visible = false;
                 panelSpelling.Visible = true;
                 panelCompiler.Visible = false;
+                panelRenderOptions.Visible = false;
+            }
+            else if (item == "Render Options")
+            {
+                panelUpdates.Visible = false;
+                panelSnippet.Visible = false;
+                panelUI.Visible = false;
+                panelSpelling.Visible = false;
+                panelCompiler.Visible = false;
+                panelRenderOptions.Visible = true;
             }
         }
         #endregion
@@ -342,6 +364,113 @@ namespace PdnCodeLab
             {
                 string url = Error.GetErrorUrl(warningsToIgnoreList.Text);
                 UIUtil.LaunchUrl(this, url);
+            }
+        }
+        #endregion
+
+        #region RenderOptions Page
+        private void presetComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (presetComboBox.SelectedItem is PresentBoxItem item)
+            {
+                RenderPreset selectedPreset = item.Preset;
+                panelRenderOptionsSub.Enabled = selectedPreset == RenderPreset.UserDefined;
+
+                switch (selectedPreset)
+                {
+                    case RenderPreset.Regular:
+                        noneRadioButton.Checked = false;
+                        horizontalStripsRadioButton.Checked = false;
+                        squareTilesRadioButton.Checked = true;
+                        singleThreadedCheckBox.Checked = false;
+                        noClipCheckBox.Checked = false;
+                        aliasedSelectionCheckBox.Checked = false;
+                        break;
+                    case RenderPreset.LegacyROI:
+                        noneRadioButton.Checked = false;
+                        horizontalStripsRadioButton.Checked = true;
+                        squareTilesRadioButton.Checked = false;
+                        singleThreadedCheckBox.Checked = false;
+                        noClipCheckBox.Checked = false;
+                        aliasedSelectionCheckBox.Checked = false;
+                        break;
+                    case RenderPreset.AliasedSelection:
+                        noneRadioButton.Checked = false;
+                        horizontalStripsRadioButton.Checked = false;
+                        squareTilesRadioButton.Checked = true;
+                        singleThreadedCheckBox.Checked = false;
+                        noClipCheckBox.Checked = false;
+                        aliasedSelectionCheckBox.Checked = true;
+                        break;
+                    case RenderPreset.SingleRenderCall:
+                        noneRadioButton.Checked = true;
+                        horizontalStripsRadioButton.Checked = false;
+                        squareTilesRadioButton.Checked = false;
+                        singleThreadedCheckBox.Checked = true;
+                        noClipCheckBox.Checked = false;
+                        aliasedSelectionCheckBox.Checked = false;
+                        break;
+                    case RenderPreset.NoSelectionClip:
+                        noneRadioButton.Checked = false;
+                        horizontalStripsRadioButton.Checked = false;
+                        squareTilesRadioButton.Checked = true;
+                        singleThreadedCheckBox.Checked = false;
+                        noClipCheckBox.Checked = true;
+                        aliasedSelectionCheckBox.Checked = false;
+                        break;
+                    case RenderPreset.UserDefined:
+                        BitmapEffectRenderingFlags renderFlags = Settings.RenderingFlags;
+                        BitmapEffectRenderingSchedule schedule = Settings.RenderingSchedule;
+
+                        noneRadioButton.Checked = schedule == BitmapEffectRenderingSchedule.None;
+                        horizontalStripsRadioButton.Checked = schedule == BitmapEffectRenderingSchedule.HorizontalStrips;
+                        squareTilesRadioButton.Checked = schedule == BitmapEffectRenderingSchedule.SquareTiles;
+                        singleThreadedCheckBox.Checked = renderFlags.HasFlag(BitmapEffectRenderingFlags.SingleThreaded);
+                        noClipCheckBox.Checked = renderFlags.HasFlag(BitmapEffectRenderingFlags.DisableSelectionClipping);
+                        aliasedSelectionCheckBox.Checked = renderFlags.HasFlag(BitmapEffectRenderingFlags.ForceAliasedSelectionQuality);
+                        break;
+                }
+
+                if (!Initializing)
+                {
+                    Settings.RenderPreset = selectedPreset;
+                }
+            }
+        }
+
+        private void RenderOption_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!Initializing &&
+                presetComboBox.SelectedItem is PresentBoxItem item &&
+                item.Preset == RenderPreset.UserDefined)
+            {
+                BitmapEffectRenderingFlags flags = BitmapEffectRenderingFlags.None;
+                if (noClipCheckBox.Checked) { flags |= BitmapEffectRenderingFlags.DisableSelectionClipping; }
+                if (aliasedSelectionCheckBox.Checked) { flags |= BitmapEffectRenderingFlags.ForceAliasedSelectionQuality; }
+                if (singleThreadedCheckBox.Checked) { flags |= BitmapEffectRenderingFlags.SingleThreaded; }
+
+                Settings.RenderingFlags = flags;
+
+                Settings.RenderingSchedule = squareTilesRadioButton.Checked
+                    ? BitmapEffectRenderingSchedule.SquareTiles : horizontalStripsRadioButton.Checked
+                    ? BitmapEffectRenderingSchedule.HorizontalStrips : noneRadioButton.Checked
+                    ? BitmapEffectRenderingSchedule.None
+                    : BitmapEffectRenderingSchedule.SquareTiles;
+            }
+        }
+
+        private class PresentBoxItem
+        {
+            internal RenderPreset Preset { get; }
+
+            internal PresentBoxItem(RenderPreset renderPresetOption)
+            {
+                Preset = renderPresetOption;
+            }
+
+            public override string ToString()
+            {
+                return Preset.GetName();
             }
         }
         #endregion
