@@ -685,18 +685,18 @@
             flagsLabel.AutoSize = true;
             flagsLabel.Location = new System.Drawing.Point(193, 23);
             flagsLabel.Name = "flagsLabel";
-            flagsLabel.Size = new System.Drawing.Size(81, 15);
+            flagsLabel.Size = new System.Drawing.Size(91, 15);
             flagsLabel.TabIndex = 8;
-            flagsLabel.Text = "Rending Flags";
+            flagsLabel.Text = "Rendering Flags";
             // 
             // scheduleLabel
             // 
             scheduleLabel.AutoSize = true;
             scheduleLabel.Location = new System.Drawing.Point(11, 23);
             scheduleLabel.Name = "scheduleLabel";
-            scheduleLabel.Size = new System.Drawing.Size(102, 15);
+            scheduleLabel.Size = new System.Drawing.Size(112, 15);
             scheduleLabel.TabIndex = 7;
-            scheduleLabel.Text = "Rending Schedule";
+            scheduleLabel.Text = "Rendering Schedule";
             // 
             // horizontalStripsRadioButton
             // 
