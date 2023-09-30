@@ -315,9 +315,12 @@ namespace PdnCodeLab
                 BindingFlags.Static | BindingFlags.Public :
                 BindingFlags.Instance | BindingFlags.FlattenHierarchy | BindingFlags.CreateInstance | BindingFlags.Public;
 
-            MemberInfo[] members = type.IsInterface
-                ? type.GetInterfaces().SelectMany(x => x.GetMembers(bindingFlags)).ToArray()
-                : type.GetMembers(bindingFlags);
+            MemberInfo[] members = type.GetMembers(bindingFlags);
+            if (type.IsInterface)
+            {
+                IEnumerable<MemberInfo> iMembers = type.GetInterfaces().SelectMany(x => x.GetMembers(bindingFlags));
+                members = members.UnionBy(iMembers, x => x.Name).ToArray();
+            }
 
             foreach (MemberInfo memberInfo in members)
             {

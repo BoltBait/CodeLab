@@ -2295,9 +2295,11 @@ namespace PdnCodeLab
                     BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic :
                     (isStatic ? BindingFlags.Static : BindingFlags.Instance) | BindingFlags.Public;
 
-                MemberInfo[] mi = type.IsInterface
-                    ? type.GetInterfaces().SelectMany(x => x.GetMember(tokens[i], bindingFlags)).ToArray()
-                    : type.GetMember(tokens[i], bindingFlags);
+                MemberInfo[] mi = type.GetMember(tokens[i], bindingFlags);
+                if (type.IsInterface && mi.Length == 0)
+                {
+                    mi = type.GetInterfaces().SelectMany(x => x.GetMember(tokens[i], bindingFlags)).ToArray();
+                }
 
                 if (mi.Length == 0 || mi[0].MemberType == MemberTypes.Method)
                 {
