@@ -147,7 +147,7 @@ namespace PdnCodeLab
             {
                 if (value)
                 {
-                    this.Margins[LeftMargin.LineNumbers].Width = this.TextWidth(Style.LineNumber, new string('9', this.Lines.Count.ToString().Length + 1)) + 2;
+                    this.Margins[LeftMargin.LineNumbers].Width = GetLineMarginWidth(this.Lines.Count.ToString().Length);
                     this.Margins[LeftMargin.Padding].Width = (this.CodeFoldingEnabled) ? 0 : 6;
                 }
                 else
@@ -4632,7 +4632,7 @@ namespace PdnCodeLab
                 {
                     // Calculate the width required to display the last line number
                     // and include some padding for good measure.
-                    this.Margins[LeftMargin.LineNumbers].Width = this.TextWidth(Style.LineNumber, new string('9', newLineNumberCharLength + 1)) + 2;
+                    this.Margins[LeftMargin.LineNumbers].Width = GetLineMarginWidth(newLineNumberCharLength);
                     this.maxLineNumberCharLength = newLineNumberCharLength;
                 }
             }
@@ -4642,7 +4642,7 @@ namespace PdnCodeLab
         {
             if (this.Margins[LeftMargin.LineNumbers].Width > 0) // Line Numbers Visible/Enabled?
             {
-                this.Margins[LeftMargin.LineNumbers].Width = this.TextWidth(Style.LineNumber, new string('9', maxLineNumberCharLength + 1)) + 2;
+                this.Margins[LeftMargin.LineNumbers].Width = GetLineMarginWidth(this.Lines.Count.ToString().Length);
             }
 
             if (this.Margins[LeftMargin.Bookmarks].Width > 0) // Bookmarks Visible/Enabled?
@@ -4654,6 +4654,11 @@ namespace PdnCodeLab
             {
                 this.Margins[LeftMargin.CodeFolding].Width = this.Lines[0].Height;
             }
+        }
+
+        private int GetLineMarginWidth(int digitCount)
+        {
+            return this.TextWidth(Style.LineNumber, new string('9', digitCount + 1)) + 2;
         }
 
         private void UpdateSubstyleAllocations()
