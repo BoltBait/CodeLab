@@ -80,6 +80,8 @@
             spellcheckOptionsLabel = new System.Windows.Forms.Label();
             spellLangComboBox = new System.Windows.Forms.ComboBox();
             panelRenderOptions = new System.Windows.Forms.Panel();
+            renderOpInfoLabel = new MessageLabel();
+            noClipWarnLabel = new MessageLabel();
             presetLabel = new System.Windows.Forms.Label();
             panelRenderOptionsSub = new System.Windows.Forms.Panel();
             flagsLabel = new System.Windows.Forms.Label();
@@ -647,6 +649,8 @@
             // 
             // panelRenderOptions
             // 
+            panelRenderOptions.Controls.Add(renderOpInfoLabel);
+            panelRenderOptions.Controls.Add(noClipWarnLabel);
             panelRenderOptions.Controls.Add(presetLabel);
             panelRenderOptions.Controls.Add(panelRenderOptionsSub);
             panelRenderOptions.Controls.Add(presetComboBox);
@@ -654,6 +658,27 @@
             panelRenderOptions.Name = "panelRenderOptions";
             panelRenderOptions.Size = new System.Drawing.Size(476, 405);
             panelRenderOptions.TabIndex = 9;
+            // 
+            // renderOpInfoLabel
+            // 
+            renderOpInfoLabel.AllowHardwareRendering = false;
+            renderOpInfoLabel.Location = new System.Drawing.Point(16, 291);
+            renderOpInfoLabel.MessageType = MessageType.Info;
+            renderOpInfoLabel.Name = "renderOpInfoLabel";
+            renderOpInfoLabel.Size = new System.Drawing.Size(399, 106);
+            renderOpInfoLabel.TabIndex = 15;
+            renderOpInfoLabel.TabStop = false;
+            renderOpInfoLabel.Text = "Changes in this section will apply the next time CodeLab is run,\r\nand will remain applied until they are changed again.\r\n\r\nThe selected Preset will appear in CodeLab's titlebar.";
+            // 
+            // noClipWarnLabel
+            // 
+            noClipWarnLabel.Location = new System.Drawing.Point(16, 199);
+            noClipWarnLabel.MessageType = MessageType.Warning;
+            noClipWarnLabel.Name = "noClipWarnLabel";
+            noClipWarnLabel.Size = new System.Drawing.Size(399, 65);
+            noClipWarnLabel.TabIndex = 14;
+            noClipWarnLabel.TabStop = false;
+            noClipWarnLabel.Text = "The flag 'Disable Selection Clipping' does not affect Classic Effects.";
             // 
             // presetLabel
             // 
@@ -676,7 +701,7 @@
             panelRenderOptionsSub.Controls.Add(singleThreadedCheckBox);
             panelRenderOptionsSub.Location = new System.Drawing.Point(17, 50);
             panelRenderOptionsSub.Name = "panelRenderOptionsSub";
-            panelRenderOptionsSub.Size = new System.Drawing.Size(398, 141);
+            panelRenderOptionsSub.Size = new System.Drawing.Size(398, 130);
             panelRenderOptionsSub.TabIndex = 12;
             // 
             // flagsLabel
@@ -703,7 +728,7 @@
             horizontalStripsRadioButton.Location = new System.Drawing.Point(14, 65);
             horizontalStripsRadioButton.Name = "horizontalStripsRadioButton";
             horizontalStripsRadioButton.Size = new System.Drawing.Size(112, 19);
-            horizontalStripsRadioButton.TabIndex = 5;
+            horizontalStripsRadioButton.TabIndex = 6;
             horizontalStripsRadioButton.TabStop = true;
             horizontalStripsRadioButton.Text = "Horizontal Strips";
             horizontalStripsRadioButton.UseVisualStyleBackColor = true;
@@ -715,7 +740,7 @@
             squareTilesRadioButton.Location = new System.Drawing.Point(14, 40);
             squareTilesRadioButton.Name = "squareTilesRadioButton";
             squareTilesRadioButton.Size = new System.Drawing.Size(87, 19);
-            squareTilesRadioButton.TabIndex = 4;
+            squareTilesRadioButton.TabIndex = 5;
             squareTilesRadioButton.TabStop = true;
             squareTilesRadioButton.Text = "Square Tiles";
             squareTilesRadioButton.UseVisualStyleBackColor = true;
@@ -727,7 +752,7 @@
             aliasedSelectionCheckBox.Location = new System.Drawing.Point(196, 66);
             aliasedSelectionCheckBox.Name = "aliasedSelectionCheckBox";
             aliasedSelectionCheckBox.Size = new System.Drawing.Size(188, 19);
-            aliasedSelectionCheckBox.TabIndex = 2;
+            aliasedSelectionCheckBox.TabIndex = 9;
             aliasedSelectionCheckBox.Text = "Force Aliased Selection Quality";
             aliasedSelectionCheckBox.UseVisualStyleBackColor = true;
             aliasedSelectionCheckBox.CheckedChanged += RenderOption_CheckedChanged;
@@ -738,7 +763,7 @@
             noneRadioButton.Location = new System.Drawing.Point(14, 90);
             noneRadioButton.Name = "noneRadioButton";
             noneRadioButton.Size = new System.Drawing.Size(54, 19);
-            noneRadioButton.TabIndex = 6;
+            noneRadioButton.TabIndex = 7;
             noneRadioButton.TabStop = true;
             noneRadioButton.Text = "None";
             noneRadioButton.UseVisualStyleBackColor = true;
@@ -750,7 +775,7 @@
             noClipCheckBox.Location = new System.Drawing.Point(196, 41);
             noClipCheckBox.Name = "noClipCheckBox";
             noClipCheckBox.Size = new System.Drawing.Size(163, 19);
-            noClipCheckBox.TabIndex = 1;
+            noClipCheckBox.TabIndex = 8;
             noClipCheckBox.Text = "Disable Selection Clipping";
             noClipCheckBox.UseVisualStyleBackColor = true;
             noClipCheckBox.CheckedChanged += RenderOption_CheckedChanged;
@@ -761,7 +786,7 @@
             singleThreadedCheckBox.Location = new System.Drawing.Point(196, 91);
             singleThreadedCheckBox.Name = "singleThreadedCheckBox";
             singleThreadedCheckBox.Size = new System.Drawing.Size(110, 19);
-            singleThreadedCheckBox.TabIndex = 0;
+            singleThreadedCheckBox.TabIndex = 10;
             singleThreadedCheckBox.Text = "Single Threaded";
             singleThreadedCheckBox.UseVisualStyleBackColor = true;
             singleThreadedCheckBox.CheckedChanged += RenderOption_CheckedChanged;
@@ -773,7 +798,7 @@
             presetComboBox.Location = new System.Drawing.Point(62, 21);
             presetComboBox.Name = "presetComboBox";
             presetComboBox.Size = new System.Drawing.Size(353, 23);
-            presetComboBox.TabIndex = 11;
+            presetComboBox.TabIndex = 4;
             presetComboBox.SelectedIndexChanged += presetComboBox_SelectedIndexChanged;
             // 
             // SettingsForm
@@ -871,5 +896,7 @@
         private System.Windows.Forms.CheckBox noClipCheckBox;
         private System.Windows.Forms.CheckBox singleThreadedCheckBox;
         private System.Windows.Forms.ComboBox presetComboBox;
+        private MessageLabel noClipWarnLabel;
+        private MessageLabel renderOpInfoLabel;
     }
 }

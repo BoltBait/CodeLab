@@ -433,6 +433,8 @@ namespace PdnCodeLab
                     ? BitmapEffectRenderingSchedule.None
                     : BitmapEffectRenderingSchedule.SquareTiles;
             }
+
+            noClipWarnLabel.Visible = noClipCheckBox.Checked;
         }
 
         private class PresentBoxItem
