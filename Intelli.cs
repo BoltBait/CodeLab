@@ -241,9 +241,11 @@ namespace PdnCodeLab
 
             if (projectType.Is5Effect())
             {
-                // removed to prevent name collision with Environment property
+                // removed to prevent name collision with properties
                 AllTypes.Remove(nameof(Environment));
                 AutoCompleteTypes.Remove(nameof(Environment));
+                AllTypes.Remove(nameof(Document));
+                AutoCompleteTypes.Remove(nameof(Document));
             }
 
             foreach (KeyValuePair<string, Type> kvp in AllTypes)
