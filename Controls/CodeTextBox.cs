@@ -1489,7 +1489,7 @@ namespace PdnCodeLab
             }
 
             string lastWords = GetLastWords(position);
-            if (lastWords.Length == 0)
+            if (lastWords.Length == 0 || lastWords == "this")
             {
                 return IntelliType.None;
             }
@@ -2172,6 +2172,11 @@ namespace PdnCodeLab
             if (lastWords.Length == 0)
             {
                 return null;
+            }
+
+            if (lastWords == "this")
+            {
+                return Intelli.UserScript;
             }
 
             if (Intelli.Variables.ContainsKey(lastWords))

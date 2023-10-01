@@ -14,6 +14,7 @@
 /////////////////////////////////////////////////////////////////////////////////
 
 using PaintDotNet;
+using PaintDotNet.Effects;
 using PaintDotNet.Rendering;
 using System;
 using System.Collections.Generic;
@@ -454,7 +455,19 @@ namespace PdnCodeLab
                 }
             }
 
-            UserScript = typeof(CodeLab); // Placeholder effect Type until it's replaced when the UserScript is actually compiled
+            UserScript = typeof(DummyEffect); // Placeholder effect Type until it's replaced when the UserScript is actually compiled
+        }
+
+        private abstract class DummyEffect : BitmapEffect
+        {
+            protected DummyEffect() : base(nameof(DummyEffect), null, BitmapEffectOptions.Create())
+            {
+            }
+
+            protected override void OnRender(IBitmapEffectOutput output)
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 
