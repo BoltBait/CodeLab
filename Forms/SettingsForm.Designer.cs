@@ -525,7 +525,6 @@
             settingsList.FormattingEnabled = true;
             settingsList.IntegralHeight = false;
             settingsList.ItemHeight = 32;
-            settingsList.Items.AddRange(new object[] { "User Interface", "Snippets", "Spellcheck", "Compiler", "Updates", "Render Options" });
             settingsList.Location = new System.Drawing.Point(12, 12);
             settingsList.Name = "settingsList";
             settingsList.Size = new System.Drawing.Size(184, 406);
