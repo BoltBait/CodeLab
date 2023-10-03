@@ -58,6 +58,7 @@ namespace PdnCodeLab
             + "using MultiLineTextboxControl = System.String;\r\n"
             + "using LabelComment = System.String;\r\n"
             + "using FontFamily = System.String;\r\n"
+            + "using LayerControl = System.Int32;\r\n"
             + "\r\n";
 
         private const string prepend_code = "\r\n"

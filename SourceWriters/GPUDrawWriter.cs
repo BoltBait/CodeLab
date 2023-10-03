@@ -61,6 +61,7 @@ namespace PdnCodeLab
             + "using LabelComment = System.String;\r\n"
             + "using FontFamily = System.String;\r\n"
             + "using FontStyle = PaintDotNet.DirectWrite.FontStyle;\r\n"
+            + "using LayerControl = System.Int32;\r\n"
             + "\r\n";
 
         private const string prepend_code = "\r\n"

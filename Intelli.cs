@@ -183,6 +183,7 @@ namespace PdnCodeLab
                 "RollControl",
                 "MultiLineTextboxControl",
                 "LabelComment",
+                "LayerControl",
                 "FontFamily"
             };
 

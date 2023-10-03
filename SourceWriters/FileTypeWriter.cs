@@ -45,6 +45,7 @@ namespace PdnCodeLab
                 + "using RadioButtonControl = System.Byte;\r\n"
                 + "using MultiLineTextboxControl = System.String;\r\n"
                 + "using LabelComment = System.String;\r\n"
+                + "using LayerControl = System.Int32;\r\n"
                 + "\r\n";
         }
 

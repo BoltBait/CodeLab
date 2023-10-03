@@ -57,7 +57,8 @@ namespace PdnCodeLab
             UIUtil.GetImage("14FilenameControl"),
             UIUtil.GetImage("15Uri"),
             UIUtil.GetImage("16FolderControl"),
-            UIUtil.GetImage("17Comment")
+            UIUtil.GetImage("17Comment"),
+            UIUtil.GetImage("18Layers")
         };
 
         internal UIBuilder(string UserScriptText, ProjectType projectType, IServiceProvider serviceProvider, IEffectEnvironment environmentParameters)
@@ -621,6 +622,28 @@ namespace PdnCodeLab
                     rbEnabled.Enabled = false;
                     rbEnabledWhen.Enabled = false;
                     break;
+                case ElementType.LayerChooser:
+                    OptionsLabel.Visible = false;
+                    OptionsText.Visible = false;
+                    DefaultColorComboBox.Visible = false;
+                    ControlMin.Visible = true;
+                    ControlMax.Visible = true;
+                    ControlDef.Visible = true;
+                    MinimumLabel.Visible = true;
+                    MaximumLabel.Visible = true;
+                    DefaultLabel.Visible = true;
+                    ControlDef.Enabled = true;
+                    ControlMax.Enabled = false;
+                    ControlMin.Enabled = false;
+                    ControlMax.Text = "9999";
+                    ControlMin.Text = "0";
+                    ControlDef.Text = "0";
+                    StyleLabel.Enabled = false;
+                    ControlStyle.Enabled = false;
+                    ControlStyle.SelectedIndex = 0;
+                    rbEnabled.Enabled = true;
+                    rbEnabledWhen.Enabled = true;
+                    break;
             }
         }
 
@@ -885,6 +908,12 @@ namespace PdnCodeLab
                     ControlMin.Text = CurrentElement.Min.ToString();
                     ControlMax.Text = CurrentElement.Max.ToString();
                     OptionsText.Text = CurrentElement.StrDefault;
+                    break;
+                case ElementType.LayerChooser:
+                    ControlStyle.SelectedIndex = 0;
+                    ControlMin.Text = CurrentElement.Min.ToString();
+                    ControlMax.Text = CurrentElement.Max.ToString();
+                    ControlDef.Text = CurrentElement.StrDefault.ToString();
                     break;
                 default:
                     break;
@@ -1434,6 +1463,7 @@ namespace PdnCodeLab
             "Uri",                      // 15
             "FolderControl",            // 16
             "LabelComment",             // 17
+            "LayerControl",             // 18
         };
 
         internal static UIElement[] ProcessUIControls(string SourceCode, bool isEffect = true)
@@ -1496,6 +1526,7 @@ namespace PdnCodeLab
                 case ElementType.DropDown:
                 case ElementType.RadioButtons:
                 case ElementType.LabelComment:
+                case ElementType.LayerChooser:
                     return true;
             }
 
@@ -1633,6 +1664,12 @@ namespace PdnCodeLab
                 case ElementType.LabelComment:
                     StrDefault = eDefault;
                     Description = eDefault;
+                    break;
+                case ElementType.LayerChooser:
+                    Description = eName + EnabledDescription;
+                    StrDefault = eDefault;
+                    Min = 0;
+                    Max = (int)parsedMax;
                     break;
             }
         }
@@ -1795,6 +1832,11 @@ namespace PdnCodeLab
             {
                 elementType = ElementType.LabelComment;
             }
+            else if (TypeStr == "LayerControl")
+            {
+                elementType = ElementType.LayerChooser;
+                MaximumStr = "9999";
+            }
             #region Detections for legacy scripts
             else if (TypeStr == "bool")
             {
@@ -1925,6 +1967,11 @@ namespace PdnCodeLab
                 {
                     defaultValue = mComment.Groups["comment"].Value;
                 }
+            }
+            else if (elementType == ElementType.LayerChooser)
+            {
+                defaultValue = DefaultStr;
+                dMax = 9999;
             }
             else if (elementType == ElementType.PanSlider)
             {
@@ -2085,6 +2132,10 @@ namespace PdnCodeLab
                 case ElementType.LabelComment:
                     SourceCode += " = \"" + StrDefault + "\"; // ";
                     break;
+                case ElementType.LayerChooser:
+                    SourceCode += " = " + StrDefault;
+                    SourceCode += "; // ";
+                    break;
             }
 
             if (EnabledWhen)
@@ -2173,7 +2224,9 @@ namespace PdnCodeLab
         [Description("Folder Control")]
         Folder,
         [Description("Label")]
-        LabelComment
+        LabelComment,
+        [Description("Layer Names")]
+        LayerChooser
     }
 
     internal enum SliderStyle
