@@ -229,12 +229,6 @@ namespace PdnCodeLab
             if (UserControls.Any(u => u.ElementType == ElementType.LayerChooser))
             {
                 PropertyPart += "            int defaultLayerIndex = Environment.SourceLayerIndex;\r\n";
-                PropertyPart += "            int layers = Environment.Document.Layers.Count;\r\n";
-                PropertyPart += "            object[] layerIndexes = new object[layers];\r\n";
-                PropertyPart += "            for (int i = 0; i < layers; i++)\r\n";
-                PropertyPart += "            {\r\n";
-                PropertyPart += "                layerIndexes[i] = i;\r\n";
-                PropertyPart += "            }\r\n";
             }
 
             PropertyPart += "            List<Property> props = new List<Property>();\r\n";
@@ -376,7 +370,7 @@ namespace PdnCodeLab
                         PropertyPart += "            props.Add(new StringProperty(PropertyNames." + propertyName + ", \"\"));\r\n";
                         break;
                     case ElementType.LayerChooser:
-                        PropertyPart += "            props.Add(new StaticListChoiceProperty(PropertyNames." + propertyName + ", Enumerable.Range(0, Environment.Document.Layers.Count).Cast<object>().ToArray(), defaultLayerIndex, false, ValueValidationFailureResult.Ignore));\r\n";
+                        PropertyPart += "            props.Add(new StaticListChoiceProperty(PropertyNames." + propertyName + ", Enumerable.Range(0, Environment.Document.Layers.Count).Reverse().Cast<object>().ToArray(), defaultLayerIndex, false, ValueValidationFailureResult.Ignore));\r\n";
                         break;
                 }
             }

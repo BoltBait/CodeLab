@@ -9,6 +9,8 @@ namespace PdnCodeLab
 {
     internal static class FileTypeWriter
     {
+        private const ProjectType projectType = ProjectType.FileType;
+
         private static string UsingPartCode()
         {
             return ""
@@ -113,7 +115,7 @@ namespace PdnCodeLab
 
         internal static string FullSourceCode(string scriptText, string projectName, string author, int majorVersion, int minorVersion, string supportURL, string description, string loadExt, string saveExt, bool supportsLayers, string title)
         {
-            UIElement[] userControls = UIElement.ProcessUIControls(scriptText, false);
+            UIElement[] userControls = UIElement.ProcessUIControls(scriptText, projectType);
 
             return
                 UsingPartCode() +
@@ -123,7 +125,7 @@ namespace PdnCodeLab
                 CommonWriter.SupportInfoPart(projectName, title, supportURL) +
                 FileTypeCtorPart(projectName, loadExt, saveExt, supportsLayers, title) +
                 CommonWriter.ConstructorBodyPart(false) +
-                CommonWriter.PropertyPart(userControls, projectName, string.Empty, HelpType.None, string.Empty, ProjectType.FileType) +
+                CommonWriter.PropertyPart(userControls, projectName, string.Empty, HelpType.None, string.Empty, projectType) +
                 FileTypePart2(userControls) +
                 CommonWriter.UserEnteredPart(scriptText) +
                 CommonWriter.EndPart();
@@ -133,7 +135,7 @@ namespace PdnCodeLab
         {
             const string projectName = "MyFileType";
 
-            UIElement[] userControls = UIElement.ProcessUIControls(fileTypeCode, false);
+            UIElement[] userControls = UIElement.ProcessUIControls(fileTypeCode, projectType);
 
             return
                 FileTypeWriter.UsingPartCode() +
@@ -141,7 +143,7 @@ namespace PdnCodeLab
                 FileTypeWriter.FileTypeFactoryPart(projectName) +
                 FileTypeWriter.FileTypeCtorPart(projectName, "\".foo\"", "\".foo\"", false, projectName) +
                 CommonWriter.ConstructorBodyPart(debug) +
-                CommonWriter.PropertyPart(userControls, projectName, string.Empty, HelpType.None, string.Empty, ProjectType.FileType) +
+                CommonWriter.PropertyPart(userControls, projectName, string.Empty, HelpType.None, string.Empty, projectType) +
                 FileTypeWriter.FileTypePart2(userControls) +
                 CommonWriter.UserEnteredPart(fileTypeCode) +
                 CommonWriter.EndPart();

@@ -110,7 +110,7 @@ namespace PdnCodeLab
             DefaultColorComboBox.Items.Add("SecondaryColor");
             DefaultColorComboBox.Items.AddRange(UIUtil.GetColorNames(false));
 
-            MasterList.AddRange(UIElement.ProcessUIControls(UserScriptText, projectType.IsEffect()));
+            MasterList.AddRange(UIElement.ProcessUIControls(UserScriptText, projectType));
 
             foreach (UIElement element in MasterList)
             {
@@ -1330,7 +1330,7 @@ namespace PdnCodeLab
 
     public class ControlTypeComboBox : ComboBox
     {
-        private ProjectType projectType = ProjectType.ClassicEffect;
+        private ProjectType projectType = ProjectType.Default;
 
         internal ProjectType ProjectType
         {
@@ -1343,7 +1343,7 @@ namespace PdnCodeLab
                 projectType = value;
 
                 ControlTypeItem[] controlTypes = Enum.GetValues<ElementType>()
-                   .Where(et => UIElement.IsControlAllowed(et, projectType.IsEffect()))
+                   .Where(et => UIElement.IsControlAllowed(et, projectType))
                    .Select(et => new ControlTypeItem(et))
                    .ToArray();
 
@@ -1466,7 +1466,7 @@ namespace PdnCodeLab
             "LayerControl",             // 18
         };
 
-        internal static UIElement[] ProcessUIControls(string SourceCode, bool isEffect = true)
+        internal static UIElement[] ProcessUIControls(string SourceCode, ProjectType projectType)
         {
             string UIControlsText = "";
             Match mcc = Regex.Match(SourceCode, @"\#region UICode(?<sublabel>.*?)\#endregion", RegexOptions.Singleline | RegexOptions.IgnoreCase);
@@ -1504,30 +1504,38 @@ namespace PdnCodeLab
                 .Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
                 .Where(x => !x.StartsWith("//", StringComparison.Ordinal))
                 .Select(x => FromSourceLine(x))
-                .Where(x => x != null && IsControlAllowed(x.ElementType, isEffect))
+                .Where(x => x != null && IsControlAllowed(x.ElementType, projectType))
                 .ToArray();
         }
 
-        internal static bool IsControlAllowed(ElementType elementType, bool isEffect)
+        internal static bool IsControlAllowed(ElementType elementType, ProjectType projectType)
         {
-            if (isEffect)
+            if (projectType.Is5Effect())
             {
                 return true;
             }
 
-            switch (elementType)
+            if (projectType == ProjectType.ClassicEffect)
             {
-                case ElementType.IntSlider:
-                case ElementType.Checkbox:
-                case ElementType.Uri:
-                case ElementType.Textbox:
-                case ElementType.MultiLineTextbox:
-                case ElementType.DoubleSlider:
-                case ElementType.DropDown:
-                case ElementType.RadioButtons:
-                case ElementType.LabelComment:
-                case ElementType.LayerChooser:
-                    return true;
+                return elementType != ElementType.LayerChooser;
+            }
+
+            if (projectType == ProjectType.FileType)
+            {
+                switch (elementType)
+                {
+                    case ElementType.IntSlider:
+                    case ElementType.Checkbox:
+                    case ElementType.Uri:
+                    case ElementType.Textbox:
+                    case ElementType.MultiLineTextbox:
+                    case ElementType.DoubleSlider:
+                    case ElementType.DropDown:
+                    case ElementType.RadioButtons:
+                    case ElementType.LabelComment:
+                    case ElementType.LayerChooser:
+                        return true;
+                }
             }
 
             return false;

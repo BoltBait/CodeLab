@@ -22,6 +22,8 @@ namespace PdnCodeLab
 {
     internal static class ClassicEffectWriter
     {
+        private const ProjectType projectType = ProjectType.ClassicEffect;
+
         private const string EmptyCode = "\r\n"
             + "#region User Entered Code\r\n"
             + "void Render(Surface dst, Surface src, Rectangle rect) { }\r\n"
@@ -216,7 +218,7 @@ namespace PdnCodeLab
 
         internal static string FullSourceCode(string SourceCode, string FileName, bool isAdjustment, string subMenuName, string menuName, string iconPath, string SupportURL, ScriptRenderingFlags renderingFlags, ScriptRenderingSchedule renderingSchedule, string Author, int MajorVersion, int MinorVersion, string Description, string KeyWords, string WindowTitleStr, HelpType HelpType, string HelpText)
         {
-            UIElement[] UserControls = UIElement.ProcessUIControls(SourceCode);
+            UIElement[] UserControls = UIElement.ProcessUIControls(SourceCode, projectType);
             bool hasPreRender = HasPreRender(SourceCode);
 
             string sUsingPart = UsingPartCode();
@@ -226,7 +228,7 @@ namespace PdnCodeLab
             string sCategoryPart = CommonWriter.CategoryPart(isAdjustment);
             string sEffectPart = ConstructorPart(UserControls, FileName, subMenuName, menuName, iconPath, renderingFlags, renderingSchedule);
             string sHelpPart = CommonWriter.HelpPart(HelpType, HelpText);
-            string sPropertyPart = CommonWriter.PropertyPart(UserControls, FileName, WindowTitleStr, HelpType, HelpText, ProjectType.ClassicEffect);
+            string sPropertyPart = CommonWriter.PropertyPart(UserControls, FileName, WindowTitleStr, HelpType, HelpText, projectType);
             string sSetRenderPart = SetRenderPart(UserControls, true, hasPreRender);
             string sRenderLoopPart = RenderLoopPart(UserControls);
             string sUserEnteredPart = CommonWriter.UserEnteredPart(SourceCode);
@@ -238,13 +240,13 @@ namespace PdnCodeLab
         internal static string FullPreview(string scriptText)
         {
             const string FileName = "PreviewEffect";
-            UIElement[] UserControls = UIElement.ProcessUIControls(scriptText);
+            UIElement[] UserControls = UIElement.ProcessUIControls(scriptText, projectType);
 
             return
                 ClassicEffectWriter.UsingPartCode() +
                 CommonWriter.NamespacePart(FileName) +
                 ClassicEffectWriter.ConstructorPart(UserControls, FileName, string.Empty, "FULL UI PREVIEW - Temporarily renders to canvas", string.Empty, ScriptRenderingFlags.None, ScriptRenderingSchedule.Default) +
-                CommonWriter.PropertyPart(UserControls, FileName, string.Empty, HelpType.None, string.Empty, ProjectType.ClassicEffect) +
+                CommonWriter.PropertyPart(UserControls, FileName, string.Empty, HelpType.None, string.Empty, projectType) +
                 ClassicEffectWriter.SetRenderPart(UserControls, true, ClassicEffectWriter.HasPreRender(scriptText)) +
                 ClassicEffectWriter.RenderLoopPart(UserControls) +
                 CommonWriter.UserEnteredPart(scriptText) +
@@ -256,13 +258,13 @@ namespace PdnCodeLab
             const string FileName = "UiPreviewEffect";
             uiCode = "#region UICode\r\n" + uiCode + "\r\n#endregion\r\n";
 
-            UIElement[] UserControls = UIElement.ProcessUIControls(uiCode);
+            UIElement[] UserControls = UIElement.ProcessUIControls(uiCode, projectType);
 
             return
                 ClassicEffectWriter.UsingPartCode() +
                 CommonWriter.NamespacePart(FileName) +
                 ClassicEffectWriter.ConstructorPart(UserControls, FileName, string.Empty, "UI PREVIEW - Does NOT Render to canvas", string.Empty, ScriptRenderingFlags.None, ScriptRenderingSchedule.Default) +
-                CommonWriter.PropertyPart(UserControls, FileName, string.Empty, HelpType.None, string.Empty, ProjectType.ClassicEffect) +
+                CommonWriter.PropertyPart(UserControls, FileName, string.Empty, HelpType.None, string.Empty, projectType) +
                 ClassicEffectWriter.RenderLoopPart(UserControls) +
                 uiCode +
                 ClassicEffectWriter.EmptyCode +

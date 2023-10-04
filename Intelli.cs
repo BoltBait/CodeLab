@@ -171,6 +171,7 @@ namespace PdnCodeLab
                 "AngleControl",
                 "PanSliderControl",
                 "DoubleSliderControl",
+                "LayerControl",
                 "ListBoxControl",
                 "RadioButtonControl",
                 "ReseedButtonControl"
@@ -183,7 +184,6 @@ namespace PdnCodeLab
                 "RollControl",
                 "MultiLineTextboxControl",
                 "LabelComment",
-                "LayerControl",
                 "FontFamily"
             };
 
