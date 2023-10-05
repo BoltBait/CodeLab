@@ -14,6 +14,7 @@
 /////////////////////////////////////////////////////////////////////////////////
 
 using PaintDotNet;
+using PaintDotNet.Effects;
 using PaintDotNet.Rendering;
 using System;
 using System.Collections.Generic;
@@ -170,6 +171,7 @@ namespace PdnCodeLab
                 "AngleControl",
                 "PanSliderControl",
                 "DoubleSliderControl",
+                "LayerControl",
                 "ListBoxControl",
                 "RadioButtonControl",
                 "ReseedButtonControl"
@@ -241,9 +243,11 @@ namespace PdnCodeLab
 
             if (projectType.Is5Effect())
             {
-                // removed to prevent name collision with Environment property
+                // removed to prevent name collision with properties
                 AllTypes.Remove(nameof(Environment));
                 AutoCompleteTypes.Remove(nameof(Environment));
+                AllTypes.Remove(nameof(Document));
+                AutoCompleteTypes.Remove(nameof(Document));
             }
 
             foreach (KeyValuePair<string, Type> kvp in AllTypes)
@@ -452,7 +456,19 @@ namespace PdnCodeLab
                 }
             }
 
-            UserScript = typeof(CodeLabRegular); // Placeholder effect Type until it's replaced when the UserScript is actually compiled
+            UserScript = typeof(DummyEffect); // Placeholder effect Type until it's replaced when the UserScript is actually compiled
+        }
+
+        private abstract class DummyEffect : BitmapEffect
+        {
+            protected DummyEffect() : base(nameof(DummyEffect), null, BitmapEffectOptions.Create())
+            {
+            }
+
+            protected override void OnRender(IBitmapEffectOutput output)
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 

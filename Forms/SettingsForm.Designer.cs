@@ -29,667 +29,808 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SettingsForm));
-            this.closeButton = new System.Windows.Forms.Button();
-            this.panelUpdates = new System.Windows.Forms.Panel();
-            this.checkNowButton = new System.Windows.Forms.Button();
-            this.checkForUpdates = new System.Windows.Forms.CheckBox();
-            this.panelCompiler = new System.Windows.Forms.Panel();
-            this.label7 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.lookupWarningButton = new System.Windows.Forms.Button();
-            this.warningToIgnoreLabel = new System.Windows.Forms.Label();
-            this.warningsToIgnoreList = new System.Windows.Forms.ListBox();
-            this.removeWarningButton = new System.Windows.Forms.Button();
-            this.label9 = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
-            this.warningLevelCombobox = new System.Windows.Forms.ComboBox();
-            this.panelUI = new System.Windows.Forms.Panel();
-            this.disableAutoCompCheckBox = new System.Windows.Forms.CheckBox();
-            this.extendedColorsCheckBox = new System.Windows.Forms.CheckBox();
-            this.caretLineFrameCheckBox = new System.Windows.Forms.CheckBox();
-            this.indentSpacesLabel = new System.Windows.Forms.Label();
-            this.indentSpacesComboBox = new System.Windows.Forms.ComboBox();
-            this.toolbarCheckbox = new System.Windows.Forms.CheckBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
-            this.label4 = new System.Windows.Forms.Label();
-            this.wordWrapTextFilesCheckbox = new System.Windows.Forms.CheckBox();
-            this.themeCombobox = new System.Windows.Forms.ComboBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.largeFontCheckbox = new System.Windows.Forms.CheckBox();
-            this.fontCombobox = new System.Windows.Forms.ComboBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.showWhiteSpaceCheckbox = new System.Windows.Forms.CheckBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.wordWrapCheckbox = new System.Windows.Forms.CheckBox();
-            this.indicatorMapCheckbox = new System.Windows.Forms.CheckBox();
-            this.codeFoldingCheckbox = new System.Windows.Forms.CheckBox();
-            this.bookMarksCheckbox = new System.Windows.Forms.CheckBox();
-            this.lineNumbersCheckbox = new System.Windows.Forms.CheckBox();
-            this.settingsList = new System.Windows.Forms.ListBox();
-            this.panelSnippet = new PdnCodeLab.SnippetManager();
-            this.panelSpelling = new System.Windows.Forms.Panel();
-            this.addLangsButton = new System.Windows.Forms.Button();
-            this.enableSpellcheckCheckBox = new System.Windows.Forms.CheckBox();
-            this.addWordsToIgnoreLabel = new System.Windows.Forms.Label();
-            this.wordsToIgnoreLabel = new System.Windows.Forms.Label();
-            this.wordsToIgnoreListBox = new System.Windows.Forms.ListBox();
-            this.removeIgnoreWordButton = new System.Windows.Forms.Button();
-            this.label11 = new System.Windows.Forms.Label();
-            this.spellcheckOptionsLabel = new System.Windows.Forms.Label();
-            this.spellLangComboBox = new System.Windows.Forms.ComboBox();
-            this.label10 = new System.Windows.Forms.Label();
-            this.panelUpdates.SuspendLayout();
-            this.panelCompiler.SuspendLayout();
-            this.panelUI.SuspendLayout();
-            this.panelSpelling.SuspendLayout();
-            this.SuspendLayout();
+            closeButton = new System.Windows.Forms.Button();
+            panelUpdates = new System.Windows.Forms.Panel();
+            checkNowButton = new System.Windows.Forms.Button();
+            checkForUpdates = new System.Windows.Forms.CheckBox();
+            panelCompiler = new System.Windows.Forms.Panel();
+            label7 = new System.Windows.Forms.Label();
+            label6 = new System.Windows.Forms.Label();
+            lookupWarningButton = new System.Windows.Forms.Button();
+            warningToIgnoreLabel = new System.Windows.Forms.Label();
+            warningsToIgnoreList = new System.Windows.Forms.ListBox();
+            removeWarningButton = new System.Windows.Forms.Button();
+            label9 = new System.Windows.Forms.Label();
+            label8 = new System.Windows.Forms.Label();
+            warningLevelCombobox = new System.Windows.Forms.ComboBox();
+            panelUI = new System.Windows.Forms.Panel();
+            label10 = new System.Windows.Forms.Label();
+            disableAutoCompCheckBox = new System.Windows.Forms.CheckBox();
+            extendedColorsCheckBox = new System.Windows.Forms.CheckBox();
+            caretLineFrameCheckBox = new System.Windows.Forms.CheckBox();
+            indentSpacesLabel = new System.Windows.Forms.Label();
+            indentSpacesComboBox = new System.Windows.Forms.ComboBox();
+            toolbarCheckbox = new System.Windows.Forms.CheckBox();
+            label5 = new System.Windows.Forms.Label();
+            linkLabel1 = new System.Windows.Forms.LinkLabel();
+            label4 = new System.Windows.Forms.Label();
+            wordWrapTextFilesCheckbox = new System.Windows.Forms.CheckBox();
+            themeCombobox = new System.Windows.Forms.ComboBox();
+            label3 = new System.Windows.Forms.Label();
+            largeFontCheckbox = new System.Windows.Forms.CheckBox();
+            fontCombobox = new System.Windows.Forms.ComboBox();
+            label2 = new System.Windows.Forms.Label();
+            showWhiteSpaceCheckbox = new System.Windows.Forms.CheckBox();
+            label1 = new System.Windows.Forms.Label();
+            wordWrapCheckbox = new System.Windows.Forms.CheckBox();
+            indicatorMapCheckbox = new System.Windows.Forms.CheckBox();
+            codeFoldingCheckbox = new System.Windows.Forms.CheckBox();
+            bookMarksCheckbox = new System.Windows.Forms.CheckBox();
+            lineNumbersCheckbox = new System.Windows.Forms.CheckBox();
+            settingsList = new System.Windows.Forms.ListBox();
+            panelSnippet = new SnippetManager();
+            panelSpelling = new System.Windows.Forms.Panel();
+            addLangsButton = new System.Windows.Forms.Button();
+            enableSpellcheckCheckBox = new System.Windows.Forms.CheckBox();
+            addWordsToIgnoreLabel = new System.Windows.Forms.Label();
+            wordsToIgnoreLabel = new System.Windows.Forms.Label();
+            wordsToIgnoreListBox = new System.Windows.Forms.ListBox();
+            removeIgnoreWordButton = new System.Windows.Forms.Button();
+            label11 = new System.Windows.Forms.Label();
+            spellcheckOptionsLabel = new System.Windows.Forms.Label();
+            spellLangComboBox = new System.Windows.Forms.ComboBox();
+            panelRenderOptions = new System.Windows.Forms.Panel();
+            renderOpInfoLabel = new MessageLabel();
+            noClipWarnLabel = new MessageLabel();
+            presetLabel = new System.Windows.Forms.Label();
+            panelRenderOptionsSub = new System.Windows.Forms.Panel();
+            flagsLabel = new System.Windows.Forms.Label();
+            scheduleLabel = new System.Windows.Forms.Label();
+            horizontalStripsRadioButton = new System.Windows.Forms.RadioButton();
+            squareTilesRadioButton = new System.Windows.Forms.RadioButton();
+            aliasedSelectionCheckBox = new System.Windows.Forms.CheckBox();
+            noneRadioButton = new System.Windows.Forms.RadioButton();
+            noClipCheckBox = new System.Windows.Forms.CheckBox();
+            singleThreadedCheckBox = new System.Windows.Forms.CheckBox();
+            presetComboBox = new System.Windows.Forms.ComboBox();
+            panelUpdates.SuspendLayout();
+            panelCompiler.SuspendLayout();
+            panelUI.SuspendLayout();
+            panelSpelling.SuspendLayout();
+            panelRenderOptions.SuspendLayout();
+            panelRenderOptionsSub.SuspendLayout();
+            SuspendLayout();
             // 
             // closeButton
             // 
-            this.closeButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.closeButton.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.closeButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.closeButton.Location = new System.Drawing.Point(604, 433);
-            this.closeButton.Name = "closeButton";
-            this.closeButton.Size = new System.Drawing.Size(75, 23);
-            this.closeButton.TabIndex = 3;
-            this.closeButton.Text = "Close";
-            this.closeButton.UseVisualStyleBackColor = true;
+            closeButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
+            closeButton.DialogResult = System.Windows.Forms.DialogResult.OK;
+            closeButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            closeButton.Location = new System.Drawing.Point(604, 433);
+            closeButton.Name = "closeButton";
+            closeButton.Size = new System.Drawing.Size(75, 23);
+            closeButton.TabIndex = 3;
+            closeButton.Text = "Close";
+            closeButton.UseVisualStyleBackColor = true;
             // 
             // panelUpdates
             // 
-            this.panelUpdates.Controls.Add(this.checkNowButton);
-            this.panelUpdates.Controls.Add(this.checkForUpdates);
-            this.panelUpdates.Location = new System.Drawing.Point(202, 12);
-            this.panelUpdates.Name = "panelUpdates";
-            this.panelUpdates.Size = new System.Drawing.Size(476, 405);
-            this.panelUpdates.TabIndex = 2;
+            panelUpdates.Controls.Add(checkNowButton);
+            panelUpdates.Controls.Add(checkForUpdates);
+            panelUpdates.Location = new System.Drawing.Point(202, 12);
+            panelUpdates.Name = "panelUpdates";
+            panelUpdates.Size = new System.Drawing.Size(476, 405);
+            panelUpdates.TabIndex = 2;
             // 
             // checkNowButton
             // 
-            this.checkNowButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.checkNowButton.Location = new System.Drawing.Point(16, 53);
-            this.checkNowButton.Name = "checkNowButton";
-            this.checkNowButton.Size = new System.Drawing.Size(88, 23);
-            this.checkNowButton.TabIndex = 1;
-            this.checkNowButton.Text = "Check Now";
-            this.checkNowButton.UseVisualStyleBackColor = true;
-            this.checkNowButton.Click += new System.EventHandler(this.checkNowButton_Click);
+            checkNowButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            checkNowButton.Location = new System.Drawing.Point(16, 53);
+            checkNowButton.Name = "checkNowButton";
+            checkNowButton.Size = new System.Drawing.Size(88, 23);
+            checkNowButton.TabIndex = 1;
+            checkNowButton.Text = "Check Now";
+            checkNowButton.UseVisualStyleBackColor = true;
+            checkNowButton.Click += checkNowButton_Click;
             // 
             // checkForUpdates
             // 
-            this.checkForUpdates.AutoSize = true;
-            this.checkForUpdates.Location = new System.Drawing.Point(16, 17);
-            this.checkForUpdates.Name = "checkForUpdates";
-            this.checkForUpdates.Size = new System.Drawing.Size(310, 19);
-            this.checkForUpdates.TabIndex = 0;
-            this.checkForUpdates.Text = "Automatically check for updates when CodeLab starts";
-            this.checkForUpdates.UseVisualStyleBackColor = true;
-            this.checkForUpdates.CheckedChanged += new System.EventHandler(this.checkForUpdates_CheckedChanged);
+            checkForUpdates.AutoSize = true;
+            checkForUpdates.Location = new System.Drawing.Point(16, 17);
+            checkForUpdates.Name = "checkForUpdates";
+            checkForUpdates.Size = new System.Drawing.Size(310, 19);
+            checkForUpdates.TabIndex = 0;
+            checkForUpdates.Text = "Automatically check for updates when CodeLab starts";
+            checkForUpdates.UseVisualStyleBackColor = true;
+            checkForUpdates.CheckedChanged += checkForUpdates_CheckedChanged;
             // 
             // panelCompiler
             // 
-            this.panelCompiler.Controls.Add(this.label7);
-            this.panelCompiler.Controls.Add(this.label6);
-            this.panelCompiler.Controls.Add(this.lookupWarningButton);
-            this.panelCompiler.Controls.Add(this.warningToIgnoreLabel);
-            this.panelCompiler.Controls.Add(this.warningsToIgnoreList);
-            this.panelCompiler.Controls.Add(this.removeWarningButton);
-            this.panelCompiler.Controls.Add(this.label9);
-            this.panelCompiler.Controls.Add(this.label8);
-            this.panelCompiler.Controls.Add(this.warningLevelCombobox);
-            this.panelCompiler.Location = new System.Drawing.Point(202, 12);
-            this.panelCompiler.Name = "panelCompiler";
-            this.panelCompiler.Size = new System.Drawing.Size(476, 405);
-            this.panelCompiler.TabIndex = 0;
+            panelCompiler.Controls.Add(label7);
+            panelCompiler.Controls.Add(label6);
+            panelCompiler.Controls.Add(lookupWarningButton);
+            panelCompiler.Controls.Add(warningToIgnoreLabel);
+            panelCompiler.Controls.Add(warningsToIgnoreList);
+            panelCompiler.Controls.Add(removeWarningButton);
+            panelCompiler.Controls.Add(label9);
+            panelCompiler.Controls.Add(label8);
+            panelCompiler.Controls.Add(warningLevelCombobox);
+            panelCompiler.Location = new System.Drawing.Point(202, 12);
+            panelCompiler.Name = "panelCompiler";
+            panelCompiler.Size = new System.Drawing.Size(476, 405);
+            panelCompiler.TabIndex = 0;
             // 
             // label7
             // 
-            this.label7.Location = new System.Drawing.Point(141, 44);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(323, 99);
-            this.label7.TabIndex = 8;
-            this.label7.Text = resources.GetString("label7.Text");
+            label7.Location = new System.Drawing.Point(141, 44);
+            label7.Name = "label7";
+            label7.Size = new System.Drawing.Size(323, 99);
+            label7.TabIndex = 8;
+            label7.Text = resources.GetString("label7.Text");
             // 
             // label6
             // 
-            this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.label6.Location = new System.Drawing.Point(133, 247);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(313, 75);
-            this.label6.TabIndex = 7;
-            this.label6.Text = "To add a specific warning to the list of warnings to ignore, when you see a warni" +
-    "ng in the error\'s list below the code window, right-click on the warning and cho" +
-    "ose \"Ignore this Warning\".";
+            label6.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            label6.Location = new System.Drawing.Point(133, 247);
+            label6.Name = "label6";
+            label6.Size = new System.Drawing.Size(313, 75);
+            label6.TabIndex = 7;
+            label6.Text = "To add a specific warning to the list of warnings to ignore, when you see a warning in the error's list below the code window, right-click on the warning and choose \"Ignore this Warning\".";
             // 
             // lookupWarningButton
             // 
-            this.lookupWarningButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.lookupWarningButton.Location = new System.Drawing.Point(133, 211);
-            this.lookupWarningButton.Name = "lookupWarningButton";
-            this.lookupWarningButton.Size = new System.Drawing.Size(108, 25);
-            this.lookupWarningButton.TabIndex = 6;
-            this.lookupWarningButton.Text = "Lookup Warning";
-            this.lookupWarningButton.UseVisualStyleBackColor = true;
-            this.lookupWarningButton.Click += new System.EventHandler(this.lookupWarningButton_Click);
+            lookupWarningButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            lookupWarningButton.Location = new System.Drawing.Point(133, 211);
+            lookupWarningButton.Name = "lookupWarningButton";
+            lookupWarningButton.Size = new System.Drawing.Size(108, 25);
+            lookupWarningButton.TabIndex = 6;
+            lookupWarningButton.Text = "Lookup Warning";
+            lookupWarningButton.UseVisualStyleBackColor = true;
+            lookupWarningButton.Click += lookupWarningButton_Click;
             // 
             // warningToIgnoreLabel
             // 
-            this.warningToIgnoreLabel.AutoSize = true;
-            this.warningToIgnoreLabel.Location = new System.Drawing.Point(35, 155);
-            this.warningToIgnoreLabel.Name = "warningToIgnoreLabel";
-            this.warningToIgnoreLabel.Size = new System.Drawing.Size(111, 15);
-            this.warningToIgnoreLabel.TabIndex = 3;
-            this.warningToIgnoreLabel.Text = "Warnings to ignore:";
+            warningToIgnoreLabel.AutoSize = true;
+            warningToIgnoreLabel.Location = new System.Drawing.Point(35, 155);
+            warningToIgnoreLabel.Name = "warningToIgnoreLabel";
+            warningToIgnoreLabel.Size = new System.Drawing.Size(111, 15);
+            warningToIgnoreLabel.TabIndex = 3;
+            warningToIgnoreLabel.Text = "Warnings to ignore:";
             // 
             // warningsToIgnoreList
             // 
-            this.warningsToIgnoreList.FormattingEnabled = true;
-            this.warningsToIgnoreList.ItemHeight = 15;
-            this.warningsToIgnoreList.Location = new System.Drawing.Point(48, 180);
-            this.warningsToIgnoreList.Name = "warningsToIgnoreList";
-            this.warningsToIgnoreList.Size = new System.Drawing.Size(75, 139);
-            this.warningsToIgnoreList.TabIndex = 4;
+            warningsToIgnoreList.FormattingEnabled = true;
+            warningsToIgnoreList.ItemHeight = 15;
+            warningsToIgnoreList.Location = new System.Drawing.Point(48, 180);
+            warningsToIgnoreList.Name = "warningsToIgnoreList";
+            warningsToIgnoreList.Size = new System.Drawing.Size(75, 139);
+            warningsToIgnoreList.TabIndex = 4;
             // 
             // removeWarningButton
             // 
-            this.removeWarningButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.removeWarningButton.Location = new System.Drawing.Point(133, 180);
-            this.removeWarningButton.Name = "removeWarningButton";
-            this.removeWarningButton.Size = new System.Drawing.Size(108, 25);
-            this.removeWarningButton.TabIndex = 5;
-            this.removeWarningButton.Text = "Remove Warning";
-            this.removeWarningButton.UseVisualStyleBackColor = true;
-            this.removeWarningButton.Click += new System.EventHandler(this.removeWarningButton_Click);
+            removeWarningButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            removeWarningButton.Location = new System.Drawing.Point(133, 180);
+            removeWarningButton.Name = "removeWarningButton";
+            removeWarningButton.Size = new System.Drawing.Size(108, 25);
+            removeWarningButton.TabIndex = 5;
+            removeWarningButton.Text = "Remove Warning";
+            removeWarningButton.UseVisualStyleBackColor = true;
+            removeWarningButton.Click += removeWarningButton_Click;
             // 
             // label9
             // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(35, 44);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(82, 15);
-            this.label9.TabIndex = 1;
-            this.label9.Text = "Warning level:";
+            label9.AutoSize = true;
+            label9.Location = new System.Drawing.Point(35, 44);
+            label9.Name = "label9";
+            label9.Size = new System.Drawing.Size(82, 15);
+            label9.TabIndex = 1;
+            label9.Text = "Warning level:";
             // 
             // label8
             // 
-            this.label8.AutoSize = true;
-            this.label8.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label8.Location = new System.Drawing.Point(14, 17);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(120, 15);
-            this.label8.TabIndex = 0;
-            this.label8.Text = "C# compiler options:";
+            label8.AutoSize = true;
+            label8.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            label8.Location = new System.Drawing.Point(14, 17);
+            label8.Name = "label8";
+            label8.Size = new System.Drawing.Size(120, 15);
+            label8.TabIndex = 0;
+            label8.Text = "C# compiler options:";
             // 
             // warningLevelCombobox
             // 
-            this.warningLevelCombobox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.warningLevelCombobox.FormattingEnabled = true;
-            this.warningLevelCombobox.Items.AddRange(new object[] {
-            "0",
-            "1",
-            "2",
-            "3",
-            "4"});
-            this.warningLevelCombobox.Location = new System.Drawing.Point(48, 68);
-            this.warningLevelCombobox.Name = "warningLevelCombobox";
-            this.warningLevelCombobox.Size = new System.Drawing.Size(75, 23);
-            this.warningLevelCombobox.TabIndex = 2;
-            this.warningLevelCombobox.SelectedIndexChanged += new System.EventHandler(this.warningLevelCombobox_SelectedIndexChanged);
+            warningLevelCombobox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            warningLevelCombobox.FormattingEnabled = true;
+            warningLevelCombobox.Items.AddRange(new object[] { "0", "1", "2", "3", "4" });
+            warningLevelCombobox.Location = new System.Drawing.Point(48, 68);
+            warningLevelCombobox.Name = "warningLevelCombobox";
+            warningLevelCombobox.Size = new System.Drawing.Size(75, 23);
+            warningLevelCombobox.TabIndex = 2;
+            warningLevelCombobox.SelectedIndexChanged += warningLevelCombobox_SelectedIndexChanged;
             // 
             // panelUI
             // 
-            this.panelUI.Controls.Add(this.label10);
-            this.panelUI.Controls.Add(this.disableAutoCompCheckBox);
-            this.panelUI.Controls.Add(this.extendedColorsCheckBox);
-            this.panelUI.Controls.Add(this.caretLineFrameCheckBox);
-            this.panelUI.Controls.Add(this.indentSpacesLabel);
-            this.panelUI.Controls.Add(this.indentSpacesComboBox);
-            this.panelUI.Controls.Add(this.toolbarCheckbox);
-            this.panelUI.Controls.Add(this.label5);
-            this.panelUI.Controls.Add(this.linkLabel1);
-            this.panelUI.Controls.Add(this.label4);
-            this.panelUI.Controls.Add(this.wordWrapTextFilesCheckbox);
-            this.panelUI.Controls.Add(this.themeCombobox);
-            this.panelUI.Controls.Add(this.label3);
-            this.panelUI.Controls.Add(this.largeFontCheckbox);
-            this.panelUI.Controls.Add(this.fontCombobox);
-            this.panelUI.Controls.Add(this.label2);
-            this.panelUI.Controls.Add(this.showWhiteSpaceCheckbox);
-            this.panelUI.Controls.Add(this.label1);
-            this.panelUI.Controls.Add(this.wordWrapCheckbox);
-            this.panelUI.Controls.Add(this.indicatorMapCheckbox);
-            this.panelUI.Controls.Add(this.codeFoldingCheckbox);
-            this.panelUI.Controls.Add(this.bookMarksCheckbox);
-            this.panelUI.Controls.Add(this.lineNumbersCheckbox);
-            this.panelUI.Location = new System.Drawing.Point(202, 12);
-            this.panelUI.Name = "panelUI";
-            this.panelUI.Size = new System.Drawing.Size(476, 405);
-            this.panelUI.TabIndex = 1;
-            // 
-            // disableAutoCompCheckBox
-            // 
-            this.disableAutoCompCheckBox.AutoSize = true;
-            this.disableAutoCompCheckBox.Location = new System.Drawing.Point(32, 131);
-            this.disableAutoCompCheckBox.Name = "disableAutoCompCheckBox";
-            this.disableAutoCompCheckBox.Size = new System.Drawing.Size(160, 19);
-            this.disableAutoCompCheckBox.TabIndex = 20;
-            this.disableAutoCompCheckBox.Text = "Disable Auto Complete...";
-            this.disableAutoCompCheckBox.UseVisualStyleBackColor = true;
-            this.disableAutoCompCheckBox.CheckedChanged += new System.EventHandler(this.disableAutoCompCheckBox_CheckedChanged);
-            // 
-            // extendedColorsCheckBox
-            // 
-            this.extendedColorsCheckBox.AutoSize = true;
-            this.extendedColorsCheckBox.Location = new System.Drawing.Point(32, 378);
-            this.extendedColorsCheckBox.Name = "extendedColorsCheckBox";
-            this.extendedColorsCheckBox.Size = new System.Drawing.Size(192, 19);
-            this.extendedColorsCheckBox.TabIndex = 19;
-            this.extendedColorsCheckBox.Text = "Extended Colors (Experimental)";
-            this.extendedColorsCheckBox.UseVisualStyleBackColor = true;
-            this.extendedColorsCheckBox.CheckedChanged += new System.EventHandler(this.extendedColorsCheckBox_CheckedChanged);
-            // 
-            // caretLineFrameCheckBox
-            // 
-            this.caretLineFrameCheckBox.AutoSize = true;
-            this.caretLineFrameCheckBox.Location = new System.Drawing.Point(237, 105);
-            this.caretLineFrameCheckBox.Name = "caretLineFrameCheckBox";
-            this.caretLineFrameCheckBox.Size = new System.Drawing.Size(122, 19);
-            this.caretLineFrameCheckBox.TabIndex = 8;
-            this.caretLineFrameCheckBox.Text = "Current line frame";
-            this.caretLineFrameCheckBox.UseVisualStyleBackColor = true;
-            this.caretLineFrameCheckBox.CheckedChanged += new System.EventHandler(this.caretLineFrameCheckBox_CheckedChanged);
-            // 
-            // indentSpacesLabel
-            // 
-            this.indentSpacesLabel.AutoSize = true;
-            this.indentSpacesLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.indentSpacesLabel.Location = new System.Drawing.Point(13, 160);
-            this.indentSpacesLabel.Name = "indentSpacesLabel";
-            this.indentSpacesLabel.Size = new System.Drawing.Size(88, 15);
-            this.indentSpacesLabel.TabIndex = 9;
-            this.indentSpacesLabel.Text = "Indent Spaces:";
-            // 
-            // indentSpacesComboBox
-            // 
-            this.indentSpacesComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.indentSpacesComboBox.FormattingEnabled = true;
-            this.indentSpacesComboBox.Items.AddRange(new object[] {
-            "2",
-            "4"});
-            this.indentSpacesComboBox.Location = new System.Drawing.Point(32, 186);
-            this.indentSpacesComboBox.Name = "indentSpacesComboBox";
-            this.indentSpacesComboBox.Size = new System.Drawing.Size(50, 23);
-            this.indentSpacesComboBox.TabIndex = 10;
-            this.indentSpacesComboBox.SelectedIndexChanged += new System.EventHandler(this.indentSpacesComboBox_SelectedIndexChanged);
-            // 
-            // toolbarCheckbox
-            // 
-            this.toolbarCheckbox.AutoSize = true;
-            this.toolbarCheckbox.Location = new System.Drawing.Point(32, 28);
-            this.toolbarCheckbox.Name = "toolbarCheckbox";
-            this.toolbarCheckbox.Size = new System.Drawing.Size(65, 19);
-            this.toolbarCheckbox.TabIndex = 1;
-            this.toolbarCheckbox.Text = "Toolbar";
-            this.toolbarCheckbox.UseVisualStyleBackColor = true;
-            this.toolbarCheckbox.CheckedChanged += new System.EventHandler(this.toolbarCheckbox_CheckedChanged);
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(228, 354);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(190, 15);
-            this.label5.TabIndex = 18;
-            this.label5.Text = "\"Auto\" matches Paint.NET\'s theme";
-            // 
-            // linkLabel1
-            // 
-            this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Location = new System.Drawing.Point(234, 301);
-            this.linkLabel1.Name = "linkLabel1";
-            this.linkLabel1.Size = new System.Drawing.Size(88, 15);
-            this.linkLabel1.TabIndex = 15;
-            this.linkLabel1.TabStop = true;
-            this.linkLabel1.Text = "Help with fonts";
-            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(225, 275);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(177, 15);
-            this.label4.TabIndex = 13;
-            this.label4.Text = "* = not available on your system";
-            // 
-            // wordWrapTextFilesCheckbox
-            // 
-            this.wordWrapTextFilesCheckbox.AutoSize = true;
-            this.wordWrapTextFilesCheckbox.Location = new System.Drawing.Point(237, 80);
-            this.wordWrapTextFilesCheckbox.Name = "wordWrapTextFilesCheckbox";
-            this.wordWrapTextFilesCheckbox.Size = new System.Drawing.Size(150, 19);
-            this.wordWrapTextFilesCheckbox.TabIndex = 6;
-            this.wordWrapTextFilesCheckbox.Text = "Word wrap text files  ‹‒\'";
-            this.wordWrapTextFilesCheckbox.UseVisualStyleBackColor = true;
-            this.wordWrapTextFilesCheckbox.CheckedChanged += new System.EventHandler(this.wordWrapTextFilesCheckbox_CheckedChanged);
-            // 
-            // themeCombobox
-            // 
-            this.themeCombobox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.themeCombobox.FormattingEnabled = true;
-            this.themeCombobox.Items.AddRange(new object[] {
-            "Auto",
-            "Light",
-            "Dark"});
-            this.themeCombobox.Location = new System.Drawing.Point(32, 349);
-            this.themeCombobox.Name = "themeCombobox";
-            this.themeCombobox.Size = new System.Drawing.Size(166, 23);
-            this.themeCombobox.TabIndex = 17;
-            this.themeCombobox.SelectedIndexChanged += new System.EventHandler(this.themeCombobox_SelectedIndexChanged);
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label3.Location = new System.Drawing.Point(13, 330);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(49, 15);
-            this.label3.TabIndex = 16;
-            this.label3.Text = "Theme:";
-            // 
-            // largeFontCheckbox
-            // 
-            this.largeFontCheckbox.AutoSize = true;
-            this.largeFontCheckbox.Location = new System.Drawing.Point(32, 300);
-            this.largeFontCheckbox.Name = "largeFontCheckbox";
-            this.largeFontCheckbox.Size = new System.Drawing.Size(85, 19);
-            this.largeFontCheckbox.TabIndex = 14;
-            this.largeFontCheckbox.Text = "Large fonts";
-            this.largeFontCheckbox.UseVisualStyleBackColor = true;
-            this.largeFontCheckbox.CheckedChanged += new System.EventHandler(this.largeFontCheckbox_CheckedChanged);
-            // 
-            // fontCombobox
-            // 
-            this.fontCombobox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.fontCombobox.FormattingEnabled = true;
-            this.fontCombobox.Items.AddRange(new object[] {
-            "Cascadia Code",
-            "Consolas",
-            "Courier New",
-            "Envy Code R",
-            "Fira Code",
-            "Hack",
-            "JetBrains Mono",
-            "Verdana"});
-            this.fontCombobox.Location = new System.Drawing.Point(32, 270);
-            this.fontCombobox.Name = "fontCombobox";
-            this.fontCombobox.Size = new System.Drawing.Size(166, 23);
-            this.fontCombobox.TabIndex = 12;
-            this.fontCombobox.SelectedIndexChanged += new System.EventHandler(this.fontCombobox_SelectedIndexChanged);
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label2.Location = new System.Drawing.Point(13, 251);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(40, 15);
-            this.label2.TabIndex = 11;
-            this.label2.Text = "Fonts:";
-            // 
-            // showWhiteSpaceCheckbox
-            // 
-            this.showWhiteSpaceCheckbox.AutoSize = true;
-            this.showWhiteSpaceCheckbox.Location = new System.Drawing.Point(32, 216);
-            this.showWhiteSpaceCheckbox.Name = "showWhiteSpaceCheckbox";
-            this.showWhiteSpaceCheckbox.Size = new System.Drawing.Size(129, 19);
-            this.showWhiteSpaceCheckbox.TabIndex = 11;
-            this.showWhiteSpaceCheckbox.Text = "Show whitespace ···";
-            this.showWhiteSpaceCheckbox.UseVisualStyleBackColor = true;
-            this.showWhiteSpaceCheckbox.CheckedChanged += new System.EventHandler(this.showWhiteSpaceCheckbox_CheckedChanged);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label1.Location = new System.Drawing.Point(13, 4);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(116, 15);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Editor functionality:";
-            // 
-            // wordWrapCheckbox
-            // 
-            this.wordWrapCheckbox.AutoSize = true;
-            this.wordWrapCheckbox.Location = new System.Drawing.Point(237, 54);
-            this.wordWrapCheckbox.Name = "wordWrapCheckbox";
-            this.wordWrapCheckbox.Size = new System.Drawing.Size(156, 19);
-            this.wordWrapCheckbox.TabIndex = 4;
-            this.wordWrapCheckbox.Text = "Word wrap code files  ‹‒\'";
-            this.wordWrapCheckbox.UseVisualStyleBackColor = true;
-            this.wordWrapCheckbox.CheckedChanged += new System.EventHandler(this.wordWrapCheckbox_CheckedChanged);
-            // 
-            // indicatorMapCheckbox
-            // 
-            this.indicatorMapCheckbox.AutoSize = true;
-            this.indicatorMapCheckbox.Location = new System.Drawing.Point(237, 28);
-            this.indicatorMapCheckbox.Name = "indicatorMapCheckbox";
-            this.indicatorMapCheckbox.Size = new System.Drawing.Size(156, 19);
-            this.indicatorMapCheckbox.TabIndex = 2;
-            this.indicatorMapCheckbox.Text = "Indicator map (scrollbar)";
-            this.indicatorMapCheckbox.UseVisualStyleBackColor = true;
-            this.indicatorMapCheckbox.CheckedChanged += new System.EventHandler(this.indicatorMapCheckbox_CheckedChanged);
-            // 
-            // codeFoldingCheckbox
-            // 
-            this.codeFoldingCheckbox.AutoSize = true;
-            this.codeFoldingCheckbox.Location = new System.Drawing.Point(32, 105);
-            this.codeFoldingCheckbox.Name = "codeFoldingCheckbox";
-            this.codeFoldingCheckbox.Size = new System.Drawing.Size(114, 19);
-            this.codeFoldingCheckbox.TabIndex = 7;
-            this.codeFoldingCheckbox.Text = "Code folding [+]";
-            this.codeFoldingCheckbox.UseVisualStyleBackColor = true;
-            this.codeFoldingCheckbox.CheckedChanged += new System.EventHandler(this.codeFoldingCheckbox_CheckedChanged);
-            // 
-            // bookMarksCheckbox
-            // 
-            this.bookMarksCheckbox.AutoSize = true;
-            this.bookMarksCheckbox.Location = new System.Drawing.Point(32, 79);
-            this.bookMarksCheckbox.Name = "bookMarksCheckbox";
-            this.bookMarksCheckbox.Size = new System.Drawing.Size(88, 19);
-            this.bookMarksCheckbox.TabIndex = 5;
-            this.bookMarksCheckbox.Text = "Book marks";
-            this.bookMarksCheckbox.UseVisualStyleBackColor = true;
-            this.bookMarksCheckbox.CheckedChanged += new System.EventHandler(this.bookMarksCheckbox_CheckedChanged);
-            // 
-            // lineNumbersCheckbox
-            // 
-            this.lineNumbersCheckbox.AutoSize = true;
-            this.lineNumbersCheckbox.Location = new System.Drawing.Point(32, 53);
-            this.lineNumbersCheckbox.Name = "lineNumbersCheckbox";
-            this.lineNumbersCheckbox.Size = new System.Drawing.Size(98, 19);
-            this.lineNumbersCheckbox.TabIndex = 3;
-            this.lineNumbersCheckbox.Text = "Line numbers";
-            this.lineNumbersCheckbox.UseVisualStyleBackColor = true;
-            this.lineNumbersCheckbox.CheckedChanged += new System.EventHandler(this.lineNumbersCheckbox_CheckedChanged);
-            // 
-            // settingsList
-            // 
-            this.settingsList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-            this.settingsList.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-            this.settingsList.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.settingsList.FormattingEnabled = true;
-            this.settingsList.IntegralHeight = false;
-            this.settingsList.ItemHeight = 32;
-            this.settingsList.Items.AddRange(new object[] {
-            "User Interface",
-            "Snippets",
-            "Spellcheck",
-            "Compiler",
-            "Updates"});
-            this.settingsList.Location = new System.Drawing.Point(12, 12);
-            this.settingsList.Name = "settingsList";
-            this.settingsList.Size = new System.Drawing.Size(184, 406);
-            this.settingsList.TabIndex = 0;
-            this.settingsList.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.settingsList_DrawItem);
-            this.settingsList.SelectedIndexChanged += new System.EventHandler(this.settingsList_SelectedIndexChanged);
-            // 
-            // panelSnippet
-            // 
-            this.panelSnippet.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.panelSnippet.Location = new System.Drawing.Point(202, 12);
-            this.panelSnippet.Name = "panelSnippet";
-            this.panelSnippet.Size = new System.Drawing.Size(476, 405);
-            this.panelSnippet.TabIndex = 1;
-            // 
-            // panelSpelling
-            // 
-            this.panelSpelling.Controls.Add(this.addLangsButton);
-            this.panelSpelling.Controls.Add(this.enableSpellcheckCheckBox);
-            this.panelSpelling.Controls.Add(this.addWordsToIgnoreLabel);
-            this.panelSpelling.Controls.Add(this.wordsToIgnoreLabel);
-            this.panelSpelling.Controls.Add(this.wordsToIgnoreListBox);
-            this.panelSpelling.Controls.Add(this.removeIgnoreWordButton);
-            this.panelSpelling.Controls.Add(this.label11);
-            this.panelSpelling.Controls.Add(this.spellcheckOptionsLabel);
-            this.panelSpelling.Controls.Add(this.spellLangComboBox);
-            this.panelSpelling.Location = new System.Drawing.Point(202, 12);
-            this.panelSpelling.Name = "panelSpelling";
-            this.panelSpelling.Size = new System.Drawing.Size(476, 405);
-            this.panelSpelling.TabIndex = 8;
-            // 
-            // addLangsButton
-            // 
-            this.addLangsButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.addLangsButton.Location = new System.Drawing.Point(157, 111);
-            this.addLangsButton.Name = "addLangsButton";
-            this.addLangsButton.Size = new System.Drawing.Size(118, 25);
-            this.addLangsButton.TabIndex = 4;
-            this.addLangsButton.Text = "Add Languages";
-            this.addLangsButton.UseVisualStyleBackColor = true;
-            this.addLangsButton.Click += new System.EventHandler(this.addLangsButton_Click);
-            // 
-            // enableSpellcheckCheckBox
-            // 
-            this.enableSpellcheckCheckBox.AutoSize = true;
-            this.enableSpellcheckCheckBox.Location = new System.Drawing.Point(38, 52);
-            this.enableSpellcheckCheckBox.Name = "enableSpellcheckCheckBox";
-            this.enableSpellcheckCheckBox.Size = new System.Drawing.Size(120, 19);
-            this.enableSpellcheckCheckBox.TabIndex = 1;
-            this.enableSpellcheckCheckBox.Text = "Enable Spellcheck";
-            this.enableSpellcheckCheckBox.UseVisualStyleBackColor = true;
-            this.enableSpellcheckCheckBox.CheckedChanged += new System.EventHandler(this.enableSpellcheckCheckBox_CheckedChanged);
-            // 
-            // addWordsToIgnoreLabel
-            // 
-            this.addWordsToIgnoreLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.addWordsToIgnoreLabel.Location = new System.Drawing.Point(154, 208);
-            this.addWordsToIgnoreLabel.Name = "addWordsToIgnoreLabel";
-            this.addWordsToIgnoreLabel.Size = new System.Drawing.Size(310, 75);
-            this.addWordsToIgnoreLabel.TabIndex = 8;
-            this.addWordsToIgnoreLabel.Text = "To add a specific word to the list of words to ignore, when you see a red underli" +
-    "ned word in the code/text window, hover over the word and choose \"Ignore Word\" f" +
-    "rom the light bulb menu.";
-            // 
-            // wordsToIgnoreLabel
-            // 
-            this.wordsToIgnoreLabel.AutoSize = true;
-            this.wordsToIgnoreLabel.Location = new System.Drawing.Point(35, 155);
-            this.wordsToIgnoreLabel.Name = "wordsToIgnoreLabel";
-            this.wordsToIgnoreLabel.Size = new System.Drawing.Size(95, 15);
-            this.wordsToIgnoreLabel.TabIndex = 5;
-            this.wordsToIgnoreLabel.Text = "Words to ignore:";
-            // 
-            // wordsToIgnoreListBox
-            // 
-            this.wordsToIgnoreListBox.FormattingEnabled = true;
-            this.wordsToIgnoreListBox.ItemHeight = 15;
-            this.wordsToIgnoreListBox.Location = new System.Drawing.Point(48, 180);
-            this.wordsToIgnoreListBox.Name = "wordsToIgnoreListBox";
-            this.wordsToIgnoreListBox.Size = new System.Drawing.Size(100, 139);
-            this.wordsToIgnoreListBox.TabIndex = 6;
-            // 
-            // removeIgnoreWordButton
-            // 
-            this.removeIgnoreWordButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.removeIgnoreWordButton.Location = new System.Drawing.Point(157, 180);
-            this.removeIgnoreWordButton.Name = "removeIgnoreWordButton";
-            this.removeIgnoreWordButton.Size = new System.Drawing.Size(118, 24);
-            this.removeIgnoreWordButton.TabIndex = 7;
-            this.removeIgnoreWordButton.Text = "Remove Word";
-            this.removeIgnoreWordButton.UseVisualStyleBackColor = true;
-            this.removeIgnoreWordButton.Click += new System.EventHandler(this.removeIgnoreWordButton_Click);
-            // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(35, 88);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(62, 15);
-            this.label11.TabIndex = 2;
-            this.label11.Text = "Language:";
-            // 
-            // spellcheckOptionsLabel
-            // 
-            this.spellcheckOptionsLabel.AutoSize = true;
-            this.spellcheckOptionsLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.spellcheckOptionsLabel.Location = new System.Drawing.Point(14, 17);
-            this.spellcheckOptionsLabel.Name = "spellcheckOptionsLabel";
-            this.spellcheckOptionsLabel.Size = new System.Drawing.Size(114, 15);
-            this.spellcheckOptionsLabel.TabIndex = 0;
-            this.spellcheckOptionsLabel.Text = "Spellcheck options:";
-            // 
-            // spellLangComboBox
-            // 
-            this.spellLangComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.spellLangComboBox.FormattingEnabled = true;
-            this.spellLangComboBox.Location = new System.Drawing.Point(48, 112);
-            this.spellLangComboBox.Name = "spellLangComboBox";
-            this.spellLangComboBox.Size = new System.Drawing.Size(100, 23);
-            this.spellLangComboBox.TabIndex = 3;
-            this.spellLangComboBox.SelectedIndexChanged += new System.EventHandler(this.spellLangComboBox_SelectedIndexChanged);
+            panelUI.Controls.Add(label10);
+            panelUI.Controls.Add(disableAutoCompCheckBox);
+            panelUI.Controls.Add(extendedColorsCheckBox);
+            panelUI.Controls.Add(caretLineFrameCheckBox);
+            panelUI.Controls.Add(indentSpacesLabel);
+            panelUI.Controls.Add(indentSpacesComboBox);
+            panelUI.Controls.Add(toolbarCheckbox);
+            panelUI.Controls.Add(label5);
+            panelUI.Controls.Add(linkLabel1);
+            panelUI.Controls.Add(label4);
+            panelUI.Controls.Add(wordWrapTextFilesCheckbox);
+            panelUI.Controls.Add(themeCombobox);
+            panelUI.Controls.Add(label3);
+            panelUI.Controls.Add(largeFontCheckbox);
+            panelUI.Controls.Add(fontCombobox);
+            panelUI.Controls.Add(label2);
+            panelUI.Controls.Add(showWhiteSpaceCheckbox);
+            panelUI.Controls.Add(label1);
+            panelUI.Controls.Add(wordWrapCheckbox);
+            panelUI.Controls.Add(indicatorMapCheckbox);
+            panelUI.Controls.Add(codeFoldingCheckbox);
+            panelUI.Controls.Add(bookMarksCheckbox);
+            panelUI.Controls.Add(lineNumbersCheckbox);
+            panelUI.Location = new System.Drawing.Point(202, 12);
+            panelUI.Name = "panelUI";
+            panelUI.Size = new System.Drawing.Size(476, 405);
+            panelUI.TabIndex = 1;
             // 
             // label10
             // 
-            this.label10.Location = new System.Drawing.Point(225, 132);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(239, 51);
-            this.label10.TabIndex = 21;
-            this.label10.Text = "When disabled, you can still trigger the\r\nautocomplete window to open after\r\nty" +
-    "ping period by pressing Ctrl-J";
+            label10.Location = new System.Drawing.Point(225, 132);
+            label10.Name = "label10";
+            label10.Size = new System.Drawing.Size(239, 51);
+            label10.TabIndex = 21;
+            label10.Text = "When disabled, you can still trigger the\r\nautocomplete window to open after\r\ntyping period by pressing Ctrl-J";
+            // 
+            // disableAutoCompCheckBox
+            // 
+            disableAutoCompCheckBox.AutoSize = true;
+            disableAutoCompCheckBox.Location = new System.Drawing.Point(32, 131);
+            disableAutoCompCheckBox.Name = "disableAutoCompCheckBox";
+            disableAutoCompCheckBox.Size = new System.Drawing.Size(157, 19);
+            disableAutoCompCheckBox.TabIndex = 20;
+            disableAutoCompCheckBox.Text = "Disable Auto Complete...";
+            disableAutoCompCheckBox.UseVisualStyleBackColor = true;
+            disableAutoCompCheckBox.CheckedChanged += disableAutoCompCheckBox_CheckedChanged;
+            // 
+            // extendedColorsCheckBox
+            // 
+            extendedColorsCheckBox.AutoSize = true;
+            extendedColorsCheckBox.Location = new System.Drawing.Point(32, 378);
+            extendedColorsCheckBox.Name = "extendedColorsCheckBox";
+            extendedColorsCheckBox.Size = new System.Drawing.Size(192, 19);
+            extendedColorsCheckBox.TabIndex = 19;
+            extendedColorsCheckBox.Text = "Extended Colors (Experimental)";
+            extendedColorsCheckBox.UseVisualStyleBackColor = true;
+            extendedColorsCheckBox.CheckedChanged += extendedColorsCheckBox_CheckedChanged;
+            // 
+            // caretLineFrameCheckBox
+            // 
+            caretLineFrameCheckBox.AutoSize = true;
+            caretLineFrameCheckBox.Location = new System.Drawing.Point(237, 105);
+            caretLineFrameCheckBox.Name = "caretLineFrameCheckBox";
+            caretLineFrameCheckBox.Size = new System.Drawing.Size(122, 19);
+            caretLineFrameCheckBox.TabIndex = 8;
+            caretLineFrameCheckBox.Text = "Current line frame";
+            caretLineFrameCheckBox.UseVisualStyleBackColor = true;
+            caretLineFrameCheckBox.CheckedChanged += caretLineFrameCheckBox_CheckedChanged;
+            // 
+            // indentSpacesLabel
+            // 
+            indentSpacesLabel.AutoSize = true;
+            indentSpacesLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            indentSpacesLabel.Location = new System.Drawing.Point(13, 160);
+            indentSpacesLabel.Name = "indentSpacesLabel";
+            indentSpacesLabel.Size = new System.Drawing.Size(88, 15);
+            indentSpacesLabel.TabIndex = 9;
+            indentSpacesLabel.Text = "Indent Spaces:";
+            // 
+            // indentSpacesComboBox
+            // 
+            indentSpacesComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            indentSpacesComboBox.FormattingEnabled = true;
+            indentSpacesComboBox.Items.AddRange(new object[] { "2", "4" });
+            indentSpacesComboBox.Location = new System.Drawing.Point(32, 186);
+            indentSpacesComboBox.Name = "indentSpacesComboBox";
+            indentSpacesComboBox.Size = new System.Drawing.Size(50, 23);
+            indentSpacesComboBox.TabIndex = 10;
+            indentSpacesComboBox.SelectedIndexChanged += indentSpacesComboBox_SelectedIndexChanged;
+            // 
+            // toolbarCheckbox
+            // 
+            toolbarCheckbox.AutoSize = true;
+            toolbarCheckbox.Location = new System.Drawing.Point(32, 28);
+            toolbarCheckbox.Name = "toolbarCheckbox";
+            toolbarCheckbox.Size = new System.Drawing.Size(65, 19);
+            toolbarCheckbox.TabIndex = 1;
+            toolbarCheckbox.Text = "Toolbar";
+            toolbarCheckbox.UseVisualStyleBackColor = true;
+            toolbarCheckbox.CheckedChanged += toolbarCheckbox_CheckedChanged;
+            // 
+            // label5
+            // 
+            label5.AutoSize = true;
+            label5.Location = new System.Drawing.Point(228, 354);
+            label5.Name = "label5";
+            label5.Size = new System.Drawing.Size(190, 15);
+            label5.TabIndex = 18;
+            label5.Text = "\"Auto\" matches Paint.NET's theme";
+            // 
+            // linkLabel1
+            // 
+            linkLabel1.AutoSize = true;
+            linkLabel1.Location = new System.Drawing.Point(234, 301);
+            linkLabel1.Name = "linkLabel1";
+            linkLabel1.Size = new System.Drawing.Size(88, 15);
+            linkLabel1.TabIndex = 15;
+            linkLabel1.TabStop = true;
+            linkLabel1.Text = "Help with fonts";
+            linkLabel1.LinkClicked += linkLabel1_LinkClicked;
+            // 
+            // label4
+            // 
+            label4.AutoSize = true;
+            label4.Location = new System.Drawing.Point(225, 275);
+            label4.Name = "label4";
+            label4.Size = new System.Drawing.Size(177, 15);
+            label4.TabIndex = 13;
+            label4.Text = "* = not available on your system";
+            // 
+            // wordWrapTextFilesCheckbox
+            // 
+            wordWrapTextFilesCheckbox.AutoSize = true;
+            wordWrapTextFilesCheckbox.Location = new System.Drawing.Point(237, 80);
+            wordWrapTextFilesCheckbox.Name = "wordWrapTextFilesCheckbox";
+            wordWrapTextFilesCheckbox.Size = new System.Drawing.Size(150, 19);
+            wordWrapTextFilesCheckbox.TabIndex = 6;
+            wordWrapTextFilesCheckbox.Text = "Word wrap text files  ‹‒'";
+            wordWrapTextFilesCheckbox.UseVisualStyleBackColor = true;
+            wordWrapTextFilesCheckbox.CheckedChanged += wordWrapTextFilesCheckbox_CheckedChanged;
+            // 
+            // themeCombobox
+            // 
+            themeCombobox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            themeCombobox.FormattingEnabled = true;
+            themeCombobox.Items.AddRange(new object[] { "Auto", "Light", "Dark" });
+            themeCombobox.Location = new System.Drawing.Point(32, 349);
+            themeCombobox.Name = "themeCombobox";
+            themeCombobox.Size = new System.Drawing.Size(166, 23);
+            themeCombobox.TabIndex = 17;
+            themeCombobox.SelectedIndexChanged += themeCombobox_SelectedIndexChanged;
+            // 
+            // label3
+            // 
+            label3.AutoSize = true;
+            label3.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            label3.Location = new System.Drawing.Point(13, 330);
+            label3.Name = "label3";
+            label3.Size = new System.Drawing.Size(49, 15);
+            label3.TabIndex = 16;
+            label3.Text = "Theme:";
+            // 
+            // largeFontCheckbox
+            // 
+            largeFontCheckbox.AutoSize = true;
+            largeFontCheckbox.Location = new System.Drawing.Point(32, 300);
+            largeFontCheckbox.Name = "largeFontCheckbox";
+            largeFontCheckbox.Size = new System.Drawing.Size(85, 19);
+            largeFontCheckbox.TabIndex = 14;
+            largeFontCheckbox.Text = "Large fonts";
+            largeFontCheckbox.UseVisualStyleBackColor = true;
+            largeFontCheckbox.CheckedChanged += largeFontCheckbox_CheckedChanged;
+            // 
+            // fontCombobox
+            // 
+            fontCombobox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            fontCombobox.FormattingEnabled = true;
+            fontCombobox.Items.AddRange(new object[] { "Cascadia Code", "Consolas", "Courier New", "Envy Code R", "Fira Code", "Hack", "JetBrains Mono", "Verdana" });
+            fontCombobox.Location = new System.Drawing.Point(32, 270);
+            fontCombobox.Name = "fontCombobox";
+            fontCombobox.Size = new System.Drawing.Size(166, 23);
+            fontCombobox.TabIndex = 12;
+            fontCombobox.SelectedIndexChanged += fontCombobox_SelectedIndexChanged;
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            label2.Location = new System.Drawing.Point(13, 251);
+            label2.Name = "label2";
+            label2.Size = new System.Drawing.Size(40, 15);
+            label2.TabIndex = 11;
+            label2.Text = "Fonts:";
+            // 
+            // showWhiteSpaceCheckbox
+            // 
+            showWhiteSpaceCheckbox.AutoSize = true;
+            showWhiteSpaceCheckbox.Location = new System.Drawing.Point(32, 216);
+            showWhiteSpaceCheckbox.Name = "showWhiteSpaceCheckbox";
+            showWhiteSpaceCheckbox.Size = new System.Drawing.Size(129, 19);
+            showWhiteSpaceCheckbox.TabIndex = 11;
+            showWhiteSpaceCheckbox.Text = "Show whitespace ···";
+            showWhiteSpaceCheckbox.UseVisualStyleBackColor = true;
+            showWhiteSpaceCheckbox.CheckedChanged += showWhiteSpaceCheckbox_CheckedChanged;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            label1.Location = new System.Drawing.Point(13, 4);
+            label1.Name = "label1";
+            label1.Size = new System.Drawing.Size(116, 15);
+            label1.TabIndex = 0;
+            label1.Text = "Editor functionality:";
+            // 
+            // wordWrapCheckbox
+            // 
+            wordWrapCheckbox.AutoSize = true;
+            wordWrapCheckbox.Location = new System.Drawing.Point(237, 54);
+            wordWrapCheckbox.Name = "wordWrapCheckbox";
+            wordWrapCheckbox.Size = new System.Drawing.Size(156, 19);
+            wordWrapCheckbox.TabIndex = 4;
+            wordWrapCheckbox.Text = "Word wrap code files  ‹‒'";
+            wordWrapCheckbox.UseVisualStyleBackColor = true;
+            wordWrapCheckbox.CheckedChanged += wordWrapCheckbox_CheckedChanged;
+            // 
+            // indicatorMapCheckbox
+            // 
+            indicatorMapCheckbox.AutoSize = true;
+            indicatorMapCheckbox.Location = new System.Drawing.Point(237, 28);
+            indicatorMapCheckbox.Name = "indicatorMapCheckbox";
+            indicatorMapCheckbox.Size = new System.Drawing.Size(156, 19);
+            indicatorMapCheckbox.TabIndex = 2;
+            indicatorMapCheckbox.Text = "Indicator map (scrollbar)";
+            indicatorMapCheckbox.UseVisualStyleBackColor = true;
+            indicatorMapCheckbox.CheckedChanged += indicatorMapCheckbox_CheckedChanged;
+            // 
+            // codeFoldingCheckbox
+            // 
+            codeFoldingCheckbox.AutoSize = true;
+            codeFoldingCheckbox.Location = new System.Drawing.Point(32, 105);
+            codeFoldingCheckbox.Name = "codeFoldingCheckbox";
+            codeFoldingCheckbox.Size = new System.Drawing.Size(114, 19);
+            codeFoldingCheckbox.TabIndex = 7;
+            codeFoldingCheckbox.Text = "Code folding [+]";
+            codeFoldingCheckbox.UseVisualStyleBackColor = true;
+            codeFoldingCheckbox.CheckedChanged += codeFoldingCheckbox_CheckedChanged;
+            // 
+            // bookMarksCheckbox
+            // 
+            bookMarksCheckbox.AutoSize = true;
+            bookMarksCheckbox.Location = new System.Drawing.Point(32, 79);
+            bookMarksCheckbox.Name = "bookMarksCheckbox";
+            bookMarksCheckbox.Size = new System.Drawing.Size(88, 19);
+            bookMarksCheckbox.TabIndex = 5;
+            bookMarksCheckbox.Text = "Book marks";
+            bookMarksCheckbox.UseVisualStyleBackColor = true;
+            bookMarksCheckbox.CheckedChanged += bookMarksCheckbox_CheckedChanged;
+            // 
+            // lineNumbersCheckbox
+            // 
+            lineNumbersCheckbox.AutoSize = true;
+            lineNumbersCheckbox.Location = new System.Drawing.Point(32, 53);
+            lineNumbersCheckbox.Name = "lineNumbersCheckbox";
+            lineNumbersCheckbox.Size = new System.Drawing.Size(98, 19);
+            lineNumbersCheckbox.TabIndex = 3;
+            lineNumbersCheckbox.Text = "Line numbers";
+            lineNumbersCheckbox.UseVisualStyleBackColor = true;
+            lineNumbersCheckbox.CheckedChanged += lineNumbersCheckbox_CheckedChanged;
+            // 
+            // settingsList
+            // 
+            settingsList.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
+            settingsList.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            settingsList.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            settingsList.FormattingEnabled = true;
+            settingsList.IntegralHeight = false;
+            settingsList.ItemHeight = 32;
+            settingsList.Location = new System.Drawing.Point(12, 12);
+            settingsList.Name = "settingsList";
+            settingsList.Size = new System.Drawing.Size(184, 406);
+            settingsList.TabIndex = 0;
+            settingsList.DrawItem += settingsList_DrawItem;
+            settingsList.SelectedIndexChanged += settingsList_SelectedIndexChanged;
+            // 
+            // panelSnippet
+            // 
+            panelSnippet.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            panelSnippet.Location = new System.Drawing.Point(202, 12);
+            panelSnippet.Name = "panelSnippet";
+            panelSnippet.Size = new System.Drawing.Size(476, 405);
+            panelSnippet.TabIndex = 1;
+            // 
+            // panelSpelling
+            // 
+            panelSpelling.Controls.Add(addLangsButton);
+            panelSpelling.Controls.Add(enableSpellcheckCheckBox);
+            panelSpelling.Controls.Add(addWordsToIgnoreLabel);
+            panelSpelling.Controls.Add(wordsToIgnoreLabel);
+            panelSpelling.Controls.Add(wordsToIgnoreListBox);
+            panelSpelling.Controls.Add(removeIgnoreWordButton);
+            panelSpelling.Controls.Add(label11);
+            panelSpelling.Controls.Add(spellcheckOptionsLabel);
+            panelSpelling.Controls.Add(spellLangComboBox);
+            panelSpelling.Location = new System.Drawing.Point(202, 12);
+            panelSpelling.Name = "panelSpelling";
+            panelSpelling.Size = new System.Drawing.Size(476, 405);
+            panelSpelling.TabIndex = 8;
+            // 
+            // addLangsButton
+            // 
+            addLangsButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            addLangsButton.Location = new System.Drawing.Point(157, 111);
+            addLangsButton.Name = "addLangsButton";
+            addLangsButton.Size = new System.Drawing.Size(118, 25);
+            addLangsButton.TabIndex = 4;
+            addLangsButton.Text = "Add Languages";
+            addLangsButton.UseVisualStyleBackColor = true;
+            addLangsButton.Click += addLangsButton_Click;
+            // 
+            // enableSpellcheckCheckBox
+            // 
+            enableSpellcheckCheckBox.AutoSize = true;
+            enableSpellcheckCheckBox.Location = new System.Drawing.Point(38, 52);
+            enableSpellcheckCheckBox.Name = "enableSpellcheckCheckBox";
+            enableSpellcheckCheckBox.Size = new System.Drawing.Size(120, 19);
+            enableSpellcheckCheckBox.TabIndex = 1;
+            enableSpellcheckCheckBox.Text = "Enable Spellcheck";
+            enableSpellcheckCheckBox.UseVisualStyleBackColor = true;
+            enableSpellcheckCheckBox.CheckedChanged += enableSpellcheckCheckBox_CheckedChanged;
+            // 
+            // addWordsToIgnoreLabel
+            // 
+            addWordsToIgnoreLabel.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            addWordsToIgnoreLabel.Location = new System.Drawing.Point(154, 208);
+            addWordsToIgnoreLabel.Name = "addWordsToIgnoreLabel";
+            addWordsToIgnoreLabel.Size = new System.Drawing.Size(310, 75);
+            addWordsToIgnoreLabel.TabIndex = 8;
+            addWordsToIgnoreLabel.Text = "To add a specific word to the list of words to ignore, when you see a red underlined word in the code/text window, hover over the word and choose \"Ignore Word\" from the light bulb menu.";
+            // 
+            // wordsToIgnoreLabel
+            // 
+            wordsToIgnoreLabel.AutoSize = true;
+            wordsToIgnoreLabel.Location = new System.Drawing.Point(35, 155);
+            wordsToIgnoreLabel.Name = "wordsToIgnoreLabel";
+            wordsToIgnoreLabel.Size = new System.Drawing.Size(95, 15);
+            wordsToIgnoreLabel.TabIndex = 5;
+            wordsToIgnoreLabel.Text = "Words to ignore:";
+            // 
+            // wordsToIgnoreListBox
+            // 
+            wordsToIgnoreListBox.FormattingEnabled = true;
+            wordsToIgnoreListBox.ItemHeight = 15;
+            wordsToIgnoreListBox.Location = new System.Drawing.Point(48, 180);
+            wordsToIgnoreListBox.Name = "wordsToIgnoreListBox";
+            wordsToIgnoreListBox.Size = new System.Drawing.Size(100, 139);
+            wordsToIgnoreListBox.TabIndex = 6;
+            // 
+            // removeIgnoreWordButton
+            // 
+            removeIgnoreWordButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            removeIgnoreWordButton.Location = new System.Drawing.Point(157, 180);
+            removeIgnoreWordButton.Name = "removeIgnoreWordButton";
+            removeIgnoreWordButton.Size = new System.Drawing.Size(118, 24);
+            removeIgnoreWordButton.TabIndex = 7;
+            removeIgnoreWordButton.Text = "Remove Word";
+            removeIgnoreWordButton.UseVisualStyleBackColor = true;
+            removeIgnoreWordButton.Click += removeIgnoreWordButton_Click;
+            // 
+            // label11
+            // 
+            label11.AutoSize = true;
+            label11.Location = new System.Drawing.Point(35, 88);
+            label11.Name = "label11";
+            label11.Size = new System.Drawing.Size(62, 15);
+            label11.TabIndex = 2;
+            label11.Text = "Language:";
+            // 
+            // spellcheckOptionsLabel
+            // 
+            spellcheckOptionsLabel.AutoSize = true;
+            spellcheckOptionsLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            spellcheckOptionsLabel.Location = new System.Drawing.Point(14, 17);
+            spellcheckOptionsLabel.Name = "spellcheckOptionsLabel";
+            spellcheckOptionsLabel.Size = new System.Drawing.Size(114, 15);
+            spellcheckOptionsLabel.TabIndex = 0;
+            spellcheckOptionsLabel.Text = "Spellcheck options:";
+            // 
+            // spellLangComboBox
+            // 
+            spellLangComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            spellLangComboBox.FormattingEnabled = true;
+            spellLangComboBox.Location = new System.Drawing.Point(48, 112);
+            spellLangComboBox.Name = "spellLangComboBox";
+            spellLangComboBox.Size = new System.Drawing.Size(100, 23);
+            spellLangComboBox.TabIndex = 3;
+            spellLangComboBox.SelectedIndexChanged += spellLangComboBox_SelectedIndexChanged;
+            // 
+            // panelRenderOptions
+            // 
+            panelRenderOptions.Controls.Add(renderOpInfoLabel);
+            panelRenderOptions.Controls.Add(noClipWarnLabel);
+            panelRenderOptions.Controls.Add(presetLabel);
+            panelRenderOptions.Controls.Add(panelRenderOptionsSub);
+            panelRenderOptions.Controls.Add(presetComboBox);
+            panelRenderOptions.Location = new System.Drawing.Point(202, 12);
+            panelRenderOptions.Name = "panelRenderOptions";
+            panelRenderOptions.Size = new System.Drawing.Size(476, 405);
+            panelRenderOptions.TabIndex = 9;
+            // 
+            // renderOpInfoLabel
+            // 
+            renderOpInfoLabel.AllowHardwareRendering = false;
+            renderOpInfoLabel.Location = new System.Drawing.Point(16, 291);
+            renderOpInfoLabel.MessageType = MessageType.Info;
+            renderOpInfoLabel.Name = "renderOpInfoLabel";
+            renderOpInfoLabel.Size = new System.Drawing.Size(399, 106);
+            renderOpInfoLabel.TabIndex = 15;
+            renderOpInfoLabel.TabStop = false;
+            renderOpInfoLabel.Text = "Changes in this section will apply the next time CodeLab is run,\r\nand will remain applied until they are changed again.\r\n\r\nThe selected Preset will appear in CodeLab's titlebar.";
+            // 
+            // noClipWarnLabel
+            // 
+            noClipWarnLabel.Location = new System.Drawing.Point(16, 199);
+            noClipWarnLabel.MessageType = MessageType.Warning;
+            noClipWarnLabel.Name = "noClipWarnLabel";
+            noClipWarnLabel.Size = new System.Drawing.Size(399, 65);
+            noClipWarnLabel.TabIndex = 14;
+            noClipWarnLabel.TabStop = false;
+            noClipWarnLabel.Text = "The flag 'Disable Selection Clipping' does not affect Classic Effects.";
+            // 
+            // presetLabel
+            // 
+            presetLabel.AutoSize = true;
+            presetLabel.Location = new System.Drawing.Point(17, 24);
+            presetLabel.Name = "presetLabel";
+            presetLabel.Size = new System.Drawing.Size(39, 15);
+            presetLabel.TabIndex = 13;
+            presetLabel.Text = "Preset";
+            // 
+            // panelRenderOptionsSub
+            // 
+            panelRenderOptionsSub.Controls.Add(flagsLabel);
+            panelRenderOptionsSub.Controls.Add(scheduleLabel);
+            panelRenderOptionsSub.Controls.Add(horizontalStripsRadioButton);
+            panelRenderOptionsSub.Controls.Add(squareTilesRadioButton);
+            panelRenderOptionsSub.Controls.Add(aliasedSelectionCheckBox);
+            panelRenderOptionsSub.Controls.Add(noneRadioButton);
+            panelRenderOptionsSub.Controls.Add(noClipCheckBox);
+            panelRenderOptionsSub.Controls.Add(singleThreadedCheckBox);
+            panelRenderOptionsSub.Location = new System.Drawing.Point(17, 50);
+            panelRenderOptionsSub.Name = "panelRenderOptionsSub";
+            panelRenderOptionsSub.Size = new System.Drawing.Size(398, 130);
+            panelRenderOptionsSub.TabIndex = 12;
+            // 
+            // flagsLabel
+            // 
+            flagsLabel.AutoSize = true;
+            flagsLabel.Location = new System.Drawing.Point(193, 23);
+            flagsLabel.Name = "flagsLabel";
+            flagsLabel.Size = new System.Drawing.Size(91, 15);
+            flagsLabel.TabIndex = 8;
+            flagsLabel.Text = "Rendering Flags";
+            // 
+            // scheduleLabel
+            // 
+            scheduleLabel.AutoSize = true;
+            scheduleLabel.Location = new System.Drawing.Point(11, 23);
+            scheduleLabel.Name = "scheduleLabel";
+            scheduleLabel.Size = new System.Drawing.Size(112, 15);
+            scheduleLabel.TabIndex = 7;
+            scheduleLabel.Text = "Rendering Schedule";
+            // 
+            // horizontalStripsRadioButton
+            // 
+            horizontalStripsRadioButton.AutoSize = true;
+            horizontalStripsRadioButton.Location = new System.Drawing.Point(14, 65);
+            horizontalStripsRadioButton.Name = "horizontalStripsRadioButton";
+            horizontalStripsRadioButton.Size = new System.Drawing.Size(112, 19);
+            horizontalStripsRadioButton.TabIndex = 6;
+            horizontalStripsRadioButton.TabStop = true;
+            horizontalStripsRadioButton.Text = "Horizontal Strips";
+            horizontalStripsRadioButton.UseVisualStyleBackColor = true;
+            horizontalStripsRadioButton.CheckedChanged += RenderOption_CheckedChanged;
+            // 
+            // squareTilesRadioButton
+            // 
+            squareTilesRadioButton.AutoSize = true;
+            squareTilesRadioButton.Location = new System.Drawing.Point(14, 40);
+            squareTilesRadioButton.Name = "squareTilesRadioButton";
+            squareTilesRadioButton.Size = new System.Drawing.Size(87, 19);
+            squareTilesRadioButton.TabIndex = 5;
+            squareTilesRadioButton.TabStop = true;
+            squareTilesRadioButton.Text = "Square Tiles";
+            squareTilesRadioButton.UseVisualStyleBackColor = true;
+            squareTilesRadioButton.CheckedChanged += RenderOption_CheckedChanged;
+            // 
+            // aliasedSelectionCheckBox
+            // 
+            aliasedSelectionCheckBox.AutoSize = true;
+            aliasedSelectionCheckBox.Location = new System.Drawing.Point(196, 66);
+            aliasedSelectionCheckBox.Name = "aliasedSelectionCheckBox";
+            aliasedSelectionCheckBox.Size = new System.Drawing.Size(188, 19);
+            aliasedSelectionCheckBox.TabIndex = 9;
+            aliasedSelectionCheckBox.Text = "Force Aliased Selection Quality";
+            aliasedSelectionCheckBox.UseVisualStyleBackColor = true;
+            aliasedSelectionCheckBox.CheckedChanged += RenderOption_CheckedChanged;
+            // 
+            // noneRadioButton
+            // 
+            noneRadioButton.AutoSize = true;
+            noneRadioButton.Location = new System.Drawing.Point(14, 90);
+            noneRadioButton.Name = "noneRadioButton";
+            noneRadioButton.Size = new System.Drawing.Size(54, 19);
+            noneRadioButton.TabIndex = 7;
+            noneRadioButton.TabStop = true;
+            noneRadioButton.Text = "None";
+            noneRadioButton.UseVisualStyleBackColor = true;
+            noneRadioButton.CheckedChanged += RenderOption_CheckedChanged;
+            // 
+            // noClipCheckBox
+            // 
+            noClipCheckBox.AutoSize = true;
+            noClipCheckBox.Location = new System.Drawing.Point(196, 41);
+            noClipCheckBox.Name = "noClipCheckBox";
+            noClipCheckBox.Size = new System.Drawing.Size(163, 19);
+            noClipCheckBox.TabIndex = 8;
+            noClipCheckBox.Text = "Disable Selection Clipping";
+            noClipCheckBox.UseVisualStyleBackColor = true;
+            noClipCheckBox.CheckedChanged += RenderOption_CheckedChanged;
+            // 
+            // singleThreadedCheckBox
+            // 
+            singleThreadedCheckBox.AutoSize = true;
+            singleThreadedCheckBox.Location = new System.Drawing.Point(196, 91);
+            singleThreadedCheckBox.Name = "singleThreadedCheckBox";
+            singleThreadedCheckBox.Size = new System.Drawing.Size(110, 19);
+            singleThreadedCheckBox.TabIndex = 10;
+            singleThreadedCheckBox.Text = "Single Threaded";
+            singleThreadedCheckBox.UseVisualStyleBackColor = true;
+            singleThreadedCheckBox.CheckedChanged += RenderOption_CheckedChanged;
+            // 
+            // presetComboBox
+            // 
+            presetComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            presetComboBox.FormattingEnabled = true;
+            presetComboBox.Location = new System.Drawing.Point(62, 21);
+            presetComboBox.Name = "presetComboBox";
+            presetComboBox.Size = new System.Drawing.Size(353, 23);
+            presetComboBox.TabIndex = 4;
+            presetComboBox.SelectedIndexChanged += presetComboBox_SelectedIndexChanged;
             // 
             // SettingsForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.CancelButton = this.closeButton;
-            this.ClientSize = new System.Drawing.Size(691, 468);
-            this.Controls.Add(this.settingsList);
-            this.Controls.Add(this.closeButton);
-            this.Controls.Add(this.panelUI);
-            this.Controls.Add(this.panelSnippet);
-            this.Controls.Add(this.panelSpelling);
-            this.Controls.Add(this.panelUpdates);
-            this.Controls.Add(this.panelCompiler);
-            this.IconName = "Settings";
-            this.Name = "SettingsForm";
-            this.Text = "CodeLab Settings";
-            this.panelUpdates.ResumeLayout(false);
-            this.panelUpdates.PerformLayout();
-            this.panelCompiler.ResumeLayout(false);
-            this.panelCompiler.PerformLayout();
-            this.panelUI.ResumeLayout(false);
-            this.panelUI.PerformLayout();
-            this.panelSpelling.ResumeLayout(false);
-            this.panelSpelling.PerformLayout();
-            this.ResumeLayout(false);
-
+            AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            CancelButton = closeButton;
+            ClientSize = new System.Drawing.Size(691, 468);
+            Controls.Add(panelRenderOptions);
+            Controls.Add(settingsList);
+            Controls.Add(closeButton);
+            Controls.Add(panelUI);
+            Controls.Add(panelSnippet);
+            Controls.Add(panelSpelling);
+            Controls.Add(panelUpdates);
+            Controls.Add(panelCompiler);
+            IconName = "Settings";
+            Location = new System.Drawing.Point(0, 0);
+            Name = "SettingsForm";
+            Text = "CodeLab Settings";
+            panelUpdates.ResumeLayout(false);
+            panelUpdates.PerformLayout();
+            panelCompiler.ResumeLayout(false);
+            panelCompiler.PerformLayout();
+            panelUI.ResumeLayout(false);
+            panelUI.PerformLayout();
+            panelSpelling.ResumeLayout(false);
+            panelSpelling.PerformLayout();
+            panelRenderOptions.ResumeLayout(false);
+            panelRenderOptions.PerformLayout();
+            panelRenderOptionsSub.ResumeLayout(false);
+            panelRenderOptionsSub.PerformLayout();
+            ResumeLayout(false);
         }
 
         #endregion
@@ -743,5 +884,19 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.CheckBox disableAutoCompCheckBox;
         private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Panel panelRenderOptions;
+        private System.Windows.Forms.Label presetLabel;
+        private System.Windows.Forms.Panel panelRenderOptionsSub;
+        private System.Windows.Forms.Label flagsLabel;
+        private System.Windows.Forms.Label scheduleLabel;
+        private System.Windows.Forms.RadioButton horizontalStripsRadioButton;
+        private System.Windows.Forms.RadioButton squareTilesRadioButton;
+        private System.Windows.Forms.CheckBox aliasedSelectionCheckBox;
+        private System.Windows.Forms.RadioButton noneRadioButton;
+        private System.Windows.Forms.CheckBox noClipCheckBox;
+        private System.Windows.Forms.CheckBox singleThreadedCheckBox;
+        private System.Windows.Forms.ComboBox presetComboBox;
+        private MessageLabel noClipWarnLabel;
+        private MessageLabel renderOpInfoLabel;
     }
 }

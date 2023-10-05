@@ -226,6 +226,10 @@ namespace PdnCodeLab
                 }
                 PropertyPart += "\r\n";
             }
+            if (UserControls.Any(u => u.ElementType == ElementType.LayerChooser))
+            {
+                PropertyPart += "            int defaultLayerIndex = Environment.SourceLayerIndex;\r\n";
+            }
 
             PropertyPart += "            List<Property> props = new List<Property>();\r\n";
             PropertyPart += "\r\n";
@@ -365,6 +369,9 @@ namespace PdnCodeLab
                     case ElementType.LabelComment:
                         PropertyPart += "            props.Add(new StringProperty(PropertyNames." + propertyName + ", \"\"));\r\n";
                         break;
+                    case ElementType.LayerChooser:
+                        PropertyPart += "            props.Add(new StaticListChoiceProperty(PropertyNames." + propertyName + ", Enumerable.Range(0, Environment.Document.Layers.Count).Reverse().Cast<object>().ToArray(), defaultLayerIndex, false, ValueValidationFailureResult.Ignore));\r\n";
+                        break;
                 }
             }
 
@@ -432,6 +439,7 @@ namespace PdnCodeLab
                             //FontFamily
                             //Uri
                             //LabelComment
+                            //LayerControl
                     }
                 }
                 PropertyPart += "\r\n";
@@ -501,7 +509,8 @@ namespace PdnCodeLab
                 if (u.ElementType == ElementType.Checkbox ||
                     u.ElementType == ElementType.ReseedButton ||
                     u.ElementType == ElementType.Uri ||
-                    u.ElementType == ElementType.LabelComment)
+                    u.ElementType == ElementType.LabelComment ||
+                    u.ElementType == ElementType.LayerChooser)
                 {
                     PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.DisplayName, string.Empty);\r\n";
                 }
@@ -662,6 +671,15 @@ namespace PdnCodeLab
                     case ElementType.LabelComment:
                         PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.Description, \"" + u.StrDefault + "\");\r\n";
                         PropertyPart += "            configUI.SetPropertyControlType(PropertyNames." + propertyName + ", PropertyControlType.Label);\r\n";
+                        break;
+                    case ElementType.LayerChooser:
+                        PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.Description, \"" + u.Name + "\");\r\n";
+                        PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.Multiline, false);\r\n";
+                        PropertyPart += "            PropertyControlInfo " + propertyName + "LayerControl = configUI.FindControlForPropertyName(PropertyNames." + propertyName + ");\r\n";
+                        PropertyPart += "            for (int i = 0; i < Environment.Document.Layers.Count; i++)\r\n";
+                        PropertyPart += "            {\r\n";
+                        PropertyPart += "                " + propertyName + "LayerControl.SetValueDisplayName(i, Environment.Document.Layers[i].Name);\r\n";
+                        PropertyPart += "            }\r\n";
                         break;
                 }
                 PropertyPart += "            configUI.SetPropertyControlValue(PropertyNames." + propertyName + ", ControlInfoPropertyNames.ShowHeaderLine, false);\r\n";
@@ -904,6 +922,9 @@ namespace PdnCodeLab
                         break;
                     case ElementType.RollBall:
                         tokenValues += $"            {u.Identifier} = {tokenName}.GetProperty<DoubleVector3Property>(PropertyNames.{propertyName}).Value;\r\n";
+                        break;
+                    case ElementType.LayerChooser:
+                        tokenValues += $"            {u.Identifier} = (int){tokenName}.GetProperty<StaticListChoiceProperty>(PropertyNames.{propertyName}).Value;\r\n";
                         break;
                 }
             }

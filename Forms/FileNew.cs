@@ -33,7 +33,7 @@ namespace PdnCodeLab
         // The following effects are handled differently as they CAN render to the same surface as the SRC surface:
         private static readonly IReadOnlyCollection<string> sameDstEffects = new string[] { "Hue/Saturation", "Brightness/Contrast" };
 
-        internal FileNew(string EffectFlag)
+        internal FileNew(RenderPreset renderPreset)
         {
             InitializeComponent();
 
@@ -62,15 +62,15 @@ namespace PdnCodeLab
             bottomBox.SelectedIndex = 2;
             updateScreen();
 
-            if (EffectFlag.Contains("Aliased Selection"))
+            if (renderPreset == RenderPreset.AliasedSelection)
             {
                 FAS.Checked = true;
             }
-            else if (EffectFlag.Contains("Legacy ROI"))
+            else if (renderPreset == RenderPreset.LegacyROI)
             {
                 LROI.Checked = true;
             }
-            else if (EffectFlag.Contains("Single Render Call"))
+            else if (renderPreset == RenderPreset.SingleRenderCall)
             {
                 SRC.Checked = true;
             }

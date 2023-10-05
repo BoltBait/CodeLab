@@ -1,5 +1,6 @@
 ﻿#pragma warning disable CS4014
 
+using PaintDotNet.Effects;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -8,13 +9,12 @@ using System.Windows.Forms;
 
 namespace PdnCodeLab
 {
-    public partial class SettingsForm : ChildFormBase
+    internal partial class SettingsForm : ChildFormBase
     {
         #region Initialize
         private readonly bool Initializing;
-        private readonly IReadOnlyList<Image> pageIcons;
 
-        public SettingsForm()
+        internal SettingsForm(SettingsPage defaultPage = SettingsPage.UI)
         {
             InitializeComponent();
             // PDN Theme
@@ -29,18 +29,7 @@ namespace PdnCodeLab
                 }
             }
 
-            pageIcons = new Image[]
-            {
-                UIUtil.GetImage("UI"),
-                UIUtil.GetImage("Snippet"),
-                UIUtil.GetImage("Spelling"),
-                UIUtil.GetImage("Compiler"),
-                UIUtil.GetImage("Updates")
-            };
-
-            settingsList.ItemHeight = UIUtil.Scale(32);
             linkLabel1.LinkColor = this.ForeColor;
-            settingsList.SelectedIndex = 0;
 
             Initializing = true;
 
@@ -93,12 +82,23 @@ namespace PdnCodeLab
             // Updates page
             checkForUpdates.Checked = Settings.CheckForUpdates;
 
+            // RenderOptions page
+            presetComboBox.Items.AddRange(PresentBoxItem.Items);
+            presetComboBox.SelectedIndex = (int)Settings.RenderPreset;
+            panelRenderOptionsSub.BackColor = Color.White;
+            panelRenderOptionsSub.ForeColor = Color.Black;
+
+            // List of Pages
+            settingsList.Items.AddRange(SettingsPageListItem.Items);
+            settingsList.ItemHeight = UIUtil.Scale(32);
+            settingsList.SelectedIndex = (int)defaultPage;
+
             Initializing = false;
         }
 
         private void settingsList_DrawItem(object sender, DrawItemEventArgs e)
         {
-            if (e.Index == -1)
+            if (e.Index == -1 || settingsList.Items[e.Index] is not SettingsPageListItem item)
             {
                 return;
             }
@@ -106,11 +106,10 @@ namespace PdnCodeLab
             e.DrawBackground();
 
             Rectangle iconRect = new Rectangle(e.Bounds.X + UIUtil.Scale(4), e.Bounds.Y + UIUtil.Scale(4), UIUtil.Scale(24), UIUtil.Scale(24));
-            e.Graphics.DrawImage(pageIcons[e.Index], iconRect);
+            e.Graphics.DrawImage(item.Image, iconRect);
 
-            string itemName = settingsList.Items[e.Index].ToString();
             Rectangle textBounds = new Rectangle(e.Bounds.X + e.Bounds.Height, e.Bounds.Y, e.Bounds.Width - e.Bounds.Height, e.Bounds.Height);
-            TextRenderer.DrawText(e.Graphics, itemName, e.Font, textBounds, e.ForeColor, TextFormatFlags.VerticalCenter);
+            TextRenderer.DrawText(e.Graphics, item.Text, e.Font, textBounds, e.ForeColor, TextFormatFlags.VerticalCenter);
 
             e.DrawFocusRectangle();
         }
@@ -120,47 +119,46 @@ namespace PdnCodeLab
             // If you're trying to figure out why your new panel isn't showing, it's because you've dropped your panel into another panel.
             // All panels should be in the form, not inside of other panels. You'll probably have to go into ...Designer.cs to fix that
             // as the WYSIWYG editor makes this difficult.
-            string item = settingsList.SelectedItem.ToString();
-            if (item == "User Interface")
+            if (settingsList.SelectedItem is SettingsPageListItem item)
             {
-                panelUpdates.Visible = false;
-                panelSnippet.Visible = false;
-                panelUI.Visible = true;
-                panelSpelling.Visible = false;
-                panelCompiler.Visible = false;
+                SettingsPage settingsPage = item.Page;
+                panelUpdates.Visible = settingsPage == SettingsPage.Updates;
+                panelSnippet.Visible = settingsPage == SettingsPage.Snippet;
+                panelUI.Visible = settingsPage == SettingsPage.UI;
+                panelSpelling.Visible = settingsPage == SettingsPage.Spelling;
+                panelCompiler.Visible = settingsPage == SettingsPage.Compiler;
+                panelRenderOptions.Visible = settingsPage == SettingsPage.RenderOptions;
             }
-            else if (item == "Snippets")
+        }
+
+        private class SettingsPageListItem
+        {
+            internal SettingsPage Page { get; }
+            internal Image Image { get; }
+            internal string Text { get; }
+
+            private SettingsPageListItem(SettingsPage settingsPage)
             {
-                panelUpdates.Visible = false;
-                panelSnippet.Visible = true;
-                panelUI.Visible = false;
-                panelSpelling.Visible = false;
-                panelCompiler.Visible = false;
+                Page = settingsPage;
+                Image = UIUtil.GetImage(settingsPage.ToString());
+                Text = settingsPage switch
+                {
+                    SettingsPage.UI => "User Interface",
+                    SettingsPage.Snippet => "Snippets",
+                    SettingsPage.Spelling => "Spellcheck",
+                    SettingsPage.Compiler => "Compiler",
+                    SettingsPage.RenderOptions => "Render Options",
+                    SettingsPage.Updates => "Updates",
+                    _ => throw new NotImplementedException(),
+                };
             }
-            else if (item == "Updates")
+
+            public override string ToString()
             {
-                panelUpdates.Visible = true;
-                panelSnippet.Visible = false;
-                panelUI.Visible = false;
-                panelSpelling.Visible = false;
-                panelCompiler.Visible = false;
+                return Text;
             }
-            else if (item == "Compiler")
-            {
-                panelUpdates.Visible = false;
-                panelSnippet.Visible = false;
-                panelUI.Visible = false;
-                panelSpelling.Visible = false;
-                panelCompiler.Visible = true;
-            }
-            else if (item == "Spellcheck")
-            {
-                panelUpdates.Visible = false;
-                panelSnippet.Visible = false;
-                panelUI.Visible = false;
-                panelSpelling.Visible = true;
-                panelCompiler.Visible = false;
-            }
+
+            internal static SettingsPageListItem[] Items { get; } = Enum.GetValues<SettingsPage>().Select(x => new SettingsPageListItem(x)).ToArray();
         }
         #endregion
 
@@ -345,5 +343,126 @@ namespace PdnCodeLab
             }
         }
         #endregion
+
+        #region RenderOptions Page
+        private void presetComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (presetComboBox.SelectedItem is PresentBoxItem item)
+            {
+                RenderPreset selectedPreset = item.Preset;
+                panelRenderOptionsSub.Enabled = selectedPreset == RenderPreset.UserDefined;
+
+                switch (selectedPreset)
+                {
+                    case RenderPreset.Regular:
+                        noneRadioButton.Checked = false;
+                        horizontalStripsRadioButton.Checked = false;
+                        squareTilesRadioButton.Checked = true;
+                        singleThreadedCheckBox.Checked = false;
+                        noClipCheckBox.Checked = false;
+                        aliasedSelectionCheckBox.Checked = false;
+                        break;
+                    case RenderPreset.LegacyROI:
+                        noneRadioButton.Checked = false;
+                        horizontalStripsRadioButton.Checked = true;
+                        squareTilesRadioButton.Checked = false;
+                        singleThreadedCheckBox.Checked = false;
+                        noClipCheckBox.Checked = false;
+                        aliasedSelectionCheckBox.Checked = false;
+                        break;
+                    case RenderPreset.AliasedSelection:
+                        noneRadioButton.Checked = false;
+                        horizontalStripsRadioButton.Checked = false;
+                        squareTilesRadioButton.Checked = true;
+                        singleThreadedCheckBox.Checked = false;
+                        noClipCheckBox.Checked = false;
+                        aliasedSelectionCheckBox.Checked = true;
+                        break;
+                    case RenderPreset.SingleRenderCall:
+                        noneRadioButton.Checked = true;
+                        horizontalStripsRadioButton.Checked = false;
+                        squareTilesRadioButton.Checked = false;
+                        singleThreadedCheckBox.Checked = true;
+                        noClipCheckBox.Checked = false;
+                        aliasedSelectionCheckBox.Checked = false;
+                        break;
+                    case RenderPreset.NoSelectionClip:
+                        noneRadioButton.Checked = false;
+                        horizontalStripsRadioButton.Checked = false;
+                        squareTilesRadioButton.Checked = true;
+                        singleThreadedCheckBox.Checked = false;
+                        noClipCheckBox.Checked = true;
+                        aliasedSelectionCheckBox.Checked = false;
+                        break;
+                    case RenderPreset.UserDefined:
+                        BitmapEffectRenderingFlags renderFlags = Settings.RenderingFlags;
+                        BitmapEffectRenderingSchedule schedule = Settings.RenderingSchedule;
+
+                        noneRadioButton.Checked = schedule == BitmapEffectRenderingSchedule.None;
+                        horizontalStripsRadioButton.Checked = schedule == BitmapEffectRenderingSchedule.HorizontalStrips;
+                        squareTilesRadioButton.Checked = schedule == BitmapEffectRenderingSchedule.SquareTiles;
+                        singleThreadedCheckBox.Checked = renderFlags.HasFlag(BitmapEffectRenderingFlags.SingleThreaded);
+                        noClipCheckBox.Checked = renderFlags.HasFlag(BitmapEffectRenderingFlags.DisableSelectionClipping);
+                        aliasedSelectionCheckBox.Checked = renderFlags.HasFlag(BitmapEffectRenderingFlags.ForceAliasedSelectionQuality);
+                        break;
+                }
+
+                if (!Initializing)
+                {
+                    Settings.RenderPreset = selectedPreset;
+                }
+            }
+        }
+
+        private void RenderOption_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!Initializing &&
+                presetComboBox.SelectedItem is PresentBoxItem item &&
+                item.Preset == RenderPreset.UserDefined)
+            {
+                BitmapEffectRenderingFlags flags = BitmapEffectRenderingFlags.None;
+                if (noClipCheckBox.Checked) { flags |= BitmapEffectRenderingFlags.DisableSelectionClipping; }
+                if (aliasedSelectionCheckBox.Checked) { flags |= BitmapEffectRenderingFlags.ForceAliasedSelectionQuality; }
+                if (singleThreadedCheckBox.Checked) { flags |= BitmapEffectRenderingFlags.SingleThreaded; }
+
+                Settings.RenderingFlags = flags;
+
+                Settings.RenderingSchedule = squareTilesRadioButton.Checked
+                    ? BitmapEffectRenderingSchedule.SquareTiles : horizontalStripsRadioButton.Checked
+                    ? BitmapEffectRenderingSchedule.HorizontalStrips : noneRadioButton.Checked
+                    ? BitmapEffectRenderingSchedule.None
+                    : BitmapEffectRenderingSchedule.SquareTiles;
+            }
+
+            noClipWarnLabel.Visible = noClipCheckBox.Checked;
+        }
+
+        private class PresentBoxItem
+        {
+            internal RenderPreset Preset { get; }
+
+            private PresentBoxItem(RenderPreset renderPresetOption)
+            {
+                Preset = renderPresetOption;
+            }
+
+            public override string ToString()
+            {
+                return Preset.GetName();
+            }
+
+            internal static PresentBoxItem[] Items { get; } = Enum.GetValues<RenderPreset>().Select(x => new PresentBoxItem(x)).ToArray();
+        }
+        #endregion
+    }
+
+    internal enum SettingsPage
+    {
+        UI,
+        Snippet,
+        Spelling,
+        Compiler,
+        RenderOptions,
+        Updates
     }
 }

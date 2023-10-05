@@ -18,6 +18,7 @@
 /////////////////////////////////////////////////////////////////////////////////
 
 using PaintDotNet;
+using PaintDotNet.Imaging;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -307,16 +308,29 @@ namespace PdnCodeLab
         internal void PopulateMembers(Type type, bool isStatic)
         {
             Clear();
-            this.isStaticColorType = isStatic && (type == typeof(ColorBgra) || type == typeof(Color));
+            this.isStaticColorType = isStatic && (type == typeof(ColorBgra) || type == typeof(Color) || type == typeof(SrgbColors) || type == typeof(LinearColors));
             this.intelliBoxContents = IntelliBoxContents.Members;
 
-            BindingFlags bindingFlags = isStatic ?
-                BindingFlags.Static | BindingFlags.Public :
-                BindingFlags.Instance | BindingFlags.FlattenHierarchy | BindingFlags.CreateInstance | BindingFlags.Public;
+            bool isUserScript = type == Intelli.UserScript;
+            MemberInfo[] members = Array.Empty<MemberInfo>();
 
-            MemberInfo[] members = type.IsInterface
-                ? type.GetInterfaces().SelectMany(x => x.GetMembers(bindingFlags)).ToArray()
-                : type.GetMembers(bindingFlags);
+            if (type == Intelli.UserScript)
+            {
+                PopulateUserScriptMembers();
+            }
+            else
+            {
+                BindingFlags bindingFlags = isStatic
+                    ? BindingFlags.Static | BindingFlags.Public
+                    : BindingFlags.Instance | BindingFlags.FlattenHierarchy | BindingFlags.CreateInstance | BindingFlags.Public;
+
+                members = type.GetMembers(bindingFlags);
+                if (type.IsInterface)
+                {
+                    IEnumerable<MemberInfo> iMembers = type.GetInterfaces().SelectMany(x => x.GetMembers(bindingFlags));
+                    members = members.UnionBy(iMembers, x => x.Name).ToArray();
+                }
+            }
 
             foreach (MemberInfo memberInfo in members)
             {
@@ -373,7 +387,7 @@ namespace PdnCodeLab
                 }
             }
 
-            if (!isStatic)
+            if (!isUserScript && !isStatic)
             {
                 foreach (MethodInfo methodInfo in type.GetExtensionMethods())
                 {
@@ -445,60 +459,7 @@ namespace PdnCodeLab
                     unFilteredItems.Add(new IntelliBoxItem(para, para, toolTip, IntelliType.Parameter));
                 }
 
-                IEnumerable<IGrouping<MemberTypes, MemberInfo>> userScriptMembers = Intelli.UserScript
-                    .GetMembers(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
-                    .Where(m => !m.IsObsolete() && !m.IsCompilerGenerated())
-                    .GroupBy(m => m.MemberType);
-
-                foreach (IGrouping<MemberTypes, MemberInfo> group in userScriptMembers)
-                {
-                    switch (group.Key)
-                    {
-                        case MemberTypes.Method:
-                            group.OfType<MethodInfo>()
-                                .Where(m =>
-                                {
-                                    return !(m.IsSpecialName ||
-                                        m.IsVirtual ||
-                                        !m.IsVisibleToReflectedType() ||
-                                        m.Name.Equals("Render", StringComparison.Ordinal) ||
-                                        m.Name.Equals("PreRender", StringComparison.Ordinal) ||
-                                        m.Name.Equals("SetRenderInfo", StringComparison.Ordinal));
-                                })
-                                .ForEach(m => AddMethod(m, false));
-
-                            break;
-                        case MemberTypes.Property:
-                            group.OfType<PropertyInfo>()
-                                .Where(p =>
-                                {
-                                    return !(!p.IsVisibleToReflectedType() ||
-                                        p.Name.Equals("__DebugMsgs", StringComparison.Ordinal) ||
-                                        p.IsIndexer());
-                                })
-                                .DistinctBy(p => p.Name)
-                                .ForEach(p => AddProperty(p));
-
-                            break;
-                        case MemberTypes.Event:
-                            group.OfType<EventInfo>()
-                                .ForEach(e => AddEvent(e));
-
-                            break;
-                        case MemberTypes.Field:
-                            group.OfType<FieldInfo>()
-                                .Where(f =>
-                                {
-                                    return !(f.Name.Equals("RandomNumber", StringComparison.Ordinal) ||
-                                        f.Name.Equals("instanceSeed", StringComparison.Ordinal) ||
-                                        f.Name.Equals("__listener", StringComparison.Ordinal) ||
-                                        f.Name.Equals("__debugWriter", StringComparison.Ordinal));
-                                })
-                                .ForEach(f => AddField(f));
-
-                            break;
-                    }
-                }
+                PopulateUserScriptMembers();
             }
 
             IReadOnlyCollection<IntelliType> matchingTypes = unFilteredItems.Select(item => item.IntelliType).Distinct().ToArray();
@@ -632,6 +593,64 @@ namespace PdnCodeLab
             }
 
             SetFilterButtonVisibility(Array.Empty<IntelliType>());
+        }
+
+        private void PopulateUserScriptMembers()
+        {
+            IEnumerable<IGrouping<MemberTypes, MemberInfo>> userScriptMembers = Intelli.UserScript
+                .GetMembers(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
+                .Where(m => !m.IsObsolete() && !m.IsCompilerGenerated())
+                .GroupBy(m => m.MemberType);
+
+            foreach (IGrouping<MemberTypes, MemberInfo> group in userScriptMembers)
+            {
+                switch (group.Key)
+                {
+                    case MemberTypes.Method:
+                        group.OfType<MethodInfo>()
+                            .Where(m =>
+                            {
+                                return !(m.IsSpecialName ||
+                                    m.IsVirtual ||
+                                    !m.IsVisibleToReflectedType() ||
+                                    m.Name.Equals("Render", StringComparison.Ordinal) ||
+                                    m.Name.Equals("PreRender", StringComparison.Ordinal) ||
+                                    m.Name.Equals("SetRenderInfo", StringComparison.Ordinal));
+                            })
+                            .ForEach(m => AddMethod(m, false));
+
+                        break;
+                    case MemberTypes.Property:
+                        group.OfType<PropertyInfo>()
+                            .Where(p =>
+                            {
+                                return !(!p.IsVisibleToReflectedType() ||
+                                    p.Name.Equals("__DebugMsgs", StringComparison.Ordinal) ||
+                                    p.IsIndexer());
+                            })
+                            .DistinctBy(p => p.Name)
+                            .ForEach(p => AddProperty(p));
+
+                        break;
+                    case MemberTypes.Event:
+                        group.OfType<EventInfo>()
+                            .ForEach(e => AddEvent(e));
+
+                        break;
+                    case MemberTypes.Field:
+                        group.OfType<FieldInfo>()
+                            .Where(f =>
+                            {
+                                return !(f.Name.Equals("RandomNumber", StringComparison.Ordinal) ||
+                                    f.Name.Equals("instanceSeed", StringComparison.Ordinal) ||
+                                    f.Name.Equals("__listener", StringComparison.Ordinal) ||
+                                    f.Name.Equals("__debugWriter", StringComparison.Ordinal));
+                            })
+                            .ForEach(f => AddField(f));
+
+                        break;
+                }
+            }
         }
 
         private void Clear()

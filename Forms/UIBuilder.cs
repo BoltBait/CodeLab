@@ -57,7 +57,8 @@ namespace PdnCodeLab
             UIUtil.GetImage("14FilenameControl"),
             UIUtil.GetImage("15Uri"),
             UIUtil.GetImage("16FolderControl"),
-            UIUtil.GetImage("17Comment")
+            UIUtil.GetImage("17Comment"),
+            UIUtil.GetImage("18Layers")
         };
 
         internal UIBuilder(string UserScriptText, ProjectType projectType, IServiceProvider serviceProvider, IEffectEnvironment environmentParameters)
@@ -109,7 +110,7 @@ namespace PdnCodeLab
             DefaultColorComboBox.Items.Add("SecondaryColor");
             DefaultColorComboBox.Items.AddRange(UIUtil.GetColorNames(false));
 
-            MasterList.AddRange(UIElement.ProcessUIControls(UserScriptText, projectType.IsEffect()));
+            MasterList.AddRange(UIElement.ProcessUIControls(UserScriptText, projectType));
 
             foreach (UIElement element in MasterList)
             {
@@ -621,6 +622,28 @@ namespace PdnCodeLab
                     rbEnabled.Enabled = false;
                     rbEnabledWhen.Enabled = false;
                     break;
+                case ElementType.LayerChooser:
+                    OptionsLabel.Visible = false;
+                    OptionsText.Visible = false;
+                    DefaultColorComboBox.Visible = false;
+                    ControlMin.Visible = true;
+                    ControlMax.Visible = true;
+                    ControlDef.Visible = true;
+                    MinimumLabel.Visible = true;
+                    MaximumLabel.Visible = true;
+                    DefaultLabel.Visible = true;
+                    ControlDef.Enabled = true;
+                    ControlMax.Enabled = false;
+                    ControlMin.Enabled = false;
+                    ControlMax.Text = "9999";
+                    ControlMin.Text = "0";
+                    ControlDef.Text = "0";
+                    StyleLabel.Enabled = false;
+                    ControlStyle.Enabled = false;
+                    ControlStyle.SelectedIndex = 0;
+                    rbEnabled.Enabled = true;
+                    rbEnabledWhen.Enabled = true;
+                    break;
             }
         }
 
@@ -885,6 +908,12 @@ namespace PdnCodeLab
                     ControlMin.Text = CurrentElement.Min.ToString();
                     ControlMax.Text = CurrentElement.Max.ToString();
                     OptionsText.Text = CurrentElement.StrDefault;
+                    break;
+                case ElementType.LayerChooser:
+                    ControlStyle.SelectedIndex = 0;
+                    ControlMin.Text = CurrentElement.Min.ToString();
+                    ControlMax.Text = CurrentElement.Max.ToString();
+                    ControlDef.Text = CurrentElement.StrDefault.ToString();
                     break;
                 default:
                     break;
@@ -1301,7 +1330,7 @@ namespace PdnCodeLab
 
     public class ControlTypeComboBox : ComboBox
     {
-        private ProjectType projectType = ProjectType.ClassicEffect;
+        private ProjectType projectType = ProjectType.Default;
 
         internal ProjectType ProjectType
         {
@@ -1314,7 +1343,7 @@ namespace PdnCodeLab
                 projectType = value;
 
                 ControlTypeItem[] controlTypes = Enum.GetValues<ElementType>()
-                   .Where(et => UIElement.IsControlAllowed(et, projectType.IsEffect()))
+                   .Where(et => UIElement.IsControlAllowed(et, projectType))
                    .Select(et => new ControlTypeItem(et))
                    .ToArray();
 
@@ -1434,9 +1463,10 @@ namespace PdnCodeLab
             "Uri",                      // 15
             "FolderControl",            // 16
             "LabelComment",             // 17
+            "LayerControl",             // 18
         };
 
-        internal static UIElement[] ProcessUIControls(string SourceCode, bool isEffect = true)
+        internal static UIElement[] ProcessUIControls(string SourceCode, ProjectType projectType)
         {
             string UIControlsText = "";
             Match mcc = Regex.Match(SourceCode, @"\#region UICode(?<sublabel>.*?)\#endregion", RegexOptions.Singleline | RegexOptions.IgnoreCase);
@@ -1474,29 +1504,38 @@ namespace PdnCodeLab
                 .Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
                 .Where(x => !x.StartsWith("//", StringComparison.Ordinal))
                 .Select(x => FromSourceLine(x))
-                .Where(x => x != null && IsControlAllowed(x.ElementType, isEffect))
+                .Where(x => x != null && IsControlAllowed(x.ElementType, projectType))
                 .ToArray();
         }
 
-        internal static bool IsControlAllowed(ElementType elementType, bool isEffect)
+        internal static bool IsControlAllowed(ElementType elementType, ProjectType projectType)
         {
-            if (isEffect)
+            if (projectType.Is5Effect())
             {
                 return true;
             }
 
-            switch (elementType)
+            if (projectType == ProjectType.ClassicEffect)
             {
-                case ElementType.IntSlider:
-                case ElementType.Checkbox:
-                case ElementType.Uri:
-                case ElementType.Textbox:
-                case ElementType.MultiLineTextbox:
-                case ElementType.DoubleSlider:
-                case ElementType.DropDown:
-                case ElementType.RadioButtons:
-                case ElementType.LabelComment:
-                    return true;
+                return elementType != ElementType.LayerChooser;
+            }
+
+            if (projectType == ProjectType.FileType)
+            {
+                switch (elementType)
+                {
+                    case ElementType.IntSlider:
+                    case ElementType.Checkbox:
+                    case ElementType.Uri:
+                    case ElementType.Textbox:
+                    case ElementType.MultiLineTextbox:
+                    case ElementType.DoubleSlider:
+                    case ElementType.DropDown:
+                    case ElementType.RadioButtons:
+                    case ElementType.LabelComment:
+                    case ElementType.LayerChooser:
+                        return true;
+                }
             }
 
             return false;
@@ -1633,6 +1672,12 @@ namespace PdnCodeLab
                 case ElementType.LabelComment:
                     StrDefault = eDefault;
                     Description = eDefault;
+                    break;
+                case ElementType.LayerChooser:
+                    Description = eName + EnabledDescription;
+                    StrDefault = eDefault;
+                    Min = 0;
+                    Max = (int)parsedMax;
                     break;
             }
         }
@@ -1795,6 +1840,11 @@ namespace PdnCodeLab
             {
                 elementType = ElementType.LabelComment;
             }
+            else if (TypeStr == "LayerControl")
+            {
+                elementType = ElementType.LayerChooser;
+                MaximumStr = "9999";
+            }
             #region Detections for legacy scripts
             else if (TypeStr == "bool")
             {
@@ -1925,6 +1975,11 @@ namespace PdnCodeLab
                 {
                     defaultValue = mComment.Groups["comment"].Value;
                 }
+            }
+            else if (elementType == ElementType.LayerChooser)
+            {
+                defaultValue = DefaultStr;
+                dMax = 9999;
             }
             else if (elementType == ElementType.PanSlider)
             {
@@ -2085,6 +2140,10 @@ namespace PdnCodeLab
                 case ElementType.LabelComment:
                     SourceCode += " = \"" + StrDefault + "\"; // ";
                     break;
+                case ElementType.LayerChooser:
+                    SourceCode += " = " + StrDefault;
+                    SourceCode += "; // ";
+                    break;
             }
 
             if (EnabledWhen)
@@ -2173,7 +2232,9 @@ namespace PdnCodeLab
         [Description("Folder Control")]
         Folder,
         [Description("Label")]
-        LabelComment
+        LabelComment,
+        [Description("Layer Names")]
+        LayerChooser
     }
 
     internal enum SliderStyle

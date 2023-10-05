@@ -147,7 +147,7 @@ namespace PdnCodeLab
             {
                 if (value)
                 {
-                    this.Margins[LeftMargin.LineNumbers].Width = this.TextWidth(Style.LineNumber, new string('9', this.Lines.Count.ToString().Length + 1)) + 2;
+                    this.Margins[LeftMargin.LineNumbers].Width = GetLineMarginWidth(this.Lines.Count.ToString().Length);
                     this.Margins[LeftMargin.Padding].Width = (this.CodeFoldingEnabled) ? 0 : 6;
                 }
                 else
@@ -1489,7 +1489,7 @@ namespace PdnCodeLab
             }
 
             string lastWords = GetLastWords(position);
-            if (lastWords.Length == 0)
+            if (lastWords.Length == 0 || lastWords == "this")
             {
                 return IntelliType.None;
             }
@@ -2174,6 +2174,11 @@ namespace PdnCodeLab
                 return null;
             }
 
+            if (lastWords == "this")
+            {
+                return Intelli.UserScript;
+            }
+
             if (Intelli.Variables.ContainsKey(lastWords))
             {
                 return Intelli.Variables[lastWords];
@@ -2295,9 +2300,11 @@ namespace PdnCodeLab
                     BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic :
                     (isStatic ? BindingFlags.Static : BindingFlags.Instance) | BindingFlags.Public;
 
-                MemberInfo[] mi = type.IsInterface
-                    ? type.GetInterfaces().SelectMany(x => x.GetMember(tokens[i], bindingFlags)).ToArray()
-                    : type.GetMember(tokens[i], bindingFlags);
+                MemberInfo[] mi = type.GetMember(tokens[i], bindingFlags);
+                if (type.IsInterface && mi.Length == 0)
+                {
+                    mi = type.GetInterfaces().SelectMany(x => x.GetMember(tokens[i], bindingFlags)).ToArray();
+                }
 
                 if (mi.Length == 0 || mi[0].MemberType == MemberTypes.Method)
                 {
@@ -4630,7 +4637,7 @@ namespace PdnCodeLab
                 {
                     // Calculate the width required to display the last line number
                     // and include some padding for good measure.
-                    this.Margins[LeftMargin.LineNumbers].Width = this.TextWidth(Style.LineNumber, new string('9', newLineNumberCharLength + 1)) + 2;
+                    this.Margins[LeftMargin.LineNumbers].Width = GetLineMarginWidth(newLineNumberCharLength);
                     this.maxLineNumberCharLength = newLineNumberCharLength;
                 }
             }
@@ -4640,7 +4647,7 @@ namespace PdnCodeLab
         {
             if (this.Margins[LeftMargin.LineNumbers].Width > 0) // Line Numbers Visible/Enabled?
             {
-                this.Margins[LeftMargin.LineNumbers].Width = this.TextWidth(Style.LineNumber, new string('9', maxLineNumberCharLength + 1)) + 2;
+                this.Margins[LeftMargin.LineNumbers].Width = GetLineMarginWidth(this.Lines.Count.ToString().Length);
             }
 
             if (this.Margins[LeftMargin.Bookmarks].Width > 0) // Bookmarks Visible/Enabled?
@@ -4652,6 +4659,11 @@ namespace PdnCodeLab
             {
                 this.Margins[LeftMargin.CodeFolding].Width = this.Lines[0].Height;
             }
+        }
+
+        private int GetLineMarginWidth(int digitCount)
+        {
+            return this.TextWidth(Style.LineNumber, new string('9', digitCount + 1)) + 2;
         }
 
         private void UpdateSubstyleAllocations()

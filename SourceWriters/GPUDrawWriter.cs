@@ -15,6 +15,8 @@ namespace PdnCodeLab
 {
     internal static class GPUDrawWriter
     {
+        private const ProjectType projectType = ProjectType.GpuDrawEffect;
+
         private const string UsingStatements = ""
             + "using System;\r\n"
             + "using System.IO;\r\n"
@@ -61,6 +63,7 @@ namespace PdnCodeLab
             + "using LabelComment = System.String;\r\n"
             + "using FontFamily = System.String;\r\n"
             + "using FontStyle = PaintDotNet.DirectWrite.FontStyle;\r\n"
+            + "using LayerControl = System.Int32;\r\n"
             + "\r\n";
 
         private const string prepend_code = "\r\n"
@@ -192,7 +195,7 @@ namespace PdnCodeLab
 
         internal static string FullSourceCode(string SourceCode, string FileName, bool isAdjustment, string subMenuName, string menuName, string iconPath, string SupportURL, ScriptRenderingFlags renderingFlags, ScriptRenderingSchedule renderingSchedule, string Author, int MajorVersion, int MinorVersion, string Description, string KeyWords, string WindowTitleStr, HelpType HelpType, string HelpText)
         {
-            UIElement[] UserControls = UIElement.ProcessUIControls(SourceCode);
+            UIElement[] UserControls = UIElement.ProcessUIControls(SourceCode, projectType);
 
             return
                 GPUDrawWriter.UsingStatements +
@@ -202,7 +205,7 @@ namespace PdnCodeLab
                 CommonWriter.CategoryPart(isAdjustment) +
                 ConstructorPart(UserControls, FileName, subMenuName, menuName, iconPath) +
                 CommonWriter.HelpPart(HelpType, HelpText) +
-                CommonWriter.PropertyPart(UserControls, FileName, WindowTitleStr, HelpType, HelpText, ProjectType.GpuEffect) +
+                CommonWriter.PropertyPart(UserControls, FileName, WindowTitleStr, HelpType, HelpText, projectType) +
                 GPUDrawWriter.InitializeRenderInfoPart(renderingFlags, renderingSchedule) +
                 GPUDrawWriter.SetTokenPart(UserControls) +
                 CommonWriter.UserEnteredPart(SourceCode) +
@@ -212,13 +215,13 @@ namespace PdnCodeLab
         internal static string FullPreview(string scriptText)
         {
             const string FileName = "PreviewEffect";
-            UIElement[] UserControls = UIElement.ProcessUIControls(scriptText);
+            UIElement[] UserControls = UIElement.ProcessUIControls(scriptText, projectType);
 
             return
                 GPUDrawWriter.UsingStatements +
                 CommonWriter.NamespacePart("UserScript") +
                 GPUDrawWriter.ConstructorPart(UserControls, FileName, string.Empty, "FULL UI PREVIEW - Temporarily renders to canvas", string.Empty) +
-                CommonWriter.PropertyPart(UserControls, FileName, string.Empty, HelpType.None, string.Empty, ProjectType.GpuEffect) +
+                CommonWriter.PropertyPart(UserControls, FileName, string.Empty, HelpType.None, string.Empty, projectType) +
                 GPUDrawWriter.SetTokenPart(UserControls) +
                 CommonWriter.UserEnteredPart(scriptText) +
                 CommonWriter.EndPart();
@@ -229,13 +232,13 @@ namespace PdnCodeLab
             const string FileName = "UiPreviewEffect";
             uiCode = "#region UICode\r\n" + uiCode + "\r\n#endregion\r\n";
 
-            UIElement[] UserControls = UIElement.ProcessUIControls(uiCode);
+            UIElement[] UserControls = UIElement.ProcessUIControls(uiCode, projectType);
 
             return
                 GPUDrawWriter.UsingStatements +
                 CommonWriter.NamespacePart(FileName) +
                 GPUDrawWriter.ConstructorPart(UserControls, FileName, string.Empty, "UI PREVIEW - Does NOT Render to canvas", string.Empty) +
-                CommonWriter.PropertyPart(UserControls, FileName, string.Empty, HelpType.None, string.Empty, ProjectType.GpuEffect) +
+                CommonWriter.PropertyPart(UserControls, FileName, string.Empty, HelpType.None, string.Empty, projectType) +
                 uiCode +
                 GPUDrawWriter.EmptyCode +
                 CommonWriter.EndPart();
