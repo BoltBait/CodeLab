@@ -17,7 +17,7 @@ namespace PdnCodeLab
         Reference,
         Shape,
 
-        Default = ClassicEffect
+        Default = GpuEffect
     }
 
     internal static class ProjectTypeExtensions
