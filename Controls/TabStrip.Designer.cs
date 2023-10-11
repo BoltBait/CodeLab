@@ -28,56 +28,54 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.untitledTab = new PdnCodeLab.TabStrip.Tab();
-            this.toolStrip1.SuspendLayout();
-            this.SuspendLayout();
+            toolStrip1 = new System.Windows.Forms.ToolStrip();
+            untitledTab = new Tab();
+            toolStrip1.SuspendLayout();
+            SuspendLayout();
             // 
             // toolStrip1
             // 
-            this.toolStrip1.AllowItemReorder = true;
-            this.toolStrip1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
-            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.untitledTab});
-            this.toolStrip1.Location = new System.Drawing.Point(0, 0);
-            this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Padding = new System.Windows.Forms.Padding(5, 0, 5, 0);
-            this.toolStrip1.Size = new System.Drawing.Size(300, 25);
-            this.toolStrip1.Stretch = true;
-            this.toolStrip1.TabIndex = 0;
-            this.toolStrip1.Text = "Tabs";
+            toolStrip1.AllowItemReorder = true;
+            toolStrip1.Dock = System.Windows.Forms.DockStyle.Fill;
+            toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+            toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { untitledTab });
+            toolStrip1.Location = new System.Drawing.Point(0, 0);
+            toolStrip1.Name = "toolStrip1";
+            toolStrip1.Padding = new System.Windows.Forms.Padding(5, 0, 5, 0);
+            toolStrip1.Size = new System.Drawing.Size(300, 25);
+            toolStrip1.Stretch = true;
+            toolStrip1.TabIndex = 0;
+            toolStrip1.Text = "Tabs";
             // 
             // untitledTab
             // 
-            this.untitledTab.AutoToolTip = false;
-            this.untitledTab.Checked = true;
-            this.untitledTab.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.untitledTab.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.untitledTab.ImageName = "ClassicEffect";
-            this.untitledTab.Margin = new System.Windows.Forms.Padding(0, 5, 3, 0);
-            this.untitledTab.Name = "untitledTab";
-            this.untitledTab.Padding = new System.Windows.Forms.Padding(0, 0, 20, 0);
-            this.untitledTab.Size = new System.Drawing.Size(89, 20);
-            this.untitledTab.Text = "Untitled";
-            this.untitledTab.ToolTipText = "Untitled";
-            this.untitledTab.Click += new System.EventHandler(this.Tab_Click);
-            this.untitledTab.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Tab_MouseDown);
-            this.untitledTab.MouseUp += new System.Windows.Forms.MouseEventHandler(this.Tab_MouseUp);
+            untitledTab.AutoToolTip = false;
+            untitledTab.Checked = true;
+            untitledTab.CheckState = System.Windows.Forms.CheckState.Checked;
+            untitledTab.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            untitledTab.ImageName = "ClassicEffect";
+            untitledTab.Margin = new System.Windows.Forms.Padding(0, 5, 3, 0);
+            untitledTab.Name = "untitledTab";
+            untitledTab.Padding = new System.Windows.Forms.Padding(0, 0, 20, 0);
+            untitledTab.Size = new System.Drawing.Size(89, 20);
+            untitledTab.Text = "Untitled";
+            untitledTab.ToolTipText = "Untitled";
+            untitledTab.Click += Tab_Click;
+            untitledTab.MouseDown += Tab_MouseDown;
+            untitledTab.MouseUp += Tab_MouseUp;
             // 
             // TabStrip
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.AutoSize = true;
-            this.Controls.Add(this.toolStrip1);
-            this.Name = "TabStrip";
-            this.Size = new System.Drawing.Size(300, 25);
-            this.toolStrip1.ResumeLayout(false);
-            this.toolStrip1.PerformLayout();
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            AutoSize = true;
+            Controls.Add(toolStrip1);
+            Name = "TabStrip";
+            Size = new System.Drawing.Size(300, 25);
+            toolStrip1.ResumeLayout(false);
+            toolStrip1.PerformLayout();
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
