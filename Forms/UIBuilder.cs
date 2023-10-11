@@ -118,7 +118,7 @@ namespace PdnCodeLab
             }
             refreshListView(0);
             dirty = false;
-            this.environmentParameters = environmentParameters;
+            this.environmentParameters = environmentParameters.CreateRef();
             this.serviceProvider = serviceProvider;
             this.projectType = projectType;
         }
