@@ -331,6 +331,14 @@ namespace PdnCodeLab
             internal string Path { get; set; }
             internal Rectangle CloseRect => closeRect;
 
+            [Browsable(false)]
+            [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+            public new string ImageName
+            {
+                get => base.ImageName;
+                set => base.ImageName = value;
+            }
+
             private Rectangle closeRect = Rectangle.Empty;
             private bool closeRectHiLite = false;
 

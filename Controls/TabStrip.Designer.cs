@@ -53,7 +53,6 @@
             untitledTab.Checked = true;
             untitledTab.CheckState = System.Windows.Forms.CheckState.Checked;
             untitledTab.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            untitledTab.ImageName = "ClassicEffect";
             untitledTab.Margin = new System.Windows.Forms.Padding(0, 5, 3, 0);
             untitledTab.Name = "untitledTab";
             untitledTab.Padding = new System.Windows.Forms.Padding(0, 0, 20, 0);
