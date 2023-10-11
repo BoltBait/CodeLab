@@ -81,6 +81,16 @@ namespace PdnCodeLab
         private IBitmapEffectRenderer renderer;
         private IBitmapSource<ColorBgra32> sourceBitmap;
 
+        // These are the rendering options that the user specified in settings. CodeLab will always
+        // specify disabled selection clipping, and default antialiasing quality. We do have
+        // to pass the schedule along to Paint.NET though.
+        // TODO: The effect script should be able to directly specify what it wants, rather than
+        //       having these in CodeLab's global settings. If that happens, this information will
+        //       be available (somewhere) in the Token, and we can update these two fields and let
+        //       OnRender() do its thing.
+        private BitmapEffectRenderingFlags renderingFlags;
+        private BitmapEffectRenderingSchedule renderingSchedule;
+
         protected override void OnInitializeRenderInfo(IBitmapEffectRenderInfo renderInfo)
         {
             this.sourceBitmap = this.Environment.GetSourceBitmapBgra32();
@@ -89,30 +99,33 @@ namespace PdnCodeLab
             {
                 case RenderPreset.Regular:
                     // No need to set anything; use the defaults
-                    //renderInfo.Flags = BitmapEffectRenderingFlags.None;
-                    //renderInfo.Schedule = BitmapEffectRenderingSchedule.SquareTiles;
+                    this.renderingFlags = BitmapEffectRenderingFlags.None;
+                    this.renderingSchedule = BitmapEffectRenderingSchedule.SquareTiles;
                     break;
                 case RenderPreset.LegacyROI:
-                    renderInfo.Flags = BitmapEffectRenderingFlags.None;
-                    renderInfo.Schedule = BitmapEffectRenderingSchedule.HorizontalStrips;
+                    this.renderingFlags = BitmapEffectRenderingFlags.None;
+                    this.renderingSchedule = BitmapEffectRenderingSchedule.HorizontalStrips;
                     break;
                 case RenderPreset.AliasedSelection:
-                    renderInfo.Flags = BitmapEffectRenderingFlags.ForceAliasedSelectionQuality;
-                    renderInfo.Schedule = BitmapEffectRenderingSchedule.SquareTiles;
+                    this.renderingFlags = BitmapEffectRenderingFlags.ForceAliasedSelectionQuality;
+                    this.renderingSchedule = BitmapEffectRenderingSchedule.SquareTiles;
                     break;
                 case RenderPreset.SingleRenderCall:
-                    renderInfo.Flags = BitmapEffectRenderingFlags.None;
-                    renderInfo.Schedule = BitmapEffectRenderingSchedule.None;
+                    this.renderingFlags = BitmapEffectRenderingFlags.None;
+                    this.renderingSchedule = BitmapEffectRenderingSchedule.None;
                     break;
                 case RenderPreset.NoSelectionClip:
-                    renderInfo.Flags = BitmapEffectRenderingFlags.DisableSelectionClipping;
-                    renderInfo.Schedule = BitmapEffectRenderingSchedule.SquareTiles;
+                    this.renderingFlags = BitmapEffectRenderingFlags.DisableSelectionClipping;
+                    this.renderingSchedule = BitmapEffectRenderingSchedule.SquareTiles;
                     break;
                 case RenderPreset.UserDefined:
-                    renderInfo.Flags = Settings.RenderingFlags;
-                    renderInfo.Schedule = Settings.RenderingSchedule;
+                    this.renderingFlags = Settings.RenderingFlags;
+                    this.renderingSchedule = Settings.RenderingSchedule;
                     break;
             }
+
+            renderInfo.Flags = BitmapEffectRenderingFlags.DisableSelectionClipping;
+            renderInfo.Schedule = this.renderingSchedule;
 
             base.OnInitializeRenderInfo(renderInfo);
         }
@@ -126,7 +139,11 @@ namespace PdnCodeLab
 
             if (projectType.IsEffect() && userEffect != null)
             {
-                using (IEffect effect = userEffect.EffectInfo.CreateInstance(this.Services, this.Environment))
+                // TODO: may need this logic elsewhere, toehead/boltbait will need to figure that out
+                using IEffectEnvironment environment = this.renderingFlags.HasFlag(BitmapEffectRenderingFlags.ForceAliasedSelectionQuality)
+                    ? this.Environment.CreateRef()
+                    : this.Environment.CloneWithAliasedSelection();
+                using (IEffect effect = userEffect.EffectInfo.CreateInstance(this.Services, environment))
                 {
                     this.renderer = effect.CreateRenderer<IBitmapEffectRenderer>();
                 }
@@ -211,7 +228,51 @@ namespace PdnCodeLab
                     }
                     else
                     {
-                        this.renderer.Render(outputLock, output.Bounds.Location);
+                        bool disableSelectionClipping = this.renderingFlags.HasFlag(BitmapEffectRenderingFlags.DisableSelectionClipping);
+                        bool forceAliasedRendering = this.renderingFlags.HasFlag(BitmapEffectRenderingFlags.ForceAliasedSelectionQuality);
+
+                        // Classic effects do not support DisableSelectionClipping
+                        bool isClassicEffect = projectType == ProjectType.ClassicEffect;
+
+                        if (disableSelectionClipping && !isClassicEffect)
+                        {
+                            // Render directly to the output buffer
+                            this.renderer.Render(outputLock, output.Bounds.Location);
+                        }
+                        else
+                        {
+                            // Copy the source to the output
+                            RegionPtr<ColorBgra32> outputRegion = outputLock.AsRegionPtr();
+                            this.sourceBitmap.CopyPixels(outputRegion, output.Bounds.Location);
+
+                            // Render effect to a temporary buffer (bitmaps are pooled/recycled, so this allocation is not expensive)
+                            using IBitmap<ColorBgra32> renderBitmap = this.Environment.ImagingFactory.CreateBitmap<ColorBgra32>(output.Bounds.Size);
+                            using IBitmapLock<ColorBgra32> renderLock = renderBitmap.Lock(BitmapLockOptions.ReadWrite);
+                            RegionPtr<ColorBgra32> renderRegion = renderLock.AsRegionPtr();
+                            this.renderer.Render(renderRegion, output.Bounds.Location);
+
+                            if (forceAliasedRendering)
+                            {
+                                // For each rect in the selection, clipped to the output, copy from renderBitmap to output
+                                foreach (RectInt32 outputRect in this.Environment.Selection.GetRenderScansClipped(output.Bounds))
+                                {
+                                    RectInt32 localRect = RectInt32.Offset(outputRect, -output.Bounds.Location);
+                                    renderRegion.Slice(localRect)
+                                        .CopyTo(outputRegion.Slice(localRect));
+                                }
+                            }
+                            else
+                            {
+                                // Get the selection mask bitmap that overlaps with the output bounds
+                                using IBitmapLock<ColorAlpha8> maskLock = this.Environment.Selection.MaskBitmap.Lock(output.Bounds);
+                                RegionPtr<ColorAlpha8> maskRegion = maskLock.AsRegionPtr();
+                                
+                                // Combine the source layer and effect output. The effect's output is blended "on top" using overwrite
+                                // blending mode, with the selection mask modulating each pixel (255 is 100% effect pixel, 0 is 100%
+                                // source layer pixel, 127 or 128 is about ~50% of each).
+                                PixelKernels.Overwrite(outputRegion, renderRegion, maskRegion);
+                            }
+                        }
                     }
                 }
                 catch (Exception exc)
