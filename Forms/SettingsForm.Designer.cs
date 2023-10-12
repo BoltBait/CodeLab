@@ -80,25 +80,27 @@
             spellcheckOptionsLabel = new System.Windows.Forms.Label();
             spellLangComboBox = new System.Windows.Forms.ComboBox();
             panelRenderOptions = new System.Windows.Forms.Panel();
+            optionsTabControl = new System.Windows.Forms.TabControl();
+            tabPage1 = new System.Windows.Forms.TabPage();
+            flagsLabel = new System.Windows.Forms.Label();
+            scheduleLabel = new System.Windows.Forms.Label();
+            singleThreadedCheckBox = new System.Windows.Forms.CheckBox();
+            horizontalStripsRadioButton = new System.Windows.Forms.RadioButton();
+            noClipCheckBox = new System.Windows.Forms.CheckBox();
+            squareTilesRadioButton = new System.Windows.Forms.RadioButton();
+            noneRadioButton = new System.Windows.Forms.RadioButton();
+            aliasedSelectionCheckBox = new System.Windows.Forms.CheckBox();
             renderOpInfoLabel = new MessageLabel();
             noClipWarnLabel = new MessageLabel();
             presetLabel = new System.Windows.Forms.Label();
-            panelRenderOptionsSub = new System.Windows.Forms.Panel();
-            flagsLabel = new System.Windows.Forms.Label();
-            scheduleLabel = new System.Windows.Forms.Label();
-            horizontalStripsRadioButton = new System.Windows.Forms.RadioButton();
-            squareTilesRadioButton = new System.Windows.Forms.RadioButton();
-            aliasedSelectionCheckBox = new System.Windows.Forms.CheckBox();
-            noneRadioButton = new System.Windows.Forms.RadioButton();
-            noClipCheckBox = new System.Windows.Forms.CheckBox();
-            singleThreadedCheckBox = new System.Windows.Forms.CheckBox();
             presetComboBox = new System.Windows.Forms.ComboBox();
             panelUpdates.SuspendLayout();
             panelCompiler.SuspendLayout();
             panelUI.SuspendLayout();
             panelSpelling.SuspendLayout();
             panelRenderOptions.SuspendLayout();
-            panelRenderOptionsSub.SuspendLayout();
+            optionsTabControl.SuspendLayout();
+            tabPage1.SuspendLayout();
             SuspendLayout();
             // 
             // closeButton
@@ -229,7 +231,7 @@
             // label8
             // 
             label8.AutoSize = true;
-            label8.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            label8.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             label8.Location = new System.Drawing.Point(14, 17);
             label8.Name = "label8";
             label8.Size = new System.Drawing.Size(120, 15);
@@ -321,7 +323,7 @@
             // indentSpacesLabel
             // 
             indentSpacesLabel.AutoSize = true;
-            indentSpacesLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            indentSpacesLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             indentSpacesLabel.Location = new System.Drawing.Point(13, 160);
             indentSpacesLabel.Name = "indentSpacesLabel";
             indentSpacesLabel.Size = new System.Drawing.Size(88, 15);
@@ -404,7 +406,7 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            label3.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             label3.Location = new System.Drawing.Point(13, 330);
             label3.Name = "label3";
             label3.Size = new System.Drawing.Size(49, 15);
@@ -436,7 +438,7 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            label2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             label2.Location = new System.Drawing.Point(13, 251);
             label2.Name = "label2";
             label2.Size = new System.Drawing.Size(40, 15);
@@ -457,7 +459,7 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            label1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             label1.Location = new System.Drawing.Point(13, 4);
             label1.Name = "label1";
             label1.Size = new System.Drawing.Size(116, 15);
@@ -523,7 +525,7 @@
             // 
             settingsList.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
             settingsList.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-            settingsList.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            settingsList.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             settingsList.FormattingEnabled = true;
             settingsList.IntegralHeight = false;
             settingsList.ItemHeight = 32;
@@ -536,7 +538,7 @@
             // 
             // panelSnippet
             // 
-            panelSnippet.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            panelSnippet.Font = new System.Drawing.Font("Segoe UI", 9F);
             panelSnippet.Location = new System.Drawing.Point(202, 12);
             panelSnippet.Name = "panelSnippet";
             panelSnippet.Size = new System.Drawing.Size(476, 405);
@@ -630,7 +632,7 @@
             // spellcheckOptionsLabel
             // 
             spellcheckOptionsLabel.AutoSize = true;
-            spellcheckOptionsLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            spellcheckOptionsLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             spellcheckOptionsLabel.Location = new System.Drawing.Point(14, 17);
             spellcheckOptionsLabel.Name = "spellcheckOptionsLabel";
             spellcheckOptionsLabel.Size = new System.Drawing.Size(114, 15);
@@ -649,83 +651,78 @@
             // 
             // panelRenderOptions
             // 
+            panelRenderOptions.Controls.Add(optionsTabControl);
             panelRenderOptions.Controls.Add(renderOpInfoLabel);
             panelRenderOptions.Controls.Add(noClipWarnLabel);
             panelRenderOptions.Controls.Add(presetLabel);
-            panelRenderOptions.Controls.Add(panelRenderOptionsSub);
             panelRenderOptions.Controls.Add(presetComboBox);
             panelRenderOptions.Location = new System.Drawing.Point(202, 12);
             panelRenderOptions.Name = "panelRenderOptions";
             panelRenderOptions.Size = new System.Drawing.Size(476, 405);
             panelRenderOptions.TabIndex = 9;
             // 
-            // renderOpInfoLabel
+            // optionsTabControl
             // 
-            renderOpInfoLabel.AllowHardwareRendering = false;
-            renderOpInfoLabel.Location = new System.Drawing.Point(16, 291);
-            renderOpInfoLabel.MessageType = MessageType.Info;
-            renderOpInfoLabel.Name = "renderOpInfoLabel";
-            renderOpInfoLabel.Size = new System.Drawing.Size(399, 106);
-            renderOpInfoLabel.TabIndex = 15;
-            renderOpInfoLabel.TabStop = false;
-            renderOpInfoLabel.Text = "Changes in this section will apply the next time CodeLab is run,\r\nand will remain applied until they are changed again.\r\n\r\nThe selected Preset will appear in CodeLab's titlebar.";
+            optionsTabControl.Controls.Add(tabPage1);
+            optionsTabControl.Location = new System.Drawing.Point(21, 57);
+            optionsTabControl.Name = "optionsTabControl";
+            optionsTabControl.SelectedIndex = 0;
+            optionsTabControl.Size = new System.Drawing.Size(416, 152);
+            optionsTabControl.TabIndex = 16;
             // 
-            // noClipWarnLabel
+            // tabPage1
             // 
-            noClipWarnLabel.Location = new System.Drawing.Point(16, 199);
-            noClipWarnLabel.MessageType = MessageType.Warning;
-            noClipWarnLabel.Name = "noClipWarnLabel";
-            noClipWarnLabel.Size = new System.Drawing.Size(399, 65);
-            noClipWarnLabel.TabIndex = 14;
-            noClipWarnLabel.TabStop = false;
-            noClipWarnLabel.Text = "The flag 'Disable Selection Clipping' does not affect Classic Effects.";
-            // 
-            // presetLabel
-            // 
-            presetLabel.AutoSize = true;
-            presetLabel.Location = new System.Drawing.Point(17, 24);
-            presetLabel.Name = "presetLabel";
-            presetLabel.Size = new System.Drawing.Size(39, 15);
-            presetLabel.TabIndex = 13;
-            presetLabel.Text = "Preset";
-            // 
-            // panelRenderOptionsSub
-            // 
-            panelRenderOptionsSub.Controls.Add(flagsLabel);
-            panelRenderOptionsSub.Controls.Add(scheduleLabel);
-            panelRenderOptionsSub.Controls.Add(horizontalStripsRadioButton);
-            panelRenderOptionsSub.Controls.Add(squareTilesRadioButton);
-            panelRenderOptionsSub.Controls.Add(aliasedSelectionCheckBox);
-            panelRenderOptionsSub.Controls.Add(noneRadioButton);
-            panelRenderOptionsSub.Controls.Add(noClipCheckBox);
-            panelRenderOptionsSub.Controls.Add(singleThreadedCheckBox);
-            panelRenderOptionsSub.Location = new System.Drawing.Point(17, 50);
-            panelRenderOptionsSub.Name = "panelRenderOptionsSub";
-            panelRenderOptionsSub.Size = new System.Drawing.Size(398, 130);
-            panelRenderOptionsSub.TabIndex = 12;
+            tabPage1.Controls.Add(flagsLabel);
+            tabPage1.Controls.Add(scheduleLabel);
+            tabPage1.Controls.Add(singleThreadedCheckBox);
+            tabPage1.Controls.Add(horizontalStripsRadioButton);
+            tabPage1.Controls.Add(noClipCheckBox);
+            tabPage1.Controls.Add(squareTilesRadioButton);
+            tabPage1.Controls.Add(noneRadioButton);
+            tabPage1.Controls.Add(aliasedSelectionCheckBox);
+            tabPage1.Location = new System.Drawing.Point(4, 24);
+            tabPage1.Name = "tabPage1";
+            tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            tabPage1.Size = new System.Drawing.Size(408, 124);
+            tabPage1.TabIndex = 0;
+            tabPage1.Text = "Options";
+            tabPage1.UseVisualStyleBackColor = true;
             // 
             // flagsLabel
             // 
             flagsLabel.AutoSize = true;
-            flagsLabel.Location = new System.Drawing.Point(193, 23);
+            flagsLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            flagsLabel.Location = new System.Drawing.Point(202, 15);
             flagsLabel.Name = "flagsLabel";
-            flagsLabel.Size = new System.Drawing.Size(91, 15);
+            flagsLabel.Size = new System.Drawing.Size(95, 15);
             flagsLabel.TabIndex = 8;
             flagsLabel.Text = "Rendering Flags";
             // 
             // scheduleLabel
             // 
             scheduleLabel.AutoSize = true;
-            scheduleLabel.Location = new System.Drawing.Point(11, 23);
+            scheduleLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            scheduleLabel.Location = new System.Drawing.Point(17, 15);
             scheduleLabel.Name = "scheduleLabel";
-            scheduleLabel.Size = new System.Drawing.Size(112, 15);
+            scheduleLabel.Size = new System.Drawing.Size(119, 15);
             scheduleLabel.TabIndex = 7;
             scheduleLabel.Text = "Rendering Schedule";
+            // 
+            // singleThreadedCheckBox
+            // 
+            singleThreadedCheckBox.AutoSize = true;
+            singleThreadedCheckBox.Location = new System.Drawing.Point(206, 91);
+            singleThreadedCheckBox.Name = "singleThreadedCheckBox";
+            singleThreadedCheckBox.Size = new System.Drawing.Size(110, 19);
+            singleThreadedCheckBox.TabIndex = 10;
+            singleThreadedCheckBox.Text = "Single Threaded";
+            singleThreadedCheckBox.UseVisualStyleBackColor = true;
+            singleThreadedCheckBox.CheckedChanged += RenderOption_CheckedChanged;
             // 
             // horizontalStripsRadioButton
             // 
             horizontalStripsRadioButton.AutoSize = true;
-            horizontalStripsRadioButton.Location = new System.Drawing.Point(14, 65);
+            horizontalStripsRadioButton.Location = new System.Drawing.Point(21, 65);
             horizontalStripsRadioButton.Name = "horizontalStripsRadioButton";
             horizontalStripsRadioButton.Size = new System.Drawing.Size(112, 19);
             horizontalStripsRadioButton.TabIndex = 6;
@@ -734,10 +731,21 @@
             horizontalStripsRadioButton.UseVisualStyleBackColor = true;
             horizontalStripsRadioButton.CheckedChanged += RenderOption_CheckedChanged;
             // 
+            // noClipCheckBox
+            // 
+            noClipCheckBox.AutoSize = true;
+            noClipCheckBox.Location = new System.Drawing.Point(206, 41);
+            noClipCheckBox.Name = "noClipCheckBox";
+            noClipCheckBox.Size = new System.Drawing.Size(163, 19);
+            noClipCheckBox.TabIndex = 8;
+            noClipCheckBox.Text = "Disable Selection Clipping";
+            noClipCheckBox.UseVisualStyleBackColor = true;
+            noClipCheckBox.CheckedChanged += RenderOption_CheckedChanged;
+            // 
             // squareTilesRadioButton
             // 
             squareTilesRadioButton.AutoSize = true;
-            squareTilesRadioButton.Location = new System.Drawing.Point(14, 40);
+            squareTilesRadioButton.Location = new System.Drawing.Point(21, 40);
             squareTilesRadioButton.Name = "squareTilesRadioButton";
             squareTilesRadioButton.Size = new System.Drawing.Size(87, 19);
             squareTilesRadioButton.TabIndex = 5;
@@ -746,21 +754,10 @@
             squareTilesRadioButton.UseVisualStyleBackColor = true;
             squareTilesRadioButton.CheckedChanged += RenderOption_CheckedChanged;
             // 
-            // aliasedSelectionCheckBox
-            // 
-            aliasedSelectionCheckBox.AutoSize = true;
-            aliasedSelectionCheckBox.Location = new System.Drawing.Point(196, 66);
-            aliasedSelectionCheckBox.Name = "aliasedSelectionCheckBox";
-            aliasedSelectionCheckBox.Size = new System.Drawing.Size(188, 19);
-            aliasedSelectionCheckBox.TabIndex = 9;
-            aliasedSelectionCheckBox.Text = "Force Aliased Selection Quality";
-            aliasedSelectionCheckBox.UseVisualStyleBackColor = true;
-            aliasedSelectionCheckBox.CheckedChanged += RenderOption_CheckedChanged;
-            // 
             // noneRadioButton
             // 
             noneRadioButton.AutoSize = true;
-            noneRadioButton.Location = new System.Drawing.Point(14, 90);
+            noneRadioButton.Location = new System.Drawing.Point(21, 90);
             noneRadioButton.Name = "noneRadioButton";
             noneRadioButton.Size = new System.Drawing.Size(54, 19);
             noneRadioButton.TabIndex = 7;
@@ -769,35 +766,55 @@
             noneRadioButton.UseVisualStyleBackColor = true;
             noneRadioButton.CheckedChanged += RenderOption_CheckedChanged;
             // 
-            // noClipCheckBox
+            // aliasedSelectionCheckBox
             // 
-            noClipCheckBox.AutoSize = true;
-            noClipCheckBox.Location = new System.Drawing.Point(196, 41);
-            noClipCheckBox.Name = "noClipCheckBox";
-            noClipCheckBox.Size = new System.Drawing.Size(163, 19);
-            noClipCheckBox.TabIndex = 8;
-            noClipCheckBox.Text = "Disable Selection Clipping";
-            noClipCheckBox.UseVisualStyleBackColor = true;
-            noClipCheckBox.CheckedChanged += RenderOption_CheckedChanged;
+            aliasedSelectionCheckBox.AutoSize = true;
+            aliasedSelectionCheckBox.Location = new System.Drawing.Point(206, 66);
+            aliasedSelectionCheckBox.Name = "aliasedSelectionCheckBox";
+            aliasedSelectionCheckBox.Size = new System.Drawing.Size(188, 19);
+            aliasedSelectionCheckBox.TabIndex = 9;
+            aliasedSelectionCheckBox.Text = "Force Aliased Selection Quality";
+            aliasedSelectionCheckBox.UseVisualStyleBackColor = true;
+            aliasedSelectionCheckBox.CheckedChanged += RenderOption_CheckedChanged;
             // 
-            // singleThreadedCheckBox
+            // renderOpInfoLabel
             // 
-            singleThreadedCheckBox.AutoSize = true;
-            singleThreadedCheckBox.Location = new System.Drawing.Point(196, 91);
-            singleThreadedCheckBox.Name = "singleThreadedCheckBox";
-            singleThreadedCheckBox.Size = new System.Drawing.Size(110, 19);
-            singleThreadedCheckBox.TabIndex = 10;
-            singleThreadedCheckBox.Text = "Single Threaded";
-            singleThreadedCheckBox.UseVisualStyleBackColor = true;
-            singleThreadedCheckBox.CheckedChanged += RenderOption_CheckedChanged;
+            renderOpInfoLabel.AllowHardwareRendering = false;
+            renderOpInfoLabel.Location = new System.Drawing.Point(24, 290);
+            renderOpInfoLabel.MessageType = MessageType.Info;
+            renderOpInfoLabel.Name = "renderOpInfoLabel";
+            renderOpInfoLabel.Size = new System.Drawing.Size(418, 106);
+            renderOpInfoLabel.TabIndex = 15;
+            renderOpInfoLabel.TabStop = false;
+            renderOpInfoLabel.Text = "Changes in this section will apply the next time CodeLab is run,\r\nand will remain applied until they are changed again.\r\n\r\nThe selected Preset will appear in CodeLab's titlebar.";
+            // 
+            // noClipWarnLabel
+            // 
+            noClipWarnLabel.AllowHardwareRendering = false;
+            noClipWarnLabel.Location = new System.Drawing.Point(24, 219);
+            noClipWarnLabel.MessageType = MessageType.Warning;
+            noClipWarnLabel.Name = "noClipWarnLabel";
+            noClipWarnLabel.Size = new System.Drawing.Size(418, 65);
+            noClipWarnLabel.TabIndex = 14;
+            noClipWarnLabel.TabStop = false;
+            noClipWarnLabel.Text = "The flag 'Disable Selection Clipping' does not affect Classic Effects.";
+            // 
+            // presetLabel
+            // 
+            presetLabel.AutoSize = true;
+            presetLabel.Location = new System.Drawing.Point(107, 24);
+            presetLabel.Name = "presetLabel";
+            presetLabel.Size = new System.Drawing.Size(87, 15);
+            presetLabel.TabIndex = 13;
+            presetLabel.Text = "Option Presets:";
             // 
             // presetComboBox
             // 
             presetComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             presetComboBox.FormattingEnabled = true;
-            presetComboBox.Location = new System.Drawing.Point(62, 21);
+            presetComboBox.Location = new System.Drawing.Point(198, 21);
             presetComboBox.Name = "presetComboBox";
-            presetComboBox.Size = new System.Drawing.Size(353, 23);
+            presetComboBox.Size = new System.Drawing.Size(161, 23);
             presetComboBox.TabIndex = 4;
             presetComboBox.SelectedIndexChanged += presetComboBox_SelectedIndexChanged;
             // 
@@ -828,8 +845,9 @@
             panelSpelling.PerformLayout();
             panelRenderOptions.ResumeLayout(false);
             panelRenderOptions.PerformLayout();
-            panelRenderOptionsSub.ResumeLayout(false);
-            panelRenderOptionsSub.PerformLayout();
+            optionsTabControl.ResumeLayout(false);
+            tabPage1.ResumeLayout(false);
+            tabPage1.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -886,7 +904,6 @@
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Panel panelRenderOptions;
         private System.Windows.Forms.Label presetLabel;
-        private System.Windows.Forms.Panel panelRenderOptionsSub;
         private System.Windows.Forms.Label flagsLabel;
         private System.Windows.Forms.Label scheduleLabel;
         private System.Windows.Forms.RadioButton horizontalStripsRadioButton;
@@ -898,5 +915,7 @@
         private System.Windows.Forms.ComboBox presetComboBox;
         private MessageLabel noClipWarnLabel;
         private MessageLabel renderOpInfoLabel;
+        private System.Windows.Forms.TabControl optionsTabControl;
+        private System.Windows.Forms.TabPage tabPage1;
     }
 }

@@ -85,8 +85,8 @@ namespace PdnCodeLab
             // RenderOptions page
             presetComboBox.Items.AddRange(PresentBoxItem.Items);
             presetComboBox.SelectedIndex = (int)Settings.RenderPreset;
-            panelRenderOptionsSub.BackColor = Color.White;
-            panelRenderOptionsSub.ForeColor = Color.Black;
+            optionsTabControl.BackColor = Color.White;
+            optionsTabControl.ForeColor = Color.Black;
 
             // List of Pages
             settingsList.Items.AddRange(SettingsPageListItem.Items);
@@ -350,7 +350,7 @@ namespace PdnCodeLab
             if (presetComboBox.SelectedItem is PresentBoxItem item)
             {
                 RenderPreset selectedPreset = item.Preset;
-                panelRenderOptionsSub.Enabled = selectedPreset == RenderPreset.UserDefined;
+                optionsTabControl.Enabled = selectedPreset == RenderPreset.UserDefined;
 
                 switch (selectedPreset)
                 {
