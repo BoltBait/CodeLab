@@ -1053,7 +1053,7 @@ namespace PdnCodeLab
 
         private void InsertImageButton_Click(object sender, EventArgs e)
         {
-            OpenFileDialog ofd = new OpenFileDialog
+            using OpenFileDialog ofd = new OpenFileDialog
             {
                 Title = "Open Image File",
                 Filter = "Image Files(*.PNG;*.BMP;*.JPG;*.GIF)|*.PNG;*.BMP;*.JPG;*.GIF|All files (*.*)|*.*",
@@ -1064,14 +1064,7 @@ namespace PdnCodeLab
 
             if (ofd.ShowDialog() == DialogResult.OK)
             {
-                Bitmap aimg = null;
-                try
-                {
-                    aimg = (Bitmap)Image.FromFile(ofd.FileName, false);
-                }
-                catch
-                {
-                }
+                Bitmap aimg = UIUtil.GetBitmapFromFile(ofd.FileName);
                 if (aimg != null)
                 {
                     InsertImage(aimg);
