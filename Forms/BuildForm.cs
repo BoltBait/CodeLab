@@ -451,16 +451,13 @@ namespace PdnCodeLab
                 return;
             }
 
-            // Make sure the icon is 16 x 16
-            if ((newicon.Width != 16) || (newicon.Height != 16))
+            // Make sure the icon is square, and is at least 16 x 16
+            if (newicon.Width != newicon.Height || newicon.Width < 16)
             {
-                if ((newicon.Width != 32) || (newicon.Height != 32))
-                {
-                    MenuIcon.Image = null;
-                    IconPath = "";
-                    FlexibleMessageBox.Show("PNG file must be 16 x 16 pixels", "Improper File Selected");
-                    return;
-                }
+                MenuIcon.Image = null;
+                IconPath = "";
+                FlexibleMessageBox.Show("PNG file must be at least 16 x 16 pixels", "Improper File Selected");
+                return;
             }
 
             // Load the icon to the message box
@@ -472,7 +469,7 @@ namespace PdnCodeLab
         {
             OpenFileDialog ofd = new OpenFileDialog
             {
-                Title = "Load 16x16 PNG Graphic",       // File Open dialog box title
+                Title = "Load Icon PNG Graphic",        // File Open dialog box title
                 Filter = "Icon Files (*.PNG)|*.png",    // Only PNG files are allowed
                 DefaultExt = ".png",
                 Multiselect = false                     // only 1 file at a time is allowed
