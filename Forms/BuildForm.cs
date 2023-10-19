@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////////
 // CodeLab for Paint.NET
-// Portions Copyright ©2007-2017 BoltBait. All Rights Reserved.
-// Portions Copyright ©Microsoft Corporation. All Rights Reserved.
+// Portions Copyright Â©2007-2017 BoltBait. All Rights Reserved.
+// Portions Copyright Â©Microsoft Corporation. All Rights Reserved.
 //
 // THE CODELAB DEVELOPERS MAKE NO WARRANTY OF ANY KIND REGARDING THE CODE. THEY
 // SPECIFICALLY DISCLAIM ANY WARRANTY OF FITNESS FOR ANY PARTICULAR PURPOSE OR
@@ -218,7 +218,7 @@ namespace PdnCodeLab
 
                 if (HelpPlainText.Text.Length == 0)
                 {
-                    HelpPlainText.Text = $"{MenuName.Text} v{MajorVersion.Value}{DecimalSymbol.Text}{MinorVersion.Value}\r\nCopyright ©{DateTime.Now.Year} by {AuthorName.Text}\r\nAll rights reserved.";
+                    HelpPlainText.Text = $"{MenuName.Text} v{MajorVersion.Value}{DecimalSymbol.Text}{MinorVersion.Value}\r\nCopyright Â©{DateTime.Now.Year} by {AuthorName.Text}\r\nAll rights reserved.";
                     if (radioButtonNone.Checked)
                     {
                         radioButtonPlain.Checked = true;
@@ -456,7 +456,7 @@ namespace PdnCodeLab
             {
                 MenuIcon.Image = null;
                 IconPath = "";
-                FlexibleMessageBox.Show("PNG file must be at least 16 x 16 pixels", "Improper File Selected", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                FlexibleMessageBox.Show("PNG file must be square and at least 16 x 16 pixels", "Improper File Selected", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
