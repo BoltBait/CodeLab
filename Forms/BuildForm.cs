@@ -42,8 +42,8 @@ namespace PdnCodeLab
         internal HelpType HelpType = 0;
         internal string HelpStr = "";
         internal string RTZPath = "";
-        private string FullScriptText = "";
-        private string FileName = "";
+        private readonly string FullScriptText = "";
+        private readonly string FileName = "";
         private readonly string resourcePath;
         private readonly bool canCreateSln;
         private readonly bool customHelp;
@@ -88,10 +88,10 @@ namespace PdnCodeLab
             bool hasUI = UIElement.ProcessUIControls(ScriptText, projectType).Length > 0;
 
             // Preload submenu name
-            Match msm = Regex.Match(ScriptText, @"//[\s-[\r\n]]*SubMenu[\s-[\r\n]]*:[\s-[\r\n]]*(?<sublabel>.*)(?=\r?\n|$)", RegexOptions.IgnoreCase);
+            Match msm = Regex.Match(ScriptText, @"//[\s-[\r\n]]*SubMenu[\s-[\r\n]]*:[\s-[\r\n]]*(?<subLabel>.*)(?=\r?\n|$)", RegexOptions.IgnoreCase);
             if (msm.Success)
             {
-                SubMenuName.Text = msm.Groups["sublabel"].Value.Trim();
+                SubMenuName.Text = msm.Groups["subLabel"].Value.Trim();
                 if (SubMenuName.Text.Equals("adjustments", StringComparison.OrdinalIgnoreCase) ||
                     SubMenuName.Text.Equals("adj", StringComparison.OrdinalIgnoreCase))
                 {
@@ -101,10 +101,10 @@ namespace PdnCodeLab
             }
 
             // Preload menu name
-            Match mmn = Regex.Match(ScriptText, @"//[\s-[\r\n]]*Name[\s-[\r\n]]*:[\s-[\r\n]]*(?<menulabel>.*)(?=\r?\n|$)", RegexOptions.IgnoreCase);
+            Match mmn = Regex.Match(ScriptText, @"//[\s-[\r\n]]*Name[\s-[\r\n]]*:[\s-[\r\n]]*(?<menuLabel>.*)(?=\r?\n|$)", RegexOptions.IgnoreCase);
             if (mmn.Success)
             {
-                string menuName = mmn.Groups["menulabel"].Value.Trim();
+                string menuName = mmn.Groups["menuLabel"].Value.Trim();
                 MenuName.Text = (menuName.Length > 0) ? menuName : ScriptName;
             }
             else
@@ -115,10 +115,10 @@ namespace PdnCodeLab
             // Preload window title
             if (hasUI)
             {
-                Match wtn = Regex.Match(ScriptText, @"//[\s-[\r\n]]*Title[\s-[\r\n]]*:[\s-[\r\n]]*(?<titlelabel>.*)(?=\r?\n|$)", RegexOptions.IgnoreCase);
+                Match wtn = Regex.Match(ScriptText, @"//[\s-[\r\n]]*Title[\s-[\r\n]]*:[\s-[\r\n]]*(?<titleLabel>.*)(?=\r?\n|$)", RegexOptions.IgnoreCase);
                 if (wtn.Success)
                 {
-                    WindowTitleText.Text = wtn.Groups["titlelabel"].Value.Trim();
+                    WindowTitleText.Text = wtn.Groups["titleLabel"].Value.Trim();
                 }
             }
             else
@@ -128,48 +128,48 @@ namespace PdnCodeLab
             }
 
             // Preload version checking for Major.Minor (period or comma)
-            Match vsn = Regex.Match(ScriptText, @"//[\s-[\r\n]]*Version[\s-[\r\n]]*:[\s-[\r\n]]*(?<majorversionlabel>\d+)[\.\,](?<minorversionlabel>\d+)(?=\r?\n|$)", RegexOptions.IgnoreCase);
+            Match vsn = Regex.Match(ScriptText, @"//[\s-[\r\n]]*Version[\s-[\r\n]]*:[\s-[\r\n]]*(?<majorVersionLabel>\d+)[\.\,](?<minorVersionLabel>\d+)(?=\r?\n|$)", RegexOptions.IgnoreCase);
             if (!vsn.Success)
             {
                 // Preload version checking for just Major
-                vsn = Regex.Match(ScriptText, @"//[\s-[\r\n]]*Version[\s-[\r\n]]*:[\s-[\r\n]]*(?<majorversionlabel>\d+)(?=\r?\n|$)", RegexOptions.IgnoreCase);
+                vsn = Regex.Match(ScriptText, @"//[\s-[\r\n]]*Version[\s-[\r\n]]*:[\s-[\r\n]]*(?<majorVersionLabel>\d+)(?=\r?\n|$)", RegexOptions.IgnoreCase);
             }
             if (vsn.Success)
             {
-                if (decimal.TryParse(vsn.Groups["majorversionlabel"].Value.Trim(), out decimal majorv))
+                if (decimal.TryParse(vsn.Groups["majorVersionLabel"].Value.Trim(), out decimal majorVer))
                 {
-                    MajorVersion.Value = Math.Clamp(majorv, MajorVersion.Minimum, MajorVersion.Maximum);
+                    MajorVersion.Value = Math.Clamp(majorVer, MajorVersion.Minimum, MajorVersion.Maximum);
                 }
-                if (decimal.TryParse(vsn.Groups["minorversionlabel"].Value.Trim(), out decimal minorv))
+                if (decimal.TryParse(vsn.Groups["minorVersionLabel"].Value.Trim(), out decimal minorVer))
                 {
-                    MinorVersion.Value = Math.Clamp(minorv, MinorVersion.Minimum, MinorVersion.Maximum);
+                    MinorVersion.Value = Math.Clamp(minorVer, MinorVersion.Minimum, MinorVersion.Maximum);
                 }
             }
 
             // Preload author's name
-            Match mau = Regex.Match(ScriptText, @"//[\s-[\r\n]]*Author[\s-[\r\n]]*:[\s-[\r\n]]*(?<authorlabel>.*)(?=\r?\n|$)", RegexOptions.IgnoreCase);
+            Match mau = Regex.Match(ScriptText, @"//[\s-[\r\n]]*Author[\s-[\r\n]]*:[\s-[\r\n]]*(?<authorLabel>.*)(?=\r?\n|$)", RegexOptions.IgnoreCase);
             if (mau.Success)
             {
-                AuthorName.Text = mau.Groups["authorlabel"].Value.Trim();
+                AuthorName.Text = mau.Groups["authorLabel"].Value.Trim();
             }
 
             // Preload Description
-            Match mds = Regex.Match(ScriptText, @"//[\s-[\r\n]]*Desc[\s-[\r\n]]*:[\s-[\r\n]]*(?<desclabel>.*)(?=\r?\n|$)", RegexOptions.IgnoreCase);
+            Match mds = Regex.Match(ScriptText, @"//[\s-[\r\n]]*Desc[\s-[\r\n]]*:[\s-[\r\n]]*(?<descLabel>.*)(?=\r?\n|$)", RegexOptions.IgnoreCase);
             DescriptionBox.Text = mds.Success ?
-                mds.Groups["desclabel"].Value.Trim() :
+                mds.Groups["descLabel"].Value.Trim() :
                 ScriptName + " selected pixels";
 
             // Preload Keywords
-            Match mkw = Regex.Match(ScriptText, @"//[\s-[\r\n]]*KeyWords[\s-[\r\n]]*:[\s-[\r\n]]*(?<wordslabel>.*)(?=\r?\n|$)", RegexOptions.IgnoreCase);
+            Match mkw = Regex.Match(ScriptText, @"//[\s-[\r\n]]*KeyWords[\s-[\r\n]]*:[\s-[\r\n]]*(?<wordsLabel>.*)(?=\r?\n|$)", RegexOptions.IgnoreCase);
             KeyWordsBox.Text = mkw.Success ?
-                mkw.Groups["wordslabel"].Value.Trim() :
+                mkw.Groups["wordsLabel"].Value.Trim() :
                 ScriptName;
 
             // Preload Support URL
-            Match msu = Regex.Match(ScriptText, @"//[\s-[\r\n]]*URL[\s-[\r\n]]*:[\s-[\r\n]]*(?<urllabel>.*)(?=\r?\n|$)", RegexOptions.IgnoreCase);
+            Match msu = Regex.Match(ScriptText, @"//[\s-[\r\n]]*URL[\s-[\r\n]]*:[\s-[\r\n]]*(?<urlLabel>.*)(?=\r?\n|$)", RegexOptions.IgnoreCase);
             if (msu.Success)
             {
-                SupportURL.Text = msu.Groups["urllabel"].Value.Trim();
+                SupportURL.Text = msu.Groups["urlLabel"].Value.Trim();
             }
 
             // Preload Force Aliased Selection
@@ -200,10 +200,10 @@ namespace PdnCodeLab
             if (hasUI)
             {
                 // Preload help text
-                Match hlp = Regex.Match(ScriptText, @"//[\s-[\r\n]]*Help[\s-[\r\n]]*:[\s-[\r\n]]*(?<helptext>.*)(?=\r?\n|$)", RegexOptions.IgnoreCase);
+                Match hlp = Regex.Match(ScriptText, @"//[\s-[\r\n]]*Help[\s-[\r\n]]*:[\s-[\r\n]]*(?<helpText>.*)(?=\r?\n|$)", RegexOptions.IgnoreCase);
                 if (hlp.Success)
                 {
-                    HelpStr = hlp.Groups["helptext"].Value.Trim();
+                    HelpStr = hlp.Groups["helpText"].Value.Trim();
                     if (HelpStr.IsWebAddress())
                     {
                         HelpURL.Text = HelpStr;
@@ -407,7 +407,7 @@ namespace PdnCodeLab
             }
             else
             {
-                FlexibleMessageBox.Show("Please enter a menu name.", "Error");
+                FlexibleMessageBox.Show("Please enter a menu name.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 MenuName.Focus();
                 return false;
             }
@@ -443,8 +443,8 @@ namespace PdnCodeLab
                 return;
             }
 
-            Bitmap newicon = UIUtil.GetBitmapFromFile(filePath);
-            if (newicon is null)
+            Bitmap newIcon = UIUtil.GetBitmapFromFile(filePath);
+            if (newIcon is null)
             {
                 MenuIcon.Image = null;
                 IconPath = "";
@@ -452,22 +452,22 @@ namespace PdnCodeLab
             }
 
             // Make sure the icon is square, and is at least 16 x 16
-            if (newicon.Width != newicon.Height || newicon.Width < 16)
+            if (newIcon.Width != newIcon.Height || newIcon.Width < 16)
             {
                 MenuIcon.Image = null;
                 IconPath = "";
-                FlexibleMessageBox.Show("PNG file must be at least 16 x 16 pixels", "Improper File Selected");
+                FlexibleMessageBox.Show("PNG file must be at least 16 x 16 pixels", "Improper File Selected", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
             // Load the icon to the message box
-            MenuIcon.Image = newicon;
+            MenuIcon.Image = newIcon;
             IconPath = filePath;
         }
 
         private void ButtonIcon_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            OpenFileDialog ofd = new OpenFileDialog
+            using OpenFileDialog ofd = new OpenFileDialog
             {
                 Title = "Load Icon PNG Graphic",        // File Open dialog box title
                 Filter = "Icon Files (*.PNG)|*.png",    // Only PNG files are allowed
@@ -567,7 +567,7 @@ namespace PdnCodeLab
                             RichHelpContent.SelectionBackColor = ColorToApply;
                             break;
                         case StyleTypes.Indent:
-                            RichHelpContent.SelectionIndent = RichHelpContent.SelectionIndent + 20;
+                            RichHelpContent.SelectionIndent += 20;
                             break;
                         case StyleTypes.Alignment:
                             RichHelpContent.SelectionAlignment = HorizontalAlignment.Center;
@@ -647,58 +647,56 @@ namespace PdnCodeLab
             }
             else if (radioButtonRich.Checked)
             {
-                using (Form form = new Form())
+                using Form form = new Form();
+                form.SuspendLayout();
+                form.AutoScaleDimensions = new SizeF(96F, 96F);
+                form.AutoScaleMode = AutoScaleMode.Dpi;
+                form.Text = MenuName.Text + " - " + LoadLocalizedString("user32.dll", 808, "Help");
+                form.AutoSize = false;
+                form.ClientSize = new Size(564, 392);
+                form.MinimumSize = new Size(330, 282);
+                form.FormBorderStyle = FormBorderStyle.Sizable;
+                form.ShowInTaskbar = false;
+                form.MinimizeBox = false;
+                form.StartPosition = FormStartPosition.CenterParent;
+                if (MenuIcon.Image != null)
                 {
-                    form.SuspendLayout();
-                    form.AutoScaleDimensions = new SizeF(96F, 96F);
-                    form.AutoScaleMode = AutoScaleMode.Dpi;
-                    form.Text = MenuName.Text + " - " + LoadLocalizedString("user32.dll", 808, "Help");
-                    form.AutoSize = false;
-                    form.ClientSize = new Size(564, 392);
-                    form.MinimumSize = new Size(330, 282);
-                    form.FormBorderStyle = FormBorderStyle.Sizable;
-                    form.ShowInTaskbar = false;
-                    form.MinimizeBox = false;
-                    form.StartPosition = FormStartPosition.CenterParent;
-                    if (MenuIcon.Image != null)
-                    {
-                        form.Icon = Icon.FromHandle(((Bitmap)MenuIcon.Image).GetHicon());
-                    }
-                    else
-                    {
-                        form.ShowIcon = false;
-                    }
-
-                    Button btn_HelpBoxOKButton = new Button();
-                    btn_HelpBoxOKButton.AutoSize = true;
-                    btn_HelpBoxOKButton.Text = LoadLocalizedString("user32.dll", 800, "OK");
-                    btn_HelpBoxOKButton.DialogResult = DialogResult.Cancel;
-                    btn_HelpBoxOKButton.Size = new Size(84, 24);
-                    btn_HelpBoxOKButton.Location = new Point(472, 359);
-                    btn_HelpBoxOKButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-
-                    RichTextBox rtb_HelpBox = new RichTextBox();
-                    rtb_HelpBox.Size = new Size(564, 350);
-                    rtb_HelpBox.Location = new Point(0, 0);
-                    rtb_HelpBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Bottom | AnchorStyles.Right;
-                    rtb_HelpBox.DetectUrls = true;
-                    rtb_HelpBox.WordWrap = true;
-                    rtb_HelpBox.ScrollBars = RichTextBoxScrollBars.ForcedVertical;
-                    rtb_HelpBox.BorderStyle = BorderStyle.None;
-                    rtb_HelpBox.Font = new Font(rtb_HelpBox.SelectionFont.Name, 10f);
-                    rtb_HelpBox.ReadOnly = false;
-                    rtb_HelpBox.Rtf = RichHelpContent.Rtf;
-                    rtb_HelpBox.ReadOnly = true;
-                    rtb_HelpBox.LinkClicked += (obj, args) =>
-                    {
-                        UIUtil.LaunchUrl(this, args.LinkText);
-                        btn_HelpBoxOKButton.Focus();
-                    };
-
-                    form.Controls.AddRange(new Control[] { btn_HelpBoxOKButton, rtb_HelpBox });
-                    form.ResumeLayout();
-                    form.ShowDialog();
+                    form.Icon = Icon.FromHandle(((Bitmap)MenuIcon.Image).GetHicon());
                 }
+                else
+                {
+                    form.ShowIcon = false;
+                }
+
+                Button btn_HelpBoxOKButton = new Button();
+                btn_HelpBoxOKButton.AutoSize = true;
+                btn_HelpBoxOKButton.Text = LoadLocalizedString("user32.dll", 800, "OK");
+                btn_HelpBoxOKButton.DialogResult = DialogResult.Cancel;
+                btn_HelpBoxOKButton.Size = new Size(84, 24);
+                btn_HelpBoxOKButton.Location = new Point(472, 359);
+                btn_HelpBoxOKButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+
+                RichTextBox rtb_HelpBox = new RichTextBox();
+                rtb_HelpBox.Size = new Size(564, 350);
+                rtb_HelpBox.Location = new Point(0, 0);
+                rtb_HelpBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Bottom | AnchorStyles.Right;
+                rtb_HelpBox.DetectUrls = true;
+                rtb_HelpBox.WordWrap = true;
+                rtb_HelpBox.ScrollBars = RichTextBoxScrollBars.ForcedVertical;
+                rtb_HelpBox.BorderStyle = BorderStyle.None;
+                rtb_HelpBox.Font = new Font(rtb_HelpBox.SelectionFont.Name, 10f);
+                rtb_HelpBox.ReadOnly = false;
+                rtb_HelpBox.Rtf = RichHelpContent.Rtf;
+                rtb_HelpBox.ReadOnly = true;
+                rtb_HelpBox.LinkClicked += (obj, args) =>
+                {
+                    UIUtil.LaunchUrl(this, args.LinkText);
+                    btn_HelpBoxOKButton.Focus();
+                };
+
+                form.Controls.AddRange(new Control[] { btn_HelpBoxOKButton, rtb_HelpBox });
+                form.ResumeLayout();
+                form.ShowDialog();
             }
         }
         #endregion
@@ -707,18 +705,16 @@ namespace PdnCodeLab
         private static string CompressString(string text)
         {
             byte[] buffer = Encoding.UTF8.GetBytes(text);
-            var memoryStream = new MemoryStream();
-            using (var gZipStream = new GZipStream(memoryStream, CompressionMode.Compress, true))
-            {
-                gZipStream.Write(buffer, 0, buffer.Length);
-            }
+            using MemoryStream memoryStream = new MemoryStream();
+            using GZipStream gZipStream = new GZipStream(memoryStream, CompressionMode.Compress, true);
+            gZipStream.Write(buffer, 0, buffer.Length);
 
             memoryStream.Position = 0;
 
-            var compressedData = new byte[memoryStream.Length];
+            byte[] compressedData = new byte[memoryStream.Length];
             memoryStream.ReadExactly(compressedData, 0, compressedData.Length);
 
-            var gZipBuffer = new byte[compressedData.Length + 4];
+            byte[] gZipBuffer = new byte[compressedData.Length + 4];
             Buffer.BlockCopy(compressedData, 0, gZipBuffer, 4, compressedData.Length);
             Buffer.BlockCopy(BitConverter.GetBytes(buffer.Length), 0, gZipBuffer, 0, 4);
             return Convert.ToBase64String(gZipBuffer);
@@ -727,21 +723,18 @@ namespace PdnCodeLab
         private static string DecompressString(string compressedText)
         {
             byte[] gZipBuffer = Convert.FromBase64String(compressedText);
-            using (var memoryStream = new MemoryStream())
-            {
-                int dataLength = BitConverter.ToInt32(gZipBuffer, 0);
-                memoryStream.Write(gZipBuffer, 4, gZipBuffer.Length - 4);
+            int dataLength = BitConverter.ToInt32(gZipBuffer, 0);
 
-                var buffer = new byte[dataLength];
+            using MemoryStream memoryStream = new MemoryStream();
+            memoryStream.Write(gZipBuffer, 4, gZipBuffer.Length - 4);
+            memoryStream.Position = 0;
 
-                memoryStream.Position = 0;
-                using (var gZipStream = new GZipStream(memoryStream, CompressionMode.Decompress))
-                {
-                    gZipStream.ReadExactly(buffer, 0, buffer.Length);
-                }
+            byte[] buffer = new byte[dataLength];
 
-                return Encoding.UTF8.GetString(buffer);
-            }
+            using GZipStream gZipStream = new GZipStream(memoryStream, CompressionMode.Decompress);
+            gZipStream.ReadExactly(buffer, 0, buffer.Length);
+
+            return Encoding.UTF8.GetString(buffer);
         }
         #endregion
 
@@ -1176,36 +1169,34 @@ namespace PdnCodeLab
                 File.WriteAllText(RTZPath, CompressedOutput);
             }
 
-            using (FolderBrowserDialog fbd = new FolderBrowserDialog())
+            using FolderBrowserDialog fbd = new FolderBrowserDialog();
+            fbd.SelectedPath = Settings.LastSlnDirectory;
+            fbd.ShowNewFolderButton = true;
+            fbd.Description = "Choose a Folder to place the generated Visual Studio Solution.";
+
+            if (fbd.ShowDialog() == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
             {
-                fbd.SelectedPath = Settings.LastSlnDirectory;
-                fbd.ShowNewFolderButton = true;
-                fbd.Description = "Choose a Folder to place the generated Visual Studio Solution.";
-
-                if (fbd.ShowDialog() == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
+                string SourceCode = this.projectType switch
                 {
-                    string SourceCode = this.projectType switch
-                    {
-                        ProjectType.ClassicEffect => ClassicEffectWriter.FullSourceCode(FullScriptText, FileName, isAdjustment, SubMenuName.Text, MenuName.Text, IconPath, URL, RenderingFlags, RenderingSchedule, Author, MajorVer, MinorVer, Description, KeyWords, WindowTitle, HelpType, HelpStr),
-                        ProjectType.BitmapEffect => BitmapEffectWriter.FullSourceCode(FullScriptText, FileName, isAdjustment, SubMenuName.Text, MenuName.Text, IconPath, URL, RenderingFlags, RenderingSchedule, Author, MajorVer, MinorVer, Description, KeyWords, WindowTitle, HelpType, HelpStr),
-                        ProjectType.GpuEffect => GPUEffectWriter.FullSourceCode(FullScriptText, FileName, isAdjustment, SubMenuName.Text, MenuName.Text, IconPath, URL, RenderingFlags, RenderingSchedule, Author, MajorVer, MinorVer, Description, KeyWords, WindowTitle, HelpType, HelpStr),
-                        ProjectType.GpuDrawEffect => GPUDrawWriter.FullSourceCode(FullScriptText, FileName, isAdjustment, SubMenuName.Text, MenuName.Text, IconPath, URL, RenderingFlags, RenderingSchedule, Author, MajorVer, MinorVer, Description, KeyWords, WindowTitle, HelpType, HelpStr),
-                        _ => throw new NotImplementedException("Invalid Project Type"),
-                    };
+                    ProjectType.ClassicEffect => ClassicEffectWriter.FullSourceCode(FullScriptText, FileName, isAdjustment, SubMenuName.Text, MenuName.Text, IconPath, URL, RenderingFlags, RenderingSchedule, Author, MajorVer, MinorVer, Description, KeyWords, WindowTitle, HelpType, HelpStr),
+                    ProjectType.BitmapEffect => BitmapEffectWriter.FullSourceCode(FullScriptText, FileName, isAdjustment, SubMenuName.Text, MenuName.Text, IconPath, URL, RenderingFlags, RenderingSchedule, Author, MajorVer, MinorVer, Description, KeyWords, WindowTitle, HelpType, HelpStr),
+                    ProjectType.GpuEffect => GPUEffectWriter.FullSourceCode(FullScriptText, FileName, isAdjustment, SubMenuName.Text, MenuName.Text, IconPath, URL, RenderingFlags, RenderingSchedule, Author, MajorVer, MinorVer, Description, KeyWords, WindowTitle, HelpType, HelpStr),
+                    ProjectType.GpuDrawEffect => GPUDrawWriter.FullSourceCode(FullScriptText, FileName, isAdjustment, SubMenuName.Text, MenuName.Text, IconPath, URL, RenderingFlags, RenderingSchedule, Author, MajorVer, MinorVer, Description, KeyWords, WindowTitle, HelpType, HelpStr),
+                    _ => throw new NotImplementedException("Invalid Project Type"),
+                };
 
-                    string slnFilePath = Solution.Generate(fbd.SelectedPath, FileName, SourceCode, IconPath, resourcePath);
+                string slnFilePath = Solution.Generate(fbd.SelectedPath, FileName, SourceCode, IconPath, resourcePath);
 
-                    if (slnFilePath != null)
+                if (slnFilePath != null)
+                {
+                    bool success = File.Exists(slnFilePath) && UIUtil.LaunchFolderAndSelectFile(this, slnFilePath);
+                    if (!success)
                     {
-                        bool success = File.Exists(slnFilePath) && UIUtil.LaunchFolderAndSelectFile(this, slnFilePath);
-                        if (!success)
-                        {
-                            FlexibleMessageBox.Show("Could not navigate to the generated Solution file.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        }
+                        FlexibleMessageBox.Show("Could not navigate to the generated Solution file.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
-
-                    Settings.LastSlnDirectory = fbd.SelectedPath;
                 }
+
+                Settings.LastSlnDirectory = fbd.SelectedPath;
             }
         }
 
