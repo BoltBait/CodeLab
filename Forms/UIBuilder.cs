@@ -1108,6 +1108,10 @@ namespace PdnCodeLab
             if (!ScriptBuilder.BuildEffect<BitmapEffect>(previewSourceCode))
             {
                 FlexibleMessageBox.Show("Something went wrong, and the Preview can't be displayed.", "Preview Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+#if DEBUG
+                using ViewSrc VSW = new ViewSrc("UI Preview Source Code", previewSourceCode, true);
+                VSW.ShowDialog();
+#endif
             }
             else if (!ScriptBuilder.BuiltEffect.Options.IsConfigurable)
             {
