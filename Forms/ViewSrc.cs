@@ -15,47 +15,36 @@
 using System;
 using System.Windows.Forms;
 using System.IO;
-using System.Drawing;
 
 namespace PdnCodeLab
 {
     internal partial class ViewSrc : ChildFormBase
     {
-        internal ViewSrc(string title, string SourceString, bool ShowSaveButton)
+        internal ViewSrc(string title, string SourceString, bool isSourceCode)
         {
             InitializeComponent();
 
-            TextSrcBox.ForeColor = this.ForeColor;
-            TextSrcBox.BackColor = this.BackColor;
+            TextSrcBox.Lexer = isSourceCode ? ScintillaNET.Lexer.Cpp : ScintillaNET.Lexer.Null;
+            TextSrcBox.Theme = PdnTheme.Theme;
+            TextSrcBox.EnableUxThemeDarkMode(PdnTheme.Theme == Theme.Dark);
 
-            TextSrcBox.Font = new Font(Settings.FontFamily, TextSrcBox.Font.Size);
             TextSrcBox.Text = SourceString;
+            TextSrcBox.ReadOnly = true;
+
             this.Text = title;
-            SaveButton.Visible = ShowSaveButton;
+            SaveButton.Visible = isSourceCode;
         }
 
         protected override void OnShown(EventArgs e)
         {
             base.OnShown(e);
 
-            TextSrcBox.Select(0, 0);
             TextSrcBox.Focus();
         }
 
         private void ButtonClose_Click(object sender, EventArgs e)
         {
             this.Close();
-        }
-
-        private void TextSrcBox_KeyDown(object sender, KeyEventArgs e)
-        {
-            // Ctrl-A does a Select All in the editor window
-            if (e.Control && (e.KeyCode == Keys.A))
-            {
-                TextSrcBox.SelectAll();
-                e.Handled = true;
-            }
-
         }
 
         private void SaveButton_Click(object sender, EventArgs e)

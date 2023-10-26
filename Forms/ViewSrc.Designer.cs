@@ -29,7 +29,7 @@ namespace PdnCodeLab
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            TextSrcBox = new System.Windows.Forms.TextBox();
+            TextSrcBox = new CodeTextBox();
             ButtonClose = new System.Windows.Forms.Button();
             toolTip1 = new System.Windows.Forms.ToolTip(components);
             CopyButton = new ScaledButton();
@@ -38,25 +38,29 @@ namespace PdnCodeLab
             // 
             // TextSrcBox
             // 
-            TextSrcBox.AcceptsReturn = true;
-            TextSrcBox.AcceptsTab = true;
             TextSrcBox.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-            TextSrcBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            TextSrcBox.AutoCMaxHeight = 9;
+            TextSrcBox.AutomaticFold = ScintillaNET.AutomaticFold.Show | ScintillaNET.AutomaticFold.Change;
+            TextSrcBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            TextSrcBox.CaretLineBackColor = System.Drawing.Color.GhostWhite;
+            TextSrcBox.CaretLineVisible = true;
+            TextSrcBox.CaretLineVisibleAlways = true;
+            TextSrcBox.IdleStyling = ScintillaNET.IdleStyling.All;
+            TextSrcBox.Lexer = ScintillaNET.Lexer.Cpp;
             TextSrcBox.Location = new System.Drawing.Point(13, 13);
-            TextSrcBox.Multiline = true;
+            TextSrcBox.MouseDwellTime = 250;
             TextSrcBox.Name = "TextSrcBox";
-            TextSrcBox.ReadOnly = true;
-            TextSrcBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            TextSrcBox.Size = new System.Drawing.Size(559, 305);
+            TextSrcBox.Size = new System.Drawing.Size(759, 304);
             TextSrcBox.TabIndex = 1;
-            TextSrcBox.KeyDown += TextSrcBox_KeyDown;
+            TextSrcBox.Technology = ScintillaNET.Technology.DirectWrite;
+            TextSrcBox.WrapIndentMode = ScintillaNET.WrapIndentMode.Indent;
             // 
             // ButtonClose
             // 
             ButtonClose.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
             ButtonClose.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             ButtonClose.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            ButtonClose.Location = new System.Drawing.Point(497, 326);
+            ButtonClose.Location = new System.Drawing.Point(697, 325);
             ButtonClose.Name = "ButtonClose";
             ButtonClose.Size = new System.Drawing.Size(75, 24);
             ButtonClose.TabIndex = 0;
@@ -70,7 +74,7 @@ namespace PdnCodeLab
             CopyButton.FlatAppearance.BorderSize = 0;
             CopyButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             CopyButton.ImageName = "Copy";
-            CopyButton.Location = new System.Drawing.Point(13, 325);
+            CopyButton.Location = new System.Drawing.Point(13, 324);
             CopyButton.Name = "CopyButton";
             CopyButton.Size = new System.Drawing.Size(27, 27);
             CopyButton.TabIndex = 3;
@@ -85,7 +89,7 @@ namespace PdnCodeLab
             SaveButton.FlatAppearance.BorderSize = 0;
             SaveButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             SaveButton.ImageName = "Save";
-            SaveButton.Location = new System.Drawing.Point(46, 325);
+            SaveButton.Location = new System.Drawing.Point(46, 324);
             SaveButton.Name = "SaveButton";
             SaveButton.Size = new System.Drawing.Size(27, 27);
             SaveButton.TabIndex = 2;
@@ -98,7 +102,7 @@ namespace PdnCodeLab
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             CancelButton = ButtonClose;
-            ClientSize = new System.Drawing.Size(584, 362);
+            ClientSize = new System.Drawing.Size(784, 361);
             Controls.Add(CopyButton);
             Controls.Add(SaveButton);
             Controls.Add(ButtonClose);
@@ -110,12 +114,11 @@ namespace PdnCodeLab
             Name = "ViewSrc";
             ShowIcon = false;
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion
 
-        private System.Windows.Forms.TextBox TextSrcBox;
+        private PdnCodeLab.CodeTextBox TextSrcBox;
         private System.Windows.Forms.Button ButtonClose;
         private ScaledButton SaveButton;
         private ScaledButton CopyButton;
