@@ -363,6 +363,7 @@ namespace PdnCodeLab
             sdkAssemblies = assemblies
                 .Where(a => a.GetCustomAttribute<AssemblyCompanyAttribute>()?.Company == "Microsoft Corporation")
                 .Append(typeof(System.Diagnostics.TextWriterTraceListener).Assembly)
+                .Append(typeof(System.IO.Compression.GZipStream).Assembly)
                 .Distinct()
                 .ToImmutableArray();
 
