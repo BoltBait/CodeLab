@@ -28,91 +28,89 @@ namespace PdnCodeLab
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.TextSrcBox = new System.Windows.Forms.TextBox();
-            this.ButtonClose = new System.Windows.Forms.Button();
-            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.CopyButton = new PdnCodeLab.ScaledButton();
-            this.SaveButton = new PdnCodeLab.ScaledButton();
-            this.SuspendLayout();
+            components = new System.ComponentModel.Container();
+            TextSrcBox = new System.Windows.Forms.TextBox();
+            ButtonClose = new System.Windows.Forms.Button();
+            toolTip1 = new System.Windows.Forms.ToolTip(components);
+            CopyButton = new ScaledButton();
+            SaveButton = new ScaledButton();
+            SuspendLayout();
             // 
             // TextSrcBox
             // 
-            this.TextSrcBox.AcceptsReturn = true;
-            this.TextSrcBox.AcceptsTab = true;
-            this.TextSrcBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.TextSrcBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextSrcBox.Location = new System.Drawing.Point(13, 13);
-            this.TextSrcBox.Multiline = true;
-            this.TextSrcBox.Name = "TextSrcBox";
-            this.TextSrcBox.ReadOnly = true;
-            this.TextSrcBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.TextSrcBox.Size = new System.Drawing.Size(559, 305);
-            this.TextSrcBox.TabIndex = 1;
-            this.TextSrcBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextSrcBox_KeyDown);
+            TextSrcBox.AcceptsReturn = true;
+            TextSrcBox.AcceptsTab = true;
+            TextSrcBox.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            TextSrcBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            TextSrcBox.Location = new System.Drawing.Point(13, 13);
+            TextSrcBox.Multiline = true;
+            TextSrcBox.Name = "TextSrcBox";
+            TextSrcBox.ReadOnly = true;
+            TextSrcBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            TextSrcBox.Size = new System.Drawing.Size(559, 305);
+            TextSrcBox.TabIndex = 1;
+            TextSrcBox.KeyDown += TextSrcBox_KeyDown;
             // 
             // ButtonClose
             // 
-            this.ButtonClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.ButtonClose.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.ButtonClose.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.ButtonClose.Location = new System.Drawing.Point(497, 326);
-            this.ButtonClose.Name = "ButtonClose";
-            this.ButtonClose.Size = new System.Drawing.Size(75, 24);
-            this.ButtonClose.TabIndex = 0;
-            this.ButtonClose.Text = "Close";
-            this.ButtonClose.UseVisualStyleBackColor = true;
-            this.ButtonClose.Click += new System.EventHandler(this.ButtonClose_Click);
+            ButtonClose.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
+            ButtonClose.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            ButtonClose.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            ButtonClose.Location = new System.Drawing.Point(497, 326);
+            ButtonClose.Name = "ButtonClose";
+            ButtonClose.Size = new System.Drawing.Size(75, 24);
+            ButtonClose.TabIndex = 0;
+            ButtonClose.Text = "Close";
+            ButtonClose.UseVisualStyleBackColor = true;
+            ButtonClose.Click += ButtonClose_Click;
             // 
             // CopyButton
             // 
-            this.CopyButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.CopyButton.FlatAppearance.BorderSize = 0;
-            this.CopyButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.CopyButton.ImageName = "Copy";
-            this.CopyButton.Location = new System.Drawing.Point(13, 325);
-            this.CopyButton.Name = "CopyButton";
-            this.CopyButton.Size = new System.Drawing.Size(27, 27);
-            this.CopyButton.TabIndex = 3;
-            this.CopyButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.toolTip1.SetToolTip(this.CopyButton, "Copy all to clipboard");
-            this.CopyButton.UseVisualStyleBackColor = true;
-            this.CopyButton.Click += new System.EventHandler(this.CopyButton_Click);
+            CopyButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
+            CopyButton.FlatAppearance.BorderSize = 0;
+            CopyButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            CopyButton.ImageName = "Copy";
+            CopyButton.Location = new System.Drawing.Point(13, 325);
+            CopyButton.Name = "CopyButton";
+            CopyButton.Size = new System.Drawing.Size(27, 27);
+            CopyButton.TabIndex = 3;
+            CopyButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            toolTip1.SetToolTip(CopyButton, "Copy all to clipboard");
+            CopyButton.UseVisualStyleBackColor = true;
+            CopyButton.Click += CopyButton_Click;
             // 
             // SaveButton
             // 
-            this.SaveButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.SaveButton.FlatAppearance.BorderSize = 0;
-            this.SaveButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SaveButton.ImageName = "Save";
-            this.SaveButton.Location = new System.Drawing.Point(46, 325);
-            this.SaveButton.Name = "SaveButton";
-            this.SaveButton.Size = new System.Drawing.Size(27, 27);
-            this.SaveButton.TabIndex = 2;
-            this.SaveButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.toolTip1.SetToolTip(this.SaveButton, "Save to file");
-            this.SaveButton.UseVisualStyleBackColor = true;
-            this.SaveButton.Click += new System.EventHandler(this.SaveButton_Click);
+            SaveButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
+            SaveButton.FlatAppearance.BorderSize = 0;
+            SaveButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            SaveButton.ImageName = "Save";
+            SaveButton.Location = new System.Drawing.Point(46, 325);
+            SaveButton.Name = "SaveButton";
+            SaveButton.Size = new System.Drawing.Size(27, 27);
+            SaveButton.TabIndex = 2;
+            SaveButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            toolTip1.SetToolTip(SaveButton, "Save to file");
+            SaveButton.UseVisualStyleBackColor = true;
+            SaveButton.Click += SaveButton_Click;
             // 
             // ViewSrc
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.CancelButton = this.ButtonClose;
-            this.ClientSize = new System.Drawing.Size(584, 362);
-            this.Controls.Add(this.CopyButton);
-            this.Controls.Add(this.SaveButton);
-            this.Controls.Add(this.ButtonClose);
-            this.Controls.Add(this.TextSrcBox);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
-            this.MaximizeBox = true;
-            this.MinimumSize = new System.Drawing.Size(300, 200);
-            this.Name = "ViewSrc";
-            this.ShowIcon = false;
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            CancelButton = ButtonClose;
+            ClientSize = new System.Drawing.Size(584, 362);
+            Controls.Add(CopyButton);
+            Controls.Add(SaveButton);
+            Controls.Add(ButtonClose);
+            Controls.Add(TextSrcBox);
+            FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
+            Location = new System.Drawing.Point(0, 0);
+            MaximizeBox = true;
+            MinimumSize = new System.Drawing.Size(300, 200);
+            Name = "ViewSrc";
+            ShowIcon = false;
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
