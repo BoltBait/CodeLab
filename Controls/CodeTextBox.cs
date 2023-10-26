@@ -4842,6 +4842,7 @@ namespace PdnCodeLab
 
                     this.SetProperty("fold", "1");
                     this.SetProperty("fold.compact", "0");
+                    this.SetProperty("fold.preprocessor", "1");
                     this.SetProperty("lexer.cpp.allow.dollars", "0");
                     this.SetProperty("lexer.cpp.escape.sequence", "1");
 
