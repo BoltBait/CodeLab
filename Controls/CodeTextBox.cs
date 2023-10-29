@@ -2775,6 +2775,12 @@ namespace PdnCodeLab
                 {
                     GoToDefinition(true);
                 }
+                else if (e.Control && e.KeyCode == Keys.C)
+                {
+                    e.SuppressKeyPress = true;
+                    e.Handled = true;
+                    CopyAsRtf();
+                }
                 else if (this.ReadOnly)
                 {
                     // no-op
@@ -4373,6 +4379,20 @@ namespace PdnCodeLab
                 }
             }
             this.EndUndoAction();
+        }
+
+        internal void CopyAsRtf()
+        {
+            Theme currentTheme = this.Theme;
+            if (currentTheme != Theme.Light)
+            {
+                this.Theme = Theme.Light;
+            }
+            this.Copy(CopyFormat.Text | CopyFormat.Rtf);
+            if (currentTheme != Theme.Light)
+            {
+                this.Theme = currentTheme;
+            }
         }
         #endregion
 
