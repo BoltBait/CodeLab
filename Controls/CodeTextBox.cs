@@ -2765,27 +2765,27 @@ namespace PdnCodeLab
 
         protected override void OnKeyDown(KeyEventArgs e)
         {
-            if (!iBox.Visible)
+            if (e.KeyCode == Keys.F12)
             {
-                if (e.KeyCode == Keys.F12)
-                {
-                    GoToDefinition(false);
-                }
-                else if (e.KeyCode == Keys.F1)
-                {
-                    GoToDefinition(true);
-                }
-                else if (e.Control && e.KeyCode == Keys.C)
-                {
-                    e.SuppressKeyPress = true;
-                    e.Handled = true;
-                    CopyAsRtf();
-                }
-                else if (this.ReadOnly)
-                {
-                    // no-op
-                }
-                else if (e.KeyCode == Keys.Escape)
+                GoToDefinition(false);
+            }
+            else if (e.KeyCode == Keys.F1)
+            {
+                GoToDefinition(true);
+            }
+            else if (e.Control && e.KeyCode == Keys.C)
+            {
+                e.SuppressKeyPress = true;
+                e.Handled = true;
+                CopyAsRtf();
+            }
+            else if (this.ReadOnly)
+            {
+                // no-op
+            }
+            else if (!iBox.Visible)
+            {
+                if (e.KeyCode == Keys.Escape)
                 {
                     // Clear indicator for variable renaming
                     ClearRenaming();
@@ -2905,10 +2905,6 @@ namespace PdnCodeLab
                         this.DeleteRange(this.CurrentPosition - 1, 2);
                     }
                 }
-            }
-            else if (this.ReadOnly)
-            {
-                // no-op
             }
             else if (e.Alt && e.KeyCode == Keys.L)
             {
