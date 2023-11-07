@@ -27,15 +27,6 @@ namespace PdnCodeLab
         {
             InitializeComponent();
 
-            foreach (Control control in this.Controls)
-            {
-                if (control is TextBox || control is NumericUpDown)
-                {
-                    control.ForeColor = this.ForeColor;
-                    control.BackColor = this.BackColor;
-                }
-            }
-
             this.fileName = Path.GetFileNameWithoutExtension(scriptPath);
             this.userCode = scriptText;
             this.isClassic = isClassic;

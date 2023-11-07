@@ -25,9 +25,6 @@ namespace PdnCodeLab
             InitializeComponent();
 
             TextSrcBox.Lexer = isSourceCode ? ScintillaNET.Lexer.Cpp : ScintillaNET.Lexer.Null;
-            TextSrcBox.Theme = PdnTheme.Theme;
-            TextSrcBox.EnableUxThemeDarkMode(PdnTheme.Theme == Theme.Dark);
-
             TextSrcBox.Text = SourceString;
             TextSrcBox.ReadOnly = true;
 

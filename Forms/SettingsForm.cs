@@ -17,19 +17,6 @@ namespace PdnCodeLab
         internal SettingsForm(SettingsPage defaultPage = SettingsPage.UI)
         {
             InitializeComponent();
-            // PDN Theme
-            foreach (Control control in this.Controls.OfType<Control>()
-                .Concat(this.Controls.OfType<Panel>().SelectMany(panel => panel.Controls.OfType<Control>()))
-                )
-            {
-                if ((control is ComboBox) || (control is ListBox))
-                {
-                    control.ForeColor = this.ForeColor;
-                    control.BackColor = this.BackColor;
-                }
-            }
-
-            linkLabel1.LinkColor = this.ForeColor;
 
             Initializing = true;
 

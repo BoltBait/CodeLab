@@ -132,16 +132,6 @@ namespace PdnCodeLab
         }
         #endregion
 
-        internal void UpdateTheme()
-        {
-            toolStrip1.Renderer = PdnTheme.Renderer;
-
-            this.FindBox.ForeColor = this.notFound ? Color.Black : this.toolStrip1.ForeColor;
-            this.FindBox.BackColor = this.notFound ? Color.FromArgb(246, 97, 81) : this.toolStrip1.BackColor;
-            this.ReplaceBox.ForeColor = this.toolStrip1.ForeColor;
-            this.ReplaceBox.BackColor = this.toolStrip1.BackColor;
-        }
-
         private void Close_Click(object sender, EventArgs e)
         {
             this.Visible = false;

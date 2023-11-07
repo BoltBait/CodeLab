@@ -55,21 +55,6 @@ namespace PdnCodeLab
 
             HelpPlainText.Font = this.Font;
 
-            // PDN Theme
-            toolStrip1.Renderer = PdnTheme.Renderer;
-            SubMenuName.ForeColor = this.ForeColor;
-            SubMenuName.BackColor = this.BackColor;
-            ButtonIcon.LinkColor = this.ForeColor;
-            ButtonIcon.ActiveLinkColor = this.ForeColor;
-            foreach (Control control in this.Controls)
-            {
-                if (control is TextBox || control is NumericUpDown)
-                {
-                    control.ForeColor = this.ForeColor;
-                    control.BackColor = this.BackColor;
-                }
-            }
-
             this.projectType = projectType;
             this.canCreateSln = canCreateSln;
 

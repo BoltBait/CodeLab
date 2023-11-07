@@ -37,15 +37,6 @@ namespace PdnCodeLab
         {
             InitializeComponent();
 
-            foreach (Control control in this.Controls)
-            {
-                if ((control is ComboBox) || (control is ListBox))
-                {
-                    control.ForeColor = this.ForeColor;
-                    control.BackColor = this.BackColor;
-                }
-            }
-
             flowList.ItemHeight = UIUtil.Scale(64);
             flowList.Font = this.Font;
             DefaultColorComboBox.Items.Add("Primary");

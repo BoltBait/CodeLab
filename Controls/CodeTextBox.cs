@@ -36,7 +36,7 @@ using System.Windows.Forms;
 
 namespace PdnCodeLab
 {
-    public sealed class CodeTextBox : Scintilla
+    public sealed class CodeTextBox : Scintilla, IToolTipControl
     {
         private readonly Timer timer = new Timer();
         private readonly IntelliBox iBox = new IntelliBox();
@@ -384,11 +384,6 @@ namespace PdnCodeLab
 
                         // Caret
                         this.CaretForeColor = Color.Gainsboro;
-
-
-                        // IntelliTip back color
-                        intelliTip.UpdateTheme(Color.White, Color.FromArgb(66, 66, 66));
-                        iBox.UpdateTheme(Color.White, Color.FromArgb(66, 66, 66));
                         break;
 
                     case Theme.Light:
@@ -454,17 +449,8 @@ namespace PdnCodeLab
 
                         // Caret
                         this.CaretForeColor = Color.Black;
-
-
-                        // IntelliTip colors
-                        intelliTip.UpdateTheme(Color.FromArgb(30, 30, 30), Color.WhiteSmoke);
-                        iBox.UpdateTheme(Color.FromArgb(30, 30, 30), Color.WhiteSmoke);
                         break;
                 }
-
-                findPanel.UpdateTheme();
-                lightBulbMenu.Renderer = PdnTheme.Renderer;
-                indicatorBar.Theme = value;
             }
         }
 
@@ -706,6 +692,11 @@ namespace PdnCodeLab
             this.CaretLineBackColor = CaretLineFrameEnabled
                 ? Color.FromArgb(234, 234, 242)
                 : Color.GhostWhite;
+        }
+
+        void IToolTipControl.ThemeToolTip(Color toolTipFore, Color toolTipBack)
+        {
+            this.intelliTip.UpdateTheme(toolTipFore, toolTipBack);
         }
         #endregion
 

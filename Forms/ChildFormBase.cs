@@ -1,4 +1,5 @@
 ﻿using PaintDotNet;
+using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
@@ -14,10 +15,8 @@ namespace PdnCodeLab
             this.SuspendLayout();
             this.AutoScaleDimensions = new SizeF(96F, 96F);
             this.AutoScaleMode = AutoScaleMode.Dpi;
-            this.BackColor = PdnTheme.BackColor;
             this.ClientSize = new Size(800, 450);
             this.Font = SystemFonts.MenuFont;
-            this.ForeColor = PdnTheme.ForeColor;
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -25,6 +24,13 @@ namespace PdnCodeLab
             this.StartPosition = FormStartPosition.CenterParent;
             this.Text = string.Empty;
             this.ResumeLayout(false);
+        }
+
+        protected override void OnLoad(EventArgs e)
+        {
+            this.UpdateTheme();
+
+            base.OnLoad(e);
         }
 
         [Browsable(false)]

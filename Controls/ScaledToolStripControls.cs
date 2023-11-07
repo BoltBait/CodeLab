@@ -113,29 +113,4 @@ namespace PdnCodeLab
             }
         }
     }
-
-    public sealed class ScaledButton : Button
-    {
-        private string imageName = string.Empty;
-
-        [Browsable(false)]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public new Image Image
-        {
-            get => base.Image;
-            set => base.Image = value;
-        }
-
-        [Category(nameof(CategoryAttribute.Appearance))]
-        [DefaultValue("")]
-        public string ImageName
-        {
-            get => imageName;
-            set
-            {
-                imageName = value.Trim();
-                this.Image = UIUtil.GetImage(imageName);
-            }
-        }
-    }
 }

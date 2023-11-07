@@ -65,18 +65,6 @@ namespace PdnCodeLab
         {
             InitializeComponent();
 
-            // PDN Theme
-            ControlListView.ForeColor = this.ForeColor;
-            ControlListView.BackColor = this.BackColor;
-            foreach (Control control in this.Controls)
-            {
-                if (control is TextBox || control is ComboBox)
-                {
-                    control.ForeColor = this.ForeColor;
-                    control.BackColor = this.BackColor;
-                }
-            }
-
             ControlListView.Font = new Font(Settings.FontFamily, ControlListView.Font.SizeInPoints);
 
             // Populate the ControlType dropdown based on allowed ElementTypes

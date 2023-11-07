@@ -32,8 +32,8 @@ namespace PdnCodeLab
             TextSrcBox = new CodeTextBox();
             ButtonClose = new System.Windows.Forms.Button();
             toolTip1 = new System.Windows.Forms.ToolTip(components);
-            CopyButton = new ScaledButton();
-            SaveButton = new ScaledButton();
+            CopyButton = new System.Windows.Forms.Button();
+            SaveButton = new System.Windows.Forms.Button();
             SuspendLayout();
             // 
             // TextSrcBox
@@ -59,7 +59,6 @@ namespace PdnCodeLab
             // 
             ButtonClose.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
             ButtonClose.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            ButtonClose.FlatStyle = System.Windows.Forms.FlatStyle.System;
             ButtonClose.Location = new System.Drawing.Point(697, 325);
             ButtonClose.Name = "ButtonClose";
             ButtonClose.Size = new System.Drawing.Size(75, 24);
@@ -72,13 +71,11 @@ namespace PdnCodeLab
             // 
             CopyButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
             CopyButton.FlatAppearance.BorderSize = 0;
-            CopyButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            CopyButton.ImageName = "Copy";
-            CopyButton.Location = new System.Drawing.Point(13, 324);
+            CopyButton.Location = new System.Drawing.Point(13, 325);
             CopyButton.Name = "CopyButton";
-            CopyButton.Size = new System.Drawing.Size(27, 27);
+            CopyButton.Size = new System.Drawing.Size(75, 24);
             CopyButton.TabIndex = 3;
-            CopyButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            CopyButton.Text = "Copy";
             toolTip1.SetToolTip(CopyButton, "Copy all to clipboard");
             CopyButton.UseVisualStyleBackColor = true;
             CopyButton.Click += CopyButton_Click;
@@ -87,13 +84,11 @@ namespace PdnCodeLab
             // 
             SaveButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
             SaveButton.FlatAppearance.BorderSize = 0;
-            SaveButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            SaveButton.ImageName = "Save";
-            SaveButton.Location = new System.Drawing.Point(46, 324);
+            SaveButton.Location = new System.Drawing.Point(94, 325);
             SaveButton.Name = "SaveButton";
-            SaveButton.Size = new System.Drawing.Size(27, 27);
+            SaveButton.Size = new System.Drawing.Size(75, 24);
             SaveButton.TabIndex = 2;
-            SaveButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            SaveButton.Text = "Save";
             toolTip1.SetToolTip(SaveButton, "Save to file");
             SaveButton.UseVisualStyleBackColor = true;
             SaveButton.Click += SaveButton_Click;
@@ -120,8 +115,8 @@ namespace PdnCodeLab
 
         private PdnCodeLab.CodeTextBox TextSrcBox;
         private System.Windows.Forms.Button ButtonClose;
-        private ScaledButton SaveButton;
-        private ScaledButton CopyButton;
+        private System.Windows.Forms.Button SaveButton;
+        private System.Windows.Forms.Button CopyButton;
         private System.Windows.Forms.ToolTip toolTip1;
     }
 }

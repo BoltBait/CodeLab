@@ -22,16 +22,8 @@ namespace PdnCodeLab
         {
             InitializeComponent();
 
-            this.SnippetList.ForeColor = PdnTheme.ForeColor;
-            this.SnippetList.BackColor = PdnTheme.BackColor;
-            this.SnippetName.ForeColor = PdnTheme.ForeColor;
-            this.SnippetName.BackColor = PdnTheme.BackColor;
-            this.toolStrip1.Renderer = PdnTheme.Renderer;
-
             this.SnippetList.Items.AddRange(Intelli.Snippets.Keys.ToArray());
             this.SnippetList.Height = this.SnippetBody.Height; // HiDPI Fix
-            this.SnippetBody.Theme = PdnTheme.Theme;
-            this.SnippetBody.EnableUxThemeDarkMode(PdnTheme.Theme == Theme.Dark);
             this.SnippetBody.LineNumbersEnabled = Settings.LineNumbers;
             this.SnippetBody.WrapMode = Settings.WordWrap ? WrapMode.Whitespace : WrapMode.None;
 
@@ -206,8 +198,8 @@ namespace PdnCodeLab
             this.dirty = true;
             string newName = this.SnippetName.Text.Trim();
             bool error = (!IsValidSnippetName(newName) || (newName != this.currentSnippet && Intelli.Snippets.ContainsKey(newName)));
-            this.SnippetName.ForeColor = (this.SnippetName.Enabled && error) ? Color.Black : PdnTheme.ForeColor;
-            this.SnippetName.BackColor = (this.SnippetName.Enabled && error) ? Color.FromArgb(246, 97, 81) : PdnTheme.BackColor;
+            this.SnippetName.ForeColor = (this.SnippetName.Enabled && error) ? Color.Black : this.ForeColor;
+            this.SnippetName.BackColor = (this.SnippetName.Enabled && error) ? Color.FromArgb(246, 97, 81) : this.BackColor;
         }
 
         private void ImportFromFileButton_Click(object sender, EventArgs e)

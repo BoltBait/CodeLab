@@ -47,11 +47,6 @@ namespace PdnCodeLab
                 .Any(tab => tab.IsDirty);
         }
 
-        internal ToolStripRenderer Renderer
-        {
-            set => toolStrip1.Renderer = value;
-        }
-
         internal Guid SelectedTabGuid
         {
             get => activeTab.Guid;

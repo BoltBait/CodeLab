@@ -63,7 +63,9 @@ namespace PdnCodeLab
             this.UseAppThemeColors = true;
             UpdateWindowTitle();
 #endif
-            PdnTheme.InitialColors(this.ForeColor, this.BackColor);
+            ThemeUtil.Initialize(IsAppThemeDark, this.ForeColor, this.BackColor, Settings.EditorTheme);
+            this.UpdateTheme();
+
             LoadSettingsFromRegistry();
 
             this.Opacity = 1.00;
@@ -143,7 +145,11 @@ namespace PdnCodeLab
 
             SetBottomPanes(Settings.ErrorBox, Settings.Output);
 
-            ApplyTheme(Settings.EditorTheme);
+            this.UpdateTheme(Settings.EditorTheme);
+            if (errorList.HasErrors)
+            {
+                ShowErrors.ForeColor = Color.Red;
+            }
 
             txtCode.Zoom = Settings.LargeFonts ? 2 : 0;
 
@@ -1021,27 +1027,6 @@ namespace PdnCodeLab
 #if FASTDEBUG
             this.Close();
 #endif
-        }
-
-        private void ApplyTheme(Theme theme)
-        {
-            PdnTheme.Theme = theme;
-            ForeColor = PdnTheme.ForeColor;
-            BackColor = PdnTheme.BackColor;
-            txtCode.Theme = PdnTheme.Theme;
-            txtCode.EnableUxThemeDarkMode(PdnTheme.Theme == Theme.Dark);
-            toolStrip1.Renderer = PdnTheme.Renderer;
-            tabStrip1.Renderer = PdnTheme.TabRenderer;
-            menuStrip1.Renderer = PdnTheme.Renderer;
-            contextMenuStrip1.Renderer = PdnTheme.Renderer;
-            errorListMenu.Renderer = PdnTheme.Renderer;
-            errorList.ForeColor = PdnTheme.ForeColor;
-            errorList.BackColor = PdnTheme.BackColor;
-            errorList.EnableUxThemeDarkMode(PdnTheme.Theme == Theme.Dark);
-            OutputTextBox.ForeColor = PdnTheme.ForeColor;
-            OutputTextBox.BackColor = PdnTheme.BackColor;
-            OutputTextBox.EnableUxThemeDarkMode(PdnTheme.Theme == Theme.Dark);
-            ShowErrors.ForeColor = errorList.HasErrors ? Color.Red : this.ForeColor;
         }
 
         private void LaunchUrl(string url)

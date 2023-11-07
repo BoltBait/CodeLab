@@ -30,7 +30,7 @@ using System.Windows.Forms;
 
 namespace PdnCodeLab
 {
-    internal sealed class IntelliBox : UserControl
+    internal sealed class IntelliBox : UserControl, IToolTipControl
     {
         private bool listBoxMouseOver;
         private bool toolstripMouseOver;
@@ -1095,16 +1095,10 @@ namespace PdnCodeLab
             }
         }
 
-        internal void UpdateTheme(Color toolTipFore, Color toolTipBack)
+        void IToolTipControl.ThemeToolTip(Color toolTipFore, Color toolTipBack)
         {
-            this.ForeColor = PdnTheme.ForeColor;
-            this.BackColor = PdnTheme.BackColor;
-            this.toolStrip.Renderer = PdnTheme.Renderer;
             this.itemToolTip.UpdateTheme(toolTipFore, toolTipBack);
             this.filterToolTip.UpdateTheme(toolTipFore, toolTipBack);
-            this.listBox.ForeColor = PdnTheme.ForeColor;
-            this.listBox.BackColor = PdnTheme.BackColor;
-            this.listBox.EnableUxThemeDarkMode(PdnTheme.Theme == Theme.Dark);
         }
 
         internal void SaveUsedItem()

@@ -426,19 +426,18 @@ namespace PdnCodeLab
             {
                 InitializeComponent();
 
-                // PDN Theme - Added by BoltBait
-                this.ForeColor = PdnTheme.ForeColor;
-                this.BackColor = PdnTheme.BackColor;
-                this.panel1.ForeColor = PdnTheme.ForeColor;
-                this.panel1.BackColor = PdnTheme.BackColor;
-                this.richTextBoxMessage.BackColor = PdnTheme.BackColor;
-                this.richTextBoxMessage.ForeColor = PdnTheme.ForeColor;
-
                 //Try to evaluate the language. If this fails, the fallback language English will be used
                 Enum.TryParse<TwoLetterISOLanguageID>(CultureInfo.CurrentUICulture.TwoLetterISOLanguageName, out this.languageID);
 
                 this.KeyPreview = true;
                 this.KeyUp += FlexibleMessageBoxForm_KeyUp;
+            }
+
+            protected override void OnLoad(EventArgs e)
+            {
+                base.OnLoad(e);
+
+                this.UpdateTheme();
             }
 
             #endregion

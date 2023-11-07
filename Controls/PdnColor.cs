@@ -39,15 +39,6 @@ namespace PdnCodeLab
         {
             InitializeComponent();
 
-            foreach (Control control in this.Controls)
-            {
-                if (control is NumericUpDown || control is TextBox)
-                {
-                    control.ForeColor = PdnTheme.ForeColor;
-                    control.BackColor = PdnTheme.BackColor;
-                }
-            }
-
             HsvRainbow = new Color[65];
             for (int i = 0; i < 65; i++)
             {
