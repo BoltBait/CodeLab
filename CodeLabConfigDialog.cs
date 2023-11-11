@@ -1733,6 +1733,7 @@ namespace PdnCodeLab
             bool hasText = txtCode.TextLength > 0;
             bool isTextSelected = hasText && txtCode.SelectedText.Length > 0;
             bool cSharp = tabStrip1.SelectedTabProjType.IsCSharp();
+            bool showDef = tabStrip1.SelectedTabProjType != ProjectType.None;
 
             this.cutToolStripMenuItem.Enabled = isTextSelected;
             this.copyToolStripMenuItem.Enabled = isTextSelected;
@@ -1747,7 +1748,8 @@ namespace PdnCodeLab
             this.redoToolStripMenuItem.Enabled = txtCode.CanRedo;
             this.commentSelectionToolStripMenuItem1.Enabled = cSharp;
             this.uncommentSelectionToolStripMenuItem1.Enabled = cSharp;
-            this.GoToDefMenuItem.Enabled = cSharp;
+            this.GoToDefMenuItem.Enabled = showDef;
+            this.LookUpDefMenuItem.Enabled = showDef;
         }
 
         private void undoToolStripMenuItem1_Click(object sender, EventArgs e)
