@@ -177,6 +177,17 @@ namespace PdnCodeLab
 
             // WorkingSpace/WorkingSpaceLinear for GPU Effects
             WorkingSpaceColorContextBox.Checked = Regex.IsMatch(ScriptText, @"//[\s-[\r\n]]*(Working\s*Space\s*Color\s*Context|WSCC)[\s-[\r\n]]*(?=\r?\n|$)", RegexOptions.IgnoreCase);
+
+            if (projectType == ProjectType.ClassicEffect)
+            {
+                NoSelectionClippingBox.Checked = false;
+                StraightAlphaBox.Checked = false;
+                WorkingSpaceColorContextBox.Checked = false;
+
+                NoSelectionClippingBox.Enabled = false;
+                StraightAlphaBox.Enabled = false;
+                WorkingSpaceColorContextBox.Enabled = false;
+            }
             #endregion
 
             resourcePath = Path.Combine(Path.GetDirectoryName(ScriptPath), ScriptName);
