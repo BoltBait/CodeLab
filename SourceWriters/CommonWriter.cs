@@ -317,7 +317,7 @@ namespace PdnCodeLab
                         break;
                     case ElementType.Textbox:
                     case ElementType.MultiLineTextbox:
-                        PropertyPart += "            props.Add(new StringProperty(PropertyNames." + propertyName + ", \"\", " + u.Max.ToString() + "));\r\n";
+                        PropertyPart += "            props.Add(new StringProperty(PropertyNames." + propertyName + ", \"" + ((u.StrDefault.StartsWith('"')) ? u.StrDefault.Substring(1, u.StrDefault.Length - ((u.StrDefault.EndsWith('"'))?2:1)) : u.StrDefault) + "\", " + u.Max.ToString() + "));\r\n";
                         break;
                     case ElementType.DropDown:
                     case ElementType.RadioButtons:

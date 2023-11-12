@@ -1607,6 +1607,7 @@ namespace PdnCodeLab
                 case ElementType.Textbox:
                     Max = (int)parsedMax;
                     Description = eName + " (" + Max.ToString() + ")" + EnabledDescription;
+                    StrDefault = eDefault;
                     break;
                 case ElementType.DoubleSlider:
                     dMin = parsedMin;
@@ -1642,6 +1643,7 @@ namespace PdnCodeLab
                     Max = (int)parsedMax;
                     Default = 1;
                     Description = eName + " (" + Max.ToString() + ")" + EnabledDescription;
+                    StrDefault = eDefault;
                     break;
                 case ElementType.RollBall:
                     Max = 1;
@@ -1993,6 +1995,10 @@ namespace PdnCodeLab
                 defaultValue = x.ToString("F3", CultureInfo.InvariantCulture) + ", " + y.ToString("F3", CultureInfo.InvariantCulture);
             }
             else if (mTEnum.Success && (elementType == ElementType.DropDown || elementType == ElementType.RadioButtons))
+            {
+                defaultValue = DefaultStr;
+            }
+            else if (elementType == ElementType.Textbox || elementType == ElementType.MultiLineTextbox)
             {
                 defaultValue = DefaultStr;
             }
