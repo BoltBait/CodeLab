@@ -954,6 +954,39 @@ namespace PdnCodeLab
             this.ResumeLayout(true);
         }
 
+        internal void ApplyUserSettings()
+        {
+            bool useWordWrap = (this.Lexer == Lexer.Null) ? Settings.WordWrapPlainText : Settings.WordWrap;
+            this.WrapMode = useWordWrap ? WrapMode.Whitespace : WrapMode.None;
+            this.TabWidth = Settings.IndentSpaces;
+            this.CaretLineFrameEnabled = Settings.CaretLineFrame;
+            this.DisableAutoComplete = Settings.DisableAutoComplete;
+            this.UseExtendedColors = Settings.ExtendedColors;
+
+            if (Settings.WhiteSpace)
+            {
+                this.ViewWhitespace = WhitespaceMode.VisibleAlways;
+                this.WrapVisualFlags = WrapVisualFlags.Start;
+            }
+            else
+            {
+                this.ViewWhitespace = WhitespaceMode.Invisible;
+                this.WrapVisualFlags = WrapVisualFlags.None;
+            }
+
+            this.CodeFoldingEnabled = Settings.CodeFolding;
+            this.LineNumbersEnabled = Settings.LineNumbers;
+            this.BookmarksEnabled = Settings.Bookmarks;
+
+            this.Zoom = Settings.LargeFonts ? 2 : 0;
+            this.MapEnabled = Settings.Map;
+
+            this.Styles[Style.Default].Font = Settings.FontFamily;
+            this.UpdateMarginWidths();
+
+            this.SpellcheckEnabled = Settings.Spellcheck;
+        }
+
         #region Intelligent Assistance functions
         private string GetLastWords(int position)
         {

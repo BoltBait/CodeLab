@@ -24,8 +24,7 @@ namespace PdnCodeLab
 
             this.SnippetList.Items.AddRange(Intelli.Snippets.Keys.ToArray());
             this.SnippetList.Height = this.SnippetBody.Height; // HiDPI Fix
-            this.SnippetBody.LineNumbersEnabled = Settings.LineNumbers;
-            this.SnippetBody.WrapMode = Settings.WordWrap ? WrapMode.Whitespace : WrapMode.None;
+            this.SnippetBody.ApplyUserSettings();
 
             if (this.SnippetList.Items.Count > 0)
             {

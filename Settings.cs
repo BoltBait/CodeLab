@@ -51,7 +51,20 @@ namespace PdnCodeLab
 
         internal static string FontFamily
         {
-            get => GetRegValue("FontFamily", "Consolas");
+            get
+            {
+                string fontFamily = GetRegValue("FontFamily", "Consolas");
+                if (!UIUtil.IsFontInstalled(fontFamily))
+                {
+                    fontFamily = "Courier New";
+                    if (!UIUtil.IsFontInstalled(fontFamily))
+                    {
+                        fontFamily = "Verdana";
+                    }
+                }
+
+                return fontFamily;
+            }
             set => SetRegValue("FontFamily", value);
         }
 

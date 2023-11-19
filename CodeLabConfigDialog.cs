@@ -108,40 +108,7 @@ namespace PdnCodeLab
 
         private void LoadSettingsFromRegistry()
         {
-            bool useWordWrap = (this.tabStrip1.SelectedTabProjType == ProjectType.None) ? Settings.WordWrapPlainText : Settings.WordWrap;
-            txtCode.WrapMode = useWordWrap ? WrapMode.Whitespace : WrapMode.None;
-            txtCode.TabWidth = Settings.IndentSpaces;
-            txtCode.CaretLineFrameEnabled = Settings.CaretLineFrame;
-            txtCode.DisableAutoComplete = Settings.DisableAutoComplete;
-            txtCode.UseExtendedColors = Settings.ExtendedColors;
-
-            if (Settings.WhiteSpace)
-            {
-                txtCode.ViewWhitespace = WhitespaceMode.VisibleAlways;
-                txtCode.WrapVisualFlags = WrapVisualFlags.Start;
-            }
-            else
-            {
-                txtCode.ViewWhitespace = WhitespaceMode.Invisible;
-                txtCode.WrapVisualFlags = WrapVisualFlags.None;
-            }
-
-            txtCode.CodeFoldingEnabled = Settings.CodeFolding;
-            txtCode.LineNumbersEnabled = Settings.LineNumbers;
-            txtCode.BookmarksEnabled = Settings.Bookmarks;
-
-            if (Settings.ToolBar)
-            {
-                toolStrip1.Visible = true;
-                txtCode.Location = new Point(txtCode.Left, tabStrip1.Bottom);
-                viewToolStripMenuItem.CheckState = CheckState.Checked;
-            }
-            else
-            {
-                toolStrip1.Visible = false;
-                txtCode.Location = new Point(txtCode.Left, tabStrip1.Top);
-                viewToolStripMenuItem.CheckState = CheckState.Unchecked;
-            }
+            toolStrip1.Visible = Settings.ToolBar;
 
             SetBottomPanes(Settings.ErrorBox, Settings.Output);
 
@@ -151,9 +118,7 @@ namespace PdnCodeLab
                 ShowErrors.ForeColor = Color.Red;
             }
 
-            txtCode.Zoom = Settings.LargeFonts ? 2 : 0;
-
-            txtCode.MapEnabled = Settings.Map;
+            txtCode.ApplyUserSettings();
 
             if (Settings.CheckForUpdates)
             {
@@ -161,21 +126,8 @@ namespace PdnCodeLab
             }
 
             string editorFont = Settings.FontFamily;
-            if (!UIUtil.IsFontInstalled(editorFont))
-            {
-                editorFont = "Courier New";
-            }
-            if (!UIUtil.IsFontInstalled(editorFont))
-            {
-                editorFont = "Verdana";
-            }
-
-            txtCode.Styles[Style.Default].Font = editorFont;
             OutputTextBox.Font = new Font(editorFont, OutputTextBox.Font.Size);
             errorList.Font = new Font(editorFont, errorList.Font.Size);
-            txtCode.UpdateMarginWidths();
-
-            txtCode.SpellcheckEnabled = Settings.Spellcheck;
 
             ScriptBuilder.SetWarningLevel(Settings.WarningLevel);
             ScriptBuilder.SetWarningsToIgnore(Settings.WarningsToIgnore);

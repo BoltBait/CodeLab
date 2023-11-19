@@ -27,6 +27,7 @@ namespace PdnCodeLab
             TextSrcBox.Lexer = isSourceCode ? ScintillaNET.Lexer.Cpp : ScintillaNET.Lexer.Null;
             TextSrcBox.Text = SourceString;
             TextSrcBox.ReadOnly = true;
+            TextSrcBox.ApplyUserSettings();
 
             this.Text = title;
             SaveButton.Visible = isSourceCode;
