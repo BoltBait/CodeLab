@@ -73,28 +73,26 @@ namespace PdnCodeLab
                 + "using RadioButtonControl = System.Byte;\r\n"
                 + "using MultiLineTextboxControl = System.String;\r\n"
                 + "using LabelComment = System.String;\r\n"
+                + "using System.Runtime.CompilerServices;\r\n"
                 + "\r\n";
         }
 
-        private const string prepend_code = "\r\n"
+        private static readonly string prepend_code = "\r\n"
             + "namespace PdnCodeLab\r\n"
             + "{\r\n"
             + "public class UserScript : Effect\r\n"
             + "{\r\n"
-            + "    [ThreadStatic]\r\n"
-            + "    private static Random RandomNumber;\r\n"
-            + "    private int instanceSeed = unchecked((int)DateTime.Now.Ticks);\r\n"
-            + "\r\n"
             + "    public override void Render(EffectConfigToken parameters, RenderArgs dstArgs, RenderArgs srcArgs, Rectangle[] rois, int startIndex, int length)\r\n"
             + "    {\r\n"
             + "        if (length == 0) return;\r\n"
-            + "        RandomNumber = new Random(instanceSeed ^ (1 << 16) ^ (rois[startIndex].X << 8) ^ rois[startIndex].Y);\r\n"
+            + "        RandomNumberRenderSeed = RandomNumber.Hash(unchecked(RandomNumberInstanceSeed + (uint)0));\r\n"
             + "        for (int i = startIndex; i < startIndex + length; ++i)\r\n"
             + "        {\r\n"
             + "            Render(dstArgs.Surface, srcArgs.Surface, rois[i]);\r\n"
             + "        }\r\n"
             + "    }\r\n"
             + "\r\n"
+            + CommonWriter.RandomPart
             + "    public UserScript()\r\n"
             + "        : base(\"UserScript\", string.Empty, new EffectOptions())\r\n";
 
@@ -140,11 +138,11 @@ namespace PdnCodeLab
             EffectPart += "            : base(StaticName, StaticIcon, SubmenuName, new EffectOptions { Flags = " + flags + schedule + " })\r\n";
             EffectPart += "        {\r\n";
 
-            if (UserControls.Any(u => u.ElementType == ElementType.ReseedButton))
-            {
+            //if (UserControls.Any(u => u.ElementType == ElementType.ReseedButton))
+            //{
                 // if we have a random number generator control, include the following line...
-                EffectPart += "            instanceSeed = unchecked((int)DateTime.Now.Ticks);\r\n";
-            }
+                EffectPart += "            RandomNumberInstanceSeed = unchecked((uint)DateTime.Now.Ticks);\r\n";
+            //}
 
             EffectPart += "        }\r\n";
             EffectPart += "\r\n";
@@ -188,13 +186,6 @@ namespace PdnCodeLab
             RenderLoopPart += "        protected override unsafe void OnRender(Rectangle[] rois, int startIndex, int length)\r\n";
             RenderLoopPart += "        {\r\n";
             RenderLoopPart += "            if (length == 0) return;\r\n";
-
-            if (hasReseed)
-            {
-                // if we have a random number generator control, include the following line...
-                RenderLoopPart += "            RandomNumber = GetRandomNumberGenerator(rois, startIndex);\r\n";
-            }
-
             RenderLoopPart += "            for (int i = startIndex; i < startIndex + length; ++i)\r\n";
             RenderLoopPart += "            {\r\n";
             RenderLoopPart += "                Render(DstArgs.Surface,SrcArgs.Surface,rois[i]);\r\n";
@@ -202,16 +193,7 @@ namespace PdnCodeLab
             RenderLoopPart += "        }\r\n";
             RenderLoopPart += "\r\n";
 
-            if (hasReseed)
-            {
-                // if we have a random number generator control, include the following line...
-                RenderLoopPart += "        private Random GetRandomNumberGenerator(Rectangle[] rois, int startIndex)\r\n";
-                RenderLoopPart += "        {\r\n";
-                RenderLoopPart += "            Rectangle roi = rois[startIndex];\r\n";
-                RenderLoopPart += "            return new Random(instanceSeed ^ (randomSeed << 16) ^ (roi.X << 8) ^ roi.Y);\r\n";
-                RenderLoopPart += "        }\r\n";
-                RenderLoopPart += "\r\n";
-            }
+
 
             return RenderLoopPart;
         }

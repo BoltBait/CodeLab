@@ -1414,6 +1414,8 @@ namespace PdnCodeLab
             code += "void Render(Surface dst, Surface src, Rectangle rect)" + cr;
             code += "{" + cr;
 
+            code += "    // uint seed = RandomNumber.InitializeSeed(RandomNumberRenderSeed, rect.Location);" + cr;
+
             // Add in code for the desired variables the user wants
             if (SelectionCode.Checked)
             {

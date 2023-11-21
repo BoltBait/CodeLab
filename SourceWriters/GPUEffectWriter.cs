@@ -105,11 +105,11 @@ namespace PdnCodeLab
             EffectPart += "            : base(StaticName, StaticIcon, SubmenuName, GpuImageEffectOptions.Create() with { IsConfigurable = " + configurable + " })\r\n";
             EffectPart += "        {\r\n";
 
-            if (UserControls.Any(u => u.ElementType == ElementType.ReseedButton))
-            {
-                // if we have a random number generator control, include the following line...
-                EffectPart += "            instanceSeed = unchecked((int)DateTime.Now.Ticks);\r\n";
-            }
+            //if (UserControls.Any(u => u.ElementType == ElementType.ReseedButton))
+            //{
+            //    // if we have a random number generator control, include the following line...
+            //    EffectPart += "            RandomNumberInstanceSeed = unchecked((uint)DateTime.Now.Ticks);\r\n";
+            //}
 
             EffectPart += "        }\r\n";
             EffectPart += "\r\n";
@@ -181,7 +181,7 @@ namespace PdnCodeLab
 
             if (UserControls.Length > 0)
             {
-                setToken += CommonWriter.TokenValuesPart(UserControls, "newToken");
+                setToken += CommonWriter.TokenValuesPart(UserControls, "newToken", true);
             }
 
             setToken +=
@@ -248,7 +248,7 @@ namespace PdnCodeLab
             return
                 GPUEffectWriter.UsingStatements +
                 GPUEffectWriter.prepend_code +
-                CommonWriter.ConstructorBodyPart(debug) +
+                CommonWriter.ConstructorBodyPart(debug, true) +
                 CommonWriter.UserEnteredPart(scriptText) +
                 CommonWriter.EndPart();
         }

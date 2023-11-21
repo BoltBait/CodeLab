@@ -153,15 +153,11 @@ namespace PdnCodeLab
                 }
             }
 
-            // if we have a random number generator control, include the following lines...
-            if (UserControls.Any(u => u.ElementType == ElementType.ReseedButton))
+            // don't put the random number generator control for GPU type effects...
+            if (!(projectType == ProjectType.GpuEffect ||
+                projectType == ProjectType.GpuDrawEffect))
             {
-                PropertyPart += "        [ThreadStatic]\r\n";
-                PropertyPart += "        private static Random RandomNumber;\r\n";
-                PropertyPart += "\r\n";
-                PropertyPart += "        private int randomSeed;\r\n";
-                PropertyPart += "        private int instanceSeed;\r\n";
-                PropertyPart += "\r\n";
+                PropertyPart += RandomPart;
             }
 
             // generate OnCreatePropertyCollection()
@@ -868,7 +864,7 @@ namespace PdnCodeLab
             return HelpPart;
         }
 
-        internal static string TokenValuesPart(UIElement[] userControls, string tokenName)
+        internal static string TokenValuesPart(UIElement[] userControls, string tokenName, bool gpuEffect = false)
         {
             string tokenValues = "";
             foreach (UIElement u in userControls)
@@ -918,7 +914,10 @@ namespace PdnCodeLab
                         break;
                     case ElementType.ReseedButton:
                         tokenValues += $"            {u.Identifier} = (byte){tokenName}.GetProperty<Int32Property>(PropertyNames.{propertyName}).Value;\r\n";
-                        tokenValues += $"            randomSeed = {u.Identifier};\r\n";
+                        if (!gpuEffect)
+                        {
+                            tokenValues += $"            RandomNumberRenderSeed = RandomNumber.Hash(unchecked(RandomNumberInstanceSeed + (uint){u.Identifier}));\r\n";
+                        }
                         break;
                     case ElementType.RollBall:
                         tokenValues += $"            {u.Identifier} = {tokenName}.GetProperty<DoubleVector3Property>(PropertyNames.{propertyName}).Value;\r\n";
@@ -933,12 +932,15 @@ namespace PdnCodeLab
             return tokenValues;
         }
 
-        internal static string ConstructorBodyPart(bool debug)
+        internal static string ConstructorBodyPart(bool debug, bool gpuEffect = false)
         {
             if (!debug)
             {
                 return ""
                     + "        {\r\n"
+
+                    + ((!gpuEffect)?"            RandomNumberInstanceSeed = unchecked((uint)DateTime.Now.Ticks);\r\n":"\r\n")
+
                     + "        }\r\n"
                     + "\r\n";
             }
@@ -947,6 +949,7 @@ namespace PdnCodeLab
                 + "        {\r\n"
                 + "            __listener = new TextWriterTraceListener(__debugWriter);\r\n"
                 + "            Trace.Listeners.Add(__listener);\r\n"
+                + ((!gpuEffect) ? "            RandomNumberInstanceSeed = unchecked((uint)DateTime.Now.Ticks);\r\n" : "\r\n")
                 + "        }\r\n"
                 + "\r\n"
                 + "        public StringWriter __debugWriter = new StringWriter();\r\n"
@@ -1004,5 +1007,83 @@ namespace PdnCodeLab
                 + "    }\r\n"
                 + "}\r\n";
         }
+
+        public const string RandomPart = ""
+            + "        #region Random Number Support\r\n"
+            + "        private readonly uint RandomNumberInstanceSeed;\r\n"
+            + "        private uint RandomNumberRenderSeed = 0;\r\n"
+            + "\r\n"
+            + "        internal static class RandomNumber\r\n"
+            + "        {\r\n"
+            + "            public static uint InitializeSeed(uint iSeed, float x, float y)\r\n"
+            + "            {\r\n"
+            + "                return CombineHashCodes(\r\n"
+            + "                    iSeed,\r\n"
+            + "                    CombineHashCodes(\r\n"
+            + "                        Hash(Unsafe.As<float, uint>(ref x)),\r\n"
+            + "                        Hash(Unsafe.As<float, uint>(ref y))));\r\n"
+            + "            }\r\n"
+            + "\r\n"
+            + "            public static uint InitializeSeed(uint instSeed, Point2Int32 scenePos)\r\n"
+            + "            {\r\n"
+            + "                return CombineHashCodes(\r\n"
+            + "                    instSeed,\r\n"
+            + "                    CombineHashCodes(\r\n"
+            + "                        Hash(unchecked((uint)scenePos.X)),\r\n"
+            + "                        Hash(unchecked((uint)scenePos.Y))));\r\n"
+            + "            }\r\n"
+            + "\r\n"
+            + "            public static uint Hash(uint input)\r\n"
+            + "            {\r\n"
+            + "                uint state = input * 747796405u + 2891336453u;\r\n"
+            + "                uint word = ((state >> (int)((state >> 28) + 4)) ^ state) * 277803737u;\r\n"
+            + "                return (word >> 22) ^ word;\r\n"
+            + "            }\r\n"
+            + "\r\n"
+            + "            public static float NextFloat(ref uint seed)\r\n"
+            + "            {\r\n"
+            + "                seed = Hash(seed);\r\n"
+            + "                return (seed >> 8) * 5.96046448E-08f;\r\n"
+            + "            }\r\n"
+            + "\r\n"
+            + "            public static int NextInt32(ref uint seed)\r\n"
+            + "            {\r\n"
+            + "                seed = Hash(seed);\r\n"
+            + "                return unchecked((int)seed);\r\n"
+            + "            }\r\n"
+            + "\r\n"
+            + "            public static int NextInt32(ref uint seed, int maxValue)\r\n"
+            + "            {\r\n"
+            + "                seed = Hash(seed);\r\n"
+            + "                return unchecked((int)(seed & 0x80000000) % maxValue);\r\n"
+            + "            }\r\n"
+            +"\r\n"
+            + "            public static int Next(ref uint seed)\r\n"
+            + "            {\r\n"
+            + "                seed = Hash(seed);\r\n"
+            + "                return unchecked((int)seed);\r\n"
+            + "            }\r\n"
+            + "\r\n"
+            + "            public static int Next(ref uint seed, int maxValue)\r\n"
+            + "            {\r\n"
+            + "                seed = Hash(seed);\r\n"
+            + "                return unchecked((int)(seed & 0x80000000) % maxValue);\r\n"
+            + "            }\r\n"
+            + "\r\n"
+            + "            public static byte NextByte(ref uint seed)\r\n"
+            + "            {\r\n"
+            + "                seed = Hash(seed);\r\n"
+            + "                return (byte)(seed & 0xFF);\r\n"
+            + "            }\r\n"
+            + "\r\n"
+            + "            private static uint CombineHashCodes(uint hash1, uint hash2)\r\n"
+            + "            {\r\n"
+            + "                uint result = hash1;\r\n"
+            + "                result = ((result << 5) + result) ^ hash2;\r\n"
+            + "                return result;\r\n"
+            + "            }\r\n"
+            + "        }\r\n"
+            + "        #endregion\r\n"
+            + "\r\n";
     }
 }

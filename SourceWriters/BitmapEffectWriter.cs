@@ -61,6 +61,7 @@ namespace PdnCodeLab
             + "using LabelComment = System.String;\r\n"
             + "using FontFamily = System.String;\r\n"
             + "using LayerControl = System.Int32;\r\n"
+            + "using System.Runtime.CompilerServices;\r\n"
             + "\r\n";
 
         private const string prepend_code = "\r\n"
@@ -106,7 +107,7 @@ namespace PdnCodeLab
             if (UserControls.Any(u => u.ElementType == ElementType.ReseedButton))
             {
                 // if we have a random number generator control, include the following line...
-                EffectPart += "            instanceSeed = unchecked((int)DateTime.Now.Ticks);\r\n";
+                EffectPart += "            RandomNumberInstanceSeed = unchecked((uint)DateTime.Now.Ticks);\r\n";
             }
 
             EffectPart += "        }\r\n";
@@ -236,6 +237,7 @@ namespace PdnCodeLab
                 BitmapEffectWriter.UsingStatements +
                 BitmapEffectWriter.prepend_code +
                 CommonWriter.ConstructorBodyPart(debug) +
+                CommonWriter.RandomPart +
                 CommonWriter.UserEnteredPart(scriptText) +
                 CommonWriter.EndPart();
         }

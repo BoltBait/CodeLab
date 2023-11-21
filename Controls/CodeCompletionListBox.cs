@@ -642,7 +642,7 @@ namespace PdnCodeLab
                             .Where(f =>
                             {
                                 return !(f.Name.Equals("RandomNumber", StringComparison.Ordinal) ||
-                                    f.Name.Equals("instanceSeed", StringComparison.Ordinal) ||
+                                    f.Name.Equals("RandomNumberInstanceSeed", StringComparison.Ordinal) ||
                                     f.Name.Equals("__listener", StringComparison.Ordinal) ||
                                     f.Name.Equals("__debugWriter", StringComparison.Ordinal));
                             })
