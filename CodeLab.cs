@@ -132,23 +132,28 @@ namespace PdnCodeLab
 
         protected override void OnSetToken(CodeLabConfigToken newToken)
         {
-            userEffect = newToken.UserScriptObject;
             projectType = newToken.ProjectType;
             fetchDebugMsg = true;
             shapeCode = (projectType == ProjectType.Shape) ? newToken.UserCode : null;
 
-            if (projectType.IsEffect() && userEffect != null)
+            if (projectType.IsEffect() && newToken.UserScriptObject != null)
             {
-                // TODO: may need this logic elsewhere, toehead/boltbait will need to figure that out
-                using IEffectEnvironment environment = this.renderingFlags.HasFlag(BitmapEffectRenderingFlags.ForceAliasedSelectionQuality)
-                    ? this.Environment.CreateRef()
-                    : this.Environment.CloneWithAliasedSelection();
-                using (IEffect effect = userEffect.EffectInfo.CreateInstance(this.Services, environment))
+                if (userEffect != newToken.UserScriptObject)
                 {
-                    this.renderer = effect.CreateRenderer<IBitmapEffectRenderer>();
+                    userEffect = newToken.UserScriptObject;
+
+                    // TODO: may need this logic elsewhere, toehead/boltbait will need to figure that out
+                    using IEffectEnvironment environment = this.renderingFlags.HasFlag(BitmapEffectRenderingFlags.ForceAliasedSelectionQuality)
+                        ? this.Environment.CreateRef()
+                        : this.Environment.CloneWithAliasedSelection();
+                    using (IEffect effect = userEffect.EffectInfo.CreateInstance(this.Services, environment))
+                    {
+                        this.renderer = effect.CreateRenderer<IBitmapEffectRenderer>();
+                    }
+                    BitmapEffectInitializeInfo initializeInfo = new BitmapEffectInitializeInfo();
+                    this.renderer.Initialize(initializeInfo);
                 }
-                BitmapEffectInitializeInfo initializeInfo = new BitmapEffectInitializeInfo();
-                this.renderer.Initialize(initializeInfo);
+
                 this.renderer.SetToken(newToken.PreviewToken);
             }
 
