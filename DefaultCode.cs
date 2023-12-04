@@ -82,7 +82,7 @@ namespace PdnCodeLab
             + "protected override void OnRender(IBitmapEffectOutput output)\r\n"
             + "{\r\n"
             + "    using IEffectInputBitmap<ColorBgra32> sourceBitmap = Environment.GetSourceBitmapBgra32();\r\n"
-            + "    using IBitmapLock<ColorBgra32> sourceLock = Environment.GetSourceBitmapBgra32().Lock(new RectInt32(0, 0, sourceBitmap.Size));\r\n"
+            + "    using IBitmapLock<ColorBgra32> sourceLock = sourceBitmap.Lock(new RectInt32(0, 0, sourceBitmap.Size));\r\n"
             + "    RegionPtr<ColorBgra32> sourceRegion = sourceLock.AsRegionPtr();\r\n"
             + "\r\n"
             + "    RectInt32 outputBounds = output.Bounds;\r\n"
