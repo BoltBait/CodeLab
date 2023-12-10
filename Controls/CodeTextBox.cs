@@ -2289,7 +2289,11 @@ namespace PdnCodeLab
 
             Type type;
             bool isStatic = false;
-            if (Intelli.Variables.ContainsKey(tokens[0]))
+            if (tokens[0] == "this")
+            {
+                type = Intelli.UserScript;
+            }
+            else if (Intelli.Variables.ContainsKey(tokens[0]))
             {
                 type = Intelli.Variables[tokens[0]];
             }
