@@ -63,7 +63,7 @@ namespace PdnCodeLab
 
         internal static string SupportInfoPart(string projectName, string menuName, string SupportURL)
         {
-            string className = projectName + "SupportInfo";
+            string className = Regex.Replace(projectName, @"[^\w]", "") + "SupportInfo";
             menuName = menuName.Replace('"', '\'');
             SupportURL = SupportURL.Trim();
             if (!SupportURL.IsWebAddress())
