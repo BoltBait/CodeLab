@@ -914,7 +914,7 @@ namespace PdnCodeLab
                     {
                         WarningLabel.Visible = true;
                         Application.DoEvents();
-                        ProcessUtil.Exec("wordpad.exe", new[] { sfd.FileName });
+                        ProcessUtil.Exec(sfd.FileName, string.Empty);
                         WarningLabel.Visible = false;
                         RichHelpContent.Rtf = File.ReadAllText(sfd.FileName);
                     }

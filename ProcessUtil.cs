@@ -20,7 +20,7 @@ namespace PdnCodeLab
         {
             Console.WriteLine($"Execute: '{fileName}' '{commandLine}'");
             ProcessStartInfo startInfo = new ProcessStartInfo(fileName, commandLine);
-            startInfo.UseShellExecute = !Path.IsPathFullyQualified(fileName);
+            startInfo.UseShellExecute = !Path.IsPathFullyQualified(fileName) || !Path.GetExtension(fileName).Equals(".exe", StringComparison.OrdinalIgnoreCase);
             using Process process = Process.Start(startInfo)!;
             process.WaitForExit();
             return process.ExitCode;
