@@ -548,43 +548,7 @@ namespace PdnCodeLab
 
             AddToRecents(filePath);
 
-            ProjectType projType;
-            switch (Path.GetExtension(filePath).ToLowerInvariant())
-            {
-                case ".cs":
-                    if (Regex.IsMatch(fileContents, @"void\s+Render\s*\(\s*Surface\s+dst\s*,\s*Surface\s+src\s*,\s*Rectangle\s+rect\s*\)\s*{(.|\s)*}", RegexOptions.Singleline))
-                    {
-                        projType = ProjectType.ClassicEffect;
-                    }
-                    else if (Regex.IsMatch(fileContents, @"protected\s+override\s+void\s+OnRender\s*\(\s*IBitmapEffectOutput\s+output\s*\)\s*{(.|\s)*}", RegexOptions.Singleline))
-                    {
-                        projType = ProjectType.BitmapEffect;
-                    }
-                    else if (Regex.IsMatch(fileContents, @"protected\s+override\s+IDeviceImage\s+OnCreateOutput\(IDeviceContext\s+deviceContext\s*\)\s*{(.|\s)*}", RegexOptions.Singleline))
-                    {
-                        projType = ProjectType.GpuEffect;
-                    }
-                    else if (Regex.IsMatch(fileContents, @"protected\s+override\s+unsafe\s+void\s+OnDraw\(IDeviceContext\s+deviceContext\s*\)\s*{(.|\s)*}", RegexOptions.Singleline))
-                    {
-                        projType = ProjectType.GpuDrawEffect;
-                    }
-                    else if (Regex.IsMatch(fileContents, @"void\s+SaveImage\s*\(\s*Document\s+input\s*,\s*Stream\s+output\s*,\s*PropertyBasedSaveConfigToken\s+token\s*,\s*Surface\s+scratchSurface\s*,\s*ProgressEventHandler\s+progressCallback\s*\)\s*{(.|\s)*}", RegexOptions.Singleline))
-                    {
-                        projType = ProjectType.FileType;
-                    }
-                    else
-                    {
-                        projType = ProjectType.None;
-                    }
-                    break;
-                case ".xaml":
-                    projType = ProjectType.Shape;
-                    break;
-                case ".txt":
-                default:
-                    projType = ProjectType.None;
-                    break;
-            }
+            ProjectType projType = ProjectTypeUtil.FromContents(fileContents, Path.GetExtension(filePath));
 
             bool removedInitTab = tabStrip1.SelectedTabIsInitial && txtCode.IsVirgin;
 
