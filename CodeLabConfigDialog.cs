@@ -17,6 +17,7 @@
 
 using PaintDotNet;
 using PaintDotNet.AppModel;
+using PaintDotNet.Clipboard;
 using PaintDotNet.Effects;
 using PaintDotNet.Effects.Gpu;
 using ScintillaNET;
@@ -1755,6 +1756,26 @@ namespace PdnCodeLab
         private void NewGpuDrawEffect_Click(object sender, EventArgs e)
         {
             CreateNewGPUDrawEffect();
+        }
+
+        private void NewFromClipboard_Click(object sender, EventArgs e)
+        {
+            string clipboardContents = this.Services.GetService<IClipboardService>().TryGetText();
+            if (clipboardContents is null)
+            {
+                return;
+            }
+
+            ProjectType projectType = ProjectTypeUtil.FromContents(clipboardContents, null);
+
+            CreateNewProjectTab(projectType, clipboardContents);
+        }
+
+        private void NewButton_DropDownOpening(object sender, EventArgs e)
+        {
+            bool containsText = this.Services.GetService<IClipboardService>().ContainsText();
+            this.NewFromClipboardMenuItem.Enabled = containsText;
+            this.NewFromClipboardMenuItem1.Enabled = containsText;
         }
 
         private void OpenButton_Click(object sender, EventArgs e)

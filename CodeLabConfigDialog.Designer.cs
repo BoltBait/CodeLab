@@ -73,6 +73,8 @@
             NewFileTypeMenuItem = new ScaledToolStripMenuItem();
             NewShapeMenuItem = new ScaledToolStripMenuItem();
             NewTextMenuItem = new ScaledToolStripMenuItem();
+            toolStripSeparator20 = new System.Windows.Forms.ToolStripSeparator();
+            NewFromClipboardMenuItem = new ScaledToolStripMenuItem();
             loadToolStripMenuItem = new ScaledToolStripMenuItem();
             openRecentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             NoRecentsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -130,6 +132,8 @@
             NewFileTypeMenuItem1 = new ScaledToolStripMenuItem();
             NewShapeMenuItem1 = new ScaledToolStripMenuItem();
             NewTextMenuItem1 = new ScaledToolStripMenuItem();
+            toolStripSeparator24 = new System.Windows.Forms.ToolStripSeparator();
+            NewFromClipboardMenuItem1 = new ScaledToolStripMenuItem();
             OpenButton = new ScaledToolStripSplitButton();
             SaveButton = new ScaledToolStripButton();
             SaveDLLButton = new ScaledToolStripButton();
@@ -471,11 +475,12 @@
             // 
             // newToolStripMenuItem
             // 
-            newToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { NewEffectMenuItem, NewBitmapEffectMenuItem, NewGpuEffectMenuItem, NewGpuDrawEffectMenuItem, NewFileTypeMenuItem, NewShapeMenuItem, NewTextMenuItem });
+            newToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { NewEffectMenuItem, NewBitmapEffectMenuItem, NewGpuEffectMenuItem, NewGpuDrawEffectMenuItem, NewFileTypeMenuItem, NewShapeMenuItem, NewTextMenuItem, toolStripSeparator20, NewFromClipboardMenuItem });
             newToolStripMenuItem.ImageName = "New";
             newToolStripMenuItem.Name = "newToolStripMenuItem";
             newToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
             newToolStripMenuItem.Text = "&New";
+            newToolStripMenuItem.DropDownOpening += NewButton_DropDownOpening;
             // 
             // NewEffectMenuItem
             // 
@@ -536,6 +541,19 @@
             NewTextMenuItem.Size = new System.Drawing.Size(184, 24);
             NewTextMenuItem.Text = "Plain Text";
             NewTextMenuItem.Click += NewTextMenuItem_Click;
+            // 
+            // toolStripSeparator20
+            // 
+            toolStripSeparator20.Name = "toolStripSeparator20";
+            toolStripSeparator20.Size = new System.Drawing.Size(174, 6);
+            // 
+            // NewFromClipboardMenuItem
+            // 
+            NewFromClipboardMenuItem.ImageName = "Paste";
+            NewFromClipboardMenuItem.Name = "NewFromClipboardMenuItem";
+            NewFromClipboardMenuItem.Size = new System.Drawing.Size(177, 22);
+            NewFromClipboardMenuItem.Text = "From Clipboard";
+            NewFromClipboardMenuItem.Click += NewFromClipboard_Click;
             // 
             // loadToolStripMenuItem
             // 
@@ -918,13 +936,14 @@
             // NewButton
             // 
             NewButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            NewButton.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { NewEffectMenuItem1, NewBitmapMenuItem1, NewGpuMenuItem1, NewGpuDrawMenuItem1, NewFileTypeMenuItem1, NewShapeMenuItem1, NewTextMenuItem1 });
+            NewButton.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { NewEffectMenuItem1, NewBitmapMenuItem1, NewGpuMenuItem1, NewGpuDrawMenuItem1, NewFileTypeMenuItem1, NewShapeMenuItem1, NewTextMenuItem1, toolStripSeparator24, NewFromClipboardMenuItem1 });
             NewButton.ImageName = "New";
             NewButton.Name = "NewButton";
             NewButton.Padding = new System.Windows.Forms.Padding(2);
             NewButton.Size = new System.Drawing.Size(36, 24);
             NewButton.Text = "New File";
             NewButton.ToolTipText = "New (Ctrl+N)";
+            NewButton.DropDownOpening += NewButton_DropDownOpening;
             // 
             // NewEffectMenuItem1
             // 
@@ -981,6 +1000,19 @@
             NewTextMenuItem1.Size = new System.Drawing.Size(180, 22);
             NewTextMenuItem1.Text = "Plain Text";
             NewTextMenuItem1.Click += NewTextMenuItem_Click;
+            // 
+            // toolStripSeparator24
+            // 
+            toolStripSeparator24.Name = "toolStripSeparator24";
+            toolStripSeparator24.Size = new System.Drawing.Size(177, 6);
+            // 
+            // NewFromClipboardMenuItem1
+            // 
+            NewFromClipboardMenuItem1.ImageName = "Paste";
+            NewFromClipboardMenuItem1.Name = "NewFromClipboardMenuItem1";
+            NewFromClipboardMenuItem1.Size = new System.Drawing.Size(180, 22);
+            NewFromClipboardMenuItem1.Text = "From Clipboard";
+            NewFromClipboardMenuItem1.Click += NewFromClipboard_Click;
             // 
             // OpenButton
             // 
@@ -1541,5 +1573,9 @@
         private ScaledToolStripMenuItem NewShapeMenuItem1;
         private ScaledToolStripMenuItem NewTextMenuItem1;
         private ScaledToolStripMenuItem apiDocMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator20;
+        private ScaledToolStripMenuItem NewFromClipboardMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator24;
+        private ScaledToolStripMenuItem NewFromClipboardMenuItem1;
     }
 }
