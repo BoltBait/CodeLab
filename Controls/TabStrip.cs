@@ -58,6 +58,7 @@ namespace PdnCodeLab
             set
             {
                 activeTab.ProjectType = value;
+                activeTab.UpdateToolTip();
                 activeTab.UpdateIcon();
             }
         }
@@ -83,7 +84,7 @@ namespace PdnCodeLab
                 }
 
                 activeTab.Path = value;
-                activeTab.ToolTipText = (value.IsNullOrEmpty()) ? activeTab.Title : value;
+                activeTab.UpdateToolTip();
                 activeTab.UpdateIcon();
             }
         }
@@ -331,13 +332,13 @@ namespace PdnCodeLab
                 this.Margin = new Padding(0, 5, 3, 0);
                 this.AutoToolTip = false;
                 this.Text = title;
-                this.ToolTipText = path.IsNullOrEmpty() ? title : path;
                 this.Guid = Guid.NewGuid();
                 this.ProjectType = projectType;
                 this.IsDirty = false;
                 this.Title = title;
                 this.Path = path;
 
+                UpdateToolTip();
                 UpdateIcon();
 
                 closeRect = Rectangle.Empty;
@@ -384,6 +385,11 @@ namespace PdnCodeLab
                         _ => "PlainText",
                     };
                 }
+            }
+
+            internal void UpdateToolTip()
+            {
+                this.ToolTipText = (this.Path.IsNullOrEmpty() ? this.Title : this.Path) + Environment.NewLine + this.ProjectType;
             }
 
             protected override void OnLayout(LayoutEventArgs e)
