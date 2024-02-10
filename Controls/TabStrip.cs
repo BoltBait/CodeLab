@@ -55,6 +55,11 @@ namespace PdnCodeLab
         internal ProjectType SelectedTabProjType
         {
             get => activeTab.ProjectType;
+            set
+            {
+                activeTab.ProjectType = value;
+                activeTab.UpdateIcon();
+            }
         }
 
         internal string SelectedTabTitle
@@ -79,33 +84,7 @@ namespace PdnCodeLab
 
                 activeTab.Path = value;
                 activeTab.ToolTipText = (value.IsNullOrEmpty()) ? activeTab.Title : value;
-
-                if (!activeTab.ProjectType.IsEffect())
-                {
-                    return;
-                }
-
-                string imagePath = Path.ChangeExtension(value, ".png");
-                if (File.Exists(imagePath))
-                {
-                    activeTab.Image = UIUtil.GetBitmapFromFile(imagePath);
-                }
-                else
-                {
-                    switch (activeTab.ProjectType)
-                    {
-                        case ProjectType.ClassicEffect:
-                            activeTab.ImageName = "ClassicEffect";
-                            break;
-                        case ProjectType.GpuDrawEffect:
-                        case ProjectType.GpuEffect:
-                            activeTab.ImageName = "GpuEffect";
-                            break;
-                        case ProjectType.BitmapEffect:
-                            activeTab.ImageName = "BitmapEffect";
-                            break;
-                    }
-                }
+                activeTab.UpdateIcon();
             }
         }
 
@@ -320,7 +299,7 @@ namespace PdnCodeLab
         {
             internal int Index { get; set; }
             internal Guid Guid { get; }
-            internal ProjectType ProjectType { get; }
+            internal ProjectType ProjectType { get; set; }
             internal bool IsDirty { get; set; }
             internal string Title { get; set; }
             internal string Path { get; set; }
@@ -351,27 +330,6 @@ namespace PdnCodeLab
                 this.ImageAlign = ContentAlignment.MiddleLeft;
                 this.Margin = new Padding(0, 5, 3, 0);
                 this.AutoToolTip = false;
-
-                string imagePath = System.IO.Path.ChangeExtension(path, ".png");
-                if (projectType.IsEffect() && File.Exists(imagePath))
-                {
-                    this.Image = UIUtil.GetBitmapFromFile(imagePath);
-                }
-                else
-                {
-                    this.ImageName = projectType switch
-                    {
-                        ProjectType.ClassicEffect => "ClassicEffect",
-                        ProjectType.GpuEffect => "GpuEffect",
-                        ProjectType.GpuDrawEffect => "GpuEffect",
-                        ProjectType.BitmapEffect => "BitmapEffect",
-                        ProjectType.FileType => "Save",
-                        ProjectType.Reference => "Book",
-                        ProjectType.Shape => "Shape",
-                        _ => "PlainText",
-                    };
-                }
-
                 this.Text = title;
                 this.ToolTipText = path.IsNullOrEmpty() ? title : path;
                 this.Guid = Guid.NewGuid();
@@ -379,6 +337,8 @@ namespace PdnCodeLab
                 this.IsDirty = false;
                 this.Title = title;
                 this.Path = path;
+
+                UpdateIcon();
 
                 closeRect = Rectangle.Empty;
             }
@@ -401,6 +361,29 @@ namespace PdnCodeLab
                     Width = size,
                     Height = size
                 };
+            }
+
+            internal void UpdateIcon()
+            {
+                string imagePath = System.IO.Path.ChangeExtension(this.Path, ".png");
+                if (this.ProjectType.IsEffect() && File.Exists(imagePath))
+                {
+                    this.Image = UIUtil.GetBitmapFromFile(imagePath);
+                }
+                else
+                {
+                    this.ImageName = this.ProjectType switch
+                    {
+                        ProjectType.ClassicEffect => "ClassicEffect",
+                        ProjectType.GpuEffect => "GpuEffect",
+                        ProjectType.GpuDrawEffect => "GpuEffect",
+                        ProjectType.BitmapEffect => "BitmapEffect",
+                        ProjectType.FileType => "Save",
+                        ProjectType.Reference => "Book",
+                        ProjectType.Shape => "Shape",
+                        _ => "PlainText",
+                    };
+                }
             }
 
             protected override void OnLayout(LayoutEventArgs e)

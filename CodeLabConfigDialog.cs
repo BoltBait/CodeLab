@@ -474,7 +474,8 @@ namespace PdnCodeLab
             ClearErrorList();
             txtCode.ClearErrors();
 
-            switch (tabStrip1.SelectedTabProjType)
+            ProjectType projectType = tabStrip1.SelectedTabProjType;
+            switch (projectType)
             {
                 case ProjectType.ClassicEffect:
                 case ProjectType.BitmapEffect:
@@ -485,6 +486,29 @@ namespace PdnCodeLab
                     {
                         txtCode.UpdateIndicatorBar();
                         return;
+                    }
+
+                    bool projectTypeMismatch = ScriptBuilder.Errors
+                        .Any(x =>
+                        {
+                            return
+                                (x.ErrorNumber.Equals("CS0534", StringComparison.Ordinal) || x.ErrorNumber.Equals("CS0115", StringComparison.Ordinal)) &&
+                                (x.ErrorText.Contains(".OnDraw(IDeviceContext)", StringComparison.Ordinal) ||
+                                x.ErrorText.Contains(".OnCreateOutput(IDeviceContext)", StringComparison.Ordinal) ||
+                                x.ErrorText.Contains(".OnRender(IBitmapEffectOutput)", StringComparison.Ordinal));
+                        });
+
+
+                    if (projectTypeMismatch)
+                    {
+                        ProjectType detectedProjectType = ProjectTypeUtil.FromContents(txtCode.Text, null);
+                        if (detectedProjectType != projectType && detectedProjectType.IsCSharp())
+                        {
+                            tabStrip1.SelectedTabProjType = detectedProjectType;
+                            UpdateForProjectType();
+                            FlexibleMessageBox.Show($"Project Type has been automatically changed from {projectType} to {detectedProjectType}.", "Project Type Mismatch", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                            return;
+                        }
                     }
 
                     int lineCount = txtCode.Lines.Count;
@@ -2018,12 +2042,27 @@ namespace PdnCodeLab
         #region Document Tabs functions
         private void tabStrip1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            ProjectType projectType = tabStrip1.SelectedTabProjType;
-            UpdateWindowTitle();
             txtCode.SwitchToDocument(tabStrip1.SelectedTabGuid);
+            UpdateWindowTitle();
+            UpdateToolBarButtons();
+            UpdateForProjectType();
+        }
+
+        private void tabStrip1_NewTabCreated(object sender, EventArgs e)
+        {
+            txtCode.CreateNewDocument(tabStrip1.SelectedTabGuid, tabStrip1.SelectedTabProjType);
+            UpdateWindowTitle();
+            UpdateToolBarButtons();
+            UpdateForProjectType();
+        }
+
+        private void UpdateForProjectType()
+        {
+            ProjectType projectType = tabStrip1.SelectedTabProjType;
+
             bool useWordWrap = (projectType == ProjectType.None) ? Settings.WordWrapPlainText : Settings.WordWrap;
             txtCode.WrapMode = useWordWrap ? WrapMode.Whitespace : WrapMode.None;
-            UpdateToolBarButtons();
+
             DisableButtonsForRef(projectType == ProjectType.Reference);
 
             if (projectType.IsCSharp())
@@ -2036,24 +2075,6 @@ namespace PdnCodeLab
             {
                 EnableCSharpButtons(false);
                 Build();
-            }
-        }
-
-        private void tabStrip1_NewTabCreated(object sender, EventArgs e)
-        {
-            ProjectType projectType = tabStrip1.SelectedTabProjType;
-
-            txtCode.CreateNewDocument(tabStrip1.SelectedTabGuid, projectType);
-            bool useWordWrap = (projectType == ProjectType.None) ? Settings.WordWrapPlainText : Settings.WordWrap;
-            txtCode.WrapMode = useWordWrap ? WrapMode.Whitespace : WrapMode.None;
-            UpdateWindowTitle();
-            UpdateToolBarButtons();
-            DisableButtonsForRef(projectType == ProjectType.Reference);
-            EnableCSharpButtons(projectType.IsCSharp());
-
-            if (projectType.IsCSharp())
-            {
-                Intelli.SetReferences(projectType);
             }
         }
 
