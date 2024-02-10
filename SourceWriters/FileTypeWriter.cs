@@ -28,6 +28,7 @@ namespace PdnCodeLab
                 + "using System.Collections.Generic;\r\n"
                 + "using System.Text;\r\n"
                 + "using System.Text.RegularExpressions;\r\n"
+                + "using System.Runtime.CompilerServices;\r\n"
                 + "using System.Runtime.InteropServices;\r\n"
                 + "using System.Runtime.Versioning;\r\n"
                 + "using Registry = Microsoft.Win32.Registry;\r\n"
