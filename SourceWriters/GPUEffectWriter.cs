@@ -15,7 +15,7 @@ namespace PdnCodeLab
 {
     internal static class GPUEffectWriter
     {
-        private const ProjectType projectType = ProjectType.GpuEffect;
+        private const ProjectType projectType = ProjectType.GpuImageEffect;
 
         private const string UsingStatements = ""
             + "using System;\r\n"

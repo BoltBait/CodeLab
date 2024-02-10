@@ -11,7 +11,7 @@ namespace PdnCodeLab
         {
             ProjectType.ClassicEffect => ClassicEffect,
             ProjectType.BitmapEffect => BitmapEffect,
-            ProjectType.GpuEffect => GPUEffect,
+            ProjectType.GpuImageEffect => GPUEffect,
             ProjectType.GpuDrawEffect => GPUDrawEffect,
             ProjectType.FileType => FileType,
             _ => string.Empty,

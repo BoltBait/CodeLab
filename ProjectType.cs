@@ -7,14 +7,14 @@ namespace PdnCodeLab
     {
         None,
         ClassicEffect,
-        GpuEffect,
+        GpuImageEffect,
         GpuDrawEffect,
         BitmapEffect,
         FileType,
         Reference,
         Shape,
 
-        Default = GpuEffect
+        Default = GpuImageEffect
     }
 
     internal static class ProjectTypeExtensions
@@ -23,7 +23,7 @@ namespace PdnCodeLab
         {
             return
                 projectType == ProjectType.ClassicEffect ||
-                projectType == ProjectType.GpuEffect ||
+                projectType == ProjectType.GpuImageEffect ||
                 projectType == ProjectType.GpuDrawEffect ||
                 projectType == ProjectType.BitmapEffect ||
                 projectType == ProjectType.FileType;
@@ -33,7 +33,7 @@ namespace PdnCodeLab
         {
             return
                 projectType == ProjectType.ClassicEffect ||
-                projectType == ProjectType.GpuEffect ||
+                projectType == ProjectType.GpuImageEffect ||
                 projectType == ProjectType.GpuDrawEffect ||
                 projectType == ProjectType.BitmapEffect;
         }
@@ -41,7 +41,7 @@ namespace PdnCodeLab
         internal static bool Is5Effect(this ProjectType projectType)
         {
             return
-                projectType == ProjectType.GpuEffect ||
+                projectType == ProjectType.GpuImageEffect ||
                 projectType == ProjectType.GpuDrawEffect ||
                 projectType == ProjectType.BitmapEffect;
         }
@@ -78,7 +78,7 @@ namespace PdnCodeLab
 
             if (Regex.IsMatch(textContents, @"protected\s+override\s+IDeviceImage\s+OnCreateOutput\(IDeviceContext\s+deviceContext\s*\)\s*{(.|\s)*}", RegexOptions.Singleline))
             {
-                return ProjectType.GpuEffect;
+                return ProjectType.GpuImageEffect;
             }
 
             if (Regex.IsMatch(textContents, @"protected\s+override\s+unsafe\s+void\s+OnDraw\(IDeviceContext\s+deviceContext\s*\)\s*{(.|\s)*}", RegexOptions.Singleline))

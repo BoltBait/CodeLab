@@ -115,7 +115,7 @@ namespace PdnCodeLab
                     pdnAssemblyNames.Add("PaintDotNet.Effects.Legacy");
                     break;
                 case ProjectType.GpuDrawEffect:
-                case ProjectType.GpuEffect:
+                case ProjectType.GpuImageEffect:
                 case ProjectType.BitmapEffect:
                     pdnAssemblyNames.Add("PaintDotNet.Effects.Core");
                     pdnAssemblyNames.Add("PaintDotNet.Effects.Gpu");

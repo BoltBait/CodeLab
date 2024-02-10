@@ -154,7 +154,7 @@ namespace PdnCodeLab
             }
 
             // don't put the random number generator control for GPU type effects...
-            if (!(projectType == ProjectType.GpuEffect ||
+            if (!(projectType == ProjectType.GpuImageEffect ||
                 projectType == ProjectType.GpuDrawEffect))
             {
                 PropertyPart += RandomPart;
