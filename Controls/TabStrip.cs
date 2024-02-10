@@ -314,6 +314,14 @@ namespace PdnCodeLab
                 set => base.ImageName = value;
             }
 
+            [Browsable(false)]
+            [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+            public new string ToolTipText
+            {
+                get => base.ToolTipText;
+                set => base.ToolTipText = value;
+            }
+
             private Rectangle closeRect = Rectangle.Empty;
             private bool closeRectHiLite = false;
 

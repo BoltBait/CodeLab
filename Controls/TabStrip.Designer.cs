@@ -58,7 +58,6 @@
             untitledTab.Padding = new System.Windows.Forms.Padding(0, 0, 20, 0);
             untitledTab.Size = new System.Drawing.Size(89, 20);
             untitledTab.Text = "Untitled";
-            untitledTab.ToolTipText = "Untitled";
             untitledTab.Click += Tab_Click;
             untitledTab.MouseDown += Tab_MouseDown;
             untitledTab.MouseUp += Tab_MouseUp;
