@@ -13,6 +13,7 @@ namespace PdnCodeLab
         internal Error SelectedError => (Error)SelectedItem;
 
         internal void AddError(Error error) => Items.Add(error);
+        internal void AddErrors(IEnumerable<Error> errors) => Items.AddRange(errors.ToArray());
         internal void ClearErrors() => Items.Clear();
     }
 }

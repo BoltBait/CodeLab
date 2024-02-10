@@ -5274,7 +5274,7 @@ namespace PdnCodeLab
             this.IndicatorClearRange(0, this.TextLength);
         }
 
-        internal void AddError(int startLine, int startColumn, int endLine, int endColumn, bool isWarning)
+        private void AddError(int startLine, int startColumn, int endLine, int endColumn, bool isWarning)
         {
             if (isWarning)
             {
@@ -5290,6 +5290,18 @@ namespace PdnCodeLab
             // Underline the error
             this.IndicatorCurrent = isWarning ? Indicator.Warning : Indicator.Error;
             this.IndicatorFillRange(position, length);
+        }
+
+        internal void AddErrors(IEnumerable<Error> errors)
+        {
+            int lineCount = this.Lines.Count;
+            foreach (Error error in errors)
+            {
+                if (error.StartLine >= 0 && error.StartLine < lineCount)
+                {
+                    AddError(error.StartLine, error.StartColumn, error.EndLine, error.EndColumn, error.IsWarning);
+                }
+            }
         }
 
         private Tuple<int, int> GetErrorPosition(int startLine, int startColumn, int endLine, int endColumn)

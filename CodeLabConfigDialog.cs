@@ -475,64 +475,36 @@ namespace PdnCodeLab
             txtCode.ClearErrors();
 
             ProjectType projectType = tabStrip1.SelectedTabProjType;
-            switch (projectType)
+            if (projectType.IsCSharp() && ScriptBuilder.Errors.Count > 0)
             {
-                case ProjectType.ClassicEffect:
-                case ProjectType.BitmapEffect:
-                case ProjectType.GpuEffect:
-                case ProjectType.GpuDrawEffect:
-                case ProjectType.FileType:
-                    if (ScriptBuilder.Errors.Count == 0)
+                bool projectTypeMismatch = ScriptBuilder.Errors
+                    .Any(x =>
                     {
-                        txtCode.UpdateIndicatorBar();
+                        return
+                            (x.ErrorNumber.Equals("CS0534", StringComparison.Ordinal) || x.ErrorNumber.Equals("CS0115", StringComparison.Ordinal)) &&
+                            (x.ErrorText.Contains(".OnDraw(IDeviceContext)", StringComparison.Ordinal) ||
+                            x.ErrorText.Contains(".OnCreateOutput(IDeviceContext)", StringComparison.Ordinal) ||
+                            x.ErrorText.Contains(".OnRender(IBitmapEffectOutput)", StringComparison.Ordinal));
+                    });
+
+                if (projectTypeMismatch)
+                {
+                    ProjectType detectedProjectType = ProjectTypeUtil.FromContents(txtCode.Text, null);
+                    if (detectedProjectType != projectType && detectedProjectType.IsCSharp())
+                    {
+                        tabStrip1.SelectedTabProjType = detectedProjectType;
+                        UpdateForProjectType();
+                        FlexibleMessageBox.Show($"Project Type has been automatically changed from {projectType} to {detectedProjectType}.", "Project Type Mismatch", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                         return;
                     }
+                }
 
-                    bool projectTypeMismatch = ScriptBuilder.Errors
-                        .Any(x =>
-                        {
-                            return
-                                (x.ErrorNumber.Equals("CS0534", StringComparison.Ordinal) || x.ErrorNumber.Equals("CS0115", StringComparison.Ordinal)) &&
-                                (x.ErrorText.Contains(".OnDraw(IDeviceContext)", StringComparison.Ordinal) ||
-                                x.ErrorText.Contains(".OnCreateOutput(IDeviceContext)", StringComparison.Ordinal) ||
-                                x.ErrorText.Contains(".OnRender(IBitmapEffectOutput)", StringComparison.Ordinal));
-                        });
-
-
-                    if (projectTypeMismatch)
-                    {
-                        ProjectType detectedProjectType = ProjectTypeUtil.FromContents(txtCode.Text, null);
-                        if (detectedProjectType != projectType && detectedProjectType.IsCSharp())
-                        {
-                            tabStrip1.SelectedTabProjType = detectedProjectType;
-                            UpdateForProjectType();
-                            FlexibleMessageBox.Show($"Project Type has been automatically changed from {projectType} to {detectedProjectType}.", "Project Type Mismatch", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                            return;
-                        }
-                    }
-
-                    int lineCount = txtCode.Lines.Count;
-                    foreach (Error error in ScriptBuilder.Errors)
-                    {
-                        errorList.AddError(error);
-
-                        if (error.StartLine >= 0 && error.StartLine < lineCount)
-                        {
-                            txtCode.AddError(error.StartLine, error.StartColumn, error.EndLine, error.EndColumn, error.IsWarning);
-                        }
-                    }
-
-                    break;
-                case ProjectType.Shape:
-                    if (ShapeBuilder.Error == null)
-                    {
-                        txtCode.UpdateIndicatorBar();
-                        return;
-                    }
-
-                    errorList.AddError(ShapeBuilder.Error);
-
-                    break;
+                errorList.AddErrors(ScriptBuilder.Errors);
+                txtCode.AddErrors(ScriptBuilder.Errors);
+            }
+            else if (projectType == ProjectType.Shape && ShapeBuilder.Error != null)
+            {
+                errorList.AddError(ShapeBuilder.Error);
             }
 
             txtCode.UpdateIndicatorBar();
