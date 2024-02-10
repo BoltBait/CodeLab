@@ -66,27 +66,27 @@ namespace PdnCodeLab
 
         private static ProjectType FromContentImpl(string textContents)
         {
-            if (Regex.IsMatch(textContents, @"void\s+Render\s*\(\s*Surface\s+dst\s*,\s*Surface\s+src\s*,\s*Rectangle\s+rect\s*\)\s*{(.|\s)*}", RegexOptions.Singleline))
+            if (Regex.IsMatch(textContents, @"void\s+Render\s*\(\s*Surface\s+\w+\s*,\s*Surface\s+\w+\s*,\s*Rectangle\s+\w+\s*\)\s*{(.|\s)*}", RegexOptions.Singleline))
             {
                 return ProjectType.ClassicEffect;
             }
 
-            if (Regex.IsMatch(textContents, @"protected\s+override\s+void\s+OnRender\s*\(\s*IBitmapEffectOutput\s+output\s*\)\s*{(.|\s)*}", RegexOptions.Singleline))
+            if (Regex.IsMatch(textContents, @"protected\s+override\s+void\s+OnRender\s*\(\s*IBitmapEffectOutput\s+\w+\s*\)\s*{(.|\s)*}", RegexOptions.Singleline))
             {
                 return ProjectType.BitmapEffect;
             }
 
-            if (Regex.IsMatch(textContents, @"protected\s+override\s+IDeviceImage\s+OnCreateOutput\(IDeviceContext\s+deviceContext\s*\)\s*{(.|\s)*}", RegexOptions.Singleline))
+            if (Regex.IsMatch(textContents, @"protected\s+override\s+IDeviceImage\s+OnCreateOutput\(IDeviceContext\s+\w+\s*\)\s*{(.|\s)*}", RegexOptions.Singleline))
             {
                 return ProjectType.GpuImageEffect;
             }
 
-            if (Regex.IsMatch(textContents, @"protected\s+override\s+unsafe\s+void\s+OnDraw\(IDeviceContext\s+deviceContext\s*\)\s*{(.|\s)*}", RegexOptions.Singleline))
+            if (Regex.IsMatch(textContents, @"protected\s+override\s+unsafe\s+void\s+OnDraw\(IDeviceContext\s+\w+\s*\)\s*{(.|\s)*}", RegexOptions.Singleline))
             {
                 return ProjectType.GpuDrawEffect;
             }
 
-            if (Regex.IsMatch(textContents, @"void\s+SaveImage\s*\(\s*Document\s+input\s*,\s*Stream\s+output\s*,\s*PropertyBasedSaveConfigToken\s+token\s*,\s*Surface\s+scratchSurface\s*,\s*ProgressEventHandler\s+progressCallback\s*\)\s*{(.|\s)*}", RegexOptions.Singleline))
+            if (Regex.IsMatch(textContents, @"void\s+SaveImage\s*\(\s*Document\s+\w+\s*,\s*Stream\s+\w+\s*,\s*PropertyBasedSaveConfigToken\s+\w+\s*,\s*Surface\s+\w+\s*,\s*ProgressEventHandler\s+\w+\s*\)\s*{(.|\s)*}", RegexOptions.Singleline))
             {
                 return ProjectType.FileType;
             }
