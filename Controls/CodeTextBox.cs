@@ -158,6 +158,32 @@ namespace PdnCodeLab
             }
         }
 
+        internal bool OffsetLineNumbersEnabled
+        {
+            get
+            {
+                return (this.Margins[LeftMargin.OffsetLineNumbers].Width > 0);
+            }
+            set
+            {
+                if (value)
+                {
+                    LineNumbersEnabled = false;
+                    int maxDigitCount = this.Lines.Count.ToString().Length + 1;
+                    this.Margins[LeftMargin.OffsetLineNumbers].Width = GetLineMarginWidth(maxDigitCount);
+                    for (int i = 0; i < this.Lines.Count; i++)
+                    {
+                        this.Lines[i].MarginStyle = Style.LineNumber;
+                        this.Lines[i].MarginText = (i - ScriptBuilder.LineOffset + 1).ToString().PadLeft(maxDigitCount);
+                    }
+                }
+                else
+                {
+                    this.Margins[LeftMargin.OffsetLineNumbers].Width = 0;
+                }
+            }
+        }
+
         internal bool BookmarksEnabled
         {
             get
@@ -863,6 +889,10 @@ namespace PdnCodeLab
             this.Markers[BookmarkMargin.Marker].Symbol = MarkerSymbol.Empty;
             this.Markers[BookmarkMargin.Marker].SetBackColor(Color.DeepSkyBlue);
             this.Markers[BookmarkMargin.Marker].SetForeColor(Color.DeepSkyBlue);
+
+            // Configure a margin to display Offset Line Numbers
+            this.Margins[LeftMargin.OffsetLineNumbers].Type = MarginType.Text;
+            this.Margins[LeftMargin.OffsetLineNumbers].Width = 0;
 
             // Instruct the lexer to calculate folding
             this.SetProperty("fold", "1");
@@ -5357,6 +5387,7 @@ namespace PdnCodeLab
             internal const int Bookmarks = 1;
             internal const int CodeFolding = 2;
             internal const int Padding = 3;
+            internal const int OffsetLineNumbers = 4;
         }
 
         private static class BookmarkMargin

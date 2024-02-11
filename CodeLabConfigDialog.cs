@@ -77,15 +77,36 @@ namespace PdnCodeLab
             transparencyToolStripMenuItem.Enabled = EnableOpacity;
 
 #if !RELEASE
-            ToolStripMenuItem[] items = Enum.GetValues<ProjectType>()
-                .Distinct() // ProjectType.Default creates a duplicate
-                .Select(x => new ToolStripMenuItem(x.ToString(), null, (sender, e) => CreateNewProjectTab(Enum.Parse<ProjectType>(((ToolStripMenuItem)sender).Text))))
-                .ToArray();
+            ScaledToolStripButton debugButton = new ScaledToolStripButton();
+            debugButton.ImageName = "InsertPicture";
+            debugButton.Click += (object sender, EventArgs e) =>
+            {
+                // test code here
+                ProjectType projType = tabStrip1.SelectedTabProjType;
+                if (!projType.IsCSharp())
+                {
+                    return;
+                }
 
-            ToolStripDropDownButton newDocTypeChooser = new ToolStripDropDownButton();
-            ((ToolStripDropDownMenu)newDocTypeChooser.DropDown).ShowImageMargin = false;
-            newDocTypeChooser.DropDownItems.AddRange(items);
-            toolStrip1.Items.Insert(1, newDocTypeChooser);
+                string userCode = txtCode.Text;
+                bool debugMode = OutputTextBox.Visible;
+
+                string runCode = projType switch
+                {
+                    ProjectType.ClassicEffect => ClassicEffectWriter.Run(userCode, debugMode),
+                    ProjectType.BitmapEffect => BitmapEffectWriter.Run(userCode, debugMode),
+                    ProjectType.GpuImageEffect => GPUEffectWriter.Run(userCode, debugMode),
+                    ProjectType.GpuDrawEffect => GPUDrawWriter.Run(userCode, debugMode),
+                    ProjectType.FileType => FileTypeWriter.Run(userCode, debugMode),
+                    _ => string.Empty,
+                };
+
+                using ViewSrc viewSrc = new ViewSrc("Run Code", runCode, true, true);
+                viewSrc.ShowDialog();
+            };
+
+            toolStrip1.Items.Add(new ToolStripSeparator());
+            toolStrip1.Items.Add(debugButton);
 #endif
 
             this.renderPreset = renderPreset;

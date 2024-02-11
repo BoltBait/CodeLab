@@ -20,7 +20,7 @@ namespace PdnCodeLab
 {
     internal partial class ViewSrc : ChildFormBase
     {
-        internal ViewSrc(string title, string SourceString, bool isSourceCode)
+        internal ViewSrc(string title, string SourceString, bool isSourceCode, bool offsetLineNumbers = false)
         {
             InitializeComponent();
 
@@ -28,6 +28,7 @@ namespace PdnCodeLab
             TextSrcBox.Text = SourceString;
             TextSrcBox.ReadOnly = true;
             TextSrcBox.ApplyUserSettings();
+            TextSrcBox.OffsetLineNumbersEnabled = offsetLineNumbers;
 
             this.Text = title;
             SaveButton.Visible = isSourceCode;
