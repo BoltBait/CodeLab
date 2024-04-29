@@ -66,6 +66,14 @@ namespace PdnCodeLab
             slnFile.AppendLine("\tEndGlobalSection");
             slnFile.AppendLine("EndGlobal");
 
+            /*
+            // Two space indent
+            StringBuilder slnxFile = new StringBuilder()
+                .AppendLine("<Solution>")
+                .AppendLine($"  <Project Path=\"{projectName}\\{projectName}.csproj\" />")
+                .Append("</Solution>"); // no end-of-line at the end of this file
+            */
+
             // Two space indent
             StringBuilder csprojFile = new StringBuilder();
             csprojFile.AppendLine("<Project Sdk=\"Microsoft.NET.Sdk\">");
@@ -127,6 +135,7 @@ namespace PdnCodeLab
             try
             {
                 File.WriteAllText(Path.Combine(slnPath, projectName + ".sln"), slnFile.ToString());
+                //File.WriteAllText(Path.Combine(slnPath, projectName + ".slnx"), slnxFile.ToString());
 
                 if (!Directory.Exists(projPath))
                 {
