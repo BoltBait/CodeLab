@@ -38,8 +38,7 @@ namespace PdnCodeLab
         private static string exceptionMsg;
 
         private static IEnumerable<MetadataReference> references = Array.Empty<MetadataReference>();
-        private static readonly CSharpParseOptions parseOptions = CSharpParseOptions.Default
-            .WithLanguageVersion(LanguageVersion.CSharp11); // https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/configure-language-version
+        private static readonly CSharpParseOptions parseOptions = CSharpParseOptions.Default;
         private static CSharpCompilationOptions compilationOptions = new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary, allowUnsafe: true, optimizationLevel: OptimizationLevel.Release, deterministic: false);
         private static IEnumerable<string> warningsToIgnore = Array.Empty<string>();
 
