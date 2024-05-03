@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -1650,7 +1651,41 @@ namespace PdnCodeLab
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FlexibleMessageBox.Show(WindowTitle + "\nCopyright ©2006-2023, All Rights Reserved.\n\nTom Jackson:\tConcept, Initial Code, Compile to DLL\n\nDavid Issel:\tEffect UI Creation, Effect Icons, Effect Help\n\t\tSystem, File New Complex Pixel Flow Code\n\t\tGeneration, GPU Image and Drawing\n\t\tEffects, CodeLab Updater, Settings\n\t\tScreen, Bug Fixes, Tutorials and Installer.\n\nJason Wendt:\tMigration to ScintillaNET editor control,\n\t\t.NET 6.0, and the C# 9.0 \"Roslyn\" Compiler.\n\t\tIntelligent Assistance (including code\n\t\tcompletion, tips, snippets, and variable\n\t\tname suggestions), Bitmap Effects, Debug\n\t\tOutput, Dark Theme, HiDPI icons, Live\n\t\tEffect Preview, Spellcheck, Filetype\n\t\tplugin creation, and Shape editing.\n\nJörg Reichert:\tFlexibleMessageBox", "About CodeLab", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            StringBuilder aboutText = new StringBuilder()
+                .AppendLine(WindowTitle)
+                .AppendLine("Copyright ©2006-2024, All Rights Reserved.")
+                .AppendLine()
+                .AppendLine("―――――――――――  Developers  ――――――――――")
+                .AppendLine()
+                .AppendLine("David Issel:\tEffect UI Creation, Effect Icons, Effect Help")
+                .AppendLine("\t\tSystem, File New Complex Pixel Flow Code")
+                .AppendLine("\t\tGeneration, GPU Image and Drawing")
+                .AppendLine("\t\tEffects, CodeLab Updater, Settings")
+                .AppendLine("\t\tScreen, Bug Fixes, Tutorials and Installer.")
+                .AppendLine()
+                .AppendLine("Jason Wendt:\tMigration to ScintillaNET editor control,")
+                .AppendLine("\t\tmodern .NET, and the \"Roslyn\" Compiler.")
+                .AppendLine("\t\tIntelligent Assistance (including code")
+                .AppendLine("\t\tcompletion, tips, snippets, and variable")
+                .AppendLine("\t\tname suggestions), Bitmap Effects, Debug")
+                .AppendLine("\t\tOutput, Dark Theme, HiDPI icons, Live")
+                .AppendLine("\t\tEffect Preview, Spellcheck, Filetype")
+                .AppendLine("\t\tplugin creation, and Shape editing.")
+                .AppendLine()
+                .AppendLine("Tom Jackson:\tConcept, Initial Code, Compile to DLL")
+                .AppendLine()
+                .AppendLine("―――――――――――  Libraries  ―――――――――――")
+                .AppendLine()
+                .AppendLine("Jörg Reichert:\tFlexibleMessageBox")
+                .AppendLine("Jacob Slusser:\tScintillaNET")
+                .AppendLine("Microsoft:\tRoslyn")
+                .AppendLine()
+                .AppendLine("―――――――――――  Runtime  ―――――――――――")
+                .AppendLine()
+                .AppendLine(".NET version:\t" + System.Environment.Version.ToString(2))
+                .Append("C# version:\t" + ScriptBuilder.CSharpVersion);
+
+            FlexibleMessageBox.Show(this, aboutText.ToString(), "About CodeLab", MessageBoxButtons.OK, MessageBoxIcon.Information);
             txtCode.Focus();
         }
         #endregion
