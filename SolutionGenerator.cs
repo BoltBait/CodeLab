@@ -79,7 +79,7 @@ namespace PdnCodeLab
             csprojFile.AppendLine("<Project Sdk=\"Microsoft.NET.Sdk\">");
             csprojFile.AppendLine();
             csprojFile.AppendLine("  <PropertyGroup>");
-            csprojFile.AppendLine("    <TargetFramework>net8.0-windows</TargetFramework>");
+            csprojFile.AppendLine($"    <TargetFramework>net{Environment.Version.ToString(2)}-windows</TargetFramework>");
             csprojFile.AppendLine("    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>");
             csprojFile.AppendLine("    <UseWindowsForms>true</UseWindowsForms>");
             csprojFile.AppendLine("    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>");
