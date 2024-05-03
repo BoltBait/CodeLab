@@ -45,6 +45,7 @@ namespace PdnCodeLab
         private static IEnumerable<Diagnostic> errors;
 
         #region Properties
+        internal static string CSharpVersion => parseOptions.LanguageVersion.ToDisplayString();
         internal static IEffect BuiltEffect => builtEffect;
         internal static FileType BuiltFileType => builtFileType;
         internal static int LineOffset => lineOffset;
