@@ -1,5 +1,4 @@
-﻿using Microsoft.CodeAnalysis;
-using PaintDotNet;
+﻿using PaintDotNet;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -13,9 +12,9 @@ namespace PdnCodeLab
 {
     internal static class DocComment
     {
-        private static readonly Dictionary<string, string> docComments = IngestDocXML();
+        private static readonly Dictionary<string, XElement> docComments = IngestDocXML();
 
-        private static Dictionary<string, string> IngestDocXML()
+        private static Dictionary<string, XElement> IngestDocXML()
         {
             IEnumerable<string> pdnXml = Directory.EnumerateFiles(Application.StartupPath, "*.xml", SearchOption.TopDirectoryOnly);
             IEnumerable<string> bclXml = Array.Empty<string>();
@@ -49,42 +48,78 @@ namespace PdnCodeLab
 
                     if (docElement.Name.LocalName != "doc" || !docElement.HasElements)
                     {
-                        return Array.Empty<KeyValuePair<string, string>>();
+                        return Array.Empty<KeyValuePair<string, XElement>>();
                     }
 
                     XElement members = docElement.Element("members");
                     if (members == null || !members.HasElements)
                     {
-                        return Array.Empty<KeyValuePair<string, string>>();
+                        return Array.Empty<KeyValuePair<string, XElement>>();
                     }
 
                     return members
                         .Elements("member")
                         .Where(e => e.Elements("summary").Any())
-                        .Select(e => new KeyValuePair<string, string>(e.Attribute("name").Value, e.Element("summary").NormalizeSummaryTag()));
+                        .Select(e => new KeyValuePair<string, XElement>(e.Attribute("name").Value, e));
                 })
                 .DistinctBy(kvp => kvp.Key)
                 .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
         }
 
-        internal static string GetDocSummaryForDef(this MemberInfo memberInfo, string indentSpacing)
+        internal static string GetDocCommentForDef(this MemberInfo memberInfo, string indentSpacing)
         {
             string commentKey = BuildCommentKey(memberInfo);
+            if (!docComments.TryGetValue(commentKey, out XElement comment))
+            {
+                return string.Empty;
+            }
 
-            return docComments.TryGetValue(commentKey, out string summary)
-                ? indentSpacing + "//\r\n" +
-                    indentSpacing + "// Summary:\r\n" +
-                    indentSpacing + "//     " + summary + "\r\n"
-                : string.Empty;
+            string summary = comment.Element("summary").NormalizeCommentElement();
+            if (summary.Length == 0)
+            {
+                return string.Empty;
+            }
+
+            string remarks = comment.Element("remarks")?.NormalizeCommentElement() ?? string.Empty;
+            string returns = comment.Element("returns")?.NormalizeCommentElement() ?? string.Empty;
+
+            return
+                indentSpacing + "//\r\n" +
+                indentSpacing + "// Summary:\r\n" +
+                indentSpacing + "//     " + summary.Split(Environment.NewLine).Join(Environment.NewLine + indentSpacing + "//     ") + "\r\n" +
+
+                (returns.Length == 0 ? string.Empty :
+                indentSpacing + "//\r\n" +
+                indentSpacing + "// Returns:\r\n" +
+                indentSpacing + "//     " + returns.Split(Environment.NewLine).Join(Environment.NewLine + indentSpacing + "//     ") + "\r\n") +
+
+                (remarks.Length == 0 ? string.Empty :
+                indentSpacing + "//\r\n" +
+                indentSpacing + "// Remarks:\r\n" +
+                indentSpacing + "//     " + remarks.Split(Environment.NewLine).Join(Environment.NewLine + indentSpacing + "//     ") + "\r\n");
         }
 
         internal static string GetDocCommentForToolTip(this MemberInfo memberInfo)
         {
             string commentKey = BuildCommentKey(memberInfo);
+            if (!docComments.TryGetValue(commentKey, out XElement comment))
+            {
+                return string.Empty;
+            }
 
-            return docComments.TryGetValue(commentKey, out string summary)
-                ? "\r\n\r\n" + summary
-                : string.Empty;
+            string summary = comment.Element("summary").NormalizeCommentElement();
+            if (summary.Length == 0)
+            {
+                return string.Empty;
+            }
+
+            string remarks = comment.Element("remarks")?.NormalizeCommentElement() ?? string.Empty;
+            string returns = comment.Element("returns")?.NormalizeCommentElement() ?? string.Empty;
+
+            return "\r\n\r\n" +
+                summary +
+                (remarks.Length > 0 ? "\r\n\r\n" + remarks : string.Empty) +
+                (returns.Length > 0 ? "\r\n\r\nReturns: " + returns : string.Empty);
         }
 
         private static string BuildCommentKey(MemberInfo memberInfo)
@@ -211,39 +246,79 @@ namespace PdnCodeLab
             return $"{type.Namespace}.{type.Name}";
         }
 
-        private static string NormalizeSummaryTag(this XElement summaryElement)
+        private static string NormalizeCommentElement(this XElement commentElement)
         {
-            if (summaryElement.HasElements)
+            if (commentElement.HasElements)
             {
-                foreach (XElement subElement in summaryElement.Elements("see"))
+                foreach (XElement inheritdocElement in commentElement.Elements("inheritdoc"))
                 {
-                    if (subElement.HasAttributes)
+                    if (inheritdocElement.HasAttributes)
                     {
-                        string cref = subElement.Attribute("cref")?.Value;
+                        string cref = inheritdocElement.Attribute("cref")?.Value;
                         if (cref != null)
                         {
-                            int dotIndex = cref.StripParens().LastIndexOf('.');
+                            inheritdocElement.Value = docComments.TryGetValue(cref, out XElement summary)
+                                ? summary.Element(commentElement.Name)?.NormalizeCommentElement() ?? string.Empty
+                                : string.Empty;
+                        }
+                    }
+                }
+
+                foreach (XElement seeElement in commentElement.Elements("see"))
+                {
+                    if (seeElement.HasAttributes)
+                    {
+                        string cref = seeElement.Attribute("cref")?.Value;
+                        if (cref != null)
+                        {
+                            string crefNormalized = cref.StripParens();
+                            int dotIndex = crefNormalized.LastIndexOf('.');
                             if (dotIndex != -1)
                             {
+                                if (cref[0] != 'T')
+                                {
+                                    int penultimateDotIndex = crefNormalized.LastIndexOf('.', dotIndex - 1);
+                                    if (penultimateDotIndex != -1)
+                                    {
+                                        dotIndex = penultimateDotIndex;
+                                    }
+                                }
+
                                 dotIndex++;
-                                subElement.Value = cref[dotIndex..];
+                                string crefShortened = cref[dotIndex..];
+                                seeElement.Value = Regex.Replace(crefShortened, @"``\d+|{``\d+}|`\d+", "<T>");
                             }
                         }
                         else
                         {
-                            XAttribute attribute = subElement.Attributes().FirstOrDefault();
+                            XAttribute attribute = seeElement.Attributes().FirstOrDefault();
                             if (attribute != null)
                             {
-                                subElement.Value = attribute.Value;
+                                seeElement.Value = attribute.Value;
                             }
                         }
                     }
                 }
+
+                foreach (XElement anchorElement in commentElement.Elements("a"))
+                {
+                    if (anchorElement.Value[0] != ' ')
+                    {
+                        anchorElement.Value = " " + anchorElement.Value;
+                    }
+                }
+
+                foreach (XElement breakElement in commentElement.Elements("br"))
+                {
+                    breakElement.Value = char.MinValue.ToString();
+                }
             }
 
-            return summaryElement.Value
-                .Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
-                .Join(' ');
+            return commentElement.Value
+                .Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                .Join(" ")
+                .Split(char.MinValue, StringSplitOptions.TrimEntries)
+                .Join(Environment.NewLine);
         }
     }
 }

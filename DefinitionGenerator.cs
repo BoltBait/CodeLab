@@ -43,7 +43,7 @@ namespace PdnCodeLab
             indent = 1;
             string spaces = GetIndent(indent);
 
-            string summary = type.GetDocSummaryForDef(spaces);
+            string summary = type.GetDocCommentForDef(spaces);
             defRef.Append(summary);
 
             if (type.IsDelegate())
@@ -96,7 +96,7 @@ namespace PdnCodeLab
                     continue;
                 }
 
-                string summary = field.GetDocSummaryForDef(spaces);
+                string summary = field.GetDocCommentForDef(spaces);
                 defRef.Append(summary);
 
                 string access = isInterface ? string.Empty : field.GetAccessModifiers();
@@ -129,7 +129,7 @@ namespace PdnCodeLab
                     continue;
                 }
 
-                string summary = ctor.GetDocSummaryForDef(spaces);
+                string summary = ctor.GetDocCommentForDef(spaces);
                 defRef.Append(summary);
 
                 areCtors = true;
@@ -150,7 +150,7 @@ namespace PdnCodeLab
             {
                 hasDeconstructor = true;
 
-                string summary = finalizer.GetDocSummaryForDef(spaces);
+                string summary = finalizer.GetDocCommentForDef(spaces);
                 defRef.Append(summary);
                 defRef.AppendLine(spaces + "~" + type.Name + "()");
                 defRef.AppendLine();
@@ -171,7 +171,7 @@ namespace PdnCodeLab
                     continue;
                 }
 
-                string summary = property.GetDocSummaryForDef(spaces);
+                string summary = property.GetDocCommentForDef(spaces);
                 string access = isInterface ? string.Empty : propMethod.GetAccessModifiers();
                 string modifier = isInterface ? string.Empty : propMethod.GetModifiers();
 
@@ -218,7 +218,7 @@ namespace PdnCodeLab
 
                 areEvents = true;
 
-                string summary = eventInfo.GetDocSummaryForDef(spaces);
+                string summary = eventInfo.GetDocCommentForDef(spaces);
                 defRef.Append(summary);
 
                 string access = isInterface ? string.Empty : eventMethod.GetAccessModifiers();
@@ -313,7 +313,7 @@ namespace PdnCodeLab
                     }
                 }
 
-                string summary = method.GetDocSummaryForDef(spaces);
+                string summary = method.GetDocCommentForDef(spaces);
                 string modifier = isInterface ? string.Empty : method.GetModifiers();
                 string access = isInterface ? string.Empty : method.GetAccessModifiers();
 
@@ -370,7 +370,7 @@ namespace PdnCodeLab
                     continue;
                 }
 
-                string summary = nestedType.GetDocSummaryForDef(spaces);
+                string summary = nestedType.GetDocCommentForDef(spaces);
                 defRef.Append(summary);
 
                 if (nestedType.IsDelegate())
