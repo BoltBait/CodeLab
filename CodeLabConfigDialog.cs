@@ -1812,7 +1812,11 @@ namespace PdnCodeLab
 
         private void NewFromClipboard_Click(object sender, EventArgs e)
         {
+#if FASTDEBUG
+            string clipboardContents = Clipboard.GetText();
+#else
             string clipboardContents = this.Services.GetService<IClipboardService>().TryGetText();
+#endif
             if (clipboardContents is null)
             {
                 return;
@@ -1825,7 +1829,11 @@ namespace PdnCodeLab
 
         private void NewButton_DropDownOpening(object sender, EventArgs e)
         {
+#if FASTDEBUG
+            bool containsText = Clipboard.ContainsText();
+#else
             bool containsText = this.Services.GetService<IClipboardService>().ContainsText();
+#endif
             this.NewFromClipboardMenuItem.Enabled = containsText;
             this.NewFromClipboardMenuItem1.Enabled = containsText;
         }
