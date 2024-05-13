@@ -479,13 +479,15 @@ namespace PdnCodeLab
 
             if (type.IsValueType)
             {
-                unFilteredItems.Add(new IntelliBoxItem($"{type.Name}()", string.Empty, $"{type.Name}()", IntelliType.Constructor));
+                string toolTip = $"{type.Name}(){type.GetDocCommentForIntelliBox()}";
+                unFilteredItems.Add(new IntelliBoxItem($"{type.Name}()", string.Empty, toolTip, IntelliType.Constructor));
             }
 
             foreach (ConstructorInfo constructor in type.GetConstructors())
             {
-                string toolTip = $"{type.Name}({constructor.Params()})";
-                unFilteredItems.Add(new IntelliBoxItem(toolTip, string.Empty, toolTip + "\nConstructor", IntelliType.Constructor));
+                string signature = $"{type.Name}({constructor.Params()})";
+                string toolTip = $"{signature}\nConstructor{type.GetDocCommentForIntelliBox()}";
+                unFilteredItems.Add(new IntelliBoxItem(signature, string.Empty, toolTip, IntelliType.Constructor));
             }
 
             this.listBox.Items.AddRange(unFilteredItems.ToArray());
@@ -687,7 +689,7 @@ namespace PdnCodeLab
                 }
             }
 
-            string toolTip = $"{byRef}{returnType}{nullable} - {methodInfo.Name}{genericArgs}{methodParameters}{genericConstraints}\n{ext}{methodInfo.MemberType}";
+            string toolTip = $"{byRef}{returnType}{nullable} - {methodInfo.Name}{genericArgs}{methodParameters}{genericConstraints}\n{ext}{methodInfo.MemberType}{methodInfo.GetDocCommentForIntelliBox()}";
             unFilteredItems.Add(new IntelliBoxItem(methodInfo.Name + genericArgs + methodParameters, methodInfo.Name, toolTip, IntelliType.Method));
         }
 
@@ -695,14 +697,14 @@ namespace PdnCodeLab
         {
             string returnType = property.PropertyType.GetDisplayName();
             string getSet = property.GetterSetter();
-            string toolTip = $"{returnType} - {property.Name}{getSet}\n{property.MemberType}";
+            string toolTip = $"{returnType} - {property.Name}{getSet}\n{property.MemberType}{property.GetDocCommentForIntelliBox()}";
             unFilteredItems.Add(new IntelliBoxItem(property.Name, property.Name, toolTip, IntelliType.Property));
         }
 
         private void AddEvent(EventInfo eventInfo)
         {
             string returnType = eventInfo.EventHandlerType.GetDisplayName();
-            string toolTip = $"{returnType} - {eventInfo.Name}\n{eventInfo.MemberType}";
+            string toolTip = $"{returnType} - {eventInfo.Name}\n{eventInfo.MemberType}{eventInfo.GetDocCommentForIntelliBox()}";
             unFilteredItems.Add(new IntelliBoxItem(eventInfo.Name, eventInfo.Name, toolTip, IntelliType.Event));
         }
 
@@ -738,7 +740,7 @@ namespace PdnCodeLab
                 fieldValue = $" ( {field.GetValue(null)} )";
             }
 
-            string toolTip = $"{returnType} - {field.Name}{fieldValue}\n{fieldTypeName}";
+            string toolTip = $"{returnType} - {field.Name}{fieldValue}\n{fieldTypeName}{field.GetDocCommentForIntelliBox()}";
             unFilteredItems.Add(new IntelliBoxItem(field.Name, field.Name, toolTip, fieldType));
         }
 
@@ -803,11 +805,11 @@ namespace PdnCodeLab
             }
             else if (isNested == true)
             {
-                toolTip = $"{baseType} - {realName}\nNested Type";
+                toolTip = $"{baseType} - {realName}\nNested Type{type.GetDocCommentForIntelliBox()}";
             }
             else
             {
-                toolTip = $"{baseType} - {type.Namespace}.{realName}\nType";
+                toolTip = $"{baseType} - {type.Namespace}.{realName}\nType{type.GetDocCommentForIntelliBox()}";
             }
 
             unFilteredItems.Add(new IntelliBoxItem(name, code, toolTip, icon));

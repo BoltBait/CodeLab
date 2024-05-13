@@ -122,6 +122,23 @@ namespace PdnCodeLab
                 (returns.Length > 0 ? "\r\n\r\nReturns: " + returns : string.Empty);
         }
 
+        internal static string GetDocCommentForIntelliBox(this MemberInfo memberInfo)
+        {
+            string commentKey = BuildCommentKey(memberInfo);
+            if (!docComments.TryGetValue(commentKey, out XElement comment))
+            {
+                return string.Empty;
+            }
+
+            string summary = comment.Element("summary").NormalizeCommentElement();
+            if (summary.Length == 0)
+            {
+                return string.Empty;
+            }
+
+            return "\r\n\r\n" + summary;
+        }
+
         private static string BuildCommentKey(MemberInfo memberInfo)
         {
             switch (memberInfo.MemberType)
