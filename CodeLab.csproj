@@ -49,6 +49,9 @@
     <Reference Include="PaintDotNet.Base">
       <HintPath>C:\Program Files\paint.net\PaintDotNet.Base.dll</HintPath>
     </Reference>
+    <Reference Include="PaintDotNet.Collections">
+      <HintPath>C:\Program Files\paint.net\PaintDotNet.Collections.dll</HintPath>
+    </Reference>
     <Reference Include="PaintDotNet.ComponentModel">
       <HintPath>C:\Program Files\paint.net\PaintDotNet.ComponentModel.dll</HintPath>
     </Reference>

@@ -44,8 +44,6 @@
             label8 = new System.Windows.Forms.Label();
             warningLevelCombobox = new System.Windows.Forms.ComboBox();
             panelUI = new System.Windows.Forms.Panel();
-            label10 = new System.Windows.Forms.Label();
-            disableAutoCompCheckBox = new System.Windows.Forms.CheckBox();
             extendedColorsCheckBox = new System.Windows.Forms.CheckBox();
             caretLineFrameCheckBox = new System.Windows.Forms.CheckBox();
             indentSpacesLabel = new System.Windows.Forms.Label();
@@ -67,6 +65,8 @@
             codeFoldingCheckbox = new System.Windows.Forms.CheckBox();
             bookMarksCheckbox = new System.Windows.Forms.CheckBox();
             lineNumbersCheckbox = new System.Windows.Forms.CheckBox();
+            noAutoCompleteInfoLabel = new MessageLabel();
+            disableAutoCompCheckBox = new System.Windows.Forms.CheckBox();
             settingsList = new System.Windows.Forms.ListBox();
             panelSnippet = new SnippetManager();
             panelSpelling = new System.Windows.Forms.Panel();
@@ -94,6 +94,12 @@
             noClipWarnLabel = new MessageLabel();
             presetLabel = new System.Windows.Forms.Label();
             presetComboBox = new System.Windows.Forms.ComboBox();
+            panelAssist = new System.Windows.Forms.Panel();
+            noSdkWarnLabel = new MessageLabel();
+            dcDefsCheckBox = new System.Windows.Forms.CheckBox();
+            dcToolTipsCheckBox = new System.Windows.Forms.CheckBox();
+            dcBclCheckBox = new System.Windows.Forms.CheckBox();
+            dcEnabledCheckBox = new System.Windows.Forms.CheckBox();
             panelUpdates.SuspendLayout();
             panelCompiler.SuspendLayout();
             panelUI.SuspendLayout();
@@ -101,6 +107,7 @@
             panelRenderOptions.SuspendLayout();
             optionsTabControl.SuspendLayout();
             tabPage1.SuspendLayout();
+            panelAssist.SuspendLayout();
             SuspendLayout();
             // 
             // closeButton
@@ -251,8 +258,6 @@
             // 
             // panelUI
             // 
-            panelUI.Controls.Add(label10);
-            panelUI.Controls.Add(disableAutoCompCheckBox);
             panelUI.Controls.Add(extendedColorsCheckBox);
             panelUI.Controls.Add(caretLineFrameCheckBox);
             panelUI.Controls.Add(indentSpacesLabel);
@@ -278,25 +283,6 @@
             panelUI.Name = "panelUI";
             panelUI.Size = new System.Drawing.Size(476, 405);
             panelUI.TabIndex = 1;
-            // 
-            // label10
-            // 
-            label10.Location = new System.Drawing.Point(225, 132);
-            label10.Name = "label10";
-            label10.Size = new System.Drawing.Size(239, 51);
-            label10.TabIndex = 21;
-            label10.Text = "When disabled, you can still trigger the\r\nautocomplete window to open after\r\ntyping period by pressing Ctrl-J";
-            // 
-            // disableAutoCompCheckBox
-            // 
-            disableAutoCompCheckBox.AutoSize = true;
-            disableAutoCompCheckBox.Location = new System.Drawing.Point(32, 131);
-            disableAutoCompCheckBox.Name = "disableAutoCompCheckBox";
-            disableAutoCompCheckBox.Size = new System.Drawing.Size(157, 19);
-            disableAutoCompCheckBox.TabIndex = 20;
-            disableAutoCompCheckBox.Text = "Disable Auto Complete...";
-            disableAutoCompCheckBox.UseVisualStyleBackColor = true;
-            disableAutoCompCheckBox.CheckedChanged += disableAutoCompCheckBox_CheckedChanged;
             // 
             // extendedColorsCheckBox
             // 
@@ -520,6 +506,28 @@
             lineNumbersCheckbox.Text = "Line numbers";
             lineNumbersCheckbox.UseVisualStyleBackColor = true;
             lineNumbersCheckbox.CheckedChanged += lineNumbersCheckbox_CheckedChanged;
+            // 
+            // noAutoCompleteInfoLabel
+            // 
+            noAutoCompleteInfoLabel.AllowHardwareRendering = false;
+            noAutoCompleteInfoLabel.Location = new System.Drawing.Point(42, 45);
+            noAutoCompleteInfoLabel.MessageType = MessageType.Info;
+            noAutoCompleteInfoLabel.Name = "noAutoCompleteInfoLabel";
+            noAutoCompleteInfoLabel.Size = new System.Drawing.Size(300, 70);
+            noAutoCompleteInfoLabel.TabIndex = 21;
+            noAutoCompleteInfoLabel.Text = "When disabled, you can still trigger the autocomplete window to open after typing period by pressing Ctrl-J";
+            noAutoCompleteInfoLabel.Visible = false;
+            // 
+            // disableAutoCompCheckBox
+            // 
+            disableAutoCompCheckBox.AutoSize = true;
+            disableAutoCompCheckBox.Location = new System.Drawing.Point(21, 20);
+            disableAutoCompCheckBox.Name = "disableAutoCompCheckBox";
+            disableAutoCompCheckBox.Size = new System.Drawing.Size(157, 19);
+            disableAutoCompCheckBox.TabIndex = 20;
+            disableAutoCompCheckBox.Text = "Disable Auto Complete...";
+            disableAutoCompCheckBox.UseVisualStyleBackColor = true;
+            disableAutoCompCheckBox.CheckedChanged += disableAutoCompCheckBox_CheckedChanged;
             // 
             // settingsList
             // 
@@ -818,11 +826,81 @@
             presetComboBox.TabIndex = 4;
             presetComboBox.SelectedIndexChanged += presetComboBox_SelectedIndexChanged;
             // 
+            // panelAssist
+            // 
+            panelAssist.Controls.Add(noSdkWarnLabel);
+            panelAssist.Controls.Add(dcDefsCheckBox);
+            panelAssist.Controls.Add(dcToolTipsCheckBox);
+            panelAssist.Controls.Add(dcBclCheckBox);
+            panelAssist.Controls.Add(dcEnabledCheckBox);
+            panelAssist.Controls.Add(noAutoCompleteInfoLabel);
+            panelAssist.Controls.Add(disableAutoCompCheckBox);
+            panelAssist.Location = new System.Drawing.Point(202, 12);
+            panelAssist.Name = "panelAssist";
+            panelAssist.Size = new System.Drawing.Size(476, 405);
+            panelAssist.TabIndex = 3;
+            // 
+            // noSdkWarnLabel
+            // 
+            noSdkWarnLabel.AllowHardwareRendering = false;
+            noSdkWarnLabel.Location = new System.Drawing.Point(59, 296);
+            noSdkWarnLabel.MessageType = MessageType.Warning;
+            noSdkWarnLabel.Name = "noSdkWarnLabel";
+            noSdkWarnLabel.Size = new System.Drawing.Size(328, 70);
+            noSdkWarnLabel.TabIndex = 26;
+            noSdkWarnLabel.Text = "The .NET SDK was not found. You may need to install it.";
+            noSdkWarnLabel.Visible = false;
+            // 
+            // dcDefsCheckBox
+            // 
+            dcDefsCheckBox.AutoSize = true;
+            dcDefsCheckBox.Location = new System.Drawing.Point(40, 246);
+            dcDefsCheckBox.Name = "dcDefsCheckBox";
+            dcDefsCheckBox.Size = new System.Drawing.Size(83, 19);
+            dcDefsCheckBox.TabIndex = 25;
+            dcDefsCheckBox.Text = "Definitions";
+            dcDefsCheckBox.UseVisualStyleBackColor = true;
+            dcDefsCheckBox.CheckedChanged += docCommentCheckBox_CheckedChanged;
+            // 
+            // dcToolTipsCheckBox
+            // 
+            dcToolTipsCheckBox.AutoSize = true;
+            dcToolTipsCheckBox.Location = new System.Drawing.Point(40, 221);
+            dcToolTipsCheckBox.Name = "dcToolTipsCheckBox";
+            dcToolTipsCheckBox.Size = new System.Drawing.Size(69, 19);
+            dcToolTipsCheckBox.TabIndex = 24;
+            dcToolTipsCheckBox.Text = "ToolTips";
+            dcToolTipsCheckBox.UseVisualStyleBackColor = true;
+            dcToolTipsCheckBox.CheckedChanged += docCommentCheckBox_CheckedChanged;
+            // 
+            // dcBclCheckBox
+            // 
+            dcBclCheckBox.AutoSize = true;
+            dcBclCheckBox.Location = new System.Drawing.Point(40, 271);
+            dcBclCheckBox.Name = "dcBclCheckBox";
+            dcBclCheckBox.Size = new System.Drawing.Size(119, 19);
+            dcBclCheckBox.TabIndex = 23;
+            dcBclCheckBox.Text = "Base Class Library";
+            dcBclCheckBox.UseVisualStyleBackColor = true;
+            dcBclCheckBox.CheckedChanged += docCommentCheckBox_CheckedChanged;
+            // 
+            // dcEnabledCheckBox
+            // 
+            dcEnabledCheckBox.AutoSize = true;
+            dcEnabledCheckBox.Location = new System.Drawing.Point(21, 196);
+            dcEnabledCheckBox.Name = "dcEnabledCheckBox";
+            dcEnabledCheckBox.Size = new System.Drawing.Size(171, 19);
+            dcEnabledCheckBox.TabIndex = 22;
+            dcEnabledCheckBox.Text = "Documentation Comments";
+            dcEnabledCheckBox.UseVisualStyleBackColor = true;
+            dcEnabledCheckBox.CheckedChanged += docCommentCheckBox_CheckedChanged;
+            // 
             // SettingsForm
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             CancelButton = closeButton;
             ClientSize = new System.Drawing.Size(691, 468);
+            Controls.Add(panelAssist);
             Controls.Add(panelRenderOptions);
             Controls.Add(settingsList);
             Controls.Add(closeButton);
@@ -848,6 +926,8 @@
             optionsTabControl.ResumeLayout(false);
             tabPage1.ResumeLayout(false);
             tabPage1.PerformLayout();
+            panelAssist.ResumeLayout(false);
+            panelAssist.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -901,7 +981,7 @@
         private System.Windows.Forms.Button addLangsButton;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.CheckBox disableAutoCompCheckBox;
-        private System.Windows.Forms.Label label10;
+        private MessageLabel noAutoCompleteInfoLabel;
         private System.Windows.Forms.Panel panelRenderOptions;
         private System.Windows.Forms.Label presetLabel;
         private System.Windows.Forms.Label flagsLabel;
@@ -917,5 +997,11 @@
         private MessageLabel renderOpInfoLabel;
         private System.Windows.Forms.TabControl optionsTabControl;
         private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.Panel panelAssist;
+        private System.Windows.Forms.CheckBox dcEnabledCheckBox;
+        private System.Windows.Forms.CheckBox dcDefsCheckBox;
+        private System.Windows.Forms.CheckBox dcToolTipsCheckBox;
+        private System.Windows.Forms.CheckBox dcBclCheckBox;
+        private MessageLabel noSdkWarnLabel;
     }
 }

@@ -10,33 +10,34 @@ using System.Xml.Linq;
 
 namespace PdnCodeLab
 {
+    [Flags]
+    internal enum DocCommentOptions
+    {
+        None = 0,
+        Definitions = 1,
+        ToolTips = 2,
+        BCL = 4,
+        Enabled = 8,
+        Default = Enabled | Definitions | ToolTips
+    }
+
     internal static class DocComment
     {
-        private static readonly Dictionary<string, XElement> docComments = IngestDocXML();
+        private static DocCommentOptions options = Settings.DocCommentOptions;
+        private static Dictionary<string, XElement> docComments = IngestDocXML();
 
         private static Dictionary<string, XElement> IngestDocXML()
         {
-            IEnumerable<string> pdnXml = Directory.EnumerateFiles(Application.StartupPath, "*.xml", SearchOption.TopDirectoryOnly);
-            IEnumerable<string> bclXml = Array.Empty<string>();
-
-            string sdkPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), @"dotnet\packs\Microsoft.NETCore.App.Ref");
-            if (Directory.Exists(sdkPath))
+            if (options <= DocCommentOptions.Enabled)
             {
-                string dotnetVer = Environment.Version.ToString(2);
-
-                string latestDir = Directory.EnumerateDirectories(sdkPath, dotnetVer + ".*", SearchOption.TopDirectoryOnly)
-                    .OrderByDescending(dir => Directory.GetCreationTime(dir))
-                    .FirstOrDefault();
-
-                if (latestDir != null)
-                {
-                    string xmlDir = Path.Combine(latestDir, @"ref\net" + dotnetVer);
-                    if (Directory.Exists(xmlDir))
-                    {
-                        bclXml = Directory.EnumerateFiles(xmlDir, "*.xml", SearchOption.TopDirectoryOnly);
-                    }
-                }
+                return new Dictionary<string, XElement>();
             }
+
+            IEnumerable<string> pdnXml = Directory.EnumerateFiles(Application.StartupPath, "*.xml", SearchOption.TopDirectoryOnly);
+
+            IEnumerable<string> bclXml = (options.HasFlag(DocCommentOptions.BCL) && TryGetSdkDirectory(out string sdkDir))
+                ? bclXml = Directory.EnumerateFiles(sdkDir, "*.xml", SearchOption.TopDirectoryOnly)
+                : Array.Empty<string>();
 
             return pdnXml
                 .Concat(bclXml)
@@ -66,8 +67,54 @@ namespace PdnCodeLab
                 .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
         }
 
+        internal static void ReInstantiate()
+        {
+            DocCommentOptions newOptions = Settings.DocCommentOptions;
+            if (newOptions != options)
+            {
+                options = newOptions;
+                docComments = IngestDocXML();
+            }
+        }
+
+        internal static bool TryGetSdkDirectory(out string sdkDirectory)
+        {
+            sdkDirectory = null;
+
+            string sdkPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), @"dotnet\packs\Microsoft.NETCore.App.Ref");
+            if (!Directory.Exists(sdkPath))
+            {
+                return false;
+            }
+
+            string dotnetVer = Environment.Version.ToString(2);
+
+            string latestDir = Directory.EnumerateDirectories(sdkPath, dotnetVer + ".*", SearchOption.TopDirectoryOnly)
+                .OrderByDescending(dir => Directory.GetCreationTime(dir))
+                .FirstOrDefault();
+
+            if (latestDir == null)
+            {
+                return false;
+            }
+
+            string sdkDir = Path.Combine(latestDir, @"ref\net" + dotnetVer);
+            if (!Directory.Exists(sdkDir))
+            {
+                return false;
+            }
+
+            sdkDirectory = sdkDir;
+            return true;
+        }
+
         internal static string GetDocCommentForDef(this MemberInfo memberInfo, string indentSpacing)
         {
+            if (options <= DocCommentOptions.Enabled || !options.HasFlag(DocCommentOptions.Definitions))
+            {
+                return string.Empty;
+            }
+
             string commentKey = BuildCommentKey(memberInfo);
             if (!docComments.TryGetValue(commentKey, out XElement comment))
             {
@@ -101,6 +148,11 @@ namespace PdnCodeLab
 
         internal static string GetDocCommentForToolTip(this MemberInfo memberInfo)
         {
+            if (options <= DocCommentOptions.Enabled || !options.HasFlag(DocCommentOptions.ToolTips))
+            {
+                return string.Empty;
+            }
+
             string commentKey = BuildCommentKey(memberInfo);
             if (!docComments.TryGetValue(commentKey, out XElement comment))
             {
@@ -124,6 +176,11 @@ namespace PdnCodeLab
 
         internal static string GetDocCommentForIntelliBox(this MemberInfo memberInfo)
         {
+            if (options <= DocCommentOptions.Enabled || !options.HasFlag(DocCommentOptions.ToolTips))
+            {
+                return string.Empty;
+            }
+
             string commentKey = BuildCommentKey(memberInfo);
             if (!docComments.TryGetValue(commentKey, out XElement comment))
             {

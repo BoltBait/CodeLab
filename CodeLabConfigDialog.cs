@@ -1646,6 +1646,7 @@ namespace PdnCodeLab
                 sf.ShowDialog();
             }
             LoadSettingsFromRegistry();
+            DocComment.ReInstantiate();
             BuildAsync();
         }
 

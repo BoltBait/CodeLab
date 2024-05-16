@@ -29,7 +29,6 @@ namespace PdnCodeLab
             wordWrapCheckbox.Checked = Settings.WordWrap;
             wordWrapTextFilesCheckbox.Checked = Settings.WordWrapPlainText;
             caretLineFrameCheckBox.Checked = Settings.CaretLineFrame;
-            disableAutoCompCheckBox.Checked = Settings.DisableAutoComplete;
             showWhiteSpaceCheckbox.Checked = Settings.WhiteSpace;
             indentSpacesComboBox.SelectedIndex = Settings.IndentSpaces == 4 ? 1 : 0;
             largeFontCheckbox.Checked = Settings.LargeFonts;
@@ -75,6 +74,14 @@ namespace PdnCodeLab
             optionsTabControl.BackColor = Color.White;
             optionsTabControl.ForeColor = Color.Black;
 
+            // Assistance Page
+            disableAutoCompCheckBox.Checked = Settings.DisableAutoComplete;
+            DocCommentOptions options = Settings.DocCommentOptions;
+            dcEnabledCheckBox.Checked = options.HasFlag(DocCommentOptions.Enabled);
+            dcToolTipsCheckBox.Checked = options.HasFlag(DocCommentOptions.ToolTips);
+            dcDefsCheckBox.Checked = options.HasFlag(DocCommentOptions.Definitions);
+            dcBclCheckBox.Checked = options.HasFlag(DocCommentOptions.BCL);
+
             // List of Pages
             settingsList.Items.AddRange(SettingsPageListItem.Items);
             settingsList.ItemHeight = UIUtil.Scale(32);
@@ -115,6 +122,7 @@ namespace PdnCodeLab
                 panelSpelling.Visible = settingsPage == SettingsPage.Spelling;
                 panelCompiler.Visible = settingsPage == SettingsPage.Compiler;
                 panelRenderOptions.Visible = settingsPage == SettingsPage.RenderOptions;
+                panelAssist.Visible = settingsPage == SettingsPage.Assistance;
             }
         }
 
@@ -134,6 +142,7 @@ namespace PdnCodeLab
                     SettingsPage.Snippet => "Snippets",
                     SettingsPage.Spelling => "Spellcheck",
                     SettingsPage.Compiler => "Compiler",
+                    SettingsPage.Assistance => "Assistance",
                     SettingsPage.RenderOptions => "Render Options",
                     SettingsPage.Updates => "Updates",
                     _ => throw new NotImplementedException(),
@@ -252,12 +261,6 @@ namespace PdnCodeLab
         {
             if (Initializing) { return; }
             Settings.CaretLineFrame = caretLineFrameCheckBox.Checked;
-        }
-
-        private void disableAutoCompCheckBox_CheckedChanged(object sender, EventArgs e)
-        {
-            if (Initializing) { return; }
-            Settings.DisableAutoComplete = disableAutoCompCheckBox.Checked;
         }
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -441,11 +444,47 @@ namespace PdnCodeLab
             internal static PresentBoxItem[] Items { get; } = Enum.GetValues<RenderPreset>().Select(x => new PresentBoxItem(x)).ToArray();
         }
         #endregion
+
+        #region Assistance
+        private void disableAutoCompCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            bool noAutoComplete = disableAutoCompCheckBox.Checked;
+
+            if (!Initializing)
+            {
+                Settings.DisableAutoComplete = noAutoComplete;
+            }
+
+            noAutoCompleteInfoLabel.Visible = noAutoComplete;
+        }
+
+        private void docCommentCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!Initializing)
+            {
+                DocCommentOptions flags = DocCommentOptions.None;
+                if (dcEnabledCheckBox.Checked) { flags |= DocCommentOptions.Enabled; }
+                if (dcToolTipsCheckBox.Checked) { flags |= DocCommentOptions.ToolTips; }
+                if (dcDefsCheckBox.Checked) { flags |= DocCommentOptions.Definitions; }
+                if (dcBclCheckBox.Checked) { flags |= DocCommentOptions.BCL; }
+
+                Settings.DocCommentOptions = flags;
+            }
+
+            bool enabled = dcEnabledCheckBox.Checked;
+            dcToolTipsCheckBox.Enabled = enabled;
+            dcDefsCheckBox.Enabled = enabled;
+            dcBclCheckBox.Enabled = enabled;
+
+            noSdkWarnLabel.Visible = enabled && dcBclCheckBox.Checked && !DocComment.TryGetSdkDirectory(out _);
+        }
+        #endregion
     }
 
     internal enum SettingsPage
     {
         UI,
+        Assistance,
         Snippet,
         Spelling,
         Compiler,

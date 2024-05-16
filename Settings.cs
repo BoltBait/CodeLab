@@ -229,6 +229,12 @@ namespace PdnCodeLab
             set => SetRegValue(nameof(RenderingSchedule), value);
         }
 
+        internal static DocCommentOptions DocCommentOptions
+        {
+            get => GetRegValue(nameof(DocCommentOptions), DocCommentOptions.Default);
+            set => SetRegValue(nameof(DocCommentOptions), value);
+        }
+
         private static void OpenRegKey()
         {
             if (regKey == null)
