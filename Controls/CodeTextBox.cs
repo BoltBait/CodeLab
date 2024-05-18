@@ -360,23 +360,25 @@ namespace PdnCodeLab
                                 break;
                         }
 
+                        Color darkBackColor = Color.FromArgb(30, 30, 30);
+
                         // Line Numbers
-                        this.Styles[Style.LineNumber].ForeColor = Color.FromArgb(43, 145, 175);
-                        this.Styles[Style.LineNumber].BackColor = Color.FromArgb(30, 30, 30);
+                        this.Styles[Style.LineNumber].ForeColor = Color.Gray;
+                        this.Styles[Style.LineNumber].BackColor = darkBackColor;
 
                         // Code Folding
-                        this.SetFoldMarginColor(true, Color.FromArgb(30, 30, 30));
-                        this.SetFoldMarginHighlightColor(true, Color.FromArgb(30, 30, 30));
+                        this.SetFoldMarginColor(true, darkBackColor);
+                        this.SetFoldMarginHighlightColor(true, darkBackColor);
 
                         // Code Fold Ellipsis
                         this.Styles[Style.FoldDisplayText].ForeColor = Color.Gray;
-                        this.Styles[Style.FoldDisplayText].BackColor = Color.FromArgb(30, 30, 30);
+                        this.Styles[Style.FoldDisplayText].BackColor = darkBackColor;
 
                         // Code Folding markers
                         for (int i = 25; i <= 31; i++)
                         {
-                            this.Markers[i].SetForeColor(Color.FromArgb(30, 30, 30));
-                            this.Markers[i].SetBackColor(Color.FromArgb(165, 165, 165));
+                            this.Markers[i].SetForeColor(darkBackColor);
+                            this.Markers[i].SetBackColor(Color.DarkGray);
                         }
 
                         // Braces & Brackets
@@ -425,22 +427,24 @@ namespace PdnCodeLab
                                 break;
                         }
 
+                        Color lightBackColor = Color.White;
+
                         // Line Numbers
                         this.Styles[Style.LineNumber].ForeColor = Color.DimGray;
-                        this.Styles[Style.LineNumber].BackColor = Color.White;
+                        this.Styles[Style.LineNumber].BackColor = lightBackColor;
 
                         // Code Folding
-                        this.SetFoldMarginColor(true, Color.White);
-                        this.SetFoldMarginHighlightColor(true, Color.White);
+                        this.SetFoldMarginColor(true, lightBackColor);
+                        this.SetFoldMarginHighlightColor(true, lightBackColor);
 
                         // Code Fold Ellipsis
                         this.Styles[Style.FoldDisplayText].ForeColor = Color.Gray;
-                        this.Styles[Style.FoldDisplayText].BackColor = Color.White;
+                        this.Styles[Style.FoldDisplayText].BackColor = lightBackColor;
 
                         // Code Folding markers
                         for (int i = 25; i <= 31; i++)
                         {
-                            this.Markers[i].SetForeColor(Color.White);
+                            this.Markers[i].SetForeColor(lightBackColor);
                             this.Markers[i].SetBackColor(Color.LightGray);
                         }
 
