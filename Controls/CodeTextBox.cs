@@ -1299,13 +1299,13 @@ namespace PdnCodeLab
                 string typeStr = isArray ? word.Replace("[]", string.Empty) : word;
 
                 Type type;
-                if (Intelli.AllTypes.ContainsKey(typeStr))
+                if (Intelli.AllTypes.TryGetValue(typeStr, out Type foundType))
                 {
-                    type = isArray ? Intelli.AllTypes[typeStr].MakeArrayType() : Intelli.AllTypes[typeStr];
+                    type = isArray ? foundType.MakeArrayType() : foundType;
                 }
-                else if (Intelli.UserDefinedTypes.ContainsKey(typeStr))
+                else if (Intelli.UserDefinedTypes.TryGetValue(typeStr, out Type foundUserType))
                 {
-                    type = isArray ? Intelli.UserDefinedTypes[typeStr].MakeArrayType() : Intelli.UserDefinedTypes[typeStr];
+                    type = isArray ? foundUserType.MakeArrayType() : foundUserType;
                 }
                 else
                 {
@@ -1645,11 +1645,11 @@ namespace PdnCodeLab
                     this.IndicatorCurrent = Indicator.ObjectHighlight;
 
                     #region Word Definition Highlight
-                    if ((currentType == IntelliType.Variable || currentType == IntelliType.Parameter) && Intelli.VarPos.ContainsKey(word) && Intelli.VarPos[word] == this.TargetStart)
+                    if ((currentType == IntelliType.Variable || currentType == IntelliType.Parameter) && Intelli.VarPos.TryGetValue(word, out int value) && value == this.TargetStart)
                     {
                         this.IndicatorCurrent = Indicator.ObjectHighlightDef;
                     }
-                    else if (currentType == IntelliType.Type && Intelli.UserDefinedTypes.ContainsKey(word))
+                    else if (currentType == IntelliType.Type && Intelli.UserDefinedTypes.TryGetValue(word, out Type foundUserType))
                     {
                         int typePos = this.TargetStart - 1;
 
@@ -1663,9 +1663,7 @@ namespace PdnCodeLab
                         if (style == Style.Cpp.Word || style == Style.Cpp.Word + Preprocessor)
                         {
                             string foundType = this.GetWordFromPosition(typePos);
-
-                            Type t = Intelli.UserDefinedTypes[word];
-                            string baseType = t.GetObjectType();
+                            string baseType = foundUserType.GetObjectType();
 
                             if (baseType == foundType)
                             {
@@ -1695,13 +1693,13 @@ namespace PdnCodeLab
                         {
                             string foundType = this.GetWordFromPosition(typePos);
                             Type t = null;
-                            if (Intelli.AllTypes.ContainsKey(foundType))
+                            if (Intelli.AllTypes.TryGetValue(foundType, out Type actualType))
                             {
-                                t = Intelli.AllTypes[foundType];
+                                t = actualType;
                             }
-                            else if (Intelli.UserDefinedTypes.ContainsKey(foundType))
+                            else if (Intelli.UserDefinedTypes.TryGetValue(foundType, out Type actualUserType))
                             {
-                                t = Intelli.UserDefinedTypes[foundType];
+                                t = actualUserType;
                             }
                             else if (foundType == typeof(void).GetDisplayName())
                             {
@@ -1774,72 +1772,64 @@ namespace PdnCodeLab
 
             ParseVariables(position);
 
-            Type type;
-            if (Intelli.Variables.ContainsKey(lastWords))
+            if (Intelli.Variables.TryGetValue(lastWords, out Type varType))
             {
-                type = Intelli.Variables[lastWords];
-                string typeName = type.GetDisplayName();
+                string typeName = varType.GetDisplayName();
 
                 return $"{typeName} - {lastWords}\nLocal Variable";
             }
 
-            if (Intelli.Parameters.ContainsKey(lastWords))
+            if (Intelli.Parameters.TryGetValue(lastWords, out Type paramType))
             {
-                type = Intelli.Parameters[lastWords];
-                string typeName = type.GetDisplayName();
+                string typeName = paramType.GetDisplayName();
 
                 return $"{typeName} - {lastWords}\nParameter";
             }
 
-            if (Intelli.AllTypes.ContainsKey(lastWords))
+            if (Intelli.AllTypes.TryGetValue(lastWords, out Type sdkType))
             {
-                type = Intelli.AllTypes[lastWords];
-
-                if (type.IsClass || type.IsValueType)
+                if (sdkType.IsClass || sdkType.IsValueType)
                 {
                     int newPos = this.WordStartPosition(position) - 1;
                     int parenPos = this.WordEndPosition(position);
                     if (newPos > InvalidPosition && this.GetWordFromPosition(newPos).Equals("new", StringComparison.Ordinal) && this.GetCharAt(parenPos).Equals('('))
                     {
                         // Constructor
-                        ConstructorInfo[] ctors = type.GetConstructors();
+                        ConstructorInfo[] ctors = sdkType.GetConstructors();
 
-                        if (type.IsValueType && this.GetCharAt(parenPos + 1).Equals(')'))
+                        if (sdkType.IsValueType && this.GetCharAt(parenPos + 1).Equals(')'))
                         {
                             string overloads = (ctors.Length > 0) ? $" (+ {ctors.Length} overloads)" : string.Empty;
-                            string summary = type.GetDocCommentForToolTip();
-                            return $"{type.Name}.{type.Name}(){overloads}\nConstructor{summary}";
+                            string summary = sdkType.GetDocCommentForToolTip();
+                            return $"{sdkType.Name}.{sdkType.Name}(){overloads}\nConstructor{summary}";
                         }
 
                         if (ctors.Length > 0)
                         {
-                            int otherOverloads = type.IsValueType ? ctors.Length : ctors.Length - 1;
+                            int otherOverloads = sdkType.IsValueType ? ctors.Length : ctors.Length - 1;
                             string overloads1 = (otherOverloads > 0) ? $" (+ {otherOverloads} overloads)" : string.Empty;
 
                             ConstructorInfo constructor = GetOverload(ctors, position);
                             string summary = constructor.GetDocCommentForToolTip();
-                            return $"{constructor.DeclaringType.Name}.{type.Name}({constructor.Params()}){overloads1}\nConstructor{summary}";
+                            return $"{constructor.DeclaringType.Name}.{sdkType.Name}({constructor.Params()}){overloads1}\nConstructor{summary}";
                         }
                     }
                 }
 
-                string typeName = type.GetObjectType();
+                string typeName = sdkType.GetObjectType();
+                string name = (sdkType.IsGenericType) ? sdkType.GetGenericName() : sdkType.Name;
+                string typeSummary = sdkType.GetDocCommentForToolTip();
 
-                string name = (type.IsGenericType) ? type.GetGenericName() : type.Name;
-                string typeSummary = type.GetDocCommentForToolTip();
-
-                return $"{typeName} - {type.Namespace}.{name}{typeSummary}";
+                return $"{typeName} - {sdkType.Namespace}.{name}{typeSummary}";
             }
 
-            if (Intelli.UserDefinedTypes.ContainsKey(lastWords))
+            if (Intelli.UserDefinedTypes.TryGetValue(lastWords, out Type userType))
             {
-                type = Intelli.UserDefinedTypes[lastWords];
-                string typeName = type.GetObjectType();
+                string typeName = userType.GetObjectType();
+                string name = (userType.IsGenericType) ? userType.GetGenericName() : userType.Name;
+                string summary = userType.GetDocCommentForToolTip();
 
-                string name = (type.IsGenericType) ? type.GetGenericName() : type.Name;
-                string summary = type.GetDocCommentForToolTip();
-
-                return $"{typeName} - {type.DeclaringType.Name}.{name}{summary}";
+                return $"{typeName} - {userType.DeclaringType.Name}.{name}{summary}";
             }
 
             MemberInfo memberInfo = GetMember(position, out int length);
@@ -1947,13 +1937,13 @@ namespace PdnCodeLab
 
                     return $"{returnType} - {precedingType}.{eventInfo.Name}\n{eventInfo.MemberType}{eventSummary}";
                 case MemberTypes.NestedType:
-                    type = (Type)memberInfo;
-                    string typeName = type.GetObjectType();
+                    Type nestedType = (Type)memberInfo;
 
-                    string name = (type.IsGenericType) ? type.GetGenericName() : type.Name;
-                    string nestedSummary = type.GetDocCommentForToolTip();
+                    string typeName = nestedType.GetObjectType();
+                    string name = (nestedType.IsGenericType) ? nestedType.GetGenericName() : nestedType.Name;
+                    string nestedSummary = nestedType.GetDocCommentForToolTip();
 
-                    return $"{typeName} - {type.Namespace}.{precedingType}.{name}\nNested Type{nestedSummary}";
+                    return $"{typeName} - {nestedType.Namespace}.{precedingType}.{name}\nNested Type{nestedSummary}";
             }
 
             return string.Empty;
@@ -2222,24 +2212,24 @@ namespace PdnCodeLab
                 return Intelli.UserScript;
             }
 
-            if (Intelli.Variables.ContainsKey(lastWords))
+            if (Intelli.Variables.TryGetValue(lastWords, out Type varType))
             {
-                return Intelli.Variables[lastWords];
+                return varType;
             }
 
-            if (Intelli.Parameters.ContainsKey(lastWords))
+            if (Intelli.Parameters.TryGetValue(lastWords, out Type paramType))
             {
-                return Intelli.Parameters[lastWords];
+                return paramType;
             }
 
-            if (Intelli.AllTypes.ContainsKey(lastWords))
+            if (Intelli.AllTypes.TryGetValue(lastWords, out Type sdkType))
             {
-                return Intelli.AllTypes[lastWords];
+                return sdkType;
             }
 
-            if (Intelli.UserDefinedTypes.ContainsKey(lastWords))
+            if (Intelli.UserDefinedTypes.TryGetValue(lastWords, out Type userType))
             {
-                return Intelli.UserDefinedTypes[lastWords];
+                return userType;
             }
 
             MemberInfo memberInfo = GetMember(position, out _);
@@ -2311,22 +2301,22 @@ namespace PdnCodeLab
             {
                 type = Intelli.UserScript;
             }
-            else if (Intelli.Variables.ContainsKey(tokens[0]))
+            else if (Intelli.Variables.TryGetValue(tokens[0], out Type varType))
             {
-                type = Intelli.Variables[tokens[0]];
+                type = varType;
             }
-            else if (Intelli.Parameters.ContainsKey(tokens[0]))
+            else if (Intelli.Parameters.TryGetValue(tokens[0], out Type paramType))
             {
-                type = Intelli.Parameters[tokens[0]];
+                type = paramType;
             }
-            else if (Intelli.AllTypes.ContainsKey(tokens[0]))
+            else if (Intelli.AllTypes.TryGetValue(tokens[0], out Type sdkType))
             {
-                type = Intelli.AllTypes[tokens[0]];
+                type = sdkType;
                 isStatic = true;
             }
-            else if (Intelli.UserDefinedTypes.ContainsKey(tokens[0]))
+            else if (Intelli.UserDefinedTypes.TryGetValue(tokens[0], out Type userType))
             {
-                type = Intelli.UserDefinedTypes[tokens[0]];
+                type = userType;
                 isStatic = true;
             }
             else if (Intelli.UserScript.Contains(tokens[0], false))
@@ -2591,19 +2581,17 @@ namespace PdnCodeLab
                 return false;
             }
 
-            if (!apiDocs && (Intelli.Variables.ContainsKey(lastWords) || Intelli.Parameters.ContainsKey(lastWords)) && Intelli.VarPos.ContainsKey(lastWords))
+            if (!apiDocs && (Intelli.Variables.ContainsKey(lastWords) || Intelli.Parameters.ContainsKey(lastWords)) && Intelli.VarPos.TryGetValue(lastWords, out int varPos))
             {
-                this.SelectionStart = Intelli.VarPos[lastWords];
-                this.SelectionEnd = this.WordEndPosition(Intelli.VarPos[lastWords]);
+                this.SelectionStart = varPos;
+                this.SelectionEnd = this.WordEndPosition(varPos);
                 this.ScrollCaret();
                 return true;
             }
 
-            if (!apiDocs && Intelli.UserDefinedTypes.ContainsKey(lastWords))
+            if (!apiDocs && Intelli.UserDefinedTypes.TryGetValue(lastWords, out Type userType))
             {
-                Type t = Intelli.UserDefinedTypes[lastWords];
-
-                string baseType = t.GetObjectType();
+                string baseType = userType.GetObjectType();
 
                 bool found = false;
                 this.TargetWholeDocument();
@@ -2645,20 +2633,18 @@ namespace PdnCodeLab
                 return found;
             }
 
-            if (Intelli.AllTypes.ContainsKey(lastWords))
+            if (Intelli.AllTypes.TryGetValue(lastWords, out Type sdkType))
             {
-                Type t = Intelli.AllTypes[lastWords];
-
                 if (apiDocs)
                 {
-                    string typeName = (t.IsGenericType) ? t.Name.Replace("`", "-") : t.Name;
-                    string fullName = $"{t.Namespace}.{typeName}";
+                    string typeName = (sdkType.IsGenericType) ? sdkType.Name.Replace("`", "-") : sdkType.Name;
+                    string fullName = $"{sdkType.Namespace}.{typeName}";
 
-                    if (t.Namespace.Equals(nameof(PdnCodeLab), StringComparison.Ordinal))
+                    if (sdkType.Namespace.Equals(nameof(PdnCodeLab), StringComparison.Ordinal))
                     {
                         return false; // UserScript
                     }
-                    else if (t.Namespace.StartsWith("PaintDotNet", StringComparison.Ordinal))
+                    else if (sdkType.Namespace.StartsWith("PaintDotNet", StringComparison.Ordinal))
                     {
                         OpenPdnDocs(fullName);
                     }
@@ -2669,7 +2655,7 @@ namespace PdnCodeLab
                 }
                 else
                 {
-                    OpenDefinitionTab(t);
+                    OpenDefinitionTab(sdkType);
                 }
 
                 return true;
@@ -2707,13 +2693,13 @@ namespace PdnCodeLab
 
                     string foundType = this.GetWordFromPosition(typePos);
                     Type t;
-                    if (Intelli.AllTypes.ContainsKey(foundType))
+                    if (Intelli.AllTypes.TryGetValue(foundType, out Type sdkType2))
                     {
-                        t = Intelli.AllTypes[foundType];
+                        t = sdkType2;
                     }
-                    else if (Intelli.UserDefinedTypes.ContainsKey(foundType))
+                    else if (Intelli.UserDefinedTypes.TryGetValue(foundType, out Type userType2))
                     {
-                        t = Intelli.UserDefinedTypes[foundType];
+                        t = userType2;
                     }
                     else if (foundType == typeof(void).GetDisplayName())
                     {
@@ -2842,7 +2828,7 @@ namespace PdnCodeLab
                         prevWordStartPos--;
                     }
 
-                    if (Intelli.Snippets.ContainsKey(prevWord) && prevWordEndPos == this.CurrentPosition)
+                    if (prevWordEndPos == this.CurrentPosition && Intelli.Snippets.TryGetValue(prevWord, out string snippetText))
                     {
                         e.Handled = true;
                         e.SuppressKeyPress = true;
@@ -2854,7 +2840,7 @@ namespace PdnCodeLab
                         // Insert the snippet
                         string indent = new string(' ', this.Lines[this.CurrentLine].Indentation);
                         int startPos = this.CurrentPosition;
-                        string[] lines = Intelli.Snippets[prevWord].Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+                        string[] lines = snippetText.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
                         for (int i = 0; i < lines.Length; i++)
                         {
                             string line = (i == lines.Length - 1) ? lines[i] : lines[i] + "\r\n" + indent;
@@ -3320,12 +3306,15 @@ namespace PdnCodeLab
             }
 
             string word = this.GetWordFromPosition(position);
-            if (!Intelli.AllTypes.ContainsKey(word) && !Intelli.UserDefinedTypes.ContainsKey(word))
+            bool isSdkType = Intelli.AllTypes.ContainsKey(word);
+            bool isUserType = Intelli.UserDefinedTypes.ContainsKey(word);
+
+            if (!isSdkType && !isUserType)
             {
                 return;
             }
 
-            Type type = Intelli.AllTypes.ContainsKey(word) ? Intelli.AllTypes[word] : Intelli.UserDefinedTypes[word];
+            Type type = isSdkType ? Intelli.AllTypes[word] : Intelli.UserDefinedTypes[word];
             if (type.IsEnum || type.IsInterface || !(type.IsClass || type.IsValueType))
             {
                 return;
@@ -4927,7 +4916,7 @@ namespace PdnCodeLab
 
         internal void SwitchToDocument(Guid guid)
         {
-            if (!docCollection.ContainsKey(guid))
+            if (!docCollection.TryGetValue(guid, out ScintillaNET.Document targetDocument))
             {
                 return;
             }
@@ -4941,8 +4930,8 @@ namespace PdnCodeLab
             var prevDocument = this.Document;
             this.AddRefDocument(prevDocument);
 
-            this.Document = this.docCollection[guid];
-            this.ReleaseDocument(this.docCollection[guid]);
+            this.Document = targetDocument;
+            this.ReleaseDocument(targetDocument);
 
             this.DocumentMeta = this.docMetaCollection[guid];
 
@@ -4987,12 +4976,12 @@ namespace PdnCodeLab
 
         internal void CloseDocument(Guid guid)
         {
-            if (!docCollection.ContainsKey(guid))
+            if (!docCollection.TryGetValue(guid, out ScintillaNET.Document targetDocument))
             {
                 return;
             }
 
-            this.ReleaseDocument(this.docCollection[guid]);
+            this.ReleaseDocument(targetDocument);
             this.docCollection.Remove(guid);
             this.docMetaCollection.Remove(guid);
         }
