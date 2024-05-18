@@ -873,15 +873,11 @@ namespace PdnCodeLab
 
             // Configure a margin to use as padding between Line Numbers and the document
             this.Margins[LeftMargin.Padding].Type = MarginType.BackColor;
-            this.Margins[LeftMargin.Padding].Sensitive = false;
             this.Margins[LeftMargin.Padding].Width = 2;
-            this.Margins[LeftMargin.Padding].Mask = 0;
 
             // Configure a margin to display Line Numbers
             this.Margins[LeftMargin.LineNumbers].Type = MarginType.Number;
-            this.Margins[LeftMargin.LineNumbers].Sensitive = false;
             this.Margins[LeftMargin.LineNumbers].Width = 0;
-            this.Margins[LeftMargin.LineNumbers].Mask = 0;
 
             // Configure a margin to display Bookmark symbols
             this.Margins[LeftMargin.Bookmarks].Width = 0;
