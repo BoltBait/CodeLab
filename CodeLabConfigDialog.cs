@@ -1112,103 +1112,65 @@ namespace PdnCodeLab
 #endif
 
             string scriptPath = tabStrip1.SelectedTabPath;
+            string userCode = txtCode.Text;
+            string projectName = Path.GetFileNameWithoutExtension(scriptPath);
+            ProjectType projectType = tabStrip1.SelectedTabProjType;
 
-            switch (tabStrip1.SelectedTabProjType)
+            if (projectType.IsEffect())
             {
-                case ProjectType.ClassicEffect:
-                    using (BuildForm buildForm = new BuildForm(fileName, txtCode.Text, scriptPath, ProjectType.ClassicEffect, canCreateSln))
-                    {
-                        if (buildForm.ShowDialog() != DialogResult.OK)
-                        {
-                            return;
-                        }
+                using BuildForm buildForm = new BuildForm(fileName, userCode, scriptPath, projectType, canCreateSln);
+                if (buildForm.ShowDialog() != DialogResult.OK)
+                {
+                    return;
+                }
 
-                        string classicSourceCode = ClassicEffectWriter.FullSourceCode(
-                            txtCode.Text, Path.GetFileNameWithoutExtension(scriptPath), buildForm.isAdjustment,
-                            buildForm.SubMenu, buildForm.MenuItemName, buildForm.IconPath, buildForm.URL, buildForm.RenderingFlags,
-                            buildForm.RenderingSchedule, buildForm.Author, buildForm.MajorVer, buildForm.MinorVer,
-                            buildForm.Description, buildForm.KeyWords, buildForm.WindowTitle, buildForm.HelpType, buildForm.HelpStr);
+                string effectSourceCode = projectType switch
+                {
+                    ProjectType.ClassicEffect =>
+                        ClassicEffectWriter.FullSourceCode(
+                            userCode, projectName, buildForm.isAdjustment, buildForm.SubMenu, buildForm.MenuItemName, buildForm.IconPath, buildForm.URL,
+                            buildForm.RenderingFlags,buildForm.RenderingSchedule, buildForm.Author, buildForm.MajorVer, buildForm.MinorVer,
+                            buildForm.Description, buildForm.KeyWords, buildForm.WindowTitle, buildForm.HelpType, buildForm.HelpStr),
+                    ProjectType.BitmapEffect =>
+                        BitmapEffectWriter.FullSourceCode(
+                            userCode, projectName, buildForm.isAdjustment, buildForm.SubMenu, buildForm.MenuItemName, buildForm.IconPath, buildForm.URL,
+                            buildForm.RenderingFlags, buildForm.RenderingSchedule, buildForm.Author, buildForm.MajorVer, buildForm.MinorVer,
+                            buildForm.Description, buildForm.KeyWords, buildForm.WindowTitle, buildForm.HelpType, buildForm.HelpStr),
+                    ProjectType.GpuDrawEffect =>
+                        GPUDrawWriter.FullSourceCode(
+                            userCode, projectName, buildForm.isAdjustment, buildForm.SubMenu, buildForm.MenuItemName, buildForm.IconPath, buildForm.URL,
+                            buildForm.RenderingFlags, buildForm.RenderingSchedule, buildForm.Author, buildForm.MajorVer, buildForm.MinorVer,
+                            buildForm.Description, buildForm.KeyWords, buildForm.WindowTitle, buildForm.HelpType, buildForm.HelpStr),
+                    ProjectType.GpuImageEffect =>
+                        GPUEffectWriter.FullSourceCode(
+                            userCode, projectName, buildForm.isAdjustment, buildForm.SubMenu, buildForm.MenuItemName, buildForm.IconPath, buildForm.URL,
+                            buildForm.RenderingFlags, buildForm.RenderingSchedule, buildForm.Author, buildForm.MajorVer, buildForm.MinorVer,
+                            buildForm.Description, buildForm.KeyWords, buildForm.WindowTitle, buildForm.HelpType, buildForm.HelpStr)
+                };
 
-                        buildSucceeded = ScriptBuilder.BuildEffectDll(classicSourceCode, scriptPath, buildForm.IconPath, buildForm.HelpType);
-                    }
+                buildSucceeded = ScriptBuilder.BuildEffectDll(effectSourceCode, scriptPath, buildForm.IconPath, buildForm.HelpType);
+            }
+            else if (projectType == ProjectType.FileType)
+            {
+                using BuildFileTypeDialog buildFileTypeDialog = new BuildFileTypeDialog(fileName, userCode, canCreateSln);
+                if (buildFileTypeDialog.ShowDialog() != DialogResult.OK)
+                {
+                    return;
+                }
 
-                    break;
-                case ProjectType.BitmapEffect:
-                    using (BuildForm buildForm = new BuildForm(fileName, txtCode.Text, scriptPath, ProjectType.BitmapEffect, canCreateSln))
-                    {
-                        if (buildForm.ShowDialog() != DialogResult.OK)
-                        {
-                            return;
-                        }
+                string fileTypeSourceCode = FileTypeWriter.FullSourceCode(
+                    userCode, projectName, buildFileTypeDialog.Author, buildFileTypeDialog.Major, buildFileTypeDialog.Minor,
+                    buildFileTypeDialog.URL, buildFileTypeDialog.Description, buildFileTypeDialog.LoadExt, buildFileTypeDialog.SaveExt,
+                    buildFileTypeDialog.Layers, buildFileTypeDialog.PluginName);
 
-                        string bitMapSourceCode = BitmapEffectWriter.FullSourceCode(
-                            txtCode.Text, Path.GetFileNameWithoutExtension(scriptPath), buildForm.isAdjustment,
-                            buildForm.SubMenu, buildForm.MenuItemName, buildForm.IconPath, buildForm.URL, buildForm.RenderingFlags,
-                            buildForm.RenderingSchedule, buildForm.Author, buildForm.MajorVer, buildForm.MinorVer,
-                            buildForm.Description, buildForm.KeyWords, buildForm.WindowTitle, buildForm.HelpType, buildForm.HelpStr);
-
-                        buildSucceeded = ScriptBuilder.BuildEffectDll(bitMapSourceCode, scriptPath, buildForm.IconPath, buildForm.HelpType);
-                    }
-
-                    break;
-                case ProjectType.GpuDrawEffect:
-                case ProjectType.GpuImageEffect:
-                    using (BuildForm buildForm = new BuildForm(fileName, txtCode.Text, scriptPath, tabStrip1.SelectedTabProjType, canCreateSln))
-                    {
-                        if (buildForm.ShowDialog() != DialogResult.OK)
-                        {
-                            return;
-                        }
-
-                        string gpuSourceCode = "";
-
-                        if (tabStrip1.SelectedTabProjType == ProjectType.GpuImageEffect)
-                        {
-                            gpuSourceCode += GPUEffectWriter.FullSourceCode(
-                                txtCode.Text, Path.GetFileNameWithoutExtension(scriptPath), buildForm.isAdjustment,
-                                buildForm.SubMenu, buildForm.MenuItemName, buildForm.IconPath, buildForm.URL, buildForm.RenderingFlags,
-                                buildForm.RenderingSchedule, buildForm.Author, buildForm.MajorVer, buildForm.MinorVer,
-                                buildForm.Description, buildForm.KeyWords, buildForm.WindowTitle, buildForm.HelpType, buildForm.HelpStr);
-                        }
-                        else if (tabStrip1.SelectedTabProjType == ProjectType.GpuDrawEffect)
-                        {
-                            gpuSourceCode += GPUDrawWriter.FullSourceCode(
-                                txtCode.Text, Path.GetFileNameWithoutExtension(scriptPath), buildForm.isAdjustment,
-                                buildForm.SubMenu, buildForm.MenuItemName, buildForm.IconPath, buildForm.URL, buildForm.RenderingFlags,
-                                buildForm.RenderingSchedule, buildForm.Author, buildForm.MajorVer, buildForm.MinorVer,
-                                buildForm.Description, buildForm.KeyWords, buildForm.WindowTitle, buildForm.HelpType, buildForm.HelpStr);
-                        }
-
-                        buildSucceeded = ScriptBuilder.BuildEffectDll(gpuSourceCode, scriptPath, buildForm.IconPath, buildForm.HelpType);
-                    }
-
-                    break;
-                case ProjectType.FileType:
-                    using (BuildFileTypeDialog buildFileTypeDialog = new BuildFileTypeDialog(fileName, txtCode.Text, canCreateSln))
-                    {
-                        if (buildFileTypeDialog.ShowDialog() != DialogResult.OK)
-                        {
-                            return;
-                        }
-
-                        string projectName = Path.GetFileNameWithoutExtension(scriptPath);
-
-                        string fileTypeSourceCode = FileTypeWriter.FullSourceCode(
-                            txtCode.Text, projectName, buildFileTypeDialog.Author, buildFileTypeDialog.Major, buildFileTypeDialog.Minor,
-                            buildFileTypeDialog.URL, buildFileTypeDialog.Description, buildFileTypeDialog.LoadExt, buildFileTypeDialog.SaveExt,
-                            buildFileTypeDialog.Layers, buildFileTypeDialog.PluginName);
-
-                        buildSucceeded = ScriptBuilder.BuildFileTypeDll(fileTypeSourceCode, projectName);
-                    }
-
-                    break;
+                buildSucceeded = ScriptBuilder.BuildFileTypeDll(fileTypeSourceCode, projectName);
             }
 
             if (buildSucceeded)
             {
-                string fullPath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.DesktopDirectory);
-                fullPath = Path.Combine(fullPath, fileName);
-                string zipPath = Path.ChangeExtension(fullPath, ".zip");
+                string zipPath = Path.Combine(
+                    System.Environment.GetFolderPath(System.Environment.SpecialFolder.DesktopDirectory),
+                    Path.ChangeExtension(fileName, ".zip"));
 
                 string succeeded = "Build succeeded!\r\n\r\n" +
                     "\"" + fileName + ".zip\" has been created on your Desktop.\r\n" +
