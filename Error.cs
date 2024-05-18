@@ -78,19 +78,14 @@ namespace PdnCodeLab
 
         public override string ToString()
         {
-            switch (this.errorType)
+            return this.errorType switch
             {
-                case ErrorType.CSharp:
-                    return $"{(this.IsWarning ? "Warning" : "Error")} at line {this.StartLine + 1}: {this.ErrorText} ({this.ErrorNumber})";
-                case ErrorType.Xaml:
-                    return this.ErrorText;
-                case ErrorType.Internal:
-                    return $"Internal Error: {this.ErrorText}";
-                case ErrorType.Exception:
-                    return this.ErrorText;
-            }
-
-            return string.Empty;
+                ErrorType.CSharp => $"{(this.IsWarning ? "Warning" : "Error")} at line {this.StartLine + 1}: {this.ErrorText} ({this.ErrorNumber})",
+                ErrorType.Xaml => this.ErrorText,
+                ErrorType.Internal => $"Internal Error: {this.ErrorText}",
+                ErrorType.Exception => this.ErrorText,
+                _ => string.Empty,
+            };
         }
 
         public int CompareTo(Error other)

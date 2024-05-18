@@ -1144,21 +1144,15 @@ namespace PdnCodeLab
             }
 
             char suffix = this.GetCharAt(numEnd + 1).ToUpperInvariant();
-            switch (suffix)
+            return suffix switch
             {
-                case 'F':
-                    return typeof(float);
-                case 'L':
-                    return typeof(long);
-                case 'D':
-                    return typeof(double);
-                case 'M':
-                    return typeof(decimal);
-                case 'U':
-                    return (this.GetCharAt(numEnd + 2).ToUpperInvariant() == 'L') ? typeof(ulong) : typeof(uint);
-                default:
-                    return (foundDecimal) ? typeof(double) : typeof(int);
-            }
+                'F' => typeof(float),
+                'L' => typeof(long),
+                'D' => typeof(double),
+                'M' => typeof(decimal),
+                'U' => (this.GetCharAt(numEnd + 2).ToUpperInvariant() == 'L') ? typeof(ulong) : typeof(uint),
+                _ => (foundDecimal) ? typeof(double) : typeof(int),
+            };
         }
 
         private Tuple<int, int> GetMethodBounds(int position)
@@ -1570,21 +1564,15 @@ namespace PdnCodeLab
                 return IntelliType.None;
             }
 
-            switch (memberInfo.MemberType)
+            return memberInfo.MemberType switch
             {
-                case MemberTypes.Property:
-                    return IntelliType.Property;
-                case MemberTypes.Method:
-                    return IntelliType.Method;
-                case MemberTypes.Field:
-                    return IntelliType.Field;
-                case MemberTypes.Event:
-                    return IntelliType.Event;
-                case MemberTypes.NestedType:
-                    return IntelliType.Type;
-            }
-
-            return IntelliType.None;
+                MemberTypes.Property => IntelliType.Property,
+                MemberTypes.Method => IntelliType.Method,
+                MemberTypes.Field => IntelliType.Field,
+                MemberTypes.Event => IntelliType.Event,
+                MemberTypes.NestedType => IntelliType.Type,
+                _ => IntelliType.None,
+            };
         }
 
         private void HighlightWordUsage()
@@ -2481,17 +2469,11 @@ namespace PdnCodeLab
 
         internal void GoToDefinition(bool msDocs)
         {
-            bool success = false;
-
-            switch (this.Lexer)
+            bool success = this.Lexer switch
             {
-                case Lexer.Cpp:
-                    success = GoToDefinitionCSharp(msDocs);
-                    break;
-                case Lexer.Xml:
-                    success = GoToDefinitionXaml();
-                    break;
-            }
+                Lexer.Cpp => GoToDefinitionCSharp(msDocs),
+                Lexer.Xml => GoToDefinitionXaml()
+            };
 
             if (!success)
             {
@@ -3799,16 +3781,11 @@ namespace PdnCodeLab
                     }
 
                     int style = this.GetStyleAt(bracePos1);
-                    bool correctStyle = false;
-                    switch (this.Lexer)
+                    bool correctStyle = this.Lexer switch
                     {
-                        case Lexer.Cpp:
-                            correctStyle = (style == Style.Cpp.Operator || style == Style.Cpp.Operator + Preprocessor);
-                            break;
-                        case Lexer.Xml:
-                            correctStyle = (style == Style.Xml.Tag || style == Style.Xml.TagUnknown);
-                            break;
-                    }
+                        Lexer.Cpp => (style == Style.Cpp.Operator || style == Style.Cpp.Operator + Preprocessor),
+                        Lexer.Xml => (style == Style.Xml.Tag || style == Style.Xml.TagUnknown)
+                    };
 
                     if (bracePos1 > InvalidPosition && correctStyle)
                     {
@@ -4805,18 +4782,12 @@ namespace PdnCodeLab
 
                 if (tooltipText == null)
                 {
-                    switch (this.Lexer)
+                    tooltipText = this.Lexer switch
                     {
-                        case Lexer.Cpp:
-                            tooltipText = this.GetIntelliTipCSharp(e.Position);
-                            break;
-                        case Lexer.Xml:
-                            tooltipText = this.GetIntelliTipXaml(e.Position);
-                            break;
-                        default:
-                            tooltipText = string.Empty;
-                            break;
-                    }
+                        Lexer.Cpp => this.GetIntelliTipCSharp(e.Position),
+                        Lexer.Xml => this.GetIntelliTipXaml(e.Position),
+                        _ => string.Empty,
+                    };
                 }
 
                 if (tooltipText.Length > 0)

@@ -546,21 +546,15 @@ namespace PdnCodeLab
 
         internal static Type GetReturnType(this MemberInfo member)
         {
-            switch (member.MemberType)
+            return member.MemberType switch
             {
-                case MemberTypes.Property:
-                    return ((PropertyInfo)member).PropertyType;
-                case MemberTypes.Method:
-                    return ((MethodInfo)member).ReturnType;
-                case MemberTypes.Field:
-                    return ((FieldInfo)member).FieldType;
-                case MemberTypes.Event:
-                    return ((EventInfo)member).EventHandlerType;
-                case MemberTypes.NestedType:
-                    return (Type)member;
-            }
-
-            return null;
+                MemberTypes.Property => ((PropertyInfo)member).PropertyType,
+                MemberTypes.Method => ((MethodInfo)member).ReturnType,
+                MemberTypes.Field => ((FieldInfo)member).FieldType,
+                MemberTypes.Event => ((EventInfo)member).EventHandlerType,
+                MemberTypes.NestedType => (Type)member,
+                _ => null,
+            };
         }
 
         internal static bool IsObsolete(this MemberInfo member)
