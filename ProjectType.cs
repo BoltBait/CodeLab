@@ -5,7 +5,7 @@ namespace PdnCodeLab
 {
     public enum ProjectType
     {
-        None,
+        PlainText,
         ClassicEffect,
         GpuImageEffect,
         GpuDrawEffect,
@@ -54,14 +54,14 @@ namespace PdnCodeLab
             ProjectType projectType = FromContentImpl(textContents);
 
             if (fileExtension is null ||
-                projectType == ProjectType.None ||
+                projectType == ProjectType.PlainText ||
                 (fileExtension.Equals(".cs", StringComparison.OrdinalIgnoreCase) && projectType.IsCSharp()) ||
                 (fileExtension.Equals(".xaml", StringComparison.OrdinalIgnoreCase) && projectType == ProjectType.Shape))
             {
                 return projectType;
             }
 
-            return ProjectType.None;
+            return ProjectType.PlainText;
         }
 
         private static ProjectType FromContentImpl(string textContents)
@@ -96,7 +96,7 @@ namespace PdnCodeLab
                 return ProjectType.Shape;
             }
 
-            return ProjectType.None;
+            return ProjectType.PlainText;
         }
     }
 }

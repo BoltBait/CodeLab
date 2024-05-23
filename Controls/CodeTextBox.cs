@@ -4861,7 +4861,7 @@ namespace PdnCodeLab
 
             switch (projectType)
             {
-                case ProjectType.None:
+                case ProjectType.PlainText:
                     this.Lexer = Lexer.Null;
                     break;
                 case ProjectType.ClassicEffect:

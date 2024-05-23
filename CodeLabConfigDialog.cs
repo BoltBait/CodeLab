@@ -240,7 +240,7 @@ namespace PdnCodeLab
             ClearErrorList();
 
             ProjectType projType = tabStrip1.SelectedTabProjType;
-            if (projType == ProjectType.None || projType == ProjectType.Reference)
+            if (projType == ProjectType.PlainText || projType == ProjectType.Reference)
             {
                 return;
             }
@@ -296,7 +296,7 @@ namespace PdnCodeLab
         private async Task BuildAsync()
         {
             ProjectType projType = tabStrip1.SelectedTabProjType;
-            if (projType == ProjectType.None || projType == ProjectType.Shape)
+            if (projType == ProjectType.PlainText || projType == ProjectType.Shape)
             {
                 return;
             }
@@ -634,7 +634,7 @@ namespace PdnCodeLab
             bool isCSharp;
             switch (tabStrip1.SelectedTabProjType)
             {
-                case ProjectType.None:
+                case ProjectType.PlainText:
                     fileExt = ".txt";
                     description = "Plain Text";
                     isCSharp = false;
@@ -1007,7 +1007,7 @@ namespace PdnCodeLab
 
         private void CreateNewPlainText()
         {
-            CreateNewProjectTab(ProjectType.None);
+            CreateNewProjectTab(ProjectType.PlainText);
         }
 
         private void CreateNewFileType()
@@ -1665,7 +1665,7 @@ namespace PdnCodeLab
             bool hasText = txtCode.TextLength > 0;
             bool isTextSelected = hasText && txtCode.SelectedText.Length > 0;
             bool cSharp = tabStrip1.SelectedTabProjType.IsCSharp();
-            bool showDef = tabStrip1.SelectedTabProjType != ProjectType.None;
+            bool showDef = tabStrip1.SelectedTabProjType != ProjectType.PlainText;
 
             this.cutToolStripMenuItem.Enabled = isTextSelected;
             this.copyToolStripMenuItem.Enabled = isTextSelected;
@@ -2059,7 +2059,7 @@ namespace PdnCodeLab
         {
             ProjectType projectType = tabStrip1.SelectedTabProjType;
 
-            bool useWordWrap = (projectType == ProjectType.None) ? Settings.WordWrapPlainText : Settings.WordWrap;
+            bool useWordWrap = (projectType == ProjectType.PlainText) ? Settings.WordWrapPlainText : Settings.WordWrap;
             txtCode.WrapMode = useWordWrap ? WrapMode.Whitespace : WrapMode.None;
 
             DisableButtonsForRef(projectType == ProjectType.Reference);
