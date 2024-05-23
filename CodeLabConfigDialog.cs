@@ -631,44 +631,29 @@ namespace PdnCodeLab
             string fileName = tabStrip1.SelectedTabTitle;
             string fileExt;
             string description;
-            bool isCSharp;
-            switch (tabStrip1.SelectedTabProjType)
+
+            ProjectType projectType = tabStrip1.SelectedTabProjType;
+            switch (projectType)
             {
                 case ProjectType.PlainText:
                     fileExt = ".txt";
                     description = "Plain Text";
-                    isCSharp = false;
                     break;
                 case ProjectType.Shape:
                     fileExt = ".xaml";
                     description = "XAML Shape";
-                    isCSharp = false;
                     break;
-                case ProjectType.ClassicEffect:
-                case ProjectType.FileType:
                 default:
                     fileExt = ".cs";
                     description = "C# Code";
-                    isCSharp = true;
                     break;
             }
 
-            if (isCSharp && fileName.Equals("Untitled", StringComparison.Ordinal))
+            if (fileName.Equals("Untitled", StringComparison.Ordinal))
             {
-                Match wtn = Regex.Match(txtCode.Text, @"//[\s-[\r\n]]*Name[\s-[\r\n]]*:[\s-[\r\n]]*(?<scriptName>.*)(?=\r?\n|$)", RegexOptions.IgnoreCase);
-                if (wtn.Success)
-                {
-                    string scriptName = wtn.Groups["scriptName"].Value.Trim();
-                    if (scriptName.Length > 0)
-                    {
-                        fileName = scriptName;
-                    }
-                }
-
-                if (fileName.Equals("Untitled", StringComparison.Ordinal))
-                {
-                    fileName = "MyScript";
-                }
+                fileName = TryExtractName(txtCode.Text, projectType, out string extractedName)
+                    ? extractedName
+                    : $"My{projectType}";
             }
 
             SaveFileDialog sfd = new SaveFileDialog
@@ -684,7 +669,7 @@ namespace PdnCodeLab
 
             sfd.FileOk += (sender, e) =>
             {
-                if (isCSharp && !char.IsLetter(Path.GetFileName(sfd.FileName), 0))
+                if (projectType.IsCSharp() && !char.IsLetter(Path.GetFileName(sfd.FileName), 0))
                 {
                     e.Cancel = true;
                     FlexibleMessageBox.Show("The filename must begin with a letter.", "Save User Script", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -1335,6 +1320,33 @@ namespace PdnCodeLab
             Opacity = SaveOpacitySetting;
 #endif
         }
+
+        private static bool TryExtractName(string userText, ProjectType projectType, out string extractedName)
+        {
+            extractedName = null;
+
+            if (projectType.IsCSharp())
+            {
+                Match wtn = Regex.Match(userText, @"//[\s-[\r\n]]*Name[\s-[\r\n]]*:[\s-[\r\n]]*(?<scriptName>.*)(?=\r?\n|$)", RegexOptions.IgnoreCase);
+                if (wtn.Success)
+                {
+                    string scriptName = wtn.Groups["scriptName"].Value.Trim();
+                    if (scriptName.Length > 0)
+                    {
+                        extractedName = scriptName;
+                    }
+                }
+            }
+            else if (projectType == ProjectType.Shape)
+            {
+                if (ShapeBuilder.TryExtractShapeName(userText, out string shapeName))
+                {
+                    extractedName = shapeName;
+                }
+            }
+
+            return extractedName != null;
+        }
         #endregion
 
         #region File Menu Event functions
@@ -1945,17 +1957,16 @@ namespace PdnCodeLab
 
                 ToolStripMenuItem recentItem = new ToolStripMenuItem();
 
-                string menuText = $"&{count} {Path.GetFileName(itemPath)}";
+                string fileName = Path.GetFileName(itemPath);
+                string menuText = $"&{count} {fileName}";
                 try
                 {
-                    Match wtn = Regex.Match(File.ReadAllText(itemPath), @"//[\s-[\r\n]]*Name[\s-[\r\n]]*:[\s-[\r\n]]*(?<menulabel>.*)(?=\r?\n|$)", RegexOptions.IgnoreCase);
-                    if (wtn.Success)
+                    string fileExtension = Path.GetExtension(itemPath);
+                    string fileContents = File.ReadAllText(itemPath);
+                    ProjectType projectType = ProjectTypeUtil.FromContents(fileContents, fileExtension);
+                    if (TryExtractName(fileContents, projectType, out string extractedName))
                     {
-                        string scriptName = wtn.Groups["menulabel"].Value.Trim();
-                        if (scriptName.Length > 0)
-                        {
-                            menuText = $"&{count} {scriptName} ({Path.GetFileName(itemPath)})";
-                        }
+                        menuText = $"&{count} {extractedName} ({fileName})";
                     }
                 }
                 catch

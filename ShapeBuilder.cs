@@ -20,6 +20,37 @@ namespace PdnCodeLab
             return geometry != null;
         }
 
+        internal static bool TryExtractShapeName(string shapeCode, out string shapeName)
+        {
+            shapeName = null;
+
+            if (string.IsNullOrWhiteSpace(shapeCode))
+            {
+                return false;
+            }
+
+            XDocument xDoc = TryParseXDocument(shapeCode);
+            if (xDoc == null)
+            {
+                return false;
+            }
+
+            XElement docElement = xDoc.Root;
+            if (docElement.Name.LocalName != "SimpleGeometryShape" || !docElement.HasAttributes)
+            {
+                return false;
+            }
+
+            XAttribute nameAttribute = docElement.Attribute("DisplayName");
+            if (nameAttribute == null || string.IsNullOrWhiteSpace(nameAttribute.Value))
+            {
+                return false;
+            }
+
+            shapeName = nameAttribute.Value;
+            return shapeName != null;
+        }
+
         internal static Geometry GeometryFromRawString(string shapeCode)
         {
             error = null;
