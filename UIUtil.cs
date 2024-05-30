@@ -1,5 +1,6 @@
 ﻿using PaintDotNet;
 using PaintDotNet.AppModel;
+using PaintDotNet.DirectWrite;
 using PaintDotNet.Drawing;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,39 @@ namespace PdnCodeLab
         private static readonly Assembly assembly = Assembly.GetExecutingAssembly();
         internal static readonly Image EmptyImage = new Bitmap(16, 16);
         private static IShellService iShellService;
+
+        internal static IReadOnlyCollection<string> FontList { get; } = BuildFontList();
+
+        private static IReadOnlyCollection<string> BuildFontList()
+        {
+            List<string> installedMonoFonts = new List<string>();
+            using IDirectWriteFactory dwFactory = DirectWriteFactory.CreateRef();
+            using IFontCollection fontCollection = dwFactory.GetSystemFontCollection(false);
+            for (int familyIndex = 0; familyIndex < fontCollection.FontFamilyCount; familyIndex++)
+            {
+                using IFontFamily fontFamily = fontCollection.GetFontFamily(familyIndex);
+                for (int fontIndex = 0; fontIndex < fontFamily.FontCount; fontIndex++)
+                {
+                    using IFont font = fontFamily.GetFont(fontIndex);
+                    if (font.IsMonospacedFont)
+                    {
+                        installedMonoFonts.Add(fontFamily.GetFamilyName());
+                        break;
+                    }
+                }
+            }
+
+            string[] recommendedFonts = ["Cascadia Code", "Consolas", "Courier New", "Envy Code R", "Fira Code", "Hack", "JetBrains Mono"];
+
+            return recommendedFonts
+                .Where(x => !installedMonoFonts.Contains(x, StringComparer.Ordinal))
+                .Select(x => x + '*')
+                .Concat(installedMonoFonts)
+                .Append("Verdana")
+                .Order(StringComparer.OrdinalIgnoreCase)
+                .ToList()
+                .AsReadOnly();
+        }
 
         internal static void SetIShellService(IShellService shellService)
         {
@@ -96,10 +130,7 @@ namespace PdnCodeLab
 
         internal static bool IsFontInstalled(string fontName)
         {
-            using (Font font = new Font(fontName, 12f))
-            {
-                return font.Name == fontName;
-            }
+            return FontList.Any(font => font.Equals(fontName, StringComparison.Ordinal));
         }
 
         internal static string[] GetColorNames(bool includeTransparent)

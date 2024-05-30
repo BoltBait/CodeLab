@@ -414,7 +414,6 @@
             // 
             fontCombobox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             fontCombobox.FormattingEnabled = true;
-            fontCombobox.Items.AddRange(new object[] { "Cascadia Code", "Consolas", "Courier New", "Envy Code R", "Fira Code", "Hack", "JetBrains Mono", "Verdana" });
             fontCombobox.Location = new System.Drawing.Point(32, 270);
             fontCombobox.Name = "fontCombobox";
             fontCombobox.Size = new System.Drawing.Size(166, 23);

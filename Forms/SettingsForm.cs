@@ -2,7 +2,6 @@
 
 using PaintDotNet.Effects;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -32,14 +31,8 @@ namespace PdnCodeLab
             showWhiteSpaceCheckbox.Checked = Settings.WhiteSpace;
             indentSpacesComboBox.SelectedIndex = Settings.IndentSpaces == 4 ? 1 : 0;
             largeFontCheckbox.Checked = Settings.LargeFonts;
-            for (int i = 0; i < fontCombobox.Items.Count; i++)
-            {
-                if (!UIUtil.IsFontInstalled(fontCombobox.Items[i].ToString()))
-                {
-                    fontCombobox.Items[i] = fontCombobox.Items[i].ToString() + "*";
-                }
-            }
-            fontCombobox.SelectedIndex = fontCombobox.FindString(Settings.FontFamily);
+            fontCombobox.Items.AddRange(UIUtil.FontList.ToArray());
+            fontCombobox.SelectedIndex = fontCombobox.FindStringExact(Settings.FontFamily);
             themeCombobox.Text = Settings.EditorTheme.ToString();
             extendedColorsCheckBox.Checked = Settings.ExtendedColors;
 
