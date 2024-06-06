@@ -216,12 +216,18 @@ namespace PdnCodeLab
         {
             if (Initializing) { return; }
             string SelectedFont = fontCombobox.Text;
-            if (SelectedFont.EndsWith("*", StringComparison.Ordinal))
+            if (SelectedFont.EndsWith('*'))
             {
-                SelectedFont = SelectedFont[0..^1];
-                FlexibleMessageBox.Show(SelectedFont + " is not installed on your system.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                string previousFont = Settings.FontFamily;
+                fontCombobox.SelectedIndex = fontCombobox.FindStringExact(previousFont);
+
+                string notInstalled = $"{SelectedFont[..^1]} is not installed on your system.\r\n\r\nSwitching back to {previousFont}.";
+                FlexibleMessageBox.Show(notInstalled, "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
-            Settings.FontFamily = SelectedFont;
+            else
+            {
+                Settings.FontFamily = SelectedFont;
+            }
         }
 
         private void largeFontCheckbox_CheckedChanged(object sender, EventArgs e)
