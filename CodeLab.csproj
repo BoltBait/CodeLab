@@ -24,9 +24,6 @@
     <Optimize>false</Optimize>
     <OutputPath>bin\FastDebug\</OutputPath>
     <DefineConstants>FASTDEBUG;DEBUG;TRACE</DefineConstants>
-    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    <TargetFramework>net8.0-windows10.0.17763.0</TargetFramework>
-    <WindowsSdkPackageVersion>10.0.22621.31</WindowsSdkPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject></StartupObject>
@@ -101,7 +98,6 @@
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.9.2" PrivateAssets="all" />
     <PackageReference Include="PlatformSpellCheck" Version="1.1.0" PrivateAssets="all" />
     <PackageReference Include="PluralizeService.Core" Version="1.2.21147.2" PrivateAssets="all" />
-    <PackageReference Include="TerraFX.Interop.Windows" Version="10.0.22621.6" PrivateAssets="all" Condition=" '$(Configuration)|$(Platform)' == 'FastDebug|AnyCPU' " />
   </ItemGroup>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Exec Command="if $(ConfigurationName)==FastDebug goto end&#xD;&#xA;&#xD;&#xA;if not exist &quot;$(TargetDir)Merged\&quot; mkdir &quot;$(TargetDir)Merged\&quot;&#xD;&#xA;&#xD;&#xA;set deps=ScintillaNET.dll Microsoft.CodeAnalysis.CSharp.dll Microsoft.CodeAnalysis.dll PluralizeService.Core.dll PlatformSpellCheck.dll&#xD;&#xA;&#xD;&#xA;cd &quot;$(TargetDir)&quot;&#xD;&#xA;&#xD;&#xA;if $(ConfigurationName)==Release (&#xD;&#xA;    $(ILRepack) /ndebug /out:Merged\$(TargetFileName) $(TargetFileName) %25deps%25&#xD;&#xA;    cmd /c explorer &quot;$(TargetDir)Merged&quot;&#xD;&#xA;) else if $(ConfigurationName)==Debug (&#xD;&#xA;    $(ILRepack) /out:Merged\$(TargetFileName) $(TargetFileName) %25deps%25&#xD;&#xA;    copy &quot;$(TargetDir)Merged\$(TargetFileName)&quot; &quot;C:\Program Files\Paint.NET\Effects\&quot;&#xD;&#xA;    copy &quot;$(TargetDir)Merged\$(TargetName).pdb&quot; &quot;C:\Program Files\Paint.NET\Effects\&quot;&#xD;&#xA;)&#xD;&#xA;&#xD;&#xA;:end&#xD;&#xA;exit 0" />
