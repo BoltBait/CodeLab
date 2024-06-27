@@ -70,6 +70,7 @@ namespace PdnCodeLab
         private int previousLine = 0;
         private int dwellWordPos = InvalidPosition;
         private int lastCaretPos = 0;
+        private int lastTextLength = 0;
         private bool mapScroll = false;
         private bool Replacing = false;
         private int maxLineNumberCharLength = 0;
@@ -3741,6 +3742,7 @@ namespace PdnCodeLab
                 }
 
                 int caretPos = this.CurrentPosition;
+                int textLength = this.TextLength;
 
                 if (this.autoBraceOpenPos != InvalidPosition)
                 {
@@ -3750,10 +3752,11 @@ namespace PdnCodeLab
                     }
                 }
 
-                // Has the caret changed position?
-                if (this.Lexer != Lexer.Null && lastCaretPos != caretPos)
+                // Has the caret changed position? Caret position doesn't change with Delete key, so check text length
+                if (this.Lexer != Lexer.Null && (caretPos != lastCaretPos || textLength != lastTextLength))
                 {
                     lastCaretPos = caretPos;
+                    lastTextLength = textLength;
 
                     HighlightWordUsage();
 
