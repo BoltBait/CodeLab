@@ -38,7 +38,7 @@ namespace PdnCodeLab
 #if FASTDEBUG
         : PdnBaseForm
 #else
-        : EffectConfigForm
+        : EffectConfigForm2
 #endif
     {
         #region Constructor

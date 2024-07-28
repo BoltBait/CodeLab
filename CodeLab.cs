@@ -197,8 +197,8 @@ namespace PdnCodeLab
                 using IBitmap<ColorBgra32> outputBitmap = outputLock.CreateSharedBitmap();
                 using IBitmap<ColorPbgra32> outputBitmapP = outputBitmap.CreatePremultipliedAdapter(PremultipliedAdapterOptions.UnPremultiplyOnDispose | PremultipliedAdapterOptions.PremultiplyOnCreate);
                 using IDeviceContext outputDC = d2dFactory.CreateBitmapDeviceContext(outputBitmapP);
-                using ISolidColorBrush strokeBrush = outputDC.CreateSolidColorBrush(this.Environment.PrimaryColor);
-                using ISolidColorBrush solidBrush = outputDC.CreateSolidColorBrush(this.Environment.SecondaryColor);
+                using ISolidColorBrush strokeBrush = outputDC.CreateSolidColorBrush(this.Environment.PrimaryColor.GetSrgb());
+                using ISolidColorBrush solidBrush = outputDC.CreateSolidColorBrush(this.Environment.SecondaryColor.GetSrgb());
 
                 using (outputDC.UseBeginDraw())
                 {

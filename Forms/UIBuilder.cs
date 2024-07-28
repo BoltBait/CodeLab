@@ -30,7 +30,7 @@ namespace PdnCodeLab
     internal partial class UIBuilder : ChildFormBase
     {
         internal string UIControlsText;
-        private readonly IEffectEnvironment environmentParameters;
+        private readonly IEffectEnvironment2 environmentParameters;
         private readonly IServiceProvider serviceProvider;
         private readonly ProjectType projectType;
         private bool dirty = false;
@@ -61,7 +61,7 @@ namespace PdnCodeLab
             UIUtil.GetImage("18Layers")
         };
 
-        internal UIBuilder(string UserScriptText, ProjectType projectType, IServiceProvider serviceProvider, IEffectEnvironment environmentParameters)
+        internal UIBuilder(string UserScriptText, ProjectType projectType, IServiceProvider serviceProvider, IEffectEnvironment2 environmentParameters)
         {
             InitializeComponent();
 
