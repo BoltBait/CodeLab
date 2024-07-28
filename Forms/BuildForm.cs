@@ -702,8 +702,10 @@ namespace PdnCodeLab
         {
             byte[] buffer = Encoding.UTF8.GetBytes(text);
             using MemoryStream memoryStream = new MemoryStream();
-            using GZipStream gZipStream = new GZipStream(memoryStream, CompressionMode.Compress, true);
-            gZipStream.Write(buffer, 0, buffer.Length);
+            using (GZipStream gZipStream = new GZipStream(memoryStream, CompressionMode.Compress, true))
+            {
+                gZipStream.Write(buffer, 0, buffer.Length);
+            }
 
             memoryStream.Position = 0;
 
@@ -727,8 +729,10 @@ namespace PdnCodeLab
 
             byte[] buffer = new byte[dataLength];
 
-            using GZipStream gZipStream = new GZipStream(memoryStream, CompressionMode.Decompress);
-            gZipStream.ReadExactly(buffer, 0, buffer.Length);
+            using (GZipStream gZipStream = new GZipStream(memoryStream, CompressionMode.Decompress))
+            {
+                gZipStream.ReadExactly(buffer, 0, buffer.Length);
+            }
 
             return Encoding.UTF8.GetString(buffer);
         }
