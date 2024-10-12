@@ -37,7 +37,23 @@ namespace PdnCodeLab
                     using IFont font = fontFamily.GetFont(fontIndex);
                     if (font.IsMonospacedFont)
                     {
-                        installedMonoFonts.Add(fontFamily.GetFamilyName());
+                        ILocalizedStrings langTags = font.TryGetInformationalStrings(InformationalStringID.DesignScriptLanguageTag);
+                        if (langTags != null)
+                        {
+                            for (int i = 0; i < langTags.Count; i++)
+                            {
+                                if (langTags.GetString(i) == "Latn")
+                                {
+                                    installedMonoFonts.Add(fontFamily.GetFamilyName());
+                                    break;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            installedMonoFonts.Add(fontFamily.GetFamilyName());
+                        }
+
                         break;
                     }
                 }
