@@ -4,6 +4,7 @@ using PaintDotNet.Effects;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 
 namespace PdnCodeLab
 {
@@ -59,25 +60,9 @@ namespace PdnCodeLab
                     return fontFamily;
                 }
 
-                fontFamily = "Cascadia Mono";
-                if (UIUtil.IsFontInstalled(fontFamily))
-                {
-                    return fontFamily;
-                }
+                string[] fallbackFonts = ["Cascadia Mono", "Consolas", "Courier New"];
 
-                fontFamily = "Consolas";
-                if (UIUtil.IsFontInstalled(fontFamily))
-                {
-                    return fontFamily;
-                }
-
-                fontFamily = "Courier New";
-                if (UIUtil.IsFontInstalled(fontFamily))
-                {
-                    return fontFamily;
-                }
-
-                return "Verdana";
+                return fallbackFonts.FirstOrDefault(font => UIUtil.IsFontInstalled(font), "Verdana");
             }
             set => SetRegValue("FontFamily", value);
         }

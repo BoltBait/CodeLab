@@ -62,7 +62,7 @@ namespace PdnCodeLab
             string[] recommendedFonts = ["Cascadia Code", "Consolas", "Courier New", "Envy Code R", "Fira Code", "Hack", "JetBrains Mono"];
 
             return recommendedFonts
-                .Where(x => !installedMonoFonts.Contains(x, StringComparer.Ordinal))
+                .Except(installedMonoFonts, StringComparer.Ordinal)
                 .Select(x => x + '*')
                 .Concat(installedMonoFonts)
                 .Append("Verdana")
@@ -146,7 +146,7 @@ namespace PdnCodeLab
 
         internal static bool IsFontInstalled(string fontName)
         {
-            return FontList.Any(font => font.Equals(fontName, StringComparison.Ordinal));
+            return FontList.Contains(fontName, StringComparer.Ordinal);
         }
 
         internal static string[] GetColorNames(bool includeTransparent)

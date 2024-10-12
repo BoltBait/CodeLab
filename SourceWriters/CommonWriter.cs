@@ -115,16 +115,11 @@ namespace PdnCodeLab
             // Enumerate the user controls
             PropertyPart += "        public enum PropertyNames\r\n";
             PropertyPart += "        {\r\n";
-            int x = 0;
-            foreach (UIElement u in UserControls)
-            {
-                x++;
-                if (x != 1)
-                {
-                    PropertyPart += ",\r\n";
-                }
-                PropertyPart += "            " + u.Identifier.FirstCharToUpper();
-            }
+
+            PropertyPart += UserControls
+                .Select(u => "            " + u.Identifier.FirstCharToUpper())
+                .Join(",\r\n");
+
             PropertyPart += "\r\n";
 
             PropertyPart += "        }\r\n";
@@ -137,16 +132,11 @@ namespace PdnCodeLab
                     string identifier = u.Identifier.FirstCharToUpper();
                     PropertyPart += "        public enum " + identifier + "Options\r\n";
                     PropertyPart += "        {\r\n";
-                    int z = 0;
-                    foreach (string Option in u.ToOptionArray())
-                    {
-                        z++;
-                        if (z != 1)
-                        {
-                            PropertyPart += ",\r\n";
-                        }
-                        PropertyPart += "            " + identifier + "Option" + z.ToString();
-                    }
+
+                    PropertyPart += u.ToOptionArray()
+                        .Select((_, z) => $"            {identifier}Option{z + 1}")
+                        .Join(",\r\n");
+
                     PropertyPart += "\r\n";
                     PropertyPart += "        }\r\n";
                     PropertyPart += "\r\n";
