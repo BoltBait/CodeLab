@@ -230,6 +230,37 @@ namespace PdnCodeLab
             }
         }
 
+        private void fontCombobox_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            if (e.Index == -1)
+            {
+                return;
+            }
+
+            e.DrawBackground();
+
+            string fontName = fontCombobox.Items[e.Index].ToString();
+            bool installed = !fontName.EndsWith('*');
+
+            if (installed)
+            {
+                int notEqualCharWidth = e.Bounds.Height + 2;
+                using Font font = new Font(fontName, e.Font.SizeInPoints);
+
+                Rectangle fontNameRect = Rectangle.FromLTRB(e.Bounds.Left, e.Bounds.Top, e.Bounds.Right - notEqualCharWidth, e.Bounds.Bottom);
+                TextRenderer.DrawText(e.Graphics, fontName, font, fontNameRect, e.ForeColor, TextFormatFlags.VerticalCenter | TextFormatFlags.EndEllipsis);
+
+                Rectangle notEqualRect = Rectangle.FromLTRB(e.Bounds.Right - notEqualCharWidth, e.Bounds.Top, e.Bounds.Right, e.Bounds.Bottom);
+                TextRenderer.DrawText(e.Graphics, "!=", font, notEqualRect, e.ForeColor, TextFormatFlags.VerticalCenter | TextFormatFlags.Right);
+            }
+            else
+            {
+                TextRenderer.DrawText(e.Graphics, fontName, e.Font, e.Bounds, e.ForeColor, TextFormatFlags.VerticalCenter | TextFormatFlags.EndEllipsis);
+            }
+
+            e.DrawFocusRectangle();
+        }
+
         private void largeFontCheckbox_CheckedChanged(object sender, EventArgs e)
         {
             if (Initializing) { return; }

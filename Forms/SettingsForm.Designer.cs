@@ -412,12 +412,14 @@
             // 
             // fontCombobox
             // 
+            fontCombobox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             fontCombobox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             fontCombobox.FormattingEnabled = true;
             fontCombobox.Location = new System.Drawing.Point(32, 270);
             fontCombobox.Name = "fontCombobox";
             fontCombobox.Size = new System.Drawing.Size(166, 23);
             fontCombobox.TabIndex = 12;
+            fontCombobox.DrawItem += fontCombobox_DrawItem;
             fontCombobox.SelectedIndexChanged += fontCombobox_SelectedIndexChanged;
             // 
             // label2
