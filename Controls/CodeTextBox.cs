@@ -114,6 +114,7 @@ namespace PdnCodeLab
             }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         internal IReadOnlyCollection<int> Bookmarks
         {
             get
@@ -138,6 +139,7 @@ namespace PdnCodeLab
             }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         internal bool LineNumbersEnabled
         {
             get
@@ -159,6 +161,7 @@ namespace PdnCodeLab
             }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         internal bool OffsetLineNumbersEnabled
         {
             get
@@ -185,6 +188,7 @@ namespace PdnCodeLab
             }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         internal bool BookmarksEnabled
         {
             get
@@ -206,6 +210,7 @@ namespace PdnCodeLab
             }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         internal bool CodeFoldingEnabled
         {
             get
@@ -228,6 +233,7 @@ namespace PdnCodeLab
             }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         internal bool MapEnabled
         {
             get
@@ -249,11 +255,13 @@ namespace PdnCodeLab
             }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         internal bool IsVirgin
         {
             get => !(this.CanUndo || this.CanRedo) && this.Text.Equals(DefaultCode.Default);
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         internal bool CaretLineFrameEnabled
         {
             get
@@ -276,12 +284,14 @@ namespace PdnCodeLab
             }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         internal bool DisableAutoComplete
         {
             get;
             set;
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         internal bool UseExtendedColors
         {
             get
@@ -300,6 +310,7 @@ namespace PdnCodeLab
             }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         internal bool SpellcheckEnabled
         {
             get
@@ -330,6 +341,7 @@ namespace PdnCodeLab
             }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         internal bool SuppressContextMenu
         {
             get => this.suppressContextMenu;
@@ -5400,9 +5412,13 @@ namespace PdnCodeLab
 
         private class DocMeta
         {
+            [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
             internal int ScrollPos { get; }
+            [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
             internal int AnchorPos { get; }
+            [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
             internal int CaretPos { get; }
+            [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
             internal IEnumerable<int> FoldedLines { get; }
 
             internal DocMeta(int scrollPos, int anchorPos, int caretPos, IEnumerable<int> foldedLines)

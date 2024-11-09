@@ -27,6 +27,7 @@ using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using System.ComponentModel;
 
 namespace PdnCodeLab
 {
@@ -1193,6 +1194,7 @@ namespace PdnCodeLab
 
             internal IntelliType IntelliType { get; }
 
+            [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
             internal bool Active
             {
                 get

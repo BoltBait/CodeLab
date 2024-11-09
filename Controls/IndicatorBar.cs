@@ -5,6 +5,7 @@ using PaintDotNet.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using System.ComponentModel;
 
 namespace PdnCodeLab
 {
@@ -63,6 +64,7 @@ namespace PdnCodeLab
         }
 
         #region Properties
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         internal Theme Theme
         {
             get
@@ -112,6 +114,7 @@ namespace PdnCodeLab
             }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         internal int Caret
         {
             get
@@ -125,6 +128,7 @@ namespace PdnCodeLab
             }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         internal IEnumerable<int> Errors
         {
             get
@@ -138,6 +142,7 @@ namespace PdnCodeLab
             }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         internal IEnumerable<int> Warnings
         {
             get
@@ -151,6 +156,7 @@ namespace PdnCodeLab
             }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         internal IEnumerable<int> Matches
         {
             get
@@ -164,6 +170,7 @@ namespace PdnCodeLab
             }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         internal IEnumerable<int> Bookmarks
         {
             get
@@ -177,6 +184,7 @@ namespace PdnCodeLab
             }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         internal int Value
         {
             get
@@ -201,6 +209,7 @@ namespace PdnCodeLab
             }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         internal int Maximum
         {
             get
@@ -224,6 +233,7 @@ namespace PdnCodeLab
             }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         internal int LargeChange
         {
             get

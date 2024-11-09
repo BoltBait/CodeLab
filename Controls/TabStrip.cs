@@ -52,6 +52,7 @@ namespace PdnCodeLab
             get => activeTab.Guid;
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         internal ProjectType SelectedTabProjType
         {
             get => activeTab.ProjectType;
@@ -63,6 +64,7 @@ namespace PdnCodeLab
             }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         internal string SelectedTabTitle
         {
             get => activeTab.Title;
@@ -73,6 +75,7 @@ namespace PdnCodeLab
             }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         internal string SelectedTabPath
         {
             get => activeTab.Path;
@@ -89,6 +92,7 @@ namespace PdnCodeLab
             }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         internal bool SelectedTabIsDirty
         {
             get => activeTab.IsDirty;
@@ -298,12 +302,19 @@ namespace PdnCodeLab
 
         private sealed class Tab : ScaledToolStripButton
         {
+            [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
             internal int Index { get; set; }
+            [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
             internal Guid Guid { get; }
+            [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
             internal ProjectType ProjectType { get; set; }
+            [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
             internal bool IsDirty { get; set; }
+            [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
             internal string Title { get; set; }
+            [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
             internal string Path { get; set; }
+            [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
             internal Rectangle CloseRect => closeRect;
 
             [Browsable(false)]

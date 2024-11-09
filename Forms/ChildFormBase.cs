@@ -43,6 +43,7 @@ namespace PdnCodeLab
         }
 
         [Category(nameof(CategoryAttribute.Appearance))]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public string IconName
         {
             get => this.iconName;

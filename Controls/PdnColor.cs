@@ -48,6 +48,7 @@ namespace PdnCodeLab
 
         #region Control Properties
         [Category(nameof(CategoryAttribute.Data))]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public Color Color
         {
             get => HSVColor.ToColor(MasterAlpha, MasterHue, MasterSat, MasterVal);
@@ -66,6 +67,7 @@ namespace PdnCodeLab
         }
 
         [Category(nameof(CategoryAttribute.Behavior))]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public bool ShowAlpha
         {
             get => showAlpha;
@@ -608,6 +610,7 @@ namespace PdnCodeLab
     {
         #region Properties
         [Category(nameof(CategoryAttribute.Data))]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public float Value
         {
             get => this.value;
@@ -620,6 +623,7 @@ namespace PdnCodeLab
         }
 
         [Category(nameof(CategoryAttribute.Behavior))]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public int MaxValue
         {
             get => this.maxValue;
@@ -627,6 +631,7 @@ namespace PdnCodeLab
         }
 
         [Category(nameof(CategoryAttribute.Appearance))]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public Color[] Colors
         {
             get => this.colors;

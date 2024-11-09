@@ -9,6 +9,7 @@
  */
 using PaintDotNet;
 using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
@@ -851,11 +852,13 @@ namespace PdnCodeLab
             /// <summary>
             /// The text that is been used for the heading.
             /// </summary>
+            [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
             public string CaptionText { get; set; }
 
             /// <summary>
             /// The text that is been used in the FlexibleMessageBoxForm.
             /// </summary>
+            [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
             public string MessageText { get; set; }
 
             #endregion

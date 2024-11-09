@@ -23,6 +23,7 @@ using PaintDotNet.Effects.Gpu;
 using ScintillaNET;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -159,6 +160,7 @@ namespace PdnCodeLab
 
         #region Token functions
 #if !FASTDEBUG
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public new CodeLabConfigToken Token
         {
             get => (CodeLabConfigToken)base.Token;

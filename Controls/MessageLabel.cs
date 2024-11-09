@@ -17,6 +17,7 @@ namespace PdnCodeLab
         public MessageType MessageType { get; set; }
 
         [Editor(typeof(MultilineStringEditor), typeof(UITypeEditor))]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public override string Text
         {
             get => base.Text;

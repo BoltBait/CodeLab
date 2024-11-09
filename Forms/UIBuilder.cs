@@ -1324,6 +1324,7 @@ namespace PdnCodeLab
     {
         private ProjectType projectType = ProjectType.Default;
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         internal ProjectType ProjectType
         {
             get
@@ -1344,6 +1345,7 @@ namespace PdnCodeLab
             }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         internal ElementType SelectedElementType
         {
             get

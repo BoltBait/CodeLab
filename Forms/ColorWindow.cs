@@ -13,6 +13,7 @@
 //
 // Latest distribution: https://www.BoltBait.com/pdn/codelab
 /////////////////////////////////////////////////////////////////////////////////
+using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -25,12 +26,14 @@ namespace PdnCodeLab
             InitializeComponent();
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         internal Color Color
         {
             get => pdnColor1.Color;
             set => pdnColor1.Color = value;
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         internal bool ShowAlpha
         {
             get => pdnColor1.ShowAlpha;

@@ -16,6 +16,7 @@ using ScintillaNET;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using System.ComponentModel;
 
 namespace PdnCodeLab
 {
@@ -39,6 +40,7 @@ namespace PdnCodeLab
         }
 
         #region Properties
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         internal string Term
         {
             get
@@ -64,6 +66,7 @@ namespace PdnCodeLab
             }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         internal bool ShowReplace
         {
             set
@@ -98,6 +101,7 @@ namespace PdnCodeLab
             }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         internal int Matches
         {
             set
