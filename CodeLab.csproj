@@ -95,7 +95,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.12.0-2.final" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.12.0-3.final" PrivateAssets="all" />
     <PackageReference Include="PlatformSpellCheck" Version="1.1.0" PrivateAssets="all" />
     <PackageReference Include="PluralizeService.Core" Version="1.2.21147.2" PrivateAssets="all" />
   </ItemGroup>
