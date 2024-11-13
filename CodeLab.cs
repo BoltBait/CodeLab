@@ -146,7 +146,7 @@ namespace PdnCodeLab
                     using IEffectEnvironment environment = this.renderingFlags.HasFlag(BitmapEffectRenderingFlags.ForceAliasedSelectionQuality)
                         ? this.Environment.CreateRef()
                         : this.Environment.CloneWithAliasedSelection();
-                    using (IEffect effect = userEffect.EffectInfo.CreateInstance(this.Services, environment))
+                    using (IEffect effect = userEffect.EffectInfo.CreateInstance(new ServiceProviderWrapper(this.Services), environment))
                     {
                         this.renderer = effect.CreateRenderer<IBitmapEffectRenderer>();
                     }
