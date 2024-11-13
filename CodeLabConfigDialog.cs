@@ -401,7 +401,7 @@ namespace PdnCodeLab
             }
 
 #if !FASTDEBUG
-            using IEffect effect = ScriptBuilder.BuiltEffect.EffectInfo.CreateInstance(this.Services, this.Environment);
+            using IEffect effect = ScriptBuilder.BuiltEffect.EffectInfo.CreateInstance(new ServiceProviderWrapper(this.Services), this.Environment);
             using IEffectConfigForm previewDialog = effect.CreateConfigForm();
             {
                 previewToken = previewDialog.Token;
