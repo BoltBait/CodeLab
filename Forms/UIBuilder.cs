@@ -1111,7 +1111,7 @@ namespace PdnCodeLab
                 emptySurface.Fill(ColorBgra.White);
                 using IBitmap<ColorBgra32> bitmap = emptySurface.CreateSharedBitmap();
                 using IEffectEnvironment enviroParams = environmentParameters.CloneWithNewSource(bitmap);
-                using IEffect effect = ScriptBuilder.BuiltEffect.EffectInfo.CreateInstance(this.serviceProvider, enviroParams);
+                using IEffect effect = ScriptBuilder.BuiltEffect.EffectInfo.CreateInstance(new ServiceProviderWrapper(this.serviceProvider), enviroParams);
                 using IEffectConfigForm effectConfigDialog = effect.CreateConfigForm();
                 effectConfigDialog.ShowDialog(this);
             }
