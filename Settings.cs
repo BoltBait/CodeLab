@@ -188,7 +188,7 @@ namespace PdnCodeLab
 
         internal static bool ExtendedColors
         {
-            get => GetRegValue("ExtendedColors", true);
+            get => GetRegValue("ExtendedColors", false);
             set => SetRegValue("ExtendedColors", value);
         }
 
