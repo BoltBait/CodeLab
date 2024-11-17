@@ -165,12 +165,12 @@ namespace PdnCodeLab
             PropertyPart += "        {\r\n";
 
             // Check to see if we're including a color wheel without an alpha slider
-            if (UserControls.Any(u => u.ElementType == ElementType.ColorWheel && !u.ColorWheelOptions.HasFlag(ColorWheelOptions.Alpha)))
+            if (UserControls.Any(u => u.ElementType == ElementType.ColorWheel))// && !u.ColorWheelOptions.HasFlag(ColorWheelOptions.Alpha)))
             {
                 if (projectType.Is5Effect())
                 {
-                    PropertyPart += "            ColorBgra32 PrimaryColor = Environment.PrimaryColor with { A = byte.MaxValue };\r\n";
-                    PropertyPart += "            ColorBgra32 SecondaryColor = Environment.SecondaryColor with { A = byte.MaxValue };\r\n";
+                    PropertyPart += "            ManagedColor PrimaryColor = this.Environment.PrimaryColor;\r\n";
+                    PropertyPart += "            ManagedColor SecondaryColor = this.Environment.SecondaryColor;\r\n";
                 }
                 else
                 {
@@ -237,60 +237,74 @@ namespace PdnCodeLab
                     case ElementType.ColorWheel:
                         ColorControlCount++;
                         bool includeAlpha = u.ColorWheelOptions.HasFlag(ColorWheelOptions.Alpha);
-                        if (u.StrDefault != "")
+                        if (!projectType.Is5Effect())
                         {
-                            if (!includeAlpha) // no alpha slider
+                            // Classic effect
+                            if (u.StrDefault != "")
                             {
-                                if (u.StrDefault == "PrimaryColor" || u.StrDefault == "SecondaryColor")
+                                if (!includeAlpha) // no alpha slider
                                 {
-                                    PropertyPart += "            props.Add(new Int32Property(PropertyNames." + propertyName + ", ColorBgra.ToOpaqueInt32(" + u.StrDefault + "), 0, 0xffffff));\r\n";
+                                    if (u.StrDefault == "PrimaryColor" || u.StrDefault == "SecondaryColor")
+                                    {
+                                        PropertyPart += "            props.Add(new Int32Property(PropertyNames." + propertyName + ", ColorBgra.ToOpaqueInt32(" + u.StrDefault + "), 0, 0xffffff));\r\n";
+                                    }
+                                    else
+                                    {
+                                        PropertyPart += "            props.Add(new Int32Property(PropertyNames." + propertyName + ", ColorBgra.ToOpaqueInt32(ColorBgra." + u.StrDefault + "), 0, 0xffffff));\r\n";
+                                    }
                                 }
-                                else
+                                else // include alpha slider
                                 {
-                                    PropertyPart += "            props.Add(new Int32Property(PropertyNames." + propertyName + ", ColorBgra.ToOpaqueInt32(ColorBgra." + u.StrDefault + "), 0, 0xffffff));\r\n";
+                                    if (u.StrDefault == "PrimaryColor" || u.StrDefault == "SecondaryColor")
+                                    {
+                                        PropertyPart += "            props.Add(new Int32Property(PropertyNames." + propertyName + ", unchecked((int)EnvironmentParameters." + u.StrDefault + ".Bgra), Int32.MinValue, Int32.MaxValue));\r\n";
+                                    }
+                                    else
+                                    {
+                                        PropertyPart += "            props.Add(new Int32Property(PropertyNames." + propertyName + ", unchecked((int)ColorBgra." + u.StrDefault + ".Bgra), Int32.MinValue, Int32.MaxValue));\r\n";
+                                    }
                                 }
                             }
-                            else // include alpha slider
+                            else
                             {
-                                if (u.StrDefault == "PrimaryColor" || u.StrDefault == "SecondaryColor")
+                                if (!includeAlpha) // no alpha slider
                                 {
-                                    PropertyPart += "            props.Add(new Int32Property(PropertyNames." + propertyName + ", unchecked((int)EnvironmentParameters." + u.StrDefault + ".Bgra), Int32.MinValue, Int32.MaxValue));\r\n";
+                                    if (ColorControlCount < 2)
+                                    {
+                                        // First color wheel defaults to Primary Color
+                                        PropertyPart += "            props.Add(new Int32Property(PropertyNames." + propertyName + ", ColorBgra.ToOpaqueInt32(PrimaryColor), 0, 0xffffff));\r\n";
+                                    }
+                                    else
+                                    {
+                                        // Second color wheel (and beyond) defaults to Secondary Color
+                                        PropertyPart += "            props.Add(new Int32Property(PropertyNames." + propertyName + ", ColorBgra.ToOpaqueInt32(SecondaryColor), 0, 0xffffff));\r\n";
+                                    }
                                 }
-                                else
+                                else  // include alpha slider
                                 {
-                                    PropertyPart += "            props.Add(new Int32Property(PropertyNames." + propertyName + ", unchecked((int)ColorBgra." + u.StrDefault + ".Bgra), Int32.MinValue, Int32.MaxValue));\r\n";
+                                    if (ColorControlCount < 2)
+                                    {
+                                        // First color wheel defaults to Primary Color
+                                        PropertyPart += "            props.Add(new Int32Property(PropertyNames." + propertyName + ", unchecked((Int32)EnvironmentParameters.PrimaryColor.Bgra), Int32.MinValue, Int32.MaxValue));\r\n";
+                                    }
+                                    else
+                                    {
+                                        // Second color wheel (and beyond) defaults to Secondary Color
+                                        PropertyPart += "            props.Add(new Int32Property(PropertyNames." + propertyName + ", unchecked((Int32)EnvironmentParameters.SecondaryColor.Bgra), Int32.MinValue, Int32.MaxValue));\r\n";
+                                    }
                                 }
                             }
                         }
                         else
                         {
-                            if (!includeAlpha) // no alpha slider
+                            // v5+ effect
+                            if (u.StrDefault == "PrimaryColor" || u.StrDefault == "SecondaryColor")
                             {
-                                if (ColorControlCount < 2)
-                                {
-                                    // First color wheel defaults to Primary Color
-                                    PropertyPart += "            props.Add(new Int32Property(PropertyNames." + propertyName + ", ColorBgra.ToOpaqueInt32(PrimaryColor), 0, 0xffffff));\r\n";
-                                }
-                                else
-                                {
-                                    // Second color wheel (and beyond) defaults to Secondary Color
-                                    PropertyPart += "            props.Add(new Int32Property(PropertyNames." + propertyName + ", ColorBgra.ToOpaqueInt32(SecondaryColor), 0, 0xffffff));\r\n";
-                                }
+                                PropertyPart += "            props.Add(new ManagedColorProperty(PropertyNames." + propertyName + ", " + u.StrDefault + ", ManagedColorPropertyAlphaMode." + ((includeAlpha) ? "SupportsAlpha" : "OpaqueOnly") + "));\r\n";
                             }
-                            else  // include alpha slider
+                            else
                             {
-                                string environment = projectType.Is5Effect() ? "Environment" : "EnvironmentParameters";
-
-                                if (ColorControlCount < 2)
-                                {
-                                    // First color wheel defaults to Primary Color
-                                    PropertyPart += "            props.Add(new Int32Property(PropertyNames." + propertyName + ", unchecked((int)" + environment + ".PrimaryColor.Bgra), Int32.MinValue, Int32.MaxValue));\r\n";
-                                }
-                                else
-                                {
-                                    // Second color wheel (and beyond) defaults to Secondary Color
-                                    PropertyPart += "            props.Add(new Int32Property(PropertyNames." + propertyName + ", unchecked((int)" + environment + ".SecondaryColor.Bgra), Int32.MinValue, Int32.MaxValue));\r\n";
-                                }
+                                PropertyPart += "            props.Add(new ManagedColorProperty(PropertyNames." + propertyName + ", " + propertyName + ", ManagedColorPropertyAlphaMode." + ((includeAlpha) ? "SupportsAlpha" : "OpaqueOnly") + "));\r\n";
                             }
                         }
                         break;
@@ -869,13 +883,20 @@ namespace PdnCodeLab
                         tokenValues += $"            {u.Identifier} = {tokenName}.GetProperty<BooleanProperty>(PropertyNames.{propertyName}).Value;\r\n";
                         break;
                     case ElementType.ColorWheel:
-                        if (!u.ColorWheelOptions.HasFlag(ColorWheelOptions.Alpha))
+                        if (gpuEffect)
                         {
-                            tokenValues += $"            {u.Identifier} = ColorBgra.FromOpaqueInt32({tokenName}.GetProperty<Int32Property>(PropertyNames.{propertyName}).Value);\r\n";
+                            tokenValues += $"            {u.Identifier} = newToken.GetProperty<ManagedColorProperty>(PropertyNames.{propertyName})!.Value;\r\n";
                         }
                         else
                         {
-                            tokenValues += $"            {u.Identifier} = ColorBgra.FromUInt32(unchecked((uint){tokenName}.GetProperty<Int32Property>(PropertyNames.{propertyName}).Value));\r\n";
+                            if (!u.ColorWheelOptions.HasFlag(ColorWheelOptions.Alpha))
+                            {
+                                tokenValues += $"            {u.Identifier} = ColorBgra.FromOpaqueInt32({tokenName}.GetProperty<Int32Property>(PropertyNames.{propertyName}).Value);\r\n";
+                            }
+                            else
+                            {
+                                tokenValues += $"            {u.Identifier} = ColorBgra.FromUInt32(unchecked((uint){tokenName}.GetProperty<Int32Property>(PropertyNames.{propertyName}).Value));\r\n";
+                            }
                         }
                         break;
                     case ElementType.AngleChooser:

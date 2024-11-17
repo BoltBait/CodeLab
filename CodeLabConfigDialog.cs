@@ -1,8 +1,8 @@
 ﻿/////////////////////////////////////////////////////////////////////////////////
 // CodeLab for Paint.NET
 // Copyright ©2006 Rick Brewster, Tom Jackson. All Rights Reserved.
-// Portions Copyright ©2007-2023 BoltBait. All Rights Reserved.
-// Portions Copyright ©2016-2023 Jason Wendt. All Rights Reserved.
+// Portions Copyright ©2007-2024 BoltBait. All Rights Reserved.
+// Portions Copyright ©2016-2024 Jason Wendt. All Rights Reserved.
 // Portions Copyright ©Microsoft Corporation. All Rights Reserved.
 //
 // THE CODELAB DEVELOPERS MAKE NO WARRANTY OF ANY KIND REGARDING THE CODE. THEY

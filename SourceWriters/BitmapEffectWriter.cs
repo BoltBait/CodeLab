@@ -44,7 +44,7 @@ namespace PdnCodeLab
             + "using PaintDotNet.Collections;\r\n"
             + "using PaintDotNet.PropertySystem;\r\n"
             + "using PaintDotNet.Rendering;\r\n"
-            + "using ColorWheelControl = PaintDotNet.Imaging.ColorBgra32;\r\n"
+            + "using ColorWheelControl = PaintDotNet.Imaging.ManagedColor;\r\n"
             + "using AngleControl = System.Double;\r\n"
             + "using PanSliderControl = PaintDotNet.Rendering.Vector2Double;\r\n"
             + "using FolderControl = System.String;\r\n"
@@ -169,7 +169,7 @@ namespace PdnCodeLab
 
             if (UserControls.Length > 0)
             {
-                setToken += CommonWriter.TokenValuesPart(UserControls, "newToken");
+                setToken += CommonWriter.TokenValuesPart(UserControls, "newToken", true);
             }
 
             setToken +=

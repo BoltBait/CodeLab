@@ -2080,11 +2080,49 @@ namespace PdnCodeLab
                     if (ColorWheelOptions.HasFlag(ColorWheelOptions.Alpha))
                     {
                         alphaStyle = "?";
-                        SourceCode += " = ColorBgra.FromBgra(" + rgb + ", 255)";
+                        if (projectType == ProjectType.ClassicEffect)
+                        {
+                            SourceCode += " = ColorBgra.FromBgra(" + rgb + ", 255)";
+                        }
+                        else
+                        {
+                            // v5+
+                            if (StrDefault.Trim() == "PrimaryColor" || StrDefault.Trim() == "")
+                            {
+                                SourceCode += " = ColorWheelControl.Create(SrgbColors.Black)";
+                            }
+                            else if (StrDefault.Trim() == "SecondaryColor")
+                            {
+                                SourceCode += " = ColorWheelControl.Create(SrgbColors.White)";
+                            }
+                            else
+                            {
+                                SourceCode += " = ColorWheelControl.Create(SrgbColors." + StrDefault + ")";
+                            }
+                        }
                     }
                     else
                     {
-                        SourceCode += " = ColorBgra.FromBgr(" + rgb + ")";
+                        if (projectType == ProjectType.ClassicEffect)
+                        {
+                            SourceCode += " = ColorBgra.FromBgr(" + rgb + ")";
+                        }
+                        else
+                        {
+                            // v5+
+                            if (StrDefault.Trim() == "PrimaryColor" || StrDefault.Trim() == "")
+                            {
+                                SourceCode += " = ColorWheelControl.Create(SrgbColors.Black)";
+                            }
+                            else if (StrDefault.Trim() == "SecondaryColor")
+                            {
+                                SourceCode += " = ColorWheelControl.Create(SrgbColors.White)";
+                            }
+                            else
+                            {
+                                SourceCode += " = ColorWheelControl.Create(SrgbColors." + StrDefault + ")";
+                            }
+                        }
                     }
 
                     SourceCode += "; // ";

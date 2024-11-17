@@ -163,7 +163,7 @@ namespace PdnCodeLab
 
             if (toDll && UserControls.Length > 0)
             {
-                SetRenderPart += CommonWriter.TokenValuesPart(UserControls, "token");
+                SetRenderPart += CommonWriter.TokenValuesPart(UserControls, "token", false);
             }
 
             if (PreRenderExists)
