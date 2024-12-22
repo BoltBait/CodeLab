@@ -27,7 +27,7 @@ using System.Windows.Forms;
 
 namespace PdnCodeLab
 {
-    internal partial class UIBuilder : ChildFormBase
+    internal partial class UIBuilder : ChildFormBase, IToolTipHost
     {
         internal string UIControlsText;
         private readonly IEffectEnvironment2 environmentParameters;
@@ -1317,6 +1317,11 @@ namespace PdnCodeLab
             }
             OptionsText.ForeColor = error ? Color.Black : Color.Black;
             OptionsText.BackColor = error ? Color.FromArgb(246, 97, 81) : Color.White;
+        }
+
+        void IToolTipHost.ThemeToolTip()
+        {
+            toolTip1.UpdateTheme();
         }
     }
 

@@ -17,6 +17,8 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
@@ -29,9 +31,14 @@ namespace PdnCodeLab
         Dark
     }
 
-    internal interface IToolTipControl
+    internal interface IIntelliTipHost
     {
         void ThemeToolTip(Color toolTipFore, Color toolTipBack);
+    }
+
+    internal interface IToolTipHost
+    {
+        void ThemeToolTip();
     }
 
     internal static class ThemeUtil
@@ -98,6 +105,11 @@ namespace PdnCodeLab
             form.ForeColor = foreColor;
             form.BackColor = backColor;
 
+            if (form is IToolTipHost toolTipHost)
+            {
+                toolTipHost.ThemeToolTip();
+            }
+
             foreach (Control c in form.Descendants<Control>())
             {
                 if (c.Parent is TabPage || c.Parent is TabControl)
@@ -111,6 +123,11 @@ namespace PdnCodeLab
                         toolStrip.Renderer = (toolStrip.Parent is TabStrip)
                             ? TabBarRenderer
                             : ToolStripRenderer;
+
+                        foreach (ToolStrip ts in toolStrip.Descendants())
+                        {
+                            ts.TryGetToolTip()?.UpdateTheme();
+                        }
 
                         break;
 
@@ -155,9 +172,9 @@ namespace PdnCodeLab
                         break;
                 }
 
-                if (c is IToolTipControl toolTipControl)
+                if (c is IIntelliTipHost intelliTipHost)
                 {
-                    toolTipControl.ThemeToolTip(
+                    intelliTipHost.ThemeToolTip(
                         effectiveDarkMode ? Color.White : Color.FromArgb(30, 30, 30),
                         effectiveDarkMode ? Color.FromArgb(66, 66, 66) : Color.WhiteSmoke);
                 }
@@ -206,6 +223,51 @@ namespace PdnCodeLab
 
             string themeName = enable ? "DarkMode_Explorer" : null;
             SetWindowTheme(hwnd, themeName, null);
+        }
+
+        internal static void UpdateTheme(this ToolTip toolTip)
+        {
+            IntPtr handle = toolTip.TryGetHandle();
+            if (handle != IntPtr.Zero)
+            {
+                bool effectiveDarkMode = currentTheme == Theme.Dark || (currentTheme == Theme.Auto && isAppThemeDark);
+                EnableUxThemeDarkMode(handle, effectiveDarkMode);
+            }
+        }
+
+        private static IEnumerable<ToolStrip> Descendants(this ToolStrip toolStrip)
+        {
+            yield return toolStrip;
+
+            foreach (ToolStripDropDownItem items in toolStrip.Items.OfType<ToolStripDropDownItem>())
+            {
+                foreach (ToolStrip descendant in items.DropDown.Descendants())
+                {
+                    yield return descendant;
+                }
+            }
+        }
+
+        private static ToolTip TryGetToolTip(this ToolStrip toolStrip)
+        {
+            object ToolTipObj = typeof(ToolStrip)
+                .GetProperty("ToolTip", BindingFlags.Instance | BindingFlags.NonPublic)?
+                .GetValue(toolStrip);
+
+            return ToolTipObj is ToolTip toolTip
+                ? toolTip
+                : null;
+        }
+
+        private static IntPtr TryGetHandle(this ToolTip toolTip)
+        {
+            object handleObj = typeof(ToolTip)
+                .GetProperty("Handle", BindingFlags.Instance | BindingFlags.NonPublic)?
+                .GetValue(toolTip);
+
+            return handleObj is IntPtr handleIntPtr
+                ? handleIntPtr
+                : IntPtr.Zero;
         }
 
         private sealed class ThemeRenderer : ToolStripProfessionalRenderer

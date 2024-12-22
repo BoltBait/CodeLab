@@ -23,7 +23,7 @@ using System.Windows.Forms;
 
 namespace PdnCodeLab
 {
-    internal partial class FileNew : ChildFormBase
+    internal partial class FileNew : ChildFormBase, IToolTipHost
     {
         internal string CodeTemplate;
 
@@ -2196,6 +2196,11 @@ namespace PdnCodeLab
                 // Return to safety
                 BasicStyle.Checked = true;
             }
+        }
+
+        void IToolTipHost.ThemeToolTip()
+        {
+            toolTip1.UpdateTheme();
         }
     }
 }

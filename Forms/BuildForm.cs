@@ -23,7 +23,7 @@ using System.Text;
 
 namespace PdnCodeLab
 {
-    internal partial class BuildForm : ChildFormBase
+    internal partial class BuildForm : ChildFormBase, IToolTipHost
     {
         #region Constructor
         internal string IconPath = "";
@@ -1209,6 +1209,11 @@ namespace PdnCodeLab
                     forceLegacyRoiBox.Checked = false;
                 }
             }
+        }
+
+        void IToolTipHost.ThemeToolTip()
+        {
+            toolTip1.UpdateTheme();
         }
     }
 }

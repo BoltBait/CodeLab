@@ -18,7 +18,7 @@ using System.IO;
 
 namespace PdnCodeLab
 {
-    internal partial class ViewSrc : ChildFormBase
+    internal partial class ViewSrc : ChildFormBase, IToolTipHost
     {
         internal ViewSrc(string title, string SourceString, bool isSourceCode, bool offsetLineNumbers = false)
         {
@@ -75,6 +75,11 @@ namespace PdnCodeLab
         private void CopyButton_Click(object sender, EventArgs e)
         {
             System.Windows.Forms.Clipboard.SetText(TextSrcBox.Text);
+        }
+
+        void IToolTipHost.ThemeToolTip()
+        {
+            toolTip1.UpdateTheme();
         }
     }
 }

@@ -36,7 +36,7 @@ using System.Windows.Forms;
 
 namespace PdnCodeLab
 {
-    public sealed class CodeTextBox : Scintilla, IToolTipControl
+    public sealed class CodeTextBox : Scintilla, IIntelliTipHost
     {
         private readonly Timer timer = new Timer();
         private readonly IntelliBox iBox = new IntelliBox();
@@ -737,7 +737,7 @@ namespace PdnCodeLab
                 : Color.GhostWhite;
         }
 
-        void IToolTipControl.ThemeToolTip(Color toolTipFore, Color toolTipBack)
+        void IIntelliTipHost.ThemeToolTip(Color toolTipFore, Color toolTipBack)
         {
             this.intelliTip.UpdateTheme(toolTipFore, toolTipBack);
         }

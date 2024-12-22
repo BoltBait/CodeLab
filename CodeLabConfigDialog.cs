@@ -37,9 +37,9 @@ namespace PdnCodeLab
 {
     internal partial class CodeLabConfigDialog
 #if FASTDEBUG
-        : PdnBaseForm
+        : PdnBaseForm, IToolTipHost
 #else
-        : EffectConfigForm2
+        : EffectConfigForm2, IToolTipHost
 #endif
     {
         #region Constructor
@@ -954,6 +954,11 @@ namespace PdnCodeLab
         private void LaunchUrl(string url)
         {
             UIUtil.LaunchUrl(this, url);
+        }
+
+        void IToolTipHost.ThemeToolTip()
+        {
+            toolTips.UpdateTheme();
         }
         #endregion
 

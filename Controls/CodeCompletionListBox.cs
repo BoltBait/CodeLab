@@ -31,7 +31,7 @@ using System.ComponentModel;
 
 namespace PdnCodeLab
 {
-    internal sealed class IntelliBox : UserControl, IToolTipControl
+    internal sealed class IntelliBox : UserControl, IIntelliTipHost
     {
         private bool listBoxMouseOver;
         private bool toolstripMouseOver;
@@ -1098,7 +1098,7 @@ namespace PdnCodeLab
             }
         }
 
-        void IToolTipControl.ThemeToolTip(Color toolTipFore, Color toolTipBack)
+        void IIntelliTipHost.ThemeToolTip(Color toolTipFore, Color toolTipBack)
         {
             this.itemToolTip.UpdateTheme(toolTipFore, toolTipBack);
             this.filterToolTip.UpdateTheme(toolTipFore, toolTipBack);
