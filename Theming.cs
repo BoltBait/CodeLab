@@ -232,6 +232,7 @@ namespace PdnCodeLab
             {
                 bool effectiveDarkMode = currentTheme == Theme.Dark || (currentTheme == Theme.Auto && isAppThemeDark);
                 EnableUxThemeDarkMode(handle, effectiveDarkMode);
+                SetWindowCorners(handle, true);
             }
         }
 
@@ -246,6 +247,33 @@ namespace PdnCodeLab
                     yield return descendant;
                 }
             }
+        }
+
+        private enum DWMWINDOWATTRIBUTE
+        {
+            DWMWA_WINDOW_CORNER_PREFERENCE = 33
+        }
+
+        private enum DWM_WINDOW_CORNER_PREFERENCE
+        {
+            DWMWCP_DEFAULT = 0,
+            DWMWCP_DONOTROUND = 1,
+            DWMWCP_ROUND = 2,
+            DWMWCP_ROUNDSMALL = 3
+        }
+
+        [DllImport("dwmapi.dll", CharSet = CharSet.Unicode, PreserveSig = false)]
+        private static extern void DwmSetWindowAttribute(IntPtr hwnd, DWMWINDOWATTRIBUTE attribute, ref DWM_WINDOW_CORNER_PREFERENCE pvAttribute, uint cbAttribute);
+
+        private static void SetWindowCorners(IntPtr hwnd, bool rounded)
+        {
+            if (!OperatingSystem.IsWindowsVersionAtLeast(10, 0, 22000))
+            {
+                return;
+            }
+
+            DWM_WINDOW_CORNER_PREFERENCE cornerPreference = rounded ? DWM_WINDOW_CORNER_PREFERENCE.DWMWCP_ROUNDSMALL : DWM_WINDOW_CORNER_PREFERENCE.DWMWCP_DONOTROUND;
+            DwmSetWindowAttribute(hwnd, DWMWINDOWATTRIBUTE.DWMWA_WINDOW_CORNER_PREFERENCE, ref cornerPreference, sizeof(DWM_WINDOW_CORNER_PREFERENCE));
         }
 
         private static ToolTip TryGetToolTip(this ToolStrip toolStrip)
