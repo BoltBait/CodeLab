@@ -18,7 +18,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
-using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
@@ -126,7 +126,7 @@ namespace PdnCodeLab
 
                         foreach (ToolStrip ts in toolStrip.Descendants())
                         {
-                            ts.TryGetToolTip()?.UpdateTheme();
+                            ts.GetToolTip().UpdateTheme();
                         }
 
                         break;
@@ -227,13 +227,10 @@ namespace PdnCodeLab
 
         internal static void UpdateTheme(this ToolTip toolTip)
         {
-            IntPtr handle = toolTip.TryGetHandle();
-            if (handle != IntPtr.Zero)
-            {
-                bool effectiveDarkMode = currentTheme == Theme.Dark || (currentTheme == Theme.Auto && isAppThemeDark);
-                EnableUxThemeDarkMode(handle, effectiveDarkMode);
-                SetWindowCorners(handle, true);
-            }
+            IntPtr handle = toolTip.GetHandle();
+            bool effectiveDarkMode = currentTheme == Theme.Dark || (currentTheme == Theme.Auto && isAppThemeDark);
+            EnableUxThemeDarkMode(handle, effectiveDarkMode);
+            SetWindowCorners(handle, true);
         }
 
         private static IEnumerable<ToolStrip> Descendants(this ToolStrip toolStrip)
@@ -276,27 +273,11 @@ namespace PdnCodeLab
             DwmSetWindowAttribute(hwnd, DWMWINDOWATTRIBUTE.DWMWA_WINDOW_CORNER_PREFERENCE, ref cornerPreference, sizeof(DWM_WINDOW_CORNER_PREFERENCE));
         }
 
-        private static ToolTip TryGetToolTip(this ToolStrip toolStrip)
-        {
-            object ToolTipObj = typeof(ToolStrip)
-                .GetProperty("ToolTip", BindingFlags.Instance | BindingFlags.NonPublic)?
-                .GetValue(toolStrip);
+        [UnsafeAccessor(UnsafeAccessorKind.Method, Name = "get_ToolTip")]
+        private static extern ToolTip GetToolTip(this ToolStrip toolStrip);
 
-            return ToolTipObj is ToolTip toolTip
-                ? toolTip
-                : null;
-        }
-
-        private static IntPtr TryGetHandle(this ToolTip toolTip)
-        {
-            object handleObj = typeof(ToolTip)
-                .GetProperty("Handle", BindingFlags.Instance | BindingFlags.NonPublic)?
-                .GetValue(toolTip);
-
-            return handleObj is IntPtr handleIntPtr
-                ? handleIntPtr
-                : IntPtr.Zero;
-        }
+        [UnsafeAccessor(UnsafeAccessorKind.Method, Name = "get_Handle")]
+        private static extern IntPtr GetHandle(this ToolTip toolStrip);
 
         private sealed class ThemeRenderer : ToolStripProfessionalRenderer
         {
