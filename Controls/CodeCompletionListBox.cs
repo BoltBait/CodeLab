@@ -100,6 +100,7 @@ namespace PdnCodeLab
                 })
                 .ToArray();
 
+            toolStrip.AllowClickThrough = true;
             toolStrip.Items.AddRange(filterButtons);
             toolStrip.Dock = DockStyle.Bottom;
             toolStrip.GripStyle = ToolStripGripStyle.Hidden;

@@ -44,6 +44,7 @@
             // 
             // toolStrip1
             // 
+            this.toolStrip1.AllowClickThrough = true;
             this.toolStrip1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.Toggle,

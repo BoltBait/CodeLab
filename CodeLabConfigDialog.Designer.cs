@@ -1389,6 +1389,7 @@
             // 
             // tabStrip1
             // 
+            toolStrip1.AllowClickThrough = true;
             tabStrip1.AutoSize = true;
             tabStrip1.Dock = System.Windows.Forms.DockStyle.Top;
             tabStrip1.Location = new System.Drawing.Point(0, 51);

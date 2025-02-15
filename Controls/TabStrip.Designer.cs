@@ -35,6 +35,7 @@
             // 
             // toolStrip1
             // 
+            toolStrip1.AllowClickThrough = true;
             toolStrip1.AllowItemReorder = true;
             toolStrip1.Dock = System.Windows.Forms.DockStyle.Fill;
             toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;

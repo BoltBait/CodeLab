@@ -569,6 +569,7 @@ namespace PdnCodeLab
             // 
             // toolStrip1
             // 
+            toolStrip1.AllowClickThrough = true;
             toolStrip1.Dock = System.Windows.Forms.DockStyle.None;
             toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { OpenButton, SaveButton, WordPadButton, toolStripSeparator2, BoldButton, ItalicsButton, UnderlineButton, SuperScriptButton, SubScriptButton, LargeFontButton, SmallFontButton, ColorButton, toolStripSeparator3, InsertImageButton, BulletButton, IndentButton, UnindentButton, ParagraphLeftButton, CenterButton });

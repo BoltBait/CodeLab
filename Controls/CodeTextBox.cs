@@ -803,6 +803,7 @@ namespace PdnCodeLab
             // 
             // lightBulbMenu
             // 
+            this.lightBulbMenu.AllowClickThrough = true;
             this.lightBulbMenu.Dock = DockStyle.None;
             this.lightBulbMenu.GripStyle = ToolStripGripStyle.Hidden;
             this.lightBulbMenu.Items.Add(this.bulbIcon);
