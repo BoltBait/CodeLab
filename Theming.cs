@@ -216,11 +216,6 @@ namespace PdnCodeLab
         /// </summary>
         private static void EnableUxThemeDarkMode(IntPtr hwnd, bool enable)
         {
-            if (!OperatingSystem.IsWindowsVersionAtLeast(10, 0, 17763))
-            {
-                return;
-            }
-
             string themeName = enable ? "DarkMode_Explorer" : null;
             SetWindowTheme(hwnd, themeName, null);
         }
