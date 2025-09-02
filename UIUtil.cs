@@ -138,18 +138,6 @@ namespace PdnCodeLab
             }
         }
 
-        [DllImport("uxtheme.dll", SetLastError = true, ExactSpelling = true, CharSet = CharSet.Unicode)]
-        private static extern int SetWindowTheme(IntPtr hWnd, string pszSubAppName, string pszSubIdList);
-
-        /// <summary>
-        /// Use to set dark scroll bars
-        /// </summary>
-        internal static void EnableUxThemeDarkMode(this Control control, bool enable)
-        {
-            string themeName = enable ? "DarkMode_Explorer" : null;
-            SetWindowTheme(control.Handle, themeName, null);
-        }
-
         #region Copied from internal WinForms Code
         internal static Image CreateDisabledImage(Image normalImage)
         {
