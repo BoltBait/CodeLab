@@ -109,11 +109,6 @@ namespace PdnCodeLab
 
             switch (projectType)
             {
-                case ProjectType.ClassicEffect:
-                    pdnAssemblyNames.Add("PaintDotNet.Effects");
-                    pdnAssemblyNames.Add("PaintDotNet.Effects.Core");
-                    pdnAssemblyNames.Add("PaintDotNet.Effects.Legacy");
-                    break;
                 case ProjectType.GpuDrawEffect:
                 case ProjectType.GpuImageEffect:
                 case ProjectType.BitmapEffect:
@@ -130,7 +125,6 @@ namespace PdnCodeLab
                     pdnAssemblyNames.Add("PaintDotNet.Effects");
                     pdnAssemblyNames.Add("PaintDotNet.Effects.Core");
                     pdnAssemblyNames.Add("PaintDotNet.Effects.Gpu");
-                    pdnAssemblyNames.Add("PaintDotNet.Effects.Legacy");
                     pdnAssemblyNames.Add("PaintDotNet.Windows");
                     pdnAssemblyNames.Add("PaintDotNet.Windows.Core");
                     pdnAssemblyNames.Add("PaintDotNet.Windows.Framework");
@@ -241,7 +235,7 @@ namespace PdnCodeLab
 
             extMethods = extMethodsList;
 
-            if (projectType.Is5Effect())
+            if (projectType.IsEffect())
             {
                 // removed to prevent name collision with properties
                 AllTypes.Remove(nameof(Environment));
@@ -337,7 +331,6 @@ namespace PdnCodeLab
                 "PaintDotNet.Effects",
                 "PaintDotNet.Effects.Core",
                 "PaintDotNet.Effects.Gpu",
-                "PaintDotNet.Effects.Legacy",
                 "PaintDotNet.Framework",
                 "PaintDotNet.Fundamentals",
                 "PaintDotNet.ObjectModel",

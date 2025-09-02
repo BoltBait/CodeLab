@@ -236,10 +236,7 @@ namespace PdnCodeLab
                         bool disableSelectionClipping = this.renderingFlags.HasFlag(BitmapEffectRenderingFlags.DisableSelectionClipping);
                         bool forceAliasedRendering = this.renderingFlags.HasFlag(BitmapEffectRenderingFlags.ForceAliasedSelectionQuality);
 
-                        // Classic effects do not support DisableSelectionClipping
-                        bool isClassicEffect = projectType == ProjectType.ClassicEffect;
-
-                        if (disableSelectionClipping && !isClassicEffect)
+                        if (disableSelectionClipping)
                         {
                             // Render directly to the output buffer
                             this.renderer.Render(outputLock, output.Bounds.Location);

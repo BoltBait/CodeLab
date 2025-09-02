@@ -6,7 +6,6 @@ namespace PdnCodeLab
     public enum ProjectType
     {
         PlainText,
-        ClassicEffect,
         GpuImageEffect,
         GpuDrawEffect,
         BitmapEffect,
@@ -22,7 +21,6 @@ namespace PdnCodeLab
         internal static bool IsCSharp(this ProjectType projectType)
         {
             return
-                projectType == ProjectType.ClassicEffect ||
                 projectType == ProjectType.GpuImageEffect ||
                 projectType == ProjectType.GpuDrawEffect ||
                 projectType == ProjectType.BitmapEffect ||
@@ -30,15 +28,6 @@ namespace PdnCodeLab
         }
 
         internal static bool IsEffect(this ProjectType projectType)
-        {
-            return
-                projectType == ProjectType.ClassicEffect ||
-                projectType == ProjectType.GpuImageEffect ||
-                projectType == ProjectType.GpuDrawEffect ||
-                projectType == ProjectType.BitmapEffect;
-        }
-
-        internal static bool Is5Effect(this ProjectType projectType)
         {
             return
                 projectType == ProjectType.GpuImageEffect ||
@@ -66,11 +55,6 @@ namespace PdnCodeLab
 
         private static ProjectType FromContentImpl(string textContents)
         {
-            if (Regex.IsMatch(textContents, @"void\s+Render\s*\(\s*Surface\s+\w+\s*,\s*Surface\s+\w+\s*,\s*Rectangle\s+\w+\s*\)\s*{(.|\s)*}", RegexOptions.Singleline))
-            {
-                return ProjectType.ClassicEffect;
-            }
-
             if (Regex.IsMatch(textContents, @"protected\s+override\s+void\s+OnRender\s*\(\s*IBitmapEffectOutput\s+\w+\s*\)\s*{(.|\s)*}", RegexOptions.Singleline))
             {
                 return ProjectType.BitmapEffect;

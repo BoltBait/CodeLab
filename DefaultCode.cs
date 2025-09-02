@@ -9,58 +9,12 @@ namespace PdnCodeLab
 
         internal static string ForProjectType(ProjectType projectType) => projectType switch
         {
-            ProjectType.ClassicEffect => ClassicEffect,
             ProjectType.BitmapEffect => BitmapEffect,
             ProjectType.GpuImageEffect => GPUEffect,
             ProjectType.GpuDrawEffect => GPUDrawEffect,
             ProjectType.FileType => FileType,
             _ => string.Empty,
         };
-
-        private const string ClassicEffect = ""
-            + "// Name:\r\n"
-            + "// Submenu:\r\n"
-            + "// Author:\r\n"
-            + "// Title:\r\n"
-            + "// Version:\r\n"
-            + "// Desc:\r\n"
-            + "// Keywords:\r\n"
-            + "// URL:\r\n"
-            + "// Help:\r\n"
-            + "#region UICode\r\n"
-            + "IntSliderControl Amount1 = 0; // [0,100] Slider 1 Description\r\n"
-            + "IntSliderControl Amount2 = 0; // [0,100] Slider 2 Description\r\n"
-            + "IntSliderControl Amount3 = 0; // [0,100] Slider 3 Description\r\n"
-            + "#endregion\r\n"
-            + "\r\n"
-            + "void Render(Surface dst, Surface src, Rectangle rect)\r\n"
-            + "{\r\n"
-            + "    //uint seed = RandomNumber.InitializeSeed(RandomNumberRenderSeed, rect.Location);\r\n"
-            + "    // Delete any of these lines you don't need\r\n"
-            + "    Rectangle selection = EnvironmentParameters.SelectionBounds;\r\n"
-            + "    int centerX = ((selection.Right - selection.Left) / 2) + selection.Left;\r\n"
-            + "    int centerY = ((selection.Bottom - selection.Top) / 2) + selection.Top;\r\n"
-            + "    ColorBgra primaryColor = EnvironmentParameters.PrimaryColor;\r\n"
-            + "    ColorBgra secondaryColor = EnvironmentParameters.SecondaryColor;\r\n"
-            + "    int brushWidth = (int)EnvironmentParameters.BrushWidth;\r\n"
-            + "\r\n"
-            + "    ColorBgra currentPixel;\r\n"
-            + "    for (int y = rect.Top; y < rect.Bottom; y++)\r\n"
-            + "    {\r\n"
-            + "        if (IsCancelRequested) return;\r\n"
-            + "        for (int x = rect.Left; x < rect.Right; x++)\r\n"
-            + "        {\r\n"
-            + "            currentPixel = src[x,y];\r\n"
-            + "            // TODO: Add pixel processing code here\r\n"
-            + "            // Access RGBA values this way, for example:\r\n"
-            + "            // currentPixel.R = RandomNumber.NextByte(ref seed);\r\n"
-            + "            // currentPixel.G = RandomNumber.NextByte(ref seed);\r\n"
-            + "            // currentPixel.B = RandomNumber.NextByte(ref seed);\r\n"
-            + "            // currentPixel.A = primaryColor.A;\r\n"
-            + "            dst[x,y] = currentPixel;\r\n"
-            + "        }\r\n"
-            + "    }\r\n"
-            + "}\r\n";
 
         private const string BitmapEffect = ""
             + "// Name:\r\n"
