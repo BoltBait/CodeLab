@@ -1,6 +1,4 @@
-﻿#pragma warning disable CS4014
-
-using PaintDotNet.Effects;
+﻿using PaintDotNet.Effects;
 using System;
 using System.Drawing;
 using System.Linq;

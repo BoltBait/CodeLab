@@ -13,7 +13,6 @@
 //
 // Latest distribution: https://www.BoltBait.com/pdn/codelab
 /////////////////////////////////////////////////////////////////////////////////
-#pragma warning disable CS4014
 
 using PaintDotNet;
 using PaintDotNet.AppModel;
