@@ -1,6 +1,5 @@
 ﻿using PaintDotNet;
 using PaintDotNet.AppModel;
-using PaintDotNet.DirectWrite;
 using PaintDotNet.Drawing;
 using System;
 using System.Collections.Generic;
@@ -10,7 +9,6 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace PdnCodeLab
@@ -21,55 +19,6 @@ namespace PdnCodeLab
         private static readonly Assembly assembly = Assembly.GetExecutingAssembly();
         internal static readonly Image EmptyImage = new Bitmap(16, 16);
         private static IShellService iShellService;
-
-        internal static IReadOnlyCollection<string> FontList { get; } = BuildFontList();
-
-        private static IReadOnlyCollection<string> BuildFontList()
-        {
-            List<string> installedMonoFonts = new List<string>();
-            using IDirectWriteFactory dwFactory = DirectWriteFactory.CreateRef();
-            using IFontCollection fontCollection = dwFactory.GetSystemFontCollection(false);
-            for (int familyIndex = 0; familyIndex < fontCollection.FontFamilyCount; familyIndex++)
-            {
-                using IFontFamily fontFamily = fontCollection.GetFontFamily(familyIndex);
-                for (int fontIndex = 0; fontIndex < fontFamily.FontCount; fontIndex++)
-                {
-                    using IFont font = fontFamily.GetFont(fontIndex);
-                    if (font.IsMonospacedFont)
-                    {
-                        ILocalizedStrings langTags = font.TryGetInformationalStrings(InformationalStringID.DesignScriptLanguageTag);
-                        if (langTags != null)
-                        {
-                            for (int i = 0; i < langTags.Count; i++)
-                            {
-                                if (langTags.GetString(i) == "Latn")
-                                {
-                                    installedMonoFonts.Add(fontFamily.GetFamilyName());
-                                    break;
-                                }
-                            }
-                        }
-                        else
-                        {
-                            installedMonoFonts.Add(fontFamily.GetFamilyName());
-                        }
-
-                        break;
-                    }
-                }
-            }
-
-            string[] recommendedFonts = ["Cascadia Code", "Consolas", "Courier New", "Envy Code R", "Fira Code", "Hack", "JetBrains Mono"];
-
-            return recommendedFonts
-                .Except(installedMonoFonts, StringComparer.Ordinal)
-                .Select(x => x + '*')
-                .Concat(installedMonoFonts)
-                .Append("Verdana")
-                .Order(StringComparer.OrdinalIgnoreCase)
-                .ToList()
-                .AsReadOnly();
-        }
 
         internal static void SetIShellService(IShellService shellService)
         {
@@ -142,11 +91,6 @@ namespace PdnCodeLab
         internal static Size ScaleSize(int width, int height)
         {
             return new Size(Scale(width), Scale(height));
-        }
-
-        internal static bool IsFontInstalled(string fontName)
-        {
-            return FontList.Contains(fontName, StringComparer.Ordinal);
         }
 
         internal static string[] GetColorNames(bool includeTransparent)

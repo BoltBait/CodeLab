@@ -31,7 +31,7 @@ namespace PdnCodeLab
             showWhiteSpaceCheckbox.Checked = Settings.WhiteSpace;
             indentSpacesComboBox.SelectedIndex = Settings.IndentSpaces == 4 ? 1 : 0;
             largeFontCheckbox.Checked = Settings.LargeFonts;
-            fontCombobox.Items.AddRange(UIUtil.FontList.ToArray());
+            fontCombobox.Items.AddRange(FontUtil.FontList.ToArray());
             fontCombobox.SelectedIndex = fontCombobox.FindStringExact(Settings.FontFamily);
             themeCombobox.Text = Settings.EditorTheme.ToString();
             extendedColorsCheckBox.Checked = Settings.ExtendedColors;

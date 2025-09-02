@@ -55,14 +55,14 @@ namespace PdnCodeLab
             get
             {
                 string fontFamily = GetRegValue("FontFamily", "Cascadia Mono");
-                if (UIUtil.IsFontInstalled(fontFamily))
+                if (FontUtil.IsFontInstalled(fontFamily))
                 {
                     return fontFamily;
                 }
 
                 string[] fallbackFonts = ["Cascadia Mono", "Consolas", "Courier New"];
 
-                return fallbackFonts.FirstOrDefault(font => UIUtil.IsFontInstalled(font), "Verdana");
+                return fallbackFonts.FirstOrDefault(font => FontUtil.IsFontInstalled(font), "Verdana");
             }
             set => SetRegValue("FontFamily", value);
         }
