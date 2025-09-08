@@ -498,10 +498,18 @@ namespace PdnCodeLab
                     ProjectType detectedProjectType = ProjectTypeUtil.FromContents(txtCode.Text, null);
                     if (detectedProjectType != projectType && detectedProjectType.IsCSharp())
                     {
-                        tabStrip1.SelectedTabProjType = detectedProjectType;
-                        UpdateForProjectType();
-                        FlexibleMessageBox.Show($"Project Type has been automatically changed from {projectType} to {detectedProjectType}.", "Project Type Mismatch", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                        return;
+                        if (detectedProjectType == ProjectType.ClassicEffectObsolete)
+                        {
+                            ClassicEffectsUnsupported();
+                        }
+                        else
+                        {
+                            tabStrip1.SelectedTabProjType = detectedProjectType;
+                            UpdateForProjectType();
+                            string message = $"Project Type has been automatically changed from {projectType} to {detectedProjectType}.";
+                            FlexibleMessageBox.Show(message, "Project Type Mismatch", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                            return;
+                        }
                     }
                 }
 
@@ -552,6 +560,12 @@ namespace PdnCodeLab
             AddToRecents(filePath);
 
             ProjectType projType = ProjectTypeUtil.FromContents(fileContents, Path.GetExtension(filePath));
+            bool isClassic = projType == ProjectType.ClassicEffectObsolete;
+
+            if (isClassic)
+            {
+                projType = ProjectType.PlainText;
+            }
 
             bool removedInitTab = tabStrip1.SelectedTabIsInitial && txtCode.IsVirgin;
 
@@ -565,6 +579,11 @@ namespace PdnCodeLab
             txtCode.Text = fileContents;
             txtCode.EmptyUndoBuffer();
             txtCode.SetSavePoint();
+
+            if (isClassic)
+            {
+                ClassicEffectsUnsupported();
+            }
         }
 
         private DialogResult PromptToSave()
@@ -936,6 +955,12 @@ namespace PdnCodeLab
         private void LaunchUrl(string url)
         {
             UIUtil.LaunchUrl(this, url);
+        }
+
+        private void ClassicEffectsUnsupported()
+        {
+            const string message = "The Classic Effects system was removed in Paint.NET 5.2.";
+            FlexibleMessageBox.Show(message, "Classic Effects Unsupported", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         void IToolTipHost.ThemeToolTip()
@@ -1767,8 +1792,19 @@ namespace PdnCodeLab
             }
 
             ProjectType projectType = ProjectTypeUtil.FromContents(clipboardContents, null);
+            bool isClassic = projectType == ProjectType.ClassicEffectObsolete;
+
+            if (isClassic)
+            {
+                projectType = ProjectType.PlainText;
+            }
 
             CreateNewProjectTab(projectType, clipboardContents);
+
+            if (isClassic)
+            {
+                ClassicEffectsUnsupported();
+            }
         }
 
         private void NewButton_DropDownOpening(object sender, EventArgs e)
