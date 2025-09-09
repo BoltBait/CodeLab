@@ -132,8 +132,6 @@ namespace PdnCodeLab
             }
 
             PdnAssemblyNames = pdnAssemblyNames
-                .Append("PaintDotNet.Windows") // PaintDotNet.Windows needed for the Classic Effect constructor that uses a System.Drawing.Bitmap
-                .Distinct()
                 .OrderBy(x => x, StringComparer.Ordinal)
                 .ToImmutableArray();
 
@@ -145,12 +143,7 @@ namespace PdnCodeLab
                 .Where(a => !intelliIgnoreList.Contains(a.GetName().Name, StringComparer.Ordinal))
                 .ToImmutableArray();
 
-            IEnumerable<string> refFilePaths = allAssemblies
-                .Append(allPdnAssemblies.First(a => a.GetName().Name.Equals("PaintDotNet.Windows", StringComparison.Ordinal)))
-                .Select(a => a.Location)
-                .Distinct();
-
-            ScriptBuilder.SetReferences(refFilePaths);
+            ScriptBuilder.SetReferences(allAssemblies.Select(a => a.Location));
 
             AllTypes = new Dictionary<string, Type>(aliasTypes);
             AutoCompleteTypes = new Dictionary<string, Type>(aliasTypes);
