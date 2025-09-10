@@ -959,7 +959,7 @@ namespace PdnCodeLab
 
         private void ClassicEffectsUnsupported()
         {
-            const string message = "The Classic Effects system was removed in Paint.NET 5.2.";
+            const string message = "The Classic Effects system was fully deprecated in Paint.NET 5.2. It is no longer possible to compile a Classic Effect.";
             FlexibleMessageBox.Show(message, "Classic Effects Unsupported", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
