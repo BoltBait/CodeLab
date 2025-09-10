@@ -91,7 +91,6 @@
             noneRadioButton = new System.Windows.Forms.RadioButton();
             aliasedSelectionCheckBox = new System.Windows.Forms.CheckBox();
             renderOpInfoLabel = new MessageLabel();
-            noClipWarnLabel = new MessageLabel();
             presetLabel = new System.Windows.Forms.Label();
             presetComboBox = new System.Windows.Forms.ComboBox();
             panelAssist = new System.Windows.Forms.Panel();
@@ -662,7 +661,6 @@
             // 
             panelRenderOptions.Controls.Add(optionsTabControl);
             panelRenderOptions.Controls.Add(renderOpInfoLabel);
-            panelRenderOptions.Controls.Add(noClipWarnLabel);
             panelRenderOptions.Controls.Add(presetLabel);
             panelRenderOptions.Controls.Add(presetComboBox);
             panelRenderOptions.Location = new System.Drawing.Point(202, 12);
@@ -796,17 +794,6 @@
             renderOpInfoLabel.TabIndex = 15;
             renderOpInfoLabel.TabStop = false;
             renderOpInfoLabel.Text = "Changes in this section will apply the next time CodeLab is run,\r\nand will remain applied until they are changed again.\r\n\r\nThe selected Preset will appear in CodeLab's titlebar.";
-            // 
-            // noClipWarnLabel
-            // 
-            noClipWarnLabel.AllowHardwareRendering = false;
-            noClipWarnLabel.Location = new System.Drawing.Point(24, 219);
-            noClipWarnLabel.MessageType = MessageType.Warning;
-            noClipWarnLabel.Name = "noClipWarnLabel";
-            noClipWarnLabel.Size = new System.Drawing.Size(418, 65);
-            noClipWarnLabel.TabIndex = 14;
-            noClipWarnLabel.TabStop = false;
-            noClipWarnLabel.Text = "The flag 'Disable Selection Clipping' does not affect Classic Effects.";
             // 
             // presetLabel
             // 
@@ -994,7 +981,6 @@
         private System.Windows.Forms.CheckBox noClipCheckBox;
         private System.Windows.Forms.CheckBox singleThreadedCheckBox;
         private System.Windows.Forms.ComboBox presetComboBox;
-        private MessageLabel noClipWarnLabel;
         private MessageLabel renderOpInfoLabel;
         private System.Windows.Forms.TabControl optionsTabControl;
         private System.Windows.Forms.TabPage tabPage1;

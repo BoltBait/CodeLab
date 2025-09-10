@@ -177,17 +177,6 @@ namespace PdnCodeLab
 
             // WorkingSpace/WorkingSpaceLinear for GPU Effects
             WorkingSpaceColorContextBox.Checked = Regex.IsMatch(ScriptText, @"//[\s-[\r\n]]*(Working\s*Space\s*Color\s*Context|WSCC)[\s-[\r\n]]*(?=\r?\n|$)", RegexOptions.IgnoreCase);
-
-            if (projectType == ProjectType.ClassicEffect)
-            {
-                NoSelectionClippingBox.Checked = false;
-                StraightAlphaBox.Checked = false;
-                WorkingSpaceColorContextBox.Checked = false;
-
-                NoSelectionClippingBox.Enabled = false;
-                StraightAlphaBox.Enabled = false;
-                WorkingSpaceColorContextBox.Enabled = false;
-            }
             #endregion
 
             resourcePath = Path.Combine(Path.GetDirectoryName(ScriptPath), ScriptName);
@@ -1132,7 +1121,6 @@ namespace PdnCodeLab
 
             string SourceCode = this.projectType switch
             {
-                ProjectType.ClassicEffect => ClassicEffectWriter.FullSourceCode(FullScriptText, FileName, isAdjustment, SubMenuName.Text, MenuName.Text, IconPath, URL, RenderingFlags, RenderingSchedule, Author, MajorVer, MinorVer, Description, KeyWords, WindowTitle, HelpType, HelpStr),
                 ProjectType.BitmapEffect => BitmapEffectWriter.FullSourceCode(FullScriptText, FileName, isAdjustment, SubMenuName.Text, MenuName.Text, IconPath, URL, RenderingFlags, RenderingSchedule, Author, MajorVer, MinorVer, Description, KeyWords, WindowTitle, HelpType, HelpStr),
                 ProjectType.GpuImageEffect => GPUEffectWriter.FullSourceCode(FullScriptText, FileName, isAdjustment, SubMenuName.Text, MenuName.Text, IconPath, URL, RenderingFlags, RenderingSchedule, Author, MajorVer, MinorVer, Description, KeyWords, WindowTitle, HelpType, HelpStr),
                 ProjectType.GpuDrawEffect => GPUDrawWriter.FullSourceCode(FullScriptText, FileName, isAdjustment, SubMenuName.Text, MenuName.Text, IconPath, URL, RenderingFlags, RenderingSchedule, Author, MajorVer, MinorVer, Description, KeyWords, WindowTitle, HelpType, HelpStr),
@@ -1171,7 +1159,6 @@ namespace PdnCodeLab
             {
                 string SourceCode = this.projectType switch
                 {
-                    ProjectType.ClassicEffect => ClassicEffectWriter.FullSourceCode(FullScriptText, FileName, isAdjustment, SubMenuName.Text, MenuName.Text, IconPath, URL, RenderingFlags, RenderingSchedule, Author, MajorVer, MinorVer, Description, KeyWords, WindowTitle, HelpType, HelpStr),
                     ProjectType.BitmapEffect => BitmapEffectWriter.FullSourceCode(FullScriptText, FileName, isAdjustment, SubMenuName.Text, MenuName.Text, IconPath, URL, RenderingFlags, RenderingSchedule, Author, MajorVer, MinorVer, Description, KeyWords, WindowTitle, HelpType, HelpStr),
                     ProjectType.GpuImageEffect => GPUEffectWriter.FullSourceCode(FullScriptText, FileName, isAdjustment, SubMenuName.Text, MenuName.Text, IconPath, URL, RenderingFlags, RenderingSchedule, Author, MajorVer, MinorVer, Description, KeyWords, WindowTitle, HelpType, HelpStr),
                     ProjectType.GpuDrawEffect => GPUDrawWriter.FullSourceCode(FullScriptText, FileName, isAdjustment, SubMenuName.Text, MenuName.Text, IconPath, URL, RenderingFlags, RenderingSchedule, Author, MajorVer, MinorVer, Description, KeyWords, WindowTitle, HelpType, HelpStr),

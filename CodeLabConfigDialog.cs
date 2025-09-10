@@ -94,7 +94,6 @@ namespace PdnCodeLab
 
                 string runCode = projType switch
                 {
-                    ProjectType.ClassicEffect => ClassicEffectWriter.Run(userCode, debugMode),
                     ProjectType.BitmapEffect => BitmapEffectWriter.Run(userCode, debugMode),
                     ProjectType.GpuImageEffect => GPUEffectWriter.Run(userCode, debugMode),
                     ProjectType.GpuDrawEffect => GPUDrawWriter.Run(userCode, debugMode),
@@ -251,13 +250,6 @@ namespace PdnCodeLab
 
             switch (projType)
             {
-                case ProjectType.ClassicEffect:
-                    string classicSourceCode = ClassicEffectWriter.Run(userCode, debugMode);
-                    ScriptBuilder.BuildEffect<Effect>(classicSourceCode, debugMode);
-                    DisplayErrors();
-                    txtCode.UpdateSyntaxHighlighting();
-                    UpdateTokenFromDialog();
-                    break;
                 case ProjectType.BitmapEffect:
                     string bitmapSourceCode = BitmapEffectWriter.Run(userCode, debugMode);
                     ScriptBuilder.BuildEffect<BitmapEffect>(bitmapSourceCode, debugMode);
@@ -309,10 +301,6 @@ namespace PdnCodeLab
             {
                 switch (projType)
                 {
-                    case ProjectType.ClassicEffect:
-                        string classicSourceCode = ClassicEffectWriter.Run(userCode, debugMode);
-                        ScriptBuilder.BuildEffect<Effect>(classicSourceCode, debugMode);
-                        break;
                     case ProjectType.BitmapEffect:
                         string bitmapSourceCode = BitmapEffectWriter.Run(userCode, debugMode);
                         ScriptBuilder.BuildEffect<BitmapEffect>(bitmapSourceCode, debugMode);
@@ -341,7 +329,6 @@ namespace PdnCodeLab
 
             switch (projType)
             {
-                case ProjectType.ClassicEffect:
                 case ProjectType.GpuImageEffect:
                 case ProjectType.GpuDrawEffect:
                 case ProjectType.BitmapEffect:
@@ -368,10 +355,6 @@ namespace PdnCodeLab
             bool built = false;
             switch (projectType)
             {
-                case ProjectType.ClassicEffect:
-                    string classicSourceCode = ClassicEffectWriter.FullPreview(txtCode.Text);
-                    built = ScriptBuilder.BuildEffect<Effect>(classicSourceCode);
-                    break;
                 case ProjectType.BitmapEffect:
                     string bitmapSourceCode = BitmapEffectWriter.FullPreview(txtCode.Text);
                     built = ScriptBuilder.BuildEffect<BitmapEffect>(bitmapSourceCode);
@@ -515,10 +498,18 @@ namespace PdnCodeLab
                     ProjectType detectedProjectType = ProjectTypeUtil.FromContents(txtCode.Text, null);
                     if (detectedProjectType != projectType && detectedProjectType.IsCSharp())
                     {
-                        tabStrip1.SelectedTabProjType = detectedProjectType;
-                        UpdateForProjectType();
-                        FlexibleMessageBox.Show($"Project Type has been automatically changed from {projectType} to {detectedProjectType}.", "Project Type Mismatch", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                        return;
+                        if (detectedProjectType == ProjectType.ClassicEffectObsolete)
+                        {
+                            ClassicEffectsUnsupported();
+                        }
+                        else
+                        {
+                            tabStrip1.SelectedTabProjType = detectedProjectType;
+                            UpdateForProjectType();
+                            string message = $"Project Type has been automatically changed from {projectType} to {detectedProjectType}.";
+                            FlexibleMessageBox.Show(message, "Project Type Mismatch", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                            return;
+                        }
                     }
                 }
 
@@ -569,6 +560,12 @@ namespace PdnCodeLab
             AddToRecents(filePath);
 
             ProjectType projType = ProjectTypeUtil.FromContents(fileContents, Path.GetExtension(filePath));
+            bool isClassic = projType == ProjectType.ClassicEffectObsolete;
+
+            if (isClassic)
+            {
+                projType = ProjectType.PlainText;
+            }
 
             bool removedInitTab = tabStrip1.SelectedTabIsInitial && txtCode.IsVirgin;
 
@@ -582,6 +579,11 @@ namespace PdnCodeLab
             txtCode.Text = fileContents;
             txtCode.EmptyUndoBuffer();
             txtCode.SetSavePoint();
+
+            if (isClassic)
+            {
+                ClassicEffectsUnsupported();
+            }
         }
 
         private DialogResult PromptToSave()
@@ -955,6 +957,12 @@ namespace PdnCodeLab
             UIUtil.LaunchUrl(this, url);
         }
 
+        private void ClassicEffectsUnsupported()
+        {
+            const string message = "The Classic Effects system was fully deprecated in Paint.NET 5.2. It is no longer possible to compile a Classic Effect.";
+            FlexibleMessageBox.Show(message, "Classic Effects Unsupported", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
         void IToolTipHost.ThemeToolTip()
         {
             toolTips.UpdateTheme();
@@ -972,15 +980,6 @@ namespace PdnCodeLab
         #endregion
 
         #region Common functions for button/menu events
-        private void CreateNewClassicEffect()
-        {
-            using FileNew fn = new FileNew(this.renderPreset);
-            if (fn.ShowDialog() == DialogResult.OK)
-            {
-                CreateNewProjectTab(ProjectType.ClassicEffect, fn.CodeTemplate);
-            }
-        }
-
         private void CreateNewBitmapEffect()
         {
             CreateNewProjectTab(ProjectType.BitmapEffect);
@@ -1117,11 +1116,6 @@ namespace PdnCodeLab
 
                 string effectSourceCode = projectType switch
                 {
-                    ProjectType.ClassicEffect =>
-                        ClassicEffectWriter.FullSourceCode(
-                            userCode, projectName, buildForm.isAdjustment, buildForm.SubMenu, buildForm.MenuItemName, buildForm.IconPath, buildForm.URL,
-                            buildForm.RenderingFlags,buildForm.RenderingSchedule, buildForm.Author, buildForm.MajorVer, buildForm.MinorVer,
-                            buildForm.Description, buildForm.KeyWords, buildForm.WindowTitle, buildForm.HelpType, buildForm.HelpStr),
                     ProjectType.BitmapEffect =>
                         BitmapEffectWriter.FullSourceCode(
                             userCode, projectName, buildForm.isAdjustment, buildForm.SubMenu, buildForm.MenuItemName, buildForm.IconPath, buildForm.URL,
@@ -1311,7 +1305,6 @@ namespace PdnCodeLab
             ProjectType projectType = this.tabStrip1.SelectedTabProjType;
             switch (projectType)
             {
-                case ProjectType.ClassicEffect:
                 case ProjectType.BitmapEffect:
                 case ProjectType.GpuImageEffect:
                 case ProjectType.GpuDrawEffect:
@@ -1367,11 +1360,6 @@ namespace PdnCodeLab
             saveAsDLLToolStripMenuItem.Enabled = notRef;
             previewEffectMenuItem.Enabled = cSharp;
             userInterfaceDesignerToolStripMenuItem.Enabled = cSharp;
-        }
-
-        private void NewEffectMenuItem_Click(object sender, EventArgs e)
-        {
-            CreateNewClassicEffect();
         }
 
         private void NewFileTypeMenuItem_Click(object sender, EventArgs e)
@@ -1804,8 +1792,19 @@ namespace PdnCodeLab
             }
 
             ProjectType projectType = ProjectTypeUtil.FromContents(clipboardContents, null);
+            bool isClassic = projectType == ProjectType.ClassicEffectObsolete;
+
+            if (isClassic)
+            {
+                projectType = ProjectType.PlainText;
+            }
 
             CreateNewProjectTab(projectType, clipboardContents);
+
+            if (isClassic)
+            {
+                ClassicEffectsUnsupported();
+            }
         }
 
         private void NewButton_DropDownOpening(object sender, EventArgs e)

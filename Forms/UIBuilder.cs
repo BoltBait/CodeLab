@@ -1509,14 +1509,9 @@ namespace PdnCodeLab
 
         internal static bool IsControlAllowed(ElementType elementType, ProjectType projectType)
         {
-            if (projectType.Is5Effect())
+            if (projectType.IsEffect())
             {
                 return true;
-            }
-
-            if (projectType == ProjectType.ClassicEffect)
-            {
-                return elementType != ElementType.LayerChooser;
             }
 
             if (projectType == ProjectType.FileType)
@@ -2085,48 +2080,33 @@ namespace PdnCodeLab
                     if (ColorWheelOptions.HasFlag(ColorWheelOptions.Alpha))
                     {
                         alphaStyle = "?";
-                        if (projectType == ProjectType.ClassicEffect)
+
+                        if (StrDefault.Trim() == "PrimaryColor" || StrDefault.Trim() == "")
                         {
-                            SourceCode += " = ColorBgra.FromBgra(" + rgb + ", 255)";
+                            SourceCode += " = ColorWheelControl.Create(SrgbColors.Black)";
+                        }
+                        else if (StrDefault.Trim() == "SecondaryColor")
+                        {
+                            SourceCode += " = ColorWheelControl.Create(SrgbColors.White)";
                         }
                         else
                         {
-                            // v5+
-                            if (StrDefault.Trim() == "PrimaryColor" || StrDefault.Trim() == "")
-                            {
-                                SourceCode += " = ColorWheelControl.Create(SrgbColors.Black)";
-                            }
-                            else if (StrDefault.Trim() == "SecondaryColor")
-                            {
-                                SourceCode += " = ColorWheelControl.Create(SrgbColors.White)";
-                            }
-                            else
-                            {
-                                SourceCode += " = ColorWheelControl.Create(SrgbColors." + StrDefault + ")";
-                            }
+                            SourceCode += " = ColorWheelControl.Create(SrgbColors." + StrDefault + ")";
                         }
                     }
                     else
                     {
-                        if (projectType == ProjectType.ClassicEffect)
+                        if (StrDefault.Trim() == "PrimaryColor" || StrDefault.Trim() == "")
                         {
-                            SourceCode += " = ColorBgra.FromBgr(" + rgb + ")";
+                            SourceCode += " = ColorWheelControl.Create(SrgbColors.Black)";
+                        }
+                        else if (StrDefault.Trim() == "SecondaryColor")
+                        {
+                            SourceCode += " = ColorWheelControl.Create(SrgbColors.White)";
                         }
                         else
                         {
-                            // v5+
-                            if (StrDefault.Trim() == "PrimaryColor" || StrDefault.Trim() == "")
-                            {
-                                SourceCode += " = ColorWheelControl.Create(SrgbColors.Black)";
-                            }
-                            else if (StrDefault.Trim() == "SecondaryColor")
-                            {
-                                SourceCode += " = ColorWheelControl.Create(SrgbColors.White)";
-                            }
-                            else
-                            {
-                                SourceCode += " = ColorWheelControl.Create(SrgbColors." + StrDefault + ")";
-                            }
+                            SourceCode += " = ColorWheelControl.Create(SrgbColors." + StrDefault + ")";
                         }
                     }
 
@@ -2155,14 +2135,7 @@ namespace PdnCodeLab
                     SourceCode += " = LayerBlendModeUtil.CreateCompositionOp(LayerBlendMode.Normal); // ";
                     break;
                 case ElementType.FontFamily:
-                    if (projectType == ProjectType.ClassicEffect)
-                    {
-                        SourceCode += " = new FontFamily(\"" + StrDefault + "\"); // ";
-                    }
-                    else
-                    {
-                        SourceCode += " = \"" + StrDefault + "\"; // ";
-                    }
+                    SourceCode += " = \"" + StrDefault + "\"; // ";
                     break;
                 case ElementType.ReseedButton:
                     SourceCode += " = 0; // ";

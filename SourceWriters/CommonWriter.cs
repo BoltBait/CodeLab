@@ -167,17 +167,8 @@ namespace PdnCodeLab
             // Check to see if we're including a color wheel without an alpha slider
             if (UserControls.Any(u => u.ElementType == ElementType.ColorWheel))// && !u.ColorWheelOptions.HasFlag(ColorWheelOptions.Alpha)))
             {
-                if (projectType.Is5Effect())
-                {
-                    PropertyPart += "            ManagedColor PrimaryColor = this.Environment.PrimaryColor;\r\n";
-                    PropertyPart += "            ManagedColor SecondaryColor = this.Environment.SecondaryColor;\r\n";
-                }
-                else
-                {
-                    PropertyPart += "            ColorBgra PrimaryColor = EnvironmentParameters.PrimaryColor.NewAlpha(byte.MaxValue);\r\n";
-                    PropertyPart += "            ColorBgra SecondaryColor = EnvironmentParameters.SecondaryColor.NewAlpha(byte.MaxValue);\r\n";
-                }
-
+                PropertyPart += "            ManagedColor PrimaryColor = this.Environment.PrimaryColor;\r\n";
+                PropertyPart += "            ManagedColor SecondaryColor = this.Environment.SecondaryColor;\r\n";
                 PropertyPart += "\r\n";
             }
 
@@ -195,21 +186,14 @@ namespace PdnCodeLab
 
             if (UserControls.Any(u => u.ElementType == ElementType.FontFamily))
             {
-                if (projectType == ProjectType.ClassicEffect)
-                {
-                    PropertyPart += "            FontFamily[] installedFontFamilies = new InstalledFontCollection().Families;\r\n";
-                } 
-                else
-                {
-                    PropertyPart += "            IDirectWriteFactory textFactory = this.Services.GetService<IDirectWriteFactory>();\r\n";
-                    PropertyPart += "            IGdiFontMap fonts = textFactory.GetGdiFontMap();\r\n";
-                    PropertyPart += "            string[] fontsList = fonts.Order().ToArray();\r\n";
-                    PropertyPart += "            int DefaultFontValueIndex = Array.FindIndex(fontsList, ff => ff.Equals(\"Arial\", StringComparison.OrdinalIgnoreCase));\r\n";
-                    PropertyPart += "            if (DefaultFontValueIndex < 0)\r\n";
-                    PropertyPart += "            {\r\n";
-                    PropertyPart += "                DefaultFontValueIndex = 0;\r\n";
-                    PropertyPart += "            }\r\n";
-                }
+                PropertyPart += "            IDirectWriteFactory textFactory = this.Services.GetService<IDirectWriteFactory>();\r\n";
+                PropertyPart += "            IGdiFontMap fonts = textFactory.GetGdiFontMap();\r\n";
+                PropertyPart += "            string[] fontsList = fonts.Order().ToArray();\r\n";
+                PropertyPart += "            int DefaultFontValueIndex = Array.FindIndex(fontsList, ff => ff.Equals(\"Arial\", StringComparison.OrdinalIgnoreCase));\r\n";
+                PropertyPart += "            if (DefaultFontValueIndex < 0)\r\n";
+                PropertyPart += "            {\r\n";
+                PropertyPart += "                DefaultFontValueIndex = 0;\r\n";
+                PropertyPart += "            }\r\n";
                 PropertyPart += "\r\n";
             }
             if (UserControls.Any(u => u.ElementType == ElementType.LayerChooser))
@@ -237,75 +221,13 @@ namespace PdnCodeLab
                     case ElementType.ColorWheel:
                         ColorControlCount++;
                         bool includeAlpha = u.ColorWheelOptions.HasFlag(ColorWheelOptions.Alpha);
-                        if (!projectType.Is5Effect())
+                        if (u.StrDefault == "PrimaryColor" || u.StrDefault == "SecondaryColor")
                         {
-                            // Classic effect
-                            if (u.StrDefault != "")
-                            {
-                                if (!includeAlpha) // no alpha slider
-                                {
-                                    if (u.StrDefault == "PrimaryColor" || u.StrDefault == "SecondaryColor")
-                                    {
-                                        PropertyPart += "            props.Add(new Int32Property(PropertyNames." + propertyName + ", ColorBgra.ToOpaqueInt32(" + u.StrDefault + "), 0, 0xffffff));\r\n";
-                                    }
-                                    else
-                                    {
-                                        PropertyPart += "            props.Add(new Int32Property(PropertyNames." + propertyName + ", ColorBgra.ToOpaqueInt32(ColorBgra." + u.StrDefault + "), 0, 0xffffff));\r\n";
-                                    }
-                                }
-                                else // include alpha slider
-                                {
-                                    if (u.StrDefault == "PrimaryColor" || u.StrDefault == "SecondaryColor")
-                                    {
-                                        PropertyPart += "            props.Add(new Int32Property(PropertyNames." + propertyName + ", unchecked((int)EnvironmentParameters." + u.StrDefault + ".Bgra), Int32.MinValue, Int32.MaxValue));\r\n";
-                                    }
-                                    else
-                                    {
-                                        PropertyPart += "            props.Add(new Int32Property(PropertyNames." + propertyName + ", unchecked((int)ColorBgra." + u.StrDefault + ".Bgra), Int32.MinValue, Int32.MaxValue));\r\n";
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                if (!includeAlpha) // no alpha slider
-                                {
-                                    if (ColorControlCount < 2)
-                                    {
-                                        // First color wheel defaults to Primary Color
-                                        PropertyPart += "            props.Add(new Int32Property(PropertyNames." + propertyName + ", ColorBgra.ToOpaqueInt32(PrimaryColor), 0, 0xffffff));\r\n";
-                                    }
-                                    else
-                                    {
-                                        // Second color wheel (and beyond) defaults to Secondary Color
-                                        PropertyPart += "            props.Add(new Int32Property(PropertyNames." + propertyName + ", ColorBgra.ToOpaqueInt32(SecondaryColor), 0, 0xffffff));\r\n";
-                                    }
-                                }
-                                else  // include alpha slider
-                                {
-                                    if (ColorControlCount < 2)
-                                    {
-                                        // First color wheel defaults to Primary Color
-                                        PropertyPart += "            props.Add(new Int32Property(PropertyNames." + propertyName + ", unchecked((Int32)EnvironmentParameters.PrimaryColor.Bgra), Int32.MinValue, Int32.MaxValue));\r\n";
-                                    }
-                                    else
-                                    {
-                                        // Second color wheel (and beyond) defaults to Secondary Color
-                                        PropertyPart += "            props.Add(new Int32Property(PropertyNames." + propertyName + ", unchecked((Int32)EnvironmentParameters.SecondaryColor.Bgra), Int32.MinValue, Int32.MaxValue));\r\n";
-                                    }
-                                }
-                            }
+                            PropertyPart += "            props.Add(new ManagedColorProperty(PropertyNames." + propertyName + ", " + u.StrDefault + ", ManagedColorPropertyAlphaMode." + ((includeAlpha) ? "SupportsAlpha" : "OpaqueOnly") + "));\r\n";
                         }
                         else
                         {
-                            // v5+ effect
-                            if (u.StrDefault == "PrimaryColor" || u.StrDefault == "SecondaryColor")
-                            {
-                                PropertyPart += "            props.Add(new ManagedColorProperty(PropertyNames." + propertyName + ", " + u.StrDefault + ", ManagedColorPropertyAlphaMode." + ((includeAlpha) ? "SupportsAlpha" : "OpaqueOnly") + "));\r\n";
-                            }
-                            else
-                            {
-                                PropertyPart += "            props.Add(new ManagedColorProperty(PropertyNames." + propertyName + ", " + propertyName + ", ManagedColorPropertyAlphaMode." + ((includeAlpha) ? "SupportsAlpha" : "OpaqueOnly") + "));\r\n";
-                            }
+                            PropertyPart += "            props.Add(new ManagedColorProperty(PropertyNames." + propertyName + ", " + propertyName + ", ManagedColorPropertyAlphaMode." + ((includeAlpha) ? "SupportsAlpha" : "OpaqueOnly") + "));\r\n";
                         }
                         break;
                     case ElementType.AngleChooser:
@@ -339,19 +261,7 @@ namespace PdnCodeLab
                         PropertyPart += "            props.Add(new StaticListChoiceProperty(PropertyNames." + propertyName + ", blendModesArray, defaultBlendModeIndex, false));\r\n";
                         break;
                     case ElementType.FontFamily:
-                        if (projectType == ProjectType.ClassicEffect)
-                        {
-                            PropertyPart += "            int " + propertyName + "DefaultValueIndex = Array.FindIndex(installedFontFamilies, ff => ff.Name.Equals(\"" + u.StrDefault + "\", StringComparison.OrdinalIgnoreCase));\r\n";
-                            PropertyPart += "            if (" + propertyName + "DefaultValueIndex < 0)\r\n";
-                            PropertyPart += "            {\r\n";
-                            PropertyPart += "                " + propertyName + "DefaultValueIndex = 0;\r\n";
-                            PropertyPart += "            }\r\n";
-                            PropertyPart += "            props.Add(new StaticListChoiceProperty(PropertyNames." + propertyName + ", installedFontFamilies, " + propertyName + "DefaultValueIndex, false));\r\n";
-                        }
-                        else
-                        {
-                            PropertyPart += "            props.Add(new StaticListChoiceProperty(PropertyNames." + propertyName + ", fontsList, DefaultFontValueIndex, false));\r\n";
-                        }
+                        PropertyPart += "            props.Add(new StaticListChoiceProperty(PropertyNames." + propertyName + ", fontsList, DefaultFontValueIndex, false));\r\n";
                         break;
                     case ElementType.ReseedButton:
                         PropertyPart += "            props.Add(new Int32Property(PropertyNames." + propertyName + ", 0, 0, 255));\r\n";
@@ -477,17 +387,8 @@ namespace PdnCodeLab
 
             if (UserControls.Any(u => u.ElementType == ElementType.PanSlider))
             {
-                if (projectType.Is5Effect())
-                {
-                    PropertyPart += "            RectInt32 selection = Environment.Selection.RenderBounds;\r\n";
-                    PropertyPart += "            IBitmapSource<ColorBgra32> panImage = Environment.GetSourceBitmapBgra32().CreateClipper(selection);\r\n";
-                }
-                else
-                {
-                    PropertyPart += "            Rectangle selection = EnvironmentParameters.SelectionBounds;\r\n";
-                    PropertyPart += "            ImageResource panImage = ImageResource.FromImage(EnvironmentParameters.SourceSurface.CreateAliasedBitmap(selection));\r\n";
-                }
-
+                PropertyPart += "            RectInt32 selection = Environment.Selection.RenderBounds;\r\n";
+                PropertyPart += "            IBitmapSource<ColorBgra32> panImage = Environment.GetSourceBitmapBgra32().CreateClipper(selection);\r\n";
                 PropertyPart += "\r\n";
             }
 
@@ -632,15 +533,6 @@ namespace PdnCodeLab
                         PropertyPart += "            }\r\n";
                         break;
                     case ElementType.FontFamily:
-                        if (projectType == ProjectType.ClassicEffect)
-                        {
-                            PropertyPart += "            PropertyControlInfo " + propertyName + "FontFamilyControl = configUI.FindControlForPropertyName(PropertyNames." + propertyName + ");\r\n";
-                            PropertyPart += "            FontFamily[] " + propertyName + "FontFamilies = new InstalledFontCollection().Families;\r\n";
-                            PropertyPart += "            foreach (FontFamily ff in " + propertyName + "FontFamilies)\r\n";
-                            PropertyPart += "            {\r\n";
-                            PropertyPart += "                " + propertyName + "FontFamilyControl.SetValueDisplayName(ff, ff.Name);\r\n";
-                            PropertyPart += "            }\r\n";
-                        }
                         break;
                     case ElementType.ReseedButton:
                         PropertyPart += "            configUI.SetPropertyControlType(PropertyNames." + propertyName + ", PropertyControlType.IncrementButton);\r\n";

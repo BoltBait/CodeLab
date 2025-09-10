@@ -4880,7 +4880,6 @@ namespace PdnCodeLab
                 case ProjectType.PlainText:
                     this.Lexer = Lexer.Null;
                     break;
-                case ProjectType.ClassicEffect:
                 case ProjectType.GpuImageEffect:
                 case ProjectType.GpuDrawEffect:
                 case ProjectType.BitmapEffect:

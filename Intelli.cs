@@ -109,11 +109,6 @@ namespace PdnCodeLab
 
             switch (projectType)
             {
-                case ProjectType.ClassicEffect:
-                    pdnAssemblyNames.Add("PaintDotNet.Effects");
-                    pdnAssemblyNames.Add("PaintDotNet.Effects.Core");
-                    pdnAssemblyNames.Add("PaintDotNet.Effects.Legacy");
-                    break;
                 case ProjectType.GpuDrawEffect:
                 case ProjectType.GpuImageEffect:
                 case ProjectType.BitmapEffect:
@@ -130,7 +125,6 @@ namespace PdnCodeLab
                     pdnAssemblyNames.Add("PaintDotNet.Effects");
                     pdnAssemblyNames.Add("PaintDotNet.Effects.Core");
                     pdnAssemblyNames.Add("PaintDotNet.Effects.Gpu");
-                    pdnAssemblyNames.Add("PaintDotNet.Effects.Legacy");
                     pdnAssemblyNames.Add("PaintDotNet.Windows");
                     pdnAssemblyNames.Add("PaintDotNet.Windows.Core");
                     pdnAssemblyNames.Add("PaintDotNet.Windows.Framework");
@@ -138,8 +132,6 @@ namespace PdnCodeLab
             }
 
             PdnAssemblyNames = pdnAssemblyNames
-                .Append("PaintDotNet.Windows") // PaintDotNet.Windows needed for the Classic Effect constructor that uses a System.Drawing.Bitmap
-                .Distinct()
                 .OrderBy(x => x, StringComparer.Ordinal)
                 .ToImmutableArray();
 
@@ -151,12 +143,7 @@ namespace PdnCodeLab
                 .Where(a => !intelliIgnoreList.Contains(a.GetName().Name, StringComparer.Ordinal))
                 .ToImmutableArray();
 
-            IEnumerable<string> refFilePaths = allAssemblies
-                .Append(allPdnAssemblies.First(a => a.GetName().Name.Equals("PaintDotNet.Windows", StringComparison.Ordinal)))
-                .Select(a => a.Location)
-                .Distinct();
-
-            ScriptBuilder.SetReferences(refFilePaths);
+            ScriptBuilder.SetReferences(allAssemblies.Select(a => a.Location));
 
             AllTypes = new Dictionary<string, Type>(aliasTypes);
             AutoCompleteTypes = new Dictionary<string, Type>(aliasTypes);
@@ -241,7 +228,7 @@ namespace PdnCodeLab
 
             extMethods = extMethodsList;
 
-            if (projectType.Is5Effect())
+            if (projectType.IsEffect())
             {
                 // removed to prevent name collision with properties
                 AllTypes.Remove(nameof(Environment));
@@ -337,7 +324,6 @@ namespace PdnCodeLab
                 "PaintDotNet.Effects",
                 "PaintDotNet.Effects.Core",
                 "PaintDotNet.Effects.Gpu",
-                "PaintDotNet.Effects.Legacy",
                 "PaintDotNet.Framework",
                 "PaintDotNet.Fundamentals",
                 "PaintDotNet.ObjectModel",

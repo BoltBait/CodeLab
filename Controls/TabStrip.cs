@@ -394,7 +394,6 @@ namespace PdnCodeLab
                 {
                     this.ImageName = this.ProjectType switch
                     {
-                        ProjectType.ClassicEffect => "ClassicEffect",
                         ProjectType.GpuImageEffect => "GpuEffect",
                         ProjectType.GpuDrawEffect => "GpuEffect",
                         ProjectType.BitmapEffect => "BitmapEffect",
