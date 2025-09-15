@@ -135,15 +135,16 @@ namespace PdnCodeLab
                         button.FlatStyle = FlatStyle.System;
                         break;
 
+                    case Panel:
+                    case SettingsPageList:
+                        c.BackColor = backColor;
+                        c.ForeColor = foreColor;
+                        break;
+
                     case TextBox:
                     case ListBox:
                     case ListView:
                         c.BackColor = effectiveDarkMode ? backColor : default;
-                        c.ForeColor = foreColor;
-                        break;
-
-                    case Panel:
-                        c.BackColor = backColor;
                         c.ForeColor = foreColor;
                         break;
 

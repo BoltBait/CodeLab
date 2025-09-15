@@ -67,7 +67,7 @@
             lineNumbersCheckbox = new System.Windows.Forms.CheckBox();
             noAutoCompleteInfoLabel = new MessageLabel();
             disableAutoCompCheckBox = new System.Windows.Forms.CheckBox();
-            settingsList = new System.Windows.Forms.ListBox();
+            settingsList = new SettingsPageList();
             panelSnippet = new SnippetManager();
             panelSpelling = new System.Windows.Forms.Panel();
             addLangsButton = new System.Windows.Forms.Button();
@@ -208,7 +208,6 @@
             // warningsToIgnoreList
             // 
             warningsToIgnoreList.FormattingEnabled = true;
-            warningsToIgnoreList.ItemHeight = 15;
             warningsToIgnoreList.Location = new System.Drawing.Point(48, 180);
             warningsToIgnoreList.Name = "warningsToIgnoreList";
             warningsToIgnoreList.Size = new System.Drawing.Size(75, 139);
@@ -288,7 +287,7 @@
             extendedColorsCheckBox.AutoSize = true;
             extendedColorsCheckBox.Location = new System.Drawing.Point(32, 378);
             extendedColorsCheckBox.Name = "extendedColorsCheckBox";
-            extendedColorsCheckBox.Size = new System.Drawing.Size(192, 19);
+            extendedColorsCheckBox.Size = new System.Drawing.Size(190, 19);
             extendedColorsCheckBox.TabIndex = 19;
             extendedColorsCheckBox.Text = "Extended Colors (Experimental)";
             extendedColorsCheckBox.UseVisualStyleBackColor = true;
@@ -331,7 +330,7 @@
             toolbarCheckbox.AutoSize = true;
             toolbarCheckbox.Location = new System.Drawing.Point(32, 28);
             toolbarCheckbox.Name = "toolbarCheckbox";
-            toolbarCheckbox.Size = new System.Drawing.Size(65, 19);
+            toolbarCheckbox.Size = new System.Drawing.Size(66, 19);
             toolbarCheckbox.TabIndex = 1;
             toolbarCheckbox.Text = "Toolbar";
             toolbarCheckbox.UseVisualStyleBackColor = true;
@@ -342,7 +341,7 @@
             label5.AutoSize = true;
             label5.Location = new System.Drawing.Point(228, 354);
             label5.Name = "label5";
-            label5.Size = new System.Drawing.Size(190, 15);
+            label5.Size = new System.Drawing.Size(191, 15);
             label5.TabIndex = 18;
             label5.Text = "\"Auto\" matches Paint.NET's theme";
             // 
@@ -371,7 +370,7 @@
             wordWrapTextFilesCheckbox.AutoSize = true;
             wordWrapTextFilesCheckbox.Location = new System.Drawing.Point(237, 80);
             wordWrapTextFilesCheckbox.Name = "wordWrapTextFilesCheckbox";
-            wordWrapTextFilesCheckbox.Size = new System.Drawing.Size(150, 19);
+            wordWrapTextFilesCheckbox.Size = new System.Drawing.Size(149, 19);
             wordWrapTextFilesCheckbox.TabIndex = 6;
             wordWrapTextFilesCheckbox.Text = "Word wrap text files  ‹‒'";
             wordWrapTextFilesCheckbox.UseVisualStyleBackColor = true;
@@ -416,7 +415,7 @@
             fontCombobox.FormattingEnabled = true;
             fontCombobox.Location = new System.Drawing.Point(32, 270);
             fontCombobox.Name = "fontCombobox";
-            fontCombobox.Size = new System.Drawing.Size(166, 23);
+            fontCombobox.Size = new System.Drawing.Size(166, 24);
             fontCombobox.TabIndex = 12;
             fontCombobox.DrawItem += fontCombobox_DrawItem;
             fontCombobox.SelectedIndexChanged += fontCombobox_SelectedIndexChanged;
@@ -532,16 +531,15 @@
             // settingsList
             // 
             settingsList.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
+            settingsList.BorderStyle = System.Windows.Forms.BorderStyle.None;
             settingsList.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             settingsList.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            settingsList.FormattingEnabled = true;
             settingsList.IntegralHeight = false;
             settingsList.ItemHeight = 32;
             settingsList.Location = new System.Drawing.Point(12, 12);
             settingsList.Name = "settingsList";
             settingsList.Size = new System.Drawing.Size(184, 406);
             settingsList.TabIndex = 0;
-            settingsList.DrawItem += settingsList_DrawItem;
             settingsList.SelectedIndexChanged += settingsList_SelectedIndexChanged;
             // 
             // panelSnippet
@@ -611,7 +609,6 @@
             // wordsToIgnoreListBox
             // 
             wordsToIgnoreListBox.FormattingEnabled = true;
-            wordsToIgnoreListBox.ItemHeight = 15;
             wordsToIgnoreListBox.Location = new System.Drawing.Point(48, 180);
             wordsToIgnoreListBox.Name = "wordsToIgnoreListBox";
             wordsToIgnoreListBox.Size = new System.Drawing.Size(100, 139);
@@ -720,7 +717,7 @@
             singleThreadedCheckBox.AutoSize = true;
             singleThreadedCheckBox.Location = new System.Drawing.Point(206, 91);
             singleThreadedCheckBox.Name = "singleThreadedCheckBox";
-            singleThreadedCheckBox.Size = new System.Drawing.Size(110, 19);
+            singleThreadedCheckBox.Size = new System.Drawing.Size(111, 19);
             singleThreadedCheckBox.TabIndex = 10;
             singleThreadedCheckBox.Text = "Single Threaded";
             singleThreadedCheckBox.UseVisualStyleBackColor = true;
@@ -754,7 +751,7 @@
             squareTilesRadioButton.AutoSize = true;
             squareTilesRadioButton.Location = new System.Drawing.Point(21, 40);
             squareTilesRadioButton.Name = "squareTilesRadioButton";
-            squareTilesRadioButton.Size = new System.Drawing.Size(87, 19);
+            squareTilesRadioButton.Size = new System.Drawing.Size(88, 19);
             squareTilesRadioButton.TabIndex = 5;
             squareTilesRadioButton.TabStop = true;
             squareTilesRadioButton.Text = "Square Tiles";
@@ -792,7 +789,6 @@
             renderOpInfoLabel.Name = "renderOpInfoLabel";
             renderOpInfoLabel.Size = new System.Drawing.Size(418, 106);
             renderOpInfoLabel.TabIndex = 15;
-            renderOpInfoLabel.TabStop = false;
             renderOpInfoLabel.Text = "Changes in this section will apply the next time CodeLab is run,\r\nand will remain applied until they are changed again.\r\n\r\nThe selected Preset will appear in CodeLab's titlebar.";
             // 
             // presetLabel
@@ -855,7 +851,7 @@
             dcToolTipsCheckBox.AutoSize = true;
             dcToolTipsCheckBox.Location = new System.Drawing.Point(40, 221);
             dcToolTipsCheckBox.Name = "dcToolTipsCheckBox";
-            dcToolTipsCheckBox.Size = new System.Drawing.Size(69, 19);
+            dcToolTipsCheckBox.Size = new System.Drawing.Size(71, 19);
             dcToolTipsCheckBox.TabIndex = 24;
             dcToolTipsCheckBox.Text = "ToolTips";
             dcToolTipsCheckBox.UseVisualStyleBackColor = true;
@@ -924,7 +920,7 @@
         private System.Windows.Forms.Panel panelUpdates;
         private System.Windows.Forms.CheckBox checkForUpdates;
         private System.Windows.Forms.Button checkNowButton;
-        private System.Windows.Forms.ListBox settingsList;
+        private SettingsPageList settingsList;
         private System.Windows.Forms.Panel panelUI;
         private System.Windows.Forms.ComboBox themeCombobox;
         private System.Windows.Forms.Label label3;
