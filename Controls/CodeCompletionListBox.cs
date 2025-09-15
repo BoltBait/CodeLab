@@ -110,7 +110,7 @@ namespace PdnCodeLab
 
             listBox.Dock = DockStyle.Fill;
             listBox.DrawMode = DrawMode.OwnerDrawFixed;
-            listBox.ItemHeight = UIUtil.Scale(16);
+            listBox.ItemHeight = UIUtil.Scale(20);
             listBox.BorderStyle = BorderStyle.None;
             listBox.DrawItem += ListBox_DrawItem;
             listBox.SelectedIndexChanged += ListBox_SelectedIndexChanged;
@@ -988,50 +988,60 @@ namespace PdnCodeLab
                 return;
             }
 
-            Rectangle textRect = Rectangle.FromLTRB(e.Bounds.Left + IconSize.Width + 1, e.Bounds.Top, e.Bounds.Right - 1, e.Bounds.Bottom - 1);
-            bool outline = e.State == DrawItemState.Selected && this.drawSelectionOutline;
+            using SolidBrush clearBrush = new SolidBrush(listBox.BackColor);
+            e.Graphics.FillRectangle(clearBrush, e.Bounds);
 
-            if (!outline)
+            const int itemMargin = 2;
+            Rectangle itemRect = Rectangle.FromLTRB(e.Bounds.Left + itemMargin, e.Bounds.Top, e.Bounds.Right - itemMargin - 1, e.Bounds.Bottom - 1);
+
+            if (e.State.HasFlag(DrawItemState.Selected))
             {
-                e.DrawBackground();
-                using (SolidBrush iconBg = new SolidBrush(this.BackColor))
+                e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+
+                Color selectedColor = ColorBgra.Blend([Color.Gray, listBox.BackColor]);
+                Size rectRadius = new Size(6, 6);
+
+                if (!this.drawSelectionOutline)
                 {
-                    e.Graphics.FillRectangle(iconBg, e.Bounds.Left, e.Bounds.Top, IconSize.Width + 1, IconSize.Height);
+                    Color fillColor = Color.FromArgb(128, selectedColor);
+                    using SolidBrush backBrush = new SolidBrush(fillColor);
+                    e.Graphics.FillRoundedRectangle(backBrush, itemRect, rectRadius);
                 }
+
+                using Pen outlinePen = new Pen(selectedColor);
+                e.Graphics.DrawRoundedRectangle(outlinePen, itemRect, rectRadius);
+
+                e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
             }
 
-            e.Graphics.DrawImage(ItemIcons[item.ImageIndex], e.Bounds.Left, e.Bounds.Top, IconSize.Width, IconSize.Height);
+            int iconMargin = (int)Math.Round((itemRect.Height - IconSize.Height) / 2f);
+            e.Graphics.DrawImage(ItemIcons[item.ImageIndex], itemRect.Left + iconMargin, itemRect.Top + iconMargin, IconSize.Width, IconSize.Height);
 
-            Color textColor = outline ? listBox.ForeColor : e.ForeColor;
-            TextRenderer.DrawText(e.Graphics, item.Text, e.Font, textRect, textColor, TextFormatFlags.EndEllipsis);
+            Rectangle textRect = Rectangle.FromLTRB(itemRect.Left + IconSize.Width + iconMargin, itemRect.Top, itemRect.Right, itemRect.Bottom);
+            TextRenderer.DrawText(e.Graphics, item.Text, e.Font, textRect, listBox.ForeColor, TextFormatFlags.VerticalCenter | TextFormatFlags.EndEllipsis);
 
             if (isStaticColorType &&
                 item.IntelliType == IntelliType.Property &&
                 Enum.TryParse(item.Text, false, out KnownColor knownColor))
             {
-                const int padding = 2;
-                int swatchHeight = e.Bounds.Height - 4;
+                const int swatchMargin = 4;
+                int swatchSize = itemRect.Height - swatchMargin * 2;
 
-                Rectangle rect = Rectangle.FromLTRB(
-                    e.Bounds.Right - swatchHeight - padding,
-                    e.Bounds.Top + padding,
-                    e.Bounds.Right - padding - 1,
-                    e.Bounds.Bottom - padding - 1);
+                Rectangle outerRect = Rectangle.FromLTRB(
+                    itemRect.Right - swatchSize - swatchMargin,
+                    itemRect.Top + swatchMargin,
+                    itemRect.Right - swatchMargin,
+                    itemRect.Bottom - swatchMargin);
 
                 Rectangle innerRect = Rectangle.FromLTRB(
-                    rect.Left + 1,
-                    rect.Top + 1,
-                    rect.Right,
-                    rect.Bottom);
+                    outerRect.Left + 1,
+                    outerRect.Top + 1,
+                    outerRect.Right,
+                    outerRect.Bottom);
 
-                using SolidBrush brush = new SolidBrush(Color.FromKnownColor(knownColor));
-                e.Graphics.FillRectangle(brush, innerRect);
-                e.Graphics.DrawRectangle(Pens.Black, rect);
-            }
-
-            if (outline)
-            {
-                e.Graphics.DrawRectangle(SystemPens.Highlight, textRect);
+                using SolidBrush swatchBrush = new SolidBrush(Color.FromKnownColor(knownColor));
+                e.Graphics.FillRectangle(swatchBrush, innerRect);
+                e.Graphics.DrawRectangle(Pens.Black, outerRect);
             }
         }
 
