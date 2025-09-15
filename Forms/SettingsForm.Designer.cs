@@ -535,10 +535,9 @@
             settingsList.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             settingsList.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             settingsList.IntegralHeight = false;
-            settingsList.ItemHeight = 32;
             settingsList.Location = new System.Drawing.Point(12, 12);
             settingsList.Name = "settingsList";
-            settingsList.Size = new System.Drawing.Size(184, 406);
+            settingsList.Size = new System.Drawing.Size(150, 406);
             settingsList.TabIndex = 0;
             settingsList.SelectedIndexChanged += settingsList_SelectedIndexChanged;
             // 
