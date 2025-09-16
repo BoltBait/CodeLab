@@ -560,9 +560,9 @@ namespace PdnCodeLab
             AddToRecents(filePath);
 
             ProjectType projType = ProjectTypeUtil.FromContents(fileContents, Path.GetExtension(filePath));
-            bool isClassic = projType == ProjectType.ClassicEffectObsolete;
+            bool isClassicEffect = projType == ProjectType.ClassicEffectObsolete;
 
-            if (isClassic)
+            if (isClassicEffect)
             {
                 projType = ProjectType.PlainText;
             }
@@ -580,7 +580,7 @@ namespace PdnCodeLab
             txtCode.EmptyUndoBuffer();
             txtCode.SetSavePoint();
 
-            if (isClassic)
+            if (isClassicEffect)
             {
                 ClassicEffectsUnsupported();
             }
@@ -1792,16 +1792,16 @@ namespace PdnCodeLab
             }
 
             ProjectType projectType = ProjectTypeUtil.FromContents(clipboardContents, null);
-            bool isClassic = projectType == ProjectType.ClassicEffectObsolete;
+            bool isClassicEffect = projectType == ProjectType.ClassicEffectObsolete;
 
-            if (isClassic)
+            if (isClassicEffect)
             {
                 projectType = ProjectType.PlainText;
             }
 
             CreateNewProjectTab(projectType, clipboardContents);
 
-            if (isClassic)
+            if (isClassicEffect)
             {
                 ClassicEffectsUnsupported();
             }

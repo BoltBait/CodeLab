@@ -19,17 +19,17 @@ namespace PdnCodeLab
         internal string SaveExt;
         internal bool Layers;
 
-        private readonly bool isClassic;
+        private readonly bool isClassicInstallation;
         private readonly string userCode;
         private readonly string fileName;
 
-        internal BuildFileTypeDialog(string scriptPath, string scriptText, bool isClassic)
+        internal BuildFileTypeDialog(string scriptPath, string scriptText, bool isClassicInstallation)
         {
             InitializeComponent();
 
             this.fileName = Path.GetFileNameWithoutExtension(scriptPath);
             this.userCode = scriptText;
-            this.isClassic = isClassic;
+            this.isClassicInstallation = isClassicInstallation;
             DecimalSymbol.Text = System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator;
 
             this.Text = $"Building {this.fileName}.DLL";
@@ -125,7 +125,7 @@ namespace PdnCodeLab
 
         private void solutionButton_Click(object sender, EventArgs e)
         {
-            if (!this.isClassic)
+            if (!this.isClassicInstallation)
             {
                 FlexibleMessageBox.Show("Due to technical reasons, this feature is only available on classic installations of Paint.NET.", "Generate Visual Studio Solution", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
