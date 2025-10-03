@@ -988,6 +988,9 @@ namespace PdnCodeLab
 
             // Use DirectWrite text rendering
             this.Technology = Technology.DirectWrite;
+
+            // Use Caret Width from Windows Settings
+            this.CaretWidth = SystemInformation.CaretWidth;
             #endregion
 
             this.Controls.Add(iBox);

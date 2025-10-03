@@ -896,6 +896,18 @@ namespace PdnCodeLab
             return base.ProcessCmdKey(ref msg, keyData);
         }
 
+        protected override void WndProc(ref Message m)
+        {
+            base.WndProc(ref m);
+
+            if (m.Msg == 0x001A &&  // WM_SETTINGCHANGE
+                m.WParam == 0x2007) // SPI_SETCARETWIDTH
+            {
+                // Caret Width was changed in Windows Settings
+                this.txtCode.CaretWidth = SystemInformation.CaretWidth;
+            }
+        }
+
         private void txtCode_KeyUp(object sender, KeyEventArgs e)
         {
             if (
