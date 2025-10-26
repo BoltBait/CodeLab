@@ -977,6 +977,7 @@ namespace PdnCodeLab
             this.ClearCmdKey(Keys.Control | Keys.S); // Insert u0013
             this.ClearCmdKey(Keys.Control | Keys.T); // Swap Lines
             this.ClearCmdKey(Keys.Control | Keys.W); // Insert u0017
+            this.ClearCmdKey(Keys.Control | Keys.OemQuestion); // Move to previous camel case
             this.ClearCmdKey(Keys.Control | Keys.OemOpenBrackets); // Go To Previous Code Block
             this.ClearCmdKey(Keys.Control | Keys.OemCloseBrackets); // Go To Next Code Block
 
@@ -2948,6 +2949,38 @@ namespace PdnCodeLab
                         this.DeleteRange(this.CurrentPosition - 1, 2);
                     }
                 }
+                else if (e.Control && e.KeyCode == Keys.OemQuestion)
+                {
+                    e.SuppressKeyPress = true;
+                    e.Handled = true;
+
+                    int startLine = this.LineFromPosition(this.SelectionStart);
+                    int endLine = this.LineFromPosition(this.SelectionEnd);
+                    bool hasSelection = this.SelectionStart != this.SelectionEnd;
+
+                    bool anyUnCommented = Enumerable.Range(startLine, endLine - startLine + 1)
+                        .Any(lineIndex =>
+                        {
+                            string lineText = this.Lines[lineIndex].Text.Trim();
+                            return lineText.Length > 0 && !lineText.StartsWith("//", StringComparison.Ordinal);
+                        });
+
+                    if (anyUnCommented)
+                    {
+                        Comment();
+                    }
+                    else
+                    {
+                        UnComment();
+                    }
+
+                    if (hasSelection)
+                    {
+                        int newSelStart = this.Lines[startLine].Position;
+                        int newSelEnd = this.Lines[endLine].EndPosition - 2;
+                        this.SetSelection(newSelEnd, newSelStart);
+                    }
+                }
             }
             else if (e.Alt && e.KeyCode == Keys.L)
             {
@@ -4199,7 +4232,7 @@ namespace PdnCodeLab
             int endLine = this.LineFromPosition(this.SelectionEnd);
 
             int minIndent = int.MaxValue;
-            for (int line = startLine; line < endLine + 1; line++)
+            for (int line = startLine; line <= endLine; line++)
             {
                 if (this.Lines[line].Text.Trim().Length > 0 && this.Lines[line].Indentation < minIndent)
                 {
@@ -4208,7 +4241,7 @@ namespace PdnCodeLab
             }
 
             this.BeginUndoAction();
-            for (int line = startLine; line < endLine + 1; line++)
+            for (int line = startLine; line <= endLine; line++)
             {
                 if (this.Lines[line].Text.Trim().Length > 0)
                 {
@@ -4220,8 +4253,11 @@ namespace PdnCodeLab
 
         internal void UnComment()
         {
+            int startLine = this.LineFromPosition(this.SelectionStart);
+            int endLine = this.LineFromPosition(this.SelectionEnd);
+
             this.BeginUndoAction();
-            for (int line = this.LineFromPosition(this.SelectionStart); line < this.LineFromPosition(this.SelectionEnd) + 1; line++)
+            for (int line = startLine; line <= endLine; line++)
             {
                 if (this.Lines[line].Text.Trim().StartsWith("//", StringComparison.Ordinal))
                 {
