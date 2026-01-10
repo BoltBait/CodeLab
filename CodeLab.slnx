@@ -1,0 +1,8 @@
+<Solution>
+  <Configurations>
+    <BuildType Name="Debug" />
+    <BuildType Name="FastDebug" />
+    <BuildType Name="Release" />
+  </Configurations>
+  <Project Path="CodeLab.csproj" />
+</Solution>
