@@ -26,9 +26,6 @@ namespace PdnCodeLab
         {
             string effectName = Regex.Replace(name, @"[^\w]", "");
             string projectName = effectName + "Effect";
-            string slnGuid = "{" + Guid.NewGuid().ToString() + "}";
-            string projGroupGuid = "{" + Guid.NewGuid().ToString() + "}";
-            string projGuid = "{" + Guid.NewGuid().ToString() + "}";
             string pdnPath = Application.StartupPath;
             string projPath = Path.Combine(slnPath, projectName);
             string propPath = Path.Combine(projPath, "Properties");
@@ -38,41 +35,11 @@ namespace PdnCodeLab
             string rtfPath = Path.ChangeExtension(resourcePath, ".rtz");
             bool rtfExists = File.Exists(rtfPath);
 
-            // Tab indent
-            StringBuilder slnFile = new StringBuilder();
-            slnFile.AppendLine();
-            slnFile.AppendLine("Microsoft Visual Studio Solution File, Format Version 12.00");
-            slnFile.AppendLine("# Visual Studio 17");
-            slnFile.AppendLine("VisualStudioVersion = 17.9.34728.123");
-            slnFile.AppendLine("MinimumVisualStudioVersion = 10.0.40219.1");
-            slnFile.AppendLine($"Project(\"{projGroupGuid}\") = \"{projectName}\", \"{projectName}\\{projectName}.csproj\", \"{projGuid}\"");
-            slnFile.AppendLine("EndProject");
-            slnFile.AppendLine("Global");
-            slnFile.AppendLine("\tGlobalSection(SolutionConfigurationPlatforms) = preSolution");
-            slnFile.AppendLine("\t\tDebug|Any CPU = Debug|Any CPU");
-            slnFile.AppendLine("\t\tRelease|Any CPU = Release|Any CPU");
-            slnFile.AppendLine("\tEndGlobalSection");
-            slnFile.AppendLine("\tGlobalSection(ProjectConfigurationPlatforms) = postSolution");
-            slnFile.AppendLine($"\t\t{projGuid}.Debug|Any CPU.ActiveCfg = Debug|Any CPU");
-            slnFile.AppendLine($"\t\t{projGuid}.Debug|Any CPU.Build.0 = Debug|Any CPU");
-            slnFile.AppendLine($"\t\t{projGuid}.Release|Any CPU.ActiveCfg = Release|Any CPU");
-            slnFile.AppendLine($"\t\t{projGuid}.Release|Any CPU.Build.0 = Release|Any CPU");
-            slnFile.AppendLine("\tEndGlobalSection");
-            slnFile.AppendLine("\tGlobalSection(SolutionProperties) = preSolution");
-            slnFile.AppendLine("\t\tHideSolutionNode = FALSE");
-            slnFile.AppendLine("\tEndGlobalSection");
-            slnFile.AppendLine("\tGlobalSection(ExtensibilityGlobals) = postSolution");
-            slnFile.AppendLine($"\t\tSolutionGuid = {slnGuid}");
-            slnFile.AppendLine("\tEndGlobalSection");
-            slnFile.AppendLine("EndGlobal");
-
-            /*
             // Two space indent
             StringBuilder slnxFile = new StringBuilder()
                 .AppendLine("<Solution>")
-                .AppendLine($"  <Project Path=\"{projectName}\\{projectName}.csproj\" />")
-                .Append("</Solution>"); // no end-of-line at the end of this file
-            */
+                .AppendLine($"  <Project Path=\"{projectName}/{projectName}.csproj\" />")
+                .AppendLine("</Solution>");
 
             // Two space indent
             StringBuilder csprojFile = new StringBuilder();
@@ -134,8 +101,7 @@ namespace PdnCodeLab
 
             try
             {
-                File.WriteAllText(Path.Combine(slnPath, projectName + ".sln"), slnFile.ToString());
-                //File.WriteAllText(Path.Combine(slnPath, projectName + ".slnx"), slnxFile.ToString());
+                File.WriteAllText(Path.Combine(slnPath, projectName + ".slnx"), slnxFile.ToString());
 
                 if (!Directory.Exists(projPath))
                 {
