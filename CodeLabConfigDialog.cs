@@ -62,6 +62,7 @@ namespace PdnCodeLab
 #if FASTDEBUG
             this.Icon = UIUtil.CreateIcon("CodeLab");
             this.ShowInTaskbar = true;
+            this.StartPosition = FormStartPosition.CenterScreen;
             this.UseAppThemeColors = true;
             UpdateWindowTitle();
 #endif
