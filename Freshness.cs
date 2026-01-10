@@ -22,7 +22,7 @@ namespace PdnCodeLab
 {
     internal static class Freshness
     {
-        private const string ThisVersion = CodeLab.Version;
+        private const string ThisVersion = BuildInfo.Version;
         private const string WebUpdateFile = "https://www.boltbait.com/versions.txt"; // The web site to check for updates
         private const string ThisApplication = "1"; // in the WebUpadteFile, CodeLab is application #1
         // format of the versions.txt file:  application number;current version;URL to download current version

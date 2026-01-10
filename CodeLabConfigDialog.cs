@@ -43,7 +43,7 @@ namespace PdnCodeLab
     {
         #region Constructor
 #if RELEASE
-        private const string WindowTitle = "CodeLab v" + CodeLab.Version;
+        private const string WindowTitle = "CodeLab v" + BuildInfo.Version;
 #else
         private const string WindowTitle = "CodeLab Debug";
 #endif
@@ -1611,7 +1611,7 @@ namespace PdnCodeLab
 
         private void changesInThisVersionToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            LaunchUrl("https://www.boltbait.com/pdn/codelab/history/#v" + CodeLab.Version);
+            LaunchUrl("https://www.boltbait.com/pdn/codelab/history/#v" + BuildInfo.Version);
         }
 
         private void discussToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1634,7 +1634,7 @@ namespace PdnCodeLab
         {
             StringBuilder aboutText = new StringBuilder()
                 .AppendLine(WindowTitle)
-                .AppendLine("Copyright ©2006-2024, All Rights Reserved.")
+                .AppendLine("Copyright ©2006-" + BuildInfo.Year + ", All Rights Reserved.")
                 .AppendLine()
                 .AppendLine("―――――――――――  Developers  ――――――――――")
                 .AppendLine()
