@@ -47,7 +47,7 @@ namespace PdnCodeLab
         private readonly ICollection<IntelliType> enumFilters = new List<IntelliType>();
         private readonly ListBox listBox = new ListBox();
         private readonly ToolStrip toolStrip = new ToolStrip();
-        private const int visibleItems = 9;
+        private const int maxVisibleItems = 9;
         private const int itemHeight = 22;
         private const int padding = 2;
 
@@ -202,9 +202,9 @@ namespace PdnCodeLab
                     this.drawSelectionOutline = false;
                     this.listBox.InvalidateSelectedIndex();
                 }
-                else if (this.listBox.SelectedIndex < this.listBox.Items.Count - visibleItems)
+                else if (this.listBox.SelectedIndex < this.listBox.Items.Count - maxVisibleItems)
                 {
-                    this.listBox.SelectedIndex += visibleItems;
+                    this.listBox.SelectedIndex += maxVisibleItems;
                 }
                 else
                 {
@@ -222,9 +222,9 @@ namespace PdnCodeLab
                     this.drawSelectionOutline = false;
                     this.listBox.InvalidateSelectedIndex();
                 }
-                else if (this.listBox.SelectedIndex > visibleItems)
+                else if (this.listBox.SelectedIndex > maxVisibleItems)
                 {
-                    this.listBox.SelectedIndex -= visibleItems;
+                    this.listBox.SelectedIndex -= maxVisibleItems;
                 }
                 else
                 {
@@ -474,11 +474,11 @@ namespace PdnCodeLab
                 PopulateUserScriptMembers();
             }
 
-            IReadOnlyCollection<IntelliType> matchingTypes = unFilteredItems.Select(item => item.IntelliType).Distinct().ToArray();
-            SetFilterButtonVisibility(matchingTypes);
-
             unFilteredItems.Sort();
             Filter(startChar.ToString().Trim());
+
+            IReadOnlyCollection<IntelliType> matchingTypes = unFilteredItems.Select(item => item.IntelliType).Distinct().ToArray();
+            SetFilterButtonVisibility(matchingTypes);
         }
 
         /// <summary>
@@ -1081,9 +1081,14 @@ namespace PdnCodeLab
 
         private void SetFilterButtonVisibility(IReadOnlyCollection<IntelliType> intelliTypes)
         {
+            int listBoxHeight = this.listBox.ItemHeight * Math.Min(maxVisibleItems, Math.Max(this.listBox.Items.Count, 1));
+            int filtersHeight = 0;
+            int newWidth = UIUtil.Scale(300);
+
             if (intelliTypes.Count > 0)
             {
                 this.toolStrip.Visible = true;
+                filtersHeight = toolStrip.Height;
 
                 foreach (FilterButton filterButton in this.toolStrip.Items)
                 {
@@ -1092,15 +1097,15 @@ namespace PdnCodeLab
                     filterButton.Visible = intelliTypes.Contains(filterButton.IntelliType);
                 }
 
-                int totalItemWidth = (this.toolStrip.Items[0].Width + this.toolStrip.Items[0].Margin.Left) * intelliTypes.Count;
-                int newWidth = Math.Max(UIUtil.Scale(300), totalItemWidth);
-                this.ClientSize = new Size(newWidth, toolStrip.Height + listBox.ItemHeight * visibleItems);
+                int filtersWidth = (this.toolStrip.Items[0].Width + this.toolStrip.Items[0].Margin.Left) * intelliTypes.Count;
+                newWidth = Math.Max(newWidth, filtersWidth);
             }
             else
             {
                 this.toolStrip.Visible = false;
-                this.ClientSize = new Size(UIUtil.Scale(300), listBox.ItemHeight * visibleItems);
             }
+
+            this.ClientSize = new Size(newWidth, listBoxHeight + filtersHeight + this.Padding.Vertical * 2);
         }
 
         private void SetFilterButtonAppearance(IEnumerable<IntelliType> intelliTypes)
