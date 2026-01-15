@@ -17,6 +17,7 @@ namespace PdnCodeLab
             this.OwnerDraw = true;
             this.Draw += IntelliTip_Draw;
             this.Popup += IntelliTip_Popup;
+            this.UpdateTheme();
         }
 
         private void IntelliTip_Popup(object sender, PopupEventArgs e)

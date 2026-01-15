@@ -235,5 +235,10 @@ namespace PdnCodeLab
         {
             OnFindNextClicked();
         }
+
+        private void toolStrip1_Paint(object sender, PaintEventArgs e)
+        {
+            e.Graphics.DrawItemSelection(this.toolStrip1.BackColor, this.toolStrip1.ClientRectangle, ItemSelectionFlags.Outline);
+        }
     }
 }

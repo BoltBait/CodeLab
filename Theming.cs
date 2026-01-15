@@ -21,6 +21,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using Windows.UI.ViewManagement;
 
 namespace PdnCodeLab
 {
@@ -29,6 +30,16 @@ namespace PdnCodeLab
         Auto,
         Light,
         Dark
+    }
+
+    [Flags]
+    internal enum ItemSelectionFlags
+    {
+        //None = 0,
+        Fill = 1,
+        Outline = 2,
+        AccentMark = 4,
+        AccentOutline = 8
     }
 
     internal interface IIntelliTipHost
@@ -52,6 +63,8 @@ namespace PdnCodeLab
         private static Color backColor;
         private static ThemeRenderer themeRenderer;
         private static TabRenderer tabRenderer;
+        private static Color accentColor;
+        private static readonly UISettings uiSettings = new UISettings();
 
         internal static void Initialize(bool PdnDarkTheme, Color foreColor, Color backColor, Theme userTheme)
         {
@@ -86,6 +99,19 @@ namespace PdnCodeLab
 
         private static ThemeRenderer ToolStripRenderer => themeRenderer ??= new ThemeRenderer();
         private static TabRenderer TabBarRenderer => tabRenderer ??= new TabRenderer();
+
+        private static Color AccentColor
+        {
+            get
+            {
+                if (accentColor.IsEmpty)
+                {
+                    accentColor = uiSettings.GetColorValue(UIColorType.AccentLight2).ToGdiColor();
+                }
+
+                return accentColor;
+            }
+        }
 
         internal static void UpdateTheme(this Form form, Theme theme)
         {
@@ -127,8 +153,15 @@ namespace PdnCodeLab
                         foreach (ToolStrip ts in toolStrip.Descendants())
                         {
                             ts.GetToolTip().UpdateTheme();
-                        }
 
+                            if (ts is ToolStripDropDown dropDown)
+                            {
+                                dropDown.Opening -= AddMenuPadding;
+                                dropDown.Opening += AddMenuPadding;
+
+                                SetWindowCorners(dropDown.Handle, DWM_WINDOW_CORNER_PREFERENCE.DWMWCP_ROUNDSMALL);
+                            }
+                        }
                         break;
 
                     case Button button:
@@ -166,6 +199,12 @@ namespace PdnCodeLab
                     case LinkLabel linkLabel:
                         linkLabel.ActiveLinkColor = foreColor;
                         linkLabel.LinkColor = foreColor;
+                        linkLabel.BackColor = Color.Transparent;
+                        break;
+
+                    case Label:
+                    case CheckBox:
+                        c.BackColor = Color.Transparent;
                         break;
 
                     case IndicatorBar indicatorBar:
@@ -177,10 +216,30 @@ namespace PdnCodeLab
                 {
                     intelliTipHost.ThemeToolTip(
                         effectiveDarkMode ? Color.White : Color.FromArgb(30, 30, 30),
-                        effectiveDarkMode ? Color.FromArgb(66, 66, 66) : Color.WhiteSmoke);
+                        effectiveDarkMode ? Color.FromArgb(40, 40, 40) : Color.WhiteSmoke);
                 }
 
                 EnableUxThemeDarkMode(c.Handle, effectiveDarkMode);
+            }
+        }
+
+        private static void AddMenuPadding(object sender, CancelEventArgs e)
+        {
+            if (sender is ToolStripDropDownMenu dropDown && dropDown.Items.Count > 0)
+            {
+                const int menuPadding = 2;
+
+                foreach (ToolStripItem item in dropDown.Items)
+                {
+                    item.Margin = new Padding(menuPadding, 0, menuPadding, 0);
+                }
+
+                dropDown.Items[0].Margin = new Padding(menuPadding, menuPadding, menuPadding, 0);
+                dropDown.Items[^1].Margin = new Padding(menuPadding, 0, menuPadding, menuPadding);
+
+                dropDown.AutoSize = true;
+                dropDown.AutoSize = false;
+                dropDown.Size = new Size(dropDown.Width + (menuPadding * 2), dropDown.Height);
             }
         }
 
@@ -226,7 +285,53 @@ namespace PdnCodeLab
             IntPtr handle = toolTip.GetHandle();
             bool effectiveDarkMode = currentTheme == Theme.Dark || (currentTheme == Theme.Auto && isAppThemeDark);
             EnableUxThemeDarkMode(handle, effectiveDarkMode);
-            SetWindowCorners(handle, true);
+            SetWindowCorners(handle, DWM_WINDOW_CORNER_PREFERENCE.DWMWCP_ROUNDSMALL);
+        }
+
+        internal static void DrawItemSelection(this Graphics graphics, Color backColor, Rectangle bounds, ItemSelectionFlags itemSelectionFlags = ItemSelectionFlags.Fill | ItemSelectionFlags.Outline)
+        {
+            if (itemSelectionFlags == 0)
+            {
+                throw new InvalidEnumArgumentException($"No value provided for {nameof(ItemSelectionFlags)}.");
+            }
+
+            graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+
+            Size rectRadius = UIUtil.ScaleSize(6, 6);
+            Color selectedColor = ColorBgra.Blend([Color.Gray, backColor]);
+            const float pixelOffset = 0.5f; // allows 1px lines to actually be 1px width, and edges of rectangles to be sharp;
+
+            if (itemSelectionFlags.HasFlag(ItemSelectionFlags.Fill))
+            {
+                RectangleF fillRect = RectangleF.FromLTRB(bounds.Left - pixelOffset, bounds.Top - pixelOffset, bounds.Right - pixelOffset, bounds.Bottom - pixelOffset);
+                Color fillColor = Color.FromArgb(128, selectedColor);
+                using SolidBrush backBrush = new SolidBrush(fillColor);
+                graphics.FillRoundedRectangle(backBrush, fillRect, rectRadius);
+            }
+
+            if (itemSelectionFlags.HasFlag(ItemSelectionFlags.AccentOutline))
+            {
+                Rectangle outlineRect = Rectangle.FromLTRB(bounds.Left, bounds.Top, bounds.Right - 1, bounds.Bottom - 1);
+                using Pen outlinePen = new Pen(AccentColor);
+                graphics.DrawRoundedRectangle(outlinePen, outlineRect, rectRadius);
+            }
+            else if (itemSelectionFlags.HasFlag(ItemSelectionFlags.Outline))
+            {
+                Rectangle outlineRect = Rectangle.FromLTRB(bounds.Left, bounds.Top, bounds.Right - 1, bounds.Bottom - 1);
+                using Pen outlinePen = new Pen(selectedColor);
+                graphics.DrawRoundedRectangle(outlinePen, outlineRect, rectRadius);
+            }
+
+            if (itemSelectionFlags.HasFlag(ItemSelectionFlags.AccentMark))
+            {
+                Size accentRadius = UIUtil.ScaleSize(3, 3);
+                int accentWidth = UIUtil.Scale(3);
+                RectangleF accentRect = new RectangleF(bounds.X - pixelOffset, bounds.Y - pixelOffset + (int)Math.Round(bounds.Height / 4f), accentWidth, (int)Math.Round(bounds.Height / 2f));
+                using SolidBrush accentBrush = new SolidBrush(AccentColor);
+                graphics.FillRoundedRectangle(accentBrush, accentRect, accentRadius);
+            }
+
+            graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
         }
 
         private static IEnumerable<ToolStrip> Descendants(this ToolStrip toolStrip)
@@ -242,9 +347,9 @@ namespace PdnCodeLab
             }
         }
 
-        private enum DWMWINDOWATTRIBUTE
+        private static Color ToGdiColor(this Windows.UI.Color color)
         {
-            DWMWA_WINDOW_CORNER_PREFERENCE = 33
+            return Color.FromArgb(color.A, color.R, color.G, color.B);
         }
 
         private enum DWM_WINDOW_CORNER_PREFERENCE
@@ -255,18 +360,27 @@ namespace PdnCodeLab
             DWMWCP_ROUNDSMALL = 3
         }
 
-        [DllImport("dwmapi.dll", CharSet = CharSet.Unicode, PreserveSig = false)]
-        private static extern void DwmSetWindowAttribute(IntPtr hwnd, DWMWINDOWATTRIBUTE attribute, ref DWM_WINDOW_CORNER_PREFERENCE pvAttribute, uint cbAttribute);
+        [Flags]
+        private enum DWMWINDOWATTRIBUTE : uint
+        {
+            /// <summary>
+            /// Use with DwmSetWindowAttribute. Specifies the rounded corner preference for a window. The pvAttribute parameter points to a value of type DWM_WINDOW_CORNER_PREFERENCE. This value is supported starting with Windows 11 Build 22000.
+            /// </summary>
+            DWMWA_WINDOW_CORNER_PREFERENCE = 33,
+        }
 
-        private static void SetWindowCorners(IntPtr hwnd, bool rounded)
+        [DllImport("dwmapi.dll", CharSet = CharSet.Unicode, PreserveSig = false)]
+        private static extern int DwmSetWindowAttribute(IntPtr hwnd, DWMWINDOWATTRIBUTE dwAttribute, ref uint pvAttribute, int cbAttribute);
+
+        private static void SetWindowCorners(IntPtr hwnd, DWM_WINDOW_CORNER_PREFERENCE cornerPreference)
         {
             if (!OperatingSystem.IsWindowsVersionAtLeast(10, 0, 22000))
             {
                 return;
             }
 
-            DWM_WINDOW_CORNER_PREFERENCE cornerPreference = rounded ? DWM_WINDOW_CORNER_PREFERENCE.DWMWCP_ROUNDSMALL : DWM_WINDOW_CORNER_PREFERENCE.DWMWCP_DONOTROUND;
-            DwmSetWindowAttribute(hwnd, DWMWINDOWATTRIBUTE.DWMWA_WINDOW_CORNER_PREFERENCE, ref cornerPreference, sizeof(DWM_WINDOW_CORNER_PREFERENCE));
+            uint cornerPreferenceUInt = (uint)cornerPreference;
+            DwmSetWindowAttribute(hwnd, DWMWINDOWATTRIBUTE.DWMWA_WINDOW_CORNER_PREFERENCE, ref cornerPreferenceUInt, sizeof(DWM_WINDOW_CORNER_PREFERENCE));
         }
 
         [UnsafeAccessor(UnsafeAccessorKind.Method, Name = "get_ToolTip")]
@@ -275,12 +389,19 @@ namespace PdnCodeLab
         [UnsafeAccessor(UnsafeAccessorKind.Method, Name = "get_Handle")]
         private static extern IntPtr GetHandle(this ToolTip toolStrip);
 
+        internal static void InvalidateCache()
+        {
+            accentColor = Color.Empty;
+        }
+
         private sealed class ThemeRenderer : ToolStripProfessionalRenderer
         {
             internal ThemeRenderer() : base(new ThemeColorTable())
             {
                 RoundedEdges = false;
             }
+
+            private Dictionary<ToolStripItem, ToolStripArrowRenderEventArgs> itemArrowArgs = new Dictionary<ToolStripItem, ToolStripArrowRenderEventArgs>();
 
             protected override void OnRenderItemText(ToolStripItemTextRenderEventArgs e)
             {
@@ -295,21 +416,131 @@ namespace PdnCodeLab
                     e.ArrowColor = ThemeUtil.foreColor;
                 }
 
+                itemArrowArgs[e.Item] = e;
+
                 base.OnRenderArrow(e);
+            }
+
+            protected override void OnRenderItemBackground(ToolStripItemRenderEventArgs e)
+            {
+                base.OnRenderItemBackground(e);
+
+                e.Graphics.FillRoundedRectangle(Brushes.Red, e.Item.ContentRectangle, new Size(6, 6));
+            }
+
+            protected override void OnRenderMenuItemBackground(ToolStripItemRenderEventArgs e)
+            {
+                base.OnRenderMenuItemBackground(e);
+
+                if (e.Item.Selected || e.Item.Pressed)
+                {
+                    Rectangle itemRect = e.ToolStrip is MenuStrip
+                        ? new Rectangle(Point.Empty, e.Item.Bounds.Size)
+                        : e.Item.ContentRectangle;
+
+                    using SolidBrush clearBrush = new SolidBrush(ColorTable.ToolStripDropDownBackground);
+                    e.Graphics.FillRectangle(clearBrush, itemRect);
+
+                    e.Graphics.DrawItemSelection(ColorTable.ToolStripDropDownBackground, itemRect);
+                }
+            }
+
+            protected override void OnRenderButtonBackground(ToolStripItemRenderEventArgs e)
+            {
+                base.OnRenderButtonBackground(e);
+
+                bool isChecked = e.Item is ToolStripButton button && button.Checked;
+
+                if (e.Item.Selected || e.Item.Pressed)
+                {
+                    Rectangle itemRect = new Rectangle(Point.Empty, e.Item.Bounds.Size);
+
+                    using SolidBrush clearBrush = new SolidBrush(ColorTable.ToolStripDropDownBackground);
+                    e.Graphics.FillRectangle(clearBrush, itemRect);
+
+                    ItemSelectionFlags selectionFlags = isChecked
+                        ? ItemSelectionFlags.Fill | ItemSelectionFlags.AccentOutline
+                        : ItemSelectionFlags.Fill | ItemSelectionFlags.Outline;
+
+                    e.Graphics.DrawItemSelection(ColorTable.ToolStripDropDownBackground, itemRect, selectionFlags);
+                }
+                else if (isChecked)
+                {
+                    Rectangle itemRect = new Rectangle(Point.Empty, e.Item.Bounds.Size);
+
+                    using SolidBrush clearBrush = new SolidBrush(ColorTable.ToolStripDropDownBackground);
+                    e.Graphics.FillRectangle(clearBrush, itemRect);
+
+                    e.Graphics.DrawItemSelection(ColorTable.ToolStripDropDownBackground, itemRect, ItemSelectionFlags.AccentOutline);
+                }
+            }
+
+            protected override void OnRenderItemCheck(ToolStripItemImageRenderEventArgs e)
+            {
+                //base.OnRenderItemCheck(e);
+
+                e.Graphics.DrawImage(e.Image, e.ImageRectangle);
+            }
+
+            protected override void OnRenderDropDownButtonBackground(ToolStripItemRenderEventArgs e)
+            {
+                base.OnRenderDropDownButtonBackground(e);
+
+                if (e.Item.Selected || e.Item.Pressed)
+                {
+                    Rectangle itemRect = new Rectangle(e.Item.ContentRectangle.Location, e.Item.Bounds.Size);
+
+                    using SolidBrush clearBrush = new SolidBrush(ColorTable.ToolStripDropDownBackground);
+                    e.Graphics.FillRectangle(clearBrush, itemRect);
+
+                    e.Graphics.DrawItemSelection(ColorTable.ToolStripDropDownBackground, itemRect);
+
+                    if (itemArrowArgs.TryGetValue(e.Item, out ToolStripArrowRenderEventArgs arrowArgs))
+                    {
+                        ToolStripArrowRenderEventArgs newArrowArgs = new ToolStripArrowRenderEventArgs(
+                            e.Graphics, arrowArgs.Item, arrowArgs.ArrowRectangle, arrowArgs.ArrowColor, arrowArgs.Direction);
+
+                        OnRenderArrow(newArrowArgs);
+                    }
+                }
+            }
+
+            protected override void OnRenderSplitButtonBackground(ToolStripItemRenderEventArgs e)
+            {
+                base.OnRenderSplitButtonBackground(e);
+
+                if (e.Item.Selected || e.Item.Pressed)
+                {
+                    using SolidBrush clearBrush = new SolidBrush(ColorTable.ToolStripDropDownBackground);
+                    e.Graphics.FillRectangle(clearBrush, e.Item.ContentRectangle);
+
+                    e.Graphics.DrawItemSelection(ColorTable.ToolStripDropDownBackground, e.Item.ContentRectangle);
+
+                    if (itemArrowArgs.TryGetValue(e.Item, out ToolStripArrowRenderEventArgs arrowArgs))
+                    {
+                        if (!e.Item.Pressed)
+                        {
+                            using Pen linePen = new Pen(ColorTable.MenuBorder, UIUtil.Scale(1));
+                            e.Graphics.DrawLine(
+                                linePen,
+                                arrowArgs.ArrowRectangle.Left - 1,
+                                arrowArgs.ArrowRectangle.Top + UIUtil.Scale(1),
+                                arrowArgs.ArrowRectangle.Left - 1,
+                                arrowArgs.ArrowRectangle.Bottom - UIUtil.Scale(1));
+                        }
+
+                        OnRenderArrow(arrowArgs);
+                    }
+                }
             }
 
             private sealed class ThemeColorTable : ProfessionalColorTable
             {
-                internal ThemeColorTable()
-                {
-                    UseSystemColors = false;
-                }
-
                 private readonly Color BackColor = ThemeUtil.backColor;
-                private readonly Color BorderColor = Color.FromArgb(186, 0, 105, 210);
-                private readonly Color HiliteColor = Color.FromArgb(62, 0, 103, 206);
-                private readonly Color CheckedColor = Color.FromArgb(129, 52, 153, 254);
-                private readonly Color CheckedBorderColor = Color.FromArgb(52, 153, 254);
+                private readonly Color BorderColor = ThemeUtil.backColor; //Color.FromArgb(186, 0, 105, 210);
+                private readonly Color HiliteColor = ThemeUtil.backColor; //Color.FromArgb(62, 0, 103, 206);
+                private readonly Color CheckedColor = ThemeUtil.AccentColor; //Color.FromArgb(129, 52, 153, 254);
+                private readonly Color CheckedBorderColor = ThemeUtil.backColor; //Color.FromArgb(52, 153, 254);
 
                 public override Color ButtonSelectedHighlight => HiliteColor;
                 public override Color ButtonSelectedBorder => BorderColor;
@@ -331,7 +562,7 @@ namespace PdnCodeLab
                 public override Color ButtonCheckedHighlight => CheckedColor;
                 public override Color ButtonCheckedHighlightBorder => CheckedBorderColor;
 
-                public override Color ToolStripBorder => BackColor;
+                public override Color ToolStripBorder => Color.Transparent;
                 public override Color ToolStripGradientBegin => BackColor;
                 public override Color ToolStripGradientMiddle => BackColor;
                 public override Color ToolStripGradientEnd => BackColor;
@@ -352,13 +583,14 @@ namespace PdnCodeLab
 
                 public override Color MenuStripGradientBegin => BackColor;
                 public override Color MenuStripGradientEnd => BackColor;
-                public override Color MenuBorder => Color.Gray;
+                public override Color MenuBorder => ColorBgra.Blend([Color.Gray, BackColor]);
 
                 public override Color ImageMarginGradientBegin => BackColor;
                 public override Color ImageMarginGradientMiddle => BackColor;
                 public override Color ImageMarginGradientEnd => BackColor;
 
                 public override Color SeparatorLight => BackColor;
+                public override Color SeparatorDark => Color.FromArgb(85, 85, 85);
             }
         }
 
@@ -372,7 +604,46 @@ namespace PdnCodeLab
             protected override void OnRenderItemText(ToolStripItemTextRenderEventArgs e)
             {
                 e.TextColor = ThemeUtil.foreColor;
+                e.TextRectangle = new Rectangle(e.TextRectangle.X + e.Item.Padding.Left, e.TextRectangle.Y, e.TextRectangle.Width, e.TextRectangle.Height);
                 base.OnRenderItemText(e);
+            }
+
+            protected override void OnRenderButtonBackground(ToolStripItemRenderEventArgs e)
+            {
+                base.OnRenderButtonBackground(e);
+
+                bool isChecked = e.Item is ToolStripButton button && button.Checked;
+
+                if (e.Item.Selected || e.Item.Pressed)
+                {
+                    Rectangle itemRect = new Rectangle(Point.Empty, e.Item.Bounds.Size);
+
+                    using SolidBrush clearBrush = new SolidBrush(ColorTable.ToolStripDropDownBackground);
+                    e.Graphics.FillRectangle(clearBrush, itemRect);
+
+                    ItemSelectionFlags selectionFlags = isChecked
+                        ? ItemSelectionFlags.Fill | ItemSelectionFlags.AccentOutline
+                        : ItemSelectionFlags.Fill | ItemSelectionFlags.Outline;
+
+                    e.Graphics.DrawItemSelection(ColorTable.ToolStripDropDownBackground, itemRect, selectionFlags);
+                }
+                else if (isChecked)
+                {
+                    Rectangle itemRect = new Rectangle(Point.Empty, e.Item.Bounds.Size);
+
+                    using SolidBrush clearBrush = new SolidBrush(ColorTable.ToolStripDropDownBackground);
+                    e.Graphics.FillRectangle(clearBrush, itemRect);
+
+                    e.Graphics.DrawItemSelection(ColorTable.ToolStripDropDownBackground, itemRect, ItemSelectionFlags.AccentOutline);
+                }
+            }
+
+            protected override void OnRenderItemImage(ToolStripItemImageRenderEventArgs e)
+            {
+                Rectangle newImageRect = new Rectangle(e.ImageRectangle.X + e.Item.Padding.Left, e.ImageRectangle.Y, e.ImageRectangle.Width, e.ImageRectangle.Height);
+                ToolStripItemImageRenderEventArgs newEventArgs = new ToolStripItemImageRenderEventArgs(e.Graphics, e.Item, e.Image, newImageRect);
+
+                base.OnRenderItemImage(newEventArgs);
             }
 
             private sealed class TabColorTable : ProfessionalColorTable
@@ -383,10 +654,10 @@ namespace PdnCodeLab
                 }
 
                 private readonly Color BackColor = Color.FromArgb(255, ColorBgra.Blend(new ColorBgra[] { ColorBgra.FromBgra(128, 128, 128, 64), ThemeUtil.backColor }));
-                private readonly Color BorderColor = Color.FromArgb(186, 0, 105, 210);
+                private readonly Color BorderColor = ThemeUtil.backColor; // Color.FromArgb(186, 0, 105, 210);
                 private readonly Color HiliteColor = Color.FromArgb(62, 0, 103, 206);
-                private readonly Color CheckedColor = Color.FromArgb(129, 52, 153, 254);
-                private readonly Color ActiveTabColor = Color.FromArgb(255, 52, 153, 254);
+                private readonly Color CheckedColor = Color.FromArgb(255, ColorBgra.Blend(new ColorBgra[] { ColorBgra.FromBgra(128, 128, 128, 64), ThemeUtil.backColor })); //Color.FromArgb(129, 52, 153, 254);
+                private readonly Color ActiveTabColor = ThemeUtil.AccentColor; // Color.FromArgb(255, 52, 153, 254);
 
                 public override Color ButtonSelectedHighlight => HiliteColor;
                 public override Color ButtonSelectedBorder => ActiveTabColor;
@@ -408,7 +679,7 @@ namespace PdnCodeLab
                 public override Color ButtonCheckedHighlight => CheckedColor;
                 public override Color ButtonCheckedHighlightBorder => ActiveTabColor;
 
-                public override Color ToolStripBorder => ActiveTabColor;
+                public override Color ToolStripBorder => Color.Transparent;
                 public override Color ToolStripGradientBegin => BackColor;
                 public override Color ToolStripGradientMiddle => BackColor;
                 public override Color ToolStripGradientEnd => BackColor;

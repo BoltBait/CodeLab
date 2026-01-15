@@ -48,6 +48,8 @@ namespace PdnCodeLab
         private readonly ListBox listBox = new ListBox();
         private readonly ToolStrip toolStrip = new ToolStrip();
         private const int visibleItems = 9;
+        private const int itemHeight = 22;
+        private const int padding = 2;
 
         internal string AutoCompleteCode => listBox.SelectedIndex >= 0 ? listBox.SelectedItem.ToString() : string.Empty;
         internal bool MouseOver => listBoxMouseOver || toolstripMouseOver;
@@ -107,10 +109,11 @@ namespace PdnCodeLab
             toolStrip.ShowItemToolTips = false;
             toolStrip.MouseEnter += ToolStrip_MouseEnter;
             toolStrip.MouseLeave += ToolStrip_MouseLeave;
+            toolStrip.Paint += ToolStrip_Paint;
 
             listBox.Dock = DockStyle.Fill;
             listBox.DrawMode = DrawMode.OwnerDrawFixed;
-            listBox.ItemHeight = UIUtil.Scale(20);
+            listBox.ItemHeight = UIUtil.Scale(itemHeight);
             listBox.BorderStyle = BorderStyle.None;
             listBox.DrawItem += ListBox_DrawItem;
             listBox.SelectedIndexChanged += ListBox_SelectedIndexChanged;
@@ -119,6 +122,7 @@ namespace PdnCodeLab
             listBox.MouseEnter += ListBox_MouseEnter;
             listBox.MouseLeave += ListBox_MouseLeave;
 
+            this.Padding = new Padding(0, UIUtil.Scale(padding), 0, 0);
             this.Controls.Add(listBox);
             this.Controls.Add(toolStrip);
             this.Cursor = Cursors.Default;
@@ -263,6 +267,12 @@ namespace PdnCodeLab
         private void ToolStrip_MouseEnter(object sender, EventArgs e)
         {
             this.toolstripMouseOver = true;
+        }
+
+        private void ToolStrip_Paint(object sender, PaintEventArgs e)
+        {
+            Rectangle bounds = this.toolStrip.ClientRectangle;
+            e.Graphics.DrawLine(Pens.Gray, bounds.Left, bounds.Top, bounds.Right, bounds.Top);
         }
 
         private void ListBox_DoubleClick(object sender, EventArgs e)
@@ -992,32 +1002,24 @@ namespace PdnCodeLab
             e.Graphics.FillRectangle(clearBrush, e.Bounds);
 
             const int itemMargin = 2;
-            Rectangle itemRect = Rectangle.FromLTRB(e.Bounds.Left + itemMargin, e.Bounds.Top, e.Bounds.Right - itemMargin - 1, e.Bounds.Bottom - 1);
+            Rectangle itemRect = Rectangle.FromLTRB(e.Bounds.Left + itemMargin, e.Bounds.Top, e.Bounds.Right - itemMargin, e.Bounds.Bottom);
 
             if (e.State.HasFlag(DrawItemState.Selected))
             {
-                e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+                ItemSelectionFlags itemSelectionFlags = this.drawSelectionOutline
+                    ? ItemSelectionFlags.Outline | ItemSelectionFlags.AccentMark
+                    : ItemSelectionFlags.Outline | ItemSelectionFlags.AccentMark | ItemSelectionFlags.Fill;
 
-                Color selectedColor = ColorBgra.Blend([Color.Gray, listBox.BackColor]);
-                Size rectRadius = new Size(6, 6);
-
-                if (!this.drawSelectionOutline)
-                {
-                    Color fillColor = Color.FromArgb(128, selectedColor);
-                    using SolidBrush backBrush = new SolidBrush(fillColor);
-                    e.Graphics.FillRoundedRectangle(backBrush, itemRect, rectRadius);
-                }
-
-                using Pen outlinePen = new Pen(selectedColor);
-                e.Graphics.DrawRoundedRectangle(outlinePen, itemRect, rectRadius);
-
-                e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
+                e.Graphics.DrawItemSelection(listBox.BackColor, itemRect, itemSelectionFlags);
             }
 
-            int iconMargin = (int)Math.Round((itemRect.Height - IconSize.Height) / 2f);
-            e.Graphics.DrawImage(ItemIcons[item.ImageIndex], itemRect.Left + iconMargin, itemRect.Top + iconMargin, IconSize.Width, IconSize.Height);
+            int accentPadding = UIUtil.Scale(5);
 
-            Rectangle textRect = Rectangle.FromLTRB(itemRect.Left + IconSize.Width + iconMargin, itemRect.Top, itemRect.Right, itemRect.Bottom);
+            int iconMargin = (int)Math.Round((itemRect.Height - IconSize.Height) / 2f);
+            Rectangle iconRect = new Rectangle(itemRect.Left + accentPadding + iconMargin, itemRect.Top + iconMargin, IconSize.Width, IconSize.Height);
+            e.Graphics.DrawImage(ItemIcons[item.ImageIndex], iconRect);
+
+            Rectangle textRect = Rectangle.FromLTRB(itemRect.Left + accentPadding + IconSize.Width + iconMargin, itemRect.Top, itemRect.Right, itemRect.Bottom);
             TextRenderer.DrawText(e.Graphics, item.Text, e.Font, textRect, listBox.ForeColor, TextFormatFlags.VerticalCenter | TextFormatFlags.EndEllipsis);
 
             if (isStaticColorType &&
@@ -1229,7 +1231,7 @@ namespace PdnCodeLab
                 this.IntelliType = intelliType;
                 this.Image = ItemIcons[(int)this.IntelliType];
                 this.ToolTipText = $"Show only {intelliType.ToString().MakePlural()}{GetHotKey(intelliType)}";
-                this.Margin = new Padding(UIUtil.Scale(2));
+                this.Margin = new Padding(UIUtil.Scale(2), UIUtil.Scale(3), UIUtil.Scale(2), UIUtil.Scale(2));
             }
 
             private static string GetHotKey(IntelliType intelliType)

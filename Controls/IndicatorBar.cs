@@ -26,12 +26,8 @@ namespace PdnCodeLab
         private bool posSliderClick;
         private bool posTrackClick;
 
-        private ColorRgb24 arrowColor;
-        private ColorRgb24 arrowColorHover;
-        private ColorRgb24 arrowColorClick;
-
         private ColorRgb24 posTrackColor;
-        private ColorRgb24 posColor;
+        private ColorRgb24 posColorNormal;
         private ColorRgb24 posColorHover;
         private ColorRgb24 posColorClick;
 
@@ -77,12 +73,8 @@ namespace PdnCodeLab
                 switch (value)
                 {
                     case Theme.Dark:
-                        arrowColor = new ColorRgb24(153, 153, 153);
-                        arrowColorHover = new ColorRgb24(28, 151, 234);
-                        arrowColorClick = new ColorRgb24(0, 122, 204);
-
                         posTrackColor = new ColorRgb24(62, 62, 66);
-                        posColor = new ColorRgb24(104, 104, 104);
+                        posColorNormal = new ColorRgb24(104, 104, 104);
                         posColorHover = new ColorRgb24(158, 158, 158);
                         posColorClick = new ColorRgb24(239, 235, 239);
 
@@ -95,12 +87,8 @@ namespace PdnCodeLab
 
                     case Theme.Light:
                     default:
-                        arrowColor = new ColorRgb24(134, 137, 153);
-                        arrowColorHover = new ColorRgb24(28, 151, 234);
-                        arrowColorClick = new ColorRgb24(0, 122, 204);
-
                         posTrackColor = new ColorRgb24(245, 245, 245);
-                        posColor = new ColorRgb24(194, 195, 201);
+                        posColorNormal = new ColorRgb24(194, 195, 201);
                         posColorHover = new ColorRgb24(104, 104, 104);
                         posColorClick = new ColorRgb24(91, 91, 91);
 
@@ -491,15 +479,17 @@ namespace PdnCodeLab
             {
                 deviceContext.FillRectangle(clipRect, brush);
 
-                brush.Color = upButtonClick ? arrowColorClick : upButtonHover ? arrowColorHover : arrowColor;
+                brush.Color = upButtonClick ? posColorClick : upButtonHover ? posColorHover : posColorNormal;
                 deviceContext.FillPolygon(upArrow, brush);
 
-                brush.Color = downButtonClick ? arrowColorClick : downButtonHover ? arrowColorHover : arrowColor;
+                brush.Color = downButtonClick ? posColorClick : downButtonHover ? posColorHover : posColorNormal;
                 deviceContext.FillPolygon(downArrow, brush);
 
-                brush.Color = posSliderClick ? posColorClick : posSliderHover ? posColorHover : posColor;
-                RectInt32 posRect = new RectInt32(posSliderRect.Width / 4, posSliderRect.Y, posSliderRect.Width - posSliderRect.Width / 2, posSliderRect.Height);
-                deviceContext.FillRectangle(posRect, brush);
+                brush.Color = posSliderClick ? posColorClick : posSliderHover ? posColorHover : posColorNormal;
+                int padding = posSliderRect.Width / 4;
+                RectInt32 posRect = RectInt32.FromEdges(posSliderRect.Left + padding, posSliderRect.Top, posSliderRect.Right - padding, posSliderRect.Bottom);
+                RoundedRect posRoundedRect = new RoundedRect(posRect, padding);
+                deviceContext.FillRoundedRectangle(posRoundedRect, brush);
             }
 
             float dpiY = deviceContext.Dpi.Y / 96f;

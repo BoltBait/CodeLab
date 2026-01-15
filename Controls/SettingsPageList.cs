@@ -3,6 +3,7 @@ using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace PdnCodeLab
@@ -10,12 +11,14 @@ namespace PdnCodeLab
 
     public class SettingsPageList : ListBox
     {
+        private int indexAtMouse = -1;
+
         public SettingsPageList()
         {
             this.Items.AddRange(SettingsPageListItem.Items);
             this.BorderStyle = BorderStyle.None;
             this.DrawMode = DrawMode.OwnerDrawFixed;
-            this.ItemHeight = UIUtil.Scale(32);
+            this.ItemHeight = UIUtil.Scale(36);
         }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -25,6 +28,45 @@ namespace PdnCodeLab
             set => this.SelectedIndex = (int)value;
         }
 
+        protected override void OnMouseMove(MouseEventArgs e)
+        {
+            base.OnMouseMove(e);
+
+            int newIndexAtMouse = this.IndexFromPoint(e.Location);
+
+            if (newIndexAtMouse != this.indexAtMouse)
+            {
+                int oldIndexAtMouse = this.indexAtMouse;
+                this.indexAtMouse = newIndexAtMouse;
+
+                if (oldIndexAtMouse > -1)
+                {
+                    Rectangle oldIndexRect = this.GetItemRectangle(oldIndexAtMouse);
+                    this.Invalidate(oldIndexRect);
+                }
+
+                if (newIndexAtMouse > -1)
+                {
+                    Rectangle indexRect = this.GetItemRectangle(newIndexAtMouse);
+                    this.Invalidate(indexRect);
+                }
+            }
+        }
+
+        protected override void OnMouseLeave(EventArgs e)
+        {
+            base.OnMouseLeave(e);
+
+            int oldIndexAtMouse = this.indexAtMouse;
+            this.indexAtMouse = -1;
+
+            if (oldIndexAtMouse > -1)
+            {
+                Rectangle oldIndexRect = this.GetItemRectangle(oldIndexAtMouse);
+                this.Invalidate(oldIndexRect);
+            }
+        }
+
         protected override void OnDrawItem(DrawItemEventArgs e)
         {
             if (e.Index == -1 || this.Items[e.Index] is not SettingsPageListItem item)
@@ -32,36 +74,51 @@ namespace PdnCodeLab
                 return;
             }
 
+            BufferedGraphicsContext currentContext = BufferedGraphicsManager.Current;
+
+            Rectangle itemBounds = new Rectangle(Point.Empty, e.Bounds.Size);
+            using BufferedGraphics bg = currentContext.Allocate(e.Graphics, itemBounds);
+
             using SolidBrush clearBrush = new SolidBrush(this.BackColor);
-            e.Graphics.FillRectangle(clearBrush, e.Bounds);
+            bg.Graphics.FillRectangle(clearBrush, itemBounds);
 
-            const int itemMargin = 0;
-            Rectangle itemRect = Rectangle.FromLTRB(e.Bounds.Left + itemMargin, e.Bounds.Top, e.Bounds.Right - itemMargin - 1, e.Bounds.Bottom - 1);
-
-            if (e.State.HasFlag(DrawItemState.Selected))
+            if (e.State.HasFlag(DrawItemState.Selected) || e.Index == this.indexAtMouse)
             {
-                e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+                ItemSelectionFlags itemSelectionFlags = e.State.HasFlag(DrawItemState.Selected)
+                    ? ItemSelectionFlags.Fill | ItemSelectionFlags.AccentMark
+                    : ItemSelectionFlags.Fill;
 
-                Color selectedColor = ColorBgra.Blend([Color.Gray, this.BackColor]);
-                Size rectRadius = new Size(6, 6);
-
-                Color fillColor = Color.FromArgb(128, selectedColor);
-                using SolidBrush backBrush = new SolidBrush(fillColor);
-                e.Graphics.FillRoundedRectangle(backBrush, itemRect, rectRadius);
-
-                using Pen outlinePen = new Pen(selectedColor);
-                e.Graphics.DrawRoundedRectangle(outlinePen, itemRect, rectRadius);
-
-                e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
+                Rectangle itemSelectionRect = Rectangle.FromLTRB(itemBounds.Left, itemBounds.Top + 2, itemBounds.Right, itemBounds.Bottom - 2);
+                bg.Graphics.DrawItemSelection(this.BackColor, itemSelectionRect, itemSelectionFlags);
             }
 
-            Rectangle iconRect = new Rectangle(e.Bounds.X + UIUtil.Scale(4), e.Bounds.Y + UIUtil.Scale(4), UIUtil.Scale(24), UIUtil.Scale(24));
-            e.Graphics.DrawImage(item.Image, iconRect);
+            int accentPadding = UIUtil.Scale(4);
 
-            Rectangle textBounds = new Rectangle(e.Bounds.X + e.Bounds.Height, e.Bounds.Y, e.Bounds.Width - e.Bounds.Height, e.Bounds.Height);
-            TextRenderer.DrawText(e.Graphics, item.Text, e.Font, textBounds, this.ForeColor, TextFormatFlags.VerticalCenter);
+            Rectangle iconRect = new Rectangle(itemBounds.X + accentPadding + UIUtil.Scale(4), itemBounds.Y + UIUtil.Scale(6), UIUtil.Scale(24), UIUtil.Scale(24));
+            bg.Graphics.DrawImage(item.Image, iconRect);
+
+            Rectangle textBounds = new Rectangle(itemBounds.X + accentPadding + itemBounds.Height, itemBounds.Y, itemBounds.Width - itemBounds.Height, itemBounds.Height);
+            TextRenderer.DrawText(bg.Graphics, item.Text, e.Font, textBounds, this.ForeColor, TextFormatFlags.VerticalCenter);
+
+            // Wrapper around BitBlt
+            CopyGraphics(e.Graphics, e.Bounds, bg.Graphics, itemBounds.Location);
 
             base.OnDrawItem(e);
+        }
+
+        [DllImport("gdi32.dll", CallingConvention = CallingConvention.StdCall)]
+        private static extern bool BitBlt(IntPtr hdc, int nXDest, int nYDest, int nWidth, int nHeight, IntPtr hdcSrc, int nXSrc, int nYSrc, uint dwRop);
+
+        private static void CopyGraphics(Graphics dstGraphics, Rectangle dstBounds, Graphics srcGraphics, Point srcLocation)
+        {
+            IntPtr dstHdc = dstGraphics.GetHdc();
+            IntPtr srcHdc = srcGraphics.GetHdc();
+
+            const uint SRCCOPY = 0x00CC0020;
+            BitBlt(dstHdc, dstBounds.X, dstBounds.Y, dstBounds.Width, dstBounds.Height, srcHdc, srcLocation.X, srcLocation.Y, SRCCOPY);
+
+            dstGraphics.ReleaseHdc(dstHdc);
+            srcGraphics.ReleaseHdc(srcHdc);
         }
 
         private class SettingsPageListItem

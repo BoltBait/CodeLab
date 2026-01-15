@@ -901,11 +901,25 @@ namespace PdnCodeLab
         {
             base.WndProc(ref m);
 
-            if (m.Msg == 0x001A &&  // WM_SETTINGCHANGE
-                m.WParam == 0x2007) // SPI_SETCARETWIDTH
+            switch (m.Msg)
             {
-                // Caret Width was changed in Windows Settings
-                this.txtCode.CaretWidth = SystemInformation.CaretWidth;
+                case 0x001A: // WM_SETTINGCHANGE
+                    switch (m.WParam)
+                    {
+                        case 0x2007: // SPI_SETCARETWIDTH
+                            // Caret Width was changed in Windows Settings
+                            this.txtCode.CaretWidth = SystemInformation.CaretWidth;
+                            break;
+
+                        case 0x0:    // undefined; check the LParam
+                            string lParmStr = System.Runtime.InteropServices.Marshal.PtrToStringAuto(m.LParam);
+                            if (lParmStr == "ImmersiveColorSet")
+                            {
+                                ThemeUtil.InvalidateCache();
+                            }
+                            break;
+                    }
+                    break;
             }
         }
 

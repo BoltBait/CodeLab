@@ -335,6 +335,7 @@ namespace PdnCodeLab
 
             private Rectangle closeRect = Rectangle.Empty;
             private bool closeRectHiLite = false;
+            private bool mouseOver = false;
 
             /// <summary>
             /// Do NOT USE. For Initial Tab only.
@@ -348,7 +349,7 @@ namespace PdnCodeLab
             internal Tab(string title, string path, ProjectType projectType)
             {
                 this.ImageAlign = ContentAlignment.MiddleLeft;
-                this.Margin = new Padding(0, 5, 3, 0);
+                this.Margin = new Padding(0, 3, 3, 3);
                 this.AutoToolTip = false;
                 this.Text = title;
                 this.Guid = Guid.NewGuid();
@@ -416,7 +417,7 @@ namespace PdnCodeLab
 
                 if (this.Padding.Right != this.Height)
                 {
-                    this.Padding = new Padding(0, 0, this.Height, 0);
+                    this.Padding = new Padding(this.Padding.Left, this.Padding.Top, this.Height, this.Padding.Bottom);
                 }
             }
 
@@ -424,7 +425,7 @@ namespace PdnCodeLab
             {
                 base.OnPaint(e);
 
-                if (this.Parent.Items.Count <= 1)
+                if (this.Parent.Items.Count <= 1 || !this.mouseOver)
                 {
                     return;
                 }
@@ -463,13 +464,25 @@ namespace PdnCodeLab
                 base.OnMouseMove(mea);
             }
 
+            protected override void OnMouseEnter(EventArgs e)
+            {
+                this.mouseOver = true;
+
+                this.Invalidate();
+
+                base.OnMouseEnter(e);
+            }
+
             protected override void OnMouseLeave(EventArgs e)
             {
+                this.mouseOver = false;
+
                 if (closeRectHiLite)
                 {
                     closeRectHiLite = false;
-                    this.Invalidate();
                 }
+
+                this.Invalidate();
 
                 base.OnMouseLeave(e);
             }

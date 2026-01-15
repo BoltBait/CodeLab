@@ -250,7 +250,7 @@ namespace PdnCodeLab
 
                 if (findPanel.Visible)
                 {
-                    findPanel.Location = new Point(this.ClientRectangle.Right - this.Margins.Right - findPanel.Width, 0);
+                    UpdateFindPanelLocation();
                 }
             }
         }
@@ -3502,7 +3502,7 @@ namespace PdnCodeLab
             findPanel.ShowReplace = showReplace;
             if (!findPanel.Visible)
             {
-                findPanel.Location = new Point(this.ClientRectangle.Right - this.Margins.Right - findPanel.Width, 0);
+                UpdateFindPanelLocation();
                 findPanel.Visible = true;
             }
             findPanel.Focus();
@@ -3555,6 +3555,12 @@ namespace PdnCodeLab
                 this.Lines[this.LineFromPosition(this.TargetStart)].EnsureVisible();
                 this.ScrollCaret();
             }
+        }
+
+        private void UpdateFindPanelLocation()
+        {
+            const int panelMargin = 2;
+            findPanel.Location = new Point(this.ClientRectangle.Right - this.Margins.Right - findPanel.Width - panelMargin, panelMargin + 1);
         }
 
         private void Find(string term, SearchFlags searchFlags)
@@ -4127,7 +4133,7 @@ namespace PdnCodeLab
             // Make sure scrollbar does cover the Find panel
             if (findPanel.Visible)
             {
-                findPanel.Location = new Point(this.ClientRectangle.Right - this.Margins.Right - findPanel.Width, 0);
+                UpdateFindPanelLocation();
             }
 
             //Update Find Highlighting
@@ -4171,7 +4177,7 @@ namespace PdnCodeLab
 
             if (findPanel.Visible)
             {
-                findPanel.Location = new Point(this.ClientRectangle.Right - this.Margins.Right - findPanel.Width, 0);
+                UpdateFindPanelLocation();
             }
 
             if (iBox.Visible)

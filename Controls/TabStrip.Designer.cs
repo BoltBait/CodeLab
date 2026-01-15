@@ -43,7 +43,7 @@
             toolStrip1.Location = new System.Drawing.Point(0, 0);
             toolStrip1.Name = "toolStrip1";
             toolStrip1.Padding = new System.Windows.Forms.Padding(5, 0, 5, 0);
-            toolStrip1.Size = new System.Drawing.Size(300, 25);
+            toolStrip1.Size = new System.Drawing.Size(300, 30);
             toolStrip1.Stretch = true;
             toolStrip1.TabIndex = 0;
             toolStrip1.Text = "Tabs";
@@ -54,10 +54,10 @@
             untitledTab.Checked = true;
             untitledTab.CheckState = System.Windows.Forms.CheckState.Checked;
             untitledTab.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            untitledTab.Margin = new System.Windows.Forms.Padding(0, 5, 3, 0);
+            untitledTab.Margin = new System.Windows.Forms.Padding(0, 3, 3, 3);
             untitledTab.Name = "untitledTab";
-            untitledTab.Padding = new System.Windows.Forms.Padding(0, 0, 20, 0);
-            untitledTab.Size = new System.Drawing.Size(89, 20);
+            untitledTab.Padding = new System.Windows.Forms.Padding(2, 2, 24, 2);
+            untitledTab.Size = new System.Drawing.Size(95, 24);
             untitledTab.Text = "Untitled";
             untitledTab.Click += Tab_Click;
             untitledTab.MouseDown += Tab_MouseDown;
@@ -70,7 +70,7 @@
             AutoSize = true;
             Controls.Add(toolStrip1);
             Name = "TabStrip";
-            Size = new System.Drawing.Size(300, 25);
+            Size = new System.Drawing.Size(300, 30);
             toolStrip1.ResumeLayout(false);
             toolStrip1.PerformLayout();
             ResumeLayout(false);

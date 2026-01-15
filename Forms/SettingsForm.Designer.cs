@@ -30,10 +30,10 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SettingsForm));
             closeButton = new System.Windows.Forms.Button();
-            panelUpdates = new System.Windows.Forms.Panel();
+            panelUpdates = new SettingsPagePanel();
             checkNowButton = new System.Windows.Forms.Button();
             checkForUpdates = new System.Windows.Forms.CheckBox();
-            panelCompiler = new System.Windows.Forms.Panel();
+            panelCompiler = new SettingsPagePanel();
             label7 = new System.Windows.Forms.Label();
             label6 = new System.Windows.Forms.Label();
             lookupWarningButton = new System.Windows.Forms.Button();
@@ -43,7 +43,7 @@
             label9 = new System.Windows.Forms.Label();
             label8 = new System.Windows.Forms.Label();
             warningLevelCombobox = new System.Windows.Forms.ComboBox();
-            panelUI = new System.Windows.Forms.Panel();
+            panelUI = new SettingsPagePanel();
             extendedColorsCheckBox = new System.Windows.Forms.CheckBox();
             caretLineFrameCheckBox = new System.Windows.Forms.CheckBox();
             indentSpacesLabel = new System.Windows.Forms.Label();
@@ -69,7 +69,7 @@
             disableAutoCompCheckBox = new System.Windows.Forms.CheckBox();
             settingsList = new SettingsPageList();
             panelSnippet = new SnippetManager();
-            panelSpelling = new System.Windows.Forms.Panel();
+            panelSpelling = new SettingsPagePanel();
             addLangsButton = new System.Windows.Forms.Button();
             enableSpellcheckCheckBox = new System.Windows.Forms.CheckBox();
             addWordsToIgnoreLabel = new System.Windows.Forms.Label();
@@ -79,7 +79,7 @@
             label11 = new System.Windows.Forms.Label();
             spellcheckOptionsLabel = new System.Windows.Forms.Label();
             spellLangComboBox = new System.Windows.Forms.ComboBox();
-            panelRenderOptions = new System.Windows.Forms.Panel();
+            panelRenderOptions = new SettingsPagePanel();
             optionsTabControl = new System.Windows.Forms.TabControl();
             tabPage1 = new System.Windows.Forms.TabPage();
             flagsLabel = new System.Windows.Forms.Label();
@@ -93,7 +93,7 @@
             renderOpInfoLabel = new MessageLabel();
             presetLabel = new System.Windows.Forms.Label();
             presetComboBox = new System.Windows.Forms.ComboBox();
-            panelAssist = new System.Windows.Forms.Panel();
+            panelAssist = new SettingsPagePanel();
             noSdkWarnLabel = new MessageLabel();
             dcDefsCheckBox = new System.Windows.Forms.CheckBox();
             dcToolTipsCheckBox = new System.Windows.Forms.CheckBox();
@@ -916,11 +916,11 @@
 
         #endregion
         private System.Windows.Forms.Button closeButton;
-        private System.Windows.Forms.Panel panelUpdates;
+        private SettingsPagePanel panelUpdates;
         private System.Windows.Forms.CheckBox checkForUpdates;
         private System.Windows.Forms.Button checkNowButton;
         private SettingsPageList settingsList;
-        private System.Windows.Forms.Panel panelUI;
+        private SettingsPagePanel panelUI;
         private System.Windows.Forms.ComboBox themeCombobox;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.CheckBox largeFontCheckbox;
@@ -937,7 +937,7 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.CheckBox wordWrapTextFilesCheckbox;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Panel panelCompiler;
+        private SettingsPagePanel panelCompiler;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.ComboBox warningLevelCombobox;
@@ -952,7 +952,7 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.CheckBox caretLineFrameCheckBox;
         private System.Windows.Forms.CheckBox extendedColorsCheckBox;
-        private System.Windows.Forms.Panel panelSpelling;
+        private SettingsPagePanel panelSpelling;
         private System.Windows.Forms.CheckBox enableSpellcheckCheckBox;
         private System.Windows.Forms.Label addWordsToIgnoreLabel;
         private System.Windows.Forms.Label wordsToIgnoreLabel;
@@ -965,7 +965,7 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.CheckBox disableAutoCompCheckBox;
         private MessageLabel noAutoCompleteInfoLabel;
-        private System.Windows.Forms.Panel panelRenderOptions;
+        private SettingsPagePanel panelRenderOptions;
         private System.Windows.Forms.Label presetLabel;
         private System.Windows.Forms.Label flagsLabel;
         private System.Windows.Forms.Label scheduleLabel;
@@ -979,7 +979,7 @@
         private MessageLabel renderOpInfoLabel;
         private System.Windows.Forms.TabControl optionsTabControl;
         private System.Windows.Forms.TabPage tabPage1;
-        private System.Windows.Forms.Panel panelAssist;
+        private SettingsPagePanel panelAssist;
         private System.Windows.Forms.CheckBox dcEnabledCheckBox;
         private System.Windows.Forms.CheckBox dcDefsCheckBox;
         private System.Windows.Forms.CheckBox dcToolTipsCheckBox;
