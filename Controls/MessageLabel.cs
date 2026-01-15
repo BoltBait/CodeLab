@@ -7,6 +7,7 @@ using System;
 using System.ComponentModel;
 using System.ComponentModel.Design;
 using System.Drawing.Design;
+using System.Windows.Forms;
 
 namespace PdnCodeLab
 {
@@ -27,6 +28,9 @@ namespace PdnCodeLab
         public MessageLabel()
         {
             this.AllowHardwareRendering = false;
+
+            SetStyle(ControlStyles.SupportsTransparentBackColor, true);
+            this.BackColor = System.Drawing.Color.Transparent;
         }
 
         protected override void OnRender(IDeviceContext deviceContext, RectFloat clipRect)
