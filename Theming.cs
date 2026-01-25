@@ -299,7 +299,7 @@ namespace PdnCodeLab
 
             Size rectRadius = UIUtil.ScaleSize(6, 6);
             Color selectedColor = ColorBgra.Blend([Color.Gray, backColor]);
-            const float pixelOffset = 0.5f; // allows 1px lines to actually be 1px width, and edges of rectangles to be sharp;
+            const float pixelOffset = 0.5f; // allows 2px lines to actually be 2px width, and edges of rectangles to be sharp;
 
             if (itemSelectionFlags.HasFlag(ItemSelectionFlags.Fill))
             {
@@ -309,16 +309,23 @@ namespace PdnCodeLab
                 graphics.FillRoundedRectangle(backBrush, fillRect, rectRadius);
             }
 
-            if (itemSelectionFlags.HasFlag(ItemSelectionFlags.AccentOutline))
+            if (itemSelectionFlags.HasFlag(ItemSelectionFlags.AccentOutline) ||
+                itemSelectionFlags.HasFlag(ItemSelectionFlags.Outline))
             {
-                Rectangle outlineRect = Rectangle.FromLTRB(bounds.Left, bounds.Top, bounds.Right - 1, bounds.Bottom - 1);
-                using Pen outlinePen = new Pen(AccentColor);
-                graphics.DrawRoundedRectangle(outlinePen, outlineRect, rectRadius);
-            }
-            else if (itemSelectionFlags.HasFlag(ItemSelectionFlags.Outline))
-            {
-                Rectangle outlineRect = Rectangle.FromLTRB(bounds.Left, bounds.Top, bounds.Right - 1, bounds.Bottom - 1);
-                using Pen outlinePen = new Pen(selectedColor);
+                int outlineWidth = Math.Min(UIUtil.Scale(1), 2); // limit width to 2, because GDI sucks
+                float outlineOffset = outlineWidth > 1 ? pixelOffset : 0;
+
+                RectangleF outlineRect = RectangleF.FromLTRB(
+                    bounds.Left + outlineOffset,
+                    bounds.Top + outlineOffset,
+                    bounds.Right - outlineOffset - 1,
+                    bounds.Bottom - outlineOffset - 1);
+
+                Color outlineColor = itemSelectionFlags.HasFlag(ItemSelectionFlags.AccentOutline)
+                    ? AccentColor
+                    : selectedColor;
+
+                using Pen outlinePen = new Pen(outlineColor, outlineWidth);
                 graphics.DrawRoundedRectangle(outlinePen, outlineRect, rectRadius);
             }
 
@@ -604,7 +611,7 @@ namespace PdnCodeLab
             protected override void OnRenderItemText(ToolStripItemTextRenderEventArgs e)
             {
                 e.TextColor = ThemeUtil.foreColor;
-                e.TextRectangle = new Rectangle(e.TextRectangle.X + e.Item.Padding.Left, e.TextRectangle.Y, e.TextRectangle.Width, e.TextRectangle.Height);
+                e.TextRectangle = new Rectangle(e.TextRectangle.X + UIUtil.Scale(e.Item.Padding.Left), e.TextRectangle.Y, e.TextRectangle.Width, e.TextRectangle.Height);
                 base.OnRenderItemText(e);
             }
 
@@ -640,7 +647,7 @@ namespace PdnCodeLab
 
             protected override void OnRenderItemImage(ToolStripItemImageRenderEventArgs e)
             {
-                Rectangle newImageRect = new Rectangle(e.ImageRectangle.X + e.Item.Padding.Left, e.ImageRectangle.Y, e.ImageRectangle.Width, e.ImageRectangle.Height);
+                Rectangle newImageRect = new Rectangle(e.ImageRectangle.X + UIUtil.Scale(e.Item.Padding.Left), e.ImageRectangle.Y, e.ImageRectangle.Width, e.ImageRectangle.Height);
                 ToolStripItemImageRenderEventArgs newEventArgs = new ToolStripItemImageRenderEventArgs(e.Graphics, e.Item, e.Image, newImageRect);
 
                 base.OnRenderItemImage(newEventArgs);

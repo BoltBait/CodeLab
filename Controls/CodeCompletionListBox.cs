@@ -51,10 +51,13 @@ namespace PdnCodeLab
         private const int itemHeight = 22;
         private const int padding = 2;
 
+        private const int itemRectPadding = 2;
+        private const int itemAccentPadding = 5;
+
         internal string AutoCompleteCode => listBox.SelectedIndex >= 0 ? listBox.SelectedItem.ToString() : string.Empty;
         internal bool MouseOver => listBoxMouseOver || toolstripMouseOver;
         internal bool AutoComplete => !drawSelectionOutline;
-        internal int IconWidth => IconSize.Width + 2;
+        internal int AlignmentOffset => UIUtil.Scale(itemRectPadding) + UIUtil.Scale(itemAccentPadding) + ((int)Math.Round((this.listBox.ItemHeight - IconSize.Height) / 2f) * 2) + IconSize.Width;
         internal bool ExtraSpace => (intelliBoxContents != IntelliBoxContents.NonMembers && intelliBoxContents != IntelliBoxContents.Constructors);
         internal bool IsEmpty => this.listBox.Items.Count == 0;
 
@@ -122,7 +125,7 @@ namespace PdnCodeLab
             listBox.MouseEnter += ListBox_MouseEnter;
             listBox.MouseLeave += ListBox_MouseLeave;
 
-            this.Padding = new Padding(0, UIUtil.Scale(padding), 0, 0);
+            this.Padding = new Padding(0, padding, 0, 0);
             this.Controls.Add(listBox);
             this.Controls.Add(toolStrip);
             this.Cursor = Cursors.Default;
@@ -1001,8 +1004,8 @@ namespace PdnCodeLab
             using SolidBrush clearBrush = new SolidBrush(listBox.BackColor);
             e.Graphics.FillRectangle(clearBrush, e.Bounds);
 
-            const int itemMargin = 2;
-            Rectangle itemRect = Rectangle.FromLTRB(e.Bounds.Left + itemMargin, e.Bounds.Top, e.Bounds.Right - itemMargin, e.Bounds.Bottom);
+            int itemPadding = UIUtil.Scale(itemRectPadding);
+            Rectangle itemRect = Rectangle.FromLTRB(e.Bounds.Left + itemPadding, e.Bounds.Top, e.Bounds.Right - itemPadding, e.Bounds.Bottom);
 
             if (e.State.HasFlag(DrawItemState.Selected))
             {
@@ -1013,14 +1016,14 @@ namespace PdnCodeLab
                 e.Graphics.DrawItemSelection(listBox.BackColor, itemRect, itemSelectionFlags);
             }
 
-            int accentPadding = UIUtil.Scale(5);
+            int accentPadding = UIUtil.Scale(itemAccentPadding);
 
             int iconMargin = (int)Math.Round((itemRect.Height - IconSize.Height) / 2f);
             Rectangle iconRect = new Rectangle(itemRect.Left + accentPadding + iconMargin, itemRect.Top + iconMargin, IconSize.Width, IconSize.Height);
             e.Graphics.DrawImage(ItemIcons[item.ImageIndex], iconRect);
 
-            Rectangle textRect = Rectangle.FromLTRB(itemRect.Left + accentPadding + IconSize.Width + iconMargin, itemRect.Top, itemRect.Right, itemRect.Bottom);
-            TextRenderer.DrawText(e.Graphics, item.Text, e.Font, textRect, listBox.ForeColor, TextFormatFlags.VerticalCenter | TextFormatFlags.EndEllipsis);
+            Rectangle textRect = Rectangle.FromLTRB(itemRect.Left + accentPadding + iconMargin + IconSize.Width + iconMargin, itemRect.Top, itemRect.Right, itemRect.Bottom);
+            TextRenderer.DrawText(e.Graphics, item.Text, e.Font, textRect, listBox.ForeColor, TextFormatFlags.VerticalCenter | TextFormatFlags.EndEllipsis | TextFormatFlags.NoPadding);
 
             if (isStaticColorType &&
                 item.IntelliType == IntelliType.Property &&

@@ -418,6 +418,8 @@ namespace PdnCodeLab
                 if (this.Padding.Right != this.Height)
                 {
                     this.Padding = new Padding(this.Padding.Left, this.Padding.Top, this.Height, this.Padding.Bottom);
+
+                    UpdateCloseRect();
                 }
             }
 

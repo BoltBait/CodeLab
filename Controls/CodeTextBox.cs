@@ -3442,7 +3442,7 @@ namespace PdnCodeLab
             int lineHeight = this.Lines[this.CurrentLine].Height;
             Point topLeft = new Point
             {
-                X = PointXFromPosition(posAtIBox) - iBox.IconWidth,
+                X = PointXFromPosition(posAtIBox) - iBox.AlignmentOffset,
                 Y = PointYFromPosition(posAtIBox) + lineHeight
             };
 
@@ -3453,7 +3453,7 @@ namespace PdnCodeLab
 
             if (this.ClientSize.Width < (topLeft.X + iBox.Width))
             {
-                topLeft.Offset(iBox.IconWidth - iBox.Width, 0);
+                topLeft.Offset(iBox.AlignmentOffset - iBox.Width, 0);
             }
 
             if (topLeft.X < 0)
@@ -3654,7 +3654,7 @@ namespace PdnCodeLab
                 {
                     Point newLocation = new Point
                     {
-                        X = PointXFromPosition(posAtIBox) - iBox.IconWidth,
+                        X = PointXFromPosition(posAtIBox) - iBox.AlignmentOffset,
                         Y = iBox.Location.Y
                     };
 
@@ -4088,7 +4088,7 @@ namespace PdnCodeLab
             if (iBox.Visible)
             {
                 iBox.Location = new Point(
-                    PointXFromPosition(posAtIBox) - iBox.IconWidth,
+                    PointXFromPosition(posAtIBox) - iBox.AlignmentOffset,
                     PointYFromPosition(posAtIBox) + this.Lines[this.CurrentLine].Height);
             }
         }
