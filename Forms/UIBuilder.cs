@@ -30,8 +30,10 @@ namespace PdnCodeLab
     internal partial class UIBuilder : ChildFormBase, IToolTipHost
     {
         internal string UIControlsText;
+#if !FASTDEBUG
         private readonly IEffectEnvironment2 environmentParameters;
         private readonly IServiceProvider serviceProvider;
+#endif
         private readonly ProjectType projectType;
         private bool dirty = false;
         private readonly List<UIElement> MasterList = new List<UIElement>();
@@ -106,8 +108,10 @@ namespace PdnCodeLab
             }
             refreshListView(0);
             dirty = false;
+#if !FASTDEBUG
             this.environmentParameters = environmentParameters.CreateRef();
             this.serviceProvider = serviceProvider;
+#endif
             this.projectType = projectType;
         }
 
@@ -1107,6 +1111,7 @@ namespace PdnCodeLab
             }
             else
             {
+#if !FASTDEBUG
                 using Surface emptySurface = new Surface(this.environmentParameters.Document.Size);
                 emptySurface.Fill(ColorBgra.White);
                 using IBitmap<ColorBgra32> bitmap = emptySurface.CreateSharedBitmap();
@@ -1114,6 +1119,7 @@ namespace PdnCodeLab
                 using IEffect effect = ScriptBuilder.BuiltEffect.EffectInfo.CreateInstance(new ServiceProviderWrapper(this.serviceProvider), enviroParams);
                 using IEffectConfigForm effectConfigDialog = effect.CreateConfigForm();
                 effectConfigDialog.ShowDialog(this);
+#endif
             }
         }
 
