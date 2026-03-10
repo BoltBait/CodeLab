@@ -15,6 +15,7 @@
 
 using PaintDotNet;
 using PaintDotNet.Effects;
+using PaintDotNet.Imaging;
 using PaintDotNet.Rendering;
 using System;
 using System.Collections.Generic;
@@ -154,7 +155,6 @@ namespace PdnCodeLab
             {
                 "IntSliderControl",
                 "CheckboxControl",
-                "ColorWheelControl",
                 "AngleControl",
                 "PanSliderControl",
                 "DoubleSliderControl",
@@ -165,6 +165,7 @@ namespace PdnCodeLab
             };
             HashSet<string> classes = new HashSet<string>()
             {
+                "ColorWheelControl",
                 "TextboxControl",
                 "FilenameControl",
                 "FolderControl",
@@ -409,7 +410,7 @@ namespace PdnCodeLab
                 // Add the aliases for the UI controls
                 { "IntSliderControl", typeof(int) },
                 { "CheckboxControl", typeof(bool) },
-                { "ColorWheelControl", typeof(ColorBgra) },
+                { "ColorWheelControl", typeof(ManagedColor) },
                 { "AngleControl", typeof(double) },
                 { "PanSliderControl", typeof(Vector2Double) },
                 { "TextboxControl", typeof(string) },
