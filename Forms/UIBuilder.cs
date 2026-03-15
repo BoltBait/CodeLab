@@ -1413,7 +1413,7 @@ namespace PdnCodeLab
 
             internal ControlTypeItem(ElementType elementType)
             {
-                this.text = elementType.GetDescription() ?? elementType.ToString();
+                this.text = elementType.ToDescription();
                 this.ElementType = elementType;
             }
 
@@ -1448,28 +1448,6 @@ namespace PdnCodeLab
         internal readonly string EnableIdentifier;
         internal readonly string Identifier;
         internal readonly string TEnum;
-
-        private static readonly string[] NewSourceCodeType = {
-            "IntSliderControl",         // 0
-            "CheckboxControl",          // 1
-            "ColorWheelControl",        // 2
-            "AngleControl",             // 3
-            "PanSliderControl",         // 4
-            "TextboxControl",           // 5
-            "DoubleSliderControl",      // 6
-            "ListBoxControl",           // 7
-            "BinaryPixelOp",            // 8
-            "FontFamily",               // 9
-            "RadioButtonControl",       // 10
-            "ReseedButtonControl",      // 11
-            "MultiLineTextboxControl",  // 12
-            "RollControl",              // 13
-            "FilenameControl",          // 14
-            "Uri",                      // 15
-            "FolderControl",            // 16
-            "LabelComment",             // 17
-            "LayerControl",             // 18
-        };
 
         internal static UIElement[] ProcessUIControls(string SourceCode, ProjectType projectType)
         {
@@ -2038,7 +2016,7 @@ namespace PdnCodeLab
         {
             bool hasTEnum = useTEnum && !TEnum.IsNullOrEmpty();
             string typeEnum = hasTEnum ? $"<{TEnum}>" : string.Empty;
-            string SourceCode = NewSourceCodeType[(int)ElementType] + typeEnum + " " + Identifier;
+            string SourceCode = ElementType.ToSourceCodeType() + typeEnum + " " + Identifier;
             switch (ElementType)
             {
                 case ElementType.IntSlider:
@@ -2219,44 +2197,82 @@ namespace PdnCodeLab
 
     internal enum ElementType
     {
-        [Description("Integer Slider")]
         IntSlider,
-        [Description("Check Box")]
         Checkbox,
-        [Description("Color Wheel")]
         ColorWheel,
-        [Description("Angle Chooser")]
         AngleChooser,
-        [Description("Pan Slider")]
         PanSlider,
-        [Description("String")]
         Textbox,
-        [Description("Double Slider")]
         DoubleSlider,
-        [Description("Drop-Down List Box")]
         DropDown,
-        [Description("BlendOp Types")]
         BinaryPixelOp,
-        [Description("Font Names")]
         FontFamily,
-        [Description("Radio Button List")]
         RadioButtons,
-        [Description("Reseed Button")]
         ReseedButton,
-        [Description("Multi-Line String")]
         MultiLineTextbox,
-        [Description("3D Roll Control")]
         RollBall,
-        [Description("Filename Control")]
         Filename,
-        [Description("Web Link")]
         Uri,
-        [Description("Folder Control")]
         Folder,
-        [Description("Label")]
         LabelComment,
-        [Description("Layer Names")]
         LayerChooser
+    }
+
+    internal static class ElementTypeExtensions
+    {
+        internal static string ToDescription(this ElementType elementType)
+        {
+            return elementType switch
+            {
+                ElementType.IntSlider => "Integer Slider",
+                ElementType.Checkbox => "Check Box",
+                ElementType.ColorWheel => "Color Wheel",
+                ElementType.AngleChooser => "Angle Chooser",
+                ElementType.PanSlider => "Pan Slider",
+                ElementType.Textbox => "String",
+                ElementType.DoubleSlider => "Double Slider",
+                ElementType.DropDown => "Drop-Down List Box",
+                ElementType.BinaryPixelOp => "BlendOp Types",
+                ElementType.FontFamily => "Font Names",
+                ElementType.RadioButtons => "Radio Button List",
+                ElementType.ReseedButton => "Reseed Button",
+                ElementType.MultiLineTextbox => "Multi-Line String",
+                ElementType.RollBall => "3D Roll Control",
+                ElementType.Filename => "Filename Control",
+                ElementType.Uri => "Web Link",
+                ElementType.Folder => "Folder Control",
+                ElementType.LabelComment => "Label",
+                ElementType.LayerChooser => "Layer Names",
+                _ => throw new NotImplementedException(),
+            };
+        }
+
+        internal static string ToSourceCodeType(this ElementType elementType)
+        {
+            return elementType switch
+            {
+                ElementType.IntSlider => "IntSliderControl",
+                ElementType.Checkbox => "CheckboxControl",
+                ElementType.ColorWheel => "ColorWheelControl",
+                ElementType.AngleChooser => "AngleControl",
+                ElementType.PanSlider => "PanSliderControl",
+                ElementType.Textbox => "TextboxControl",
+                ElementType.DoubleSlider => "DoubleSliderControl",
+                ElementType.DropDown => "ListBoxControl",
+                ElementType.BinaryPixelOp => "BinaryPixelOp",
+                ElementType.FontFamily => "FontFamily",
+                ElementType.RadioButtons => "RadioButtonControl",
+                ElementType.ReseedButton => "ReseedButtonControl",
+                ElementType.MultiLineTextbox => "MultiLineTextboxControl",
+                ElementType.RollBall => "RollControl",
+                ElementType.Filename => "FilenameControl",
+                ElementType.Uri => "Uri",
+                ElementType.Folder => "FolderControl",
+                ElementType.LabelComment => "LabelComment",
+                ElementType.LayerChooser => "LayerControl",
+                _ => throw new NotImplementedException(),
+            };
+        }
     }
 
     internal enum SliderStyle

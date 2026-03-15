@@ -655,18 +655,6 @@ namespace PdnCodeLab
             return constraints;
         }
 
-        internal static string GetDescription(this Enum value)
-        {
-            Type type = value.GetType();
-            string name = Enum.GetName(type, value);
-            if (name == null)
-            {
-                return null;
-            }
-
-            return type.GetField(name)?.GetCustomAttribute<DescriptionAttribute>(false)?.Description;
-        }
-
         private static Type[] StringToTypeArray(string types)
         {
             if (types.Length == 0)
