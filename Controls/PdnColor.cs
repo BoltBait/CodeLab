@@ -13,11 +13,16 @@
 //
 // Latest distribution: https://www.BoltBait.com/pdn/codelab
 /////////////////////////////////////////////////////////////////////////////////
+using PaintDotNet.Controls;
+using PaintDotNet.Direct2D1;
+using PaintDotNet.Imaging;
+using PaintDotNet.Rendering;
 using System;
-using System.Drawing;
-using System.Windows.Forms;
-using System.Drawing.Drawing2D;
 using System.ComponentModel;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Linq;
+using System.Windows.Forms;
 
 namespace PdnCodeLab
 {
@@ -28,22 +33,24 @@ namespace PdnCodeLab
         private bool mouseDown;
         private bool ignore;
         private bool showAlpha;
-        private double MasterHue;
-        private double MasterSat;
-        private double MasterVal;
-        private int MasterAlpha;
+        private float MasterHue;
+        private float MasterSat;
+        private float MasterVal;
+        private byte MasterAlpha;
         private Bitmap wheelBmp;
-        private readonly Color[] HsvRainbow;
+        const int wheelPadding = 10;
 
         public PdnColor()
         {
             InitializeComponent();
 
-            HsvRainbow = new Color[65];
-            for (int i = 0; i < 65; i++)
-            {
-                HsvRainbow[i] = HSVColor.ToColor(255, i / 65f, 1, 1);
-            }
+            hColorSlider.Colors = Enumerable.Range(0, 65)
+                .Select(i =>
+                {
+                    ColorHsv96Float hsv = new ColorHsv96Float(i / 65f * ColorHsv96Float.HueMaxValue, ColorHsv96Float.SaturationMaxValue, ColorHsv96Float.ValueMaxValue);
+                    return (SrgbColorA)hsv.ToRgb();
+                })
+                .ToArray();
         }
 
         #region Control Properties
@@ -51,14 +58,15 @@ namespace PdnCodeLab
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public Color Color
         {
-            get => HSVColor.ToColor(MasterAlpha, MasterHue, MasterSat, MasterVal);
+            get => GdiColorFromHsv(MasterHue, MasterSat, MasterVal, MasterAlpha);
+
             set
             {
-                Color _colorVal = value;
-                MasterHue = HSVColor.FromColor(_colorVal, MasterHue).Hue;
-                MasterSat = HSVColor.FromColor(_colorVal, MasterHue).Sat;
-                MasterVal = HSVColor.FromColor(_colorVal, MasterHue).Value;
-                MasterAlpha = _colorVal.A;
+                ColorHsv96Float hsv = HsvFromGdiColor(value);
+                MasterHue = hsv.Hue;
+                MasterSat = hsv.Saturation;
+                MasterVal = hsv.Value;
+                MasterAlpha = value.A;
                 setColors(true, true);
                 UpdateColorSliders();
                 colorWheelBox.Refresh();
@@ -104,12 +112,11 @@ namespace PdnCodeLab
         #region Color Wheel functions
         private void ColorWheel_Paint()
         {
-            float Padding = colorWheelBox.ClientSize.Width * 3 / 210;
-            float Radius = colorWheelBox.ClientSize.Width / 2 - Padding;
+            int wheelSize = colorWheelBox.ClientSize.Width - (wheelPadding * 2);
 
             #region create wheel
             GraphicsPath wheel_path = new GraphicsPath();
-            RectangleF wheelRect = new RectangleF(Padding, Padding, Radius * 2, Radius * 2);
+            Rectangle wheelRect = new Rectangle(wheelPadding, wheelPadding, wheelSize, wheelSize);
             wheel_path.AddEllipse(wheelRect);
             wheel_path.Flatten();
 
@@ -117,7 +124,10 @@ namespace PdnCodeLab
             Color[] surround_colors = new Color[wheel_path.PointCount];
             for (int i = 0; i < num_pts; i++)
             {
-                surround_colors[i] = HSVColor.ToColor(255, i / num_pts, 1, 1);
+                surround_colors[i] = GdiColorFromHsv(
+                    ColorHsv96Float.HueMaxValue * i / num_pts,
+                    ColorHsv96Float.SaturationMaxValue,
+                    ColorHsv96Float.ValueMaxValue);
             }
             #endregion
 
@@ -143,35 +153,38 @@ namespace PdnCodeLab
                     }
                 }
 
-                //set _hue and sat marker
-                double hlfht = Radius + Padding;
-                double radius = MasterSat * (hlfht - 1 - Padding);
-
-                PointF _huePoint = new PointF
-                {
-                    X = (float)(hlfht + radius * Math.Cos(MasterHue * Math.PI / .5) - Padding),
-                    Y = (float)(hlfht + radius * Math.Sin(MasterHue * Math.PI / .5) - Padding)
-                };
-                SizeF _hueSize = new SizeF(Padding * 2, Padding * 2);
-                RectangleF _hueMark = new RectangleF(_huePoint, _hueSize);
-                using (SolidBrush markBrush = new SolidBrush(HSVColor.ToColor(MasterAlpha, MasterHue, MasterSat, 1)))
-                {
-                    g.FillEllipse(markBrush, _hueMark);
-                }
-
                 float dpiX = g.DpiX / 96f;
                 float dpiY = g.DpiY / 96f;
 
+                //set _hue and sat marker
+                float center = colorWheelBox.ClientSize.Width / 2f;
+                float radius = MasterSat / ColorHsv96Float.SaturationMaxValue * (center - 1 - wheelPadding);
+
+                float markerSize = 8 * dpiX;
+                RectangleF markRect = new RectangleF
+                {
+                    X = center + radius * MathF.Cos(MasterHue / ColorHsv96Float.HueMaxValue * MathF.PI / .5f) - (markerSize / 2),
+                    Y = center + radius * MathF.Sin(MasterHue / ColorHsv96Float.HueMaxValue * MathF.PI / .5f) - (markerSize / 2),
+                    Width = markerSize,
+                    Height = markerSize
+                };
+
+                Color markColor = GdiColorFromHsv(MasterHue, MasterSat, ColorHsv96Float.ValueMaxValue);
+                using (SolidBrush markBrush = new SolidBrush(markColor))
+                {
+                    g.FillEllipse(markBrush, markRect);
+                }
+
                 using (Pen markPen = new Pen(Color.White, 1 * dpiX))
                 {
-                    g.DrawEllipse(markPen, _hueMark.X + 1 * dpiX, _hueMark.Y + 1 * dpiX, _hueMark.Width - 2 * dpiX, _hueMark.Height - 2 * dpiX);
+                    g.DrawEllipse(markPen, markRect.X + 1 * dpiX, markRect.Y + 1 * dpiX, markRect.Width - 2 * dpiX, markRect.Height - 2 * dpiX);
                     markPen.Color = Color.Black;
-                    g.DrawEllipse(markPen, _hueMark);
+                    g.DrawEllipse(markPen, markRect);
                 }
 
                 //draw color sample
                 g.SmoothingMode = SmoothingMode.None;
-                Color _colorVal = HSVColor.ToColor(MasterAlpha, MasterHue, MasterSat, MasterVal);
+                Color _colorVal = GdiColorFromHsv(MasterHue, MasterSat, MasterVal, MasterAlpha);
 
                 Rectangle SwatchRect1 = new Rectangle(0, 0, (int)MathF.Round(30 * dpiX), (int)MathF.Round(30 * dpiY));
                 Rectangle SwatchRect2 = Rectangle.FromLTRB(SwatchRect1.Left + (int)MathF.Round(1 * dpiX), SwatchRect1.Top + (int)MathF.Round(1 * dpiY), SwatchRect1.Right - (int)MathF.Round(1 * dpiX), SwatchRect1.Bottom - (int)MathF.Round(1 * dpiY));
@@ -209,16 +222,17 @@ namespace PdnCodeLab
                 return;
             }
 
-            float Padding = colorWheelBox.ClientSize.Width * 3 / 100;
-            float Radius = colorWheelBox.ClientSize.Width / 2 - Padding;
+            // need to take Padding into account for the mouse XY and the center point
+            float center = colorWheelBox.ClientSize.Width / 2f - wheelPadding;
+            PointF offsetPoint = new PointF(e.X - wheelPadding - center, e.Y - wheelPadding - center);
 
-            float hlfht = Radius + Padding;
-            double offset = Math.Sqrt((e.Y - hlfht) * (e.Y - hlfht) + (e.X - hlfht) * (e.X - hlfht)) / hlfht;
+            float rad = MathF.Atan2(offsetPoint.Y, offsetPoint.X) * .5f / MathF.PI;
+            MasterHue = ColorHsv96Float.HueMaxValue * ((rad < 0) ? rad + 1 : rad);
 
-            double rad = Math.Atan2(e.Y - hlfht, e.X - hlfht) * .5 / Math.PI;
-            MasterHue = (rad < 0) ? rad + 1 : rad;
-            MasterSat = (offset > 1) ? 1 : offset;
-            MasterVal = 1;
+            float offset = MathF.Sqrt(offsetPoint.Y * offsetPoint.Y + offsetPoint.X * offsetPoint.X) / center;
+            MasterSat = ColorHsv96Float.SaturationMaxValue * ((offset > 1) ? 1 : offset);
+
+            MasterVal = ColorHsv96Float.ValueMaxValue;
 
             UpdateColorSliders();
             setColors(true, true);
@@ -249,11 +263,13 @@ namespace PdnCodeLab
                 return;
             }
 
-            Color _colorVal = Color.FromArgb((int)alphaBox.Value, (int)redBox.Value, (int)greenBox.Value, (int)blueBox.Value);
-            MasterHue = HSVColor.FromColor(_colorVal, MasterHue).Hue;
-            MasterSat = HSVColor.FromColor(_colorVal, MasterHue).Sat;
-            MasterVal = HSVColor.FromColor(_colorVal, MasterHue).Value;
-            MasterAlpha = _colorVal.A;
+            ColorRgba32 rgba = ColorRgba32.FromRgba((byte)redBox.Value, (byte)greenBox.Value, (byte)blueBox.Value, (byte)alphaBox.Value);
+            ColorHsv96Float hsv = HsvFromRgb(rgba.R, rgba.G, rgba.B);
+
+            MasterHue = hsv.Hue;
+            MasterSat = hsv.Saturation;
+            MasterVal = hsv.Value;
+            MasterAlpha = rgba.A;
 
             UpdateColorSliders();
 
@@ -261,8 +277,8 @@ namespace PdnCodeLab
 
             ignore = true;
             hexBox.Text = (showAlpha) ?
-                _colorVal.ToArgb().ToString("X8") :
-                _colorVal.ToArgb().ToString("X8").Substring(2);
+                rgba.Rgba.ToString("X8") :
+                rgba.Rgba.ToString("X8").Substring(2);
             ignore = false;
 
             colorWheelBox.Refresh();
@@ -296,21 +312,23 @@ namespace PdnCodeLab
                 return;
             }
 
-            Color _colorVal = Color.FromArgb((int)aColorSlider.Value, (int)rColorSlider.Value, (int)gColorSlider.Value, (int)bColorSlider.Value);
-            MasterHue = HSVColor.FromColor(_colorVal, MasterHue).Hue;
-            MasterSat = HSVColor.FromColor(_colorVal, MasterHue).Sat;
-            MasterVal = HSVColor.FromColor(_colorVal, MasterHue).Value;
-            MasterAlpha = (int)aColorSlider.Value;
+            ColorRgba32 rgba = ColorRgba32.FromRgba((byte)rColorSlider.Value, (byte)gColorSlider.Value, (byte)bColorSlider.Value, (byte)aColorSlider.Value);
+            ColorHsv96Float hsv = HsvFromRgb(rgba.R, rgba.G, rgba.B);
+
+            MasterHue = hsv.Hue;
+            MasterSat = hsv.Saturation;
+            MasterVal = hsv.Value;
+            MasterAlpha = rgba.A;
 
             setColors(false, false);
 
             ignore = true;
-            redBox.Value = _colorVal.R;
-            greenBox.Value = _colorVal.G;
-            blueBox.Value = _colorVal.B;
+            redBox.Value = rgba.R;
+            greenBox.Value = rgba.G;
+            blueBox.Value = rgba.B;
             hexBox.Text = (showAlpha) ?
-                _colorVal.ToArgb().ToString("X8") :
-                _colorVal.ToArgb().ToString("X8").Substring(2);
+                rgba.Rgba.ToString("X8") :
+                rgba.Rgba.ToString("X8").Substring(2);
             ignore = false;
 
             UpdateColorSliders();
@@ -327,26 +345,28 @@ namespace PdnCodeLab
                 return;
             }
 
-            Color _colorVal;
+            ColorRgba32 rgbaFromHex;
             try
             {
-                ColorConverter c = new ColorConverter();
-                _colorVal = (Color)c.ConvertFromString("#" + hexBox.Text);
+                uint value = Convert.ToUInt32(hexBox.Text, 16);
+                rgbaFromHex = ColorRgba32.FromUInt32(value);
             }
             catch
             {
-                _colorVal = HSVColor.ToColor(MasterAlpha, MasterHue, MasterSat, MasterVal);
+                ColorRgba32 rgbaFromHsv = RgbaFromHsv(MasterHue, MasterSat, MasterVal, MasterAlpha);
                 hexBox.Text = (showAlpha) ?
-                    _colorVal.ToArgb().ToString("X8") :
-                    _colorVal.ToArgb().ToString("X8").Substring(2);
+                    rgbaFromHsv.Rgba.ToString("X8") :
+                    rgbaFromHsv.Rgba.ToString("X8").Substring(2);
 
                 return;
             }
 
-            MasterHue = HSVColor.FromColor(_colorVal, MasterHue).Hue;
-            MasterSat = HSVColor.FromColor(_colorVal, MasterHue).Sat;
-            MasterVal = HSVColor.FromColor(_colorVal, MasterHue).Value;
-            MasterAlpha = (showAlpha) ? _colorVal.A : 255;
+            ColorHsv96Float hsv = HsvFromRgb(rgbaFromHex.R, rgbaFromHex.G, rgbaFromHex.B);
+
+            MasterHue = hsv.Hue;
+            MasterSat = hsv.Saturation;
+            MasterVal = hsv.Value;
+            MasterAlpha = (showAlpha) ? rgbaFromHex.A : byte.MaxValue;
 
             setColors(true, false);
             colorWheelBox.Refresh();
@@ -382,9 +402,9 @@ namespace PdnCodeLab
                 return;
             }
 
-            MasterHue = (double)hueBox.Value / 360;
-            MasterSat = (double)satBox.Value / 100;
-            MasterVal = (double)valBox.Value / 100;
+            MasterHue = (float)hueBox.Value;
+            MasterSat = (float)satBox.Value;
+            MasterVal = (float)valBox.Value;
             setColors(true, true);
             colorWheelBox.Refresh();
             UpdateColorSliders();
@@ -413,10 +433,10 @@ namespace PdnCodeLab
                 return;
             }
 
-            MasterHue = hColorSlider.Value / 360f;
-            MasterSat = sColorSlider.Value / 100f;
-            MasterVal = vColorSlider.Value / 100f;
-            MasterAlpha = (int)aColorSlider.Value;
+            MasterHue = hColorSlider.Value;
+            MasterSat = sColorSlider.Value;
+            MasterVal = vColorSlider.Value;
+            MasterAlpha = (byte)aColorSlider.Value;
 
             setColors(true, true);
             UpdateColorSliders();
@@ -434,179 +454,89 @@ namespace PdnCodeLab
         private void setColors(bool rgb, bool hex)
         {
             ignore = true;
-            Color _colorVal = HSVColor.ToColor(MasterAlpha, MasterHue, MasterSat, MasterVal);
-            if (rgb)
+
+            if (rgb || hex)
             {
-                redBox.Value = _colorVal.R;
-                greenBox.Value = _colorVal.G;
-                blueBox.Value = _colorVal.B;
+                ColorRgba32 rgbaColor = RgbaFromHsv(MasterHue, MasterSat, MasterVal, MasterAlpha);
+
+                if (rgb)
+                {
+                    redBox.Value = rgbaColor.R;
+                    greenBox.Value = rgbaColor.G;
+                    blueBox.Value = rgbaColor.B;
+                }
+
+                if (hex)
+                {
+                    hexBox.Text = (showAlpha) ?
+                        rgbaColor.Rgba.ToString("X8") :
+                        rgbaColor.Rgba.ToString("X8").Substring(2);
+                }
             }
-            alphaBox.Value = _colorVal.A;
-            hueBox.Value = (decimal)MasterHue * 360;
-            satBox.Value = (decimal)MasterSat * 100;
-            valBox.Value = (decimal)MasterVal * 100;
-            if (hex)
-            {
-                hexBox.Text = (showAlpha) ?
-                    _colorVal.ToArgb().ToString("X8") :
-                    _colorVal.ToArgb().ToString("X8").Substring(2);
-            }
+
+            alphaBox.Value = MasterAlpha;
+            hueBox.Value = (decimal)MasterHue;
+            satBox.Value = (decimal)MasterSat;
+            valBox.Value = (decimal)MasterVal;
+
             ignore = false;
         }
 
         private void UpdateColorSliders()
         {
-            // TODO: Updating everything together at the same time is probably not the most optimal. It's already super fast though...
-
             ignore = true;
-            //Color RGB = HSVColor.ToColor(MasterAlpha, MasterHue, MasterSat, MasterVal);
-            Color RGB = Color.FromArgb((int)redBox.Value, (int)greenBox.Value, (int)blueBox.Value);
-            aColorSlider.Colors = new Color[] { Color.Transparent, Color.FromArgb(RGB.R, RGB.G, RGB.B) };
-            rColorSlider.Colors = new Color[] { Color.FromArgb(byte.MinValue, RGB.G, RGB.B), Color.FromArgb(byte.MaxValue, RGB.G, RGB.B) };
-            gColorSlider.Colors = new Color[] { Color.FromArgb(RGB.R, byte.MinValue, RGB.B), Color.FromArgb(RGB.R, byte.MaxValue, RGB.B) };
-            bColorSlider.Colors = new Color[] { Color.FromArgb(RGB.R, RGB.G, byte.MinValue), Color.FromArgb(RGB.R, RGB.G, byte.MaxValue) };
+            ColorRgb24 RGB = ColorRgb24.FromRgb((byte)redBox.Value, (byte)greenBox.Value, (byte)blueBox.Value);
+            aColorSlider.Colors = new SrgbColorA[] { SrgbColors.Transparent, (SrgbColorA)ColorRgb24.FromRgb(RGB.R, RGB.G, RGB.B) };
+            rColorSlider.Colors = new SrgbColorA[] { (SrgbColorA)ColorRgb24.FromRgb(byte.MinValue, RGB.G, RGB.B), (SrgbColorA)ColorRgb24.FromRgb(byte.MaxValue, RGB.G, RGB.B) };
+            gColorSlider.Colors = new SrgbColorA[] { (SrgbColorA)ColorRgb24.FromRgb(RGB.R, byte.MinValue, RGB.B), (SrgbColorA)ColorRgb24.FromRgb(RGB.R, byte.MaxValue, RGB.B) };
+            bColorSlider.Colors = new SrgbColorA[] { (SrgbColorA)ColorRgb24.FromRgb(RGB.R, RGB.G, byte.MinValue), (SrgbColorA)ColorRgb24.FromRgb(RGB.R, RGB.G, byte.MaxValue) };
 
-            hColorSlider.Colors = HsvRainbow;
+            ColorRgb96Float minSaturation = new ColorHsv96Float(MasterHue, ColorHsv96Float.SaturationMinValue, MasterVal).ToRgb();
+            ColorRgb96Float maxSaturation = new ColorHsv96Float(MasterHue, ColorHsv96Float.SaturationMaxValue, MasterVal).ToRgb();
+            sColorSlider.Colors = new SrgbColorA[] { (SrgbColorA)minSaturation, (SrgbColorA)maxSaturation };
 
-            Color minSaturation = HSVColor.ToColor(byte.MaxValue, MasterHue, 0, MasterVal);
-            Color maxSaturation = HSVColor.ToColor(byte.MaxValue, MasterHue, 1, MasterVal);
-            sColorSlider.Colors = new Color[] { minSaturation, maxSaturation };
-
-            Color minValue = HSVColor.ToColor(byte.MaxValue, MasterHue, MasterSat, 0);
-            Color maxValue = HSVColor.ToColor(byte.MaxValue, MasterHue, MasterSat, 1);
-            vColorSlider.Colors = new Color[] { minValue, maxValue };
+            ColorRgb96Float minValue = new ColorHsv96Float(MasterHue, MasterSat, ColorHsv96Float.ValueMinValue).ToRgb();
+            ColorRgb96Float maxValue = new ColorHsv96Float(MasterHue, MasterSat, ColorHsv96Float.ValueMaxValue).ToRgb();
+            vColorSlider.Colors = new SrgbColorA[] { (SrgbColorA)minValue, (SrgbColorA)maxValue };
 
             aColorSlider.Value = MasterAlpha;
             rColorSlider.Value = RGB.R;
             gColorSlider.Value = RGB.G;
             bColorSlider.Value = RGB.B;
-            hColorSlider.Value = (float)(MasterHue * 360);
-            sColorSlider.Value = (float)(MasterSat * 100);
-            vColorSlider.Value = (float)(MasterVal * 100);
+            hColorSlider.Value = MasterHue;
+            sColorSlider.Value = MasterSat;
+            vColorSlider.Value = MasterVal;
             ignore = false;
         }
         #endregion
 
-        private struct HSVColor
+        private static Color GdiColorFromHsv(float hue, float saturation, float value, byte alpha = byte.MaxValue)
         {
-            internal double Hue { get; set; }
-            internal double Sat { get; set; }
-            internal double Value { get; set; }
+            ColorRgba32 rgb = RgbaFromHsv(hue, saturation, value, alpha);
+            return Color.FromArgb(rgb.A, rgb.R, rgb.G, rgb.B);
+        }
 
-            internal static Color ToColor(int alpha, double h, double s, double v)
-            {
-                double r, g, b;
-                if (s == 0)
-                {
-                    r = v;
-                    g = v;
-                    b = v;
-                }
-                else
-                {
-                    double varH = h * 6;
-                    double varI = Math.Floor(varH);
-                    double var1 = v * (1 - s);
-                    double var2 = v * (1 - (s * (varH - varI)));
-                    double var3 = v * (1 - (s * (1 - (varH - varI))));
+        private static ColorRgba32 RgbaFromHsv(float hue, float saturation, float value, byte alpha = byte.MaxValue)
+        {
+            ColorRgb96Float rgbFloat = new ColorHsv96Float(hue, saturation, value).ToRgb();
+            return ColorRgba32.FromRgba((byte)(rgbFloat.R * 255f), (byte)(rgbFloat.G * 255f), (byte)(rgbFloat.B * 255f), alpha);
+        }
 
-                    if (varI == 0)
-                    {
-                        r = v;
-                        g = var3;
-                        b = var1;
-                    }
-                    else if (varI == 1)
-                    {
-                        r = var2;
-                        g = v;
-                        b = var1;
-                    }
-                    else if (varI == 2)
-                    {
-                        r = var1;
-                        g = v;
-                        b = var3;
-                    }
-                    else if (varI == 3)
-                    {
-                        r = var1;
-                        g = var2;
-                        b = v;
-                    }
-                    else if (varI == 4)
-                    {
-                        r = var3;
-                        g = var1;
-                        b = v;
-                    }
-                    else
-                    {
-                        r = v;
-                        g = var1;
-                        b = var2;
-                    }
-                }
-                return Color.FromArgb(alpha, (int)(r * 255), (int)(g * 255), (int)(b * 255));
-            }
+        private static ColorHsv96Float HsvFromGdiColor(Color gdiColor)
+        {
+            return HsvFromRgb(gdiColor.R, gdiColor.G, gdiColor.B);
+        }
 
-            internal static HSVColor FromColor(Color c, double oldHue)
-            {
-                double r = c.R / 255.0;
-                double g = c.G / 255.0;
-                double b = c.B / 255.0;
-                double varMin = Math.Min(r, Math.Min(g, b));
-                double varMax = Math.Max(r, Math.Max(g, b));
-                double delMax = varMax - varMin;
-                HSVColor hsv = new HSVColor();
-
-                hsv.Value = varMax;
-
-                if (delMax == 0)
-                {
-                    hsv.Hue = oldHue;
-                    hsv.Sat = 0;
-                }
-                else
-                {
-                    double delR = (((varMax - r) / 6) + (delMax / 2)) / delMax;
-                    double delG = (((varMax - g) / 6) + (delMax / 2)) / delMax;
-                    double delB = (((varMax - b) / 6) + (delMax / 2)) / delMax;
-
-                    hsv.Sat = delMax / varMax;
-
-                    if (r == varMax)
-                    {
-                        hsv.Hue = delB - delG;
-                    }
-                    else if (g == varMax)
-                    {
-                        hsv.Hue = (1.0 / 3) + delR - delB;
-                    }
-                    else //// if (b == varMax) 
-                    {
-                        hsv.Hue = (2.0 / 3) + delG - delR;
-                    }
-
-                    if (hsv.Hue < 0)
-                    {
-                        hsv.Hue++;
-                    }
-
-                    if (hsv.Hue > 1)
-                    {
-                        hsv.Hue--;
-                    }
-                }
-
-                return hsv;
-            }
+        private static ColorHsv96Float HsvFromRgb(byte r, byte g, byte b)
+        {
+            ColorRgb96Float rgb = new ColorRgb96Float(r / 255f, g / 255f, b / 255f);
+            return ColorHsv96Float.FromRgb(rgb);
         }
     }
 
     [DefaultEvent(nameof(ValueChanged))]
     [DefaultProperty(nameof(Value))]
-    public class ColorSlider : PictureBox
+    public class ColorSlider : Direct2DControl
     {
         #region Properties
         [Category(nameof(CategoryAttribute.Data))]
@@ -627,18 +557,17 @@ namespace PdnCodeLab
         public int MaxValue
         {
             get => this.maxValue;
-            set => this.maxValue = value;
+            set => this.maxValue = Math.Max(value, 1);
         }
 
-        [Category(nameof(CategoryAttribute.Appearance))]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
-        public Color[] Colors
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        internal SrgbColorA[] Colors
         {
             get => this.colors;
             set
             {
                 this.colors = value;
-                DrawColors();
+                this.Refresh();
             }
         }
         #endregion
@@ -654,15 +583,60 @@ namespace PdnCodeLab
 
         private float value = 0;
         private int maxValue = byte.MaxValue;
-        private Color[] colors = { Color.White, Color.Black };
-        private Bitmap markerBmp;
+        private SrgbColorA[] colors = { SrgbColors.White, SrgbColors.Black };
         private bool isMouseOver;
         private bool isMouseDown;
+        private const int sliderPadding = 4;
 
         public ColorSlider()
         {
             this.Width = 73;
             this.Height = 15;
+        }
+
+        protected override void OnRender(PaintDotNet.Direct2D1.IDeviceContext deviceContext, RectFloat clipRect)
+        {
+            base.OnRender(deviceContext, clipRect);
+
+            Rectangle clientRect = this.ClientRectangle;
+            float padding = UIUtil.Scale(sliderPadding);
+
+            RectFloat colorRect = RectFloat.FromEdges(
+                clientRect.Left + padding,
+                clientRect.Top,
+                clientRect.Right - padding,
+                clientRect.Bottom  - padding);
+
+            // Draw color band
+            float totalColors = colors.Length - 1;
+            GradientStop[] gradientStopArray = colors
+                .Select((c, i) => new GradientStop(i / totalColors, (ColorRgba128Float)c))
+                .ToArray();
+
+            ReadOnlySpan<GradientStop> gradientStops = new ReadOnlySpan<GradientStop>(gradientStopArray);
+
+            using (IGradientStopCollection gradientStopCollection = deviceContext.CreateGradientStopCollection(gradientStops))
+            using (ILinearGradientBrush gradientBrush = deviceContext.CreateLinearGradientBrush(colorRect.TopLeft, colorRect.TopRight, gradientStopCollection))
+            {
+                deviceContext.FillRectangle(colorRect, gradientBrush);
+            }
+
+            // Draw value marker
+            float markPos = value / maxValue * colorRect.Width + padding;
+            Point2Float[] markerPolygon =
+            {
+                new Point2Float(markPos, clientRect.Bottom - UIUtil.Scale(7)),  // top
+                new Point2Float(markPos - UIUtil.Scale(3), clientRect.Bottom),  // left
+                new Point2Float(markPos + UIUtil.Scale(3), clientRect.Bottom)   // right
+            };
+
+            SrgbColorA markerColor = (isMouseOver) ? SrgbColors.Blue : (SrgbColorA)this.ForeColor;
+            using (ISolidColorBrush markerFillBrush = deviceContext.CreateSolidColorBrush(markerColor))
+            using (ISolidColorBrush markerDrawBrush = deviceContext.CreateSolidColorBrush(this.BackColor))
+            {
+                deviceContext.DrawPolygon(markerPolygon, markerDrawBrush);
+                deviceContext.FillPolygon(markerPolygon, markerFillBrush);
+            }
         }
 
         protected override void OnMouseUp(MouseEventArgs e)
@@ -681,11 +655,11 @@ namespace PdnCodeLab
                 return;
             }
 
-            float range = this.ClientSize.Width * 0.8904f;
-            float offset = this.ClientSize.Width * 0.0548f;
+            float padding = UIUtil.Scale(sliderPadding);
+            float range = this.ClientSize.Width - (padding * 2f);
 
-            value = e.X / range * maxValue - offset;
-            value = Math.Clamp(value, 0, maxValue);
+            float newValue = (e.X - padding) / range * maxValue;
+            value = Math.Clamp(newValue, 0, maxValue);
             this.Refresh();
             OnValueChanged();
         }
@@ -712,104 +686,6 @@ namespace PdnCodeLab
 
             isMouseOver = false;
             this.Refresh();
-        }
-
-        protected override void OnPaint(PaintEventArgs pe)
-        {
-            base.OnPaint(pe);
-
-            DrawMarker();
-            pe.Graphics.DrawImage(markerBmp, 0, 0);
-        }
-
-        private void DrawMarker()
-        {
-            if (this.markerBmp == null || this.markerBmp.Size != this.ClientSize)
-            {
-                this.markerBmp = new Bitmap(this.ClientSize.Width, this.ClientSize.Height);
-            }
-
-            using (Graphics g = Graphics.FromImage(markerBmp))
-            {
-                g.CompositingMode = CompositingMode.SourceOver;
-                g.SmoothingMode = SmoothingMode.AntiAlias;
-                g.CompositingQuality = CompositingQuality.HighQuality;
-
-                // clear bitmap
-                g.Clear(Color.Transparent);
-
-                if (maxValue == 0)
-                {
-                    maxValue = 1;
-                }
-
-                float dpi = g.DpiX / 96f;
-                float markPos = value / maxValue * (g.VisibleClipBounds.Width - (9 * dpi)) + (4 * dpi);
-
-                PointF top = new PointF(markPos, g.VisibleClipBounds.Bottom - (7 * dpi));
-                PointF left = new PointF(markPos - (3.5f * dpi), g.VisibleClipBounds.Bottom);
-                PointF right = new PointF(markPos + (3.5f * dpi), g.VisibleClipBounds.Bottom);
-                PointF[] marker = { top, left, right };
-
-                Color markerColor = (isMouseOver) ? Color.Blue : Parent.ForeColor;
-
-                using (SolidBrush markerBrush = new SolidBrush(markerColor))
-                using (Pen markerPen = new Pen(this.BackColor, 1))
-                {
-                    if (isMouseOver)
-                    {
-                        g.FillPolygon(markerBrush, marker);
-                        g.DrawPolygon(markerPen, marker);
-                    }
-                    else
-                    {
-                        g.DrawPolygon(markerPen, marker);
-                        g.FillPolygon(markerBrush, marker);
-                    }
-                }
-            }
-        }
-
-        private void DrawColors()
-        {
-            if (this.Image == null || this.Image.Size != this.ClientSize)
-            {
-                this.Image = new Bitmap(this.ClientSize.Width, this.ClientSize.Height);
-            }
-
-            using (Graphics g = Graphics.FromImage(this.Image))
-            {
-                g.Clear(Color.Transparent);
-                float dpi = g.DpiX / 96f;
-                RectangleF colorRect = new RectangleF(g.VisibleClipBounds.X + (4 * dpi), g.VisibleClipBounds.Y, g.VisibleClipBounds.Width - (8 * dpi), g.VisibleClipBounds.Height - (4 * dpi));
-
-                using (HatchBrush brush = new HatchBrush(HatchStyle.DiagonalCross, Color.LightGray, Color.White))
-                {
-                    g.FillRectangle(brush, colorRect);
-                }
-
-                // custom Rect to avoid a bug in LinearGradientBrush on HiDPI
-                RectangleF gradientRect = new RectangleF(colorRect.Left - 1, colorRect.Top, colorRect.Width + 1, colorRect.Height);
-                using (LinearGradientBrush brush = new LinearGradientBrush(gradientRect, colors[0], colors[1], LinearGradientMode.Horizontal))
-                {
-                    if (maxValue == 360)
-                    {
-                        ColorBlend cb = new ColorBlend();
-                        float[] positions = new float[colors.Length];
-                        positions[0] = 0;
-                        for (int i = 1; i < colors.Length - 1; i++)
-                        {
-                            positions[i] = i / (float)colors.Length;
-                        }
-                        positions[colors.Length - 1] = 1;
-                        cb.Positions = positions;
-                        cb.Colors = colors;
-                        brush.InterpolationColors = cb;
-                    }
-
-                    g.FillRectangle(brush, colorRect);
-                }
-            }
         }
     }
 }

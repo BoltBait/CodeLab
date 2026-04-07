@@ -65,13 +65,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.hueBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.satBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.valBox)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.vColorSlider)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.sColorSlider)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.hColorSlider)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.bColorSlider)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gColorSlider)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.rColorSlider)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.aColorSlider)).BeginInit();
             this.SuspendLayout();
             // 
             // colorWheelBox
@@ -349,9 +342,6 @@
             // 
             // vColorSlider
             // 
-            this.vColorSlider.Colors = new System.Drawing.Color[] {
-        System.Drawing.Color.White,
-        System.Drawing.Color.Black};
             this.vColorSlider.Location = new System.Drawing.Point(254, 199);
             this.vColorSlider.MaxValue = 100;
             this.vColorSlider.Name = "vColorSlider";
@@ -363,9 +353,6 @@
             // 
             // sColorSlider
             // 
-            this.sColorSlider.Colors = new System.Drawing.Color[] {
-        System.Drawing.Color.White,
-        System.Drawing.Color.Black};
             this.sColorSlider.Location = new System.Drawing.Point(254, 175);
             this.sColorSlider.MaxValue = 100;
             this.sColorSlider.Name = "sColorSlider";
@@ -377,9 +364,6 @@
             // 
             // hColorSlider
             // 
-            this.hColorSlider.Colors = new System.Drawing.Color[] {
-        System.Drawing.Color.White,
-        System.Drawing.Color.Black};
             this.hColorSlider.Location = new System.Drawing.Point(254, 151);
             this.hColorSlider.MaxValue = 360;
             this.hColorSlider.Name = "hColorSlider";
@@ -391,9 +375,6 @@
             // 
             // bColorSlider
             // 
-            this.bColorSlider.Colors = new System.Drawing.Color[] {
-        System.Drawing.Color.White,
-        System.Drawing.Color.Black};
             this.bColorSlider.Location = new System.Drawing.Point(254, 77);
             this.bColorSlider.MaxValue = 255;
             this.bColorSlider.Name = "bColorSlider";
@@ -405,9 +386,6 @@
             // 
             // gColorSlider
             // 
-            this.gColorSlider.Colors = new System.Drawing.Color[] {
-        System.Drawing.Color.White,
-        System.Drawing.Color.Black};
             this.gColorSlider.Location = new System.Drawing.Point(254, 53);
             this.gColorSlider.MaxValue = 255;
             this.gColorSlider.Name = "gColorSlider";
@@ -419,9 +397,6 @@
             // 
             // rColorSlider
             // 
-            this.rColorSlider.Colors = new System.Drawing.Color[] {
-        System.Drawing.Color.White,
-        System.Drawing.Color.Black};
             this.rColorSlider.Location = new System.Drawing.Point(254, 29);
             this.rColorSlider.MaxValue = 255;
             this.rColorSlider.Name = "rColorSlider";
@@ -433,9 +408,6 @@
             // 
             // aColorSlider
             // 
-            this.aColorSlider.Colors = new System.Drawing.Color[] {
-        System.Drawing.Color.White,
-        System.Drawing.Color.Black};
             this.aColorSlider.Location = new System.Drawing.Point(254, 252);
             this.aColorSlider.MaxValue = 255;
             this.aColorSlider.Name = "aColorSlider";
@@ -486,13 +458,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.hueBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.satBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.valBox)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.vColorSlider)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.sColorSlider)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.hColorSlider)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.bColorSlider)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gColorSlider)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.rColorSlider)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.aColorSlider)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
