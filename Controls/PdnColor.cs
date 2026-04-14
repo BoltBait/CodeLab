@@ -163,8 +163,8 @@ namespace PdnCodeLab
                 float markerSize = 8 * dpiX;
                 RectangleF markRect = new RectangleF
                 {
-                    X = center + radius * MathF.Cos(MasterHue / ColorHsv96Float.HueMaxValue * MathF.PI / .5f) - (markerSize / 2),
-                    Y = center + radius * MathF.Sin(MasterHue / ColorHsv96Float.HueMaxValue * MathF.PI / .5f) - (markerSize / 2),
+                    X = center + radius * float.CosPi(MasterHue / ColorHsv96Float.HueMaxValue / .5f) - (markerSize / 2),
+                    Y = center + radius * float.SinPi(MasterHue / ColorHsv96Float.HueMaxValue / .5f) - (markerSize / 2),
                     Width = markerSize,
                     Height = markerSize
                 };
@@ -186,8 +186,8 @@ namespace PdnCodeLab
                 g.SmoothingMode = SmoothingMode.None;
                 Color _colorVal = GdiColorFromHsv(MasterHue, MasterSat, MasterVal, MasterAlpha);
 
-                Rectangle SwatchRect1 = new Rectangle(0, 0, (int)MathF.Round(30 * dpiX), (int)MathF.Round(30 * dpiY));
-                Rectangle SwatchRect2 = Rectangle.FromLTRB(SwatchRect1.Left + (int)MathF.Round(1 * dpiX), SwatchRect1.Top + (int)MathF.Round(1 * dpiY), SwatchRect1.Right - (int)MathF.Round(1 * dpiX), SwatchRect1.Bottom - (int)MathF.Round(1 * dpiY));
+                Rectangle SwatchRect1 = new Rectangle(0, 0, (int)float.Round(30 * dpiX), (int)float.Round(30 * dpiY));
+                Rectangle SwatchRect2 = Rectangle.FromLTRB(SwatchRect1.Left + (int)float.Round(1 * dpiX), SwatchRect1.Top + (int)float.Round(1 * dpiY), SwatchRect1.Right - (int)float.Round(1 * dpiX), SwatchRect1.Bottom - (int)float.Round(1 * dpiY));
 
                 using (HatchBrush hb = new HatchBrush(HatchStyle.LargeCheckerBoard, Color.LightGray, Color.White))
                 {
@@ -197,7 +197,7 @@ namespace PdnCodeLab
                 {
                     g.FillRectangle(SB, SwatchRect1);
                 }
-                using (Pen outlinePen = new Pen(Color.Black, (int)MathF.Round(1 * dpiX)))
+                using (Pen outlinePen = new Pen(Color.Black, (int)float.Round(1 * dpiX)))
                 {
                     outlinePen.Alignment = PenAlignment.Inset;
 
@@ -226,10 +226,10 @@ namespace PdnCodeLab
             float center = colorWheelBox.ClientSize.Width / 2f - wheelPadding;
             PointF offsetPoint = new PointF(e.X - wheelPadding - center, e.Y - wheelPadding - center);
 
-            float rad = MathF.Atan2(offsetPoint.Y, offsetPoint.X) * .5f / MathF.PI;
+            float rad = float.Atan2Pi(offsetPoint.Y, offsetPoint.X) * .5f;
             MasterHue = ColorHsv96Float.HueMaxValue * ((rad < 0) ? rad + 1 : rad);
 
-            float offset = MathF.Sqrt(offsetPoint.Y * offsetPoint.Y + offsetPoint.X * offsetPoint.X) / center;
+            float offset = float.Hypot(offsetPoint.X, offsetPoint.Y) / center;
             MasterSat = ColorHsv96Float.SaturationMaxValue * ((offset > 1) ? 1 : offset);
 
             MasterVal = ColorHsv96Float.ValueMaxValue;
@@ -557,7 +557,7 @@ namespace PdnCodeLab
         public int MaxValue
         {
             get => this.maxValue;
-            set => this.maxValue = Math.Max(value, 1);
+            set => this.maxValue = int.Max(value, 1);
         }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -659,7 +659,7 @@ namespace PdnCodeLab
             float range = this.ClientSize.Width - (padding * 2f);
 
             float newValue = (e.X - padding) / range * maxValue;
-            value = Math.Clamp(newValue, 0, maxValue);
+            value = float.Clamp(newValue, 0, maxValue);
             this.Refresh();
             OnValueChanged();
         }
