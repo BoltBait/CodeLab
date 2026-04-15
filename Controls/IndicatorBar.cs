@@ -1,11 +1,12 @@
-﻿using PaintDotNet.Controls;
+﻿using PaintDotNet;
+using PaintDotNet.Controls;
 using PaintDotNet.Direct2D1;
 using PaintDotNet.Imaging;
 using PaintDotNet.Rendering;
 using System;
 using System.Collections.Generic;
-using System.Windows.Forms;
 using System.ComponentModel;
+using System.Windows.Forms;
 
 namespace PdnCodeLab
 {
@@ -492,7 +493,7 @@ namespace PdnCodeLab
                 deviceContext.FillRoundedRectangle(posRoundedRect, brush);
             }
 
-            float dpiY = deviceContext.Dpi.Y / 96f;
+            float dpiY = (float)UIScaleFactor.Current.Scale;
 
             using (ISolidColorBrush caretBrush = deviceContext.CreateSolidColorBrush(caretColor))
             {
