@@ -46,7 +46,7 @@ namespace PdnCodeLab
         private string stringFilter = string.Empty;
         private readonly ICollection<IntelliType> enumFilters = new List<IntelliType>();
         private readonly ListBox listBox = new ListBox();
-        private readonly ToolStrip toolStrip = new ToolStrip();
+        private readonly ToolStrip filterStrip = new ToolStrip();
         private const int maxVisibleItems = 9;
         private const int itemHeight = 22;
         private const int padding = 2;
@@ -105,14 +105,14 @@ namespace PdnCodeLab
                 })
                 .ToArray();
 
-            toolStrip.AllowClickThrough = true;
-            toolStrip.Items.AddRange(filterButtons);
-            toolStrip.Dock = DockStyle.Bottom;
-            toolStrip.GripStyle = ToolStripGripStyle.Hidden;
-            toolStrip.ShowItemToolTips = false;
-            toolStrip.MouseEnter += ToolStrip_MouseEnter;
-            toolStrip.MouseLeave += ToolStrip_MouseLeave;
-            toolStrip.Paint += ToolStrip_Paint;
+            filterStrip.AllowClickThrough = true;
+            filterStrip.Items.AddRange(filterButtons);
+            filterStrip.Dock = DockStyle.Bottom;
+            filterStrip.GripStyle = ToolStripGripStyle.Hidden;
+            filterStrip.ShowItemToolTips = false;
+            filterStrip.MouseEnter += ToolStrip_MouseEnter;
+            filterStrip.MouseLeave += ToolStrip_MouseLeave;
+            filterStrip.Paint += ToolStrip_Paint;
 
             listBox.Dock = DockStyle.Fill;
             listBox.DrawMode = DrawMode.OwnerDrawFixed;
@@ -127,7 +127,7 @@ namespace PdnCodeLab
 
             this.Padding = new Padding(0, padding, 0, 0);
             this.Controls.Add(listBox);
-            this.Controls.Add(toolStrip);
+            this.Controls.Add(filterStrip);
             this.Cursor = Cursors.Default;
             this.BorderStyle = BorderStyle.FixedSingle;
         }
@@ -274,7 +274,7 @@ namespace PdnCodeLab
 
         private void ToolStrip_Paint(object sender, PaintEventArgs e)
         {
-            Rectangle bounds = this.toolStrip.ClientRectangle;
+            Rectangle bounds = this.filterStrip.ClientRectangle;
             e.Graphics.DrawLine(Pens.Gray, bounds.Left, bounds.Top, bounds.Right, bounds.Top);
         }
 
@@ -865,7 +865,7 @@ namespace PdnCodeLab
 
         internal void Filter(IntelliType intelliType)
         {
-            IEnumerable<FilterButton> filterButtons = this.toolStrip.Items.OfType<FilterButton>();
+            IEnumerable<FilterButton> filterButtons = this.filterStrip.Items.OfType<FilterButton>();
             FilterButton filterButton = filterButtons.FirstOrDefault(b => b.Visible && b.IntelliType == intelliType);
 
             if (filterButton is null)
@@ -1090,22 +1090,22 @@ namespace PdnCodeLab
 
             if (intelliTypes.Count > 0)
             {
-                this.toolStrip.Visible = true;
-                filtersHeight = toolStrip.Height;
+                this.filterStrip.Visible = true;
+                filtersHeight = filterStrip.Height;
 
-                foreach (FilterButton filterButton in this.toolStrip.Items)
+                foreach (FilterButton filterButton in this.filterStrip.Items)
                 {
                     filterButton.Checked = false;
                     filterButton.Active = true;
                     filterButton.Visible = intelliTypes.Contains(filterButton.IntelliType);
                 }
 
-                int filtersWidth = (this.toolStrip.Items[0].Width + this.toolStrip.Items[0].Margin.Left) * intelliTypes.Count;
+                int filtersWidth = (this.filterStrip.Items[0].Width + this.filterStrip.Items[0].Margin.Left) * intelliTypes.Count;
                 newWidth = Math.Max(newWidth, filtersWidth);
             }
             else
             {
-                this.toolStrip.Visible = false;
+                this.filterStrip.Visible = false;
             }
 
             this.ClientSize = new Size(newWidth, listBoxHeight + filtersHeight + this.Padding.Vertical * 2);
@@ -1113,7 +1113,7 @@ namespace PdnCodeLab
 
         private void SetFilterButtonAppearance(IEnumerable<IntelliType> intelliTypes)
         {
-            foreach (FilterButton filterButton in this.toolStrip.Items)
+            foreach (FilterButton filterButton in this.filterStrip.Items)
             {
                 filterButton.Active = intelliTypes.Contains(filterButton.IntelliType);
             }
