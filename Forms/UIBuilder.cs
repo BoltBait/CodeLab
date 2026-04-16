@@ -1170,11 +1170,11 @@ namespace PdnCodeLab
             if (elementType != ElementType.AngleChooser &&
                 elementType != ElementType.DoubleSlider)
             {
-                dMax = Math.Truncate(dMax);
+                dMax = double.Truncate(dMax);
                 ControlMax.Text = dMax.ToString();
-                dMin = Math.Truncate(dMin);
+                dMin = double.Truncate(dMin);
                 ControlMin.Text = dMin.ToString();
-                dDef = Math.Truncate(dDef);
+                dDef = double.Truncate(dDef);
                 ControlDef.Text = dDef.ToString();
             }
 
@@ -1206,11 +1206,11 @@ namespace PdnCodeLab
             if (elementType != ElementType.AngleChooser &&
                 elementType != ElementType.DoubleSlider)
             {
-                dMax = Math.Truncate(dMax);
+                dMax = double.Truncate(dMax);
                 ControlMax.Text = dMax.ToString();
-                dMin = Math.Truncate(dMin);
+                dMin = double.Truncate(dMin);
                 ControlMin.Text = dMin.ToString();
-                dDef = Math.Truncate(dDef);
+                dDef = double.Truncate(dDef);
                 ControlDef.Text = dDef.ToString();
             }
 
@@ -1242,11 +1242,11 @@ namespace PdnCodeLab
             if (elementType != ElementType.AngleChooser &&
                 elementType != ElementType.DoubleSlider)
             {
-                dMax = Math.Truncate(dMax);
+                dMax = double.Truncate(dMax);
                 ControlMax.Text = dMax.ToString();
-                dMin = Math.Truncate(dMin);
+                dMin = double.Truncate(dMin);
                 ControlMin.Text = dMin.ToString();
-                dDef = Math.Truncate(dDef);
+                dDef = double.Truncate(dDef);
                 ControlDef.Text = dDef.ToString();
             }
 
@@ -1578,10 +1578,10 @@ namespace PdnCodeLab
                     Description += EnabledDescription;
                     break;
                 case ElementType.AngleChooser:
-                    dMin = Math.Clamp(parsedMin, -180.0, 360.0);
+                    dMin = double.Clamp(parsedMin, -180.0, 360.0);
                     double upperBound = (dMin < 0.0) ? 180.0 : 360;
-                    dMax = Math.Clamp(parsedMax, dMin, upperBound);
-                    dDefault = Math.Clamp(parsedDefault, dMin, dMax);
+                    dMax = double.Clamp(parsedMax, dMin, upperBound);
+                    dDefault = double.Clamp(parsedDefault, dMin, dMax);
                     Description = eName + " (" + dMin.ToString() + ".." + dDefault.ToString() + ".." + dMax.ToString() + ")" + EnabledDescription;
                     break;
                 case ElementType.PanSlider:
@@ -1606,7 +1606,7 @@ namespace PdnCodeLab
                 case ElementType.RadioButtons:
                     Name += "|" + eOptions;
                     int maxValue = Name.Split('|').Length - 2;
-                    Default = (int)Math.Clamp(parsedDefault, 0, maxValue);
+                    Default = int.Clamp((int)parsedDefault, 0, maxValue);
                     StrDefault = eDefault;
                     int nameLength1 = Name.IndexOf("|", StringComparison.Ordinal);
                     if (nameLength1 == -1) nameLength1 = Name.Length;
@@ -1970,11 +1970,11 @@ namespace PdnCodeLab
                 {
                     if (double.TryParse(xyPair.Groups["x"].Value, NumberStyles.Float, CultureInfo.InvariantCulture, out x))
                     {
-                        x = Math.Clamp(x, -1, 1);
+                        x = double.Clamp(x, -1, 1);
                     }
                     if (double.TryParse(xyPair.Groups["y"].Value, NumberStyles.Float, CultureInfo.InvariantCulture, out y))
                     {
-                        y = Math.Clamp(y, -1, 1);
+                        y = double.Clamp(y, -1, 1);
                     }
                 }
 

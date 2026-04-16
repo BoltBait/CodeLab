@@ -85,7 +85,7 @@ namespace PdnCodeLab
 
         internal static int Scale(int value)
         {
-            return (int)Math.Round(value * UIScaleFactor.Current.Scale);
+            return (int)double.Round(value * UIScaleFactor.Current.Scale);
         }
 
         internal static Size ScaleSize(int width, int height)

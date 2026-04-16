@@ -1961,7 +1961,7 @@ namespace PdnCodeLab
                 .Distinct(StringComparer.OrdinalIgnoreCase)
                 .ToArray();
 
-            int length = Math.Min(8, paths.Length);
+            int length = int.Min(8, paths.Length);
 
             Settings.RecentDocs = string.Join("|", paths, 0, length);
         }

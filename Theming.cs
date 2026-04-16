@@ -312,7 +312,7 @@ namespace PdnCodeLab
             if (itemSelectionFlags.HasFlag(ItemSelectionFlags.AccentOutline) ||
                 itemSelectionFlags.HasFlag(ItemSelectionFlags.Outline))
             {
-                int outlineWidth = Math.Min(UIUtil.Scale(1), 2); // limit width to 2, because GDI sucks
+                int outlineWidth = int.Min(UIUtil.Scale(1), 2); // limit width to 2, because GDI sucks
                 float outlineOffset = outlineWidth > 1 ? pixelOffset : 0;
 
                 RectangleF outlineRect = RectangleF.FromLTRB(
@@ -333,7 +333,7 @@ namespace PdnCodeLab
             {
                 Size accentRadius = UIUtil.ScaleSize(3, 3);
                 int accentWidth = UIUtil.Scale(3);
-                RectangleF accentRect = new RectangleF(bounds.X - pixelOffset, bounds.Y - pixelOffset + (int)Math.Round(bounds.Height / 4f), accentWidth, (int)Math.Round(bounds.Height / 2f));
+                RectangleF accentRect = new RectangleF(bounds.X - pixelOffset, bounds.Y - pixelOffset + (int)float.Round(bounds.Height / 4f), accentWidth, (int)float.Round(bounds.Height / 2f));
                 using SolidBrush accentBrush = new SolidBrush(AccentColor);
                 graphics.FillRoundedRectangle(accentBrush, accentRect, accentRadius);
             }

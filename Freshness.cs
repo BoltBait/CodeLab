@@ -56,7 +56,7 @@ namespace PdnCodeLab
             if (!force)
             {
                 // only check for updates every 7 days
-                if (Math.Abs((Settings.LatestUpdateCheck - DateTime.Today).TotalDays) < 7)
+                if (double.Abs((Settings.LatestUpdateCheck - DateTime.Today).TotalDays) < 7)
                 {
                     return; // not time yet
                 }

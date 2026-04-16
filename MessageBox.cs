@@ -540,7 +540,7 @@ namespace PdnCodeLab
                 const int SCROLLBAR_WIDTH_OFFSET = 15;
                 var longestTextRowWidth = stringRows.Max(textForRow => TextRenderer.MeasureText(textForRow, FONT).Width);
                 var captionWidth = TextRenderer.MeasureText(caption, SystemFonts.CaptionFont).Width;
-                var textWidth = Math.Max(longestTextRowWidth + SCROLLBAR_WIDTH_OFFSET, captionWidth);
+                var textWidth = int.Max(longestTextRowWidth + SCROLLBAR_WIDTH_OFFSET, captionWidth);
 
                 //Calculate margins
                 var marginWidth = flexibleMessageBoxForm.Width - flexibleMessageBoxForm.richTextBoxMessage.Width;

@@ -508,7 +508,7 @@ namespace PdnCodeLab
                         if (Intelli.TryGetEnumNames(u.TEnum, out string[] enumNames))
                         {
                             string[] displayNames = u.ToOptionArray();
-                            int length = Math.Min(enumNames.Length, displayNames.Length);
+                            int length = int.Min(enumNames.Length, displayNames.Length);
 
                             for (int i = 0; i < length; i++)
                             {

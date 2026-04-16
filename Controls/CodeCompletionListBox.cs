@@ -57,7 +57,7 @@ namespace PdnCodeLab
         internal string AutoCompleteCode => listBox.SelectedIndex >= 0 ? listBox.SelectedItem.ToString() : string.Empty;
         internal bool MouseOver => listBoxMouseOver || toolstripMouseOver;
         internal bool AutoComplete => !drawSelectionOutline;
-        internal int AlignmentOffset => UIUtil.Scale(itemRectPadding) + UIUtil.Scale(itemAccentPadding) + ((int)Math.Round((this.listBox.ItemHeight - IconSize.Height) / 2f) * 2) + IconSize.Width;
+        internal int AlignmentOffset => UIUtil.Scale(itemRectPadding) + UIUtil.Scale(itemAccentPadding) + ((int)float.Round((this.listBox.ItemHeight - IconSize.Height) / 2f) * 2) + IconSize.Width;
         internal bool ExtraSpace => (intelliBoxContents != IntelliBoxContents.NonMembers && intelliBoxContents != IntelliBoxContents.Constructors);
         internal bool IsEmpty => this.listBox.Items.Count == 0;
 
@@ -240,8 +240,8 @@ namespace PdnCodeLab
         {
             if (this.listBoxMouseOver && this.listBox.Items.Count > 0)
             {
-                int newTopIndex = this.listBox.TopIndex - Math.Sign(delta) * SystemInformation.MouseWheelScrollLines;
-                this.listBox.TopIndex = Math.Clamp(newTopIndex, 0, this.listBox.Items.Count - 1);
+                int newTopIndex = this.listBox.TopIndex - int.Sign(delta) * SystemInformation.MouseWheelScrollLines;
+                this.listBox.TopIndex = int.Clamp(newTopIndex, 0, this.listBox.Items.Count - 1);
             }
         }
 
@@ -1018,7 +1018,7 @@ namespace PdnCodeLab
 
             int accentPadding = UIUtil.Scale(itemAccentPadding);
 
-            int iconMargin = (int)Math.Round((itemRect.Height - IconSize.Height) / 2f);
+            int iconMargin = (int)float.Round((itemRect.Height - IconSize.Height) / 2f);
             Rectangle iconRect = new Rectangle(itemRect.Left + accentPadding + iconMargin, itemRect.Top + iconMargin, IconSize.Width, IconSize.Height);
             e.Graphics.DrawImage(ItemIcons[item.ImageIndex], iconRect);
 
@@ -1084,7 +1084,7 @@ namespace PdnCodeLab
 
         private void SetFilterButtonVisibility(IReadOnlyCollection<IntelliType> intelliTypes)
         {
-            int listBoxHeight = this.listBox.ItemHeight * Math.Min(maxVisibleItems, Math.Max(this.listBox.Items.Count, 1));
+            int listBoxHeight = this.listBox.ItemHeight * int.Clamp(this.listBox.Items.Count, 1, maxVisibleItems);
             int filtersHeight = 0;
             int newWidth = UIUtil.Scale(300);
 
@@ -1101,7 +1101,7 @@ namespace PdnCodeLab
                 }
 
                 int filtersWidth = (this.filterStrip.Items[0].Width + this.filterStrip.Items[0].Margin.Left) * intelliTypes.Count;
-                newWidth = Math.Max(newWidth, filtersWidth);
+                newWidth = int.Max(newWidth, filtersWidth);
             }
             else
             {

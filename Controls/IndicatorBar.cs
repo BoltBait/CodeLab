@@ -179,12 +179,12 @@ namespace PdnCodeLab
             get
             {
                 float scale = posTrackRect.Height / (float)maximum;
-                return (int)MathF.Round((posSliderRect.Y - posTrackRect.Top) / scale);
+                return (int)float.Round((posSliderRect.Y - posTrackRect.Top) / scale);
             }
             set
             {
                 float scale = posTrackRect.Height / (float)maximum;
-                posSliderRect.Y = posTrackRect.Top + (int)MathF.Round(value * scale);
+                posSliderRect.Y = posTrackRect.Top + (int)float.Round(value * scale);
                 if (posSliderRect.Top < posTrackRect.Top)
                 {
                     posSliderRect.Y = posTrackRect.Top;
@@ -498,7 +498,7 @@ namespace PdnCodeLab
             using (ISolidColorBrush caretBrush = deviceContext.CreateSolidColorBrush(caretColor))
             {
                 float curLineVPos = (float)(caret + 0) / maximum * posTrackRect.Height + posTrackRect.Top;
-                curLineVPos = Math.Clamp(curLineVPos, posTrackRect.Top * dpiY, posTrackRect.Bottom * dpiY);
+                curLineVPos = float.Clamp(curLineVPos, posTrackRect.Top * dpiY, posTrackRect.Bottom * dpiY);
                 deviceContext.DrawLine(posTrackRect.Left, curLineVPos, posTrackRect.Right, curLineVPos, caretBrush, 2f * dpiY);
             }
 
@@ -510,7 +510,7 @@ namespace PdnCodeLab
                 foreach (int bookmark in this.bookmarks)
                 {
                     float bkmkVPos = (float)bookmark / maximum * posTrackRect.Height + posTrackRect.Top;
-                    bkmkVPos = Math.Clamp(bkmkVPos, posTrackRect.Top, posTrackRect.Bottom);
+                    bkmkVPos = float.Clamp(bkmkVPos, posTrackRect.Top, posTrackRect.Bottom);
                     deviceContext.DrawLine(posTrackRect.Left + 6f * dpiY, bkmkVPos, posTrackRect.Right - 6f * dpiY, bkmkVPos, indicatorPen, strokeWidth);
                 }
 
@@ -518,7 +518,7 @@ namespace PdnCodeLab
                 foreach (int match in this.matches)
                 {
                     float matchLineVPos = (float)match / maximum * posTrackRect.Height + posTrackRect.Top;
-                    matchLineVPos = Math.Clamp(matchLineVPos, posTrackRect.Top, posTrackRect.Bottom);
+                    matchLineVPos = float.Clamp(matchLineVPos, posTrackRect.Top, posTrackRect.Bottom);
                     deviceContext.DrawLine(posTrackRect.Left, matchLineVPos, posTrackRect.Left + 4f * dpiY, matchLineVPos, indicatorPen, strokeWidth);
                 }
 
@@ -526,7 +526,7 @@ namespace PdnCodeLab
                 foreach (int error in this.warnings)
                 {
                     float warnLineVPos = (float)error / maximum * posTrackRect.Height + posTrackRect.Top;
-                    warnLineVPos = Math.Clamp(warnLineVPos, posTrackRect.Top, posTrackRect.Bottom);
+                    warnLineVPos = float.Clamp(warnLineVPos, posTrackRect.Top, posTrackRect.Bottom);
                     deviceContext.DrawLine(posTrackRect.Right - 4f * dpiY, warnLineVPos, posTrackRect.Right, warnLineVPos, indicatorPen, strokeWidth);
                 }
 
@@ -534,7 +534,7 @@ namespace PdnCodeLab
                 foreach (int error in this.errors)
                 {
                     float errLineVPos = (float)error / maximum * posTrackRect.Height + posTrackRect.Top;
-                    errLineVPos = Math.Clamp(errLineVPos, posTrackRect.Top, posTrackRect.Bottom);
+                    errLineVPos = float.Clamp(errLineVPos, posTrackRect.Top, posTrackRect.Bottom);
                     deviceContext.DrawLine(posTrackRect.Right - 4f * dpiY, errLineVPos, posTrackRect.Right, errLineVPos, indicatorPen, strokeWidth);
                 }
             }
@@ -551,13 +551,13 @@ namespace PdnCodeLab
             ScrollEventType scrollType;
             if (upButtonClick && upButtonHover)
             {
-                delta = -(int)MathF.Round(posTrackRect.Height / (float)maximum);
+                delta = -(int)float.Round(posTrackRect.Height / (float)maximum);
 
                 scrollType = ScrollEventType.SmallDecrement;
             }
             else if (downButtonClick && downButtonHover)
             {
-                delta = (int)MathF.Round(posTrackRect.Height / (float)maximum);
+                delta = (int)float.Round(posTrackRect.Height / (float)maximum);
                 scrollType = ScrollEventType.SmallIncrement;
             }
             else if (posTrackClick && posTrackHover)

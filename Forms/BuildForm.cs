@@ -123,11 +123,11 @@ namespace PdnCodeLab
             {
                 if (decimal.TryParse(vsn.Groups["majorVersionLabel"].Value.Trim(), out decimal majorVer))
                 {
-                    MajorVersion.Value = Math.Clamp(majorVer, MajorVersion.Minimum, MajorVersion.Maximum);
+                    MajorVersion.Value = decimal.Clamp(majorVer, MajorVersion.Minimum, MajorVersion.Maximum);
                 }
                 if (decimal.TryParse(vsn.Groups["minorVersionLabel"].Value.Trim(), out decimal minorVer))
                 {
-                    MinorVersion.Value = Math.Clamp(minorVer, MinorVersion.Minimum, MinorVersion.Maximum);
+                    MinorVersion.Value = decimal.Clamp(minorVer, MinorVersion.Minimum, MinorVersion.Maximum);
                 }
             }
 
@@ -482,7 +482,7 @@ namespace PdnCodeLab
         private void rtb_FindMatchingUBBPair(string OpenUBBcode, FontStyle NewFontStyle, Color NewColor, StyleTypes NewStyleType, float NewSize, int NewBaseLineDirection, ref int FirstCodeLocation, ref int FirstEndLocation, ref FontStyle FirstStyle, ref Color FirstColor, ref float FirstSize, ref int FirstBaselineDirection, ref StyleTypes FirstStyleType, ref int FirstOpenCodeLength)
         {
             int OpenCodePosition = RichHelpContent.Find(OpenUBBcode);
-            int CloseCodePosition = RichHelpContent.Find(OpenUBBcode.Insert(1, "/"), Math.Max(OpenCodePosition, 0), RichTextBoxFinds.NoHighlight);
+            int CloseCodePosition = RichHelpContent.Find(OpenUBBcode.Insert(1, "/"), int.Max(OpenCodePosition, 0), RichTextBoxFinds.NoHighlight);
             if ((OpenCodePosition != -1) && (CloseCodePosition != -1) && (OpenCodePosition < FirstCodeLocation))
             {
                 FirstCodeLocation = OpenCodePosition;
@@ -562,7 +562,7 @@ namespace PdnCodeLab
                             break;
                         case StyleTypes.Baseline:
                             RichHelpContent.SelectionCharOffset = RichHelpContent.SelectionFont.Height / 3 * NewBaselineDirection;
-                            RichHelpContent.SelectionFont = new Font(RichHelpContent.SelectionFont.Name, MathF.Max(RichHelpContent.SelectionFont.Size * 0.75f, SizeToApply), RichHelpContent.SelectionFont.Style);
+                            RichHelpContent.SelectionFont = new Font(RichHelpContent.SelectionFont.Name, float.Max(RichHelpContent.SelectionFont.Size * 0.75f, SizeToApply), RichHelpContent.SelectionFont.Style);
                             break;
                         default:
                             break;
