@@ -146,7 +146,7 @@ namespace PdnCodeLab
             UIControlsText = "";
             foreach (UIElement uie in MasterList)
             {
-                UIControlsText += uie.ToSourceString(true, this.projectType);
+                UIControlsText += uie.ToSourceString(true);
             }
         }
 
@@ -1082,19 +1082,14 @@ namespace PdnCodeLab
 #if !FASTDEBUG
             if (this.projectType.IsEffect())
             {
-                PreviewEffect(this.projectType);
-            }
-            else if (this.projectType == ProjectType.FileType)
-            {
-                PreviewFileType();
+                PreviewEffect();
             }
 #endif
-            return;
         }
 
-        private void PreviewEffect(ProjectType projectType)
+        private void PreviewEffect()
         {
-            string uiCode = MasterList.Select(uiE => uiE.ToSourceString(false, projectType)).Join("");
+            string uiCode = MasterList.Select(uiE => uiE.ToSourceString(false)).Join("");
             string previewSourceCode = BitmapEffectWriter.UiPreview(uiCode);
 
             if (!ScriptBuilder.BuildEffect<BitmapEffect>(previewSourceCode))
@@ -1120,39 +1115,6 @@ namespace PdnCodeLab
                 using IEffectConfigForm effectConfigDialog = effect.CreateConfigForm();
                 effectConfigDialog.ShowDialog(this);
 #endif
-            }
-        }
-
-        private void PreviewFileType()
-        {
-            string code = "#region UICode\r\n";
-            code += MasterList.Select(uiE => uiE.ToSourceString(false, ProjectType.FileType)).Join("");
-            code += "\r\n";
-            code += "#endregion\r\n";
-            code += "void SaveImage(Document input, Stream output, PropertyBasedSaveConfigToken token, Surface scratchSurface, ProgressEventHandler progressCallback)\r\n";
-            code += "{}\r\n";
-            code += "Document LoadImage(Stream input)\r\n";
-            code += "{ return new Document(400, 300); }\r\n";
-
-            string fileTypeSourceCode = FileTypeWriter.Run(code, false);
-
-            if (!ScriptBuilder.BuildFileType(fileTypeSourceCode))
-            {
-                MessageBox.Show("Compilation Failed!");
-                return;
-            }
-
-            if (!ScriptBuilder.BuiltFileType.SupportsConfiguration)
-            {
-                MessageBox.Show("No Config!");
-                return;
-            }
-
-            using (SaveWidgetDialog widgetDialog = new SaveWidgetDialog(
-                ScriptBuilder.BuiltFileType.CreateSaveConfigWidget(),
-                ScriptBuilder.BuiltFileType.CreateDefaultSaveConfigToken()))
-            {
-                widgetDialog.ShowDialog();
             }
         }
 
@@ -1347,7 +1309,6 @@ namespace PdnCodeLab
                 projectType = value;
 
                 ControlTypeItem[] controlTypes = Enum.GetValues<ElementType>()
-                   .Where(et => UIElement.IsControlAllowed(et, projectType))
                    .Select(et => new ControlTypeItem(et))
                    .ToArray();
 
@@ -1487,36 +1448,7 @@ namespace PdnCodeLab
                 .Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
                 .Where(x => !x.StartsWith("//", StringComparison.Ordinal))
                 .Select(x => FromSourceLine(x))
-                .Where(x => x != null && IsControlAllowed(x.ElementType, projectType))
                 .ToArray();
-        }
-
-        internal static bool IsControlAllowed(ElementType elementType, ProjectType projectType)
-        {
-            if (projectType.IsEffect())
-            {
-                return true;
-            }
-
-            if (projectType == ProjectType.FileType)
-            {
-                switch (elementType)
-                {
-                    case ElementType.IntSlider:
-                    case ElementType.Checkbox:
-                    case ElementType.Uri:
-                    case ElementType.Textbox:
-                    case ElementType.MultiLineTextbox:
-                    case ElementType.DoubleSlider:
-                    case ElementType.DropDown:
-                    case ElementType.RadioButtons:
-                    case ElementType.LabelComment:
-                    case ElementType.LayerChooser:
-                        return true;
-                }
-            }
-
-            return false;
         }
 
         internal UIElement(ElementType eType, string eName, string eMin, string eMax, string eDefault, string eOptions, int eStyle, bool eEnabled, string targetIdentifier, bool eSwap, string identifier, string typeEnum)
@@ -2012,7 +1944,7 @@ namespace PdnCodeLab
             return Identifier + " — " + Description;
         }
 
-        internal string ToSourceString(bool useTEnum, ProjectType projectType)
+        internal string ToSourceString(bool useTEnum)
         {
             bool hasTEnum = useTEnum && !TEnum.IsNullOrEmpty();
             string typeEnum = hasTEnum ? $"<{TEnum}>" : string.Empty;

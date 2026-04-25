@@ -69,7 +69,6 @@
             NewBitmapEffectMenuItem = new ScaledToolStripMenuItem();
             NewGpuEffectMenuItem = new ScaledToolStripMenuItem();
             NewGpuDrawEffectMenuItem = new ScaledToolStripMenuItem();
-            NewFileTypeMenuItem = new ScaledToolStripMenuItem();
             NewShapeMenuItem = new ScaledToolStripMenuItem();
             NewTextMenuItem = new ScaledToolStripMenuItem();
             toolStripSeparator20 = new System.Windows.Forms.ToolStripSeparator();
@@ -127,7 +126,6 @@
             NewBitmapMenuItem1 = new ScaledToolStripMenuItem();
             NewGpuMenuItem1 = new ScaledToolStripMenuItem();
             NewGpuDrawMenuItem1 = new ScaledToolStripMenuItem();
-            NewFileTypeMenuItem1 = new ScaledToolStripMenuItem();
             NewShapeMenuItem1 = new ScaledToolStripMenuItem();
             NewTextMenuItem1 = new ScaledToolStripMenuItem();
             toolStripSeparator24 = new System.Windows.Forms.ToolStripSeparator();
@@ -473,7 +471,7 @@
             // 
             // newToolStripMenuItem
             // 
-            newToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { NewBitmapEffectMenuItem, NewGpuEffectMenuItem, NewGpuDrawEffectMenuItem, NewFileTypeMenuItem, NewShapeMenuItem, NewTextMenuItem, toolStripSeparator20, NewFromClipboardMenuItem });
+            newToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { NewBitmapEffectMenuItem, NewGpuEffectMenuItem, NewGpuDrawEffectMenuItem, NewShapeMenuItem, NewTextMenuItem, toolStripSeparator20, NewFromClipboardMenuItem });
             newToolStripMenuItem.ImageName = "New";
             newToolStripMenuItem.Name = "newToolStripMenuItem";
             newToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
@@ -503,15 +501,6 @@
             NewGpuDrawEffectMenuItem.Size = new System.Drawing.Size(180, 22);
             NewGpuDrawEffectMenuItem.Text = "GPU Drawing Effect";
             NewGpuDrawEffectMenuItem.Click += NewGpuDrawEffect_Click;
-            // 
-            // NewFileTypeMenuItem
-            // 
-            NewFileTypeMenuItem.ImageName = "Save";
-            NewFileTypeMenuItem.Name = "NewFileTypeMenuItem";
-            NewFileTypeMenuItem.Padding = new System.Windows.Forms.Padding(2);
-            NewFileTypeMenuItem.Size = new System.Drawing.Size(184, 24);
-            NewFileTypeMenuItem.Text = "FileType";
-            NewFileTypeMenuItem.Click += NewFileTypeMenuItem_Click;
             // 
             // NewShapeMenuItem
             // 
@@ -925,7 +914,7 @@
             // NewButton
             // 
             NewButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            NewButton.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { NewBitmapMenuItem1, NewGpuMenuItem1, NewGpuDrawMenuItem1, NewFileTypeMenuItem1, NewShapeMenuItem1, NewTextMenuItem1, toolStripSeparator24, NewFromClipboardMenuItem1 });
+            NewButton.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { NewBitmapMenuItem1, NewGpuMenuItem1, NewGpuDrawMenuItem1, NewShapeMenuItem1, NewTextMenuItem1, toolStripSeparator24, NewFromClipboardMenuItem1 });
             NewButton.ImageName = "New";
             NewButton.Name = "NewButton";
             NewButton.Padding = new System.Windows.Forms.Padding(2);
@@ -957,14 +946,6 @@
             NewGpuDrawMenuItem1.Size = new System.Drawing.Size(180, 22);
             NewGpuDrawMenuItem1.Text = "GPU Drawing Effect";
             NewGpuDrawMenuItem1.Click += NewGpuDrawEffect_Click;
-            // 
-            // NewFileTypeMenuItem1
-            // 
-            NewFileTypeMenuItem1.ImageName = "Save";
-            NewFileTypeMenuItem1.Name = "NewFileTypeMenuItem1";
-            NewFileTypeMenuItem1.Size = new System.Drawing.Size(180, 22);
-            NewFileTypeMenuItem1.Text = "FileType";
-            NewFileTypeMenuItem1.Click += NewFileTypeMenuItem_Click;
             // 
             // NewShapeMenuItem1
             // 
@@ -1530,7 +1511,6 @@
         private ScaledToolStripButton FindButton;
         private ScaledToolStripButton ReplaceButton;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator22;
-        private ScaledToolStripMenuItem NewFileTypeMenuItem;
         private ScaledToolStripMenuItem NewShapeMenuItem;
         private ScaledToolStripMenuItem NewTextMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator23;
@@ -1549,7 +1529,6 @@
         private ScaledToolStripMenuItem NewBitmapMenuItem1;
         private ScaledToolStripMenuItem NewGpuMenuItem1;
         private ScaledToolStripMenuItem NewGpuDrawMenuItem1;
-        private ScaledToolStripMenuItem NewFileTypeMenuItem1;
         private ScaledToolStripMenuItem NewShapeMenuItem1;
         private ScaledToolStripMenuItem NewTextMenuItem1;
         private ScaledToolStripMenuItem apiDocMenuItem;

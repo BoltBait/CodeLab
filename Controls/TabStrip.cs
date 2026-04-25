@@ -398,7 +398,6 @@ namespace PdnCodeLab
                         ProjectType.GpuImageEffect => "GpuEffect",
                         ProjectType.GpuDrawEffect => "GpuEffect",
                         ProjectType.BitmapEffect => "BitmapEffect",
-                        ProjectType.FileType => "Save",
                         ProjectType.Reference => "Book",
                         ProjectType.Shape => "Shape",
                         _ => "PlainText",

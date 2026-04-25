@@ -10,7 +10,7 @@ namespace PdnCodeLab
         GpuImageEffect,
         GpuDrawEffect,
         BitmapEffect,
-        FileType,
+        ClassicFileTypeObsolete,
         Reference,
         Shape,
 
@@ -26,7 +26,7 @@ namespace PdnCodeLab
                 projectType == ProjectType.GpuImageEffect ||
                 projectType == ProjectType.GpuDrawEffect ||
                 projectType == ProjectType.BitmapEffect ||
-                projectType == ProjectType.FileType;
+                projectType == ProjectType.ClassicFileTypeObsolete;
         }
 
         internal static bool IsEffect(this ProjectType projectType)
@@ -35,6 +35,13 @@ namespace PdnCodeLab
                 projectType == ProjectType.GpuImageEffect ||
                 projectType == ProjectType.GpuDrawEffect ||
                 projectType == ProjectType.BitmapEffect;
+        }
+
+        internal static bool IsClassic(this ProjectType projectType)
+        {
+            return
+                projectType == ProjectType.ClassicEffectObsolete ||
+                projectType == ProjectType.ClassicFileTypeObsolete;
         }
     }
 
@@ -79,7 +86,7 @@ namespace PdnCodeLab
 
             if (Regex.IsMatch(textContents, @"void\s+SaveImage\s*\(\s*Document\s+\w+\s*,\s*Stream\s+\w+\s*,\s*PropertyBasedSaveConfigToken\s+\w+\s*,\s*Surface\s+\w+\s*,\s*ProgressEventHandler\s+\w+\s*\)\s*{(.|\s)*}", RegexOptions.Singleline))
             {
-                return ProjectType.FileType;
+                return ProjectType.ClassicFileTypeObsolete;
             }
 
             if (Regex.IsMatch(textContents, @"<ps:SimpleGeometryShape\s+xmlns=""clr-namespace:PaintDotNet\.UI\.Media;assembly=PaintDotNet\.Framework""\s+xmlns:ps=""clr-namespace:PaintDotNet\.Shapes;assembly=PaintDotNet\.Framework""", RegexOptions.Singleline))

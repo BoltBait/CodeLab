@@ -4928,7 +4928,6 @@ namespace PdnCodeLab
                 case ProjectType.GpuImageEffect:
                 case ProjectType.GpuDrawEffect:
                 case ProjectType.BitmapEffect:
-                case ProjectType.FileType:
                 case ProjectType.Reference:
                     this.Lexer = Lexer.Cpp;
                     this.AllocateSubstyles(Style.Cpp.Identifier, this.useExtendedColors ? Substyle.ExtStyleCount : Substyle.NormStyleCount);

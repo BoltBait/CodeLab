@@ -96,14 +96,7 @@ namespace PdnCodeLab
             if (UserControls.Length == 0)
             {
                 // No controls, so no User Interface. Generate an empty OnCreatePropertyCollection()
-                if (projectType == ProjectType.FileType)
-                {
-                    PropertyPart += "        public override PropertyCollection OnCreateSavePropertyCollection()\r\n";
-                }
-                else
-                {
-                    PropertyPart += "        protected override PropertyCollection OnCreatePropertyCollection()\r\n";
-                }
+                PropertyPart += "        protected override PropertyCollection OnCreatePropertyCollection()\r\n";
                 PropertyPart += "        {\r\n";
                 PropertyPart += "            return PropertyCollection.CreateEmpty();\r\n";
                 PropertyPart += "        }\r\n";
@@ -152,16 +145,7 @@ namespace PdnCodeLab
 
             // generate OnCreatePropertyCollection()
             PropertyPart += "\r\n";
-
-            if (projectType == ProjectType.FileType)
-            {
-                PropertyPart += "        public override PropertyCollection OnCreateSavePropertyCollection()\r\n";
-            }
-            else
-            {
-                PropertyPart += "        protected override PropertyCollection OnCreatePropertyCollection()\r\n";
-            }
-
+            PropertyPart += "        protected override PropertyCollection OnCreatePropertyCollection()\r\n";
             PropertyPart += "        {\r\n";
 
             // Check to see if we're including a color wheel without an alpha slider
@@ -364,16 +348,7 @@ namespace PdnCodeLab
 
             // generate OnCreateConfigUI()
             PropertyPart += "\r\n";
-
-            if (projectType == ProjectType.FileType)
-            {
-                PropertyPart += "        public override ControlInfo OnCreateSaveConfigUI(PropertyCollection props)\r\n";
-            }
-            else
-            {
-                PropertyPart += "        protected override ControlInfo OnCreateConfigUI(PropertyCollection props)\r\n";
-            }
-
+            PropertyPart += "        protected override ControlInfo OnCreateConfigUI(PropertyCollection props)\r\n";
             PropertyPart += "        {\r\n";
 
             if (UserControls.Any(u => u.ElementType == ElementType.BinaryPixelOp))
@@ -392,15 +367,7 @@ namespace PdnCodeLab
                 PropertyPart += "\r\n";
             }
 
-            if (projectType == ProjectType.FileType)
-            {
-                PropertyPart += "            ControlInfo configUI = CreateDefaultSaveConfigUI(props);\r\n";
-            }
-            else
-            {
-                PropertyPart += "            ControlInfo configUI = CreateDefaultConfigUI(props);\r\n";
-            }
-
+            PropertyPart += "            ControlInfo configUI = CreateDefaultConfigUI(props);\r\n";
             PropertyPart += "\r\n";
 
             foreach (UIElement u in UserControls)

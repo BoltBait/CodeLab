@@ -30,7 +30,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Document = PaintDotNet.Document;
 
 namespace PdnCodeLab
 {
@@ -98,7 +97,6 @@ namespace PdnCodeLab
                     ProjectType.BitmapEffect => BitmapEffectWriter.Run(userCode, debugMode),
                     ProjectType.GpuImageEffect => GPUEffectWriter.Run(userCode, debugMode),
                     ProjectType.GpuDrawEffect => GPUDrawWriter.Run(userCode, debugMode),
-                    ProjectType.FileType => FileTypeWriter.Run(userCode, debugMode),
                     _ => string.Empty,
                 };
 
@@ -272,13 +270,6 @@ namespace PdnCodeLab
                     txtCode.UpdateSyntaxHighlighting();
                     UpdateTokenFromDialog();
                     break;
-                case ProjectType.FileType:
-                    string fileTypeSourceCode = FileTypeWriter.Run(userCode, debugMode);
-                    ScriptBuilder.BuildFileType(fileTypeSourceCode, debugMode);
-                    DisplayErrors();
-                    txtCode.UpdateSyntaxHighlighting();
-                    RunFileType();
-                    break;
                 case ProjectType.Shape:
                     ShapeBuilder.TryParseShapeCode(userCode);
                     DisplayErrors();
@@ -290,7 +281,7 @@ namespace PdnCodeLab
         private async Task BuildAsync()
         {
             ProjectType projType = tabStrip1.SelectedTabProjType;
-            if (projType == ProjectType.PlainText || projType == ProjectType.Shape)
+            if (!projType.IsEffect())
             {
                 return;
             }
@@ -314,10 +305,6 @@ namespace PdnCodeLab
                         string gpuDrawSourceCode = GPUDrawWriter.Run(userCode, debugMode);
                         ScriptBuilder.BuildEffect<GpuDrawingEffect>(gpuDrawSourceCode, debugMode);
                         break;
-                    case ProjectType.FileType:
-                        string fileTypeSourceCode = FileTypeWriter.Run(userCode, debugMode);
-                        ScriptBuilder.BuildFileType(fileTypeSourceCode, debugMode);
-                        break;
                 }
             });
 
@@ -327,20 +314,8 @@ namespace PdnCodeLab
             }
 
             DisplayErrors();
-
-            switch (projType)
-            {
-                case ProjectType.GpuImageEffect:
-                case ProjectType.GpuDrawEffect:
-                case ProjectType.BitmapEffect:
-                    txtCode.UpdateSyntaxHighlighting();
-                    UpdateTokenFromDialog();
-                    break;
-                case ProjectType.FileType:
-                    txtCode.UpdateSyntaxHighlighting();
-                    RunFileType();
-                    break;
-            }
+            txtCode.UpdateSyntaxHighlighting();
+            UpdateTokenFromDialog();
 
             tmrCompile.Enabled = true;
         }
@@ -398,84 +373,6 @@ namespace PdnCodeLab
             Build();
         }
 
-        private void RunFileTypeWithDialog()
-        {
-            if (errorList.HasErrors)
-            {
-                FlexibleMessageBox.Show("Before you can preview your FileType, you must resolve all code errors.", "Build Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            if (!ScriptBuilder.BuiltFileType.SupportsConfiguration)
-            {
-                const string noControls = "There are no UI controls!\r\n\r\n" +
-                    "Be aware that FileTypes with no controls will not display a Save Configuration dialog in Paint.NET.\r\n\r\n" +
-                    "However, a Save Configuration dialog will still display here in CodeLab for testing/debugging purposes.\r\n" +
-                    "It contains an image preview, which can provide visual feedback if the FileType is working correctly.";
-
-                FlexibleMessageBox.Show(noControls, "Preview Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
-
-            using Surface srcSurface = new Surface(800, 600);
-            using Graphics g = new RenderArgs(srcSurface).Graphics;
-            using System.Drawing.Drawing2D.LinearGradientBrush gradientBrush = new System.Drawing.Drawing2D.LinearGradientBrush(srcSurface.Bounds, Color.Black, Color.White, 0f);
-            g.FillRectangle(gradientBrush, srcSurface.Bounds);
-
-            using SaveConfigDialog saveDialog = new SaveConfigDialog(ScriptBuilder.BuiltFileType, srcSurface);
-            saveDialog.ShowDialog();
-        }
-
-        private void RunFileType()
-        {
-            if (ScriptBuilder.BuiltFileType == null)
-            {
-                return;
-            }
-
-            Size size = new Size(400, 300);
-            using (Document document = new Document(size))
-            using (MemoryStream stream = new MemoryStream())
-            using (Surface scratchSurface = new Surface(size))
-            {
-                document.Layers.Add(new BitmapLayer(size, ColorBgra.DodgerBlue.NewAlpha(85)));
-
-                SaveConfigToken token = ScriptBuilder.BuiltFileType.CreateDefaultSaveConfigToken();
-                ProgressEventHandler progress = (object s1, ProgressEventArgs e1) =>
-                {
-                };
-
-                try
-                {
-                    ScriptBuilder.BuiltFileType.Save(document, stream, token, scratchSurface, progress, false);
-
-                    stream.Seek(0, SeekOrigin.Begin);
-
-                    using (Document savedDoc = ScriptBuilder.BuiltFileType.Load(stream))
-                    {
-                        savedDoc.Flatten(scratchSurface);
-                    }
-
-                    // Debug Output capture
-                    if (OutputTextBox.Visible)
-                    {
-                        string output = ScriptBuilder.BuiltFileType.GetType().GetProperty("__DebugMsgs", typeof(string))?.GetValue(ScriptBuilder.BuiltFileType)?.ToString();
-                        if (!output.IsNullOrEmpty() && output.Trim().Length > 0)
-                        {
-                            OutputTextBox.AppendText(output);
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    errorList.AddError(Error.NewExceptionError(ex));
-                    ShowErrors.Text = $"{showErrorList} ({errorList.ErrorCount})";
-                    ShowErrors.ForeColor = Color.Red;
-                }
-
-                document.Layers.DisposeAll();
-            }
-        }
-
         private void DisplayErrors()
         {
             ClearErrorList();
@@ -497,13 +394,13 @@ namespace PdnCodeLab
                 if (projectTypeMismatch)
                 {
                     ProjectType detectedProjectType = ProjectTypeUtil.FromContents(txtCode.Text, null);
-                    if (detectedProjectType != projectType && detectedProjectType.IsCSharp())
+                    if (detectedProjectType != projectType)
                     {
-                        if (detectedProjectType == ProjectType.ClassicEffectObsolete)
+                        if (detectedProjectType.IsClassic())
                         {
-                            ClassicEffectsUnsupported();
+                            ClassicPluginsUnsupported(detectedProjectType);
                         }
-                        else
+                        else if (detectedProjectType.IsCSharp())
                         {
                             tabStrip1.SelectedTabProjType = detectedProjectType;
                             UpdateForProjectType();
@@ -560,17 +457,15 @@ namespace PdnCodeLab
 
             AddToRecents(filePath);
 
-            ProjectType projType = ProjectTypeUtil.FromContents(fileContents, Path.GetExtension(filePath));
-            bool isClassicEffect = projType == ProjectType.ClassicEffectObsolete;
-
-            if (isClassicEffect)
-            {
-                projType = ProjectType.PlainText;
-            }
+            ProjectType detectedProjectType = ProjectTypeUtil.FromContents(fileContents, Path.GetExtension(filePath));
+            bool isClassicPlugin = detectedProjectType.IsClassic();
 
             bool removedInitTab = tabStrip1.SelectedTabIsInitial && txtCode.IsVirgin;
 
-            tabStrip1.NewTab(Path.GetFileNameWithoutExtension(filePath), filePath, projType);
+            tabStrip1.NewTab(
+                Path.GetFileNameWithoutExtension(filePath),
+                filePath,
+                isClassicPlugin ? ProjectType.PlainText : detectedProjectType);
 
             if (removedInitTab)
             {
@@ -581,9 +476,9 @@ namespace PdnCodeLab
             txtCode.EmptyUndoBuffer();
             txtCode.SetSavePoint();
 
-            if (isClassicEffect)
+            if (isClassicPlugin)
             {
-                ClassicEffectsUnsupported();
+                ClassicPluginsUnsupported(detectedProjectType);
             }
         }
 
@@ -984,10 +879,18 @@ namespace PdnCodeLab
             UIUtil.LaunchUrl(this, url);
         }
 
-        private void ClassicEffectsUnsupported()
+        private static void ClassicPluginsUnsupported(ProjectType projectType)
         {
-            const string message = "The Classic Effects system was fully deprecated in Paint.NET 5.2. It is no longer possible to compile a Classic Effect.";
-            FlexibleMessageBox.Show(message, "Classic Effects Unsupported", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            string message = projectType switch
+            {
+                ProjectType.ClassicEffectObsolete =>
+                    "The Classic Effects system was fully deprecated in Paint.NET 5.2.\r\nIt is no longer possible to compile a Classic Effect.",
+                ProjectType.ClassicFileTypeObsolete =>
+                    "The Classic FileType system was deprecated in Paint.NET 5.2.\r\nPlease use the updated FileType API and Visual Studio.",
+                _ => throw new InvalidEnumArgumentException()
+            };
+
+            FlexibleMessageBox.Show(message, "Classic Plugins Unsupported", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         void IToolTipHost.ThemeToolTip()
@@ -1025,11 +928,6 @@ namespace PdnCodeLab
         private void CreateNewPlainText()
         {
             CreateNewProjectTab(ProjectType.PlainText);
-        }
-
-        private void CreateNewFileType()
-        {
-            CreateNewProjectTab(ProjectType.FileType);
         }
 
         private void CreateNewShape()
@@ -1161,21 +1059,6 @@ namespace PdnCodeLab
                 };
 
                 buildSucceeded = ScriptBuilder.BuildEffectDll(effectSourceCode, scriptPath, buildForm.IconPath, buildForm.HelpType);
-            }
-            else if (projectType == ProjectType.FileType)
-            {
-                using BuildFileTypeDialog buildFileTypeDialog = new BuildFileTypeDialog(fileName, userCode, canCreateSln);
-                if (buildFileTypeDialog.ShowDialog() != DialogResult.OK)
-                {
-                    return;
-                }
-
-                string fileTypeSourceCode = FileTypeWriter.FullSourceCode(
-                    userCode, projectName, buildFileTypeDialog.Author, buildFileTypeDialog.Major, buildFileTypeDialog.Minor,
-                    buildFileTypeDialog.URL, buildFileTypeDialog.Description, buildFileTypeDialog.LoadExt, buildFileTypeDialog.SaveExt,
-                    buildFileTypeDialog.Layers, buildFileTypeDialog.PluginName);
-
-                buildSucceeded = ScriptBuilder.BuildFileTypeDll(fileTypeSourceCode, projectName);
             }
 
             if (buildSucceeded)
@@ -1323,25 +1206,18 @@ namespace PdnCodeLab
 
         private void RunCommand()
         {
+            ProjectType projectType = this.tabStrip1.SelectedTabProjType;
+            if (!projectType.IsEffect())
+            {
+                return;
+            }
+
 #if !FASTDEBUG
             double SaveOpacitySetting = Opacity;
             Opacity = 0;
             tmrCompile.Enabled = false;
             Build();
-
-            ProjectType projectType = this.tabStrip1.SelectedTabProjType;
-            switch (projectType)
-            {
-                case ProjectType.BitmapEffect:
-                case ProjectType.GpuImageEffect:
-                case ProjectType.GpuDrawEffect:
-                    RunEffectWithDialog(projectType);
-                    break;
-                case ProjectType.FileType:
-                    RunFileTypeWithDialog();
-                    break;
-            }
-
+            RunEffectWithDialog(projectType);
             tmrCompile.Enabled = true;
             Opacity = SaveOpacitySetting;
 #endif
@@ -1387,11 +1263,6 @@ namespace PdnCodeLab
             saveAsDLLToolStripMenuItem.Enabled = notRef;
             previewEffectMenuItem.Enabled = cSharp;
             userInterfaceDesignerToolStripMenuItem.Enabled = cSharp;
-        }
-
-        private void NewFileTypeMenuItem_Click(object sender, EventArgs e)
-        {
-            CreateNewFileType();
         }
 
         private void NewShapeMenuItem_Click(object sender, EventArgs e)
@@ -1818,19 +1689,16 @@ namespace PdnCodeLab
                 return;
             }
 
-            ProjectType projectType = ProjectTypeUtil.FromContents(clipboardContents, null);
-            bool isClassicEffect = projectType == ProjectType.ClassicEffectObsolete;
+            ProjectType detectedProjectType = ProjectTypeUtil.FromContents(clipboardContents, null);
+            bool isClassicPlugin = detectedProjectType.IsClassic();
 
-            if (isClassicEffect)
+            CreateNewProjectTab(
+                isClassicPlugin ? ProjectType.PlainText : detectedProjectType,
+                clipboardContents);
+
+            if (isClassicPlugin)
             {
-                projectType = ProjectType.PlainText;
-            }
-
-            CreateNewProjectTab(projectType, clipboardContents);
-
-            if (isClassicEffect)
-            {
-                ClassicEffectsUnsupported();
+                ClassicPluginsUnsupported(detectedProjectType);
             }
         }
 

@@ -93,7 +93,6 @@ namespace PdnCodeLab
                 "PaintDotNet.Base",
                 "PaintDotNet.ComponentModel",
                 "PaintDotNet.Core",
-                "PaintDotNet.Data",
                 "PaintDotNet.Framework",
                 "PaintDotNet.Fundamentals",
                 "PaintDotNet.ObjectModel",
@@ -234,8 +233,6 @@ namespace PdnCodeLab
                 // removed to prevent name collision with properties
                 AllTypes.Remove(nameof(Environment));
                 AutoCompleteTypes.Remove(nameof(Environment));
-                AllTypes.Remove(nameof(Document));
-                AutoCompleteTypes.Remove(nameof(Document));
             }
 
             foreach (KeyValuePair<string, Type> kvp in AllTypes)
@@ -321,7 +318,6 @@ namespace PdnCodeLab
                 "PaintDotNet.Base",
                 "PaintDotNet.ComponentModel",
                 "PaintDotNet.Core",
-                "PaintDotNet.Data",
                 "PaintDotNet.Effects",
                 "PaintDotNet.Effects.Core",
                 "PaintDotNet.Effects.Gpu",

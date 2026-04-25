@@ -33,7 +33,6 @@ namespace PdnCodeLab
     internal static class ScriptBuilder
     {
         private static IEffect builtEffect;
-        private static FileType builtFileType;
         private static int lineOffset;
         private static string exceptionMsg;
 
@@ -47,7 +46,6 @@ namespace PdnCodeLab
         #region Properties
         internal static string CSharpVersion => parseOptions.LanguageVersion.ToDisplayString();
         internal static IEffect BuiltEffect => builtEffect;
-        internal static FileType BuiltFileType => builtFileType;
         internal static int LineOffset => lineOffset;
         internal static int ColumnOffset => 8;
         internal static string Exception => exceptionMsg;
@@ -141,39 +139,10 @@ namespace PdnCodeLab
                 resourceFiles.Add(helpPath);
             }
 
-            return BuildDll(projectName, resourceFiles, fullSourceCode, true);
+            return BuildDll(projectName, resourceFiles, fullSourceCode);
         }
 
-        internal static bool BuildFileType(string fullSourceCode, bool debug = false)
-        {
-            builtFileType = null;
-
-            Assembly assembly = CreateAssembly(fullSourceCode, debug);
-            if (assembly == null)
-            {
-                return false;
-            }
-
-            Intelli.UserDefinedTypes.Clear();
-
-            foreach (Type type in assembly.GetTypes())
-            {
-                if (type.IsSubclassOf(typeof(FileType)) && !type.IsAbstract)
-                {
-                    builtFileType = (FileType)type.GetConstructors(BindingFlags.NonPublic | BindingFlags.Instance)[0].Invoke(null);
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        internal static bool BuildFileTypeDll(string fullSourceCode, string projectName)
-        {
-            return BuildDll(projectName, Array.Empty<string>(), fullSourceCode, false);
-        }
-
-        private static bool BuildDll(string projectName, IEnumerable<string> resources, string sourceCode, bool isEffect)
+        private static bool BuildDll(string projectName, IEnumerable<string> resources, string sourceCode)
         {
             lineOffset = CalculateLineOffset(sourceCode);
             exceptionMsg = null;
@@ -224,7 +193,7 @@ namespace PdnCodeLab
                     File.Delete(zipPath);
                 }
 
-                string pluginDirName = isEffect ? "Effects" : "FileTypes";
+                const string pluginDirName = "Effects";
 
                 // Try this in Russian for outputting Russian characters to the install batch file:
 
