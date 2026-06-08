@@ -68,7 +68,7 @@ namespace PdnCodeLab
             SupportURL = SupportURL.Trim();
             if (!SupportURL.IsWebAddress())
             {
-                SupportURL = "https://www.getpaint.net/redirect/plugins.html";
+                SupportURL = "https://www.paint.net/redirect/plugins.html";
             }
 
             string SupportInfoPart = "";

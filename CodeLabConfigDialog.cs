@@ -1502,7 +1502,7 @@ namespace PdnCodeLab
 
         private void discussToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            LaunchUrl("https://forums.getpaint.net/forum/17-plugin");
+            LaunchUrl("https://forums.paint.net/forum/17-plugin");
         }
 
         private void settingsToolStripMenuItem_Click(object sender, EventArgs e)

@@ -362,7 +362,7 @@ namespace PdnCodeLab
             SupportURL.Name = "SupportURL";
             SupportURL.Size = new System.Drawing.Size(200, 23);
             SupportURL.TabIndex = 10;
-            SupportURL.Text = "https://www.getpaint.net/redirect/plugins.html";
+            SupportURL.Text = "https://www.paint.net/redirect/plugins.html";
             // 
             // label19
             // 
@@ -539,7 +539,7 @@ namespace PdnCodeLab
             HelpURL.Name = "HelpURL";
             HelpURL.Size = new System.Drawing.Size(325, 23);
             HelpURL.TabIndex = 20;
-            HelpURL.Text = "https://www.getpaint.net/redirect/plugins.html";
+            HelpURL.Text = "https://www.paint.net/redirect/plugins.html";
             // 
             // HelpPlainText
             // 

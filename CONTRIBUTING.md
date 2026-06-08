@@ -2,7 +2,7 @@
 
 #### Before You Begin
 
-- Install the latest version of [Paint.NET](https://www.getpaint.net/). Make sure you use the classic installer. Installing Paint.NET from the Microsoft Store will not work for CodeLab development.
+- Install the latest version of [Paint.NET](https://www.paint.net/). Make sure you use the classic installer. Installing Paint.NET from the Microsoft Store will not work for CodeLab development.
 
 - Install the latest version of [Visual Studio](https://visualstudio.microsoft.com/vs/) (C# options). The free Community Edition works fine.
 

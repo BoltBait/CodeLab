@@ -555,7 +555,7 @@ namespace PdnCodeLab
                     StyleLabel.Enabled = false;
                     ControlStyle.Enabled = false;
                     ControlStyle.SelectedIndex = 0;
-                    OptionsText.Text = "https://www.GetPaint.net";
+                    OptionsText.Text = "https://www.paint.net";
                     OptionsLabel.Text = "URL:";
                     toolTip1.SetToolTip(this.OptionsText, "URL must begin with 'http://' or 'https://' to be valid.");
                     rbEnabled.Enabled = true;
