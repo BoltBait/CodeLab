@@ -11,6 +11,7 @@ using System.Windows.Forms;
 
 namespace PdnCodeLab
 {
+    [DefaultProperty(nameof(Text))]
     public class MessageLabel : Direct2DControl
     {
         [DefaultValue(MessageType.None)]

@@ -1384,7 +1384,7 @@ namespace PdnCodeLab
                     }
 
                     string varRange = this.GetTextRange(varPos, semiColonPos - varPos);
-                    string[] possibleVars = varRange.StripBraces().StripParens().Split(new char[] { ',' });
+                    string[] possibleVars = varRange.StripBraces().StripParens().Split(',');
                     MatchCollection braceMatches = Regex.Matches(varRange, @"\{(?:\{[^{}]*\}|[^{}])*\}");
 
                     int varCount = possibleVars.Length;
@@ -3739,7 +3739,7 @@ namespace PdnCodeLab
                             // Enter/Return with characters to right of caret
                             int indent = GetIndentFromPrevLine(this.CurrentLine);
 
-                            if (lineText.Trim().Equals("}"))
+                            if (lineText.Trim().Equals("}", StringComparison.Ordinal))
                             {
                                 this.BeginUndoAction();
 
@@ -4382,7 +4382,7 @@ namespace PdnCodeLab
                 // Adjust Line Indentation
                 string trimmedLine = linesNoComments[line].Trim();
 
-                if (codeBlock && !trimmedLine.StartsWith("{", StringComparison.Ordinal) && !trimmedLine.StartsWith("using", StringComparison.Ordinal))
+                if (codeBlock && !trimmedLine.StartsWith('{') && !trimmedLine.StartsWith("using", StringComparison.Ordinal))
                 {
                     braceLess = true;
                     lineIndent += this.TabWidth;
@@ -4422,11 +4422,11 @@ namespace PdnCodeLab
                     withinCase--;
                     lineIndent -= this.TabWidth;
                 }
-                else if (trimmedLine.EndsWith("{", StringComparison.Ordinal))
+                else if (trimmedLine.EndsWith('{'))
                 {
                     lineIndent += this.TabWidth;
                 }
-                else if (trimmedLine.EndsWith("}", StringComparison.Ordinal) && !trimmedLine.Equals("}", StringComparison.Ordinal))
+                else if (trimmedLine.EndsWith('}') && !trimmedLine.Equals("}", StringComparison.Ordinal))
                 {
                     int closeBrace = this.Lines[line].Position + this.Lines[line].Indentation + trimmedLine.Length - 1;
                     int openBrace = this.BraceMatch(closeBrace);
@@ -4447,7 +4447,7 @@ namespace PdnCodeLab
                     }
                 }
                 else if (trimmedLine.StartsWith("using", StringComparison.Ordinal) || trimmedLine.StartsWith("else", StringComparison.Ordinal) ||
-                        (trimmedLine.StartsWith("if", StringComparison.Ordinal) && !trimmedLine.EndsWith(";", StringComparison.Ordinal)))
+                        (trimmedLine.StartsWith("if", StringComparison.Ordinal) && !trimmedLine.EndsWith(';')))
                 {
                     codeBlock = true;
                 }
@@ -4709,7 +4709,7 @@ namespace PdnCodeLab
                 string lineText = this.Lines[lineIndex].Text.Trim();
                 if (lineText.Length > 0)
                 {
-                    indent = lineText.EndsWith("{", StringComparison.Ordinal) ?
+                    indent = lineText.EndsWith('{') ?
                         this.Lines[lineIndex].Indentation + this.TabWidth :
                         this.Lines[lineIndex].Indentation;
 

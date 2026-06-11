@@ -30,7 +30,7 @@ namespace PdnCodeLab
         {
             if (options <= DocCommentOptions.Enabled)
             {
-                return new Dictionary<string, XElement>();
+                return new Dictionary<string, XElement>(0, StringComparer.Ordinal);
             }
 
             IEnumerable<string> pdnXml = Directory.EnumerateFiles(Application.StartupPath, "*.xml", SearchOption.TopDirectoryOnly);
@@ -64,7 +64,7 @@ namespace PdnCodeLab
                         .Select(e => new KeyValuePair<string, XElement>(e.Attribute("name").Value, e));
                 })
                 .DistinctBy(kvp => kvp.Key)
-                .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+                .ToDictionary(StringComparer.Ordinal);
         }
 
         internal static void ReInstantiate()

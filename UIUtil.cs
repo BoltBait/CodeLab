@@ -101,7 +101,7 @@ namespace PdnCodeLab
 
             if (!includeTransparent)
             {
-                names.Remove("Transparent");
+                names.Remove(nameof(Color.Transparent));
             }
 
             names.Sort();
