@@ -15,11 +15,11 @@
 using System;
 using System.Drawing;
 using System.IO;
-using System.Windows.Forms;
-using System.Text.RegularExpressions;
+using System.Linq;
 using System.Runtime.InteropServices;
-using System.IO.Compression;
 using System.Text;
+using System.Text.RegularExpressions;
+using System.Windows.Forms;
 
 namespace PdnCodeLab
 {
@@ -201,7 +201,7 @@ namespace PdnCodeLab
                     }
                 }
 
-                if (HelpPlainText.Text.Length == 0)
+                if (HelpPlainText.TextLength == 0)
                 {
                     HelpPlainText.Text = $"{MenuName.Text} v{MajorVersion.Value}{DecimalSymbol.Text}{MinorVersion.Value}\r\nCopyright ©{DateTime.Now.Year} by {AuthorName.Text}\r\nAll rights reserved.";
                     if (radioButtonNone.Checked)
@@ -211,55 +211,16 @@ namespace PdnCodeLab
                 }
 
                 // See if a help file exists
-                try
+                string[] possibleHelpPaths =
                 {
-                    string rtfPath = Path.ChangeExtension(resourcePath, ".rtf");
-                    if (File.Exists(rtfPath))
-                    {
-                        RichHelpContent.Rtf = File.ReadAllText(rtfPath);
-                        radioButtonRich.Checked = true;
-                    }
-                }
-                catch
-                {
-                    // If something went wrong, don't crash, just assume the file is invalid
-                }
+                    Path.ChangeExtension(resourcePath, ".rtf"),
+                    Path.ChangeExtension(resourcePath, ".rtz"),
+                    Path.ChangeExtension(resourcePath, ".txt")
+                };
 
-                if (RichHelpContent.Text.Length == 0)
-                {
-                    try
-                    {
-                        string rtzPath = Path.ChangeExtension(resourcePath, ".rtz");
-                        if (File.Exists(rtzPath))
-                        {
-                            string compressedContents = File.ReadAllText(rtzPath);
-                            RichHelpContent.Rtf = DecompressString(compressedContents);
-                            radioButtonRich.Checked = true;
-                        }
-                    }
-                    catch
-                    {
-                        // If something went wrong, don't crash, just assume the file is invalid
-                    }
-                }
-
-                if (RichHelpContent.Text.Length == 0)
-                {
-                    try
-                    {
-                        string txtPath = Path.ChangeExtension(resourcePath, ".txt");
-                        if (File.Exists(txtPath))
-                        {
-                            RichHelpContent.Text = File.ReadAllText(txtPath);
-                            ChangeUBBtoRTF();
-                            radioButtonRich.Checked = true;
-                        }
-                    }
-                    catch
-                    {
-                        // If something went wrong, don't crash, just assume the file is invalid
-                    }
-                }
+                string helpPath = possibleHelpPaths.FirstOrDefault(path => File.Exists(path));
+                bool rtfLoaded = RichHelpContent.LoadFileFromPath(helpPath);
+                radioButtonRich.Checked = rtfLoaded;
 
                 if (Regex.IsMatch(ScriptText, @"void OnWindowHelpButtonClicked\(IWin32Window owner, string helpContent\)(\s)*{(.|\s)*}", RegexOptions.Singleline))
                 {
@@ -407,7 +368,7 @@ namespace PdnCodeLab
                 {
                     HelpType = HelpType.RichText;
                     // save rtz file where the cs file is stored: RTZPath
-                    string CompressedOutput = CompressString(RichHelpContent.Rtf);
+                    string CompressedOutput = RichHelpContent.RtfCompressed;
                     File.WriteAllText(RTZPath, CompressedOutput);
                     // return filename
                     HelpStr = Path.GetFileName(RTZPath);
@@ -464,130 +425,6 @@ namespace PdnCodeLab
             {
                 SetIcon(ofd.FileName);
             }
-        }
-        #endregion
-
-        #region UBB to RTF
-        private enum StyleTypes
-        {
-            Style,
-            Color,
-            BackColor,
-            Indent,
-            Alignment,
-            Size,
-            Baseline
-        }
-
-        private void rtb_FindMatchingUBBPair(string OpenUBBcode, FontStyle NewFontStyle, Color NewColor, StyleTypes NewStyleType, float NewSize, int NewBaseLineDirection, ref int FirstCodeLocation, ref int FirstEndLocation, ref FontStyle FirstStyle, ref Color FirstColor, ref float FirstSize, ref int FirstBaselineDirection, ref StyleTypes FirstStyleType, ref int FirstOpenCodeLength)
-        {
-            int OpenCodePosition = RichHelpContent.Find(OpenUBBcode);
-            int CloseCodePosition = RichHelpContent.Find(OpenUBBcode.Insert(1, "/"), int.Max(OpenCodePosition, 0), RichTextBoxFinds.NoHighlight);
-            if ((OpenCodePosition != -1) && (CloseCodePosition != -1) && (OpenCodePosition < FirstCodeLocation))
-            {
-                FirstCodeLocation = OpenCodePosition;
-                FirstEndLocation = CloseCodePosition;
-                FirstStyle = NewFontStyle;
-                FirstColor = NewColor;
-                FirstSize = NewSize;
-                FirstBaselineDirection = NewBaseLineDirection;
-                FirstStyleType = NewStyleType;
-                FirstOpenCodeLength = OpenUBBcode.Length;
-            }
-        }
-
-        private void ChangeUBBtoRTF()
-        {
-            int EarliestTagFound = int.MaxValue;
-            int MatchingEndTag = 0;
-            FontStyle StyleToApply = FontStyle.Regular;
-            StyleTypes StyleTypeToApply = StyleTypes.Style;
-            int OpenCodeLength = 0;
-            Color ColorToApply = Color.Black;
-            float SizeToApply = 10f;
-            int NewBaselineDirection = 0;
-            RichHelpContent.SelectAll();
-            RichHelpContent.SelectionIndent = 10;
-            RichHelpContent.SelectionRightIndent = 10;
-            RichHelpContent.Select(0, 0);
-            RichHelpContent.SelectionFont = new Font(RichHelpContent.SelectionFont.Name, 5f, RichHelpContent.SelectionFont.Style);
-            RichHelpContent.SelectedText = "\n";
-            do
-            {
-                EarliestTagFound = int.MaxValue;
-                rtb_FindMatchingUBBPair("[b]", FontStyle.Bold, Color.Black, StyleTypes.Style, 10f, 0, ref EarliestTagFound, ref MatchingEndTag, ref StyleToApply, ref ColorToApply, ref SizeToApply, ref NewBaselineDirection, ref StyleTypeToApply, ref OpenCodeLength);
-                rtb_FindMatchingUBBPair("[i]", FontStyle.Italic, Color.Black, StyleTypes.Style, 10f, 0, ref EarliestTagFound, ref MatchingEndTag, ref StyleToApply, ref ColorToApply, ref SizeToApply, ref NewBaselineDirection, ref StyleTypeToApply, ref OpenCodeLength);
-                rtb_FindMatchingUBBPair("[u]", FontStyle.Underline, Color.Black, StyleTypes.Style, 10f, 0, ref EarliestTagFound, ref MatchingEndTag, ref StyleToApply, ref ColorToApply, ref SizeToApply, ref NewBaselineDirection, ref StyleTypeToApply, ref OpenCodeLength);
-                rtb_FindMatchingUBBPair("[s]", FontStyle.Strikeout, Color.Black, StyleTypes.Style, 10f, 0, ref EarliestTagFound, ref MatchingEndTag, ref StyleToApply, ref ColorToApply, ref SizeToApply, ref NewBaselineDirection, ref StyleTypeToApply, ref OpenCodeLength);
-                rtb_FindMatchingUBBPair("[red]", FontStyle.Regular, Color.Red, StyleTypes.Color, 10f, 0, ref EarliestTagFound, ref MatchingEndTag, ref StyleToApply, ref ColorToApply, ref SizeToApply, ref NewBaselineDirection, ref StyleTypeToApply, ref OpenCodeLength);
-                rtb_FindMatchingUBBPair("[blue]", FontStyle.Regular, Color.Blue, StyleTypes.Color, 10f, 0, ref EarliestTagFound, ref MatchingEndTag, ref StyleToApply, ref ColorToApply, ref SizeToApply, ref NewBaselineDirection, ref StyleTypeToApply, ref OpenCodeLength);
-                rtb_FindMatchingUBBPair("[cyan]", FontStyle.Regular, Color.Cyan, StyleTypes.Color, 10f, 0, ref EarliestTagFound, ref MatchingEndTag, ref StyleToApply, ref ColorToApply, ref SizeToApply, ref NewBaselineDirection, ref StyleTypeToApply, ref OpenCodeLength);
-                rtb_FindMatchingUBBPair("[green]", FontStyle.Regular, Color.Green, StyleTypes.Color, 10f, 0, ref EarliestTagFound, ref MatchingEndTag, ref StyleToApply, ref ColorToApply, ref SizeToApply, ref NewBaselineDirection, ref StyleTypeToApply, ref OpenCodeLength);
-                rtb_FindMatchingUBBPair("[brown]", FontStyle.Regular, Color.Chocolate, StyleTypes.Color, 10f, 0, ref EarliestTagFound, ref MatchingEndTag, ref StyleToApply, ref ColorToApply, ref SizeToApply, ref NewBaselineDirection, ref StyleTypeToApply, ref OpenCodeLength);
-                rtb_FindMatchingUBBPair("[white]", FontStyle.Regular, Color.White, StyleTypes.Color, 10f, 0, ref EarliestTagFound, ref MatchingEndTag, ref StyleToApply, ref ColorToApply, ref SizeToApply, ref NewBaselineDirection, ref StyleTypeToApply, ref OpenCodeLength);
-                rtb_FindMatchingUBBPair("[yellow]", FontStyle.Regular, Color.Gold, StyleTypes.Color, 10f, 0, ref EarliestTagFound, ref MatchingEndTag, ref StyleToApply, ref ColorToApply, ref SizeToApply, ref NewBaselineDirection, ref StyleTypeToApply, ref OpenCodeLength);
-                rtb_FindMatchingUBBPair("[purple]", FontStyle.Regular, Color.Purple, StyleTypes.Color, 10f, 0, ref EarliestTagFound, ref MatchingEndTag, ref StyleToApply, ref ColorToApply, ref SizeToApply, ref NewBaselineDirection, ref StyleTypeToApply, ref OpenCodeLength);
-                rtb_FindMatchingUBBPair("[orange]", FontStyle.Regular, Color.DarkOrange, StyleTypes.Color, 10f, 0, ref EarliestTagFound, ref MatchingEndTag, ref StyleToApply, ref ColorToApply, ref SizeToApply, ref NewBaselineDirection, ref StyleTypeToApply, ref OpenCodeLength);
-                rtb_FindMatchingUBBPair("[silver]", FontStyle.Regular, Color.Silver, StyleTypes.Color, 10f, 0, ref EarliestTagFound, ref MatchingEndTag, ref StyleToApply, ref ColorToApply, ref SizeToApply, ref NewBaselineDirection, ref StyleTypeToApply, ref OpenCodeLength);
-                rtb_FindMatchingUBBPair("[sharpie]", FontStyle.Regular, Color.Black, StyleTypes.BackColor, 10f, 0, ref EarliestTagFound, ref MatchingEndTag, ref StyleToApply, ref ColorToApply, ref SizeToApply, ref NewBaselineDirection, ref StyleTypeToApply, ref OpenCodeLength);
-                rtb_FindMatchingUBBPair("[highlighter]", FontStyle.Regular, Color.Gold, StyleTypes.BackColor, 10f, 0, ref EarliestTagFound, ref MatchingEndTag, ref StyleToApply, ref ColorToApply, ref SizeToApply, ref NewBaselineDirection, ref StyleTypeToApply, ref OpenCodeLength);
-                rtb_FindMatchingUBBPair("[indent]", FontStyle.Regular, Color.Black, StyleTypes.Indent, 10f, 0, ref EarliestTagFound, ref MatchingEndTag, ref StyleToApply, ref ColorToApply, ref SizeToApply, ref NewBaselineDirection, ref StyleTypeToApply, ref OpenCodeLength);
-                rtb_FindMatchingUBBPair("[center]", FontStyle.Regular, Color.Black, StyleTypes.Alignment, 10f, 0, ref EarliestTagFound, ref MatchingEndTag, ref StyleToApply, ref ColorToApply, ref SizeToApply, ref NewBaselineDirection, ref StyleTypeToApply, ref OpenCodeLength);
-                rtb_FindMatchingUBBPair("[small]", FontStyle.Regular, Color.Black, StyleTypes.Size, 7.5f, 0, ref EarliestTagFound, ref MatchingEndTag, ref StyleToApply, ref ColorToApply, ref SizeToApply, ref NewBaselineDirection, ref StyleTypeToApply, ref OpenCodeLength);
-                rtb_FindMatchingUBBPair("[big]", FontStyle.Regular, Color.Black, StyleTypes.Size, 13f, 0, ref EarliestTagFound, ref MatchingEndTag, ref StyleToApply, ref ColorToApply, ref SizeToApply, ref NewBaselineDirection, ref StyleTypeToApply, ref OpenCodeLength);
-                rtb_FindMatchingUBBPair("[sup]", FontStyle.Regular, Color.Black, StyleTypes.Baseline, 7.5f, 1, ref EarliestTagFound, ref MatchingEndTag, ref StyleToApply, ref ColorToApply, ref SizeToApply, ref NewBaselineDirection, ref StyleTypeToApply, ref OpenCodeLength);
-                rtb_FindMatchingUBBPair("[sub]", FontStyle.Regular, Color.Black, StyleTypes.Baseline, 7.5f, -1, ref EarliestTagFound, ref MatchingEndTag, ref StyleToApply, ref ColorToApply, ref SizeToApply, ref NewBaselineDirection, ref StyleTypeToApply, ref OpenCodeLength);
-                if (EarliestTagFound < int.MaxValue)
-                {
-                    RichHelpContent.Select(EarliestTagFound, MatchingEndTag - EarliestTagFound);
-                    switch (StyleTypeToApply)
-                    {
-                        case StyleTypes.Style:
-                            RichHelpContent.SelectionFont = new Font(RichHelpContent.SelectionFont, RichHelpContent.SelectionFont.Style | StyleToApply);
-                            break;
-                        case StyleTypes.Color:
-                            RichHelpContent.SelectionColor = ColorToApply;
-                            break;
-                        case StyleTypes.BackColor:
-                            RichHelpContent.SelectionBackColor = ColorToApply;
-                            break;
-                        case StyleTypes.Indent:
-                            RichHelpContent.SelectionIndent += 20;
-                            break;
-                        case StyleTypes.Alignment:
-                            RichHelpContent.SelectionAlignment = HorizontalAlignment.Center;
-                            break;
-                        case StyleTypes.Size:
-                            RichHelpContent.SelectionFont = new Font(RichHelpContent.SelectionFont.Name, SizeToApply, RichHelpContent.SelectionFont.Style);
-                            break;
-                        case StyleTypes.Baseline:
-                            RichHelpContent.SelectionCharOffset = RichHelpContent.SelectionFont.Height / 3 * NewBaselineDirection;
-                            RichHelpContent.SelectionFont = new Font(RichHelpContent.SelectionFont.Name, float.Max(RichHelpContent.SelectionFont.Size * 0.75f, SizeToApply), RichHelpContent.SelectionFont.Style);
-                            break;
-                        default:
-                            break;
-                    }
-                    RichHelpContent.Select(MatchingEndTag, OpenCodeLength + 1);
-                    RichHelpContent.SelectedText = "";
-                    RichHelpContent.Select(EarliestTagFound, OpenCodeLength);
-                    RichHelpContent.SelectedText = "";
-                }
-            } while (EarliestTagFound < int.MaxValue);
-            int findt = RichHelpContent.Find("[t]");
-            while (findt > -1)
-            {
-                RichHelpContent.Select(findt, 3);
-                RichHelpContent.SelectedText = "\\t";
-                findt = RichHelpContent.Find("[t]");
-            }
-            int findn = RichHelpContent.Find("[n]");
-            while (findn > -1)
-            {
-                RichHelpContent.Select(findn, 3);
-                RichHelpContent.SelectedText = "\\n";
-                findn = RichHelpContent.Find("[n]");
-            }
-            RichHelpContent.Select(0, 0);
         }
         #endregion
 
@@ -686,47 +523,6 @@ namespace PdnCodeLab
         }
         #endregion
 
-        #region Compression
-        private static string CompressString(string text)
-        {
-            byte[] buffer = Encoding.UTF8.GetBytes(text);
-            using MemoryStream memoryStream = new MemoryStream();
-            using (GZipStream gZipStream = new GZipStream(memoryStream, CompressionMode.Compress, true))
-            {
-                gZipStream.Write(buffer, 0, buffer.Length);
-            }
-
-            memoryStream.Position = 0;
-
-            byte[] compressedData = new byte[memoryStream.Length];
-            memoryStream.ReadExactly(compressedData, 0, compressedData.Length);
-
-            byte[] gZipBuffer = new byte[compressedData.Length + 4];
-            Buffer.BlockCopy(compressedData, 0, gZipBuffer, 4, compressedData.Length);
-            Buffer.BlockCopy(BitConverter.GetBytes(buffer.Length), 0, gZipBuffer, 0, 4);
-            return Convert.ToBase64String(gZipBuffer);
-        }
-
-        private static string DecompressString(string compressedText)
-        {
-            byte[] gZipBuffer = Convert.FromBase64String(compressedText);
-            int dataLength = BitConverter.ToInt32(gZipBuffer, 0);
-
-            using MemoryStream memoryStream = new MemoryStream();
-            memoryStream.Write(gZipBuffer, 4, gZipBuffer.Length - 4);
-            memoryStream.Position = 0;
-
-            byte[] buffer = new byte[dataLength];
-
-            using (GZipStream gZipStream = new GZipStream(memoryStream, CompressionMode.Decompress))
-            {
-                gZipStream.ReadExactly(buffer, 0, buffer.Length);
-            }
-
-            return Encoding.UTF8.GetString(buffer);
-        }
-        #endregion
-
         #region RTF Editor functions
         private void UpdateReadOnlyFields()
         {
@@ -778,76 +574,14 @@ namespace PdnCodeLab
             }
         }
 
-        private void radioButtonNone_CheckedChanged(object sender, EventArgs e)
+        private void radioHelpType_CheckedChanged(object sender, EventArgs e)
         {
             UpdateReadOnlyFields();
         }
 
-        private void radioButtonURL_CheckedChanged(object sender, EventArgs e)
+        private void OpenRtf()
         {
-            UpdateReadOnlyFields();
-        }
-
-        private void radioButtonPlain_CheckedChanged(object sender, EventArgs e)
-        {
-            UpdateReadOnlyFields();
-        }
-
-        private void radioButtonRich_CheckedChanged(object sender, EventArgs e)
-        {
-            UpdateReadOnlyFields();
-        }
-
-        private void InsertImage(Image img)
-        {
-            IDataObject obj = System.Windows.Forms.Clipboard.GetDataObject();
-            System.Windows.Forms.Clipboard.Clear();
-
-            System.Windows.Forms.Clipboard.SetImage(img);
-            RichHelpContent.Paste();
-
-            System.Windows.Forms.Clipboard.Clear();
-            System.Windows.Forms.Clipboard.SetDataObject(obj);
-        }
-
-        private void DoColor()
-        {
-            ColorWindow colorDialog1 = new ColorWindow
-            {
-                Color = Color.FromArgb(255, RichHelpContent.SelectionColor),
-                ShowAlpha = false
-            };
-
-            if (colorDialog1.ShowDialog() == DialogResult.OK && colorDialog1.Color != RichHelpContent.SelectionColor)
-            {
-                RichHelpContent.SelectionColor = colorDialog1.Color;
-            }
-        }
-
-        private void DoBold()
-        {
-            RichHelpContent.SelectionFont = (RichHelpContent.SelectionFont.Bold) ?
-                new Font(RichHelpContent.SelectionFont, RichHelpContent.SelectionFont.Style ^ FontStyle.Bold) :
-                new Font(RichHelpContent.SelectionFont, RichHelpContent.SelectionFont.Style | FontStyle.Bold);
-        }
-
-        private void DoItalics()
-        {
-            RichHelpContent.SelectionFont = (RichHelpContent.SelectionFont.Italic) ?
-                new Font(RichHelpContent.SelectionFont, RichHelpContent.SelectionFont.Style ^ FontStyle.Italic) :
-                new Font(RichHelpContent.SelectionFont, RichHelpContent.SelectionFont.Style | FontStyle.Italic);
-        }
-
-        private void DoUnderline()
-        {
-            RichHelpContent.SelectionFont = (RichHelpContent.SelectionFont.Underline) ?
-                new Font(RichHelpContent.SelectionFont, RichHelpContent.SelectionFont.Style ^ FontStyle.Underline) :
-                new Font(RichHelpContent.SelectionFont, RichHelpContent.SelectionFont.Style | FontStyle.Underline);
-        }
-
-        private void DoOpen()
-        {
-            OpenFileDialog ofd = new OpenFileDialog
+            using OpenFileDialog ofd = new OpenFileDialog
             {
                 Title = "Open Help File",
                 Filter = "Rich Text Format (*.RTF)|*.RTF|Compressed Rich Text Format (*.RTZ)|*.RTZ|Text Format with UBB Codes (*.TXT)|*.TXT",
@@ -856,40 +590,17 @@ namespace PdnCodeLab
                 InitialDirectory = Settings.LastSourceDirectory
             };
 
-            if (ofd.ShowDialog() == DialogResult.OK && File.Exists(ofd.FileName))
+            if (ofd.ShowDialog() == DialogResult.OK)
             {
-                try
-                {
-                    string fileExtension = Path.GetExtension(ofd.FileName);
-                    if (fileExtension.Equals(".rtf", StringComparison.OrdinalIgnoreCase))
-                    {
-                        RichHelpContent.ResetText();
-                        RichHelpContent.Rtf = File.ReadAllText(ofd.FileName);
-                    }
-                    else if (fileExtension.Equals(".rtz", StringComparison.OrdinalIgnoreCase))
-                    {
-                        string FileContents = File.ReadAllText(ofd.FileName);
-                        string ExpandedContents = DecompressString(FileContents);
-                        RichHelpContent.ResetText();
-                        RichHelpContent.Rtf = ExpandedContents;
-                    }
-                    else if (fileExtension.Equals(".txt", StringComparison.OrdinalIgnoreCase))
-                    {
-                        RichHelpContent.ResetText();
-                        RichHelpContent.Text = File.ReadAllText(ofd.FileName);
-                        ChangeUBBtoRTF();
-                    }
-                }
-                catch
-                {
-                }
+                RichHelpContent.LoadFileFromPath(ofd.FileName);
             }
+
             RichHelpContent.Focus();
         }
 
-        private void DoSave(bool OpenInWordPad)
+        private void SaveRtf(bool OpenInWordPad)
         {
-            SaveFileDialog sfd = new SaveFileDialog
+            using SaveFileDialog sfd = new SaveFileDialog
             {
                 Title = "Save Help File",
                 FileName = Path.ChangeExtension(FileName, ".rtf"),
@@ -917,127 +628,82 @@ namespace PdnCodeLab
                 }
             }
         }
-
-        private void DoSuperscript()
-        {
-            RichHelpContent.SelectionCharOffset = (RichHelpContent.SelectionCharOffset == 0) ? 5 : 0;
-        }
-
-        private void DoSubscript()
-        {
-            RichHelpContent.SelectionCharOffset = (RichHelpContent.SelectionCharOffset == 0) ? -5 : 0;
-        }
-
-        private void DoLargeFont()
-        {
-            RichHelpContent.SelectionFont = new Font(RichHelpContent.SelectionFont.Name, (RichHelpContent.SelectionFont.SizeInPoints + 2 > 72) ? 72 : RichHelpContent.SelectionFont.SizeInPoints + 2);
-        }
-
-        private void DoSmallFont()
-        {
-            RichHelpContent.SelectionFont = new Font(RichHelpContent.SelectionFont.Name, (RichHelpContent.SelectionFont.SizeInPoints - 2 < 2) ? 2 : RichHelpContent.SelectionFont.SizeInPoints - 2);
-        }
-
-        private void DoBullet()
-        {
-            RichHelpContent.SelectionBullet = !RichHelpContent.SelectionBullet;
-        }
-
-        private void DoIndent()
-        {
-            RichHelpContent.SelectionIndent += 20;
-        }
-
-        private void DoUnindent()
-        {
-            RichHelpContent.SelectionIndent -= 20;
-        }
-
-        private void DoLeft()
-        {
-            RichHelpContent.SelectionAlignment = HorizontalAlignment.Left;
-        }
-
-        private void DoCenter()
-        {
-            RichHelpContent.SelectionAlignment = HorizontalAlignment.Center;
-        }
         #endregion
 
         #region RTF Editor Toolbar Buttons
         private void BoldButton_Click(object sender, EventArgs e)
         {
-            DoBold();
+            RichHelpContent.ToggleBold();
         }
 
         private void ItalicsButton_Click(object sender, EventArgs e)
         {
-            DoItalics();
+            RichHelpContent.ToggleItalics();
         }
 
         private void UnderlineButton_Click(object sender, EventArgs e)
         {
-            DoUnderline();
+            RichHelpContent.ToggleUnderline();
         }
 
         private void OpenButton_Click(object sender, EventArgs e)
         {
-            DoOpen();
+            OpenRtf();
         }
 
         private void SaveButton_Click_1(object sender, EventArgs e)
         {
-            DoSave(false);
+            SaveRtf(false);
         }
 
         private void WordPadButton_Click(object sender, EventArgs e)
         {
-            DoSave(true);
+            SaveRtf(true);
         }
 
         private void SuperScriptButton_Click(object sender, EventArgs e)
         {
-            DoSuperscript();
+            RichHelpContent.ToggleSuperscript();
         }
 
         private void SubScriptButton_Click(object sender, EventArgs e)
         {
-            DoSubscript();
+            RichHelpContent.ToggleSubscript();
         }
 
         private void LargeFontButton_Click(object sender, EventArgs e)
         {
-            DoLargeFont();
+            RichHelpContent.IncreaseFontSize();
         }
 
         private void SmallFontButton_Click(object sender, EventArgs e)
         {
-            DoSmallFont();
+            RichHelpContent.DecreaseFontSize();
         }
 
         private void BulletButton_Click(object sender, EventArgs e)
         {
-            DoBullet();
+            RichHelpContent.ToggleBullet();
         }
 
         private void IndentButton_Click(object sender, EventArgs e)
         {
-            DoIndent();
+            RichHelpContent.Indent();
         }
 
         private void UnindentButton_Click(object sender, EventArgs e)
         {
-            DoUnindent();
+            RichHelpContent.Unindent();
         }
 
         private void ParagraphLeftButton_Click(object sender, EventArgs e)
         {
-            DoLeft();
+            RichHelpContent.AlginLeft();
         }
 
         private void CenterButton_Click(object sender, EventArgs e)
         {
-            DoCenter();
+            RichHelpContent.AlignCenter();
         }
 
         private void InsertImageButton_Click(object sender, EventArgs e)
@@ -1056,7 +722,7 @@ namespace PdnCodeLab
                 Bitmap aimg = UIUtil.GetBitmapFromFile(ofd.FileName);
                 if (aimg != null)
                 {
-                    InsertImage(aimg);
+                    RichHelpContent.InsertImage(aimg);
                 }
                 else
                 {
@@ -1067,7 +733,7 @@ namespace PdnCodeLab
 
         private void ColorButton_Click(object sender, EventArgs e)
         {
-            DoColor();
+            RichHelpContent.ApplyColor();
         }
         #endregion
 
@@ -1076,37 +742,37 @@ namespace PdnCodeLab
         {
             if (e.Modifiers == Keys.Control && e.KeyCode == Keys.B)
             {
-                DoBold();
+                RichHelpContent.ToggleBold();
                 e.Handled = true;
             }
             if (e.Modifiers == Keys.Control && e.KeyCode == Keys.I)
             {
-                DoItalics();
+                RichHelpContent.ToggleItalics();
                 e.Handled = true;
             }
             if (e.Modifiers == Keys.Control && e.KeyCode == Keys.U)
             {
-                DoUnderline();
+                RichHelpContent.ToggleUnderline();
                 e.Handled = true;
             }
             if (e.Modifiers == Keys.Control && e.KeyCode == Keys.O)
             {
-                DoOpen();
+                OpenRtf();
                 e.Handled = true;
             }
             if (e.Modifiers == Keys.Control && e.KeyCode == Keys.S)
             {
-                DoSave(false);
+                SaveRtf(false);
                 e.Handled = true;
             }
             if (e.Modifiers == Keys.Control && e.KeyCode == Keys.W)
             {
-                DoSave(true);
+                SaveRtf(true);
                 e.Handled = true;
             }
             if ((e.KeyCode == Keys.F8) || (e.Modifiers == Keys.Alt && e.KeyCode == Keys.C))
             {
-                DoColor();
+                RichHelpContent.ApplyColor();
                 e.Handled = true;
             }
         }
@@ -1146,7 +812,7 @@ namespace PdnCodeLab
 
             if (radioButtonRich.Checked)
             {
-                string CompressedOutput = CompressString(RichHelpContent.Rtf);
+                string CompressedOutput = RichHelpContent.RtfCompressed;
                 File.WriteAllText(RTZPath, CompressedOutput);
             }
 

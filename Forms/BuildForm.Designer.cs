@@ -73,7 +73,7 @@ namespace PdnCodeLab
             radioButtonRich = new System.Windows.Forms.RadioButton();
             HelpURL = new System.Windows.Forms.TextBox();
             HelpPlainText = new System.Windows.Forms.TextBox();
-            RichHelpContent = new System.Windows.Forms.RichTextBox();
+            RichHelpContent = new RtfHelpEditor();
             toolStrip1 = new System.Windows.Forms.ToolStrip();
             OpenButton = new ScaledToolStripButton();
             SaveButton = new ScaledToolStripButton();
@@ -130,7 +130,7 @@ namespace PdnCodeLab
             // 
             ButtonSave.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
             ButtonSave.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            ButtonSave.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            ButtonSave.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold);
             ButtonSave.Location = new System.Drawing.Point(554, 670);
             ButtonSave.Name = "ButtonSave";
             ButtonSave.Size = new System.Drawing.Size(75, 24);
@@ -250,7 +250,7 @@ namespace PdnCodeLab
             // 
             PreviewHelpButton.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
             PreviewHelpButton.BackColor = System.Drawing.SystemColors.ActiveCaption;
-            PreviewHelpButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            PreviewHelpButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             PreviewHelpButton.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
             PreviewHelpButton.Location = new System.Drawing.Point(684, 25);
             PreviewHelpButton.Name = "PreviewHelpButton";
@@ -291,7 +291,7 @@ namespace PdnCodeLab
             WorkingSpaceColorContextBox.Location = new System.Drawing.Point(19, 473);
             WorkingSpaceColorContextBox.Margin = new System.Windows.Forms.Padding(2);
             WorkingSpaceColorContextBox.Name = "WorkingSpaceColorContextBox";
-            WorkingSpaceColorContextBox.Size = new System.Drawing.Size(188, 19);
+            WorkingSpaceColorContextBox.Size = new System.Drawing.Size(206, 19);
             WorkingSpaceColorContextBox.TabIndex = 91;
             WorkingSpaceColorContextBox.Text = "Working Space Gamma (sRGB 2.2)";
             toolTip1.SetToolTip(WorkingSpaceColorContextBox, "If unchecked then the source images are supplied in linear (1.0) gamma to GPU accelerated effects. It is usually best to use linear gamma, but sRGB can be more comfortable or convenient in some cases.");
@@ -348,7 +348,7 @@ namespace PdnCodeLab
             // DecimalSymbol
             // 
             DecimalSymbol.AutoSize = true;
-            DecimalSymbol.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            DecimalSymbol.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold);
             DecimalSymbol.Location = new System.Drawing.Point(185, 233);
             DecimalSymbol.Name = "DecimalSymbol";
             DecimalSymbol.Size = new System.Drawing.Size(20, 29);
@@ -376,7 +376,7 @@ namespace PdnCodeLab
             // label20
             // 
             label20.AutoSize = true;
-            label20.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            label20.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold);
             label20.Location = new System.Drawing.Point(6, 184);
             label20.Name = "label20";
             label20.Size = new System.Drawing.Size(117, 13);
@@ -386,7 +386,7 @@ namespace PdnCodeLab
             // label21
             // 
             label21.AutoSize = true;
-            label21.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            label21.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             label21.Location = new System.Drawing.Point(6, 10);
             label21.Name = "label21";
             label21.Size = new System.Drawing.Size(91, 15);
@@ -439,7 +439,7 @@ namespace PdnCodeLab
             // label6
             // 
             label6.AutoSize = true;
-            label6.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            label6.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold);
             label6.Location = new System.Drawing.Point(6, 382);
             label6.Name = "label6";
             label6.Size = new System.Drawing.Size(161, 13);
@@ -459,7 +459,7 @@ namespace PdnCodeLab
             ForceSingleThreadedBox.AutoSize = true;
             ForceSingleThreadedBox.Location = new System.Drawing.Point(141, 405);
             ForceSingleThreadedBox.Name = "ForceSingleThreadedBox";
-            ForceSingleThreadedBox.Size = new System.Drawing.Size(110, 19);
+            ForceSingleThreadedBox.Size = new System.Drawing.Size(111, 19);
             ForceSingleThreadedBox.TabIndex = 12;
             ForceSingleThreadedBox.Text = "Single Threaded";
             ForceSingleThreadedBox.UseVisualStyleBackColor = true;
@@ -467,7 +467,7 @@ namespace PdnCodeLab
             // label8
             // 
             label8.AutoSize = true;
-            label8.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            label8.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold);
             label8.Location = new System.Drawing.Point(285, 10);
             label8.Name = "label8";
             label8.Size = new System.Drawing.Size(79, 13);
@@ -494,7 +494,7 @@ namespace PdnCodeLab
             radioButtonNone.TabStop = true;
             radioButtonNone.Text = "None";
             radioButtonNone.UseVisualStyleBackColor = true;
-            radioButtonNone.CheckedChanged += radioButtonNone_CheckedChanged;
+            radioButtonNone.CheckedChanged += radioHelpType_CheckedChanged;
             // 
             // radioButtonURL
             // 
@@ -506,31 +506,31 @@ namespace PdnCodeLab
             radioButtonURL.TabStop = true;
             radioButtonURL.Text = "Help URL:";
             radioButtonURL.UseVisualStyleBackColor = true;
-            radioButtonURL.CheckedChanged += radioButtonURL_CheckedChanged;
+            radioButtonURL.CheckedChanged += radioHelpType_CheckedChanged;
             // 
             // radioButtonPlain
             // 
             radioButtonPlain.AutoSize = true;
             radioButtonPlain.Location = new System.Drawing.Point(298, 78);
             radioButtonPlain.Name = "radioButtonPlain";
-            radioButtonPlain.Size = new System.Drawing.Size(77, 19);
+            radioButtonPlain.Size = new System.Drawing.Size(76, 19);
             radioButtonPlain.TabIndex = 21;
             radioButtonPlain.TabStop = true;
             radioButtonPlain.Text = "Plain text:";
             radioButtonPlain.UseVisualStyleBackColor = true;
-            radioButtonPlain.CheckedChanged += radioButtonPlain_CheckedChanged;
+            radioButtonPlain.CheckedChanged += radioHelpType_CheckedChanged;
             // 
             // radioButtonRich
             // 
             radioButtonRich.AutoSize = true;
             radioButtonRich.Location = new System.Drawing.Point(298, 134);
             radioButtonRich.Name = "radioButtonRich";
-            radioButtonRich.Size = new System.Drawing.Size(74, 19);
+            radioButtonRich.Size = new System.Drawing.Size(73, 19);
             radioButtonRich.TabIndex = 23;
             radioButtonRich.TabStop = true;
             radioButtonRich.Text = "Rich text:";
             radioButtonRich.UseVisualStyleBackColor = true;
-            radioButtonRich.CheckedChanged += radioButtonRich_CheckedChanged;
+            radioButtonRich.CheckedChanged += radioHelpType_CheckedChanged;
             // 
             // HelpURL
             // 
@@ -546,7 +546,6 @@ namespace PdnCodeLab
             HelpPlainText.AcceptsReturn = true;
             HelpPlainText.AcceptsTab = true;
             HelpPlainText.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-            HelpPlainText.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             HelpPlainText.Location = new System.Drawing.Point(385, 77);
             HelpPlainText.Multiline = true;
             HelpPlainText.Name = "HelpPlainText";
@@ -559,7 +558,6 @@ namespace PdnCodeLab
             RichHelpContent.AcceptsTab = true;
             RichHelpContent.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
             RichHelpContent.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            RichHelpContent.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             RichHelpContent.Location = new System.Drawing.Point(288, 182);
             RichHelpContent.Name = "RichHelpContent";
             RichHelpContent.Size = new System.Drawing.Size(422, 433);
@@ -789,7 +787,7 @@ namespace PdnCodeLab
             // PlainTextLabel
             // 
             PlainTextLabel.AutoSize = true;
-            PlainTextLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            PlainTextLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.5F);
             PlainTextLabel.Location = new System.Drawing.Point(319, 97);
             PlainTextLabel.Name = "PlainTextLabel";
             PlainTextLabel.Size = new System.Drawing.Size(42, 24);
@@ -799,7 +797,7 @@ namespace PdnCodeLab
             // WarningLabel
             // 
             WarningLabel.AutoSize = true;
-            WarningLabel.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            WarningLabel.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold);
             WarningLabel.ForeColor = System.Drawing.Color.Red;
             WarningLabel.Location = new System.Drawing.Point(376, 136);
             WarningLabel.Name = "WarningLabel";
@@ -838,7 +836,7 @@ namespace PdnCodeLab
             // 
             // sampleLabel
             // 
-            sampleLabel.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            sampleLabel.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold);
             sampleLabel.Location = new System.Drawing.Point(6, 498);
             sampleLabel.Name = "sampleLabel";
             sampleLabel.Size = new System.Drawing.Size(254, 124);
@@ -999,7 +997,7 @@ namespace PdnCodeLab
         private System.Windows.Forms.RadioButton radioButtonRich;
         private System.Windows.Forms.TextBox HelpURL;
         private System.Windows.Forms.TextBox HelpPlainText;
-        private System.Windows.Forms.RichTextBox RichHelpContent;
+        private RtfHelpEditor RichHelpContent;
         private System.Windows.Forms.ToolStrip toolStrip1;
         private ScaledToolStripButton BoldButton;
         private ScaledToolStripButton ItalicsButton;
