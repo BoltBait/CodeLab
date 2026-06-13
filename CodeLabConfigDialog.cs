@@ -63,6 +63,10 @@ namespace PdnCodeLab
             this.ShowInTaskbar = true;
             this.StartPosition = FormStartPosition.CenterScreen;
             this.UseAppThemeColors = true;
+
+            this.txtCode.Text = DefaultCode.Default;
+            this.txtCode.EmptyUndoBuffer();
+            this.txtCode.SetSavePoint();
             UpdateWindowTitle();
 #endif
             ThemeUtil.Initialize(IsAppThemeDark, this.ForeColor, this.BackColor, Settings.EditorTheme);
@@ -117,13 +121,6 @@ namespace PdnCodeLab
             base.OnLoading();
 
             UIUtil.SetIShellService(this.Services.GetService<IShellService>());
-        }
-#else
-        protected override void OnShown(EventArgs e)
-        {
-            base.OnShown(e);
-
-            this.txtCode.Text = DefaultCode.Default;
         }
 #endif
 
