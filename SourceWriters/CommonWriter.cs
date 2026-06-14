@@ -43,7 +43,7 @@ namespace PdnCodeLab
             AssemblyInfoPart += "[assembly: AssemblyCulture(\"\")]\r\n";
             AssemblyInfoPart += "[assembly: ComVisible(false)]\r\n";
             AssemblyInfoPart += "[assembly: AssemblyVersion(\"" + MajorVersion.ToString() + "." + MinorVersion.ToString() + ".*\")]\r\n";
-            AssemblyInfoPart += "[assembly: AssemblyMetadata(\"BuiltByCodeLab\", \"Version=" + CodeLab.VersionFull + "\")]\r\n";
+            AssemblyInfoPart += "[assembly: AssemblyMetadata(\"BuiltByCodeLab\", \"Version=" + BuildInfo.VersionFull + "\")]\r\n";
             AssemblyInfoPart += "[assembly: SupportedOSPlatform(\"Windows\")]\r\n";
             AssemblyInfoPart += "\r\n";
             return AssemblyInfoPart;
