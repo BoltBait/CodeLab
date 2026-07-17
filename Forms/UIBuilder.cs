@@ -1897,7 +1897,13 @@ namespace PdnCodeLab
             {
                 double x = 0;
                 double y = 0;
-                Match xyPair = Regex.Match(DefaultStr, @"\bPair.Create\(\s*(?<x>-?\s*\d*.?\d*)\s*,\s*(?<y>-?\s*\d*.?\d*)\s*\)");
+                Match xyPair = Regex.Match(DefaultStr, @"\bnew\s+Vector2Double\(\s*(?<x>-?\s*\d*.?\d*)\s*,\s*(?<y>-?\s*\d*.?\d*)\s*\)");
+
+                if (!xyPair.Success)
+                {
+                    xyPair = Regex.Match(DefaultStr, @"\bPair.Create\(\s*(?<x>-?\s*\d*.?\d*)\s*,\s*(?<y>-?\s*\d*.?\d*)\s*\)");
+                }
+
                 if (xyPair.Success)
                 {
                     if (double.TryParse(xyPair.Groups["x"].Value, NumberStyles.Float, CultureInfo.InvariantCulture, out x))
