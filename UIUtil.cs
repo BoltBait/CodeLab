@@ -139,7 +139,7 @@ namespace PdnCodeLab
             }
         }
 
-        internal static Image CreateDisabledImage(Image normalImage)
+        internal static Image CreateDisabledImage(this Image normalImage)
         {
             Bitmap disabledBitmap = new Bitmap(normalImage);
             disabledBitmap.ApplyEffect(DisabledImageColorMatrix);

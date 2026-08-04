@@ -1212,6 +1212,7 @@ namespace PdnCodeLab
         private sealed class FilterButton : ScaledToolStripButton
         {
             private bool active = true;
+            private Image disabledImage;
 
             internal IntelliType IntelliType { get; }
 
@@ -1229,7 +1230,7 @@ namespace PdnCodeLab
                         this.active = value;
                         this.Image = value
                             ? ItemIcons[(int)this.IntelliType]
-                            : UIUtil.CreateDisabledImage(ItemIcons[(int)this.IntelliType]);
+                            : disabledImage ??= ItemIcons[(int)this.IntelliType].CreateDisabledImage();
                     }
                 }
             }
