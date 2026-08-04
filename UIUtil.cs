@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Drawing.Imaging.Effects;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -138,33 +139,18 @@ namespace PdnCodeLab
             }
         }
 
-        #region Copied from internal WinForms Code
         internal static Image CreateDisabledImage(Image normalImage)
         {
-            ArgumentNullException.ThrowIfNull(normalImage);
-
-            ImageAttributes imgAttrib = new ImageAttributes();
-
-            imgAttrib.ClearColorKey();
-            imgAttrib.SetColorMatrix(DisabledImageColorMatrix);
-
-            Size size = normalImage.Size;
-            Bitmap disabledBitmap = new Bitmap(size.Width, size.Height);
-            using (Graphics graphics = Graphics.FromImage(disabledBitmap))
-            {
-                graphics.DrawImage(normalImage,
-                                   new Rectangle(0, 0, size.Width, size.Height),
-                                   0, 0, size.Width, size.Height,
-                                   GraphicsUnit.Pixel,
-                                   imgAttrib);
-            }
+            Bitmap disabledBitmap = new Bitmap(normalImage);
+            disabledBitmap.ApplyEffect(DisabledImageColorMatrix);
 
             return disabledBitmap;
         }
 
-        private static ColorMatrix s_disabledImageColorMatrix;
+        #region Matrix code copied from internal WinForms Code
+        private static ColorMatrixEffect s_disabledImageColorMatrix;
 
-        private static ColorMatrix DisabledImageColorMatrix
+        private static ColorMatrixEffect DisabledImageColorMatrix
         {
             get
             {
@@ -186,7 +172,8 @@ namespace PdnCodeLab
                     transparency[3] = new float[5] { 0, 0, 0, .7F, 0 };
                     transparency[4] = new float[5] { 0, 0, 0, 0, 0 };
 
-                    s_disabledImageColorMatrix = MultiplyColorMatrix(transparency, greyscale);
+                    ColorMatrix colorMatrix = MultiplyColorMatrix(transparency, greyscale);
+                    s_disabledImageColorMatrix = new ColorMatrixEffect(colorMatrix);
                 }
 
                 return s_disabledImageColorMatrix;
