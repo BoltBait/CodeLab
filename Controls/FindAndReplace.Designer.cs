@@ -28,159 +28,149 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.Toggle = new System.Windows.Forms.ToolStripButton();
-            this.FindBox = new System.Windows.Forms.ToolStripTextBox();
-            this.Next = new System.Windows.Forms.ToolStripButton();
-            this.Close = new System.Windows.Forms.ToolStripButton();
-            this.MatchCase = new System.Windows.Forms.ToolStripButton();
-            this.MatchWord = new System.Windows.Forms.ToolStripButton();
-            this.Regex = new System.Windows.Forms.ToolStripButton();
-            this.EscChars = new System.Windows.Forms.ToolStripButton();
-            this.ReplaceBox = new System.Windows.Forms.ToolStripTextBox();
-            this.ReplaceAll = new System.Windows.Forms.ToolStripButton();
-            this.toolStrip1.SuspendLayout();
-            this.SuspendLayout();
+            toolStrip1 = new System.Windows.Forms.ToolStrip();
+            Toggle = new System.Windows.Forms.ToolStripButton();
+            FindBox = new System.Windows.Forms.ToolStripTextBox();
+            Next = new System.Windows.Forms.ToolStripButton();
+            Close = new System.Windows.Forms.ToolStripButton();
+            MatchCase = new System.Windows.Forms.ToolStripButton();
+            MatchWord = new System.Windows.Forms.ToolStripButton();
+            Regex = new System.Windows.Forms.ToolStripButton();
+            EscChars = new System.Windows.Forms.ToolStripButton();
+            ReplaceBox = new System.Windows.Forms.ToolStripTextBox();
+            ReplaceAll = new System.Windows.Forms.ToolStripButton();
+            toolStrip1.SuspendLayout();
+            SuspendLayout();
             // 
             // toolStrip1
             // 
-            this.toolStrip1.AllowClickThrough = true;
-            this.toolStrip1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.Toggle,
-            this.FindBox,
-            this.Next,
-            this.Close,
-            this.MatchCase,
-            this.MatchWord,
-            this.Regex,
-            this.EscChars,
-            this.ReplaceBox,
-            this.ReplaceAll});
-            this.toolStrip1.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
-            this.toolStrip1.Location = new System.Drawing.Point(0, 0);
-            this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Padding = new System.Windows.Forms.Padding(3);
-            this.toolStrip1.Size = new System.Drawing.Size(234, 78);
-            this.toolStrip1.TabIndex = 0;
-            this.toolStrip1.Text = "toolStrip1";
-            this.toolStrip1.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.toolStrip1_ItemClicked);
-            this.toolStrip1.Paint += new System.Windows.Forms.PaintEventHandler(this.toolStrip1_Paint);
+            toolStrip1.AllowClickThrough = true;
+            toolStrip1.Dock = System.Windows.Forms.DockStyle.Fill;
+            toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { Toggle, FindBox, Next, Close, MatchCase, MatchWord, Regex, EscChars, ReplaceBox, ReplaceAll });
+            toolStrip1.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
+            toolStrip1.Location = new System.Drawing.Point(0, 0);
+            toolStrip1.Name = "toolStrip1";
+            toolStrip1.Padding = new System.Windows.Forms.Padding(3);
+            toolStrip1.Size = new System.Drawing.Size(234, 78);
+            toolStrip1.TabIndex = 0;
+            toolStrip1.Text = "toolStrip1";
+            toolStrip1.ItemClicked += toolStrip1_ItemClicked;
+            toolStrip1.Paint += toolStrip1_Paint;
             // 
             // Toggle
             // 
-            this.Toggle.AutoToolTip = false;
-            this.Toggle.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.Toggle.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Toggle.Margin = new System.Windows.Forms.Padding(0, 1, 3, 2);
-            this.Toggle.Name = "Toggle";
-            this.Toggle.Size = new System.Drawing.Size(23, 19);
-            this.Toggle.Text = "▲";
-            this.Toggle.ToolTipText = "Find / Replace";
-            this.Toggle.Click += new System.EventHandler(this.Toggle_Click);
+            Toggle.AutoToolTip = false;
+            Toggle.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            Toggle.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
+            Toggle.Margin = new System.Windows.Forms.Padding(0, 1, 3, 2);
+            Toggle.Name = "Toggle";
+            Toggle.Size = new System.Drawing.Size(23, 19);
+            Toggle.Text = "▲";
+            Toggle.ToolTipText = "Find / Replace";
+            Toggle.Click += Toggle_Click;
             // 
             // FindBox
             // 
-            this.FindBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.FindBox.Name = "FindBox";
-            this.FindBox.Size = new System.Drawing.Size(150, 23);
-            this.FindBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.FindBox_KeyPress);
-            this.FindBox.TextChanged += new System.EventHandler(this.FindBox_TextChanged);
+            FindBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            FindBox.Name = "FindBox";
+            FindBox.Size = new System.Drawing.Size(150, 23);
+            FindBox.KeyPress += FindBox_KeyPress;
+            FindBox.TextChanged += FindBox_TextChanged;
             // 
             // Next
             // 
-            this.Next.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.Next.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Next.Name = "Next";
-            this.Next.Size = new System.Drawing.Size(24, 19);
-            this.Next.Text = "▶";
-            this.Next.ToolTipText = "Find Next";
-            this.Next.Click += new System.EventHandler(this.Next_Click);
+            Next.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            Next.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
+            Next.Name = "Next";
+            Next.Size = new System.Drawing.Size(23, 19);
+            Next.Text = "▶";
+            Next.ToolTipText = "Find Next";
+            Next.Click += Next_Click;
             // 
             // Close
             // 
-            this.Close.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.Close.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Close.Name = "Close";
-            this.Close.Size = new System.Drawing.Size(23, 19);
-            this.Close.Text = "X";
-            this.Close.ToolTipText = "Close (Esc)";
-            this.Close.Click += new System.EventHandler(this.Close_Click);
+            Close.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            Close.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
+            Close.Name = "Close";
+            Close.Size = new System.Drawing.Size(23, 19);
+            Close.Text = "X";
+            Close.ToolTipText = "Close (Esc)";
+            Close.Click += Close_Click;
             // 
             // MatchCase
             // 
-            this.MatchCase.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.MatchCase.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.MatchCase.Margin = new System.Windows.Forms.Padding(27, 4, 0, 4);
-            this.MatchCase.Name = "MatchCase";
-            this.MatchCase.Size = new System.Drawing.Size(46, 19);
-            this.MatchCase.Text = "Casing";
-            this.MatchCase.ToolTipText = "Match Casing";
-            this.MatchCase.Click += new System.EventHandler(this.MatchCase_Click);
+            MatchCase.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            MatchCase.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
+            MatchCase.Margin = new System.Windows.Forms.Padding(27, 4, 0, 4);
+            MatchCase.Name = "MatchCase";
+            MatchCase.Size = new System.Drawing.Size(46, 19);
+            MatchCase.Text = "Casing";
+            MatchCase.ToolTipText = "Match Casing";
+            MatchCase.Click += MatchCase_Click;
             // 
             // MatchWord
             // 
-            this.MatchWord.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.MatchWord.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.MatchWord.Margin = new System.Windows.Forms.Padding(4, 4, 0, 4);
-            this.MatchWord.Name = "MatchWord";
-            this.MatchWord.Size = new System.Drawing.Size(48, 19);
-            this.MatchWord.Text = "[word]";
-            this.MatchWord.ToolTipText = "Match Whole Word";
-            this.MatchWord.Click += new System.EventHandler(this.MatchWord_Click);
+            MatchWord.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            MatchWord.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
+            MatchWord.Margin = new System.Windows.Forms.Padding(4, 4, 0, 4);
+            MatchWord.Name = "MatchWord";
+            MatchWord.Size = new System.Drawing.Size(48, 19);
+            MatchWord.Text = "[word]";
+            MatchWord.ToolTipText = "Match Whole Word";
+            MatchWord.Click += MatchWord_Click;
             // 
             // Regex
             // 
-            this.Regex.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.Regex.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Regex.Margin = new System.Windows.Forms.Padding(4, 4, 0, 4);
-            this.Regex.Name = "Regex";
-            this.Regex.Size = new System.Drawing.Size(47, 19);
-            this.Regex.Text = "Regex";
-            this.Regex.ToolTipText = "Use Regular Expressions";
-            this.Regex.Click += new System.EventHandler(this.Regex_Click);
+            Regex.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            Regex.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
+            Regex.Margin = new System.Windows.Forms.Padding(4, 4, 0, 4);
+            Regex.Name = "Regex";
+            Regex.Size = new System.Drawing.Size(47, 19);
+            Regex.Text = "Regex";
+            Regex.ToolTipText = "Use Regular Expressions";
+            Regex.Click += Regex_Click;
             // 
             // EscChars
             // 
-            this.EscChars.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.EscChars.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.EscChars.Margin = new System.Windows.Forms.Padding(4, 4, 0, 4);
-            this.EscChars.Name = "EscChars";
-            this.EscChars.Size = new System.Drawing.Size(46, 19);
-            this.EscChars.Text = "\\Chars";
-            this.EscChars.ToolTipText = "Interpret Escape Characters";
-            this.EscChars.Click += new System.EventHandler(this.EscChars_Click);
+            EscChars.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            EscChars.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
+            EscChars.Margin = new System.Windows.Forms.Padding(4, 4, 0, 4);
+            EscChars.Name = "EscChars";
+            EscChars.Size = new System.Drawing.Size(46, 19);
+            EscChars.Text = "\\Chars";
+            EscChars.ToolTipText = "Interpret Escape Characters";
+            EscChars.Click += EscChars_Click;
             // 
             // ReplaceBox
             // 
-            this.ReplaceBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ReplaceBox.Margin = new System.Windows.Forms.Padding(27, 0, 1, 0);
-            this.ReplaceBox.Name = "ReplaceBox";
-            this.ReplaceBox.Size = new System.Drawing.Size(150, 23);
+            ReplaceBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            ReplaceBox.Margin = new System.Windows.Forms.Padding(27, 0, 1, 0);
+            ReplaceBox.Name = "ReplaceBox";
+            ReplaceBox.Size = new System.Drawing.Size(150, 23);
             // 
             // ReplaceAll
             // 
-            this.ReplaceAll.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.ReplaceAll.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ReplaceAll.Margin = new System.Windows.Forms.Padding(4, 1, 0, 2);
-            this.ReplaceAll.Name = "ReplaceAll";
-            this.ReplaceAll.Size = new System.Drawing.Size(40, 19);
-            this.ReplaceAll.Text = "A➝B";
-            this.ReplaceAll.ToolTipText = "Replace All";
-            this.ReplaceAll.Click += new System.EventHandler(this.ReplaceAll_Click);
+            ReplaceAll.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            ReplaceAll.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
+            ReplaceAll.Margin = new System.Windows.Forms.Padding(4, 1, 0, 2);
+            ReplaceAll.Name = "ReplaceAll";
+            ReplaceAll.Size = new System.Drawing.Size(40, 19);
+            ReplaceAll.Text = "A➝B";
+            ReplaceAll.ToolTipText = "Replace All";
+            ReplaceAll.Click += ReplaceAll_Click;
             // 
             // FindAndReplace
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.Controls.Add(this.toolStrip1);
-            this.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.Name = "FindAndReplace";
-            this.Size = new System.Drawing.Size(234, 78);
-            this.toolStrip1.ResumeLayout(false);
-            this.toolStrip1.PerformLayout();
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            Controls.Add(toolStrip1);
+            Cursor = System.Windows.Forms.Cursors.Arrow;
+            Name = "FindAndReplace";
+            Size = new System.Drawing.Size(234, 78);
+            toolStrip1.ResumeLayout(false);
+            toolStrip1.PerformLayout();
+            ResumeLayout(false);
+            PerformLayout();
 
         }
 
