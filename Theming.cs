@@ -39,7 +39,8 @@ namespace PdnCodeLab
         Fill = 1,
         Outline = 2,
         AccentMark = 4,
-        AccentOutline = 8
+        AccentOutline = 8,
+        BackColorFill = 16
     }
 
     internal interface IIntelliTipHost
@@ -301,10 +302,15 @@ namespace PdnCodeLab
             Color selectedColor = ColorBgra.Blend([Color.Gray, backColor]);
             const float pixelOffset = 0.5f; // allows 2px lines to actually be 2px width, and edges of rectangles to be sharp;
 
-            if (itemSelectionFlags.HasFlag(ItemSelectionFlags.Fill))
+            if (itemSelectionFlags.HasFlag(ItemSelectionFlags.Fill) ||
+                itemSelectionFlags.HasFlag(ItemSelectionFlags.BackColorFill))
             {
                 RectangleF fillRect = RectangleF.FromLTRB(bounds.Left - pixelOffset, bounds.Top - pixelOffset, bounds.Right - pixelOffset, bounds.Bottom - pixelOffset);
-                Color fillColor = Color.FromArgb(128, selectedColor);
+
+                Color fillColor = itemSelectionFlags.HasFlag(ItemSelectionFlags.Fill)
+                    ? Color.FromArgb(128, selectedColor)
+                    : backColor;
+
                 using SolidBrush backBrush = new SolidBrush(fillColor);
                 graphics.FillRoundedRectangle(backBrush, fillRect, rectRadius);
             }

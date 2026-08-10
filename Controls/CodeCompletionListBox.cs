@@ -125,11 +125,10 @@ namespace PdnCodeLab
             listBox.MouseEnter += ListBox_MouseEnter;
             listBox.MouseLeave += ListBox_MouseLeave;
 
-            this.Padding = new Padding(0, padding, 0, 0);
+            this.Padding = new Padding(padding, padding * 2, padding, padding);
             this.Controls.Add(listBox);
             this.Controls.Add(filterStrip);
             this.Cursor = Cursors.Default;
-            this.BorderStyle = BorderStyle.FixedSingle;
         }
 
         internal void SelectFirst()
@@ -250,6 +249,11 @@ namespace PdnCodeLab
             this.itemToolTip.Hide(this);
 
             base.OnLocationChanged(e);
+        }
+
+        protected override void OnPaintBackground(PaintEventArgs e)
+        {
+            e.Graphics.DrawItemSelection(this.BackColor, this.ClientRectangle, ItemSelectionFlags.Outline | ItemSelectionFlags.BackColorFill);
         }
 
         private void ListBox_MouseEnter(object sender, EventArgs e)
@@ -1108,7 +1112,7 @@ namespace PdnCodeLab
                 this.filterStrip.Visible = false;
             }
 
-            this.ClientSize = new Size(newWidth, listBoxHeight + filtersHeight + this.Padding.Vertical * 2);
+            this.ClientSize = new Size(newWidth, listBoxHeight + filtersHeight + this.Padding.Top * 2 + this.Padding.Bottom);
         }
 
         private void SetFilterButtonAppearance(IEnumerable<IntelliType> intelliTypes)

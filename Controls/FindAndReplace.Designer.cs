@@ -48,14 +48,13 @@
             toolStrip1.Dock = System.Windows.Forms.DockStyle.Fill;
             toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { Toggle, FindBox, Next, Close, MatchCase, MatchWord, Regex, EscChars, ReplaceBox, ReplaceAll });
             toolStrip1.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
-            toolStrip1.Location = new System.Drawing.Point(0, 0);
+            toolStrip1.Location = new System.Drawing.Point(2, 2);
             toolStrip1.Name = "toolStrip1";
             toolStrip1.Padding = new System.Windows.Forms.Padding(3);
-            toolStrip1.Size = new System.Drawing.Size(234, 78);
+            toolStrip1.Size = new System.Drawing.Size(232, 76);
             toolStrip1.TabIndex = 0;
             toolStrip1.Text = "toolStrip1";
             toolStrip1.ItemClicked += toolStrip1_ItemClicked;
-            toolStrip1.Paint += toolStrip1_Paint;
             // 
             // Toggle
             // 
@@ -166,7 +165,8 @@
             Controls.Add(toolStrip1);
             Cursor = System.Windows.Forms.Cursors.Arrow;
             Name = "FindAndReplace";
-            Size = new System.Drawing.Size(234, 78);
+            Padding = new System.Windows.Forms.Padding(2);
+            Size = new System.Drawing.Size(236, 80);
             toolStrip1.ResumeLayout(false);
             toolStrip1.PerformLayout();
             ResumeLayout(false);

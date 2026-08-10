@@ -194,7 +194,7 @@ namespace PdnCodeLab
                 Toggle.Text = "▼";
                 ReplaceBox.Visible = false;
                 ReplaceAll.Visible = false;
-                this.Height = ReplaceBox.Bounds.Top;
+                this.Height = ReplaceBox.Bounds.Top + this.Padding.Vertical;
                 replaceVisible = false;
             }
             else
@@ -202,9 +202,11 @@ namespace PdnCodeLab
                 Toggle.Text = "▲";
                 ReplaceBox.Visible = true;
                 ReplaceAll.Visible = true;
-                this.Height = ReplaceBox.Bounds.Bottom + FindBox.Bounds.Top;
+                this.Height = ReplaceBox.Bounds.Bottom + FindBox.Bounds.Top + this.Padding.Vertical;
                 replaceVisible = true;
             }
+
+            this.Refresh();
         }
 
         private void FindBox_TextChanged(object sender, EventArgs e)
@@ -236,9 +238,9 @@ namespace PdnCodeLab
             OnFindNextClicked();
         }
 
-        private void toolStrip1_Paint(object sender, PaintEventArgs e)
+        protected override void OnPaintBackground(PaintEventArgs e)
         {
-            e.Graphics.DrawItemSelection(this.toolStrip1.BackColor, this.toolStrip1.ClientRectangle, ItemSelectionFlags.Outline);
+            e.Graphics.DrawItemSelection(this.BackColor, this.ClientRectangle, ItemSelectionFlags.Outline | ItemSelectionFlags.BackColorFill);
         }
     }
 }
