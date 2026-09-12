@@ -954,7 +954,7 @@ namespace PdnCodeLab
             this.Zoom = 0;
 
             // ToolTip Delay (ms)
-            this.MouseDwellTime = 250;
+            this.MouseDwellTime = SystemInformation.MouseHoverTime;
 
             // Free up default HotKeys, so they can be used for other things
             // or just to disable undesired features (see comments for defaults)
