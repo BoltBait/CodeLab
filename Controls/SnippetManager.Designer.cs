@@ -140,6 +140,7 @@
             this.ExportToClipButton});
             this.ImportExportMenu.ImageName = "Json";
             this.ImportExportMenu.Name = "ImportExportMenu";
+            this.ImportExportMenu.Padding = new System.Windows.Forms.Padding(2);
             this.ImportExportMenu.Size = new System.Drawing.Size(29, 24);
             this.ImportExportMenu.Text = "Import/Export";
             // 

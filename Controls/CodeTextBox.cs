@@ -821,7 +821,7 @@ namespace PdnCodeLab
             this.bulbIcon.DisplayStyle = ToolStripItemDisplayStyle.Image;
             this.bulbIcon.ImageName = "Bulb";
             this.bulbIcon.Name = "bulbIcon";
-            this.bulbIcon.Size = new Size(29, 22);
+            this.bulbIcon.Padding = new Padding(2);
             this.bulbIcon.Text = "Bulb Icon";
 
             #region ScintillaNET Initializers
