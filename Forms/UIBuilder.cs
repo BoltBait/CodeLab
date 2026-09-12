@@ -98,7 +98,7 @@ namespace PdnCodeLab
             DefaultColorComboBox.Items.Add("None");
             DefaultColorComboBox.Items.Add("PrimaryColor");
             DefaultColorComboBox.Items.Add("SecondaryColor");
-            DefaultColorComboBox.Items.AddRange(UIUtil.GetColorNames(false));
+            DefaultColorComboBox.Items.AddRange(UIUtil.ColorNames.ToArray());
 
             MasterList.AddRange(UIElement.ProcessUIControls(UserScriptText, projectType));
 
@@ -1981,60 +1981,32 @@ namespace PdnCodeLab
                     SourceCode += "; // ";
                     break;
                 case ElementType.ColorWheel:
-                    Color c;
-                    if (StrDefault.Length == 0 || StrDefault == "PrimaryColor")
+                    string selectedColor = StrDefault.Trim();
+                    string validatedColor;
+
+                    if (selectedColor.Length == 0 || selectedColor == "PrimaryColor")
                     {
-                        c = Color.Black;
+                        validatedColor = "Black";
                     }
-                    else if (StrDefault == "SecondaryColor")
+                    else if (selectedColor == "SecondaryColor")
                     {
-                        c = Color.White;
+                        validatedColor = "White";
+                    }
+                    else if (UIUtil.ColorNames.Contains(selectedColor))
+                    {
+                        validatedColor = selectedColor;
                     }
                     else
                     {
-                        c = Color.FromName(StrDefault);
+                        validatedColor = "Black";
                     }
 
-                    string rgb = c.B.ToString() + ", " + c.G.ToString() + ", " + c.R.ToString();
+                    SourceCode += $" = ColorWheelControl.Create(SrgbColors.{validatedColor}); // ";
+
                     string resetStyle = ColorWheelOptions.HasFlag(ColorWheelOptions.NoReset) ? "!" : "";
-                    string alphaStyle = "";
+                    string alphaStyle = ColorWheelOptions.HasFlag(ColorWheelOptions.Alpha) ? "?" : "";
 
-                    if (ColorWheelOptions.HasFlag(ColorWheelOptions.Alpha))
-                    {
-                        alphaStyle = "?";
-
-                        if (StrDefault.Trim() == "PrimaryColor" || StrDefault.Trim() == "")
-                        {
-                            SourceCode += " = ColorWheelControl.Create(SrgbColors.Black)";
-                        }
-                        else if (StrDefault.Trim() == "SecondaryColor")
-                        {
-                            SourceCode += " = ColorWheelControl.Create(SrgbColors.White)";
-                        }
-                        else
-                        {
-                            SourceCode += " = ColorWheelControl.Create(SrgbColors." + StrDefault + ")";
-                        }
-                    }
-                    else
-                    {
-                        if (StrDefault.Trim() == "PrimaryColor" || StrDefault.Trim() == "")
-                        {
-                            SourceCode += " = ColorWheelControl.Create(SrgbColors.Black)";
-                        }
-                        else if (StrDefault.Trim() == "SecondaryColor")
-                        {
-                            SourceCode += " = ColorWheelControl.Create(SrgbColors.White)";
-                        }
-                        else
-                        {
-                            SourceCode += " = ColorWheelControl.Create(SrgbColors." + StrDefault + ")";
-                        }
-                    }
-
-                    SourceCode += "; // ";
-
-                    string config = StrDefault.Trim() + alphaStyle + resetStyle;
+                    string config = selectedColor + alphaStyle + resetStyle;
                     if (config.Length > 0)
                     {
                         SourceCode += "[" + config + "] ";

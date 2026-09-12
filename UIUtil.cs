@@ -1,8 +1,10 @@
 ﻿using PaintDotNet;
 using PaintDotNet.AppModel;
 using PaintDotNet.Drawing;
+using PaintDotNet.Imaging;
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -20,6 +22,13 @@ namespace PdnCodeLab
         private static readonly Assembly assembly = Assembly.GetExecutingAssembly();
         internal static readonly Image EmptyImage = new Bitmap(16, 16);
         private static IShellService iShellService;
+
+        internal static readonly ICollection<string> ColorNames = typeof(SrgbColors)
+            .GetProperties(BindingFlags.Public | BindingFlags.Static)
+            .Where(prop => prop.PropertyType == typeof(SrgbColor))
+            .Select(prop => prop.Name)
+            .Order()
+            .ToImmutableArray();
 
         internal static void SetIShellService(IShellService shellService)
         {
@@ -92,22 +101,6 @@ namespace PdnCodeLab
         internal static Size ScaleSize(int width, int height)
         {
             return new Size(Scale(width), Scale(height));
-        }
-
-        internal static string[] GetColorNames(bool includeTransparent)
-        {
-            List<string> names = typeof(Color).GetProperties(BindingFlags.Public | BindingFlags.Static)
-                     .Where(prop => prop.PropertyType == typeof(Color))
-                     .Select(prop => prop.Name).ToList();
-
-            if (!includeTransparent)
-            {
-                names.Remove(nameof(Color.Transparent));
-            }
-
-            names.Sort();
-
-            return names.ToArray();
         }
 
         internal static void LaunchUrl(IWin32Window owner, string url)
