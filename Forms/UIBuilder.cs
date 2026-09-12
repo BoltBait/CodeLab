@@ -1419,25 +1419,6 @@ namespace PdnCodeLab
                 // We found the standard #region UICode/#endregion block
                 UIControlsText = mcc.Groups["sublabel"].Value.Trim();
             }
-            else
-            {
-                // Find standard UI controls from REALLY OLD scripts
-                Match ma1 = Regex.Match(SourceCode, @"int\s+Amount1\s*=\s*\-?\d+.*\n", RegexOptions.IgnoreCase);
-                if (ma1.Success)
-                {
-                    UIControlsText = ma1.Value;
-                    Match ma2 = Regex.Match(SourceCode, @"int\s+Amount2\s*=\s*\-?\d+.*\n", RegexOptions.IgnoreCase);
-                    if (ma2.Success)
-                    {
-                        UIControlsText += ma2.Value;
-                        Match ma3 = Regex.Match(SourceCode, @"int\s+Amount3\s*=\s*\-?\d+.*\n", RegexOptions.IgnoreCase);
-                        if (ma3.Success)
-                        {
-                            UIControlsText += ma3.Value;
-                        }
-                    }
-                }
-            }
 
             if (UIControlsText.Length == 0)
             {
@@ -1757,60 +1738,6 @@ namespace PdnCodeLab
                 elementType = ElementType.LayerChooser;
                 MaximumStr = "9999";
             }
-            #region Detections for legacy scripts
-            else if (TypeStr == "bool")
-            {
-                elementType = ElementType.Checkbox;
-            }
-            else if (TypeStr == "int")
-            {
-                elementType = ElementType.IntSlider;
-            }
-            else if (TypeStr == "ColorBgra")
-            {
-                elementType = ElementType.ColorWheel;
-            }
-            else if (TypeStr == "string")
-            {
-                elementType = (int.TryParse(MinimumStr, out int min) && min > 0) ? ElementType.MultiLineTextbox : ElementType.Textbox;
-            }
-            else if (TypeStr == "byte")
-            {
-                if (!LabelStr.Contains('|', StringComparison.Ordinal) || (MaximumStr == "255"))
-                {
-                    elementType = ElementType.ReseedButton;
-                }
-                else if (MaximumStr.Length == 0)
-                {
-                    elementType = ElementType.DropDown;
-                }
-                else if (MaximumStr == "1")
-                {
-                    elementType = ElementType.RadioButtons;
-                }
-            }
-            else if (TypeStr == "Pair<double, double>")
-            {
-                elementType = ElementType.PanSlider;
-            }
-            else if (TypeStr == "Tuple<double, double, double>")
-            {
-                elementType = ElementType.RollBall;
-            }
-            else if (TypeStr == "double")
-            {
-                if (int.TryParse(MinimumStr, out int iMin) && (iMin == -180) &&
-                    int.TryParse(MaximumStr, out int iMax) && (iMax == 180) &&
-                    int.TryParse(DefaultStr, out int iDefault) && (iDefault == 45))
-                {
-                    elementType = ElementType.AngleChooser;
-                }
-                else
-                {
-                    elementType = ElementType.DoubleSlider;
-                }
-            }
-            #endregion
             else
             {
                 return null;
