@@ -1429,6 +1429,7 @@ namespace PdnCodeLab
                 .Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
                 .Where(x => !x.StartsWith("//", StringComparison.Ordinal))
                 .Select(x => FromSourceLine(x))
+                .Where(uiE => uiE != null)
                 .ToArray();
         }
 
