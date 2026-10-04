@@ -420,6 +420,19 @@ namespace PdnCodeLab
                 scrollByDelta();
                 arrowTimer.Enabled = true;
             }
+            else if (ModifierKeys.HasFlag(Keys.Shift) && shaftRect.Contains(e.Location))
+            {
+                thumbRect.Y = int.Clamp(
+                    e.Y - (thumbRect.Height / 2),
+                    shaftRect.Top,
+                    shaftRect.Bottom - thumbRect.Height);
+
+                this.Invalidate();
+                OnScroll(new ScrollEventArgs(ScrollEventType.ThumbTrack, this.Value));
+
+                thumbClicked = true;
+                clickedThumbPos = e.Y - thumbRect.Top;
+            }
             else if (thumbRect.Contains(e.Location))
             {
                 thumbClicked = true;
