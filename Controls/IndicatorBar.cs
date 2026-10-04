@@ -14,23 +14,23 @@ namespace PdnCodeLab
     {
         private RectInt32 upButtonRect;
         private RectInt32 downButtonRect;
-        private RectInt32 posSliderRect;
-        private RectInt32 posTrackRect;
+        private RectInt32 thumbRect;
+        private RectInt32 shaftRect;
 
-        private bool upButtonHover;
-        private bool downButtonHover;
-        private bool posSliderHover;
-        private bool posTrackHover;
+        private bool upButtonHovered;
+        private bool downButtonHovered;
+        private bool thumbHovered;
+        private bool shaftHovered;
 
-        private bool upButtonClick;
-        private bool downButtonClick;
-        private bool posSliderClick;
-        private bool posTrackClick;
+        private bool upButtonClicked;
+        private bool downButtonClicked;
+        private bool thumbClicked;
+        private bool shaftClicked;
 
-        private ColorRgb24 posTrackColor;
-        private ColorRgb24 posColorNormal;
-        private ColorRgb24 posColorHover;
-        private ColorRgb24 posColorClick;
+        private ColorRgb24 shaftColor;
+        private ColorRgb24 normalColor;
+        private ColorRgb24 hoveredColor;
+        private ColorRgb24 clickedColor;
 
         private ColorRgb24 caretColor;
         private ColorRgb24 errorColor;
@@ -38,10 +38,10 @@ namespace PdnCodeLab
         private ColorRgb24 matchColor;
         private ColorRgb24 bookmarkColor;
 
-        private int posClicked;
-        private int posSliderClicked;
+        private int clickedShaftPos;
+        private int clickedThumbPos;
         private readonly Timer arrowTimer = new Timer();
-        private int trackDirection;
+        private int scrollDirection;
 
 
         private Theme theme = Theme.Light;
@@ -74,10 +74,10 @@ namespace PdnCodeLab
                 switch (value)
                 {
                     case Theme.Dark:
-                        posTrackColor = new ColorRgb24(62, 62, 66);
-                        posColorNormal = new ColorRgb24(104, 104, 104);
-                        posColorHover = new ColorRgb24(158, 158, 158);
-                        posColorClick = new ColorRgb24(239, 235, 239);
+                        shaftColor = new ColorRgb24(62, 62, 66);
+                        normalColor = new ColorRgb24(104, 104, 104);
+                        hoveredColor = new ColorRgb24(158, 158, 158);
+                        clickedColor = new ColorRgb24(239, 235, 239);
 
                         caretColor = SrgbColors.Gainsboro;
                         errorColor = new ColorRgb24(252, 62, 54);
@@ -88,10 +88,10 @@ namespace PdnCodeLab
 
                     case Theme.Light:
                     default:
-                        posTrackColor = new ColorRgb24(245, 245, 245);
-                        posColorNormal = new ColorRgb24(194, 195, 201);
-                        posColorHover = new ColorRgb24(104, 104, 104);
-                        posColorClick = new ColorRgb24(91, 91, 91);
+                        shaftColor = new ColorRgb24(245, 245, 245);
+                        normalColor = new ColorRgb24(194, 195, 201);
+                        hoveredColor = new ColorRgb24(104, 104, 104);
+                        clickedColor = new ColorRgb24(91, 91, 91);
 
                         caretColor = new ColorRgb24(0, 0, 205);
                         errorColor = SrgbColors.Red;
@@ -178,20 +178,20 @@ namespace PdnCodeLab
         {
             get
             {
-                float scale = posTrackRect.Height / (float)maximum;
-                return (int)float.Round((posSliderRect.Y - posTrackRect.Top) / scale);
+                float scale = shaftRect.Height / (float)maximum;
+                return (int)float.Round((thumbRect.Y - shaftRect.Top) / scale);
             }
             set
             {
-                float scale = posTrackRect.Height / (float)maximum;
-                posSliderRect.Y = posTrackRect.Top + (int)float.Round(value * scale);
-                if (posSliderRect.Top < posTrackRect.Top)
+                float scale = shaftRect.Height / (float)maximum;
+                thumbRect.Y = shaftRect.Top + (int)float.Round(value * scale);
+                if (thumbRect.Top < shaftRect.Top)
                 {
-                    posSliderRect.Y = posTrackRect.Top;
+                    thumbRect.Y = shaftRect.Top;
                 }
-                else if (posSliderRect.Bottom > posTrackRect.Bottom)
+                else if (thumbRect.Bottom > shaftRect.Bottom)
                 {
-                    posSliderRect.Y = posTrackRect.Bottom - posSliderRect.Height;
+                    thumbRect.Y = shaftRect.Bottom - thumbRect.Height;
                 }
 
                 Refresh(); // Need to redraw very quickly here. Refresh() rather than Invalidate().
@@ -211,11 +211,11 @@ namespace PdnCodeLab
 
                 if (largeChange > maximum)
                 {
-                    posSliderRect.Height = posTrackRect.Height;
+                    thumbRect.Height = shaftRect.Height;
                 }
                 else
                 {
-                    posSliderRect.Height = largeChange * posTrackRect.Height / value;
+                    thumbRect.Height = largeChange * shaftRect.Height / value;
                 }
 
                 Invalidate();
@@ -235,11 +235,11 @@ namespace PdnCodeLab
 
                 if (largeChange > maximum)
                 {
-                    posSliderRect.Height = posTrackRect.Height;
+                    thumbRect.Height = shaftRect.Height;
                 }
                 else
                 {
-                    posSliderRect.Height = value * posTrackRect.Height / maximum;
+                    thumbRect.Height = value * shaftRect.Height / maximum;
                 }
 
                 Invalidate();
@@ -255,9 +255,9 @@ namespace PdnCodeLab
             this.upButtonRect.Size = new SizeInt32(width, width);
             this.downButtonRect.Size = new SizeInt32(width, width);
 
-            this.posSliderRect.Width = width;
+            this.thumbRect.Width = width;
 
-            this.posTrackRect = RectInt32.FromEdges(this.ClientRectangle.Left, upButtonRect.Bottom + 1, this.ClientRectangle.Right, upButtonRect.Bottom + 10);
+            this.shaftRect = RectInt32.FromEdges(this.ClientRectangle.Left, upButtonRect.Bottom + 1, this.ClientRectangle.Right, upButtonRect.Bottom + 10);
 
             this.arrowTimer.Enabled = false;
             this.arrowTimer.Interval = 500;
@@ -281,7 +281,7 @@ namespace PdnCodeLab
 
             downButtonRect.Y = this.ClientRectangle.Bottom - downButtonRect.Height;
 
-            posTrackRect.Height = downButtonRect.Top - upButtonRect.Bottom - 2;
+            shaftRect.Height = downButtonRect.Top - upButtonRect.Bottom - 2;
         }
 
         protected override void OnMouseMove(MouseEventArgs e)
@@ -290,78 +290,78 @@ namespace PdnCodeLab
 
             if (upButtonRect.Contains(e.Location))
             {
-                if (!upButtonHover)
+                if (!upButtonHovered)
                 {
-                    upButtonHover = true;
+                    upButtonHovered = true;
                     this.Invalidate();
                 }
             }
-            else if (upButtonHover)
+            else if (upButtonHovered)
             {
-                upButtonHover = false;
+                upButtonHovered = false;
                 this.Invalidate();
             }
 
             if (downButtonRect.Contains(e.Location))
             {
-                if (!downButtonHover)
+                if (!downButtonHovered)
                 {
-                    downButtonHover = true;
+                    downButtonHovered = true;
                     this.Invalidate();
                 }
             }
-            else if (downButtonHover)
+            else if (downButtonHovered)
             {
-                downButtonHover = false;
+                downButtonHovered = false;
                 this.Invalidate();
             }
 
-            if (posSliderRect.Contains(e.Location))
+            if (thumbRect.Contains(e.Location))
             {
-                if (!posSliderHover)
+                if (!thumbHovered)
                 {
-                    posSliderHover = true;
+                    thumbHovered = true;
                     this.Invalidate();
                 }
             }
-            else if (posSliderHover)
+            else if (thumbHovered)
             {
-                posSliderHover = false;
+                thumbHovered = false;
                 this.Invalidate();
             }
 
-            if (!posSliderRect.Contains(e.Location) && posTrackRect.Contains(e.Location))
+            if (!thumbRect.Contains(e.Location) && shaftRect.Contains(e.Location))
             {
-                if (trackDirection == -1 && e.Y > posSliderRect.Top)
+                if (scrollDirection == -1 && e.Y > thumbRect.Top)
                 {
-                    trackDirection = 0;
+                    scrollDirection = 0;
                 }
-                else if (trackDirection == 1 && e.Y < posSliderRect.Bottom)
+                else if (scrollDirection == 1 && e.Y < thumbRect.Bottom)
                 {
-                    trackDirection = 0;
+                    scrollDirection = 0;
                 }
 
-                if (!posTrackHover)
+                if (!shaftHovered)
                 {
-                    posTrackHover = true;
+                    shaftHovered = true;
                 }
             }
-            else if (posTrackHover)
+            else if (shaftHovered)
             {
-                posTrackHover = false;
+                shaftHovered = false;
             }
 
-            if (posSliderClick)
+            if (thumbClicked)
             {
-                posSliderRect.Y = e.Y - posSliderClicked;
+                thumbRect.Y = e.Y - clickedThumbPos;
 
-                if (posSliderRect.Top < posTrackRect.Top)
+                if (thumbRect.Top < shaftRect.Top)
                 {
-                    posSliderRect.Y = posTrackRect.Top;
+                    thumbRect.Y = shaftRect.Top;
                 }
-                else if (posSliderRect.Bottom > posTrackRect.Bottom)
+                else if (thumbRect.Bottom > shaftRect.Bottom)
                 {
-                    posSliderRect.Y = posTrackRect.Bottom - posSliderRect.Height;
+                    thumbRect.Y = shaftRect.Bottom - thumbRect.Height;
                 }
 
                 Refresh(); // Need to redraw very quickly here. Refresh() rather than Invalidate().
@@ -373,27 +373,27 @@ namespace PdnCodeLab
         {
             base.OnMouseLeave(e);
 
-            if (upButtonHover)
+            if (upButtonHovered)
             {
-                upButtonHover = false;
+                upButtonHovered = false;
                 this.Invalidate();
             }
 
-            if (downButtonHover)
+            if (downButtonHovered)
             {
-                downButtonHover = false;
+                downButtonHovered = false;
                 this.Invalidate();
             }
 
-            if (posSliderHover)
+            if (thumbHovered)
             {
-                posSliderHover = false;
+                thumbHovered = false;
                 this.Invalidate();
             }
 
-            if (posTrackHover)
+            if (shaftHovered)
             {
-                posTrackHover = false;
+                shaftHovered = false;
             }
         }
 
@@ -408,29 +408,29 @@ namespace PdnCodeLab
 
             if (upButtonRect.Contains(e.Location))
             {
-                upButtonClick = true;
+                upButtonClicked = true;
                 this.Invalidate();
                 scrollByDelta();
                 arrowTimer.Enabled = true;
             }
             else if (downButtonRect.Contains(e.Location))
             {
-                downButtonClick = true;
+                downButtonClicked = true;
                 this.Invalidate();
                 scrollByDelta();
                 arrowTimer.Enabled = true;
             }
-            else if (posSliderRect.Contains(e.Location))
+            else if (thumbRect.Contains(e.Location))
             {
-                posSliderClick = true;
-                posSliderClicked = e.Y - posSliderRect.Top;
+                thumbClicked = true;
+                clickedThumbPos = e.Y - thumbRect.Top;
                 this.Invalidate();
             }
-            else if (posTrackRect.Contains(e.Location))
+            else if (shaftRect.Contains(e.Location))
             {
-                posTrackClick = true;
-                posClicked = e.Y;
-                trackDirection = (e.Y < posSliderRect.Top) ? -1 : 1;
+                shaftClicked = true;
+                clickedShaftPos = e.Y;
+                scrollDirection = (e.Y < thumbRect.Top) ? -1 : 1;
                 scrollByDelta();
                 arrowTimer.Enabled = true;
             }
@@ -440,17 +440,17 @@ namespace PdnCodeLab
         {
             base.OnMouseUp(e);
 
-            if (posSliderClick)
+            if (thumbClicked)
             {
                 OnScroll(new ScrollEventArgs(ScrollEventType.EndScroll, this.Value));
             }
 
-            upButtonClick = false;
-            downButtonClick = false;
-            posSliderClick = false;
-            posTrackClick = false;
+            upButtonClicked = false;
+            downButtonClicked = false;
+            thumbClicked = false;
+            shaftClicked = false;
 
-            trackDirection = 0;
+            scrollDirection = 0;
 
             arrowTimer.Enabled = false;
             arrowTimer.Interval = 500;
@@ -476,19 +476,19 @@ namespace PdnCodeLab
                 new Point2Int32(downButtonRect.Width / 2, downButtonRect.Top - 1 + downButtonRect.Height * 2 / 3)
             };
 
-            using (ISolidColorBrush brush = deviceContext.CreateSolidColorBrush(posTrackColor))
+            using (ISolidColorBrush brush = deviceContext.CreateSolidColorBrush(shaftColor))
             {
                 deviceContext.FillRectangle(clipRect, brush);
 
-                brush.Color = upButtonClick ? posColorClick : upButtonHover ? posColorHover : posColorNormal;
+                brush.Color = upButtonClicked ? clickedColor : upButtonHovered ? hoveredColor : normalColor;
                 deviceContext.FillPolygon(upArrow, brush);
 
-                brush.Color = downButtonClick ? posColorClick : downButtonHover ? posColorHover : posColorNormal;
+                brush.Color = downButtonClicked ? clickedColor : downButtonHovered ? hoveredColor : normalColor;
                 deviceContext.FillPolygon(downArrow, brush);
 
-                brush.Color = posSliderClick ? posColorClick : posSliderHover ? posColorHover : posColorNormal;
-                int padding = posSliderRect.Width / 4;
-                RectInt32 posRect = RectInt32.FromEdges(posSliderRect.Left + padding, posSliderRect.Top, posSliderRect.Right - padding, posSliderRect.Bottom);
+                brush.Color = thumbClicked ? clickedColor : thumbHovered ? hoveredColor : normalColor;
+                int padding = thumbRect.Width / 4;
+                RectInt32 posRect = RectInt32.FromEdges(thumbRect.Left + padding, thumbRect.Top, thumbRect.Right - padding, thumbRect.Bottom);
                 RoundedRect posRoundedRect = new RoundedRect(posRect, padding);
                 deviceContext.FillRoundedRectangle(posRoundedRect, brush);
             }
@@ -497,9 +497,9 @@ namespace PdnCodeLab
 
             using (ISolidColorBrush caretBrush = deviceContext.CreateSolidColorBrush(caretColor))
             {
-                float curLineVPos = (float)(caret + 0) / maximum * posTrackRect.Height + posTrackRect.Top;
-                curLineVPos = float.Clamp(curLineVPos, posTrackRect.Top * dpiY, posTrackRect.Bottom * dpiY);
-                deviceContext.DrawLine(posTrackRect.Left, curLineVPos, posTrackRect.Right, curLineVPos, caretBrush, 2f * dpiY);
+                float curLineVPos = (float)(caret + 0) / maximum * shaftRect.Height + shaftRect.Top;
+                curLineVPos = float.Clamp(curLineVPos, shaftRect.Top * dpiY, shaftRect.Bottom * dpiY);
+                deviceContext.DrawLine(shaftRect.Left, curLineVPos, shaftRect.Right, curLineVPos, caretBrush, 2f * dpiY);
             }
 
             using (ISolidColorBrush indicatorPen = deviceContext.CreateSolidColorBrush(matchColor))
@@ -509,33 +509,33 @@ namespace PdnCodeLab
                 indicatorPen.Color = bookmarkColor;
                 foreach (int bookmark in this.bookmarks)
                 {
-                    float bkmkVPos = (float)bookmark / maximum * posTrackRect.Height + posTrackRect.Top;
-                    bkmkVPos = float.Clamp(bkmkVPos, posTrackRect.Top, posTrackRect.Bottom);
-                    deviceContext.DrawLine(posTrackRect.Left + 6f * dpiY, bkmkVPos, posTrackRect.Right - 6f * dpiY, bkmkVPos, indicatorPen, strokeWidth);
+                    float bkmkVPos = (float)bookmark / maximum * shaftRect.Height + shaftRect.Top;
+                    bkmkVPos = float.Clamp(bkmkVPos, shaftRect.Top, shaftRect.Bottom);
+                    deviceContext.DrawLine(shaftRect.Left + 6f * dpiY, bkmkVPos, shaftRect.Right - 6f * dpiY, bkmkVPos, indicatorPen, strokeWidth);
                 }
 
                 indicatorPen.Color = matchColor;
                 foreach (int match in this.matches)
                 {
-                    float matchLineVPos = (float)match / maximum * posTrackRect.Height + posTrackRect.Top;
-                    matchLineVPos = float.Clamp(matchLineVPos, posTrackRect.Top, posTrackRect.Bottom);
-                    deviceContext.DrawLine(posTrackRect.Left, matchLineVPos, posTrackRect.Left + 4f * dpiY, matchLineVPos, indicatorPen, strokeWidth);
+                    float matchLineVPos = (float)match / maximum * shaftRect.Height + shaftRect.Top;
+                    matchLineVPos = float.Clamp(matchLineVPos, shaftRect.Top, shaftRect.Bottom);
+                    deviceContext.DrawLine(shaftRect.Left, matchLineVPos, shaftRect.Left + 4f * dpiY, matchLineVPos, indicatorPen, strokeWidth);
                 }
 
                 indicatorPen.Color = warningColor;
                 foreach (int error in this.warnings)
                 {
-                    float warnLineVPos = (float)error / maximum * posTrackRect.Height + posTrackRect.Top;
-                    warnLineVPos = float.Clamp(warnLineVPos, posTrackRect.Top, posTrackRect.Bottom);
-                    deviceContext.DrawLine(posTrackRect.Right - 4f * dpiY, warnLineVPos, posTrackRect.Right, warnLineVPos, indicatorPen, strokeWidth);
+                    float warnLineVPos = (float)error / maximum * shaftRect.Height + shaftRect.Top;
+                    warnLineVPos = float.Clamp(warnLineVPos, shaftRect.Top, shaftRect.Bottom);
+                    deviceContext.DrawLine(shaftRect.Right - 4f * dpiY, warnLineVPos, shaftRect.Right, warnLineVPos, indicatorPen, strokeWidth);
                 }
 
                 indicatorPen.Color = errorColor;
                 foreach (int error in this.errors)
                 {
-                    float errLineVPos = (float)error / maximum * posTrackRect.Height + posTrackRect.Top;
-                    errLineVPos = float.Clamp(errLineVPos, posTrackRect.Top, posTrackRect.Bottom);
-                    deviceContext.DrawLine(posTrackRect.Right - 4f * dpiY, errLineVPos, posTrackRect.Right, errLineVPos, indicatorPen, strokeWidth);
+                    float errLineVPos = (float)error / maximum * shaftRect.Height + shaftRect.Top;
+                    errLineVPos = float.Clamp(errLineVPos, shaftRect.Top, shaftRect.Bottom);
+                    deviceContext.DrawLine(shaftRect.Right - 4f * dpiY, errLineVPos, shaftRect.Right, errLineVPos, indicatorPen, strokeWidth);
                 }
             }
         }
@@ -549,20 +549,20 @@ namespace PdnCodeLab
 
             int delta;
             ScrollEventType scrollType;
-            if (upButtonClick && upButtonHover)
+            if (upButtonClicked && upButtonHovered)
             {
-                delta = -(int)float.Round(posTrackRect.Height / (float)maximum);
+                delta = -(int)float.Round(shaftRect.Height / (float)maximum);
 
                 scrollType = ScrollEventType.SmallDecrement;
             }
-            else if (downButtonClick && downButtonHover)
+            else if (downButtonClicked && downButtonHovered)
             {
-                delta = (int)float.Round(posTrackRect.Height / (float)maximum);
+                delta = (int)float.Round(shaftRect.Height / (float)maximum);
                 scrollType = ScrollEventType.SmallIncrement;
             }
-            else if (posTrackClick && posTrackHover)
+            else if (shaftClicked && shaftHovered)
             {
-                if (posSliderRect.Contains(posSliderRect.Left, posClicked))
+                if (thumbRect.Contains(thumbRect.Left, clickedShaftPos))
                 {
                     OnScroll(new ScrollEventArgs(ScrollEventType.EndScroll, this.Value));
                     if (arrowTimer.Enabled)
@@ -572,14 +572,14 @@ namespace PdnCodeLab
                     return;
                 }
 
-                if (trackDirection == -1)
+                if (scrollDirection == -1)
                 {
-                    delta = -posSliderRect.Height;
+                    delta = -thumbRect.Height;
                     scrollType = ScrollEventType.LargeDecrement;
                 }
-                else if (trackDirection == 1)
+                else if (scrollDirection == 1)
                 {
-                    delta = posSliderRect.Height;
+                    delta = thumbRect.Height;
                     scrollType = ScrollEventType.LargeIncrement;
                 }
                 else
@@ -592,16 +592,16 @@ namespace PdnCodeLab
                 return;
             }
 
-            posSliderRect.Y += delta;
+            thumbRect.Y += delta;
 
-            if (posSliderRect.Top < posTrackRect.Top)
+            if (thumbRect.Top < shaftRect.Top)
             {
-                posSliderRect.Y = posTrackRect.Top;
+                thumbRect.Y = shaftRect.Top;
                 scrollType = ScrollEventType.First;
             }
-            else if (posSliderRect.Bottom > posTrackRect.Bottom)
+            else if (thumbRect.Bottom > shaftRect.Bottom)
             {
-                posSliderRect.Y = posTrackRect.Bottom - posSliderRect.Height;
+                thumbRect.Y = shaftRect.Bottom - thumbRect.Height;
                 scrollType = ScrollEventType.Last;
             }
 
