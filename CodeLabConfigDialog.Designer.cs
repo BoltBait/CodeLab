@@ -1220,15 +1220,13 @@
             txtCode.AccessibleRole = System.Windows.Forms.AccessibleRole.Text;
             txtCode.AutoCMaxHeight = 9;
             txtCode.AutomaticFold = ScintillaNET.AutomaticFold.Show | ScintillaNET.AutomaticFold.Change;
-            txtCode.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            txtCode.BorderStyle = ScintillaNET.BorderStyle.FixedSingle;
             txtCode.CaretLineBackColor = System.Drawing.Color.GhostWhite;
-            txtCode.CaretLineVisible = true;
             txtCode.CaretLineVisibleAlways = true;
             txtCode.ContextMenuStrip = contextMenuStrip1;
             txtCode.Dock = System.Windows.Forms.DockStyle.Fill;
             txtCode.EdgeColor = System.Drawing.Color.PowderBlue;
             txtCode.IdleStyling = ScintillaNET.IdleStyling.All;
-            txtCode.Lexer = ScintillaNET.Lexer.Cpp;
             txtCode.Location = new System.Drawing.Point(0, 0);
             txtCode.Margin = new System.Windows.Forms.Padding(0);
             txtCode.MouseDwellTime = 250;

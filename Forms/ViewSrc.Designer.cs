@@ -41,12 +41,10 @@ namespace PdnCodeLab
             TextSrcBox.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
             TextSrcBox.AutoCMaxHeight = 9;
             TextSrcBox.AutomaticFold = ScintillaNET.AutomaticFold.Show | ScintillaNET.AutomaticFold.Change;
-            TextSrcBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            TextSrcBox.BorderStyle = ScintillaNET.BorderStyle.FixedSingle;
             TextSrcBox.CaretLineBackColor = System.Drawing.Color.GhostWhite;
-            TextSrcBox.CaretLineVisible = true;
             TextSrcBox.CaretLineVisibleAlways = true;
             TextSrcBox.IdleStyling = ScintillaNET.IdleStyling.All;
-            TextSrcBox.Lexer = ScintillaNET.Lexer.Cpp;
             TextSrcBox.Location = new System.Drawing.Point(13, 13);
             TextSrcBox.MouseDwellTime = 250;
             TextSrcBox.Name = "TextSrcBox";

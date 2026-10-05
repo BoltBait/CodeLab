@@ -24,7 +24,7 @@ namespace PdnCodeLab
         {
             InitializeComponent();
 
-            TextSrcBox.Lexer = isSourceCode ? ScintillaNET.Lexer.Cpp : ScintillaNET.Lexer.Null;
+            TextSrcBox.Lexer = isSourceCode ? ScintillaNET.Lexer.SCLEX_CSHARP : ScintillaNET.Lexer.SCLEX_NULL;
             TextSrcBox.Text = SourceString;
             TextSrcBox.ReadOnly = true;
             TextSrcBox.ApplyUserSettings();

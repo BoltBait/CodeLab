@@ -81,6 +81,7 @@ namespace PdnCodeLab
         private bool updatingStyles = false;
         private int autoBraceOpenPos = InvalidPosition;
         private bool suppressContextMenu = true;
+        private Lexer lexer = Lexer.SCLEX_NULL;
         #endregion
 
         #region Properties
@@ -100,10 +101,11 @@ namespace PdnCodeLab
                     foldedLines.Add(lineIndex);
                 }
 
-                return new DocMeta(this.DocLineFromVisible(this.FirstVisibleLine), this.AnchorPosition, this.CurrentPosition, foldedLines);
+                return new DocMeta(this.Lexer, this.DocLineFromVisible(this.FirstVisibleLine), this.AnchorPosition, this.CurrentPosition, foldedLines);
             }
             set
             {
+                this.Lexer = value.Lexer;
                 this.AnchorPosition = value.AnchorPos;
                 this.CurrentPosition = value.CaretPos;
                 this.FirstVisibleLine = value.ScrollPos;
@@ -111,6 +113,20 @@ namespace PdnCodeLab
                 {
                     this.Lines[line].FoldLine(FoldAction.Contract);
                 }
+            }
+        }
+
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        internal Lexer Lexer
+        {
+            get
+            {
+                return this.lexer;
+            }
+            set
+            {
+                this.lexer = value;
+                this.LexerName = this.GetLexerIDFromLexer(value);
             }
         }
 
@@ -302,7 +318,7 @@ namespace PdnCodeLab
             {
                 this.useExtendedColors = value;
 
-                if (this.Lexer == Lexer.Cpp)
+                if (this.Lexer == Lexer.SCLEX_CSHARP)
                 {
                     UpdateSubstyleAllocations();
                     UpdateSyntaxHighlighting();
@@ -364,10 +380,10 @@ namespace PdnCodeLab
                     case Theme.Dark:
                         switch (this.Lexer)
                         {
-                            case Lexer.Xml:
+                            case Lexer.SCLEX_XML:
                                 SetXMLDarkStyles();
                                 break;
-                            case Lexer.Cpp:
+                            case Lexer.SCLEX_CSHARP:
                             default:
                                 SetCSharpDarkStyles();
                                 break;
@@ -401,7 +417,7 @@ namespace PdnCodeLab
                         this.Styles[Style.BraceBad].ForeColor = Color.Red;
 
                         // White Space
-                        this.SetWhitespaceForeColor(true, Color.FromArgb(20, 72, 82));
+                        this.WhitespaceTextColor = Color.FromArgb(20, 72, 82);
 
                         // Object Highlight
                         this.Indicators[Indicator.ObjectHighlight].ForeColor = Color.FromArgb(17, 61, 111);
@@ -418,7 +434,7 @@ namespace PdnCodeLab
                         this.Indicators[Indicator.Spelling].ForeColor = Color.Magenta;
 
                         // Selection
-                        this.SetSelectionBackColor(true, Color.FromArgb(38, 79, 120));
+                        this.SelectionBackColor = Color.FromArgb(38, 79, 120);
 
                         // Current Line Highlight
                         SetCaretLineDarkColor();
@@ -431,10 +447,10 @@ namespace PdnCodeLab
                     default:
                         switch (this.Lexer)
                         {
-                            case Lexer.Xml:
+                            case Lexer.SCLEX_XML:
                                 SetXMLLightStyles();
                                 break;
-                            case Lexer.Cpp:
+                            case Lexer.SCLEX_CSHARP:
                             default:
                                 SetCSharpLightStyles();
                                 break;
@@ -468,7 +484,7 @@ namespace PdnCodeLab
                         this.Styles[Style.BraceBad].ForeColor = Color.Red;
 
                         // White Space
-                        this.SetWhitespaceForeColor(true, Color.FromArgb(43, 145, 175));
+                        this.WhitespaceTextColor = Color.FromArgb(43, 145, 175);
 
                         // Object Highlight
                         this.Indicators[Indicator.ObjectHighlight].ForeColor = Color.Gainsboro;
@@ -485,7 +501,7 @@ namespace PdnCodeLab
                         this.Indicators[Indicator.Spelling].ForeColor = Color.Magenta;
 
                         // Selection
-                        this.SetSelectionBackColor(true, Color.FromArgb(173, 214, 255));
+                        this.SelectionBackColor = Color.FromArgb(173, 214, 255);
 
                         // Current Line Highlight
                         SetCaretLineLightColor();
@@ -764,7 +780,7 @@ namespace PdnCodeLab
                 timer.Interval = 1000;
                 timer.Tick += (sender, e) =>
                 {
-                    if (this.Lexer == Lexer.Cpp)
+                    if (this.Lexer == Lexer.SCLEX_CSHARP)
                     {
                         if (this.useExtendedColors)
                         {
@@ -825,7 +841,7 @@ namespace PdnCodeLab
             this.bulbIcon.Text = "Bulb Icon";
 
             #region ScintillaNET Initializers
-            this.Lexer = Lexer.Cpp;
+            this.Lexer = Lexer.SCLEX_CSHARP;
 
             int substyleStart = this.AllocateSubstyles(Style.Cpp.Identifier, Substyle.NormStyleCount);
             Substyle.SetStyles(substyleStart);
@@ -942,7 +958,6 @@ namespace PdnCodeLab
             this.ViewWhitespace = WhitespaceMode.Invisible;
 
             // Current Line Highlight
-            this.CaretLineVisible = true;
             this.CaretLineVisibleAlways = true;
 
             // Word Wrap
@@ -1004,7 +1019,7 @@ namespace PdnCodeLab
 
         internal void ApplyUserSettings()
         {
-            bool useWordWrap = (this.Lexer == Lexer.Null) ? Settings.WordWrapPlainText : Settings.WordWrap;
+            bool useWordWrap = (this.Lexer == Lexer.SCLEX_NULL) ? Settings.WordWrapPlainText : Settings.WordWrap;
             this.WrapMode = useWordWrap ? WrapMode.Whitespace : WrapMode.None;
             this.TabWidth = Settings.IndentSpaces;
             this.CaretLineFrameEnabled = Settings.CaretLineFrame;
@@ -1473,7 +1488,7 @@ namespace PdnCodeLab
 
         private void ColorizeBraces()
         {
-            if (this.Lexer != Lexer.Cpp)
+            if (this.Lexer != Lexer.SCLEX_CSHARP)
             {
                 return;
             }
@@ -1595,7 +1610,7 @@ namespace PdnCodeLab
 
         private void HighlightWordUsage()
         {
-            if (this.Lexer != Lexer.Cpp)
+            if (this.Lexer != Lexer.SCLEX_CSHARP)
             {
                 return;
             }
@@ -2479,8 +2494,8 @@ namespace PdnCodeLab
         {
             bool success = this.Lexer switch
             {
-                Lexer.Cpp => GoToDefinitionCSharp(msDocs),
-                Lexer.Xml => GoToDefinitionXaml()
+                Lexer.SCLEX_CSHARP => GoToDefinitionCSharp(msDocs),
+                Lexer.SCLEX_XML => GoToDefinitionXaml()
             };
 
             if (!success)
@@ -3808,7 +3823,7 @@ namespace PdnCodeLab
                 }
 
                 // Has the caret changed position? Caret position doesn't change with Delete key, so check text length
-                if (this.Lexer != Lexer.Null && (caretPos != lastCaretPos || textLength != lastTextLength))
+                if (this.Lexer != Lexer.SCLEX_NULL && (caretPos != lastCaretPos || textLength != lastTextLength))
                 {
                     lastCaretPos = caretPos;
                     lastTextLength = textLength;
@@ -3830,8 +3845,8 @@ namespace PdnCodeLab
                     int style = this.GetStyleAt(bracePos1);
                     bool correctStyle = this.Lexer switch
                     {
-                        Lexer.Cpp => (style == Style.Cpp.Operator || style == Style.Cpp.Operator + Preprocessor),
-                        Lexer.Xml => (style == Style.Xml.Tag || style == Style.Xml.TagUnknown)
+                        Lexer.SCLEX_CSHARP => (style == Style.Cpp.Operator || style == Style.Cpp.Operator + Preprocessor),
+                        Lexer.SCLEX_XML => (style == Style.Xml.Tag || style == Style.Xml.TagUnknown)
                     };
 
                     if (bracePos1 > InvalidPosition && correctStyle)
@@ -3840,7 +3855,7 @@ namespace PdnCodeLab
                         int bracePos2 = this.BraceMatch(bracePos1);
                         if (bracePos2 == InvalidPosition)
                         {
-                            if (this.Lexer == Lexer.Cpp)
+                            if (this.Lexer == Lexer.SCLEX_CSHARP)
                             {
                                 this.BraceBadLight(bracePos1);
                             }
@@ -3877,7 +3892,7 @@ namespace PdnCodeLab
             else if (iBox.Visible)
             {
                 string word = this.GetWordFromPosition(this.CurrentPosition);
-                if (this.Lexer == Lexer.Xml && e.Char == '/' && this.GetCharAt(this.CurrentPosition - 2) == '<')
+                if (this.Lexer == Lexer.SCLEX_XML && e.Char == '/' && this.GetCharAt(this.CurrentPosition - 2) == '<')
                 {
                     // Do nothing
                 }
@@ -3896,7 +3911,7 @@ namespace PdnCodeLab
                     iBox.Visible = false;
                 }
             }
-            else if (this.Lexer == Lexer.Cpp)
+            else if (this.Lexer == Lexer.SCLEX_CSHARP)
             {
                 if (e.Char == '}')
                 {
@@ -4056,7 +4071,7 @@ namespace PdnCodeLab
                     }
                 }
             }
-            else if (this.Lexer == Lexer.Xml)
+            else if (this.Lexer == Lexer.SCLEX_XML)
             {
                 if (this.DisableAutoComplete)
                 {
@@ -4153,7 +4168,7 @@ namespace PdnCodeLab
 
         protected override void OnBeforeDelete(BeforeModificationEventArgs e)
         {
-            if (this.Lexer == Lexer.Cpp && e.Source == ModificationSource.User && e.Text.Trim().Length > 0)
+            if (this.Lexer == Lexer.SCLEX_CSHARP && e.Source == ModificationFlags.User && e.Text.Trim().Length > 0)
             {
                 SetUpRenaming(e.Position);
             }
@@ -4163,7 +4178,7 @@ namespace PdnCodeLab
 
         protected override void OnBeforeInsert(BeforeModificationEventArgs e)
         {
-            if (this.Lexer == Lexer.Cpp && e.Source == ModificationSource.User && e.Text.Trim().Length > 0)
+            if (this.Lexer == Lexer.SCLEX_CSHARP && e.Source == ModificationFlags.User && e.Text.Trim().Length > 0)
             {
                 SetUpRenaming(e.Position);
             }
@@ -4285,7 +4300,7 @@ namespace PdnCodeLab
 
         internal void UpdateSyntaxHighlighting()
         {
-            if (this.Lexer != Lexer.Cpp)
+            if (this.Lexer != Lexer.SCLEX_CSHARP)
             {
                 return;
             }
@@ -4679,11 +4694,6 @@ namespace PdnCodeLab
             return ((bitmask & flag) == flag);
         }
 
-        private new char GetCharAt(int position)
-        {
-            return base.GetCharAt(position).ToChar();
-        }
-
         private int WordStartPosition(int position)
         {
             return this.WordStartPosition(position, true);
@@ -4796,13 +4806,13 @@ namespace PdnCodeLab
                 lightBulbMenu.Hide();
             }
 
-            if (this.Lexer != Lexer.Null)
+            if (this.Lexer != Lexer.SCLEX_NULL)
             {
                 dwellWordPos = this.WordStartPosition(e.Position);
 
                 string tooltipText = null;
 
-                if (this.Lexer == Lexer.Cpp)
+                if (this.Lexer == Lexer.SCLEX_CSHARP)
                 {
                     // If there's an error here, we'll show that instead
                     bool isError = this.IsIndicatorOn(Indicator.Error, e.Position);
@@ -4834,8 +4844,8 @@ namespace PdnCodeLab
                 {
                     tooltipText = this.Lexer switch
                     {
-                        Lexer.Cpp => this.GetIntelliTipCSharp(e.Position),
-                        Lexer.Xml => this.GetIntelliTipXaml(e.Position),
+                        Lexer.SCLEX_CSHARP => this.GetIntelliTipCSharp(e.Position),
+                        Lexer.SCLEX_XML => this.GetIntelliTipXaml(e.Position),
                         _ => string.Empty,
                     };
                 }
@@ -4923,13 +4933,13 @@ namespace PdnCodeLab
             switch (projectType)
             {
                 case ProjectType.PlainText:
-                    this.Lexer = Lexer.Null;
+                    this.Lexer = Lexer.SCLEX_NULL;
                     break;
                 case ProjectType.GpuImageEffect:
                 case ProjectType.GpuDrawEffect:
                 case ProjectType.BitmapEffect:
                 case ProjectType.Reference:
-                    this.Lexer = Lexer.Cpp;
+                    this.Lexer = Lexer.SCLEX_CSHARP;
                     this.AllocateSubstyles(Style.Cpp.Identifier, this.useExtendedColors ? Substyle.ExtStyleCount : Substyle.NormStyleCount);
                     this.UpdateSyntaxHighlighting();
 
@@ -4950,7 +4960,7 @@ namespace PdnCodeLab
                     }
                     break;
                 case ProjectType.Shape:
-                    this.Lexer = Lexer.Xml;
+                    this.Lexer = Lexer.SCLEX_XML;
 
                     this.SetProperty("fold", "1");
                     this.SetProperty("fold.html", "1");
@@ -5002,7 +5012,7 @@ namespace PdnCodeLab
 
             switch (this.Lexer)
             {
-                case Lexer.Cpp:
+                case Lexer.SCLEX_CSHARP:
                     UpdateSubstyleAllocations();
 
                     switch (this.theme)
@@ -5015,7 +5025,7 @@ namespace PdnCodeLab
                             break;
                     }
                     break;
-                case Lexer.Xml:
+                case Lexer.SCLEX_XML:
                     switch (this.theme)
                     {
                         case Theme.Light:
@@ -5161,8 +5171,8 @@ namespace PdnCodeLab
             }
 
             SpellingError[] spellingErrors = spellChecker.Check(textRange).ToArray();
-            bool isCSharp = this.Lexer == Lexer.Cpp;
-            bool isXaml = this.Lexer == Lexer.Xml;
+            bool isCSharp = this.Lexer == Lexer.SCLEX_CSHARP;
+            bool isXaml = this.Lexer == Lexer.SCLEX_XML;
 
             this.IndicatorCurrent = Indicator.Spelling;
             this.IndicatorClearRange(startPos, length);
@@ -5254,7 +5264,7 @@ namespace PdnCodeLab
             int indicatorLength = this.Indicators[Indicator.Spelling].End(position) - indicatorStart;
 
             RecommendedAction recommendedAction = RecommendedAction.None;
-            if (this.Lexer == Lexer.Null)
+            if (this.Lexer == Lexer.SCLEX_NULL)
             {
                 Line line = this.Lines[this.LineFromPosition(position)];
                 recommendedAction = spellChecker.Check(line.Text)
@@ -5457,6 +5467,8 @@ namespace PdnCodeLab
         private class DocMeta
         {
             [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+            internal Lexer Lexer { get; }
+            [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
             internal int ScrollPos { get; }
             [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
             internal int AnchorPos { get; }
@@ -5465,8 +5477,9 @@ namespace PdnCodeLab
             [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
             internal IEnumerable<int> FoldedLines { get; }
 
-            internal DocMeta(int scrollPos, int anchorPos, int caretPos, IEnumerable<int> foldedLines)
+            internal DocMeta(Lexer lexer, int scrollPos, int anchorPos, int caretPos, IEnumerable<int> foldedLines)
             {
+                this.Lexer = lexer;
                 this.ScrollPos = scrollPos;
                 this.AnchorPos = anchorPos;
                 this.CaretPos = caretPos;

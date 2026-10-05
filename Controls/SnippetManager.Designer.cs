@@ -78,11 +78,9 @@
             // SnippetBody
             // 
             this.SnippetBody.AutomaticFold = ((ScintillaNET.AutomaticFold)((ScintillaNET.AutomaticFold.Show | ScintillaNET.AutomaticFold.Change)));
-            this.SnippetBody.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.SnippetBody.BorderStyle = ScintillaNET.BorderStyle.FixedSingle;
             this.SnippetBody.CaretLineBackColor = System.Drawing.Color.GhostWhite;
-            this.SnippetBody.CaretLineVisible = true;
             this.SnippetBody.IdleStyling = ScintillaNET.IdleStyling.All;
-            this.SnippetBody.Lexer = ScintillaNET.Lexer.Cpp;
             this.SnippetBody.Location = new System.Drawing.Point(100, 41);
             this.SnippetBody.MouseDwellTime = 250;
             this.SnippetBody.Name = "SnippetBody";
