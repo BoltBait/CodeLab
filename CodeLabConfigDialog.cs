@@ -53,6 +53,7 @@ namespace PdnCodeLab
         public CodeLabConfigDialog(RenderPreset renderPreset)
         {
             Task.Run(() => Intelli.Keywords); // Forces the Intelli class to start initializing in the background
+            SetupForScintillaNative();
             InitializeComponent();
 
             FormBorderStyle = FormBorderStyle.Sizable;
@@ -902,6 +903,36 @@ namespace PdnCodeLab
             };
 
             FlexibleMessageBox.Show(message, "Classic Plugins Unsupported", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
+        private static void SetupForScintillaNative()
+        {
+            string scintillaTempDirectory = Path.Combine(Path.GetTempPath(), "CodeLab", BuildInfo.Version);
+            string scintillaPath = Path.Combine(scintillaTempDirectory, "Scintilla.dll");
+            string lexillaPath = Path.Combine(scintillaTempDirectory, "Lexilla.dll");
+
+            if (!File.Exists(scintillaPath) || !File.Exists(lexillaPath))
+            {
+                Directory.CreateDirectory(scintillaTempDirectory);
+
+                System.Runtime.InteropServices.Architecture arch = System.Runtime.InteropServices.RuntimeInformation.ProcessArchitecture;
+                System.Reflection.Assembly executingAssembly = System.Reflection.Assembly.GetExecutingAssembly();
+
+                using Stream scintillaStream = executingAssembly.GetManifestResourceStream($"PdnCodeLab.Native.{arch}.Scintilla.dll");
+                using FileStream scintillaFileStream = File.Create(scintillaPath);
+                scintillaStream.Seek(0, SeekOrigin.Begin);
+                scintillaStream.CopyTo(scintillaFileStream);
+
+                using Stream lexillaStream = executingAssembly.GetManifestResourceStream($"PdnCodeLab.Native.{arch}.Lexilla.dll");
+                using FileStream lexillaFileStream = File.Create(lexillaPath);
+                lexillaStream.Seek(0, SeekOrigin.Begin);
+                lexillaStream.CopyTo(lexillaFileStream);
+            }
+
+            if (File.Exists(scintillaPath) && File.Exists(lexillaPath))
+            {
+                ScintillaNativeLibrary.SatelliteDirectory = scintillaTempDirectory;
+            }
         }
 
         void IToolTipHost.ThemeToolTip()
