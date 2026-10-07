@@ -84,6 +84,47 @@ namespace PdnCodeLab
         private Lexer lexer = Lexer.SCLEX_NULL;
         #endregion
 
+        #region Scintilla.NET shims
+        // this whole region can be deleted when a new version of Scintilla.NET is released
+
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public bool CaretLineHighlightSubline
+        {
+            get
+            {
+                return DirectMessage(SciApi.SCI_GETCARETLINEHIGHLIGHTSUBLINE) != IntPtr.Zero;
+            }
+            set
+            {
+                IntPtr highlightSubline = value ? new IntPtr(1) : IntPtr.Zero;
+                DirectMessage(SciApi.SCI_SETCARETLINEHIGHLIGHTSUBLINE, highlightSubline);
+            }
+        }
+
+        // CaretWidth is already in Scintilla, but erroneously clamps to the value to 3
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public new int CaretWidth
+        {
+            get
+            {
+                return DirectMessage(SciApi.SCI_GETCARETWIDTH).ToInt32();
+            }
+            set
+            {
+                DirectMessage(SciApi.SCI_SETCARETWIDTH, new IntPtr(value));
+            }
+        }
+
+        // using SCI_GETSTYLEINDEXAT requires internal helper functions
+        // This is the same code we've been using for several years,
+        // but has been renamed to GetStyleIndexAt() to match the Scintilla API
+        private int GetStyleIndexAt(int position)
+        {
+            int style = this.GetStyleAt(position);
+            return (style >= 0) ? style : Substyle.SubstyleCorrection(style);
+        }
+        #endregion
+
         #region Properties
         private DocMeta DocumentMeta
         {
@@ -958,6 +999,7 @@ namespace PdnCodeLab
             this.ViewWhitespace = WhitespaceMode.Invisible;
 
             // Current Line Highlight
+            this.CaretLineHighlightSubline = true;
             this.CaretLineVisibleAlways = true;
 
             // Word Wrap
@@ -1140,7 +1182,7 @@ namespace PdnCodeLab
             int numStart = position;
             while (numStart > InvalidPosition)
             {
-                int style = this.GetStyleAt(numStart - 1);
+                int style = this.GetStyleIndexAt(numStart - 1);
                 if (style != Style.Cpp.Number && style != Style.Cpp.Number + Preprocessor)
                 {
                     break;
@@ -1168,8 +1210,8 @@ namespace PdnCodeLab
                 numEnd++;
             }
 
-            int startStyle = this.GetStyleAt(numStart);
-            int endStyle = this.GetStyleAt(numEnd);
+            int startStyle = this.GetStyleIndexAt(numStart);
+            int endStyle = this.GetStyleIndexAt(numEnd);
             if ((startStyle != Style.Cpp.Number && startStyle != Style.Cpp.Number + Preprocessor) ||
                 (endStyle != Style.Cpp.Number && endStyle != Style.Cpp.Number + Preprocessor))
             {
@@ -1422,7 +1464,7 @@ namespace PdnCodeLab
                             varPos += possibleVars[i].Length + braceLength + 1;
                         }
 
-                        int style = this.GetStyleAt(thisVarPos);
+                        int style = this.GetStyleIndexAt(thisVarPos);
                         if (style != Style.Cpp.Identifier && style != Style.Cpp.Identifier + Preprocessor &&
                             style != Substyle.ParamAndVar && style != Substyle.ParamAndVar + Preprocessor)
                         {
@@ -1464,7 +1506,7 @@ namespace PdnCodeLab
             int pos = 0;
             while (pos < this.TextLength)
             {
-                int style = this.GetStyleAt(pos);
+                int style = this.GetStyleIndexAt(pos);
                 if ((style == Style.Cpp.Identifier || style == Style.Cpp.Identifier + Preprocessor ||
                     style == Substyle.Method || style == Substyle.Method + Preprocessor) &&
                     this.GetIntelliType(pos) == IntelliType.Method)
@@ -1503,7 +1545,7 @@ namespace PdnCodeLab
 
             for (int pos = 0; pos < this.TextLength; pos++)
             {
-                int style = this.GetStyleAt(pos);
+                int style = this.GetStyleIndexAt(pos);
                 if (style != Style.Cpp.Operator && style != Style.Cpp.Operator + Preprocessor)
                 {
                     continue;
@@ -1557,7 +1599,7 @@ namespace PdnCodeLab
 
         private IntelliType GetIntelliType(int position)
         {
-            int style = this.GetStyleAt(position);
+            int style = this.GetStyleIndexAt(position);
             if (style != Style.Cpp.Word && style != Style.Cpp.Word + Preprocessor &&
                 style != Style.Cpp.Word2 && style != Style.Cpp.Word2 + Preprocessor &&
                 style != Substyle.Enum && style != Substyle.Enum + Preprocessor &&
@@ -1692,7 +1734,7 @@ namespace PdnCodeLab
                             typePos--;
                         }
 
-                        int style = this.GetStyleAt(typePos);
+                        int style = this.GetStyleIndexAt(typePos);
                         if (style == Style.Cpp.Word || style == Style.Cpp.Word + Preprocessor)
                         {
                             string foundType = this.GetWordFromPosition(typePos);
@@ -1714,7 +1756,7 @@ namespace PdnCodeLab
                             typePos--;
                         }
 
-                        int style = this.GetStyleAt(typePos);
+                        int style = this.GetStyleIndexAt(typePos);
                         if (style == Style.Cpp.Word || style == Style.Cpp.Word + Preprocessor ||
                             style == Style.Cpp.Word2 || style == Style.Cpp.Word2 + Preprocessor ||
                             style == Substyle.Enum || style == Substyle.Enum + Preprocessor ||
@@ -1763,7 +1805,7 @@ namespace PdnCodeLab
 
         private string GetIntelliTipCSharp(int position)
         {
-            int style = this.GetStyleAt(position);
+            int style = this.GetStyleIndexAt(position);
             if (style == Style.Cpp.Comment || style == Style.Cpp.Comment + Preprocessor ||
                 style == Style.Cpp.CommentLine || style == Style.Cpp.CommentLine + Preprocessor ||
                 style == Style.Cpp.Preprocessor || style == Style.Cpp.Preprocessor + Preprocessor ||
@@ -1984,7 +2026,7 @@ namespace PdnCodeLab
 
         private string GetIntelliTipXaml(int position)
         {
-            int style = this.GetStyleAt(position);
+            int style = this.GetStyleIndexAt(position);
             if (style != Style.Xml.Tag && style != Style.Xml.Attribute)
             {
                 return string.Empty;
@@ -2208,7 +2250,7 @@ namespace PdnCodeLab
 
         private Type GetReturnType(int position)
         {
-            int style = this.GetStyleAt(position - 1);
+            int style = this.GetStyleIndexAt(position - 1);
             if (style == Style.Cpp.Comment || style == Style.Cpp.Comment + Preprocessor ||
                 style == Style.Cpp.CommentLine || style == Style.Cpp.CommentLine + Preprocessor ||
                 style == Style.Cpp.Preprocessor || style == Style.Cpp.Preprocessor + Preprocessor ||
@@ -2276,7 +2318,7 @@ namespace PdnCodeLab
 
         private Type GetDeclaringType(int position)
         {
-            int style = this.GetStyleAt(position);
+            int style = this.GetStyleIndexAt(position);
             if (style != Style.Cpp.Word && style != Style.Cpp.Word + Preprocessor &&
                 style != Style.Cpp.Word2 && style != Style.Cpp.Word2 + Preprocessor &&
                 style != Substyle.Enum && style != Substyle.Enum + Preprocessor &&
@@ -2432,7 +2474,7 @@ namespace PdnCodeLab
                 pos--;
             }
 
-            if (!foundTagStart || this.GetStyleAt(pos) != Style.Xml.Tag)
+            if (!foundTagStart || this.GetStyleIndexAt(pos) != Style.Xml.Tag)
             {
                 return null;
             }
@@ -2507,7 +2549,7 @@ namespace PdnCodeLab
         private bool GoToDefinitionXaml()
         {
             int position = this.WordStartPosition(this.CurrentPosition);
-            int style = this.GetStyleAt(position);
+            int style = this.GetStyleIndexAt(position);
 
             if (style == Style.Xml.Attribute)
             {
@@ -2548,7 +2590,7 @@ namespace PdnCodeLab
         {
             int position = this.WordStartPosition(this.CurrentPosition);
 
-            int style = this.GetStyleAt(position);
+            int style = this.GetStyleIndexAt(position);
             if (style == Style.Cpp.Comment || style == Style.Cpp.Comment + Preprocessor ||
                 style == Style.Cpp.CommentLine || style == Style.Cpp.CommentLine + Preprocessor ||
                 style == Style.Cpp.Preprocessor || style == Style.Cpp.Preprocessor + Preprocessor ||
@@ -2645,7 +2687,7 @@ namespace PdnCodeLab
                         continue;
                     }
 
-                    int style2 = this.GetStyleAt(typePos);
+                    int style2 = this.GetStyleIndexAt(typePos);
                     if (style2 != Style.Cpp.Word && style2 != Style.Cpp.Word + Preprocessor &&
                         style2 != Style.Cpp.Word2 && style2 != Style.Cpp.Word2 + Preprocessor &&
                         style2 != Substyle.Enum && style2 != Substyle.Enum + Preprocessor &&
@@ -2749,7 +2791,7 @@ namespace PdnCodeLab
                     }
 
                     // Don't parse variables in comments
-                    int style2 = this.GetStyleAt(typePos);
+                    int style2 = this.GetStyleIndexAt(typePos);
                     if (style2 != Style.Cpp.Word && style2 != Style.Cpp.Word + Preprocessor &&
                         style2 != Style.Cpp.Word2 && style2 != Style.Cpp.Word2 + Preprocessor &&
                         style2 != Substyle.Enum && style2 != Substyle.Enum + Preprocessor &&
@@ -2927,7 +2969,7 @@ namespace PdnCodeLab
                         bracePos1 = caretPos;
                     }
 
-                    int style = this.GetStyleAt(bracePos1);
+                    int style = this.GetStyleIndexAt(bracePos1);
 
                     if (bracePos1 > InvalidPosition && (style == Style.Cpp.Operator || style == Style.Cpp.Operator + Preprocessor))
                     {
@@ -3277,7 +3319,7 @@ namespace PdnCodeLab
                 prevCharPos--;
             }
 
-            int style = this.GetStyleAt(prevCharPos);
+            int style = this.GetStyleIndexAt(prevCharPos);
             if (style != Style.Cpp.Word && style != Style.Cpp.Word + Preprocessor &&
                 style != Style.Cpp.Word2 && style != Style.Cpp.Word2 + Preprocessor &&
                 style != Substyle.Enum && style != Substyle.Enum + Preprocessor &&
@@ -3319,10 +3361,10 @@ namespace PdnCodeLab
                 prevCharPos--;
             }
 
-            int style = this.GetStyleAt(position - 1);
+            int style = this.GetStyleIndexAt(position - 1);
             if (prevCharPos < this.Lines[this.LineFromPosition(position)].Position)
             {
-                int prevStyle = this.GetStyleAt(prevCharPos);
+                int prevStyle = this.GetStyleIndexAt(prevCharPos);
                 if (prevStyle == Style.Cpp.Comment || prevStyle == Style.Cpp.Comment + Preprocessor ||
                     prevStyle == Style.Cpp.Verbatim || prevStyle == Style.Cpp.Verbatim + Preprocessor)
                 {
@@ -3355,7 +3397,7 @@ namespace PdnCodeLab
 
         private void ConstructorIntelliBox(int position)
         {
-            int style = this.GetStyleAt(this.WordStartPosition(position));
+            int style = this.GetStyleIndexAt(this.WordStartPosition(position));
             if (style != Style.Cpp.Word && style != Style.Cpp.Word + Preprocessor &&
                 style != Style.Cpp.Word2 && style != Style.Cpp.Word2 + Preprocessor &&
                 style != Substyle.Enum && style != Substyle.Enum + Preprocessor &&
@@ -3391,7 +3433,7 @@ namespace PdnCodeLab
 
         private void SuggestionIntelliBox(int position)
         {
-            int style = this.GetStyleAt(position - 1);
+            int style = this.GetStyleIndexAt(position - 1);
             if (style != Style.Cpp.Word2 && style != Style.Cpp.Word2 + Preprocessor &&
                 style != Substyle.Enum && style != Substyle.Enum + Preprocessor &&
                 style != Substyle.Interface && style != Substyle.Interface + Preprocessor &&
@@ -3842,7 +3884,7 @@ namespace PdnCodeLab
                         bracePos1 = caretPos;
                     }
 
-                    int style = this.GetStyleAt(bracePos1);
+                    int style = this.GetStyleIndexAt(bracePos1);
                     bool correctStyle = this.Lexer switch
                     {
                         Lexer.SCLEX_CSHARP => (style == Style.Cpp.Operator || style == Style.Cpp.Operator + Preprocessor),
@@ -4732,12 +4774,6 @@ namespace PdnCodeLab
             return indent;
         }
 
-        private new int GetStyleAt(int position)
-        {
-            int style = base.GetStyleAt(position);
-            return (style >= 0) ? style : Substyle.SubstyleCorrection(style);
-        }
-
         private void AdjustLineNumbersWidth()
         {
             if (this.Margins[LeftMargin.LineNumbers].Width > 0) // Line Numbers Visible/Enabled?
@@ -5189,7 +5225,7 @@ namespace PdnCodeLab
                         continue;
                     }
 
-                    int style = this.GetStyleAt(errorPos);
+                    int style = this.GetStyleIndexAt(errorPos);
 
                     bool isComment;
                     if (isCSharp)
