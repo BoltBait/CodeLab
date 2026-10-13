@@ -911,7 +911,9 @@ namespace PdnCodeLab
             string scintillaPath = Path.Combine(scintillaTempDirectory, "Scintilla.dll");
             string lexillaPath = Path.Combine(scintillaTempDirectory, "Lexilla.dll");
 
+#if RELEASE
             if (!File.Exists(scintillaPath) || !File.Exists(lexillaPath))
+#endif
             {
                 Directory.CreateDirectory(scintillaTempDirectory);
 
@@ -1588,6 +1590,13 @@ namespace PdnCodeLab
                 .AppendLine("Jörg Reichert:\tFlexibleMessageBox")
                 .AppendLine("Jacob Slusser:\tScintillaNET")
                 .AppendLine("Microsoft:\tRoslyn")
+#if !RELEASE
+                .AppendLine()
+                .AppendLine("――――――――――  Code Editor  ――――――――――")
+                .AppendLine()
+                .AppendLine("Scintilla version:\t" + txtCode.ScintillaVersion)
+                .AppendLine("Lexilla version:\t" + txtCode.LexillaVersion)
+#endif
                 .AppendLine()
                 .AppendLine("―――――――――――  Runtime  ―――――――――――")
                 .AppendLine()

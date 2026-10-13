@@ -31,7 +31,6 @@
   <ItemGroup>
     <EmbeddedResource Include="Icons\*.png" />
     <EmbeddedResource Include="Resources\*.png" />
-    <EmbeddedResource Include="Native\**" />
     <Content Include="Icons\CodeLab.64.png" />
   </ItemGroup>
   <ItemGroup>
@@ -95,5 +94,8 @@
   </Target>
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
     <Exec Command="set latestVersion=NotFound&#xD;&#xA;&#xD;&#xA;for /F %25%25d in ('dir /a:d /b /o:-d &quot;$(NuGetPackageRoot)scintilla5.net\*&quot;') do (&#xD;&#xA;  set latestVersion=%25%25d&#xD;&#xA;  goto loopExit&#xD;&#xA;)&#xD;&#xA;&#xD;&#xA;:loopExit&#xD;&#xA;&#xD;&#xA;echo.&#xD;&#xA;echo ------------- Copying native Scintilla files for Embedding -------------&#xD;&#xA;&#xD;&#xA;set sourceArm64=$(NuGetPackageRoot)scintilla5.net\%25latestVersion%25\runtimes\win-arm64\native&#xD;&#xA;robocopy &quot;%25sourceArm64%25&quot; &quot;$(ProjectDir)Native\Arm64&quot; *.dll&#xD;&#xA;&#xD;&#xA;if ERRORLEVEL 2 exit ERRORLEVEL&#xD;&#xA;&#xD;&#xA;set sourceX64=$(NuGetPackageRoot)scintilla5.net\%25latestVersion%25\runtimes\win-x64\native&#xD;&#xA;robocopy &quot;%25sourceX64%25&quot; &quot;$(ProjectDir)Native\X64&quot; *.dll&#xD;&#xA;&#xD;&#xA;if ERRORLEVEL 2 exit ERRORLEVEL&#xD;&#xA;&#xD;&#xA;echo ------------- Compiling -------------&#xD;&#xA;&#xD;&#xA;exit 0" />
+    <ItemGroup>
+      <EmbeddedResource Include="Native\*\*.dll" />
+    </ItemGroup>
   </Target>
 </Project>
