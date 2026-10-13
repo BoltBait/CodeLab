@@ -84,47 +84,6 @@ namespace PdnCodeLab
         private Lexer lexer = Lexer.SCLEX_NULL;
         #endregion
 
-        #region Scintilla.NET shims
-        // this whole region can be deleted when a new version of Scintilla.NET is released
-
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public bool CaretLineHighlightSubline
-        {
-            get
-            {
-                return DirectMessage(SciApi.SCI_GETCARETLINEHIGHLIGHTSUBLINE) != IntPtr.Zero;
-            }
-            set
-            {
-                IntPtr highlightSubline = value ? new IntPtr(1) : IntPtr.Zero;
-                DirectMessage(SciApi.SCI_SETCARETLINEHIGHLIGHTSUBLINE, highlightSubline);
-            }
-        }
-
-        // CaretWidth is already in Scintilla, but erroneously clamps to the value to 3
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public new int CaretWidth
-        {
-            get
-            {
-                return DirectMessage(SciApi.SCI_GETCARETWIDTH).ToInt32();
-            }
-            set
-            {
-                DirectMessage(SciApi.SCI_SETCARETWIDTH, new IntPtr(value));
-            }
-        }
-
-        // using SCI_GETSTYLEINDEXAT requires internal helper functions
-        // This is the same code we've been using for several years,
-        // but has been renamed to GetStyleIndexAt() to match the Scintilla API
-        private int GetStyleIndexAt(int position)
-        {
-            int style = this.GetStyleAt(position);
-            return (style >= 0) ? style : Substyle.SubstyleCorrection(style);
-        }
-        #endregion
-
         #region Properties
         private DocMeta DocumentMeta
         {
@@ -5479,7 +5438,6 @@ namespace PdnCodeLab
             private static int keywords = -1;
             private static int interfaces = -1;
             private static int paramsAndVars = -1;
-            private static int correction = 0;
 
             internal static void SetStyles(int startIndex)
             {
@@ -5489,13 +5447,6 @@ namespace PdnCodeLab
                 enums = startIndex + 3;
                 interfaces = startIndex + 4;
                 paramsAndVars = startIndex + 5;
-
-                correction = startIndex * 2;
-            }
-
-            internal static int SubstyleCorrection(int style)
-            {
-                return style + correction;
             }
         }
         #endregion
