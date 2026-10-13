@@ -3660,9 +3660,15 @@ namespace PdnCodeLab
             bool vScroll = e.Change.HasFlag(UpdateChange.VScroll);
             bool content = e.Change.HasFlag(UpdateChange.Content);
             bool selection = e.Change.HasFlag(UpdateChange.Selection);
+            bool lineCount = e.Change.HasFlag(UpdateChange.LineCount);
 
             bool styles = this.updatingStyles;
             this.updatingStyles = false;
+
+            if (lineCount)
+            {
+                AdjustLineNumbersWidth();
+            }
 
             if (hScroll)
             {
@@ -4144,8 +4150,6 @@ namespace PdnCodeLab
 
         protected override void OnTextChanged(EventArgs e)
         {
-            AdjustLineNumbersWidth();
-
             // Make sure scrollbar does cover the Find panel
             if (findPanel.Visible)
             {
@@ -4973,7 +4977,6 @@ namespace PdnCodeLab
                     break;
             }
 
-            AdjustLineNumbersWidth();
             ClearErrors();
             UpdateIndicatorBar();
         }
