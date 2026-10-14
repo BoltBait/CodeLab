@@ -3579,6 +3579,16 @@ namespace PdnCodeLab
             findPanel.Location = new Point(this.ClientRectangle.Right - this.Margins.Right - findPanel.Width - panelMargin, panelMargin + 1);
         }
 
+        private void RefreshFind()
+        {
+            if (!Replacing && findPanel.Visible && findPanel.Term.Length > 0)
+            {
+                Tuple<int, int> oldRange = new Tuple<int, int>(this.TargetStart, this.TargetEnd);
+                Find(findPanel.Term, findPanel.Flags);
+                this.SetTargetRange(oldRange.Item1, oldRange.Item2);
+            }
+        }
+
         private void Find(string term, SearchFlags searchFlags)
         {
             // Remove all highlights from the last time
@@ -4148,27 +4158,22 @@ namespace PdnCodeLab
             this.delayedOperation = DelayedOperation.None;
         }
 
-        protected override void OnTextChanged(EventArgs e)
+        protected override void OnDelete(ModificationEventArgs e)
         {
-            // Make sure scrollbar does cover the Find panel
-            if (findPanel.Visible)
-            {
-                UpdateFindPanelLocation();
-            }
-
-            //Update Find Highlighting
-            if (findPanel.Visible && findPanel.Term.Length > 0 && !Replacing)
-            {
-                Tuple<int, int> oldRange = new Tuple<int, int>(this.TargetStart, this.TargetEnd);
-                Find(findPanel.Term, findPanel.Flags);
-                this.SetTargetRange(oldRange.Item1, oldRange.Item2);
-            }
-
+            RefreshFind();
             EnqueueSpellCheck();
-
             AdjustRenaming();
 
-            base.OnTextChanged(e);
+            base.OnDelete(e);
+        }
+
+        protected override void OnInsert(ModificationEventArgs e)
+        {
+            RefreshFind();
+            EnqueueSpellCheck();
+            AdjustRenaming();
+
+            base.OnInsert(e);
         }
 
         protected override void OnBeforeDelete(BeforeModificationEventArgs e)
