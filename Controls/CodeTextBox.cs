@@ -71,7 +71,7 @@ namespace PdnCodeLab
         private int dwellWordPos = InvalidPosition;
         private int lastCaretPos = 0;
         private int lastTextLength = 0;
-        private bool mapScroll = false;
+        private bool indicatorBarScrolled = false;
         private bool Replacing = false;
         private int maxLineNumberCharLength = 0;
         private int disableIntelliTipPos = InvalidPosition;
@@ -250,7 +250,7 @@ namespace PdnCodeLab
         }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        internal bool MapEnabled
+        internal bool IndicatorBarEnabled
         {
             get
             {
@@ -1043,7 +1043,7 @@ namespace PdnCodeLab
             this.BookmarksEnabled = Settings.Bookmarks;
 
             this.Zoom = Settings.LargeFonts ? 2 : 0;
-            this.MapEnabled = Settings.Map;
+            this.IndicatorBarEnabled = Settings.IndicatorBar;
 
             this.Styles[Style.Default].Font = Settings.FontFamily;
             this.UpdateMarginWidths();
@@ -3713,13 +3713,13 @@ namespace PdnCodeLab
                     };
                 }
 
-                if (!mapScroll)
+                if (!indicatorBarScrolled)
                 {
                     indicatorBar.Value = this.FirstVisibleLine;
                 }
                 else
                 {
-                    mapScroll = false;
+                    indicatorBarScrolled = false;
                 }
 
                 EnqueueSpellCheck();
@@ -3736,7 +3736,7 @@ namespace PdnCodeLab
 
             if (content)
             {
-                if (MapEnabled)
+                if (IndicatorBarEnabled)
                 {
                     indicatorBar.Maximum = CountUILines();
                     indicatorBar.Value = this.FirstVisibleLine;
@@ -3822,7 +3822,7 @@ namespace PdnCodeLab
                     disableIntelliTipPos = InvalidPosition;
                 }
 
-                if (MapEnabled)
+                if (IndicatorBarEnabled)
                 {
                     int curLine = GetVisibleLine(this.CurrentLine);
                     indicatorBar.Caret = CountVisibleLines(curLine);
@@ -5059,10 +5059,10 @@ namespace PdnCodeLab
         }
         #endregion
 
-        #region Indicator Map functions
+        #region Indicator Bar functions
         internal void UpdateIndicatorBar()
         {
-            if (!MapEnabled)
+            if (!IndicatorBarEnabled)
             {
                 return;
             }
@@ -5153,7 +5153,7 @@ namespace PdnCodeLab
 
         private void IndicatorBar_Scroll(object sender, ScrollEventArgs e)
         {
-            mapScroll = true;
+            indicatorBarScrolled = true;
             this.LineScroll(e.NewValue - this.FirstVisibleLine, 0);
         }
         #endregion

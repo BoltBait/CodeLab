@@ -61,7 +61,7 @@
             showWhiteSpaceCheckbox = new System.Windows.Forms.CheckBox();
             label1 = new System.Windows.Forms.Label();
             wordWrapCheckbox = new System.Windows.Forms.CheckBox();
-            indicatorMapCheckbox = new System.Windows.Forms.CheckBox();
+            indicatorBarCheckbox = new System.Windows.Forms.CheckBox();
             codeFoldingCheckbox = new System.Windows.Forms.CheckBox();
             bookMarksCheckbox = new System.Windows.Forms.CheckBox();
             lineNumbersCheckbox = new System.Windows.Forms.CheckBox();
@@ -273,7 +273,7 @@
             panelUI.Controls.Add(showWhiteSpaceCheckbox);
             panelUI.Controls.Add(label1);
             panelUI.Controls.Add(wordWrapCheckbox);
-            panelUI.Controls.Add(indicatorMapCheckbox);
+            panelUI.Controls.Add(indicatorBarCheckbox);
             panelUI.Controls.Add(codeFoldingCheckbox);
             panelUI.Controls.Add(bookMarksCheckbox);
             panelUI.Controls.Add(lineNumbersCheckbox);
@@ -462,16 +462,16 @@
             wordWrapCheckbox.UseVisualStyleBackColor = true;
             wordWrapCheckbox.CheckedChanged += wordWrapCheckbox_CheckedChanged;
             // 
-            // indicatorMapCheckbox
+            // indicatorBarCheckbox
             // 
-            indicatorMapCheckbox.AutoSize = true;
-            indicatorMapCheckbox.Location = new System.Drawing.Point(237, 28);
-            indicatorMapCheckbox.Name = "indicatorMapCheckbox";
-            indicatorMapCheckbox.Size = new System.Drawing.Size(156, 19);
-            indicatorMapCheckbox.TabIndex = 2;
-            indicatorMapCheckbox.Text = "Indicator map (scrollbar)";
-            indicatorMapCheckbox.UseVisualStyleBackColor = true;
-            indicatorMapCheckbox.CheckedChanged += indicatorMapCheckbox_CheckedChanged;
+            indicatorBarCheckbox.AutoSize = true;
+            indicatorBarCheckbox.Location = new System.Drawing.Point(237, 28);
+            indicatorBarCheckbox.Name = "indicatorBarCheckbox";
+            indicatorBarCheckbox.Size = new System.Drawing.Size(156, 19);
+            indicatorBarCheckbox.TabIndex = 2;
+            indicatorBarCheckbox.Text = "Indicator scrollbar";
+            indicatorBarCheckbox.UseVisualStyleBackColor = true;
+            indicatorBarCheckbox.CheckedChanged += indicatorBarCheckbox_CheckedChanged;
             // 
             // codeFoldingCheckbox
             // 
@@ -929,7 +929,7 @@
         private System.Windows.Forms.CheckBox showWhiteSpaceCheckbox;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.CheckBox wordWrapCheckbox;
-        private System.Windows.Forms.CheckBox indicatorMapCheckbox;
+        private System.Windows.Forms.CheckBox indicatorBarCheckbox;
         private System.Windows.Forms.CheckBox codeFoldingCheckbox;
         private System.Windows.Forms.CheckBox bookMarksCheckbox;
         private System.Windows.Forms.CheckBox lineNumbersCheckbox;

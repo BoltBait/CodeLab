@@ -114,7 +114,7 @@ namespace PdnCodeLab
             set => SetRegValue("LineNumbers", value);
         }
 
-        internal static bool Map
+        internal static bool IndicatorBar
         {
             get => GetRegValue("Map", false);
             set => SetRegValue("Map", value);

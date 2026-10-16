@@ -22,7 +22,7 @@ namespace PdnCodeLab
             lineNumbersCheckbox.Checked = Settings.LineNumbers;
             bookMarksCheckbox.Checked = Settings.Bookmarks;
             codeFoldingCheckbox.Checked = Settings.CodeFolding;
-            indicatorMapCheckbox.Checked = Settings.Map;
+            indicatorBarCheckbox.Checked = Settings.IndicatorBar;
             wordWrapCheckbox.Checked = Settings.WordWrap;
             wordWrapTextFilesCheckbox.Checked = Settings.WordWrapPlainText;
             caretLineFrameCheckBox.Checked = Settings.CaretLineFrame;
@@ -131,10 +131,10 @@ namespace PdnCodeLab
             Settings.CodeFolding = codeFoldingCheckbox.Checked;
         }
 
-        private void indicatorMapCheckbox_CheckedChanged(object sender, EventArgs e)
+        private void indicatorBarCheckbox_CheckedChanged(object sender, EventArgs e)
         {
             if (Initializing) { return; }
-            Settings.Map = indicatorMapCheckbox.Checked;
+            Settings.IndicatorBar = indicatorBarCheckbox.Checked;
         }
 
         private void wordWrapCheckbox_CheckedChanged(object sender, EventArgs e)
