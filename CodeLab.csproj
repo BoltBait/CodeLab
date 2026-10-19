@@ -11,11 +11,14 @@
     <ForceDesignerDPIUnaware>true</ForceDesignerDPIUnaware>
     <SupportedOSPlatformVersion>10.0.19041.0</SupportedOSPlatformVersion>
   </PropertyGroup>
+  <PropertyGroup>
+    <PdnDir>C:\Program Files\Paint.NET\</PdnDir>
+  </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputType>Library</OutputType>
     <StartAction>Program</StartAction>
-    <StartProgram>C:\Program Files\paint.net\PaintDotNet.exe</StartProgram>
-    <StartWorkingDirectory>C:\Program Files\paint.net\</StartWorkingDirectory>
+    <StartProgram>$(PdnDir)PaintDotNet.exe</StartProgram>
+    <StartWorkingDirectory>$(PdnDir)</StartWorkingDirectory>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputType>Library</OutputType>
@@ -39,43 +42,43 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="PaintDotNet.Base">
-      <HintPath>C:\Program Files\paint.net\PaintDotNet.Base.dll</HintPath>
+      <HintPath>$(PdnDir)PaintDotNet.Base.dll</HintPath>
     </Reference>
     <Reference Include="PaintDotNet.Collections">
-      <HintPath>C:\Program Files\paint.net\PaintDotNet.Collections.dll</HintPath>
+      <HintPath>$(PdnDir)PaintDotNet.Collections.dll</HintPath>
     </Reference>
     <Reference Include="PaintDotNet.ComponentModel">
-      <HintPath>C:\Program Files\paint.net\PaintDotNet.ComponentModel.dll</HintPath>
+      <HintPath>$(PdnDir)PaintDotNet.ComponentModel.dll</HintPath>
     </Reference>
     <Reference Include="PaintDotNet.Core">
-      <HintPath>C:\Program Files\paint.net\PaintDotNet.Core.dll</HintPath>
+      <HintPath>$(PdnDir)PaintDotNet.Core.dll</HintPath>
     </Reference>
     <Reference Include="PaintDotNet.Effects.Core">
-      <HintPath>C:\Program Files\paint.net\PaintDotNet.Effects.Core.dll</HintPath>
+      <HintPath>$(PdnDir)PaintDotNet.Effects.Core.dll</HintPath>
     </Reference>
     <Reference Include="PaintDotNet.Framework">
-      <HintPath>C:\Program Files\paint.net\PaintDotNet.Framework.dll</HintPath>
+      <HintPath>$(PdnDir)PaintDotNet.Framework.dll</HintPath>
     </Reference>
     <Reference Include="PaintDotNet.Fundamentals">
-      <HintPath>C:\Program Files\paint.net\PaintDotNet.Fundamentals.dll</HintPath>
+      <HintPath>$(PdnDir)PaintDotNet.Fundamentals.dll</HintPath>
     </Reference>
     <Reference Include="PaintDotNet.ObjectModel">
-      <HintPath>C:\Program Files\paint.net\PaintDotNet.ObjectModel.dll</HintPath>
+      <HintPath>$(PdnDir)PaintDotNet.ObjectModel.dll</HintPath>
     </Reference>
     <Reference Include="PaintDotNet.Primitives">
-      <HintPath>C:\Program Files\paint.net\PaintDotNet.Primitives.dll</HintPath>
+      <HintPath>$(PdnDir)PaintDotNet.Primitives.dll</HintPath>
     </Reference>
     <Reference Include="PaintDotNet.PropertySystem">
-      <HintPath>C:\Program Files\paint.net\PaintDotNet.PropertySystem.dll</HintPath>
+      <HintPath>$(PdnDir)PaintDotNet.PropertySystem.dll</HintPath>
     </Reference>
     <Reference Include="PaintDotNet.Windows">
-      <HintPath>C:\Program Files\paint.net\PaintDotNet.Windows.dll</HintPath>
+      <HintPath>$(PdnDir)PaintDotNet.Windows.dll</HintPath>
     </Reference>
     <Reference Include="PaintDotNet.Windows.Core">
-      <HintPath>C:\Program Files\paint.net\PaintDotNet.Windows.Core.dll</HintPath>
+      <HintPath>$(PdnDir)PaintDotNet.Windows.Core.dll</HintPath>
     </Reference>
     <Reference Include="PaintDotNet.Windows.Framework">
-      <HintPath>C:\Program Files\paint.net\PaintDotNet.Windows.Framework.dll</HintPath>
+      <HintPath>$(PdnDir)PaintDotNet.Windows.Framework.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -90,7 +93,7 @@
     <PackageReference Include="Scintilla5.NET" Version="7.0.1" />
   </ItemGroup>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="if $(ConfigurationName)==FastDebug goto end&#xD;&#xA;&#xD;&#xA;if not exist &quot;$(TargetDir)Merged\&quot; mkdir &quot;$(TargetDir)Merged\&quot;&#xD;&#xA;&#xD;&#xA;set deps=Scintilla.NET.dll Microsoft.CodeAnalysis.CSharp.dll Microsoft.CodeAnalysis.dll Microsoft.Windows.SDK.NET.dll PluralizeService.Core.dll PlatformSpellCheck.dll&#xD;&#xA;&#xD;&#xA;cd &quot;$(TargetDir)&quot;&#xD;&#xA;&#xD;&#xA;if $(ConfigurationName)==Release (&#xD;&#xA;    echo.&#xD;&#xA;    echo ------------- Trimming -------------&#xD;&#xA;&#xD;&#xA;    dotnet exec &quot;$(ILLinkTasksAssembly)\..\..\net\illink.dll&quot; -a &quot;$(TargetPath)&quot; all --trim-mode copy --action copy --action link &quot;Microsoft.Windows.SDK.NET&quot; --action link &quot;PluralizeService.Core&quot; -d $(TargetDir) -d $(NETCoreAppDir) -d $(WindowsDesktopAppDir) --skip-unresolved -out &quot;$(TargetDir)Trimmed&quot;&#xD;&#xA;&#xD;&#xA;    echo.&#xD;&#xA;&#xD;&#xA;    cd &quot;$(TargetDir)Trimmed&quot;&#xD;&#xA;&#xD;&#xA;    $(ILRepack) /ndebug /out:..\Merged\$(TargetFileName) $(TargetFileName) %25deps%25&#xD;&#xA;    cmd /c explorer &quot;$(TargetDir)Merged&quot;&#xD;&#xA;) else if $(ConfigurationName)==Debug (&#xD;&#xA;    $(ILRepack) /out:Merged\$(TargetFileName) $(TargetFileName) %25deps%25&#xD;&#xA;    copy &quot;$(TargetDir)Merged\$(TargetFileName)&quot; &quot;C:\Program Files\Paint.NET\Effects\&quot;&#xD;&#xA;    copy &quot;$(TargetDir)Merged\$(TargetName).pdb&quot; &quot;C:\Program Files\Paint.NET\Effects\&quot;&#xD;&#xA;)&#xD;&#xA;&#xD;&#xA;:end&#xD;&#xA;exit 0" />
+    <Exec Command="if $(ConfigurationName)==FastDebug goto end&#xD;&#xA;&#xD;&#xA;if not exist &quot;$(TargetDir)Merged\&quot; mkdir &quot;$(TargetDir)Merged\&quot;&#xD;&#xA;&#xD;&#xA;set deps=Scintilla.NET.dll Microsoft.CodeAnalysis.CSharp.dll Microsoft.CodeAnalysis.dll Microsoft.Windows.SDK.NET.dll PluralizeService.Core.dll PlatformSpellCheck.dll&#xD;&#xA;&#xD;&#xA;cd &quot;$(TargetDir)&quot;&#xD;&#xA;&#xD;&#xA;if $(ConfigurationName)==Release (&#xD;&#xA;    echo.&#xD;&#xA;    echo ------------- Trimming -------------&#xD;&#xA;&#xD;&#xA;    dotnet exec &quot;$(ILLinkTasksAssembly)\..\..\net\illink.dll&quot; -a &quot;$(TargetPath)&quot; all --trim-mode copy --action copy --action link &quot;Microsoft.Windows.SDK.NET&quot; --action link &quot;PluralizeService.Core&quot; -d $(TargetDir) -d $(NETCoreAppDir) -d $(WindowsDesktopAppDir) --skip-unresolved -out &quot;$(TargetDir)Trimmed&quot;&#xD;&#xA;&#xD;&#xA;    echo.&#xD;&#xA;&#xD;&#xA;    cd &quot;$(TargetDir)Trimmed&quot;&#xD;&#xA;&#xD;&#xA;    $(ILRepack) /ndebug /out:..\Merged\$(TargetFileName) $(TargetFileName) %25deps%25&#xD;&#xA;    cmd /c explorer &quot;$(TargetDir)Merged&quot;&#xD;&#xA;) else if $(ConfigurationName)==Debug (&#xD;&#xA;    $(ILRepack) /out:Merged\$(TargetFileName) $(TargetFileName) %25deps%25&#xD;&#xA;    copy &quot;$(TargetDir)Merged\$(TargetFileName)&quot; &quot;$(PdnDir)Effects\&quot;&#xD;&#xA;    copy &quot;$(TargetDir)Merged\$(TargetName).pdb&quot; &quot;$(PdnDir)Effects\&quot;&#xD;&#xA;)&#xD;&#xA;&#xD;&#xA;:end&#xD;&#xA;exit 0" />
   </Target>
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
     <Exec Command="set latestVersion=NotFound&#xD;&#xA;&#xD;&#xA;for /F %25%25d in ('dir /a:d /b /o:-d &quot;$(NuGetPackageRoot)scintilla5.net\*&quot;') do (&#xD;&#xA;  set latestVersion=%25%25d&#xD;&#xA;  goto loopExit&#xD;&#xA;)&#xD;&#xA;&#xD;&#xA;:loopExit&#xD;&#xA;&#xD;&#xA;echo.&#xD;&#xA;echo ------------- Copying native Scintilla files for Embedding -------------&#xD;&#xA;&#xD;&#xA;set sourceArm64=$(NuGetPackageRoot)scintilla5.net\%25latestVersion%25\runtimes\win-arm64\native&#xD;&#xA;robocopy &quot;%25sourceArm64%25&quot; &quot;$(ProjectDir)Native\Arm64&quot; *.dll&#xD;&#xA;&#xD;&#xA;if ERRORLEVEL 2 exit ERRORLEVEL&#xD;&#xA;&#xD;&#xA;set sourceX64=$(NuGetPackageRoot)scintilla5.net\%25latestVersion%25\runtimes\win-x64\native&#xD;&#xA;robocopy &quot;%25sourceX64%25&quot; &quot;$(ProjectDir)Native\X64&quot; *.dll&#xD;&#xA;&#xD;&#xA;if ERRORLEVEL 2 exit ERRORLEVEL&#xD;&#xA;&#xD;&#xA;echo ------------- Compiling -------------&#xD;&#xA;&#xD;&#xA;exit 0" />
