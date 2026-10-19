@@ -13,6 +13,9 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputType>Library</OutputType>
+    <StartAction>Program</StartAction>
+    <StartProgram>C:\Program Files\paint.net\PaintDotNet.exe</StartProgram>
+    <StartWorkingDirectory>C:\Program Files\paint.net\</StartWorkingDirectory>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputType>Library</OutputType>
@@ -24,9 +27,6 @@
     <Optimize>false</Optimize>
     <OutputPath>bin\FastDebug\</OutputPath>
     <DefineConstants>FASTDEBUG;DEBUG;TRACE</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject></StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <EmbeddedResource Include="Icons\*.png" />
