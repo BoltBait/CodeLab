@@ -1571,12 +1571,11 @@ namespace PdnCodeLab
                 .AppendLine("Tom Jackson:\tConcept, Initial Code, Compile to DLL")
                 .AppendLine()
                 .AppendLine("David Issel:\tEffect UI Creation, Effect Icons, Effect Help")
-                .AppendLine("\t\tSystem, File New Complex Pixel Flow Code")
-                .AppendLine("\t\tGeneration, GPU Image and Drawing")
+                .AppendLine("\t\tSystem, GPU Image and Drawing")
                 .AppendLine("\t\tEffects, CodeLab Updater, Settings")
                 .AppendLine("\t\tScreen, Bug Fixes, Tutorials and Installer.")
                 .AppendLine()
-                .AppendLine("Jason Wendt:\tMigration to ScintillaNET editor control,")
+                .AppendLine("Jason Wendt:\tMigration to Scintilla.NET editor control,")
                 .AppendLine("\t\tmodern .NET, and the \"Roslyn\" Compiler.")
                 .AppendLine("\t\tIntelligent Assistance (including code")
                 .AppendLine("\t\tcompletion, tips, snippets, and variable")
@@ -1588,20 +1587,15 @@ namespace PdnCodeLab
                 .AppendLine("―――――――――――  Libraries  ―――――――――――")
                 .AppendLine()
                 .AppendLine("Jörg Reichert:\tFlexibleMessageBox")
-                .AppendLine("Jacob Slusser:\tScintillaNET")
+                .AppendLine("Jacob Slusser:\tScintilla.NET")
                 .AppendLine("Microsoft:\tRoslyn")
-#if !RELEASE
                 .AppendLine()
-                .AppendLine("――――――――――  Code Editor  ――――――――――")
+                .AppendLine("――――――――――  Version Info  ――――――――――")
                 .AppendLine()
-                .AppendLine("Scintilla version:\t" + txtCode.ScintillaVersion)
-                .AppendLine("Lexilla version:\t" + txtCode.LexillaVersion)
-#endif
-                .AppendLine()
-                .AppendLine("―――――――――――  Runtime  ―――――――――――")
-                .AppendLine()
+                .AppendLine("C# version:\t" + ScriptBuilder.CSharpVersion)
                 .AppendLine(".NET version:\t" + System.Environment.Version.ToString(2))
-                .Append("C# version:\t" + ScriptBuilder.CSharpVersion);
+                .AppendLine("Scintilla version:\t" + txtCode.ScintillaVersion)
+                .Append("Lexilla version:\t" + txtCode.LexillaVersion);
 
             FlexibleMessageBox.Show(this, aboutText.ToString(), "About CodeLab", MessageBoxButtons.OK, MessageBoxIcon.Information);
             txtCode.Focus();
