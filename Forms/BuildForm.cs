@@ -45,18 +45,18 @@ namespace PdnCodeLab
         private readonly string FullScriptText = "";
         private readonly string FileName = "";
         private readonly string resourcePath;
-        private readonly bool canCreateSln;
+        private readonly bool isClassicInstall;
         private readonly bool customHelp;
         private readonly ProjectType projectType;
 
-        internal BuildForm(string ScriptName, string ScriptText, string ScriptPath, ProjectType projectType, bool canCreateSln)
+        internal BuildForm(string ScriptName, string ScriptText, string ScriptPath, ProjectType projectType, bool isClassicInstall)
         {
             InitializeComponent();
 
             HelpPlainText.Font = this.Font;
 
             this.projectType = projectType;
-            this.canCreateSln = canCreateSln;
+            this.isClassicInstall = isClassicInstall;
 
             WarningLabel.Visible = false;
 
@@ -799,12 +799,6 @@ namespace PdnCodeLab
 
         private void GenSlnButton_Click(object sender, EventArgs e)
         {
-            if (!this.canCreateSln)
-            {
-                FlexibleMessageBox.Show("Due to technical reasons, this feature is only available on classic installations of Paint.NET.", "Generate Visual Studio Solution", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
-            }
-
             if (!UpdateAllValues())
             {
                 return;
@@ -831,7 +825,7 @@ namespace PdnCodeLab
                     _ => throw new NotImplementedException("Invalid Project Type"),
                 };
 
-                string slnFilePath = Solution.Generate(fbd.SelectedPath, FileName, SourceCode, IconPath, resourcePath);
+                string slnFilePath = Solution.Generate(fbd.SelectedPath, FileName, SourceCode, IconPath, resourcePath, this.isClassicInstall);
 
                 if (slnFilePath != null)
                 {

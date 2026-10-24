@@ -22,11 +22,10 @@ namespace PdnCodeLab
 {
     internal static class Solution
     {
-        internal static string Generate(string slnPath, string name, string effectSource, string iconPath, string resourcePath)
+        internal static string Generate(string slnPath, string name, string effectSource, string iconPath, string resourcePath, bool isClassicInstall)
         {
             string effectName = Regex.Replace(name, @"[^\w]", "");
             string projectName = effectName + "Effect";
-            string pdnPath = Application.StartupPath;
             string projPath = Path.Combine(slnPath, projectName);
             string propPath = Path.Combine(projPath, "Properties");
             bool iconExists = File.Exists(iconPath);
@@ -35,13 +34,13 @@ namespace PdnCodeLab
             string rtfPath = Path.ChangeExtension(resourcePath, ".rtz");
             bool rtfExists = File.Exists(rtfPath);
 
-            // Two space indent
+            // Two space indent on these files
+
             StringBuilder slnxFile = new StringBuilder()
                 .AppendLine("<Solution>")
                 .AppendLine($"  <Project Path=\"{projectName}/{projectName}.csproj\" />")
                 .AppendLine("</Solution>");
 
-            // Two space indent
             StringBuilder csprojFile = new StringBuilder();
             csprojFile.AppendLine("<Project Sdk=\"Microsoft.NET.Sdk\">");
             csprojFile.AppendLine();
@@ -83,17 +82,22 @@ namespace PdnCodeLab
             csprojFile.AppendLine("  </Target>");
             csprojFile.Append("</Project>"); // no end-of-line at the end of this file
 
-            // Two space indent
             StringBuilder launchSettingsFile = new StringBuilder();
-            launchSettingsFile.AppendLine("{");
-            launchSettingsFile.AppendLine("  \"profiles\": {");
-            launchSettingsFile.AppendLine("    \"" + projectName + "\": {");
-            launchSettingsFile.AppendLine("      \"commandName\": \"Executable\",");
-            launchSettingsFile.AppendLine($"      \"executablePath\": \"{Path.Combine(pdnPath, "PaintDotNet.exe").Replace(@"\", @"\\")}\",");
-            launchSettingsFile.AppendLine($"      \"workingDirectory\": \"{pdnPath.Replace(@"\", @"\\")}\"");
-            launchSettingsFile.AppendLine("    }");
-            launchSettingsFile.AppendLine("  }");
-            launchSettingsFile.Append("}"); // no end-of-line at the end of this file
+            if (isClassicInstall)
+            {
+                string pdnPath = Application.StartupPath;
+
+                launchSettingsFile
+                    .AppendLine("{")
+                    .AppendLine("  \"profiles\": {")
+                    .AppendLine("    \"" + projectName + "\": {")
+                    .AppendLine("      \"commandName\": \"Executable\",")
+                    .AppendLine($"      \"executablePath\": \"{Path.Combine(pdnPath, "PaintDotNet.exe").Replace(@"\", @"\\")}\",")
+                    .AppendLine($"      \"workingDirectory\": \"{pdnPath.Replace(@"\", @"\\")}\"")
+                    .AppendLine("    }")
+                    .AppendLine("  }")
+                    .Append("}"); // no end-of-line at the end of this file
+            }
 
             try
             {
@@ -120,12 +124,15 @@ namespace PdnCodeLab
                     File.Copy(rtfPath, Path.Combine(projPath, Path.GetFileName(rtfPath)), true);
                 }
 
-                if (!Directory.Exists(propPath))
+                if (isClassicInstall)
                 {
-                    Directory.CreateDirectory(propPath);
-                }
+                    if (!Directory.Exists(propPath))
+                    {
+                        Directory.CreateDirectory(propPath);
+                    }
 
-                File.WriteAllText(Path.Combine(propPath, "launchSettings.json"), launchSettingsFile.ToString());
+                    File.WriteAllText(Path.Combine(propPath, "launchSettings.json"), launchSettingsFile.ToString());
+                }
             }
             catch (Exception ex)
             {

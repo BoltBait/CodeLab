@@ -1065,9 +1065,9 @@ namespace PdnCodeLab
 
             bool buildSucceeded = false;
 #if FASTDEBUG
-            const bool canCreateSln = false;
+            const bool isClassicInstall = false;
 #else
-            bool canCreateSln = this.Services.GetService<IAppInfoService>().InstallType == AppInstallType.Classic;
+            bool isClassicInstall = this.Services.GetService<IAppInfoService>().InstallType == AppInstallType.Classic;
 #endif
 
             string scriptPath = tabStrip1.SelectedTabPath;
@@ -1077,7 +1077,7 @@ namespace PdnCodeLab
 
             if (projectType.IsEffect())
             {
-                using BuildForm buildForm = new BuildForm(fileName, userCode, scriptPath, projectType, canCreateSln);
+                using BuildForm buildForm = new BuildForm(fileName, userCode, scriptPath, projectType, isClassicInstall);
                 if (buildForm.ShowDialog() != DialogResult.OK)
                 {
                     return;
