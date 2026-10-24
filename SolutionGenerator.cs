@@ -74,12 +74,8 @@ namespace PdnCodeLab
                 csprojFile.AppendLine();
             }
             csprojFile.AppendLine("  <ItemGroup>");
-            foreach (string assemblyName in Intelli.PdnAssemblyNames)
-            {
-                csprojFile.AppendLine($"    <Reference Include=\"{assemblyName}\">");
-                csprojFile.AppendLine($"      <HintPath>{Path.Combine(pdnPath, $"{assemblyName}.dll")}</HintPath>");
-                csprojFile.AppendLine("    </Reference>");
-            }
+            // https://learn.microsoft.com/en-us/nuget/concepts/dependency-resolution#floating-versions
+            csprojFile.AppendLine("    <PackageReference Include=\"Paint.NET.Plugin.SDK\" Version=\"*-*\" />");
             csprojFile.AppendLine("  </ItemGroup>");
             csprojFile.AppendLine();
             csprojFile.AppendLine("  <Target Name=\"PostBuild\" AfterTargets=\"PostBuildEvent\">");

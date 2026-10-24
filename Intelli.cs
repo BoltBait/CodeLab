@@ -39,7 +39,6 @@ namespace PdnCodeLab
         internal static Dictionary<string, string> Snippets { get; }
         internal static Dictionary<string, string> TypeAliases { get; }
         internal static IEnumerable<string> Keywords { get; }
-        internal static IEnumerable<string> PdnAssemblyNames { get; private set; }
         internal static Type UserScript { get; set; }
         internal static string ClassList { get; private set; }
         internal static string EnumList { get; private set; }
@@ -130,10 +129,6 @@ namespace PdnCodeLab
                     pdnAssemblyNames.Add("PaintDotNet.Windows.Framework");
                     break;
             }
-
-            PdnAssemblyNames = pdnAssemblyNames
-                .OrderBy(x => x, StringComparer.Ordinal)
-                .ToImmutableArray();
 
             ImmutableArray<Assembly> allAssemblies = sdkAssemblies
                 .Concat(allPdnAssemblies.Where(a => pdnAssemblyNames.Contains(a.GetName().Name, StringComparer.Ordinal)))
