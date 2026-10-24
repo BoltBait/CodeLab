@@ -488,7 +488,7 @@
             // 
             // NewGpuEffectMenuItem
             // 
-            NewGpuEffectMenuItem.ImageName = "GpuEffect";
+            NewGpuEffectMenuItem.ImageName = "ImageEffect";
             NewGpuEffectMenuItem.Name = "NewGpuEffectMenuItem";
             NewGpuEffectMenuItem.Size = new System.Drawing.Size(180, 22);
             NewGpuEffectMenuItem.Text = "GPU Image Effect";
@@ -496,7 +496,7 @@
             // 
             // NewGpuDrawEffectMenuItem
             // 
-            NewGpuDrawEffectMenuItem.ImageName = "GpuEffect";
+            NewGpuDrawEffectMenuItem.ImageName = "DrawingEffect";
             NewGpuDrawEffectMenuItem.Name = "NewGpuDrawEffectMenuItem";
             NewGpuDrawEffectMenuItem.Size = new System.Drawing.Size(180, 22);
             NewGpuDrawEffectMenuItem.Text = "GPU Drawing Effect";
@@ -933,7 +933,7 @@
             // 
             // NewGpuMenuItem1
             // 
-            NewGpuMenuItem1.ImageName = "GpuEffect";
+            NewGpuMenuItem1.ImageName = "ImageEffect";
             NewGpuMenuItem1.Name = "NewGpuMenuItem1";
             NewGpuMenuItem1.Size = new System.Drawing.Size(180, 22);
             NewGpuMenuItem1.Text = "GPU Image Effect";
@@ -941,7 +941,7 @@
             // 
             // NewGpuDrawMenuItem1
             // 
-            NewGpuDrawMenuItem1.ImageName = "GpuEffect";
+            NewGpuDrawMenuItem1.ImageName = "DrawingEffect";
             NewGpuDrawMenuItem1.Name = "NewGpuDrawMenuItem1";
             NewGpuDrawMenuItem1.Size = new System.Drawing.Size(180, 22);
             NewGpuDrawMenuItem1.Text = "GPU Drawing Effect";
