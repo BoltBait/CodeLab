@@ -391,7 +391,7 @@ namespace PdnCodeLab
             return commentElement.Value
                 .Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
                 .Join(" ")
-                .Split(char.MinValue, StringSplitOptions.TrimEntries)
+                .Split(char.MinValue, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
                 .Join(Environment.NewLine);
         }
     }

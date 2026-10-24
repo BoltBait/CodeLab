@@ -18,7 +18,7 @@
 // Intellisense code from http://www.codeproject.com/KB/cs/diy-intellisense.aspx
 // which required tons of fixes in order to get it to work properly.
 /////////////////////////////////////////////////////////////////////////////////
-// Scintilla editor from https://github.com/jacobslusser/ScintillaNET
+// Scintilla editor from https://github.com/desjarlais/Scintilla.NET/
 // Implemented in CodeLab and customized by Jason Wendt.
 /////////////////////////////////////////////////////////////////////////////////
 
@@ -48,7 +48,7 @@ namespace PdnCodeLab
         private readonly List<int> matchLines = new List<int>();
         private readonly ToolStrip lightBulbMenu = new ToolStrip();
         private readonly ScaledToolStripDropDownButton bulbIcon = new ScaledToolStripDropDownButton();
-        private readonly Dictionary<Guid, ScintillaNET.Document> docCollection = new Dictionary<Guid, ScintillaNET.Document>();
+        private readonly Dictionary<Guid, Document> docCollection = new Dictionary<Guid, Document>();
         private readonly Dictionary<Guid, DocMeta> docMetaCollection = new Dictionary<Guid, DocMeta>();
         private const int Preprocessor = 64;
         private const BindingFlags userScriptBindingFlags = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly;
@@ -4925,11 +4925,11 @@ namespace PdnCodeLab
             this.docMetaCollection[this.docGuid] = this.DocumentMeta;
             this.docGuid = guid;
 
-            var document = this.Document;
+            Document document = this.Document;
             this.AddRefDocument(document);
 
             // Replace the current document with a new one
-            ScintillaNET.Document newDocument = this.CreateDocument();
+            Document newDocument = this.CreateDocument();
             this.docCollection.Add(guid, newDocument);
 
             this.Document = newDocument;
@@ -4988,7 +4988,7 @@ namespace PdnCodeLab
 
         internal void SwitchToDocument(Guid guid)
         {
-            if (!docCollection.TryGetValue(guid, out ScintillaNET.Document targetDocument))
+            if (!docCollection.TryGetValue(guid, out Document targetDocument))
             {
                 return;
             }
@@ -5048,7 +5048,7 @@ namespace PdnCodeLab
 
         internal void CloseDocument(Guid guid)
         {
-            if (!docCollection.TryGetValue(guid, out ScintillaNET.Document targetDocument))
+            if (!docCollection.TryGetValue(guid, out Document targetDocument))
             {
                 return;
             }

@@ -602,7 +602,7 @@ namespace PdnCodeLab
         #endregion
 
         #region Error listbox functions
-        private void errorListMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        private void errorListMenu_Opening(object sender, CancelEventArgs e)
         {
             if (errorList.SelectedIndex < 0)
             {
@@ -911,7 +911,7 @@ namespace PdnCodeLab
             string scintillaPath = Path.Combine(scintillaTempDirectory, "Scintilla.dll");
             string lexillaPath = Path.Combine(scintillaTempDirectory, "Lexilla.dll");
 
-#if RELEASE
+#if !FASTDEBUG
             if (!File.Exists(scintillaPath) || !File.Exists(lexillaPath))
 #endif
             {
@@ -1603,7 +1603,7 @@ namespace PdnCodeLab
         #endregion
 
         #region Context menu Event functions
-        private void contextMenuStrip1_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
         {
             if (txtCode.SuppressContextMenu)
             {
@@ -2054,7 +2054,7 @@ namespace PdnCodeLab
             PasteButton.Enabled = enable;
         }
 
-        private void tabStrip1_TabClosingAndDirty(object sender, System.ComponentModel.CancelEventArgs e)
+        private void tabStrip1_TabClosingAndDirty(object sender, CancelEventArgs e)
         {
             if (PromptToSave() == DialogResult.Cancel)
             {

@@ -184,15 +184,12 @@ namespace PdnCodeLab
             set
             {
                 float scale = shaftRect.Height / (float)maximum;
-                thumbRect.Y = shaftRect.Top + (int)float.Round(value * scale);
-                if (thumbRect.Top < shaftRect.Top)
-                {
-                    thumbRect.Y = shaftRect.Top;
-                }
-                else if (thumbRect.Bottom > shaftRect.Bottom)
-                {
-                    thumbRect.Y = shaftRect.Bottom - thumbRect.Height;
-                }
+                int newThumbPos = (int)float.Round(value * scale);
+
+                thumbRect.Y = int.Clamp(
+                    shaftRect.Top + newThumbPos,
+                    shaftRect.Top,
+                    shaftRect.Bottom - thumbRect.Height);
 
                 Refresh(); // Need to redraw very quickly here. Refresh() rather than Invalidate().
             }
@@ -353,16 +350,10 @@ namespace PdnCodeLab
 
             if (thumbClicked)
             {
-                thumbRect.Y = e.Y - clickedThumbPos;
-
-                if (thumbRect.Top < shaftRect.Top)
-                {
-                    thumbRect.Y = shaftRect.Top;
-                }
-                else if (thumbRect.Bottom > shaftRect.Bottom)
-                {
-                    thumbRect.Y = shaftRect.Bottom - thumbRect.Height;
-                }
+                thumbRect.Y = int.Clamp(
+                    e.Y - clickedThumbPos,
+                    shaftRect.Top,
+                    shaftRect.Bottom - thumbRect.Height);
 
                 Refresh(); // Need to redraw very quickly here. Refresh() rather than Invalidate().
                 OnScroll(new ScrollEventArgs(ScrollEventType.ThumbTrack, this.Value));

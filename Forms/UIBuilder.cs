@@ -40,7 +40,7 @@ namespace PdnCodeLab
         private readonly HashSet<string> IDList = new HashSet<string>();
         private string currentID;
 
-        internal static Image[] ControlIcons = new Image[]
+        internal static readonly Image[] ControlIcons = new Image[]
         {
             UIUtil.GetImage("00int"),
             UIUtil.GetImage("01CheckBox"),
