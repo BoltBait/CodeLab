@@ -3764,6 +3764,7 @@ namespace PdnCodeLab
                             {
                                 // Only with Enter/Return
                                 this.ChooseCaretX();
+                                this.Refresh(); // Scintilla doesn't redraw immediately in this scenario; force it
                             }
                         }
                         else if (content && this.CurrentLine - previousLine == 1)
