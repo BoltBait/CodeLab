@@ -46,10 +46,11 @@ namespace PdnCodeLab
         private readonly string FileName = "";
         private readonly string resourcePath;
         private readonly bool isClassicInstall;
+        private readonly bool isStableVersion;
         private readonly bool customHelp;
         private readonly ProjectType projectType;
 
-        internal BuildForm(string ScriptName, string ScriptText, string ScriptPath, ProjectType projectType, bool isClassicInstall)
+        internal BuildForm(string ScriptName, string ScriptText, string ScriptPath, ProjectType projectType, bool isClassicInstall, bool isStableVersion)
         {
             InitializeComponent();
 
@@ -57,6 +58,7 @@ namespace PdnCodeLab
 
             this.projectType = projectType;
             this.isClassicInstall = isClassicInstall;
+            this.isStableVersion = isStableVersion;
 
             WarningLabel.Visible = false;
 
@@ -825,7 +827,7 @@ namespace PdnCodeLab
                     _ => throw new NotImplementedException("Invalid Project Type"),
                 };
 
-                string slnFilePath = Solution.Generate(fbd.SelectedPath, FileName, SourceCode, IconPath, resourcePath, this.isClassicInstall);
+                string slnFilePath = Solution.Generate(fbd.SelectedPath, FileName, SourceCode, IconPath, resourcePath, this.isClassicInstall, this.isStableVersion);
 
                 if (slnFilePath != null)
                 {

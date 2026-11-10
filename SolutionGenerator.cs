@@ -22,7 +22,7 @@ namespace PdnCodeLab
 {
     internal static class Solution
     {
-        internal static string Generate(string slnPath, string name, string effectSource, string iconPath, string resourcePath, bool isClassicInstall)
+        internal static string Generate(string slnPath, string name, string effectSource, string iconPath, string resourcePath, bool isClassicInstall, bool isStableVersion)
         {
             string effectName = Regex.Replace(name, @"[^\w]", "");
             string projectName = effectName + "Effect";
@@ -74,7 +74,8 @@ namespace PdnCodeLab
             }
             csprojFile.AppendLine("  <ItemGroup>");
             // https://learn.microsoft.com/en-us/nuget/concepts/dependency-resolution#floating-versions
-            csprojFile.AppendLine("    <PackageReference Include=\"Paint.NET.Plugin.SDK\" Version=\"*-*\" />");
+            string nuGetVersion = isStableVersion ? "*" : "*-*";
+            csprojFile.AppendLine($"    <PackageReference Include=\"Paint.NET.Plugin.SDK\" Version=\"{nuGetVersion}\" />");
             csprojFile.AppendLine("  </ItemGroup>");
             csprojFile.AppendLine();
             csprojFile.AppendLine("  <Target Name=\"PostBuild\" AfterTargets=\"PostBuildEvent\">");

@@ -1054,8 +1054,11 @@ namespace PdnCodeLab
             bool buildSucceeded = false;
 #if FASTDEBUG
             const bool isClassicInstall = false;
+            const bool isStableVersion = false;
 #else
-            bool isClassicInstall = this.Services.GetService<IAppInfoService>().InstallType == AppInstallType.Classic;
+            IAppInfoService appInfo = this.Services.GetService<IAppInfoService>();
+            bool isClassicInstall = appInfo.InstallType == AppInstallType.Classic;
+            bool isStableVersion = appInfo.IsStableVersion;
 #endif
 
             string scriptPath = tabStrip1.SelectedTabPath;
@@ -1065,7 +1068,7 @@ namespace PdnCodeLab
 
             if (projectType.IsEffect())
             {
-                using BuildForm buildForm = new BuildForm(fileName, userCode, scriptPath, projectType, isClassicInstall);
+                using BuildForm buildForm = new BuildForm(fileName, userCode, scriptPath, projectType, isClassicInstall, isStableVersion);
                 if (buildForm.ShowDialog() != DialogResult.OK)
                 {
                     return;
