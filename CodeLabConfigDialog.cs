@@ -803,22 +803,11 @@ namespace PdnCodeLab
                             // Caret Width was changed in Windows Settings
                             this.txtCode.CaretWidth = SystemInformation.CaretWidth;
                             break;
-
-#if !NET11_0_OR_GREATER
-                        case 0x0:    // undefined; check the LParam
-                            string lParmStr = System.Runtime.InteropServices.Marshal.PtrToStringAuto(m.LParam);
-                            if (lParmStr == "ImmersiveColorSet")
-                            {
-                                ThemeUtil.InvalidateCache();
-                            }
-                            break;
-#endif
                     }
                     break;
             }
         }
 
-#if NET11_0_OR_GREATER
         protected override void OnSystemVisualSettingsChanged(SystemVisualSettingsChangedEventArgs e)
         {
             base.OnSystemVisualSettingsChanged(e);
@@ -828,7 +817,6 @@ namespace PdnCodeLab
                 ThemeUtil.InvalidateCache();
             }
         }
-#endif
 
         private void txtCode_KeyUp(object sender, KeyEventArgs e)
         {
