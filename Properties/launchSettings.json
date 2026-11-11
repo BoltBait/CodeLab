@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "CodeLab": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "DOTNET_ReadyToRun": "0"
+      }
+    }
+  }
+}
