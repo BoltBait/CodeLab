@@ -5018,6 +5018,7 @@ namespace PdnCodeLab
             {
                 case Lexer.SCLEX_CSHARP:
                     UpdateSubstyleAllocations();
+                    UpdateSyntaxHighlighting();
 
                     switch (this.theme)
                     {
