@@ -3713,13 +3713,16 @@ namespace PdnCodeLab
                     };
                 }
 
-                if (!indicatorBarScrolled)
+                if (IndicatorBarEnabled)
                 {
-                    indicatorBar.Value = this.FirstVisibleLine;
-                }
-                else
-                {
-                    indicatorBarScrolled = false;
+                    if (!indicatorBarScrolled)
+                    {
+                        indicatorBar.Value = this.FirstVisibleLine;
+                    }
+                    else
+                    {
+                        indicatorBarScrolled = false;
+                    }
                 }
 
                 EnqueueSpellCheck();
