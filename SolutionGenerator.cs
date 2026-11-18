@@ -144,7 +144,7 @@ namespace PdnCodeLab
                 return null;
             }
 
-            return Path.Combine(slnPath, projectName + ".sln");
+            return Path.Combine(slnPath, projectName + ".slnx");
         }
     }
 }
