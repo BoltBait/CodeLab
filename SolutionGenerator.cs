@@ -94,7 +94,10 @@ namespace PdnCodeLab
                     .AppendLine("    \"" + projectName + "\": {")
                     .AppendLine("      \"commandName\": \"Executable\",")
                     .AppendLine($"      \"executablePath\": \"{Path.Combine(pdnPath, "PaintDotNet.exe").Replace(@"\", @"\\")}\",")
-                    .AppendLine($"      \"workingDirectory\": \"{pdnPath.Replace(@"\", @"\\")}\"")
+                    .AppendLine($"      \"workingDirectory\": \"{pdnPath.Replace(@"\", @"\\")}\",")
+                    .AppendLine("      \"environmentVariables\": {")
+                    .AppendLine("        \"DOTNET_ReadyToRun\": \"0\"")
+                    .AppendLine("      }")
                     .AppendLine("    }")
                     .AppendLine("  }")
                     .Append("}"); // no end-of-line at the end of this file
